@@ -14,8 +14,10 @@ public class VoxelEditorGUI : MonoBehaviour {
 
     string[] dirList;
 
+    List<string> materialNames;
+    List<Texture> materialPreviews;
     string materialDirectory = "GameAssets/Materials";
-    List<string> materials;
+    List<string> materialSubDirectories;
     Vector2 matListScroll;
 
     void Start()
@@ -36,17 +38,31 @@ public class VoxelEditorGUI : MonoBehaviour {
         GUI.Box(guiRect, "Assign Material");
 
 
-        if (materials == null)
+        if (materialPreviews == null)
             return;
         Rect scrollBox = new Rect(guiRect.xMin, guiRect.yMin + 40, guiRect.width, guiRect.height - 40);
-        Rect scrollArea = new Rect(0, 0, guiRect.width - 40, materials.Count * 30);
+        float scrollAreaWidth = guiRect.width - 40;
+        float scrollAreaHeight = materialSubDirectories.Count * 25 + materialPreviews.Count * (scrollAreaWidth - 20);
+        Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
         matListScroll = GUI.BeginScrollView(scrollBox, matListScroll, scrollArea);
-        for (int i = 0; i < materials.Count; i++)
+        float y = 0;
+        for (int i = 0; i < materialSubDirectories.Count; i++)
         {
-            if (GUI.Button(new Rect(10, 30 * i, scrollArea.width - 20, 20), materials[i]))
+            string subDir = materialSubDirectories[i];
+            if (GUI.Button(new Rect(10, y, scrollArea.width - 20, 20), subDir))
             {
-                MaterialSelected(materials[i]);
+                MaterialDirectorySelected(materialSubDirectories[i]);
             }
+            y += 25;
+        }
+        for (int i = 0; i < materialPreviews.Count; i++)
+        {
+            Texture materialPreview = materialPreviews[i];
+            if (GUI.Button(new Rect(10, y, scrollArea.width - 20, scrollArea.width - 20), materialPreview))
+            {
+                MaterialSelected(materialNames[i]);
+            }
+            y += scrollArea.width - 20;
         }
         GUI.EndScrollView();
     }
@@ -54,21 +70,55 @@ public class VoxelEditorGUI : MonoBehaviour {
     void UpdateMaterialDirectory()
     {
         Debug.Log(materialDirectory);
-        materials = new List<string>();
-        materials.Add("..");
+        materialSubDirectories = new List<string>();
+        materialSubDirectories.Add("..");
+        materialNames = new List<string>();
+        materialPreviews = new List<Texture>();
         foreach (string dirEntry in dirList)
         {
             if (dirEntry.Length <= 2)
                 continue;
             string newDirEntry = dirEntry.Substring(2);
             string directory = Path.GetDirectoryName(newDirEntry);
+            if (directory != materialDirectory)
+                continue;
             string extension = Path.GetExtension(newDirEntry);
-            if (directory == materialDirectory && (extension == ".mat" || extension == ""))
-                materials.Add(Path.GetFileName(newDirEntry));
+            if (extension == "")
+                materialSubDirectories.Add(Path.GetFileName(newDirEntry));
+            else if (extension == ".mat")
+            {
+                materialNames.Add(Path.GetFileNameWithoutExtension(newDirEntry));
+                Material material = Resources.Load<Material>(directory + "/" + Path.GetFileNameWithoutExtension(newDirEntry));
+                if (material == null)
+                {
+                    materialPreviews.Add(null);
+                    continue;
+                }
+                Texture previewTexture = material.mainTexture;
+                if (previewTexture == null)
+                {
+                    if (material.color != null)
+                    {
+                        Texture2D solidColorTexture = new Texture2D(128, 128);
+                        for (int y = 0; y < solidColorTexture.height; y++)
+                        {
+                            for (int x = 0; x < solidColorTexture.height; x++)
+                            {
+                                solidColorTexture.SetPixel(x, y, material.color);
+                            }
+                        }
+                        solidColorTexture.Apply();
+                        previewTexture = solidColorTexture;
+                    }
+                }
+                materialPreviews.Add(previewTexture);
+            }
         }
+
+        Resources.UnloadUnusedAssets();
     }
 
-    void MaterialSelected(string name)
+    void MaterialDirectorySelected(string name)
     {
         if (name == "..")
         {
@@ -76,17 +126,17 @@ public class VoxelEditorGUI : MonoBehaviour {
             UpdateMaterialDirectory();
             return;
         }
-        if (name.EndsWith(".mat"))
-        {
-            string materialPath = materialDirectory + "/" + Path.GetFileNameWithoutExtension(name);
-            Material material = Resources.Load<Material>(materialPath);
-            Debug.Log(material);
-            voxelArray.TestAssignMaterial(material);
-        }
         else
         {
             materialDirectory += "/" + name;
             UpdateMaterialDirectory();
         }
+    }
+
+    void MaterialSelected(string name)
+    {
+        string materialPath = materialDirectory + "/" + name;
+        Material material = Resources.Load<Material>(materialPath);
+        voxelArray.TestAssignMaterial(material);
     }
 }
