@@ -11,6 +11,7 @@ public class VoxelEditorGUI : MonoBehaviour {
     public float scaleFactor;
 
     public VoxelArray voxelArray;
+    public Transform cameraPivot;
 
     string[] dirList;
 
@@ -33,6 +34,16 @@ public class VoxelEditorGUI : MonoBehaviour {
         GUI.matrix = Matrix4x4.Scale(new Vector3(scaleFactor, scaleFactor, 1));
 
         guiRect = new Rect(10, 10, 180, targetHeight - 20);
+
+        if (GUI.Button(new Rect(guiRect.xMax + 10, 10, 80, 20), "Save"))
+        {
+            MapFileWriter writer = new MapFileWriter("mapsave");
+            writer.Write(cameraPivot, voxelArray);
+        }
+
+        if (GUI.Button(new Rect(guiRect.xMax + 100, 10, 80, 20), "Load"))
+        {
+        }
 
         // Make a background box
         GUI.Box(guiRect, "Assign Material");

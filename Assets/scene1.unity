@@ -457,6 +457,7 @@ MonoBehaviour:
     height: 200
   scaleFactor: 0
   voxelArray: {fileID: 213926859}
+  cameraPivot: {fileID: 661348387}
 --- !u!4 &878046149
 Transform:
   m_ObjectHideFlags: 0
