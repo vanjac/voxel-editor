@@ -20,7 +20,6 @@ public class VoxelArray : MonoBehaviour {
     }
 
     public Transform axes;
-    private Material[] testMaterials;
 
     // select state
     bool selection = false;
@@ -29,7 +28,7 @@ public class VoxelArray : MonoBehaviour {
     List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
 
 	void Start () {
-        testMaterials = new Material[]
+        Material[] testMaterials = new Material[]
         {
             Resources.Load<Material>("GameAssets/Materials/Red"),
             Resources.Load<Material>("GameAssets/Materials/Yellow"),
