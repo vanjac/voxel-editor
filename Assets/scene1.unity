@@ -458,7 +458,8 @@ MonoBehaviour:
   scaleFactor: 0
   voxelArray: {fileID: 213926859}
   cameraPivot: {fileID: 661348387}
-  guiSkin: {fileID: 11400000, guid: ddb3fafb1b405da448d603429302de39, type: 2}
+  guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
+  propertiesScroll: {x: 0, y: 0}
 --- !u!4 &878046149
 Transform:
   m_ObjectHideFlags: 0
