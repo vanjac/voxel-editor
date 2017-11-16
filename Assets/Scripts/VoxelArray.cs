@@ -104,6 +104,16 @@ public class VoxelArray : MonoBehaviour {
         Destroy(voxel.gameObject);
     }
 
+    public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()
+    {
+        foreach (Transform childTransform in transform)
+        {
+            Voxel v = childTransform.GetComponent<Voxel>();
+            if (v != null)
+                yield return v;
+        }
+    }
+
     // below Select functions are called by the camera
 
     public void SelectBackground()
@@ -155,9 +165,8 @@ public class VoxelArray : MonoBehaviour {
         largerSelectCurrentBounds.Expand(new Vector3(0.1f, 0.1f, 0.1f));
 
         // update selection...
-        foreach (Transform childTransform in transform)
+        foreach (Voxel checkVoxel in IterateVoxels())
         {
-            Voxel checkVoxel = childTransform.GetComponent<Voxel>();
             bool updateCheckVoxel = false;
             for (int checkFaceI = 0; checkFaceI < 6; checkFaceI++)
             {
