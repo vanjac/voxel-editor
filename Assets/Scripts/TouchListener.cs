@@ -66,6 +66,11 @@ public class TouchListener : MonoBehaviour {
                 }
             }
 
+            if (currentTouchOperation == TouchOperation.GUI)
+            {
+                editorGUI.propertiesScroll.y += touch.deltaPosition.y / editorGUI.scaleFactor;
+            }
+
             if (currentTouchOperation != TouchOperation.SELECT)
                 return;
 

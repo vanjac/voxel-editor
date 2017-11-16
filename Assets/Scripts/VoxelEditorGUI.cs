@@ -12,6 +12,8 @@ public class VoxelEditorGUI : MonoBehaviour {
 
     public VoxelArray voxelArray;
     public Transform cameraPivot;
+    public GUISkin guiSkin;
+    public Vector2 propertiesScroll;
 
     string[] dirList;
 
@@ -19,7 +21,6 @@ public class VoxelEditorGUI : MonoBehaviour {
     List<Texture> materialPreviews;
     string materialDirectory = "GameAssets/Materials";
     List<string> materialSubDirectories;
-    Vector2 matListScroll;
 
     void Start()
     {
@@ -30,10 +31,12 @@ public class VoxelEditorGUI : MonoBehaviour {
 
     void OnGUI()
     {
+        GUI.skin = guiSkin;
+
         scaleFactor = Screen.height / targetHeight;
         GUI.matrix = Matrix4x4.Scale(new Vector3(scaleFactor, scaleFactor, 1));
 
-        guiRect = new Rect(10, 10, 180, targetHeight - 20);
+        guiRect = new Rect(0, 0, 180, targetHeight);
 
         if (GUI.Button(new Rect(guiRect.xMax + 10, 10, 80, 20), "Save"))
         {
@@ -52,16 +55,18 @@ public class VoxelEditorGUI : MonoBehaviour {
         if (materialPreviews == null)
             return;
         Rect scrollBox = new Rect(guiRect.xMin, guiRect.yMin + 40, guiRect.width, guiRect.height - 40);
-        float scrollAreaWidth = guiRect.width - 40;
-        float scrollAreaHeight = materialSubDirectories.Count * 25 + materialPreviews.Count * (scrollAreaWidth - 20);
+        float scrollAreaWidth = guiRect.width - 5;
+        float buttonWidth = scrollAreaWidth - 20;
+        float scrollAreaHeight = materialSubDirectories.Count * 25 + materialPreviews.Count * buttonWidth;
         Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
-        matListScroll = GUI.BeginScrollView(scrollBox, matListScroll, scrollArea);
+        propertiesScroll = GUI.BeginScrollView(scrollBox, propertiesScroll, scrollArea);
         float y = 0;
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
             string subDir = materialSubDirectories[i];
-            if (GUI.Button(new Rect(10, y, scrollArea.width - 20, 20), subDir))
+            if (GUI.Button(new Rect(10, y, buttonWidth, 20), subDir))
             {
+                propertiesScroll = new Vector2(0, 0);
                 MaterialDirectorySelected(materialSubDirectories[i]);
             }
             y += 25;
@@ -69,11 +74,11 @@ public class VoxelEditorGUI : MonoBehaviour {
         for (int i = 0; i < materialPreviews.Count; i++)
         {
             Texture materialPreview = materialPreviews[i];
-            if (GUI.Button(new Rect(10, y, scrollArea.width - 20, scrollArea.width - 20), materialPreview))
+            if (GUI.Button(new Rect(10, y, buttonWidth, buttonWidth), materialPreview))
             {
                 MaterialSelected(materialNames[i]);
             }
-            y += scrollArea.width - 20;
+            y += buttonWidth;
         }
         GUI.EndScrollView();
     }
