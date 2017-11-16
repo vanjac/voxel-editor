@@ -97,19 +97,17 @@ public class VoxelEditorGUI : MonoBehaviour {
                 Texture previewTexture = material.mainTexture;
                 if (previewTexture == null)
                 {
-                    if (material.color != null)
+                    // color is a value type, so the color will never be null
+                    Texture2D solidColorTexture = new Texture2D(128, 128);
+                    for (int y = 0; y < solidColorTexture.height; y++)
                     {
-                        Texture2D solidColorTexture = new Texture2D(128, 128);
-                        for (int y = 0; y < solidColorTexture.height; y++)
+                        for (int x = 0; x < solidColorTexture.height; x++)
                         {
-                            for (int x = 0; x < solidColorTexture.height; x++)
-                            {
-                                solidColorTexture.SetPixel(x, y, material.color);
-                            }
+                            solidColorTexture.SetPixel(x, y, material.color);
                         }
-                        solidColorTexture.Apply();
-                        previewTexture = solidColorTexture;
                     }
+                    solidColorTexture.Apply();
+                    previewTexture = solidColorTexture;
                 }
                 materialPreviews.Add(previewTexture);
             }
