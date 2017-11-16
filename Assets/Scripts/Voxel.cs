@@ -46,8 +46,6 @@ public class Voxel : MonoBehaviour
 
     static Material selectedMaterial = null;
 
-    public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
-
     public static Vector3 NormalForFaceI(int faceI)
     {
         switch (faceI)
@@ -91,6 +89,8 @@ public class Voxel : MonoBehaviour
     {
         return (faceI / 2) * 2 + (faceI % 2 == 0 ? 1 : 0);
     }
+
+    public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
 
 	void Start ()
     {
