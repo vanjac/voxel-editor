@@ -15,8 +15,6 @@ public class VoxelEditorGUI : MonoBehaviour {
     public GUISkin guiSkin;
     public Vector2 propertiesScroll;
 
-    string[] dirList;
-
     List<string> materialNames;
     List<Texture> materialPreviews;
     string materialDirectory = "GameAssets/Materials";
@@ -24,8 +22,6 @@ public class VoxelEditorGUI : MonoBehaviour {
 
     void Start()
     {
-        TextAsset dirListText = Resources.Load<TextAsset>("dirlist");
-        dirList = dirListText.text.Split('\n');
         UpdateMaterialDirectory();
     }
 
@@ -46,6 +42,8 @@ public class VoxelEditorGUI : MonoBehaviour {
 
         if (GUI.Button(new Rect(guiRect.xMax + 100, 10, 80, 20), "Load"))
         {
+            MapFileReader reader = new MapFileReader("mapsave");
+            reader.Read(cameraPivot, voxelArray);
         }
 
         // Make a background box
@@ -54,7 +52,7 @@ public class VoxelEditorGUI : MonoBehaviour {
 
         if (materialPreviews == null)
             return;
-        Rect scrollBox = new Rect(guiRect.xMin, guiRect.yMin + 40, guiRect.width, guiRect.height - 40);
+        Rect scrollBox = new Rect(guiRect.xMin, guiRect.yMin + 25, guiRect.width, guiRect.height - 25);
         float scrollAreaWidth = guiRect.width - 5;
         float buttonWidth = scrollAreaWidth - 20;
         float scrollAreaHeight = materialSubDirectories.Count * 25 + materialPreviews.Count * buttonWidth;
@@ -90,7 +88,7 @@ public class VoxelEditorGUI : MonoBehaviour {
         materialSubDirectories.Add("..");
         materialNames = new List<string>();
         materialPreviews = new List<Texture>();
-        foreach (string dirEntry in dirList)
+        foreach (string dirEntry in ResourcesDirectory.dirList)
         {
             if (dirEntry.Length <= 2)
                 continue;

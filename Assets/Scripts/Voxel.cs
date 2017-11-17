@@ -141,6 +141,14 @@ public class Voxel : MonoBehaviour
         return true;
     }
 
+    public void Clear()
+    {
+        for (int faceI = 0; faceI < faces.Length; faceI++)
+        {
+            faces[faceI].Clear();
+        }
+    }
+
     public void UpdateVoxel()
     {
         int numFilledFaces = 0;

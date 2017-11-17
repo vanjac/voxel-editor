@@ -101,6 +101,7 @@ public class VoxelArray : MonoBehaviour {
     public void RemoveVoxel(Voxel voxel)
     {
         Destroy(voxel.gameObject);
+        Resources.UnloadUnusedAssets();
     }
 
     public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()
@@ -110,6 +111,23 @@ public class VoxelArray : MonoBehaviour {
             Voxel v = childTransform.GetComponent<Voxel>();
             if (v != null)
                 yield return v;
+        }
+    }
+
+    public void ClearAll()
+    {
+        SelectBackground();
+        foreach (Voxel voxel in IterateVoxels())
+        {
+            voxel.Clear();
+        }
+    }
+
+    public void UpdateAll()
+    {
+        foreach (Voxel voxel in IterateVoxels())
+        {
+            VoxelModified(voxel);
         }
     }
 
