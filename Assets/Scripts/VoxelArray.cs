@@ -20,6 +20,8 @@ public class VoxelArray : MonoBehaviour {
     }
 
     public Transform axes;
+    public GameObject voxelPrefab;
+    public Material selectedMaterial;
 
     // select state
     bool selection = false;
@@ -28,6 +30,8 @@ public class VoxelArray : MonoBehaviour {
     List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
 
 	void Start () {
+        Voxel.selectedMaterial = selectedMaterial;
+
         Material[] testMaterials = new Material[]
         {
             Resources.Load<Material>("GameAssets/Materials/Red"),
@@ -83,7 +87,7 @@ public class VoxelArray : MonoBehaviour {
 
     public Voxel CreateVoxel(Vector3 position)
     {
-        GameObject voxelObject = Instantiate(Resources.Load<GameObject>("VoxelPrefab"));
+        GameObject voxelObject = Instantiate(voxelPrefab);
         voxelObject.transform.position = position;
         voxelObject.transform.parent = transform;
         voxelObject.name = "Voxel at " + position;

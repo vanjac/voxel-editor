@@ -153,6 +153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axes: {fileID: 609989223}
+  voxelPrefab: {fileID: 1695945752962522, guid: 6aaef85e5238dcc4e9250d27386663fb,
+    type: 2}
+  selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
 --- !u!1 &416192707
 GameObject:
   m_ObjectHideFlags: 0

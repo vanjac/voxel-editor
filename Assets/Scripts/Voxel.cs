@@ -44,7 +44,7 @@ public class Voxel : MonoBehaviour
 
     public static VoxelFace EMPTY_FACE = new VoxelFace();
 
-    static Material selectedMaterial = null;
+    public static Material selectedMaterial; // set by VoxelArray instance
 
     public static Vector3 NormalForFaceI(int faceI)
     {
@@ -94,9 +94,6 @@ public class Voxel : MonoBehaviour
 
 	void Start ()
     {
-        if (selectedMaterial == null)
-            selectedMaterial = Resources.Load<Material>("Materials/Selected");
-
         UpdateVoxel();
 	}
 
