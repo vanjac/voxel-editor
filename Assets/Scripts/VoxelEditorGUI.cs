@@ -134,13 +134,17 @@ public class VoxelEditorGUI : MonoBehaviour {
     {
         if (name == "..")
         {
-            materialDirectory = Path.GetDirectoryName(materialDirectory);
+            if(materialDirectory.Trim() != "")
+                materialDirectory = Path.GetDirectoryName(materialDirectory);
             UpdateMaterialDirectory();
             return;
         }
         else
         {
-            materialDirectory += "/" + name;
+            if (materialDirectory.Trim() == "")
+                materialDirectory = name;
+            else
+                materialDirectory += "/" + name;
             UpdateMaterialDirectory();
         }
     }
