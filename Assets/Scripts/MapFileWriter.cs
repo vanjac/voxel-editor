@@ -5,6 +5,9 @@ using UnityEngine;
 using SimpleJSON;
 
 public class MapFileWriter {
+    public const int VERSION = 0;
+    private const int FILE_MIN_READER_VERSION = 0;
+
     private string fileName;
 
     public MapFileWriter(string fileName)
@@ -15,6 +18,9 @@ public class MapFileWriter {
     public void Write(Transform cameraPivot, VoxelArray voxelArray)
     {
         JSONObject root = new JSONObject();
+
+        root["writerVersion"] = VERSION;
+        root["minReaderVersion"] = FILE_MIN_READER_VERSION;
 
         JSONObject camera = new JSONObject();
         camera["pan"] = WriteVector3(cameraPivot.position);

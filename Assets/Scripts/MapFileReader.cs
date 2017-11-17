@@ -5,6 +5,8 @@ using UnityEngine;
 using SimpleJSON;
 
 public class MapFileReader {
+    public const int VERSION = MapFileWriter.VERSION;
+
     private string fileName;
 
     public MapFileReader(string fileName)
@@ -42,9 +44,14 @@ public class MapFileReader {
 
         JSONNode rootNode = JSON.Parse(jsonString);
         JSONObject root = rootNode.AsObject;
-        if (root == null)
+        if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
         {
             Debug.Log("Invalid map file!");
+            return;
+        }
+        if (root["minReaderVersion"].AsInt > VERSION)
+        {
+            Debug.Log("This map file is for a new version of the editor!");
             return;
         }
 
