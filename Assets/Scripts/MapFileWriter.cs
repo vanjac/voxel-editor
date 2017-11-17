@@ -31,7 +31,6 @@ public class MapFileWriter {
         root["world"] = WriteWorld(voxelArray);
 
         string filePath = Application.persistentDataPath + "/" + fileName + ".json.gz";
-        Debug.Log("Writing to " + filePath);
         using (FileStream fileStream = File.Create(filePath))
         {
             using (GZipStream zipStream = new GZipStream(fileStream, CompressionMode.Compress))
