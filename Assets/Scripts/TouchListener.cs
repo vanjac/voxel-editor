@@ -12,6 +12,7 @@ public class TouchListener : MonoBehaviour {
     }
 
     public VoxelEditorGUI editorGUI;
+    public VoxelArray voxelArray;
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;
     Transform pivot;
@@ -35,7 +36,6 @@ public class TouchListener : MonoBehaviour {
 
             Voxel voxel;
             int faceI;
-            VoxelArray voxelArray;
 
             if (currentTouchOperation == TouchOperation.NONE)
             {
@@ -48,10 +48,10 @@ public class TouchListener : MonoBehaviour {
 
                     if (editorGUI.guiRect.Contains(guiPos))
                         currentTouchOperation = TouchOperation.GUI;
-                    else if (!GetTouchSelection(out voxel, out faceI, out voxelArray))
+                    else if (!GetTouchSelection(out voxel, out faceI))
                     {
                         // ray hit nothing
-                        GameObject.FindGameObjectWithTag("VoxelArray").GetComponent<VoxelArray>().SelectBackground();
+                        voxelArray.SelectBackground();
                         currentTouchOperation = TouchOperation.NONE;
                     }
                     else if (voxel != null)
@@ -74,7 +74,7 @@ public class TouchListener : MonoBehaviour {
             if (currentTouchOperation != TouchOperation.SELECT)
                 return;
 
-            GetTouchSelection(out voxel, out faceI, out voxelArray);
+            GetTouchSelection(out voxel, out faceI);
             if (voxel != null)
             {
                 voxelArray.SelectDrag(voxel, faceI);
@@ -129,11 +129,10 @@ public class TouchListener : MonoBehaviour {
         }
 	}
 
-    private bool GetTouchSelection(out Voxel voxel, out int faceI, out VoxelArray voxelArray)
+    private bool GetTouchSelection(out Voxel voxel, out int faceI)
     {
         voxel = null;
         faceI = -1;
-        voxelArray = null;
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.GetTouch(0).position), out hit))
         {
@@ -144,13 +143,11 @@ public class TouchListener : MonoBehaviour {
                 if (faceI == -1)
                     voxel = null;
             }
+            return true;
         }
         else
         {
             return false;
         }
-        if (voxel != null)
-            voxelArray = voxel.transform.parent.GetComponent<VoxelArray>();
-        return true;
     }
 }

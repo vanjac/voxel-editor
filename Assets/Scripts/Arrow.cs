@@ -5,21 +5,20 @@ using UnityEngine;
 public class Arrow : MonoBehaviour {
 
     public Vector3 forwardDirection;
+    public Camera camera;
     public VoxelArray voxelArray;
     float lastUpdatePosition;
     Vector3 prevMousePosition;
     LineRenderer lineRenderer;
-    Camera cam;
 
 	// Use this for initialization
 	void Start () {
-        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         lineRenderer = GetComponent<LineRenderer>();
 	}
 
     void Update()
     {
-        float distanceToCam = (transform.position - cam.transform.position).magnitude;
+        float distanceToCam = (transform.position - camera.transform.position).magnitude;
         transform.localScale = Vector3.one * distanceToCam / 5;
         lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
     }
@@ -41,13 +40,13 @@ public class Arrow : MonoBehaviour {
     {
         if (Input.touchCount > 1)
             return;
-        float distanceToCam = (transform.position - cam.transform.position).magnitude;
+        float distanceToCam = (transform.position - camera.transform.position).magnitude;
 
         Vector3 mouseMove = Input.mousePosition - prevMousePosition;
         prevMousePosition = Input.mousePosition;
 
-        Vector3 originScreenPos = cam.WorldToScreenPoint(transform.position);
-        Vector3 offsetScreenPos = cam.WorldToScreenPoint(transform.position + forwardDirection);
+        Vector3 originScreenPos = camera.WorldToScreenPoint(transform.position);
+        Vector3 offsetScreenPos = camera.WorldToScreenPoint(transform.position + forwardDirection);
         Vector3 screenMoveVector = offsetScreenPos - originScreenPos;
 
         float moveAmount = Vector3.Dot(mouseMove, screenMoveVector.normalized);

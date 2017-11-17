@@ -296,6 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forwardDirection: {x: 0, y: 1, z: 0}
+  camera: {fileID: 1179125980}
   voxelArray: {fileID: 213926859}
 --- !u!1 &609989222
 GameObject:
@@ -503,6 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forwardDirection: {x: 0, y: 0, z: 1}
+  camera: {fileID: 1179125980}
   voxelArray: {fileID: 213926859}
 --- !u!120 &1061257465
 LineRenderer:
@@ -710,6 +712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editorGUI: {fileID: 878046148}
+  voxelArray: {fileID: 213926859}
 --- !u!1 &1185221136
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,4 +856,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forwardDirection: {x: 1, y: 0, z: 0}
+  camera: {fileID: 1179125980}
   voxelArray: {fileID: 213926859}
