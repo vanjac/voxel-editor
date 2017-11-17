@@ -8,7 +8,7 @@ public class TouchListener : MonoBehaviour {
 
     enum TouchOperation
     {
-        NONE, SELECT, CAMERA, GUI
+        NONE, SELECT, CAMERA, GUI, MOVE
     }
 
     public VoxelEditorGUI editorGUI;
@@ -62,7 +62,7 @@ public class TouchListener : MonoBehaviour {
                     }
                     else
                         // ray hit something other than a voxel, probably adjust axes or something
-                        currentTouchOperation = TouchOperation.GUI;
+                        currentTouchOperation = TouchOperation.MOVE;
                 }
             }
 
