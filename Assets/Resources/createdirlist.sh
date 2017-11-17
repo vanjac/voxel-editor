@@ -1,1 +1,1 @@
-find . ! -name '*.meta' > dirlist.txt
+find . ! -name '*.meta' ! -name 'createdirlist.sh' > dirlist.txt

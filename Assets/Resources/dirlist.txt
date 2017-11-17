@@ -1,5 +1,4 @@
 .
-./createdirlist.sh
 ./dirlist.txt
 ./GameAssets
 ./GameAssets/Materials
@@ -509,6 +508,3 @@
 ./GameAssets/Materials/wood/WoodPlywoodKnots.mat
 ./GameAssets/Materials/wood/WoodPlywoodKnots.png
 ./GameAssets/Materials/Yellow.mat
-./Materials
-./Materials/Selected.mat
-./VoxelPrefab.prefab
