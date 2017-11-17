@@ -1,1 +1,1 @@
-find . > dirlist.txt
+find . ! -name '*.meta' > dirlist.txt
