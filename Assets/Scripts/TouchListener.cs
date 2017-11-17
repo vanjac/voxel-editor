@@ -11,7 +11,6 @@ public class TouchListener : MonoBehaviour {
         NONE, SELECT, CAMERA, GUI, MOVE
     }
 
-    public VoxelEditorGUI editorGUI;
     public VoxelArray voxelArray;
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;
@@ -42,11 +41,7 @@ public class TouchListener : MonoBehaviour {
                 // wait until moved or released, in case a multitouch operation is about to begin
                 if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Ended)
                 {
-                    Vector2 guiPos = touch.position;
-                    guiPos.y = Screen.height - guiPos.y;
-                    guiPos /= editorGUI.scaleFactor;
-
-                    if (editorGUI.guiRect.Contains(guiPos))
+                    if (GUIPanel.PanelContainingPoint(touch.position) != null)
                         currentTouchOperation = TouchOperation.GUI;
                     else if (!GetTouchSelection(out voxel, out faceI))
                     {
@@ -68,7 +63,9 @@ public class TouchListener : MonoBehaviour {
 
             if (currentTouchOperation == TouchOperation.GUI)
             {
-                editorGUI.propertiesScroll.y += touch.deltaPosition.y / editorGUI.scaleFactor;
+                GUIPanel panel = GUIPanel.PanelContainingPoint(touch.position);
+                if (panel != null)
+                    panel.scroll.y += touch.deltaPosition.y / panel.scaleFactor;
             }
 
             if (currentTouchOperation != TouchOperation.SELECT)

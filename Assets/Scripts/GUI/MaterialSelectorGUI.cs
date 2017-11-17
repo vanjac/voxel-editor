@@ -3,17 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class VoxelEditorGUI : MonoBehaviour {
-
-    const float targetHeight = 360;
-
-    public Rect guiRect;
-    public float scaleFactor;
-
+public class MaterialSelectorGUI : GUIPanel
+{
     public VoxelArray voxelArray;
-    public Transform cameraPivot;
-    public GUISkin guiSkin;
-    public Vector2 propertiesScroll;
 
     List<string> materialNames;
     List<Texture> materialPreviews;
@@ -23,48 +15,32 @@ public class VoxelEditorGUI : MonoBehaviour {
     void Start()
     {
         UpdateMaterialDirectory();
+        depth = -1;
     }
 
     void OnGUI()
     {
-        GUI.skin = guiSkin;
+        base.OnGUI();
 
-        scaleFactor = Screen.height / targetHeight;
-        GUI.matrix = Matrix4x4.Scale(new Vector3(scaleFactor, scaleFactor, 1));
+        panelRect = new Rect(200, 0, 180, PropertiesGUI.targetHeight);
 
-        guiRect = new Rect(0, 0, 180, targetHeight);
-
-        if (GUI.Button(new Rect(guiRect.xMax + 10, 10, 80, 20), "Save"))
-        {
-            MapFileWriter writer = new MapFileWriter("mapsave");
-            writer.Write(cameraPivot, voxelArray);
-        }
-
-        if (GUI.Button(new Rect(guiRect.xMax + 100, 10, 80, 20), "Load"))
-        {
-            MapFileReader reader = new MapFileReader("mapsave");
-            reader.Read(cameraPivot, voxelArray);
-        }
-
-        // Make a background box
-        GUI.Box(guiRect, "Assign Material");
-
+        GUI.Box(panelRect, "Assign Material");
 
         if (materialPreviews == null)
             return;
-        Rect scrollBox = new Rect(guiRect.xMin, guiRect.yMin + 25, guiRect.width, guiRect.height - 25);
-        float scrollAreaWidth = guiRect.width - 5;
+        Rect scrollBox = new Rect(panelRect.xMin, panelRect.yMin + 25, panelRect.width, panelRect.height - 25);
+        float scrollAreaWidth = panelRect.width - 1;
         float buttonWidth = scrollAreaWidth - 20;
         float scrollAreaHeight = materialSubDirectories.Count * 25 + materialPreviews.Count * buttonWidth;
         Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
-        propertiesScroll = GUI.BeginScrollView(scrollBox, propertiesScroll, scrollArea);
+        scroll = GUI.BeginScrollView(scrollBox, scroll, scrollArea);
         float y = 0;
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
             string subDir = materialSubDirectories[i];
             if (GUI.Button(new Rect(10, y, buttonWidth, 20), subDir))
             {
-                propertiesScroll = new Vector2(0, 0);
+                scroll = new Vector2(0, 0);
                 MaterialDirectorySelected(materialSubDirectories[i]);
             }
             y += 25;
@@ -134,7 +110,7 @@ public class VoxelEditorGUI : MonoBehaviour {
     {
         if (name == "..")
         {
-            if(materialDirectory.Trim() != "")
+            if (materialDirectory.Trim() != "")
                 materialDirectory = Path.GetDirectoryName(materialDirectory);
             UpdateMaterialDirectory();
             return;
@@ -154,5 +130,6 @@ public class VoxelEditorGUI : MonoBehaviour {
         string materialPath = materialDirectory + "/" + name;
         Material material = Resources.Load<Material>(materialPath);
         voxelArray.TestAssignMaterial(material);
+        Destroy(this);
     }
 }
