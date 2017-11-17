@@ -24,16 +24,17 @@ public class MapFileWriter {
 
         root["world"] = WriteWorld(voxelArray);
 
-        Debug.Log(root.ToString());
         string filePath = Application.persistentDataPath + "/" + fileName + ".json.gz";
         Debug.Log("Writing to " + filePath);
         using (FileStream fileStream = File.Create(filePath))
         {
             using (GZipStream zipStream = new GZipStream(fileStream, CompressionMode.Compress))
             {
-                var sw = new StreamWriter(zipStream);
-                sw.Write(root.ToString());
-                sw.Flush();
+                using (var sw = new StreamWriter(zipStream))
+                {
+                    sw.Write(root.ToString());
+                    sw.Flush();
+                }
             }
         }
     }
@@ -106,10 +107,10 @@ public class MapFileWriter {
     private JSONObject WriteFace(VoxelFace face, int faceI, List<string> materials)
     {
         JSONObject faceObject = new JSONObject();
-        faceObject["i"] = faceI;
+        faceObject["i"].AsInt = faceI;
         if (face.material != null)
         {
-            faceObject["mat"] = materials.IndexOf(face.material.name);
+            faceObject["mat"].AsInt = materials.IndexOf(face.material.name);
         }
         return faceObject;
     }
