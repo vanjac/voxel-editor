@@ -254,6 +254,8 @@
 ./GameAssets/Materials/water/WaterSparkling.mat
 ./GameAssets/Materials/water/WaterStream.mat
 ./GameAssets/Materials/water/WaterStreamShallow.mat
+./GameAssets/Materials/WaterBasicDaytime.mat
+./GameAssets/Materials/WaterBasicNighttime.mat
 ./GameAssets/Materials/wood
 ./GameAssets/Materials/wood/Wood01.mat
 ./GameAssets/Materials/wood/Wood02.mat
