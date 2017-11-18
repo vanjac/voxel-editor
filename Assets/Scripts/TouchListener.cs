@@ -33,7 +33,7 @@ public class TouchListener : MonoBehaviour {
             Touch touch = Input.GetTouch(0);
 
             RaycastHit hit;
-            bool rayHitSomething = Physics.Raycast(Camera.main.ScreenPointToRay(Input.GetTouch(0).position), out hit);
+            bool rayHitSomething = Physics.Raycast(GetComponent<Camera>().ScreenPointToRay(Input.GetTouch(0).position), out hit);
             Voxel hitVoxel = null;
             int hitFaceI = -1;
             MoveAxis hitMoveAxis = null;
@@ -125,7 +125,6 @@ public class TouchListener : MonoBehaviour {
             if (pivotRotationEuler.x < -90 || (pivotRotationEuler.x > 180 && pivotRotationEuler.x < 270))
                 pivotRotationEuler.x = -90;
             pivot.rotation = Quaternion.Euler(pivotRotationEuler);
-            return;
         }
         else if (Input.touchCount == 3)
         {
@@ -140,7 +139,17 @@ public class TouchListener : MonoBehaviour {
             move /= 3;
             pivot.position -= move.x * pivot.right * pivot.localScale.z / 60;
             pivot.position -= move.y * pivot.up * pivot.localScale.z / 60;
-            return;
+
+            // as the camera is moving, adjust the depth of the pivot point to the depth at the center of the screen
+            RaycastHit hit;
+            Debug.DrawRay(transform.position, transform.forward * 20, Color.black);
+            if (Physics.Raycast(transform.position, transform.forward, out hit))
+            {
+                float currentDistanceToCamera = (pivot.position - transform.position).magnitude;
+                float newDistanceToCamera = (hit.point - transform.position).magnitude;
+                pivot.position = hit.point;
+                pivot.localScale *= newDistanceToCamera / currentDistanceToCamera;
+            }
         }
 	}
 }
