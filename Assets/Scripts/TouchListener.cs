@@ -15,12 +15,10 @@ public class TouchListener : MonoBehaviour {
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;
     Transform pivot;
-    Vector3 pivotRotationEuler;
 
     void Start()
     {
         pivot = transform.parent;
-        pivotRotationEuler = pivot.rotation.eulerAngles;
     }
 
 	void Update ()
@@ -97,11 +95,12 @@ public class TouchListener : MonoBehaviour {
                 pivot.localScale *= scaleFactor;
 
             Vector3 move = (touchZero.deltaPosition + touchOne.deltaPosition) / 2;
+            Vector3 pivotRotationEuler = pivot.rotation.eulerAngles;
             pivotRotationEuler.y += move.x * 0.3f;
             pivotRotationEuler.x -= move.y * 0.3f;
-            if (pivotRotationEuler.x > 90)
+            if (pivotRotationEuler.x > 90 && pivotRotationEuler.x < 180)
                 pivotRotationEuler.x = 90;
-            if (pivotRotationEuler.x < -90)
+            if (pivotRotationEuler.x < -90 || (pivotRotationEuler.x > 180 && pivotRotationEuler.x < 270))
                 pivotRotationEuler.x = -90;
             pivot.rotation = Quaternion.Euler(pivotRotationEuler);
             return;
