@@ -12,17 +12,18 @@ public class MaterialSelectorGUI : GUIPanel
     string materialDirectory = "GameAssets/Materials";
     List<string> materialSubDirectories;
 
-    void Start()
+    void OnEnable()
     {
         UpdateMaterialDirectory();
         depth = -1;
+        base.OnEnable();
     }
 
     void OnGUI()
     {
         base.OnGUI();
 
-        panelRect = new Rect(200, 0, 180, PropertiesGUI.targetHeight);
+        panelRect = new Rect(scaledScreenWidth - 180, 0, 180, PropertiesGUI.targetHeight);
 
         GUI.Box(panelRect, "Assign Material");
 

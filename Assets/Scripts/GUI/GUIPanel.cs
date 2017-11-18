@@ -10,6 +10,7 @@ public class GUIPanel : MonoBehaviour {
     public GUISkin guiSkin;
 
     static List<GUIPanel> openPanels = new List<GUIPanel>();
+    static int frontDepth = 0;
 
     public Rect panelRect;
     public Vector2 scroll = new Vector2(0, 0);
@@ -22,11 +23,19 @@ public class GUIPanel : MonoBehaviour {
     public void OnEnable()
     {
         openPanels.Add(this);
+        if (depth < frontDepth)
+            frontDepth = depth;
     }
 
     public void OnDisable()
     {
         openPanels.Remove(this);
+        frontDepth = 999;
+        foreach (GUIPanel panel in openPanels)
+        {
+            if (panel.depth < frontDepth)
+                frontDepth = panel.depth;
+        }
     }
 
     public void OnGUI()
@@ -37,6 +46,8 @@ public class GUIPanel : MonoBehaviour {
         GUI.skin = globalGUISkin;
         GUI.depth = 1;
         GUI.enabled = true;
+        if (depth > frontDepth)
+            GUI.enabled = false;
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
@@ -44,6 +55,8 @@ public class GUIPanel : MonoBehaviour {
                 touchMoved = true;
             if (touchMoved && PanelContainsPoint(touch.position))
                 GUI.enabled = false;
+            if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position) && depth < 0)
+                Destroy(this);
         }
         else
         {
