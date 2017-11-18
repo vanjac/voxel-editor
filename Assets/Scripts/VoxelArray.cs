@@ -110,13 +110,18 @@ public class VoxelArray : MonoBehaviour {
         }
     }
 
+    private Vector3Int Vector3ToInt(Vector3 v)
+    {
+        return new Vector3Int(
+            Mathf.RoundToInt(v.x),
+            Mathf.RoundToInt(v.y),
+            Mathf.RoundToInt(v.z)
+            );
+    }
+
     public Voxel VoxelAt(Vector3 position, bool createIfMissing)
     {
-        Vector3Int intPosition = new Vector3Int(
-            Mathf.RoundToInt(position.x),
-            Mathf.RoundToInt(position.y),
-            Mathf.RoundToInt(position.z)
-            );
+        Vector3Int intPosition = Vector3ToInt(position);
         if (!rootNode.InBounds(intPosition))
         {
             // will it be the large end of the new node that will be created
@@ -176,6 +181,41 @@ public class VoxelArray : MonoBehaviour {
         return SearchOctreeRecursive(branch, position, createIfMissing);
     }
 
+    // return if empty
+    private bool RemoveVoxelRecursive(OctreeNode node, Vector3Int position, Voxel voxelToRemove)
+    {
+        if (node.size == 1)
+        {
+            // the voxel could have alreay been replaced with a new one
+            if (node.voxel == voxelToRemove)
+            {
+                node.voxel = null;
+                return true;
+            }
+            return false;
+        }
+
+        int halfSize = node.size / 2;
+        bool xLarge = position.x >= node.position.x + halfSize;
+        bool yLarge = position.y >= node.position.y + halfSize;
+        bool zLarge = position.z >= node.position.z + halfSize;
+        int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
+        OctreeNode branch = node.branches[branchI];
+
+        if (branch != null)
+            if (RemoveVoxelRecursive(branch, position, voxelToRemove))
+            {
+                node.branches[branchI] = null;
+            }
+
+        for (int i = 0; i < 8; i++)
+        {
+            if (node.branches[i] != null)
+                return false;
+        }
+        return true;
+    }
+
     public void VoxelModified(Voxel voxel)
     {
         if (voxel.IsEmpty())
@@ -190,13 +230,34 @@ public class VoxelArray : MonoBehaviour {
         unloadUnusedAssets = true;
     }
 
+    // called by voxels that are being destroyed
+    public void VoxelDestroyed(Voxel voxel)
+    {
+        RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
+    }
+
     public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()
     {
-        foreach (Transform childTransform in transform)
+        foreach (Voxel v in IterateOctree(rootNode))
+            yield return v;
+    }
+
+    private System.Collections.Generic.IEnumerable<Voxel> IterateOctree(OctreeNode node)
+    {
+        if (node == null)
+        { }
+        else if (node.size == 1)
         {
-            Voxel v = childTransform.GetComponent<Voxel>();
-            if (v != null)
-                yield return v;
+            if (node.voxel != null)
+                yield return node.voxel;
+        }
+        else
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                foreach (Voxel v in IterateOctree(node.branches[i]))
+                    yield return v;
+            }
         }
     }
 

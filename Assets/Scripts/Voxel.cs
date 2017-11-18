@@ -146,6 +146,12 @@ public class Voxel : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        VoxelArray array = transform.parent.GetComponent<VoxelArray>();
+        array.VoxelDestroyed(this);
+    }
+
     public void UpdateVoxel()
     {
         int numFilledFaces = 0;
