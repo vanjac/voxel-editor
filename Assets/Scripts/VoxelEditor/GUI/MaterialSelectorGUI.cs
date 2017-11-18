@@ -87,13 +87,19 @@ public class MaterialSelectorGUI : GUIPanel
                 Texture previewTexture = material.mainTexture;
                 if (previewTexture == null)
                 {
-                    // color is a value type, so the color will never be null
+                    Color color;
+                    if (material.HasProperty("_Color"))
+                    {
+                        color = material.color;
+                    } else {
+                        color = Color.white;
+                    }
                     Texture2D solidColorTexture = new Texture2D(128, 128);
                     for (int y = 0; y < solidColorTexture.height; y++)
                     {
                         for (int x = 0; x < solidColorTexture.height; x++)
                         {
-                            solidColorTexture.SetPixel(x, y, material.color);
+                            solidColorTexture.SetPixel(x, y, color);
                         }
                     }
                     solidColorTexture.Apply();
