@@ -9,7 +9,7 @@ public class PropertiesGUI : GUIPanel {
 
     MaterialSelectorGUI materialSelector;
 
-    void OnGUI()
+    public override void OnGUI()
     {
         base.OnGUI();
 

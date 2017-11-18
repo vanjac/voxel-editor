@@ -12,14 +12,14 @@ public class MaterialSelectorGUI : GUIPanel
     string materialDirectory = "GameAssets/Materials";
     List<string> materialSubDirectories;
 
-    void OnEnable()
+    public override void OnEnable()
     {
         UpdateMaterialDirectory();
         depth = -1;
         base.OnEnable();
     }
 
-    void OnGUI()
+    public override void OnGUI()
     {
         base.OnGUI();
 

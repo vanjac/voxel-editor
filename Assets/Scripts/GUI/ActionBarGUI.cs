@@ -7,7 +7,7 @@ public class ActionBarGUI : GUIPanel
     public VoxelArray voxelArray;
     public Transform cameraPivot;
 
-    void OnGUI()
+    public override void OnGUI()
     {
         base.OnGUI();
 

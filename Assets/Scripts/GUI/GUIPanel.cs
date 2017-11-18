@@ -20,14 +20,14 @@ public class GUIPanel : MonoBehaviour {
 
     private bool touchMoved = false;
 
-    public void OnEnable()
+    public virtual void OnEnable()
     {
         openPanels.Add(this);
         if (depth < frontDepth)
             frontDepth = depth;
     }
 
-    public void OnDisable()
+    public virtual void OnDisable()
     {
         openPanels.Remove(this);
         frontDepth = 999;
@@ -38,7 +38,7 @@ public class GUIPanel : MonoBehaviour {
         }
     }
 
-    public void OnGUI()
+    public virtual void OnGUI()
     {
         if (globalGUISkin == null)
             globalGUISkin = guiSkin;
