@@ -38,27 +38,24 @@ public class TouchListener : MonoBehaviour {
 
             if (currentTouchOperation == TouchOperation.NONE)
             {
-                // wait until moved or released, in case a multitouch operation is about to begin
-                if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Ended)
+                if (GUIPanel.PanelContainingPoint(touch.position) != null)
+                    currentTouchOperation = TouchOperation.GUI;
+                else if (touch.phase != TouchPhase.Moved && touch.phase != TouchPhase.Ended)
+                    ; // wait until moved or released, in case a multitouch operation is about to begin
+                else if (!GetTouchSelection(out voxel, out faceI))
                 {
-                    if (GUIPanel.PanelContainingPoint(touch.position) != null)
-                        currentTouchOperation = TouchOperation.GUI;
-                    else if (!GetTouchSelection(out voxel, out faceI))
-                    {
-                        // ray hit nothing
-                        voxelArray.SelectBackground();
-                        currentTouchOperation = TouchOperation.NONE;
-                    }
-                    else if (voxel != null)
-                    {
-                        // ray hit a voxel
-                        voxelArray.SelectDown(voxel, faceI);
-                        currentTouchOperation = TouchOperation.SELECT;
-                    }
-                    else
-                        // ray hit something other than a voxel, probably adjust axes or something
-                        currentTouchOperation = TouchOperation.MOVE;
+                    // ray hit nothing
+                    voxelArray.SelectBackground();
                 }
+                else if (voxel != null)
+                {
+                    // ray hit a voxel
+                    voxelArray.SelectDown(voxel, faceI);
+                    currentTouchOperation = TouchOperation.SELECT;
+                }
+                else
+                    // ray hit something other than a voxel, probably adjust axes or something
+                    currentTouchOperation = TouchOperation.MOVE;
             }
 
             if (currentTouchOperation == TouchOperation.GUI)
