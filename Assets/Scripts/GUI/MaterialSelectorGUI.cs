@@ -60,7 +60,6 @@ public class MaterialSelectorGUI : GUIPanel
 
     void UpdateMaterialDirectory()
     {
-        Debug.Log(materialDirectory);
         materialSubDirectories = new List<string>();
         materialSubDirectories.Add("..");
         materialNames = new List<string>();
