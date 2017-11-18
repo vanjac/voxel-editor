@@ -14,7 +14,7 @@ public class TouchListener : MonoBehaviour {
     public VoxelArray voxelArray;
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;
-    Arrow movingArrow;
+    MoveAxis movingAxis;
     Transform pivot;
 
     void Start()
@@ -36,7 +36,7 @@ public class TouchListener : MonoBehaviour {
             bool rayHitSomething = Physics.Raycast(Camera.main.ScreenPointToRay(Input.GetTouch(0).position), out hit);
             Voxel hitVoxel = null;
             int hitFaceI = -1;
-            Arrow hitArrow = null;
+            MoveAxis hitMoveAxis = null;
             if (rayHitSomething)
             {
                 GameObject hitObject = hit.transform.gameObject;
@@ -49,7 +49,7 @@ public class TouchListener : MonoBehaviour {
                 }
                 else if (hitObject.tag == "MoveAxis")
                 {
-                    hitArrow = hitObject.GetComponent<Arrow>();
+                    hitMoveAxis = hitObject.GetComponent<MoveAxis>();
                 }
             }
 
@@ -68,11 +68,11 @@ public class TouchListener : MonoBehaviour {
                     currentTouchOperation = TouchOperation.SELECT;
                     voxelArray.SelectDown(hitVoxel, hitFaceI);
                 }
-                else if (hitArrow != null)
+                else if (hitMoveAxis != null)
                 {
                     currentTouchOperation = TouchOperation.MOVE;
-                    movingArrow = hitArrow;
-                    movingArrow.TouchDown(touch);
+                    movingAxis = hitMoveAxis;
+                    movingAxis.TouchDown(touch);
                 }
             }
 
@@ -91,7 +91,7 @@ public class TouchListener : MonoBehaviour {
             }
             else if (currentTouchOperation == TouchOperation.MOVE)
             {
-                movingArrow.TouchDrag(touch);
+                movingAxis.TouchDrag(touch);
             }
         }
         if (Input.touchCount == 2)

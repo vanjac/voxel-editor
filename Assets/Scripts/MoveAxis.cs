@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Arrow : MonoBehaviour {
+public class MoveAxis : MonoBehaviour {
 
     public Vector3 forwardDirection;
     public Camera camera;
