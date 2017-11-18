@@ -66,12 +66,12 @@ public class VoxelArray : MonoBehaviour {
 
         Material[] testMaterials = new Material[]
         {
-            Resources.Load<Material>("GameAssets/Materials/Red"),
-            Resources.Load<Material>("GameAssets/Materials/Yellow"),
-            Resources.Load<Material>("GameAssets/Materials/Green"),
-            Resources.Load<Material>("GameAssets/Materials/Cyan"),
-            Resources.Load<Material>("GameAssets/Materials/Blue"),
-            Resources.Load<Material>("GameAssets/Materials/Magenta")
+            Resources.Load<Material>("GameAssets/Materials/colors/Red"),
+            Resources.Load<Material>("GameAssets/Materials/colors/Yellow"),
+            Resources.Load<Material>("GameAssets/Materials/colors/Green"),
+            Resources.Load<Material>("GameAssets/Materials/colors/Cyan"),
+            Resources.Load<Material>("GameAssets/Materials/colors/Blue"),
+            Resources.Load<Material>("GameAssets/Materials/colors/Magenta")
         };
 
         for (int x = -2; x <= 2; x++)
