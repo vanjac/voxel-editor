@@ -30,16 +30,13 @@ public class MapFileWriter {
 
         root["world"] = WriteWorld(voxelArray);
 
-        string filePath = Application.persistentDataPath + "/" + fileName + ".json.gz";
+        string filePath = Application.persistentDataPath + "/" + fileName + ".json";
         using (FileStream fileStream = File.Create(filePath))
         {
-            using (GZipStream zipStream = new GZipStream(fileStream, CompressionMode.Compress))
+            using (var sw = new StreamWriter(fileStream))
             {
-                using (var sw = new StreamWriter(zipStream))
-                {
-                    sw.Write(root.ToString());
-                    sw.Flush();
-                }
+                sw.Write(root.ToString());
+                sw.Flush();
             }
         }
     }

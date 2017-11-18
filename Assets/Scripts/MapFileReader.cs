@@ -30,15 +30,12 @@ public class MapFileReader {
     {
         string jsonString;
 
-        string filePath = Application.persistentDataPath + "/" + fileName + ".json.gz";
+        string filePath = Application.persistentDataPath + "/" + fileName + ".json";
         using (FileStream fileStream = File.Open(filePath, FileMode.Open))
         {
-            using (GZipStream zipStream = new GZipStream(fileStream, CompressionMode.Decompress))
+            using (var sr = new StreamReader(fileStream))
             {
-                using (var sr = new StreamReader(zipStream))
-                {
-                    jsonString = sr.ReadToEnd();
-                }
+                jsonString = sr.ReadToEnd();
             }
         }
 
