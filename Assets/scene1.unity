@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 416192709}
   m_Layer: 0
   m_Name: YAxis
-  m_TagString: Untagged
+  m_TagString: MoveAxis
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 1061257466}
   m_Layer: 0
   m_Name: ZAxis
-  m_TagString: Untagged
+  m_TagString: MoveAxis
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -754,7 +754,7 @@ GameObject:
   - component: {fileID: 1185221138}
   m_Layer: 0
   m_Name: XAxis
-  m_TagString: Untagged
+  m_TagString: MoveAxis
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

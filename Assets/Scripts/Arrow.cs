@@ -8,7 +8,6 @@ public class Arrow : MonoBehaviour {
     public Camera camera;
     public VoxelArray voxelArray;
     float lastUpdatePosition;
-    Vector3 prevMousePosition;
     LineRenderer lineRenderer;
 
 	// Use this for initialization
@@ -28,28 +27,22 @@ public class Arrow : MonoBehaviour {
         return Vector3.Dot(transform.parent.position, forwardDirection);
     }
 
-    void OnMouseDown()
+    // below Touch functions are called by Touch Listener
+
+    public void TouchDown(Touch touch)
     {
-        if (Input.touchCount > 1)
-            return;
         lastUpdatePosition = GetPosition();
-        prevMousePosition = Input.mousePosition;
     }
 
-    void OnMouseDrag()
+    public void TouchDrag(Touch touch)
     {
-        if (Input.touchCount > 1)
-            return;
         float distanceToCam = (transform.position - camera.transform.position).magnitude;
-
-        Vector3 mouseMove = Input.mousePosition - prevMousePosition;
-        prevMousePosition = Input.mousePosition;
 
         Vector3 originScreenPos = camera.WorldToScreenPoint(transform.position);
         Vector3 offsetScreenPos = camera.WorldToScreenPoint(transform.position + forwardDirection);
         Vector3 screenMoveVector = offsetScreenPos - originScreenPos;
 
-        float moveAmount = Vector3.Dot(mouseMove, screenMoveVector.normalized);
+        float moveAmount = Vector3.Dot(touch.deltaPosition, screenMoveVector.normalized);
         transform.parent.position += forwardDirection * moveAmount * distanceToCam / 500;
 
         float position = GetPosition();

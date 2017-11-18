@@ -14,6 +14,7 @@ public class TouchListener : MonoBehaviour {
     public VoxelArray voxelArray;
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;
+    Arrow movingArrow;
     Transform pivot;
 
     void Start()
@@ -31,8 +32,26 @@ public class TouchListener : MonoBehaviour {
         {
             Touch touch = Input.GetTouch(0);
 
-            Voxel voxel;
-            int faceI;
+            RaycastHit hit;
+            bool rayHitSomething = Physics.Raycast(Camera.main.ScreenPointToRay(Input.GetTouch(0).position), out hit);
+            Voxel hitVoxel = null;
+            int hitFaceI = -1;
+            Arrow hitArrow = null;
+            if (rayHitSomething)
+            {
+                GameObject hitObject = hit.transform.gameObject;
+                if (hitObject.tag == "Voxel")
+                {
+                    hitVoxel = hitObject.GetComponent<Voxel>();
+                    hitFaceI = Voxel.FaceIForNormal(hit.normal);
+                    if (hitFaceI == -1)
+                        hitVoxel = null;
+                }
+                else if (hitObject.tag == "MoveAxis")
+                {
+                    hitArrow = hitObject.GetComponent<Arrow>();
+                }
+            }
 
             if (currentTouchOperation == TouchOperation.NONE)
             {
@@ -40,20 +59,21 @@ public class TouchListener : MonoBehaviour {
                     currentTouchOperation = TouchOperation.GUI;
                 else if (touch.phase != TouchPhase.Moved && touch.phase != TouchPhase.Ended)
                     ; // wait until moved or released, in case a multitouch operation is about to begin
-                else if (!GetTouchSelection(out voxel, out faceI))
+                else if (!rayHitSomething)
                 {
-                    // ray hit nothing
                     voxelArray.SelectBackground();
                 }
-                else if (voxel != null)
+                else if (hitVoxel != null)
                 {
-                    // ray hit a voxel
-                    voxelArray.SelectDown(voxel, faceI);
                     currentTouchOperation = TouchOperation.SELECT;
+                    voxelArray.SelectDown(hitVoxel, hitFaceI);
                 }
-                else
-                    // ray hit something other than a voxel, probably adjust axes or something
+                else if (hitArrow != null)
+                {
                     currentTouchOperation = TouchOperation.MOVE;
+                    movingArrow = hitArrow;
+                    movingArrow.TouchDown(touch);
+                }
             }
 
             if (currentTouchOperation == TouchOperation.GUI)
@@ -62,14 +82,16 @@ public class TouchListener : MonoBehaviour {
                 if (panel != null)
                     panel.scroll.y += touch.deltaPosition.y / panel.scaleFactor;
             }
-
-            if (currentTouchOperation != TouchOperation.SELECT)
-                return;
-
-            GetTouchSelection(out voxel, out faceI);
-            if (voxel != null)
+            else if (currentTouchOperation == TouchOperation.SELECT)
             {
-                voxelArray.SelectDrag(voxel, faceI);
+                if (hitVoxel != null)
+                {
+                    voxelArray.SelectDrag(hitVoxel, hitFaceI);
+                }
+            }
+            else if (currentTouchOperation == TouchOperation.MOVE)
+            {
+                movingArrow.TouchDrag(touch);
             }
         }
         if (Input.touchCount == 2)
@@ -121,26 +143,4 @@ public class TouchListener : MonoBehaviour {
             return;
         }
 	}
-
-    private bool GetTouchSelection(out Voxel voxel, out int faceI)
-    {
-        voxel = null;
-        faceI = -1;
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.GetTouch(0).position), out hit))
-        {
-            if (hit.transform.gameObject.tag == "Voxel")
-            {
-                voxel = hit.transform.GetComponent<Voxel>();
-                faceI = Voxel.FaceIForNormal(hit.normal);
-                if (faceI == -1)
-                    voxel = null;
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 }
