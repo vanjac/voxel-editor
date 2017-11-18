@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveAxis : MonoBehaviour {
 
     public Vector3 forwardDirection;
-    public Camera camera;
+    public Camera mainCamera;
     public VoxelArray voxelArray;
     float lastUpdatePosition;
     LineRenderer lineRenderer;
@@ -17,7 +17,7 @@ public class MoveAxis : MonoBehaviour {
 
     void Update()
     {
-        float distanceToCam = (transform.position - camera.transform.position).magnitude;
+        float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
         transform.localScale = Vector3.one * distanceToCam / 5;
         lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
     }
@@ -36,10 +36,10 @@ public class MoveAxis : MonoBehaviour {
 
     public void TouchDrag(Touch touch)
     {
-        float distanceToCam = (transform.position - camera.transform.position).magnitude;
+        float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
 
-        Vector3 originScreenPos = camera.WorldToScreenPoint(transform.position);
-        Vector3 offsetScreenPos = camera.WorldToScreenPoint(transform.position + forwardDirection);
+        Vector3 originScreenPos = mainCamera.WorldToScreenPoint(transform.position);
+        Vector3 offsetScreenPos = mainCamera.WorldToScreenPoint(transform.position + forwardDirection);
         Vector3 screenMoveVector = offsetScreenPos - originScreenPos;
 
         float moveAmount = Vector3.Dot(touch.deltaPosition, screenMoveVector.normalized);
