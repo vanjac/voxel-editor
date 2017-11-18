@@ -38,6 +38,14 @@ v2f vert(appdata v)
 
 	o.pos = UnityObjectToClipPos(v.vertex);
 
+	// animate waves
+	// this should behave the same as the WaterBasic.cs script
+	float4 offset4 = WaveSpeed * (_Time.x * _WaveScale);
+	_WaveOffset.x = fmod(offset4.x, 1.0);
+	_WaveOffset.y = fmod(offset4.y, 1.0);
+	_WaveOffset.z = fmod(offset4.z, 1.0);
+	_WaveOffset.w = fmod(offset4.w, 1.0);
+
 	// scroll bump waves
 	float4 temp;
 	float4 wpos = mul (unity_ObjectToWorld, v.vertex);
