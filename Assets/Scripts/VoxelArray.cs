@@ -19,9 +19,37 @@ public class VoxelArray : MonoBehaviour {
         }
     }
 
+    class OctreeNode
+    {
+        public Vector3Int position;
+        public int size;
+        public OctreeNode[] branches = new OctreeNode[8];
+        public Voxel voxel;
+
+        public OctreeNode(Vector3Int position, int size)
+        {
+            this.position = position;
+            this.size = size;
+        }
+
+        public bool InBounds(Vector3Int point)
+        {
+            return point.x >= position.x && point.x < position.x + size
+                && point.y >= position.y && point.y < position.y + size
+                && point.z >= position.z && point.z < position.z + size;
+        }
+
+        public override string ToString()
+        {
+            return position + "(" + size + ")";
+        }
+    }
+
     public Transform axes;
     public GameObject voxelPrefab;
     public Material selectedMaterial;
+
+    private OctreeNode rootNode;
 
     // select state
     bool selection = false;
@@ -32,6 +60,8 @@ public class VoxelArray : MonoBehaviour {
     bool unloadUnusedAssets = false;
 
 	void Start () {
+        rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
+
         Voxel.selectedMaterial = selectedMaterial;
 
         Material[] testMaterials = new Material[]
@@ -50,7 +80,7 @@ public class VoxelArray : MonoBehaviour {
             {
                 for (int z = -2; z <= 2; z++)
                 {
-                    Voxel newVoxel = CreateVoxel(new Vector3(x, y, z));
+                    Voxel newVoxel = VoxelAt(new Vector3(x, y, z), true);
                     if (x == -2)
                         newVoxel.faces[0].material = testMaterials[0];
                     if (x == 2)
@@ -82,27 +112,68 @@ public class VoxelArray : MonoBehaviour {
 
     public Voxel VoxelAt(Vector3 position, bool createIfMissing)
     {
-        foreach (Transform childTransform in transform)
+        Vector3Int intPosition = new Vector3Int(
+            Mathf.RoundToInt(position.x),
+            Mathf.RoundToInt(position.y),
+            Mathf.RoundToInt(position.z)
+            );
+        if (!rootNode.InBounds(intPosition))
         {
-            Vector3 childPosition = childTransform.position;
-            if (Mathf.RoundToInt(childPosition.x) == position.x
-                    && Mathf.RoundToInt(childPosition.y) == position.y
-                    && Mathf.RoundToInt(childPosition.z) == position.z)
-                return childTransform.GetComponent<Voxel>();
+            // will it be the large end of the new node that will be created
+            bool xLarge = position.x < rootNode.position.x;
+            bool yLarge = position.y < rootNode.position.y;
+            bool zLarge = position.z < rootNode.position.z;
+            int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
+            Vector3Int newRootPos = new Vector3Int(
+                rootNode.position.x - (xLarge ? rootNode.size : 0),
+                rootNode.position.y - (yLarge ? rootNode.size : 0),
+                rootNode.position.z - (zLarge ? rootNode.size : 0)
+                );
+            OctreeNode newRoot = new OctreeNode(newRootPos, rootNode.size * 2);
+            newRoot.branches[branchI] = rootNode;
+            rootNode = newRoot;
         }
-        if (createIfMissing)
-            return CreateVoxel(position);
-        else
-            return null;
+        return SearchOctreeRecursive(rootNode, intPosition, createIfMissing);
     }
 
-    public Voxel CreateVoxel(Vector3 position)
+    private Voxel SearchOctreeRecursive(OctreeNode node, Vector3Int position, bool createIfMissing)
     {
-        GameObject voxelObject = Instantiate(voxelPrefab);
-        voxelObject.transform.position = position;
-        voxelObject.transform.parent = transform;
-        voxelObject.name = "Voxel at " + position;
-        return voxelObject.GetComponent<Voxel>();
+        if (node.size == 1)
+        {
+            if (!createIfMissing)
+                return node.voxel;
+            else if (node.voxel != null)
+                return node.voxel;
+            else
+            {
+                GameObject voxelObject = Instantiate(voxelPrefab);
+                voxelObject.transform.position = position;
+                voxelObject.transform.parent = transform;
+                voxelObject.name = "Voxel at " + position;
+                node.voxel = voxelObject.GetComponent<Voxel>();
+                return node.voxel;
+            }
+        }
+
+        int halfSize = node.size / 2;
+        bool xLarge = position.x >= node.position.x + halfSize;
+        bool yLarge = position.y >= node.position.y + halfSize;
+        bool zLarge = position.z >= node.position.z + halfSize;
+        int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
+        OctreeNode branch = node.branches[branchI];
+        if (branch == null)
+        {
+            if (!createIfMissing)
+                return null;
+            Vector3Int branchPos = new Vector3Int(
+                node.position.x + (xLarge ? halfSize : 0),
+                node.position.y + (yLarge ? halfSize : 0),
+                node.position.z + (zLarge ? halfSize : 0)
+                );
+            branch = new OctreeNode(branchPos, halfSize);
+            node.branches[branchI] = branch;
+        }
+        return SearchOctreeRecursive(branch, position, createIfMissing);
     }
 
     public void VoxelModified(Voxel voxel)
