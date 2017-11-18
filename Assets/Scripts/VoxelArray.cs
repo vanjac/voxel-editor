@@ -29,6 +29,8 @@ public class VoxelArray : MonoBehaviour {
     Bounds selectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
     List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
 
+    bool unloadUnusedAssets = false;
+
 	void Start () {
         Voxel.selectedMaterial = selectedMaterial;
 
@@ -69,6 +71,15 @@ public class VoxelArray : MonoBehaviour {
         UpdateSelection();
 	}
 
+    void Update()
+    {
+        if (unloadUnusedAssets)
+        {
+            unloadUnusedAssets = false;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
     public Voxel VoxelAt(Vector3 position, bool createIfMissing)
     {
         foreach (Transform childTransform in transform)
@@ -105,7 +116,7 @@ public class VoxelArray : MonoBehaviour {
     public void RemoveVoxel(Voxel voxel)
     {
         Destroy(voxel.gameObject);
-        Resources.UnloadUnusedAssets();
+        unloadUnusedAssets = true;
     }
 
     public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()
