@@ -47,14 +47,19 @@
 ./GameAssets/Materials/blocks/StonePaversFlagstoneGray.mat
 ./GameAssets/Materials/blocks/StonePaversWalk.mat
 ./GameAssets/Materials/blocks/StoneSandstoneAshlarLight.mat
-./GameAssets/Materials/Blue.mat
+./GameAssets/Materials/colors
+./GameAssets/Materials/colors/Blue.mat
+./GameAssets/Materials/colors/Cyan.mat
+./GameAssets/Materials/colors/Green.mat
+./GameAssets/Materials/colors/Magenta.mat
+./GameAssets/Materials/colors/Red.mat
+./GameAssets/Materials/colors/Yellow.mat
 ./GameAssets/Materials/concrete
 ./GameAssets/Materials/concrete/ConcreteAggregateSmoke.mat
 ./GameAssets/Materials/concrete/ConcreteForm4x8.mat
 ./GameAssets/Materials/concrete/ConcreteScoredJointless.mat
 ./GameAssets/Materials/concrete/PolishedConcreteNew.mat
 ./GameAssets/Materials/concrete/PolishedConcreteOld.mat
-./GameAssets/Materials/Cyan.mat
 ./GameAssets/Materials/fencing
 ./GameAssets/Materials/fencing/Fencing.mat
 ./GameAssets/Materials/fencing/FencingChainLink.mat
@@ -76,7 +81,6 @@
 ./GameAssets/Materials/glass/TranslucentGlassSkyReflection.mat
 ./GameAssets/Materials/glass/TranslucentGlassTinted.mat
 ./GameAssets/Materials/glass/TranslucentResinCrushGray.mat
-./GameAssets/Materials/Green.mat
 ./GameAssets/Materials/groundcover
 ./GameAssets/Materials/groundcover/GroundcoverBarkChips.mat
 ./GameAssets/Materials/groundcover/GroundcoverBrickCrushed.mat
@@ -88,9 +92,10 @@
 ./GameAssets/Materials/groundcover/GroundcoverSandRaked.mat
 ./GameAssets/Materials/groundcover/GroundcoverSandSmooth.mat
 ./GameAssets/Materials/groundcover/GroundcoverWoodMix.mat
+./GameAssets/Materials/groundcover/MudRocky.mat
 ./GameAssets/Materials/groundcover/PeaGravel.mat
+./GameAssets/Materials/groundcover/Sand.mat
 ./GameAssets/Materials/groundcover/SmallAggregate.mat
-./GameAssets/Materials/Magenta.mat
 ./GameAssets/Materials/metal
 ./GameAssets/Materials/metal/Aluminum.mat
 ./GameAssets/Materials/metal/MetalAluminumAnodized.mat
@@ -121,7 +126,6 @@
 ./GameAssets/Materials/patterns/SketchySidingScale.mat
 ./GameAssets/Materials/patterns/SketchySidingStraight.mat
 ./GameAssets/Materials/patterns/SketchyStoneAshlar.mat
-./GameAssets/Materials/Red.mat
 ./GameAssets/Materials/roofing
 ./GameAssets/Materials/roofing/RoofingMetalStandingSeamRed.mat
 ./GameAssets/Materials/roofing/RoofingScalloped.mat
@@ -142,6 +146,7 @@
 ./GameAssets/Materials/siding/SidingRustyMetal.mat
 ./GameAssets/Materials/stone
 ./GameAssets/Materials/stone/CarreraMarble.mat
+./GameAssets/Materials/stone/Cliff.mat
 ./GameAssets/Materials/stone/EarthyGranite.mat
 ./GameAssets/Materials/stone/Granite01.mat
 ./GameAssets/Materials/stone/Granite02.mat
@@ -231,7 +236,9 @@
 ./GameAssets/Materials/tile/WoodSquareTile02.mat
 ./GameAssets/Materials/vegetation
 ./GameAssets/Materials/vegetation/GrassDarkGreen.mat
+./GameAssets/Materials/vegetation/GrassHill.mat
 ./GameAssets/Materials/vegetation/GrassLightGreen.mat
+./GameAssets/Materials/vegetation/GrassRocky.mat
 ./GameAssets/Materials/vegetation/VegetationBarkMaple.mat
 ./GameAssets/Materials/vegetation/VegetationBarkPonderosa.mat
 ./GameAssets/Materials/vegetation/VegetationBlur3.mat
@@ -247,6 +254,8 @@
 ./GameAssets/Materials/wallpaper/WallpaperStripe.mat
 ./GameAssets/Materials/wallpaper/WallpaperThinBrownStripes.mat
 ./GameAssets/Materials/water
+./GameAssets/Materials/water/WaterBasicDaytime.mat
+./GameAssets/Materials/water/WaterBasicNighttime.mat
 ./GameAssets/Materials/water/WaterDarkBlue.mat
 ./GameAssets/Materials/water/WaterDeep.mat
 ./GameAssets/Materials/water/WaterLightBlue.mat
@@ -254,8 +263,6 @@
 ./GameAssets/Materials/water/WaterSparkling.mat
 ./GameAssets/Materials/water/WaterStream.mat
 ./GameAssets/Materials/water/WaterStreamShallow.mat
-./GameAssets/Materials/WaterBasicDaytime.mat
-./GameAssets/Materials/WaterBasicNighttime.mat
 ./GameAssets/Materials/wood
 ./GameAssets/Materials/wood/Wood01.mat
 ./GameAssets/Materials/wood/Wood02.mat
@@ -269,4 +276,3 @@
 ./GameAssets/Materials/wood/WoodLumberButtJoined.mat
 ./GameAssets/Materials/wood/WoodOSB.mat
 ./GameAssets/Materials/wood/WoodPlywoodKnots.mat
-./GameAssets/Materials/Yellow.mat
