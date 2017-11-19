@@ -30,7 +30,7 @@ public class Menu : MonoBehaviour {
 
     public void NewMap()
     {
-        string filePath = Application.persistentDataPath + "/" + mapNameInput.text + ".json";
+        string filePath = GetMapPath(mapNameInput.text);
         using (FileStream fileStream = File.Create(filePath))
         {
             using (var sw = new StreamWriter(fileStream))
@@ -40,6 +40,17 @@ public class Menu : MonoBehaviour {
             }
         }
         UpdateMapList();
+    }
+
+    public void DeleteMap()
+    {
+        File.Delete(GetMapPath(mapSelect.options[mapSelect.value].text));
+        UpdateMapList();
+    }
+
+    private string GetMapPath(string name)
+    {
+        return Application.persistentDataPath + "/" + name + ".json";
     }
 
     void UpdateMapList()
