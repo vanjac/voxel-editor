@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ActionBarGUI : GUIPanel
 {
@@ -23,6 +24,11 @@ public class ActionBarGUI : GUIPanel
         {
             MapFileReader reader = new MapFileReader("mapsave");
             reader.Read(cameraPivot, voxelArray);
+        }
+
+        if (GUI.Button(new Rect(panelRect.xMin + 180, panelRect.yMin, 80, 20), "Play"))
+        {
+            SceneManager.LoadScene("playScene");
         }
     }
 }
