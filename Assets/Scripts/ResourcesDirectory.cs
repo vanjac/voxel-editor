@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourcesDirectory : MonoBehaviour {
+public class ResourcesDirectory {
     private static string[] _dirList = null;
     public static string[] dirList
     {
