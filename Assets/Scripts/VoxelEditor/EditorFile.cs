@@ -7,18 +7,19 @@ public class EditorFile : MonoBehaviour
 {
     public VoxelArray voxelArray;
     public Transform cameraPivot;
+    string mapName = "mapsave";
 
     public void Load()
     {
-        Debug.Log("Loading...");
-        MapFileReader reader = new MapFileReader("mapsave");
+        Debug.Log("Loading " + mapName);
+        MapFileReader reader = new MapFileReader(mapName);
         reader.Read(cameraPivot, voxelArray);
     }
 
     public void Save()
     {
         Debug.Log("Saving...");
-        MapFileWriter writer = new MapFileWriter("mapsave");
+        MapFileWriter writer = new MapFileWriter(mapName);
         writer.Write(cameraPivot, voxelArray);
     }
 
@@ -30,6 +31,11 @@ public class EditorFile : MonoBehaviour
 
     void OnEnable()
     {
+        GameObject selectedMap = GameObject.Find("SelectedMap");
+        if (selectedMap != null)
+        {
+            mapName = selectedMap.GetComponent<SelectedMap>().mapName;
+        }
         Load();
     }
 
