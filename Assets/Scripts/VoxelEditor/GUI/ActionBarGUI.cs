@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ActionBarGUI : GUIPanel
 {
     public VoxelArray voxelArray;
+    public EditorFile editorFile;
 
     public override void OnGUI()
     {
@@ -49,9 +49,15 @@ public class ActionBarGUI : GUIPanel
             }
         }
 
-        if (GUI.Button(new Rect(panelRect.xMin + 180, panelRect.yMin, 80, 20), "Play"))
+        if (GUI.Button(new Rect(panelRect.xMin + 90, panelRect.yMin, 80, 20), "Play"))
         {
-            SceneManager.LoadScene("playScene");
+
+            editorFile.LoadScene("playScene");
+        }
+
+        if (GUI.Button(new Rect(panelRect.xMin + 180, panelRect.yMin, 80, 20), "Close"))
+        {
+            editorFile.LoadScene("menuScene");
         }
     }
 }
