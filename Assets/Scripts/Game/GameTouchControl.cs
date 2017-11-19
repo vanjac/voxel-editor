@@ -9,12 +9,19 @@ public class GameTouchControl : MonoBehaviour {
     CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     bool uiInteraction = false;
 
-	void OnEnable () {
+	void OnEnable ()
+    {
         hAxis = new CrossPlatformInputManager.VirtualAxis("Mouse X");
         CrossPlatformInputManager.RegisterVirtualAxis(hAxis);
         vAxis = new CrossPlatformInputManager.VirtualAxis("Mouse Y");
         CrossPlatformInputManager.RegisterVirtualAxis(vAxis);
 	}
+
+    void OnDisable()
+    {
+        hAxis.Remove();
+        vAxis.Remove();
+    }
 	
 	// Update is called once per frame
 	void Update () {
