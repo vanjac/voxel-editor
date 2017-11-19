@@ -52,14 +52,17 @@ public class MapFileReader {
             return;
         }
 
-        if (root["camera"]["pan"] != null)
-            cameraPivot.position = ReadVector3(root["camera"]["pan"].AsArray);
-        if (root["camera"]["rotate"] != null)
-            cameraPivot.rotation = ReadQuaternion(root["camera"]["rotate"].AsArray);
-        if (root["camera"]["scale"] != null)
+        if (cameraPivot != null)
         {
-            float scale = root["camera"]["scale"].AsFloat;
-            cameraPivot.localScale = new Vector3(scale, scale, scale);
+            if (root["camera"]["pan"] != null)
+                cameraPivot.position = ReadVector3(root["camera"]["pan"].AsArray);
+            if (root["camera"]["rotate"] != null)
+                cameraPivot.rotation = ReadQuaternion(root["camera"]["rotate"].AsArray);
+            if (root["camera"]["scale"] != null)
+            {
+                float scale = root["camera"]["scale"].AsFloat;
+                cameraPivot.localScale = new Vector3(scale, scale, scale);
+            }
         }
 
         if (root["world"] != null)
