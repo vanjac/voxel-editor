@@ -7,7 +7,7 @@ using UnityStandardAssets.CrossPlatformInput;
 public class GameTouchControl : MonoBehaviour {
 
     CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
-    bool uiInteraction = false;
+    int lookTouchId;
 
 	void OnEnable ()
     {
@@ -23,27 +23,26 @@ public class GameTouchControl : MonoBehaviour {
         vAxis.Remove();
     }
 	
-	// Update is called once per frame
-	void Update () {
-        if (Input.touchCount == 1)
+	void Update ()
+    {
+        bool setAxes = false;
+        for (int i = 0; i < Input.touchCount; i++)
         {
-            Touch touch = Input.GetTouch(0);
-            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                uiInteraction = true;
-            if(!uiInteraction)
+            Touch touch = Input.GetTouch(i);
+            if (touch.phase == TouchPhase.Began && !EventSystem.current.IsPointerOverGameObject(touch.fingerId))
             {
+                lookTouchId = touch.fingerId;
+            }
+            if (touch.fingerId == lookTouchId)
+            {
+                setAxes = true;
                 hAxis.Update(touch.deltaPosition.x / 10);
                 vAxis.Update(touch.deltaPosition.y / 10);
             }
-            else
-            {
-                hAxis.Update(0);
-                vAxis.Update(0);
-            }
         }
-        else
+        if (!setAxes)
         {
-            uiInteraction = false;
+            lookTouchId = -1;
             hAxis.Update(0);
             vAxis.Update(0);
         }
