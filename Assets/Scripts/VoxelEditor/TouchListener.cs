@@ -58,7 +58,7 @@ public class TouchListener : MonoBehaviour {
                 if (GUIPanel.PanelContainingPoint(touch.position) != null)
                     currentTouchOperation = TouchOperation.GUI;
                 else if (touch.phase != TouchPhase.Moved && touch.phase != TouchPhase.Ended)
-                    ; // wait until moved or released, in case a multitouch operation is about to begin
+                { } // wait until moved or released, in case a multitouch operation is about to begin
                 else if (!rayHitSomething)
                 {
                     voxelArray.SelectBackground();
