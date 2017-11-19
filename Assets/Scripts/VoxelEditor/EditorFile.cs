@@ -24,6 +24,7 @@ public class EditorFile : MonoBehaviour
 
     public void LoadScene(string name)
     {
+        Save();
         SceneManager.LoadScene(name);
     }
 
