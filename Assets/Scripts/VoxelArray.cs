@@ -59,7 +59,7 @@ public class VoxelArray : MonoBehaviour {
 
     bool unloadUnusedAssets = false;
 
-	void Start () {
+	void Awake () {
         rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
 
         Voxel.selectedMaterial = selectedMaterial;
@@ -314,6 +314,8 @@ public class VoxelArray : MonoBehaviour {
 
     public void UpdateSelection()
     {
+        if (axes == null)
+            return;
         if (selection)
         {
             axes.position = selectCurrentBounds.center;

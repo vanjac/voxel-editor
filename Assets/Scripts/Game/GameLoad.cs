@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameLoad : MonoBehaviour {
 
-	void Awake() {
+	void Start() {
         MapFileReader reader = new MapFileReader("mapsave");
         reader.Read(null, GetComponent<VoxelArray>());
 	}
