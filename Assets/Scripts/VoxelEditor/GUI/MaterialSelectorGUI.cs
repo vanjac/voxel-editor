@@ -49,10 +49,14 @@ public class MaterialSelectorGUI : GUIPanel
         for (int i = 0; i < materialPreviews.Count; i++)
         {
             Texture materialPreview = materialPreviews[i];
-            if (GUI.Button(new Rect(10, y, buttonWidth, buttonWidth), materialPreview))
+            Rect buttonRect = new Rect(10, y, buttonWidth, buttonWidth);
+            Rect textureRect = new Rect(buttonRect.xMin + 10, buttonRect.yMin + 10,
+                buttonRect.width - 20, buttonRect.height - 20);
+            if (GUI.Button(buttonRect, ""))
             {
                 MaterialSelected(materialNames[i]);
             }
+            GUI.DrawTexture(textureRect, materialPreview, ScaleMode.ScaleToFit);
             y += buttonWidth;
         }
         GUI.EndScrollView();
@@ -84,24 +88,21 @@ public class MaterialSelectorGUI : GUIPanel
                     materialPreviews.Add(null);
                     continue;
                 }
-                Texture previewTexture = material.mainTexture;
+
+                Texture previewTexture = null;
+                Color color = Color.white;
+
+                if (material.mainTexture != null)
+                    previewTexture = material.mainTexture;
+                else if (material.HasProperty("_Color"))
+                    color = material.color;
+                else if (material.HasProperty("_ColorControl"))
+                    // water shader
+                    previewTexture = material.GetTexture("_ColorControl");
                 if (previewTexture == null)
                 {
-                    Color color;
-                    if (material.HasProperty("_Color"))
-                    {
-                        color = material.color;
-                    } else {
-                        color = Color.white;
-                    }
-                    Texture2D solidColorTexture = new Texture2D(128, 128);
-                    for (int y = 0; y < solidColorTexture.height; y++)
-                    {
-                        for (int x = 0; x < solidColorTexture.height; x++)
-                        {
-                            solidColorTexture.SetPixel(x, y, color);
-                        }
-                    }
+                    Texture2D solidColorTexture = new Texture2D(1, 1);
+                    solidColorTexture.SetPixel(0, 0, color);
                     solidColorTexture.Apply();
                     previewTexture = solidColorTexture;
                 }
