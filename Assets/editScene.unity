@@ -515,7 +515,6 @@ MonoBehaviour:
   scaleFactor: 0
   scaledScreenWidth: 0
   depth: 0
-  voxelArray: {fileID: 213926859}
   editorFile: {fileID: 213926860}
 --- !u!1 &1061257463
 GameObject:

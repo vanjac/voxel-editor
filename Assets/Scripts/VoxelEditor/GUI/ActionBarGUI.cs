@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ActionBarGUI : GUIPanel
 {
-    public VoxelArray voxelArray;
     public EditorFile editorFile;
 
     public override void OnGUI()
