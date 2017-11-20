@@ -325,6 +325,34 @@ public class VoxelArray : MonoBehaviour {
         }
     }
 
+    public void FaceSelectFloodFill(Voxel voxel, int faceI)
+    {
+        if (voxel == null)
+            return;
+        VoxelFace face = voxel.faces[faceI];
+        if (face.IsEmpty())
+            return;
+        if (face.selected)
+            return;
+        voxel.faces[faceI].selected = true;
+        selectedFaces.Add(new VoxelFaceReference(voxel, faceI));
+        voxel.UpdateVoxel();
+
+        int oppositeFaceI = Voxel.OppositeFaceI(faceI);
+
+        Vector3 position = voxel.transform.position;
+        for (int sideFaceI = 0; sideFaceI < 6; sideFaceI++)
+        {
+            if (sideFaceI == faceI || sideFaceI == oppositeFaceI)
+                continue;
+            Vector3 newPos = position + Voxel.NormalForFaceI(sideFaceI);
+            FaceSelectFloodFill(VoxelAt(newPos, false), faceI);
+        }
+
+        axes.position = position + new Vector3(0.5f, 0.5f, 0.5f);
+        axes.gameObject.SetActive(true);
+    }
+
     public void Adjust(Vector3 adjustDirection)
     {
         var faceChangeQueue = new List<FaceChange>();

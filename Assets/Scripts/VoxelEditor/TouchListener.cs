@@ -17,6 +17,9 @@ public class TouchListener : MonoBehaviour {
     MoveAxis movingAxis;
     Transform pivot;
 
+    Voxel lastHitVoxel;
+    int lastHitFaceI;
+
     void Start()
     {
         pivot = transform.parent;
@@ -52,6 +55,11 @@ public class TouchListener : MonoBehaviour {
                     hitMoveAxis = hitObject.GetComponent<MoveAxis>();
                 }
             }
+            if (hitVoxel != null)
+            {
+                lastHitVoxel = hitVoxel;
+                lastHitFaceI = hitFaceI;
+            }
 
             if (currentTouchOperation == TouchOperation.NONE)
             {
@@ -65,14 +73,31 @@ public class TouchListener : MonoBehaviour {
                 }
                 else if (hitVoxel != null)
                 {
-                    currentTouchOperation = TouchOperation.SELECT;
-                    voxelArray.SelectDown(hitVoxel, hitFaceI);
+                    if (touch.tapCount == 1)
+                    {
+                        currentTouchOperation = TouchOperation.SELECT;
+                        voxelArray.SelectDown(hitVoxel, hitFaceI);
+                    }
+                    else if (touch.tapCount == 2)
+                    {
+                        Debug.Log("Face select!");
+                        voxelArray.SelectBackground(); // clear selection first for flood fill to work
+                        voxelArray.FaceSelectFloodFill(hitVoxel, hitFaceI);
+                    }
                 }
                 else if (hitMoveAxis != null)
                 {
-                    currentTouchOperation = TouchOperation.MOVE;
-                    movingAxis = hitMoveAxis;
-                    movingAxis.TouchDown(touch);
+                    if (touch.tapCount == 1)
+                    {
+                        currentTouchOperation = TouchOperation.MOVE;
+                        movingAxis = hitMoveAxis;
+                        movingAxis.TouchDown(touch);
+                    }
+                    else if (touch.tapCount == 2)
+                    {
+                        voxelArray.SelectBackground(); // clear selection first for flood fill to work
+                        voxelArray.FaceSelectFloodFill(lastHitVoxel, lastHitFaceI);
+                    }
                 }
             }
 
