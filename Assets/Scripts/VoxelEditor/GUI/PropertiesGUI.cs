@@ -32,6 +32,16 @@ public class PropertiesGUI : GUIPanel {
             }
         }
 
+        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 25, scrollArea.width - 20, 20), "Set Overlay"))
+        {
+            if (materialSelector == null)
+            {
+                materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
+                materialSelector.voxelArray = voxelArray;
+                materialSelector.overlay = true;
+            }
+        }
+
         GUI.EndScrollView();
     }
 

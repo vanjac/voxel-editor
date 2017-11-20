@@ -5,16 +5,18 @@ using UnityEngine;
 public struct VoxelFace
 {
     public Material material;
+    public Material overlay;
     public bool selected;
 
     public bool IsEmpty()
     {
-        return material == null;
+        return material == null && overlay == null;
     }
 
     public void Clear()
     {
         material = null;
+        overlay = null;
         selected = false;
     }
 }

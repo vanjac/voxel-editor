@@ -1,4 +1,5 @@
 .
+./default.json
 ./dirlist.txt
 ./GameAssets
 ./GameAssets/Materials
@@ -276,3 +277,5 @@
 ./GameAssets/Materials/wood/WoodLumberButtJoined.mat
 ./GameAssets/Materials/wood/WoodOSB.mat
 ./GameAssets/Materials/wood/WoodPlywoodKnots.mat
+./GameAssets/Overlays
+./GameAssets/Overlays/X.mat

@@ -526,7 +526,7 @@ public class VoxelArray : MonoBehaviour {
     } // end Adjust()
 
 
-    public void TestAssignMaterial(Material mat)
+    public void AssignMaterial(Material mat, bool overlay)
     {
         foreach (VoxelFaceReference faceRef in selectedFaces)
         {

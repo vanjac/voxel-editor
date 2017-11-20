@@ -6,6 +6,7 @@ using UnityEngine;
 public class MaterialSelectorGUI : GUIPanel
 {
     public VoxelArray voxelArray;
+    public bool overlay;
 
     List<string> materialNames;
     List<Texture> materialPreviews;
@@ -14,9 +15,21 @@ public class MaterialSelectorGUI : GUIPanel
 
     public override void OnEnable()
     {
-        UpdateMaterialDirectory();
         depth = -1;
         base.OnEnable();
+    }
+
+    void Start()
+    {
+        if (overlay)
+        {
+            materialDirectory = "GameAssets/Overlays";
+        }
+        else
+        {
+            materialDirectory = "GameAssets/Materials";
+        }
+        UpdateMaterialDirectory();
     }
 
     public override void OnGUI()
@@ -136,7 +149,7 @@ public class MaterialSelectorGUI : GUIPanel
     {
         string materialPath = materialDirectory + "/" + name;
         Material material = Resources.Load<Material>(materialPath);
-        voxelArray.TestAssignMaterial(material);
+        voxelArray.AssignMaterial(material, overlay);
         Destroy(this);
     }
 }
