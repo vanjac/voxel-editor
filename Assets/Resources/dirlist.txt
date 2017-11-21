@@ -223,6 +223,7 @@
 ./GameAssets/Materials/tile/WhiteSubwayTile.mat
 ./GameAssets/Materials/tile/WoodSquareTile01.mat
 ./GameAssets/Materials/tile/WoodSquareTile02.mat
+./GameAssets/Materials/Vantablack.mat
 ./GameAssets/Materials/vegetation
 ./GameAssets/Materials/vegetation/GrassDarkGreen.mat
 ./GameAssets/Materials/vegetation/GrassHill.mat
@@ -252,6 +253,7 @@
 ./GameAssets/Materials/water/WaterSparkling.mat
 ./GameAssets/Materials/water/WaterStream.mat
 ./GameAssets/Materials/water/WaterStreamShallow.mat
+./GameAssets/Materials/White Light.mat
 ./GameAssets/Materials/wood
 ./GameAssets/Materials/wood/FencingWeathered.mat
 ./GameAssets/Materials/wood/FencingWoodOld.mat
