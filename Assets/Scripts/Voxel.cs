@@ -165,6 +165,7 @@ public class Voxel : MonoBehaviour
         var uv = new Vector2[numFilledFaces * 4];
 
         numFilledFaces = 0;
+        int numMaterials = 0;
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
             VoxelFace face = faces[faceNum];
@@ -192,6 +193,12 @@ public class Voxel : MonoBehaviour
             }
 
             numFilledFaces++;
+            if (face.material != null)
+                numMaterials++;
+            if (face.overlay != null)
+                numMaterials++;
+            if (face.selected)
+                numMaterials++;
         }
         
         Mesh mesh = GetComponent<MeshFilter>().mesh;
@@ -199,20 +206,18 @@ public class Voxel : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.uv = uv;
-        mesh.subMeshCount = numFilledFaces;
+        mesh.subMeshCount = numMaterials;
 
-        Material[] materials = new Material[numFilledFaces];
+        Material[] materials = new Material[numMaterials];
 
         numFilledFaces = 0;
+        numMaterials = 0;
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
             VoxelFace face = faces[faceNum];
             if (face.IsEmpty())
                 continue;
-            if (face.selected)
-                materials[numFilledFaces] = selectedMaterial;
-            else
-                materials[numFilledFaces] = face.material;
+
             var triangles = new int[6];
 
             if (faceNum % 2 == 0)
@@ -234,7 +239,23 @@ public class Voxel : MonoBehaviour
                 triangles[5] = numFilledFaces * 4 + 3;
             }
 
-            mesh.SetTriangles(triangles, numFilledFaces);
+            if (face.material != null) {
+                materials[numMaterials] = face.material;
+                mesh.SetTriangles(triangles, numMaterials);
+                numMaterials++;
+            }
+            if (face.overlay != null)
+            {
+                materials[numMaterials] = face.overlay;
+                mesh.SetTriangles(triangles, numMaterials);
+                numMaterials++;
+            }
+            if (face.selected)
+            {
+                materials[numMaterials] = selectedMaterial;
+                mesh.SetTriangles(triangles, numMaterials);
+                numMaterials++;
+            }
 
             numFilledFaces++;
         }

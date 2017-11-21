@@ -530,7 +530,11 @@ public class VoxelArray : MonoBehaviour {
     {
         foreach (VoxelFaceReference faceRef in selectedFaces)
         {
-            faceRef.voxel.faces[faceRef.faceI].material = mat;
+            if(overlay)
+                faceRef.voxel.faces[faceRef.faceI].overlay = mat;
+            else
+                faceRef.voxel.faces[faceRef.faceI].material = mat;
+            VoxelModified(faceRef.voxel);
         }
     }
 }
