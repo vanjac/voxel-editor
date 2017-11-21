@@ -51,16 +51,23 @@ public class MapFileWriter {
         {
             foreach (VoxelFace face in voxel.faces)
             {
-                Material material = face.material;
-                if (material == null)
-                    continue;
-                string name = material.name;
-                if (!foundMaterials.Contains(name))
+                if (face.material != null)
                 {
-                    foundMaterials.Add(name);
-                    JSONObject materialObject = new JSONObject();
-                    materialObject["name"] = name;
-                    materialsArray[-1] = materialObject;
+                    string name = face.material.name;
+                    if (!foundMaterials.Contains(name))
+                    {
+                        foundMaterials.Add(name);
+                        materialsArray[-1] = WriteMaterial(face.material);
+                    }
+                }
+                if (face.overlay != null)
+                {
+                    string name = face.overlay.name;
+                    if (!foundMaterials.Contains(name))
+                    {
+                        foundMaterials.Add(name);
+                        materialsArray[-1] = WriteMaterial(face.overlay);
+                    }
                 }
             }
         }
@@ -69,6 +76,13 @@ public class MapFileWriter {
         world["map"] = WriteMap(voxelArray, foundMaterials);
 
         return world;
+    }
+
+    private JSONObject WriteMaterial(Material material)
+    {
+        JSONObject materialObject = new JSONObject();
+        materialObject["name"] = material.name;
+        return materialObject;
     }
 
     private JSONObject WriteMap(VoxelArray voxelArray, List<string> materials)
@@ -113,6 +127,10 @@ public class MapFileWriter {
         if (face.material != null)
         {
             faceObject["mat"].AsInt = materials.IndexOf(face.material.name);
+        }
+        if (face.overlay != null)
+        {
+            faceObject["over"].AsInt = materials.IndexOf(face.overlay.name);
         }
         return faceObject;
     }
