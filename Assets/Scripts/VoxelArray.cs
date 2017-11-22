@@ -537,4 +537,24 @@ public class VoxelArray : MonoBehaviour {
             VoxelModified(faceRef.voxel);
         }
     }
+
+    public void OrientFaces(byte change)
+    {
+        foreach (VoxelFaceReference faceRef in selectedFaces)
+        {
+            byte faceOrientation = faceRef.face.orientation;
+            int faceRotation = faceOrientation & 3;
+            bool faceFlip = (faceOrientation & 4) != 0;
+            if (faceFlip)
+                faceRotation += 4 - (change & 3);
+            else
+                faceRotation += change & 3;
+            faceRotation &= 3;
+            if ((change & 4) != 0)
+                faceFlip = !faceFlip;
+            faceOrientation = (byte)(faceRotation + (faceFlip ? 4 : 0));
+            faceRef.voxel.faces[faceRef.faceI].orientation = faceOrientation;
+            VoxelModified(faceRef.voxel);
+        }
+    }
 }

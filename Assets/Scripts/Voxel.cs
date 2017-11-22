@@ -6,6 +6,7 @@ public struct VoxelFace
 {
     public Material material;
     public Material overlay;
+    public byte orientation;
     public bool selected;
 
     public bool IsEmpty()
@@ -17,6 +18,7 @@ public struct VoxelFace
     {
         material = null;
         overlay = null;
+        orientation = 0;
         selected = false;
     }
 }
@@ -45,6 +47,13 @@ public class Voxel : MonoBehaviour
 {
 
     public static VoxelFace EMPTY_FACE = new VoxelFace();
+    public static Vector2[] SQUARE_LOOP = new Vector2[]
+    {
+        Vector2.zero,
+        Vector2.right,
+        Vector2.one,
+        Vector2.up
+    };
 
     public static Material selectedMaterial; // set by VoxelArray instance
 
@@ -176,20 +185,23 @@ public class Voxel : MonoBehaviour
             // example for faceNum = 5 (z min)
             // 0 bottom left
             // 1 bottom right
-            // 2 top left
-            // 3 top right
-            for (int v = 0; v <= 1; v++)
+            // 2 top right
+            // 3 top left
+            for (int i = 0; i < 4; i++)
             {
-                for (int u = 0; u <= 1; u++)
-                {
-                    int vertexI = numFilledFaces * 4 + v * 2 + u;
-                    float[] vertexPos = new float[3];
-                    vertexPos[axis] = faceNum % 2;
-                    vertexPos[(axis + 1) % 3] = u;
-                    vertexPos[(axis + 2) % 3] = v;
-                    vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-                    uv[vertexI] = new Vector2(u, v);
-                }
+                int vertexI = numFilledFaces * 4 + i;
+                float[] vertexPos = new float[3];
+                vertexPos[axis] = faceNum % 2;
+                vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
+                vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
+                vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                int uvNum = face.orientation & 3;
+                if ((((face.orientation & 4) >> 2) ^ (faceNum % 2)) == 0)
+                    uvNum += i;
+                else
+                    uvNum += 4 - i;
+                uvNum %= 4;
+                uv[vertexI] = SQUARE_LOOP[uvNum];
             }
 
             numFilledFaces++;
@@ -224,19 +236,19 @@ public class Voxel : MonoBehaviour
             {
                 triangles[0] = numFilledFaces * 4 + 0;
                 triangles[1] = numFilledFaces * 4 + 1;
-                triangles[2] = numFilledFaces * 4 + 3;
+                triangles[2] = numFilledFaces * 4 + 2;
                 triangles[3] = numFilledFaces * 4 + 0;
-                triangles[4] = numFilledFaces * 4 + 3;
-                triangles[5] = numFilledFaces * 4 + 2;
+                triangles[4] = numFilledFaces * 4 + 2;
+                triangles[5] = numFilledFaces * 4 + 3;
             }
             else
             {
                 triangles[0] = numFilledFaces * 4 + 0;
-                triangles[1] = numFilledFaces * 4 + 3;
+                triangles[1] = numFilledFaces * 4 + 2;
                 triangles[2] = numFilledFaces * 4 + 1;
                 triangles[3] = numFilledFaces * 4 + 0;
-                triangles[4] = numFilledFaces * 4 + 2;
-                triangles[5] = numFilledFaces * 4 + 3;
+                triangles[4] = numFilledFaces * 4 + 3;
+                triangles[5] = numFilledFaces * 4 + 2;
             }
 
             if (face.material != null) {

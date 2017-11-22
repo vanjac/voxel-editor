@@ -47,6 +47,26 @@ public class PropertiesGUI : GUIPanel {
             voxelArray.AssignMaterial(null, true);
         }
 
+        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Left"))
+        {
+            voxelArray.OrientFaces(1);
+        }
+
+        if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Right"))
+        {
+            voxelArray.OrientFaces(3);
+        }
+
+        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip Horizontal"))
+        {
+            voxelArray.OrientFaces(5);
+        }
+
+        if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip Vertical"))
+        {
+            voxelArray.OrientFaces(7);
+        }
+
         GUI.EndScrollView();
     }
 
