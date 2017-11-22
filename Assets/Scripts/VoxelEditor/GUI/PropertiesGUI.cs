@@ -32,7 +32,7 @@ public class PropertiesGUI : GUIPanel {
             }
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 25, scrollArea.width - 20, 20), "Set Overlay"))
+        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 25, scrollArea.width - 70, 20), "Set Overlay"))
         {
             if (materialSelector == null)
             {
@@ -40,6 +40,11 @@ public class PropertiesGUI : GUIPanel {
                 materialSelector.voxelArray = voxelArray;
                 materialSelector.overlay = true;
             }
+        }
+
+        if (GUI.Button(new Rect(scrollArea.xMax - 60, scrollArea.yMin + 25, 50, 20), "Clear"))
+        {
+            voxelArray.AssignMaterial(null, true);
         }
 
         GUI.EndScrollView();
