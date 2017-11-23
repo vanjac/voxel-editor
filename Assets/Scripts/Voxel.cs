@@ -207,7 +207,7 @@ public class Voxel : MonoBehaviour
                 else
                     uvNum += 4 - i;
                 uvNum %= 4;
-                Vector2 uvOrigin;
+                Vector2 uvOrigin; // materials can span multiple voxels
                 if ((face.orientation & 3) % 2 == 1 ^ (faceNum == 0 || faceNum == 1))
                     uvOrigin = new Vector2(transformPos[(axis + 2) % 3], transformPos[(axis + 1) % 3]);
                 else
