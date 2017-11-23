@@ -57,12 +57,12 @@ public class PropertiesGUI : GUIPanel {
             voxelArray.OrientFaces(1);
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip Horizontal"))
+        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip H"))
         {
             voxelArray.OrientFaces(7);
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip Vertical"))
+        if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip V"))
         {
             voxelArray.OrientFaces(5);
         }
