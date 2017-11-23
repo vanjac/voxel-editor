@@ -80,7 +80,6 @@ public class TouchListener : MonoBehaviour {
                     }
                     else if (touch.tapCount == 2)
                     {
-                        Debug.Log("Face select!");
                         voxelArray.SelectBackground(); // clear selection first for flood fill to work
                         voxelArray.FaceSelectFloodFill(hitVoxel, hitFaceI);
                     }
