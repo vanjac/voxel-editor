@@ -200,9 +200,9 @@ public class Voxel : MonoBehaviour
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
                 vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
                 int uvNum = face.orientation & 3;
-                if (faceNum == 0 || faceNum == 3 || faceNum == 5)
+                if (faceNum == 1 || faceNum == 2 || faceNum == 4)
                     uvNum += 1;
-                if ((((face.orientation & 4) >> 2) ^ (faceNum % 2)) == 0)
+                if ((((face.orientation & 4) != 0) ^ (faceNum % 2) == 1))
                     uvNum += i;
                 else
                     uvNum += 4 - i;

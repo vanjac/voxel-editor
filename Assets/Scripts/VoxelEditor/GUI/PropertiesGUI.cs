@@ -49,22 +49,22 @@ public class PropertiesGUI : GUIPanel {
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Left"))
         {
-            voxelArray.OrientFaces(1);
+            voxelArray.OrientFaces(3);
         }
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Right"))
         {
-            voxelArray.OrientFaces(3);
+            voxelArray.OrientFaces(1);
         }
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip Horizontal"))
         {
-            voxelArray.OrientFaces(5);
+            voxelArray.OrientFaces(7);
         }
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip Vertical"))
         {
-            voxelArray.OrientFaces(7);
+            voxelArray.OrientFaces(5);
         }
 
         GUI.EndScrollView();
