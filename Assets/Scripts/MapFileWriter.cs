@@ -132,6 +132,10 @@ public class MapFileWriter {
         {
             faceObject["over"].AsInt = materials.IndexOf(face.overlay.name);
         }
+        if (face.orientation != 0)
+        {
+            faceObject["orient"].AsInt = face.orientation;
+        }
         return faceObject;
     }
 

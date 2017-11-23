@@ -153,6 +153,10 @@ public class MapFileReader {
             int matI = faceObject["over"].AsInt;
             voxel.faces[faceI].overlay = materials[matI];
         }
+        if (faceObject["orient"] != null)
+        {
+            voxel.faces[faceI].orientation = (byte)(faceObject["orient"].AsInt);
+        }
     }
 
     private Vector3 ReadVector3(JSONArray a)
