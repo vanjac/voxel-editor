@@ -13,7 +13,7 @@ public class EditorFile : MonoBehaviour
     {
         Debug.Log("Loading " + mapName);
         MapFileReader reader = new MapFileReader(mapName);
-        reader.Read(cameraPivot, voxelArray);
+        reader.Read(cameraPivot, voxelArray, true);
     }
 
     public void Save()

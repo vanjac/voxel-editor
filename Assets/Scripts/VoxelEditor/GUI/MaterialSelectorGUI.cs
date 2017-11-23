@@ -86,6 +86,8 @@ public class MaterialSelectorGUI : GUIPanel
             if (dirEntry.Length <= 2)
                 continue;
             string newDirEntry = dirEntry.Substring(2);
+            if (Path.GetFileName(newDirEntry).StartsWith("$"))
+                continue; // special alternate materials for game
             string directory = Path.GetDirectoryName(newDirEntry);
             if (directory != materialDirectory)
                 continue;

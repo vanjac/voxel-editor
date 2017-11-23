@@ -3,6 +3,7 @@
 ./dirlist.txt
 ./GameAssets
 ./GameAssets/Materials
+./GameAssets/Materials/$Sky.mat
 ./GameAssets/Materials/asphalt
 ./GameAssets/Materials/asphalt/AsphaltNew.mat
 ./GameAssets/Materials/asphalt/BlacktopNew.mat
@@ -133,6 +134,7 @@
 ./GameAssets/Materials/siding/CladdingStuccoWhite.mat
 ./GameAssets/Materials/siding/ModernSiding.mat
 ./GameAssets/Materials/siding/SidingRustyMetal.mat
+./GameAssets/Materials/Sky.mat
 ./GameAssets/Materials/stone
 ./GameAssets/Materials/stone/CarreraMarble.mat
 ./GameAssets/Materials/stone/Cliff.mat

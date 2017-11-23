@@ -14,7 +14,7 @@ public class GameLoad : MonoBehaviour {
             name = selectedMap.GetComponent<SelectedMap>().mapName;
         }
         MapFileReader reader = new MapFileReader(name);
-        reader.Read(null, GetComponent<VoxelArray>());
+        reader.Read(null, GetComponent<VoxelArray>(), false);
 	}
 
     public void Close()

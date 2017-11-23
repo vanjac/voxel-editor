@@ -26,7 +26,7 @@ public class MapFileReader {
         }
     }
 
-    public void Read(Transform cameraPivot, VoxelArray voxelArray)
+    public void Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
         string jsonString;
 
@@ -52,7 +52,7 @@ public class MapFileReader {
             return;
         }
 
-        if (cameraPivot != null)
+        if (editor && cameraPivot != null)
         {
             if (root["camera"]["pan"] != null)
                 cameraPivot.position = ReadVector3(root["camera"]["pan"].AsArray);
@@ -66,10 +66,10 @@ public class MapFileReader {
         }
 
         if (root["world"] != null)
-            ReadWorld(root["world"].AsObject, voxelArray);
+            ReadWorld(root["world"].AsObject, voxelArray, editor);
     }
 
-    private void ReadWorld(JSONObject world, VoxelArray voxelArray)
+    private void ReadWorld(JSONObject world, VoxelArray voxelArray, bool editor)
     {
         var materials = new List<Material>();
         if (world["materials"] != null)
@@ -89,7 +89,10 @@ public class MapFileReader {
                     if (dirEntry.Length <= 2)
                         continue;
                     string newDirEntry = dirEntry.Substring(2);
-                    if (Path.GetFileNameWithoutExtension(newDirEntry) == name)
+                    string checkFileName = Path.GetFileNameWithoutExtension(newDirEntry);
+                    if((!editor) && checkFileName.StartsWith("$")) // special alternate materials for game
+                        checkFileName = checkFileName.Substring(1);
+                    if (checkFileName == name)
                     {
                         string path = Path.GetDirectoryName(newDirEntry) + "/" + Path.GetFileNameWithoutExtension(newDirEntry);
                         mat = Resources.Load<Material>(path);
