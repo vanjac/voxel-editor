@@ -173,6 +173,10 @@ public class Voxel : MonoBehaviour
         var vertices = new Vector3[numFilledFaces * 4];
         var uv = new Vector2[numFilledFaces * 4];
 
+        float[] transformPos = new float[]
+        {
+            transform.position.x, transform.position.y, transform.position.z
+        };
         numFilledFaces = 0;
         int numMaterials = 0;
         for (int faceNum = 0; faceNum < 6; faceNum++)
@@ -203,7 +207,12 @@ public class Voxel : MonoBehaviour
                 else
                     uvNum += 4 - i;
                 uvNum %= 4;
-                uv[vertexI] = SQUARE_LOOP[uvNum];
+                Vector2 uvOrigin;
+                if ((face.orientation & 3) % 2 == 1 ^ (faceNum == 0 || faceNum == 1))
+                    uvOrigin = new Vector2(transformPos[(axis + 2) % 3], transformPos[(axis + 1) % 3]);
+                else
+                    uvOrigin = new Vector2(transformPos[(axis + 1) % 3], transformPos[(axis + 2) % 3]);
+                uv[vertexI] =  uvOrigin + SQUARE_LOOP[uvNum];
             }
 
             numFilledFaces++;
