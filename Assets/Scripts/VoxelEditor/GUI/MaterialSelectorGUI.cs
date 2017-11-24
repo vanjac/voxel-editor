@@ -74,7 +74,7 @@ public class MaterialSelectorGUI : GUIPanel
             {
                 MaterialSelected(materialNames[i]);
             }
-            GUI.DrawTexture(textureRect, materialPreview, ScaleMode.ScaleToFit);
+            GUI.DrawTexture(textureRect, materialPreview, ScaleMode.ScaleToFit, false);
             y += buttonWidth;
         }
         GUI.EndScrollView();
