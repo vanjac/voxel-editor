@@ -308,6 +308,34 @@ public class VoxelArray : MonoBehaviour {
         selectMode = SelectMode.NONE;
     }
 
+    private void SelectFace(VoxelFaceReference faceRef)
+    {
+        if (faceRef.face.selected)
+            return;
+        faceRef.voxel.faces[faceRef.faceI].selected = true;
+        selectedFaces.Add(faceRef);
+        faceRef.voxel.UpdateVoxel();
+    }
+
+    private void SelectFace(Voxel voxel, int faceI)
+    {
+        SelectFace(new VoxelFaceReference(voxel, faceI));
+    }
+
+    private void DeselectFace(VoxelFaceReference faceRef)
+    {
+        if (!faceRef.face.selected)
+            return;
+        faceRef.voxel.faces[faceRef.faceI].selected = false;
+        selectedFaces.Remove(faceRef);
+        faceRef.voxel.UpdateVoxel();
+    }
+
+    private void DeselectFace(Voxel voxel, int faceI)
+    {
+        DeselectFace(new VoxelFaceReference(voxel, faceI));
+    }
+
     private void UpdateBoxSelection()
     {
         if (selectMode != SelectMode.BOX)
@@ -321,7 +349,6 @@ public class VoxelArray : MonoBehaviour {
         // update selection...
         foreach (Voxel checkVoxel in IterateVoxels())
         {
-            bool updateCheckVoxel = false;
             for (int checkFaceI = 0; checkFaceI < 6; checkFaceI++)
             {
                 if (checkVoxel.faces[checkFaceI].IsEmpty())
@@ -331,19 +358,11 @@ public class VoxelArray : MonoBehaviour {
                 // if checkBounds fully inside selectCurrentBounds
                 checkFaceSelected = largerSelectCurrentBounds.Contains(checkBounds.min)
                     && largerSelectCurrentBounds.Contains(checkBounds.max);
-                if (checkVoxel.faces[checkFaceI].selected != checkFaceSelected)
-                {
-                    VoxelFaceReference faceRef = new VoxelFaceReference(checkVoxel, checkFaceI);
-                    updateCheckVoxel = true;
-                    if (checkFaceSelected)
-                        selectedFaces.Add(faceRef);
-                    else
-                        selectedFaces.Remove(faceRef);
-                }
-                checkVoxel.faces[checkFaceI].selected = checkFaceSelected;
+                if (checkFaceSelected)
+                    SelectFace(checkVoxel, checkFaceI);
+                else
+                    DeselectFace(checkVoxel, checkFaceI);
             }
-            if (updateCheckVoxel)
-                checkVoxel.UpdateVoxel();
         }
     }
 
@@ -356,9 +375,7 @@ public class VoxelArray : MonoBehaviour {
             return;
         if (face.selected)
             return;
-        voxel.faces[faceI].selected = true;
-        selectedFaces.Add(new VoxelFaceReference(voxel, faceI));
-        voxel.UpdateVoxel();
+        SelectFace(voxel, faceI);
 
         int oppositeFaceI = Voxel.OppositeFaceI(faceI);
 
