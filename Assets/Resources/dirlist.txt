@@ -282,3 +282,9 @@
 ./GameAssets/Overlays/glass/TranslucentGlassSkyReflection.mat
 ./GameAssets/Overlays/glass/TranslucentGlassTinted.mat
 ./GameAssets/Overlays/glass/TranslucentResinCrushGray.mat
+./GameAssets/Skies
+./GameAssets/Skies/sky5X1.mat
+./GameAssets/Skies/sky5X2.mat
+./GameAssets/Skies/sky5X3.mat
+./GameAssets/Skies/sky5X4.mat
+./GameAssets/Skies/sky5X5.mat

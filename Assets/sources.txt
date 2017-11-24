@@ -1,5 +1,6 @@
 Editor/CreateMaterialsForTextures: https://answers.unity.com/answers/746039/view.html
 GameAssets/SketchupTextures: Sketchup
+GameAssets/sky5X_textures: Sky5X One (Asset Store)
 GameAssets/skybox_editor: https://developer.valvesoftware.com/wiki/File:Toolsskybox.gif
 GameAssets/SurfaceTextures: Standard Assets
 GameAssets/Water (Basic): Standard Assets
