@@ -11,7 +11,7 @@ public class EditorFile : MonoBehaviour
     public void Load()
     {
         string mapName = SelectedMap.GetSelectedMapName();
-        Debug.Log("Loading " + mapName);
+        Debug.unityLogger.Log("EditorFile", "Loading " + mapName);
         MapFileReader reader = new MapFileReader(mapName);
         reader.Read(cameraPivot, voxelArray, true);
         // reading the file creates new voxels which sets the unsavedChanges flag
@@ -22,10 +22,10 @@ public class EditorFile : MonoBehaviour
     {
         if (!voxelArray.unsavedChanges)
         {
-            Debug.Log("No unsaved changes");
+            Debug.unityLogger.Log("EditorFile", "No unsaved changes");
             return;
         }
-        Debug.Log("Saving...");
+        Debug.unityLogger.Log("EditorFile", "Saving...");
         MapFileWriter writer = new MapFileWriter(SelectedMap.GetSelectedMapName());
         writer.Write(cameraPivot, voxelArray);
         voxelArray.unsavedChanges = false;
@@ -33,26 +33,27 @@ public class EditorFile : MonoBehaviour
 
     public void LoadScene(string name)
     {
-        Debug.Log("LoadScene(" + name + ")");
+        Debug.unityLogger.Log("EditorFile", "LoadScene(" + name + ")");
         Save();
         SceneManager.LoadScene(name);
     }
 
     void OnEnable()
     {
-        Debug.Log("OnEnable()");
+        Debug.unityLogger.Log("EditorFile", "OnEnable()");
         Load();
     }
 
     void OnApplicationQuit()
     {
-        Debug.Log("OnApplicationQuit()");
+        Debug.unityLogger.Log("EditorFile", "OnApplicationQuit()");
         Save();
     }
 
-    void OnApplicationPause()
+    void OnApplicationPause(bool pauseStatus)
     {
-        Debug.Log("OnApplicationPause()");
-        Save();
+        Debug.unityLogger.Log("EditorFile", "OnApplicationPause(" + pauseStatus + ")");
+        if (pauseStatus)
+            Save();
     }
 }
