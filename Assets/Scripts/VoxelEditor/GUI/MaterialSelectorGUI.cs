@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class MaterialSelectorGUI : GUIPanel
 {
+    public delegate void MaterialSelectHandler(Material material);
+
     public VoxelArray voxelArray;
-    public bool overlay;
+    public MaterialSelectHandler handler;
+    public string materialDirectory = "GameAssets/Materials";
 
     List<string> materialNames;
     List<Texture> materialPreviews;
-    string materialDirectory = "GameAssets/Materials";
     List<string> materialSubDirectories;
 
     public override void OnEnable()
@@ -21,14 +23,6 @@ public class MaterialSelectorGUI : GUIPanel
 
     void Start()
     {
-        if (overlay)
-        {
-            materialDirectory = "GameAssets/Overlays";
-        }
-        else
-        {
-            materialDirectory = "GameAssets/Materials";
-        }
         UpdateMaterialDirectory();
     }
 
@@ -149,9 +143,9 @@ public class MaterialSelectorGUI : GUIPanel
 
     void MaterialSelected(string name)
     {
-        string materialPath = materialDirectory + "/" + name;
-        Material material = Resources.Load<Material>(materialPath);
-        voxelArray.AssignMaterial(material, overlay);
+        Material material = ResourcesDirectory.GetMaterial(materialDirectory + "/" + name);
+        if (handler != null)
+            handler(material);
         Destroy(this);
     }
 }

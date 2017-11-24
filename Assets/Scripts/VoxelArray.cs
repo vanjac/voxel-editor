@@ -564,14 +564,20 @@ public class VoxelArray : MonoBehaviour {
     } // end Adjust()
 
 
-    public void AssignMaterial(Material mat, bool overlay)
+    public void AssignMaterial(Material mat)
     {
         foreach (VoxelFaceReference faceRef in selectedFaces)
         {
-            if(overlay)
-                faceRef.voxel.faces[faceRef.faceI].overlay = mat;
-            else
-                faceRef.voxel.faces[faceRef.faceI].material = mat;
+            faceRef.voxel.faces[faceRef.faceI].material = mat;
+            VoxelModified(faceRef.voxel);
+        }
+    }
+
+    public void AssignOverlay(Material mat)
+    {
+        foreach (VoxelFaceReference faceRef in selectedFaces)
+        {
+            faceRef.voxel.faces[faceRef.faceI].overlay = mat;
             VoxelModified(faceRef.voxel);
         }
     }

@@ -7,8 +7,6 @@ public class PropertiesGUI : GUIPanel {
 
     public VoxelArray voxelArray;
 
-    MaterialSelectorGUI materialSelector;
-
     public override void OnGUI()
     {
         base.OnGUI();
@@ -25,26 +23,22 @@ public class PropertiesGUI : GUIPanel {
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin, scrollArea.width - 20, 20), "Set Material"))
         {
-            if (materialSelector == null)
-            {
-                materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-                materialSelector.voxelArray = voxelArray;
-            }
+            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
+            materialSelector.voxelArray = voxelArray;
+            materialSelector.handler = voxelArray.AssignMaterial;
         }
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 25, scrollArea.width - 70, 20), "Set Overlay"))
         {
-            if (materialSelector == null)
-            {
-                materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-                materialSelector.voxelArray = voxelArray;
-                materialSelector.overlay = true;
-            }
+            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
+            materialSelector.voxelArray = voxelArray;
+            materialSelector.materialDirectory = "GameAssets/Overlays";
+            materialSelector.handler = voxelArray.AssignOverlay;
         }
 
         if (GUI.Button(new Rect(scrollArea.xMax - 60, scrollArea.yMin + 25, 50, 20), "Clear"))
         {
-            voxelArray.AssignMaterial(null, true);
+            voxelArray.AssignOverlay(null);
         }
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Left"))
