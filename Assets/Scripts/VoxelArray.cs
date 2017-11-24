@@ -49,6 +49,8 @@ public class VoxelArray : MonoBehaviour {
     public GameObject voxelPrefab;
     public Material selectedMaterial;
 
+    public bool unsavedChanges = false; // set by VoxelArray, checked and cleared by EditorFile
+
     private OctreeNode rootNode;
 
     enum SelectMode
@@ -191,16 +193,16 @@ public class VoxelArray : MonoBehaviour {
 
     public void VoxelModified(Voxel voxel)
     {
+        unsavedChanges = true;
         if (voxel.IsEmpty())
-            RemoveVoxel(voxel);
+        {
+            Destroy(voxel.gameObject);
+            unloadUnusedAssets = true;
+        }
         else
+        {
             voxel.UpdateVoxel();
-    }
-
-    public void RemoveVoxel(Voxel voxel)
-    {
-        Destroy(voxel.gameObject);
-        unloadUnusedAssets = true;
+        }
     }
 
     // called by voxels that are being destroyed
