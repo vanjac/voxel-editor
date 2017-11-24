@@ -51,11 +51,18 @@ public class VoxelArray : MonoBehaviour {
 
     private OctreeNode rootNode;
 
-    // select state
-    bool selection = false;
-    Bounds selectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
-    Bounds selectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
+    enum SelectMode
+    {
+        NONE, // nothing selected
+        ADJUSTED, // selection has moved since it was set
+        BOX, // select inside a 3D box
+        FACE // fill-select adjacent faces
+    }
+
+    SelectMode selectMode = SelectMode.NONE;
     List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
+    Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
+    Bounds boxSelectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     bool unloadUnusedAssets = false;
 
@@ -64,7 +71,7 @@ public class VoxelArray : MonoBehaviour {
 
         Voxel.selectedMaterial = selectedMaterial;
 
-        UpdateSelection();
+        ClearSelection();
 	}
 
     void Update()
@@ -244,55 +251,68 @@ public class VoxelArray : MonoBehaviour {
         }
     }
 
-    // below Select functions are called by the camera
 
+    // called by TouchListener
     public void SelectBackground()
     {
-        selectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
-        selectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
-        selection = false;
-        UpdateSelection();
-        if (selectedFaces.Count > 0)
-        {
-            Debug.Log("There were faces in the selected faces list that weren't marked as selected!");
-            selectedFaces.Clear();
-        }
+        ClearSelection();
     }
 
+    // called by TouchListener
     public void SelectDown(Voxel voxel, int faceI)
     {
-        selectStartBounds = voxel.GetFaceBounds(faceI);
-        selectCurrentBounds = selectStartBounds;
-        selection = true;
-        UpdateSelection();
+        selectMode = SelectMode.BOX;
+        boxSelectStartBounds = voxel.GetFaceBounds(faceI);
+        boxSelectCurrentBounds = boxSelectStartBounds;
+        UpdateBoxSelection();
     }
 
+    // called by TouchListener
     public void SelectDrag(Voxel voxel, int faceI)
     {
-        if (!selection)
+        if (selectMode != SelectMode.BOX)
             return;
-        Bounds oldSelectCurrentBounds = selectCurrentBounds;
-        selectCurrentBounds = selectStartBounds;
-        selectCurrentBounds.Encapsulate(voxel.GetFaceBounds(faceI));
-        if (oldSelectCurrentBounds != selectCurrentBounds)
-            UpdateSelection();
+        Bounds oldSelectCurrentBounds = boxSelectCurrentBounds;
+        boxSelectCurrentBounds = boxSelectStartBounds;
+        boxSelectCurrentBounds.Encapsulate(voxel.GetFaceBounds(faceI));
+        if (oldSelectCurrentBounds != boxSelectCurrentBounds)
+            UpdateBoxSelection();
     }
 
-    public void UpdateSelection()
+    private void ClearMoveAxes()
     {
         if (axes == null)
             return;
-        if (selection)
-        {
-            axes.position = selectCurrentBounds.center;
-            axes.gameObject.SetActive(true);
-        }
-        else
-        {
-            axes.gameObject.SetActive(false);
-        }
+        axes.gameObject.SetActive(false);
+    }
 
-        Bounds largerSelectCurrentBounds = selectCurrentBounds;
+    private void SetMoveAxes(Vector3 position)
+    {
+        if (axes == null)
+            return;
+        axes.position = position;
+        axes.gameObject.SetActive(true);
+    }
+
+    private void ClearSelection()
+    {
+        foreach (VoxelFaceReference faceRef in selectedFaces)
+        {
+            faceRef.voxel.faces[faceRef.faceI].selected = false;
+            faceRef.voxel.UpdateVoxel();
+        }
+        selectedFaces.Clear();
+        ClearMoveAxes();
+        selectMode = SelectMode.NONE;
+    }
+
+    private void UpdateBoxSelection()
+    {
+        if (selectMode != SelectMode.BOX)
+            return;
+        SetMoveAxes(boxSelectCurrentBounds.center);
+
+        Bounds largerSelectCurrentBounds = boxSelectCurrentBounds;
         // Bounds is by reference, not value, so this won't modify selectCurrentBounds
         largerSelectCurrentBounds.Expand(new Vector3(0.1f, 0.1f, 0.1f));
 
@@ -349,8 +369,8 @@ public class VoxelArray : MonoBehaviour {
             FaceSelectFloodFill(VoxelAt(newPos, false), faceI);
         }
 
-        axes.position = position + new Vector3(0.5f, 0.5f, 0.5f);
-        axes.gameObject.SetActive(true);
+        selectMode = SelectMode.FACE;
+        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f));
     }
 
     public void Adjust(Vector3 adjustDirection)
@@ -521,8 +541,7 @@ public class VoxelArray : MonoBehaviour {
             }
         }
 
-        selectStartBounds.center += adjustDirection;
-        selectCurrentBounds.center += adjustDirection;
+        selectMode = SelectMode.ADJUSTED;
     } // end Adjust()
 
 
