@@ -10,6 +10,7 @@ public class MaterialSelectorGUI : GUIPanel
     public VoxelArray voxelArray;
     public MaterialSelectHandler handler;
     public string materialDirectory = "GameAssets/Materials";
+    public bool allowNullMaterial = false;
 
     List<string> materialNames;
     List<Texture> materialPreviews;
@@ -40,9 +41,19 @@ public class MaterialSelectorGUI : GUIPanel
         float scrollAreaWidth = panelRect.width - 1;
         float buttonWidth = scrollAreaWidth - 20;
         float scrollAreaHeight = materialSubDirectories.Count * 25 + materialPreviews.Count * buttonWidth;
+        if (allowNullMaterial)
+            scrollAreaHeight += 25;
         Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
         scroll = GUI.BeginScrollView(scrollBox, scroll, scrollArea);
         float y = 0;
+        if (allowNullMaterial)
+        {
+            if (GUI.Button(new Rect(10, y, buttonWidth, 20), "Clear"))
+            {
+                MaterialSelected(null);
+            }
+            y += 25;
+        }
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
             string subDir = materialSubDirectories[i];
@@ -143,7 +154,9 @@ public class MaterialSelectorGUI : GUIPanel
 
     void MaterialSelected(string name)
     {
-        Material material = ResourcesDirectory.GetMaterial(materialDirectory + "/" + name);
+        Material material = null;
+        if (name != null)
+            material = ResourcesDirectory.GetMaterial(materialDirectory + "/" + name);
         if (handler != null)
             handler(material);
         Destroy(this);

@@ -28,17 +28,13 @@ public class PropertiesGUI : GUIPanel {
             materialSelector.handler = voxelArray.AssignMaterial;
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 25, scrollArea.width - 70, 20), "Set Overlay"))
+        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 25, scrollArea.width - 20, 20), "Set Overlay"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
             materialSelector.voxelArray = voxelArray;
             materialSelector.materialDirectory = "GameAssets/Overlays";
+            materialSelector.allowNullMaterial = true;
             materialSelector.handler = voxelArray.AssignOverlay;
-        }
-
-        if (GUI.Button(new Rect(scrollArea.xMax - 60, scrollArea.yMin + 25, 50, 20), "Clear"))
-        {
-            voxelArray.AssignOverlay(null);
         }
 
         if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Left"))
