@@ -57,7 +57,20 @@ public class PropertiesGUI : GUIPanel {
             voxelArray.OrientFaces(5);
         }
 
+        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 100, scrollArea.width - 20, 20), "Set Sky"))
+        {
+            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
+            materialSelector.voxelArray = voxelArray;
+            materialSelector.materialDirectory = "GameAssets/Skies";
+            materialSelector.handler = SetSkybox;
+        }
+
         GUI.EndScrollView();
+    }
+
+    private void SetSkybox(Material sky)
+    {
+        RenderSettings.skybox = sky;
     }
 
 }

@@ -119,6 +119,9 @@ public class MaterialSelectorGUI : GUIPanel
                 else if (material.HasProperty("_ColorControl"))
                     // water shader
                     previewTexture = material.GetTexture("_ColorControl");
+                else if (material.HasProperty("_FrontTex"))
+                    // skybox
+                    previewTexture = material.GetTexture("_FrontTex");
                 if (previewTexture == null)
                 {
                     Texture2D solidColorTexture = new Texture2D(1, 1);
