@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ResourcesDirectory {
@@ -16,5 +17,12 @@ public class ResourcesDirectory {
             }
             return _dirList;
         }
+    }
+
+    public static Material GetMaterial(string path)
+    {
+        // remove extension if necessary
+        path = Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path);
+        return Resources.Load<Material>(path);
     }
 }

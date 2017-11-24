@@ -94,8 +94,7 @@ public class MapFileReader {
                         checkFileName = checkFileName.Substring(1);
                     if (checkFileName == name)
                     {
-                        string path = Path.GetDirectoryName(newDirEntry) + "/" + Path.GetFileNameWithoutExtension(newDirEntry);
-                        mat = Resources.Load<Material>(path);
+                        mat = ResourcesDirectory.GetMaterial(newDirEntry);
                         break;
                     }
                 }

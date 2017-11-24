@@ -97,7 +97,7 @@ public class MaterialSelectorGUI : GUIPanel
             else if (extension == ".mat")
             {
                 materialNames.Add(Path.GetFileNameWithoutExtension(newDirEntry));
-                Material material = Resources.Load<Material>(directory + "/" + Path.GetFileNameWithoutExtension(newDirEntry));
+                Material material = ResourcesDirectory.GetMaterial(newDirEntry);
                 if (material == null)
                 {
                     materialPreviews.Add(null);
