@@ -370,7 +370,7 @@ public class VoxelArray : MonoBehaviour {
         }
 
         selectMode = SelectMode.FACE;
-        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f));
+        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.NormalForFaceI(faceI) / 2);
     }
 
     public void Adjust(Vector3 adjustDirection)
