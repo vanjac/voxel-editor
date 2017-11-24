@@ -21,6 +21,24 @@ public struct VoxelFace
         orientation = 0;
         selected = false;
     }
+
+    public static int GetOrientationRotation(byte orientation)
+    {
+        return orientation & 3;
+    }
+
+    public static bool GetOrientationMirror(byte orientation)
+    {
+        return (orientation & 4) != 0;
+    }
+
+    public static byte Orientation(int rotation, bool mirror)
+    {
+        while (rotation < 0)
+            rotation += 4;
+        rotation %= 4;
+        return (byte)(rotation + (mirror ? 4 : 0));
+    }
 }
 
 public struct VoxelFaceReference
@@ -199,16 +217,16 @@ public class Voxel : MonoBehaviour
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
                 vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-                int uvNum = face.orientation & 3;
+                int uvNum = VoxelFace.GetOrientationRotation(face.orientation);
                 if (faceNum == 1 || faceNum == 2 || faceNum == 4)
                     uvNum += 1;
-                if ((((face.orientation & 4) != 0) ^ (faceNum % 2) == 1))
+                if ((VoxelFace.GetOrientationMirror(face.orientation) ^ (faceNum % 2) == 1))
                     uvNum += i;
                 else
                     uvNum += 4 - i;
                 uvNum %= 4;
                 Vector2 uvOrigin; // materials can span multiple voxels
-                if ((face.orientation & 3) % 2 == 1 ^ (faceNum == 0 || faceNum == 1))
+                if (VoxelFace.GetOrientationRotation(face.orientation) % 2 == 1 ^ (faceNum == 0 || faceNum == 1))
                     uvOrigin = new Vector2(transformPos[(axis + 2) % 3], transformPos[(axis + 1) % 3]);
                 else
                     uvOrigin = new Vector2(transformPos[(axis + 1) % 3], transformPos[(axis + 2) % 3]);
