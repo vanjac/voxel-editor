@@ -7,13 +7,7 @@ public class GameLoad : MonoBehaviour {
 
     void Start()
     {
-        string name = "mapsave";
-        GameObject selectedMap = GameObject.Find("SelectedMap");
-        if (selectedMap != null)
-        {
-            name = selectedMap.GetComponent<SelectedMap>().mapName;
-        }
-        MapFileReader reader = new MapFileReader(name);
+        MapFileReader reader = new MapFileReader(SelectedMap.GetSelectedMapName());
         reader.Read(null, GetComponent<VoxelArray>(), false);
 	}
 

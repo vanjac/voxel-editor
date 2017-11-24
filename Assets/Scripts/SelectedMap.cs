@@ -9,4 +9,13 @@ public class SelectedMap : MonoBehaviour {
     void Start () {
         DontDestroyOnLoad(this);
     }
+
+    public static string GetSelectedMapName()
+    {
+        GameObject selectedMap = GameObject.Find("SelectedMap");
+        if (selectedMap != null)
+            return selectedMap.GetComponent<SelectedMap>().mapName;
+        else
+            return "mapsave";
+    }
 }
