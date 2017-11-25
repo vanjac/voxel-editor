@@ -538,7 +538,6 @@ public class VoxelArray : MonoBehaviour {
                             // prevent edge case when pulling a face away that was previously cater-corner to another open region
                             Voxel newSideVoxel = VoxelAt(oldPos + Voxel.NormalForFaceI(sideFaceI), true);
                             faceChangeQueue.Add(new FaceChange(newSideVoxel, sideFaceI, sideVoxel.faces[sideFaceI]));
-
                         }
                     }
 
