@@ -47,14 +47,19 @@ public class GUIPanel : MonoBehaviour {
         GUI.depth = 1;
         GUI.enabled = true;
         if (depth > frontDepth)
-            GUI.enabled = false;
+            GUI.color = new Color(1, 1, 1, 0.4f);
+        else
+            GUI.color = Color.white;
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Moved)
                 touchMoved = true;
             if (touchMoved && PanelContainsPoint(touch.position))
+            {
                 GUI.enabled = false;
+                GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
+            }
             if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position) && depth < 0)
                 Destroy(this);
         }
