@@ -7,7 +7,14 @@ public struct VoxelFace
     public Material material;
     public Material overlay;
     public byte orientation;
-    public bool selected;
+    public bool addSelected, storedSelected;
+    public bool selected
+    {
+        get
+        {
+            return addSelected || storedSelected;
+        }
+    }
 
     public bool IsEmpty()
     {
@@ -19,7 +26,8 @@ public struct VoxelFace
         material = null;
         overlay = null;
         orientation = 0;
-        selected = false;
+        addSelected = false;
+        storedSelected = false;
     }
 
     public static int GetOrientationRotation(byte orientation)

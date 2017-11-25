@@ -157,6 +157,8 @@ MonoBehaviour:
   voxelPrefab: {fileID: 1695945752962522, guid: 6aaef85e5238dcc4e9250d27386663fb,
     type: 2}
   selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
+  unsavedChanges: 0
+  selectMode: 0
 --- !u!114 &213926860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +517,7 @@ MonoBehaviour:
   scaleFactor: 0
   scaledScreenWidth: 0
   depth: 0
+  voxelArray: {fileID: 213926859}
   editorFile: {fileID: 213926860}
 --- !u!1 &1061257463
 GameObject:

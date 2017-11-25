@@ -53,7 +53,7 @@ public class VoxelArray : MonoBehaviour {
 
     private OctreeNode rootNode;
 
-    enum SelectMode
+    public enum SelectMode
     {
         NONE, // nothing selected
         ADJUSTED, // selection has moved since it was set
@@ -61,8 +61,11 @@ public class VoxelArray : MonoBehaviour {
         FACE // fill-select adjacent faces
     }
 
-    SelectMode selectMode = SelectMode.NONE;
+    public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
+    // all faces where face.addSelected == true
     List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
+    // all faces where face.storedSelected == true
+    List<VoxelFaceReference> storedSelectedFaces = new List<VoxelFaceReference>();
     Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
     Bounds boxSelectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
 
@@ -296,23 +299,24 @@ public class VoxelArray : MonoBehaviour {
         axes.gameObject.SetActive(true);
     }
 
-    private void ClearSelection()
+    public void ClearSelection()
     {
         foreach (VoxelFaceReference faceRef in selectedFaces)
         {
-            faceRef.voxel.faces[faceRef.faceI].selected = false;
+            faceRef.voxel.faces[faceRef.faceI].addSelected = false;
             faceRef.voxel.UpdateVoxel();
         }
         selectedFaces.Clear();
-        ClearMoveAxes();
+        if(storedSelectedFaces.Count == 0)
+            ClearMoveAxes();
         selectMode = SelectMode.NONE;
     }
 
     private void SelectFace(VoxelFaceReference faceRef)
     {
-        if (faceRef.face.selected)
+        if (faceRef.face.addSelected)
             return;
-        faceRef.voxel.faces[faceRef.faceI].selected = true;
+        faceRef.voxel.faces[faceRef.faceI].addSelected = true;
         selectedFaces.Add(faceRef);
         faceRef.voxel.UpdateVoxel();
     }
@@ -324,9 +328,9 @@ public class VoxelArray : MonoBehaviour {
 
     private void DeselectFace(VoxelFaceReference faceRef)
     {
-        if (!faceRef.face.selected)
+        if (!faceRef.face.addSelected)
             return;
-        faceRef.voxel.faces[faceRef.faceI].selected = false;
+        faceRef.voxel.faces[faceRef.faceI].addSelected = false;
         selectedFaces.Remove(faceRef);
         faceRef.voxel.UpdateVoxel();
     }
@@ -334,6 +338,66 @@ public class VoxelArray : MonoBehaviour {
     private void DeselectFace(Voxel voxel, int faceI)
     {
         DeselectFace(new VoxelFaceReference(voxel, faceI));
+    }
+
+    private System.Collections.Generic.IEnumerable<VoxelFaceReference> IterateSelected()
+    {
+        foreach (VoxelFaceReference faceRef in selectedFaces)
+            yield return faceRef;
+        foreach (VoxelFaceReference faceRef in storedSelectedFaces)
+            if (!faceRef.face.addSelected) // make sure the face isn't also in selectedFaces
+                yield return faceRef;
+    }
+
+    public void StoreSelection()
+    {
+        // move faces out of storedSelectedFaces and into selectedFaces
+        foreach (VoxelFaceReference faceRef in selectedFaces)
+        {
+            faceRef.voxel.faces[faceRef.faceI].addSelected = false;
+            if (faceRef.face.storedSelected)
+                continue; // already in storedSelectedFaces
+            faceRef.voxel.faces[faceRef.faceI].storedSelected = true;
+            storedSelectedFaces.Add(faceRef);
+            // shouldn't need to update the voxel since it should have already been selected
+        }
+        selectedFaces.Clear();
+        selectMode = SelectMode.NONE;
+    }
+
+    private void MergeStoredSelected()
+    {
+        // move faces out of storedSelectedFaces and into selectedFaces
+        // opposite of StoreSelection()
+        foreach (VoxelFaceReference faceRef in storedSelectedFaces)
+        {
+            faceRef.voxel.faces[faceRef.faceI].storedSelected = false;
+            if (faceRef.face.addSelected)
+                continue; // already in selectedFaces
+            faceRef.voxel.faces[faceRef.faceI].addSelected = true;
+            selectedFaces.Add(faceRef);
+            // shouldn't need to update the voxel since it should have already been selected
+        }
+        storedSelectedFaces.Clear();
+        selectMode = SelectMode.ADJUSTED;
+    }
+
+    public void ClearStoredSelection()
+    {
+        foreach (VoxelFaceReference faceRef in storedSelectedFaces)
+        {
+            faceRef.voxel.faces[faceRef.faceI].storedSelected = false;
+            faceRef.voxel.UpdateVoxel();
+        }
+        storedSelectedFaces.Clear();
+        if (selectedFaces.Count == 0)
+            ClearMoveAxes();
+    }
+
+    // including stored selection
+    public bool SomethingIsSelected()
+    {
+        return storedSelectedFaces.Count != 0 || selectedFaces.Count != 0;
     }
 
     private void UpdateBoxSelection()
@@ -373,7 +437,7 @@ public class VoxelArray : MonoBehaviour {
         VoxelFace face = voxel.faces[faceI];
         if (face.IsEmpty())
             return;
-        if (face.selected)
+        if (face.addSelected)
             return;
         SelectFace(voxel, faceI);
 
@@ -394,6 +458,11 @@ public class VoxelArray : MonoBehaviour {
 
     public void Adjust(Vector3 adjustDirection)
     {
+        MergeStoredSelected();
+        // now we can safely look only the face addSelected property and the selectedFaces list
+        // and ignore the storedSelected property and the storedSelectedFaces list
+        // face.selected can be a substitute for face.addSelected
+
         var faceChangeQueue = new List<FaceChange>();
 
         for (int i = 0; i < selectedFaces.Count; i++)
@@ -529,18 +598,18 @@ public class VoxelArray : MonoBehaviour {
             int faceI = faceChange.faceRef.faceI;
             if (faceChange.updateFace)
             {
-                bool oldSelect = voxel.faces[faceI].selected;
+                bool oldSelect = voxel.faces[faceI].addSelected;
                 if (voxel.faces[faceI].IsEmpty())
                     oldSelect = false;
                 voxel.faces[faceI] = faceChange.newFace;
                 if (voxel.faces[faceI].IsEmpty())
-                    voxel.faces[faceI].selected = false;
+                    voxel.faces[faceI].addSelected = false;
                 else
-                    voxel.faces[faceI].selected = oldSelect;
+                    voxel.faces[faceI].addSelected = oldSelect;
             }
             if (faceChange.updateSelect && !voxel.faces[faceI].IsEmpty())
             {
-                voxel.faces[faceI].selected = faceChange.newFace.selected;
+                voxel.faces[faceI].addSelected = faceChange.newFace.addSelected;
             }
         }
         foreach (FaceChange faceChange in faceChangeQueue)
@@ -554,13 +623,11 @@ public class VoxelArray : MonoBehaviour {
                 selectedFaces.RemoveAt(i);
                 continue;
             }
-            if (!faceRef.face.selected)
+            if (!faceRef.face.addSelected)
             {
-                faceRef.voxel.faces[faceRef.faceI].selected = true;
+                faceRef.voxel.faces[faceRef.faceI].addSelected = true;
             }
         }
-
-        selectMode = SelectMode.ADJUSTED;
     } // end Adjust()
 
 
