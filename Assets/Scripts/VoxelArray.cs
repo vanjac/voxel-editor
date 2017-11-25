@@ -533,8 +533,13 @@ public class VoxelArray : MonoBehaviour {
                     if (sideVoxel != null && (!sideVoxel.faces[sideFaceI].IsEmpty()))
                     {
                         // expand side
-                        Voxel newSideVoxel = VoxelAt(oldPos + Voxel.NormalForFaceI(sideFaceI), true);
-                        faceChangeQueue.Add(new FaceChange(newSideVoxel, sideFaceI, sideVoxel.faces[sideFaceI]));
+                        if (sideVoxel.faces[oppositeFaceI].IsEmpty())
+                        {
+                            // prevent edge case when pulling a face away that was previously cater-corner to another open region
+                            Voxel newSideVoxel = VoxelAt(oldPos + Voxel.NormalForFaceI(sideFaceI), true);
+                            faceChangeQueue.Add(new FaceChange(newSideVoxel, sideFaceI, sideVoxel.faces[sideFaceI]));
+
+                        }
                     }
 
                     if (!oldVoxel.faces[sideFaceI].IsEmpty())
