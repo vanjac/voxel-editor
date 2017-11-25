@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VoxelArray : MonoBehaviour {
 
-    struct FaceChange
+    private struct FaceChange
     {
         public VoxelFaceReference faceRef;
         public VoxelFace newFace;
@@ -19,7 +19,7 @@ public class VoxelArray : MonoBehaviour {
         }
     }
 
-    class OctreeNode
+    private class OctreeNode
     {
         public Vector3Int position;
         public int size;
@@ -63,13 +63,13 @@ public class VoxelArray : MonoBehaviour {
 
     public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
     // all faces where face.addSelected == true
-    List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
+    private List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
     // all faces where face.storedSelected == true
-    List<VoxelFaceReference> storedSelectedFaces = new List<VoxelFaceReference>();
-    Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
-    Bounds boxSelectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
+    private List<VoxelFaceReference> storedSelectedFaces = new List<VoxelFaceReference>();
+    private Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
+    private Bounds boxSelectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
 
-    bool unloadUnusedAssets = false;
+    private bool unloadUnusedAssets = false;
 
 	void Awake () {
         rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
