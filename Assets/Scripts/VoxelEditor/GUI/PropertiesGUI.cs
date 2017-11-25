@@ -21,14 +21,19 @@ public class PropertiesGUI : GUIPanel {
         Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
         scroll = GUI.BeginScrollView(scrollBox, scroll, scrollArea);
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin, scrollArea.width - 20, 20), "Set Material"))
+        Rect paddedScrollArea = new Rect(scrollArea.xMin + 10, scrollArea.yMin, scrollArea.width - 20, scrollArea.height);
+        GUILayout.BeginArea(paddedScrollArea);
+
+        GUILayout.Label("FACES:");
+
+        if (GUILayout.Button("Set Material"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
             materialSelector.voxelArray = voxelArray;
             materialSelector.handler = voxelArray.AssignMaterial;
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 25, scrollArea.width - 20, 20), "Set Overlay"))
+        if (GUILayout.Button("Set Overlay"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
             materialSelector.voxelArray = voxelArray;
@@ -37,27 +42,36 @@ public class PropertiesGUI : GUIPanel {
             materialSelector.handler = voxelArray.AssignOverlay;
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Left"))
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Left"))
         {
             voxelArray.OrientFaces(3);
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 50, (scrollArea.width - 20) / 2, 20), "Right"))
+        if (GUILayout.Button("Right"))
         {
             voxelArray.OrientFaces(1);
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip H"))
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Flip H"))
         {
             voxelArray.OrientFaces(7);
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10 + (scrollArea.width - 20) / 2, scrollArea.yMin + 75, (scrollArea.width - 20) / 2, 20), "Flip V"))
+        if (GUILayout.Button("Flip V"))
         {
             voxelArray.OrientFaces(5);
         }
 
-        if (GUI.Button(new Rect(scrollArea.xMin + 10, scrollArea.yMin + 100, scrollArea.width - 20, 20), "Set Sky"))
+        GUILayout.EndHorizontal();
+
+        GUILayout.Label("MAP:");
+
+        if (GUILayout.Button("Set Sky"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
             materialSelector.voxelArray = voxelArray;
@@ -65,6 +79,21 @@ public class PropertiesGUI : GUIPanel {
             materialSelector.handler = SetSkybox;
         }
 
+        GUILayout.Label("Ambient light intensity:");
+
+        float oldIntensity = RenderSettings.ambientIntensity;
+        float newIntensity = GUILayout.HorizontalSlider(oldIntensity, 0, 3);
+        if (newIntensity != oldIntensity)
+            RenderSettings.ambientIntensity = newIntensity;
+
+        GUILayout.Label("Directional light intensity:");
+
+        oldIntensity = RenderSettings.sun.intensity;
+        newIntensity = GUILayout.HorizontalSlider(oldIntensity, 0, 3);
+        if (newIntensity != oldIntensity)
+            RenderSettings.sun.intensity = newIntensity;
+
+        GUILayout.EndArea();
         GUI.EndScrollView();
     }
 
