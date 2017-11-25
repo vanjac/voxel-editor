@@ -100,7 +100,7 @@ public class VoxelArray : MonoBehaviour {
     public Voxel VoxelAt(Vector3 position, bool createIfMissing)
     {
         Vector3Int intPosition = Vector3ToInt(position);
-        if (!rootNode.InBounds(intPosition))
+        while (!rootNode.InBounds(intPosition))
         {
             // will it be the large end of the new node that will be created
             bool xLarge = position.x < rootNode.position.x;
