@@ -3,7 +3,7 @@ GameAssets/SketchupTextures: Sketchup
 GameAssets/sky5X_textures: Sky5X One (Asset Store)
 GameAssets/skybox_editor: https://developer.valvesoftware.com/wiki/File:Toolsskybox.gif
 GameAssets/SurfaceTextures: Standard Assets
-GameAssets/Water (Basic): Standard Assets
+GameAssets/Water (Basic): Standard Assets (modified)
 Scripts/Game/FirstPersonCharacter: Standard Assets (modified)
 Scripts/Libraries/SimpleJSON: http://wiki.unity3d.com/index.php/SimpleJSON
 Standard Assets: Standard Assets
