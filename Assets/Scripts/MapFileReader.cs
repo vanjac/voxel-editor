@@ -113,7 +113,13 @@ public class MapFileReader {
     private void ReadLighting(JSONObject lighting, List<Material> materials)
     {
         if (lighting["sky"] != null)
-            RenderSettings.skybox = materials[lighting["sky"].AsInt];
+        {
+            Material skybox = materials[lighting["sky"].AsInt];
+            if (skybox != null) // default skybox is null
+            {
+                RenderSettings.skybox = skybox;
+            }
+        }
         if (lighting["ambientIntensity"] != null)
             RenderSettings.ambientIntensity = lighting["ambientIntensity"].AsFloat;
         if (lighting["sun"] != null)
