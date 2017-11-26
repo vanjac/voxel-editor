@@ -545,7 +545,7 @@ MonoBehaviour:
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
-    m_FixedHeight: 12
+    m_FixedHeight: 16
     m_StretchWidth: 1
     m_StretchHeight: 0
   m_horizontalSliderThumb:
@@ -611,9 +611,9 @@ MonoBehaviour:
     m_TextClipping: 1
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 0
-    m_FixedHeight: 12
-    m_StretchWidth: 1
+    m_FixedWidth: 16
+    m_FixedHeight: 16
+    m_StretchWidth: 0
     m_StretchHeight: 0
   m_verticalSlider:
     m_Name: verticalslider
