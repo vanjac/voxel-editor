@@ -18,7 +18,7 @@ public class GUIPanel : MonoBehaviour {
     public float scaledScreenWidth;
     public int depth = 0;
 
-    private Vector2 touchStartPos = Vector2.zero;
+    protected Vector2 touchStartPos = Vector2.zero;
     protected bool horizontalSlide, verticalSlide;
 
     public virtual void OnEnable()

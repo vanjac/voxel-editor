@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class PropertiesGUI : GUIPanel {
 
-    const float SLIDE_HIDDEN = -150;
+    const float SLIDE_HIDDEN = -160;
 
     float slide = 0;
     public VoxelArray voxelArray;
+    private bool slidingPanel = false;
     private bool adjustingSlider = false;
 
     public override void OnGUI()
@@ -18,20 +19,10 @@ public class PropertiesGUI : GUIPanel {
         panelRect = new Rect(slide, 0, 180, targetHeight);
         GUI.Box(panelRect, voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties");
 
-        bool slidingPanel = false;
-        if (Input.touchCount == 1)
+        if (slidingPanel)
         {
-            Touch touch = Input.GetTouch(0);
-            if (horizontalSlide && (!adjustingSlider) && PanelContainsPoint(touch.position))
-            {
-                GUI.enabled = false;
-                GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
-                slidingPanel = true;
-            }
-        }
-        else
-        {
-            adjustingSlider = false;
+            GUI.enabled = false;
+            GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
         }
 
         Rect scrollBox = new Rect(panelRect.xMin, panelRect.yMin + 25, panelRect.width, panelRect.height - 25);
@@ -48,6 +39,20 @@ public class PropertiesGUI : GUIPanel {
         else
             MapPropertiesGUI();
 
+        if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (horizontalSlide && (!adjustingSlider) && PanelContainsPoint(touchStartPos))
+            {
+                slidingPanel = true;
+            }
+        }
+        else
+        {
+            adjustingSlider = false;
+            slidingPanel = false;
+        }
+
         if (slidingPanel)
         {
             Touch touch = Input.GetTouch(0);
@@ -60,9 +65,9 @@ public class PropertiesGUI : GUIPanel {
             if (Event.current.type == EventType.Repaint)
             {
                 if (slide > SLIDE_HIDDEN / 2)
-                    slide += 5;
+                    slide += 5 * scaleFactor;
                 else
-                    slide -= 5;
+                    slide -= 5 * scaleFactor;
             }
         }
         if (slide > 0)
