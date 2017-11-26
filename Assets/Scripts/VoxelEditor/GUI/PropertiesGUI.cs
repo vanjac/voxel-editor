@@ -17,7 +17,7 @@ public class PropertiesGUI : GUIPanel {
 
         Rect scrollBox = new Rect(panelRect.xMin, panelRect.yMin + 25, panelRect.width, panelRect.height - 25);
         float scrollAreaWidth = panelRect.width - 1;
-        float scrollAreaHeight = scrollBox.height - 1; // TODO
+        float scrollAreaHeight = scrollBox.height * 1.5f; // TODO
         Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
         scroll = GUI.BeginScrollView(scrollBox, scroll, scrollArea);
 
@@ -81,23 +81,47 @@ public class PropertiesGUI : GUIPanel {
 
         GUILayout.Label("Ambient light intensity:");
 
-        float oldIntensity = RenderSettings.ambientIntensity;
-        float newIntensity = GUILayout.HorizontalSlider(oldIntensity, 0, 3);
-        if (newIntensity != oldIntensity)
-            RenderSettings.ambientIntensity = newIntensity;
+        float oldValue = RenderSettings.ambientIntensity;
+        float newValue = GUILayout.HorizontalSlider(oldValue, 0, 3);
+        if (newValue != oldValue)
+            RenderSettings.ambientIntensity = newValue;
 
         GUILayout.Label("Sun intensity:");
 
-        oldIntensity = RenderSettings.sun.intensity;
-        newIntensity = GUILayout.HorizontalSlider(oldIntensity, 0, 3);
-        if (newIntensity != oldIntensity)
-            RenderSettings.sun.intensity = newIntensity;
+        oldValue = RenderSettings.sun.intensity;
+        newValue = GUILayout.HorizontalSlider(oldValue, 0, 3);
+        if (newValue != oldValue)
+            RenderSettings.sun.intensity = newValue;
 
         if (GUILayout.Button("Sun Color"))
         {
             ColorPickerGUI colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.color = RenderSettings.sun.color;
             colorPicker.handler = SetSunColor;
+        }
+
+        GUILayout.Label("Sun Pitch:");
+
+        oldValue = RenderSettings.sun.transform.rotation.eulerAngles.x;
+        if (oldValue > 270)
+            oldValue -= 360;
+        newValue = GUILayout.HorizontalSlider(oldValue, -90, 90);
+        if (newValue != oldValue)
+        {
+            Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
+            eulerAngles.x = newValue;
+            RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
+        }
+
+        GUILayout.Label("Sun Yaw:");
+
+        oldValue = RenderSettings.sun.transform.rotation.eulerAngles.y;
+        newValue = GUILayout.HorizontalSlider(oldValue, 0, 360);
+        if (newValue != oldValue)
+        {
+            Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
+            eulerAngles.y = newValue;
+            RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
         }
 
         GUILayout.EndArea();
