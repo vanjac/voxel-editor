@@ -69,7 +69,8 @@ public class GUIPanel : MonoBehaviour {
             {
                 GUI.enabled = false;
                 GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
-                scroll.y += touch.deltaPosition.y / scaleFactor;
+                if (Event.current.type == EventType.Repaint) // scroll at correct rate
+                    scroll.y += touch.deltaPosition.y / scaleFactor;
             }
             if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position) && depth < 0)
                 Destroy(this);
