@@ -5,15 +5,34 @@ using UnityEngine;
 
 public class PropertiesGUI : GUIPanel {
 
+    const float SLIDE_HIDDEN = -150;
+
+    float slide = 0;
     public VoxelArray voxelArray;
+    private bool adjustingSlider = false;
 
     public override void OnGUI()
     {
         base.OnGUI();
 
-        panelRect = new Rect(0, 0, 180, targetHeight);
-
+        panelRect = new Rect(slide, 0, 180, targetHeight);
         GUI.Box(panelRect, voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties");
+
+        bool slidingPanel = false;
+        if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (horizontalSlide && (!adjustingSlider) && PanelContainsPoint(touch.position))
+            {
+                GUI.enabled = false;
+                GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
+                slidingPanel = true;
+            }
+        }
+        else
+        {
+            adjustingSlider = false;
+        }
 
         Rect scrollBox = new Rect(panelRect.xMin, panelRect.yMin + 25, panelRect.width, panelRect.height - 25);
         float scrollAreaWidth = panelRect.width - 1;
@@ -28,6 +47,28 @@ public class PropertiesGUI : GUIPanel {
             SelectionPropertiesGUI();
         else
             MapPropertiesGUI();
+
+        if (slidingPanel)
+        {
+            Touch touch = Input.GetTouch(0);
+            slidingPanel = true;
+            if (Event.current.type == EventType.Repaint) // scroll at correct rate
+                slide += touch.deltaPosition.x / scaleFactor;
+        }
+        else
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (slide > SLIDE_HIDDEN / 2)
+                    slide += 5;
+                else
+                    slide -= 5;
+            }
+        }
+        if (slide > 0)
+            slide = 0;
+        if (slide < SLIDE_HIDDEN)
+            slide = SLIDE_HIDDEN;
 
         GUILayout.EndArea();
         GUI.EndScrollView();
@@ -97,6 +138,7 @@ public class PropertiesGUI : GUIPanel {
         {
             RenderSettings.ambientIntensity = newValue;
             voxelArray.unsavedChanges = true;
+            adjustingSlider = true;
         }
 
         GUILayout.Label("Sun intensity:");
@@ -107,6 +149,7 @@ public class PropertiesGUI : GUIPanel {
         {
             RenderSettings.sun.intensity = newValue;
             voxelArray.unsavedChanges = true;
+            adjustingSlider = true;
         }
 
         if (GUILayout.Button("Sun Color"))
@@ -128,6 +171,7 @@ public class PropertiesGUI : GUIPanel {
             eulerAngles.x = newValue;
             RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
             voxelArray.unsavedChanges = true;
+            adjustingSlider = true;
         }
 
         GUILayout.Label("Sun Yaw:");
@@ -140,6 +184,7 @@ public class PropertiesGUI : GUIPanel {
             eulerAngles.y = newValue;
             RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
             voxelArray.unsavedChanges = true;
+            adjustingSlider = true;
         }
     }
 
