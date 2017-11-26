@@ -13,19 +13,28 @@ public class PropertiesGUI : GUIPanel {
 
         panelRect = new Rect(0, 0, 180, targetHeight);
 
-        GUI.Box(panelRect, "Properties");
+        GUI.Box(panelRect, voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties");
 
         Rect scrollBox = new Rect(panelRect.xMin, panelRect.yMin + 25, panelRect.width, panelRect.height - 25);
         float scrollAreaWidth = panelRect.width - 1;
-        float scrollAreaHeight = scrollBox.height * 1.5f; // TODO
+        float scrollAreaHeight = scrollBox.height - 1; // TODO
         Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
         scroll = GUI.BeginScrollView(scrollBox, scroll, scrollArea);
 
         Rect paddedScrollArea = new Rect(scrollArea.xMin + 10, scrollArea.yMin, scrollArea.width - 20, scrollArea.height);
         GUILayout.BeginArea(paddedScrollArea);
 
-        GUILayout.Label("FACES:");
+        if (voxelArray.SomethingIsSelected())
+            SelectionPropertiesGUI();
+        else
+            MapPropertiesGUI();
 
+        GUILayout.EndArea();
+        GUI.EndScrollView();
+    }
+
+    private void SelectionPropertiesGUI()
+    {
         if (GUILayout.Button("Set Material"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
@@ -68,9 +77,10 @@ public class PropertiesGUI : GUIPanel {
         }
 
         GUILayout.EndHorizontal();
+    }
 
-        GUILayout.Label("MAP:");
-
+    private void MapPropertiesGUI()
+    {
         if (GUILayout.Button("Set Sky"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
@@ -131,9 +141,6 @@ public class PropertiesGUI : GUIPanel {
             RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
             voxelArray.unsavedChanges = true;
         }
-
-        GUILayout.EndArea();
-        GUI.EndScrollView();
     }
 
     private void SetSkybox(Material sky)
