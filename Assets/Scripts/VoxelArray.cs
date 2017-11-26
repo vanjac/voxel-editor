@@ -437,7 +437,7 @@ public class VoxelArray : MonoBehaviour {
         VoxelFace face = voxel.faces[faceI];
         if (face.IsEmpty())
             return;
-        if (face.addSelected)
+        if (face.selected) // stop at boundaries of stored selection
             return;
         SelectFace(voxel, faceI);
 
