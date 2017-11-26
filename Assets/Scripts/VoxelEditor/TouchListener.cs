@@ -12,6 +12,7 @@ public class TouchListener : MonoBehaviour {
     }
 
     public VoxelArray voxelArray;
+    public Transform axes;
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;
     MoveAxis movingAxis;
@@ -19,6 +20,7 @@ public class TouchListener : MonoBehaviour {
 
     Voxel lastHitVoxel;
     int lastHitFaceI;
+    bool axesEnabled = false;
 
     void Start()
     {
@@ -27,6 +29,15 @@ public class TouchListener : MonoBehaviour {
 
 	void Update ()
     {
+        // axes enabled should always equal (currentTouchOperation != TouchOperation.SELECT)
+        if (axesEnabled != (currentTouchOperation != TouchOperation.SELECT))
+        {
+            axesEnabled = currentTouchOperation != TouchOperation.SELECT;
+            // VoxelArray sets root node; TouchListener sets children
+            foreach (Transform child in axes)
+                child.gameObject.SetActive(axesEnabled);
+        }
+
         if (Input.touchCount == 0)
         {
             currentTouchOperation = TouchOperation.NONE;
