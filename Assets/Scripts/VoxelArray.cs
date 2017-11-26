@@ -637,7 +637,7 @@ public class VoxelArray : MonoBehaviour {
 
     public void AssignMaterial(Material mat)
     {
-        foreach (VoxelFaceReference faceRef in selectedFaces)
+        foreach (VoxelFaceReference faceRef in IterateSelected())
         {
             faceRef.voxel.faces[faceRef.faceI].material = mat;
             VoxelModified(faceRef.voxel);
@@ -646,7 +646,7 @@ public class VoxelArray : MonoBehaviour {
 
     public void AssignOverlay(Material mat)
     {
-        foreach (VoxelFaceReference faceRef in selectedFaces)
+        foreach (VoxelFaceReference faceRef in IterateSelected())
         {
             faceRef.voxel.faces[faceRef.faceI].overlay = mat;
             VoxelModified(faceRef.voxel);
@@ -657,7 +657,7 @@ public class VoxelArray : MonoBehaviour {
     {
         int changeRotation = VoxelFace.GetOrientationRotation(change);
         bool changeFlip = VoxelFace.GetOrientationMirror(change);
-        foreach (VoxelFaceReference faceRef in selectedFaces)
+        foreach (VoxelFaceReference faceRef in IterateSelected())
         {
             byte faceOrientation = faceRef.face.orientation;
             int faceRotation = VoxelFace.GetOrientationRotation(faceOrientation);
