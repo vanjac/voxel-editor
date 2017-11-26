@@ -84,14 +84,20 @@ public class PropertiesGUI : GUIPanel {
         float oldValue = RenderSettings.ambientIntensity;
         float newValue = GUILayout.HorizontalSlider(oldValue, 0, 3);
         if (newValue != oldValue)
+        {
             RenderSettings.ambientIntensity = newValue;
+            voxelArray.unsavedChanges = true;
+        }
 
         GUILayout.Label("Sun intensity:");
 
         oldValue = RenderSettings.sun.intensity;
         newValue = GUILayout.HorizontalSlider(oldValue, 0, 3);
         if (newValue != oldValue)
+        {
             RenderSettings.sun.intensity = newValue;
+            voxelArray.unsavedChanges = true;
+        }
 
         if (GUILayout.Button("Sun Color"))
         {
@@ -111,6 +117,7 @@ public class PropertiesGUI : GUIPanel {
             Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
             eulerAngles.x = newValue;
             RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
+            voxelArray.unsavedChanges = true;
         }
 
         GUILayout.Label("Sun Yaw:");
@@ -122,6 +129,7 @@ public class PropertiesGUI : GUIPanel {
             Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
             eulerAngles.y = newValue;
             RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
+            voxelArray.unsavedChanges = true;
         }
 
         GUILayout.EndArea();
@@ -131,11 +139,13 @@ public class PropertiesGUI : GUIPanel {
     private void SetSkybox(Material sky)
     {
         RenderSettings.skybox = sky;
+        voxelArray.unsavedChanges = true;
     }
 
     private void SetSunColor(Color color)
     {
         RenderSettings.sun.color = color;
+        voxelArray.unsavedChanges = true;
     }
 
 }
