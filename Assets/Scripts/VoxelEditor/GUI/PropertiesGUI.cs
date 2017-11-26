@@ -86,12 +86,19 @@ public class PropertiesGUI : GUIPanel {
         if (newIntensity != oldIntensity)
             RenderSettings.ambientIntensity = newIntensity;
 
-        GUILayout.Label("Directional light intensity:");
+        GUILayout.Label("Sun intensity:");
 
         oldIntensity = RenderSettings.sun.intensity;
         newIntensity = GUILayout.HorizontalSlider(oldIntensity, 0, 3);
         if (newIntensity != oldIntensity)
             RenderSettings.sun.intensity = newIntensity;
+
+        if (GUILayout.Button("Sun Color"))
+        {
+            ColorPickerGUI colorPicker = gameObject.AddComponent<ColorPickerGUI>();
+            colorPicker.color = RenderSettings.sun.color;
+            colorPicker.handler = SetSunColor;
+        }
 
         GUILayout.EndArea();
         GUI.EndScrollView();
@@ -100,6 +107,11 @@ public class PropertiesGUI : GUIPanel {
     private void SetSkybox(Material sky)
     {
         RenderSettings.skybox = sky;
+    }
+
+    private void SetSunColor(Color color)
+    {
+        RenderSettings.sun.color = color;
     }
 
 }
