@@ -288,3 +288,6 @@
 ./GameAssets/Skies/sky5X3.mat
 ./GameAssets/Skies/sky5X4.mat
 ./GameAssets/Skies/sky5X5.mat
+./GameAssets/Skies/sky_black.mat
+./GameAssets/Skies/sky_procedural.mat
+./GameAssets/Skies/sky_white.mat
