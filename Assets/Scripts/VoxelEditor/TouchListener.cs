@@ -100,12 +100,6 @@ public class TouchListener : MonoBehaviour {
                 }
             }
 
-            if (currentTouchOperation == TouchOperation.GUI)
-            {
-                GUIPanel panel = GUIPanel.PanelContainingPoint(touch.position);
-                if (panel != null)
-                    panel.scroll.y += touch.deltaPosition.y / panel.scaleFactor;
-            }
             else if (currentTouchOperation == TouchOperation.SELECT)
             {
                 if (hitVoxel != null)

@@ -18,7 +18,8 @@ public class GUIPanel : MonoBehaviour {
     public float scaledScreenWidth;
     public int depth = 0;
 
-    private bool touchMoved = false;
+    private Vector2 touchStartPos = Vector2.zero;
+    bool horizontalSlide, verticalSlide;
 
     public virtual void OnEnable()
     {
@@ -53,19 +54,30 @@ public class GUIPanel : MonoBehaviour {
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Moved)
-                touchMoved = true;
-            if (touchMoved && PanelContainsPoint(touch.position))
+            if (touch.phase == TouchPhase.Began)
+                touchStartPos = touch.position;
+            if ((!verticalSlide) && Mathf.Abs((touch.position - touchStartPos).x) > 20 * scaleFactor)
+            {
+                horizontalSlide = true;
+            }
+            if ((!horizontalSlide) && Mathf.Abs((touch.position - touchStartPos).y) > 20 * scaleFactor)
+            {
+                verticalSlide = true;
+            }
+
+            if (verticalSlide && PanelContainsPoint(touch.position))
             {
                 GUI.enabled = false;
                 GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
+                scroll.y += touch.deltaPosition.y / scaleFactor;
             }
             if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position) && depth < 0)
                 Destroy(this);
         }
         else
         {
-            touchMoved = false;
+            horizontalSlide = false;
+            verticalSlide = false;
         }
 
         scaleFactor = Screen.height / targetHeight;
