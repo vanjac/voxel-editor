@@ -757,6 +757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
+  axes: {fileID: 609989223}
 --- !u!1 &1185221136
 GameObject:
   m_ObjectHideFlags: 0
