@@ -47,35 +47,33 @@ public class MapFileWriter {
 
         JSONArray materialsArray = new JSONArray();
         var foundMaterials = new List<string>();
+
+        AddMaterial(RenderSettings.skybox, foundMaterials, materialsArray);
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
             foreach (VoxelFace face in voxel.faces)
             {
-                if (face.material != null)
-                {
-                    string name = face.material.name;
-                    if (!foundMaterials.Contains(name))
-                    {
-                        foundMaterials.Add(name);
-                        materialsArray[-1] = WriteMaterial(face.material);
-                    }
-                }
-                if (face.overlay != null)
-                {
-                    string name = face.overlay.name;
-                    if (!foundMaterials.Contains(name))
-                    {
-                        foundMaterials.Add(name);
-                        materialsArray[-1] = WriteMaterial(face.overlay);
-                    }
-                }
+                AddMaterial(face.material, foundMaterials, materialsArray);
+                AddMaterial(face.overlay, foundMaterials, materialsArray);
             }
         }
-        world["materials"] = materialsArray;
 
+        world["materials"] = materialsArray;
+        world["lighting"] = WriteLighting(foundMaterials);
         world["map"] = WriteMap(voxelArray, foundMaterials);
 
         return world;
+    }
+
+    void AddMaterial(Material material, List<string> foundMaterials, JSONArray materialsArray)
+    {
+        if (material == null)
+            return;
+        string name = material.name;
+        if (foundMaterials.Contains(name))
+            return;
+        foundMaterials.Add(name);
+        materialsArray[-1] = WriteMaterial(material);
     }
 
     private JSONObject WriteMaterial(Material material)
@@ -83,6 +81,22 @@ public class MapFileWriter {
         JSONObject materialObject = new JSONObject();
         materialObject["name"] = material.name;
         return materialObject;
+    }
+
+    private JSONObject WriteLighting(List<string> materials)
+    {
+        JSONObject lighting = new JSONObject();
+        lighting["sky"].AsInt = materials.IndexOf(RenderSettings.skybox.name);
+        lighting["ambientIntensity"].AsFloat = RenderSettings.ambientIntensity;
+
+        JSONObject sun = new JSONObject();
+        sun["intensity"].AsFloat = RenderSettings.sun.intensity;
+        sun["color"] = WriteColor(RenderSettings.sun.color);
+        sun["angle"] = WriteQuaternion(RenderSettings.sun.transform.rotation);
+
+        lighting["sun"] = sun;
+
+        return lighting;
     }
 
     private JSONObject WriteMap(VoxelArray voxelArray, List<string> materials)
@@ -159,6 +173,17 @@ public class MapFileWriter {
         a[0] = Mathf.RoundToInt(v.x);
         a[1] = Mathf.RoundToInt(v.y);
         a[2] = Mathf.RoundToInt(v.z);
+        return a;
+    }
+
+    private JSONArray WriteColor(Color c)
+    {
+        JSONArray a = new JSONArray();
+        a[0] = c.r;
+        a[1] = c.g;
+        a[2] = c.b;
+        if (c.a != 1)
+            a[3] = c.a;
         return a;
     }
 }

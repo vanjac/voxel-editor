@@ -104,8 +104,28 @@ public class MapFileReader {
             }
         }
 
+        if (world["lighting"] != null)
+            ReadLighting(world["lighting"].AsObject, materials);
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials);
+    }
+
+    private void ReadLighting(JSONObject lighting, List<Material> materials)
+    {
+        if (lighting["sky"] != null)
+            RenderSettings.skybox = materials[lighting["sky"].AsInt];
+        if (lighting["ambientIntensity"] != null)
+            RenderSettings.ambientIntensity = lighting["ambientIntensity"].AsFloat;
+        if (lighting["sun"] != null)
+        {
+            JSONObject sun = lighting["sun"].AsObject;
+            if (sun["intensity"] != null)
+                RenderSettings.sun.intensity = sun["intensity"].AsFloat;
+            if (sun["color"] != null)
+                RenderSettings.sun.color = ReadColor(sun["color"].AsArray);
+            if (sun["angle"] != null)
+                RenderSettings.sun.transform.rotation = ReadQuaternion(sun["angle"].AsArray);
+        }
     }
 
     private void ReadMap(JSONObject map, VoxelArray voxelArray, List<Material> materials)
@@ -169,5 +189,13 @@ public class MapFileReader {
     private Quaternion ReadQuaternion(JSONArray a)
     {
         return Quaternion.Euler(ReadVector3(a));
+    }
+
+    private Color ReadColor(JSONArray a)
+    {
+        if (a.Count == 4)
+            return new Color(a[0], a[1], a[2], a[3]);
+        else
+            return new Color(a[0], a[1], a[2]);
     }
 }
