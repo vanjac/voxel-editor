@@ -41,7 +41,6 @@ public class PropertiesGUI : GUIPanel {
 
         if (Input.touchCount == 1)
         {
-            Touch touch = Input.GetTouch(0);
             if (horizontalSlide && (!adjustingSlider) && PanelContainsPoint(touchStartPos))
             {
                 slidingPanel = true;
