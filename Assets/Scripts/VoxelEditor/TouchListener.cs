@@ -72,11 +72,17 @@ public class TouchListener : MonoBehaviour {
                 lastHitFaceI = hitFaceI;
             }
 
+            if (touch.phase == TouchPhase.Began)
+                // this seems to improve the reliability of double-taps when things are running slowly.
+                // I think it's because there's not always a long enough gap between taps
+                // for the touch operation to be cleared.
+                currentTouchOperation = TouchOperation.NONE;
+
             if (currentTouchOperation == TouchOperation.NONE)
             {
                 if (GUIPanel.PanelContainingPoint(touch.position) != null)
                     currentTouchOperation = TouchOperation.GUI;
-                else if (touch.phase != TouchPhase.Moved && touch.phase != TouchPhase.Ended)
+                else if (touch.phase != TouchPhase.Moved && touch.phase != TouchPhase.Ended && touch.tapCount == 1)
                 { } // wait until moved or released, in case a multitouch operation is about to begin
                 else if (!rayHitSomething)
                 {
@@ -109,7 +115,7 @@ public class TouchListener : MonoBehaviour {
                         voxelArray.FaceSelectFloodFill(lastHitVoxel, lastHitFaceI);
                     }
                 }
-            }
+            } // end if currentTouchOperation == NONE
 
             else if (currentTouchOperation == TouchOperation.SELECT)
             {
@@ -122,8 +128,8 @@ public class TouchListener : MonoBehaviour {
             {
                 movingAxis.TouchDrag(touch);
             }
-        }
-        if (Input.touchCount == 2)
+        } // end if touch count is 1
+        else if (Input.touchCount == 2)
         {
             if (currentTouchOperation == TouchOperation.NONE)
                 currentTouchOperation = TouchOperation.CAMERA;
