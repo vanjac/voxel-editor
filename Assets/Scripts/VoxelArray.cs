@@ -67,7 +67,7 @@ public class VoxelArray : MonoBehaviour {
     // all faces where face.storedSelected == true
     private List<VoxelFaceReference> storedSelectedFaces = new List<VoxelFaceReference>();
     private Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
-    private Bounds boxSelectCurrentBounds = new Bounds(Vector3.zero, Vector3.zero);
+    public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     private bool unloadUnusedAssets = false;
 
@@ -268,7 +268,7 @@ public class VoxelArray : MonoBehaviour {
     {
         selectMode = SelectMode.BOX;
         boxSelectStartBounds = voxel.GetFaceBounds(faceI);
-        boxSelectCurrentBounds = boxSelectStartBounds;
+        selectionBounds = boxSelectStartBounds;
         UpdateBoxSelection();
     }
 
@@ -277,10 +277,10 @@ public class VoxelArray : MonoBehaviour {
     {
         if (selectMode != SelectMode.BOX)
             return;
-        Bounds oldSelectCurrentBounds = boxSelectCurrentBounds;
-        boxSelectCurrentBounds = boxSelectStartBounds;
-        boxSelectCurrentBounds.Encapsulate(voxel.GetFaceBounds(faceI));
-        if (oldSelectCurrentBounds != boxSelectCurrentBounds)
+        Bounds oldSelectionBounds = selectionBounds;
+        selectionBounds = boxSelectStartBounds;
+        selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
+        if (oldSelectionBounds != selectionBounds)
             UpdateBoxSelection();
     }
 
@@ -310,6 +310,7 @@ public class VoxelArray : MonoBehaviour {
         if(storedSelectedFaces.Count == 0)
             ClearMoveAxes();
         selectMode = SelectMode.NONE;
+        selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
     }
 
     private void SelectFace(VoxelFaceReference faceRef)
@@ -363,6 +364,7 @@ public class VoxelArray : MonoBehaviour {
         }
         selectedFaces.Clear();
         selectMode = SelectMode.NONE;
+        selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
     }
 
     private void MergeStoredSelected()
@@ -404,11 +406,11 @@ public class VoxelArray : MonoBehaviour {
     {
         if (selectMode != SelectMode.BOX)
             return;
-        SetMoveAxes(boxSelectCurrentBounds.center);
+        SetMoveAxes(selectionBounds.center);
 
-        Bounds largerSelectCurrentBounds = boxSelectCurrentBounds;
-        // Bounds is by reference, not value, so this won't modify selectCurrentBounds
-        largerSelectCurrentBounds.Expand(new Vector3(0.1f, 0.1f, 0.1f));
+        Bounds largerSelectionBounds = selectionBounds;
+        // Bounds is by reference, not value, so this won't modify selectionBounds
+        largerSelectionBounds.Expand(new Vector3(0.1f, 0.1f, 0.1f));
 
         // update selection...
         foreach (Voxel checkVoxel in IterateVoxels())
@@ -419,9 +421,9 @@ public class VoxelArray : MonoBehaviour {
                     continue;
                 Bounds checkBounds = checkVoxel.GetFaceBounds(checkFaceI);
                 bool checkFaceSelected;
-                // if checkBounds fully inside selectCurrentBounds
-                checkFaceSelected = largerSelectCurrentBounds.Contains(checkBounds.min)
-                    && largerSelectCurrentBounds.Contains(checkBounds.max);
+                // if checkBounds fully inside selectionBounds
+                checkFaceSelected = largerSelectionBounds.Contains(checkBounds.min)
+                    && largerSelectionBounds.Contains(checkBounds.max);
                 if (checkFaceSelected)
                     SelectFace(checkVoxel, checkFaceI);
                 else
@@ -452,6 +454,10 @@ public class VoxelArray : MonoBehaviour {
             FaceSelectFloodFill(VoxelAt(newPos, false), faceI);
         }
 
+        if (selectMode != SelectMode.FACE)
+            selectionBounds = voxel.GetFaceBounds(faceI);
+        else
+            selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
         selectMode = SelectMode.FACE;
         SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.NormalForFaceI(faceI) / 2);
     }

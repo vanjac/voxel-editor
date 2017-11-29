@@ -39,5 +39,13 @@ public class ActionBarGUI : GUIPanel
         {
             editorFile.LoadScene("menuScene");
         }
+
+        Vector3 selectionSize = voxelArray.selectionBounds.size;
+        if (selectionSize != Vector3.zero)
+        {
+            GUI.skin.label.alignment = TextAnchor.LowerRight;
+            GUI.Label(new Rect(panelRect.xMin, targetHeight - 24, panelRect.width - 10, 24), selectionSize.ToString());
+            GUI.skin.label.alignment = TextAnchor.UpperRight;
+        }
     }
 }
