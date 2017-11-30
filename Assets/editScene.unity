@@ -179,6 +179,12 @@ MonoBehaviour:
   - {fileID: 878046148}
   - {fileID: 878046150}
   - {fileID: 1179125982}
+  disableOnPlay:
+  - {fileID: 878046148}
+  - {fileID: 878046150}
+  - {fileID: 1179125982}
+  enableOnPlay:
+  - {fileID: 878046151}
   voxelArray: {fileID: 213926859}
   cameraPivot: {fileID: 661348387}
 --- !u!1 &416192707

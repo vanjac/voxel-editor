@@ -32,12 +32,12 @@ public class ActionBarGUI : GUIPanel
         if (GUI.Button(new Rect(panelRect.xMin + 130, panelRect.yMin, 80, 20), "Play"))
         {
 
-            editorFile.LoadScene("playScene");
+            editorFile.Play();
         }
 
         if (GUI.Button(new Rect(panelRect.xMin + 220, panelRect.yMin, 80, 20), "Close"))
         {
-            editorFile.LoadScene("menuScene");
+            editorFile.Close();
         }
 
         Vector3 selectionSize = voxelArray.selectionBounds.size;

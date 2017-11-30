@@ -8,6 +8,9 @@ public class EditorFile : MonoBehaviour
     public List<MonoBehaviour> disableOnLoad;
     public List<MonoBehaviour> enableOnLoad;
 
+    public List<MonoBehaviour> disableOnPlay;
+    public List<MonoBehaviour> enableOnPlay;
+
     public VoxelArray voxelArray;
     public Transform cameraPivot;
 
@@ -45,11 +48,23 @@ public class EditorFile : MonoBehaviour
         voxelArray.unsavedChanges = false;
     }
 
-    public void LoadScene(string name)
+    public void Play()
     {
-        Debug.unityLogger.Log("EditorFile", "LoadScene(" + name + ")");
+        Debug.unityLogger.Log("EditorFile", "Play");
         Save();
-        SceneManager.LoadScene(name);
+        SceneManager.LoadSceneAsync("playScene");
+
+        foreach (MonoBehaviour b in disableOnPlay)
+            b.enabled = false;
+        foreach (MonoBehaviour b in enableOnPlay)
+            b.enabled = true;
+    }
+
+    public void Close()
+    {
+        Debug.unityLogger.Log("EditorFile", "Close");
+        Save();
+        SceneManager.LoadScene("menuScene");
     }
 
     void OnEnable()
