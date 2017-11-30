@@ -145,7 +145,6 @@ public class MapFileReader {
                 ReadVoxel(voxelObject, voxelArray, materials, editor);
             }
         }
-        voxelArray.UpdateAll();
     }
 
     private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray, List<Material> materials, bool editor)
@@ -172,7 +171,6 @@ public class MapFileReader {
                 ReadFace(faceObject, voxel, materials);
             }
         }
-        voxelArray.VoxelModified(voxel);
     }
 
     private void ReadFace(JSONObject faceObject, Voxel voxel, List<Material> materials)
