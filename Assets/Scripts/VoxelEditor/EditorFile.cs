@@ -5,17 +5,31 @@ using UnityEngine.SceneManagement;
 
 public class EditorFile : MonoBehaviour
 {
+    public List<MonoBehaviour> disableOnLoad;
+    public List<MonoBehaviour> enableOnLoad;
+
     public VoxelArray voxelArray;
     public Transform cameraPivot;
 
     public void Load()
     {
+        StartCoroutine(LoadCoroutine());
+    }
+
+    public IEnumerator LoadCoroutine()
+    {
+        yield return null;
         string mapName = SelectedMap.GetSelectedMapName();
         Debug.unityLogger.Log("EditorFile", "Loading " + mapName);
         MapFileReader reader = new MapFileReader(mapName);
         reader.Read(cameraPivot, voxelArray, true);
         // reading the file creates new voxels which sets the unsavedChanges flag
         voxelArray.unsavedChanges = false;
+
+        foreach (MonoBehaviour b in disableOnLoad)
+            b.enabled = false;
+        foreach (MonoBehaviour b in enableOnLoad)
+            b.enabled = true;
     }
 
     public void Save()

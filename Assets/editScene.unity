@@ -159,6 +159,9 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
   unsavedChanges: 0
   selectMode: 0
+  selectionBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &213926860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,6 +173,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4eaeef26bed74f4bb762332c03c7a69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableOnLoad:
+  - {fileID: 878046151}
+  enableOnLoad:
+  - {fileID: 878046148}
+  - {fileID: 878046150}
+  - {fileID: 1179125982}
   voxelArray: {fileID: 213926859}
   cameraPivot: {fileID: 661348387}
 --- !u!1 &416192707
@@ -450,6 +459,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 878046149}
+  - component: {fileID: 878046151}
   - component: {fileID: 878046148}
   - component: {fileID: 878046150}
   m_Layer: 0
@@ -465,7 +475,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 878046147}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aedd94cb8319ee14f9d0a168308e739a, type: 3}
   m_Name: 
@@ -501,7 +511,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 878046147}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ccd89f203e7ef47869869965d935bc, type: 3}
   m_Name: 
@@ -519,6 +529,28 @@ MonoBehaviour:
   depth: 0
   voxelArray: {fileID: 213926859}
   editorFile: {fileID: 213926860}
+--- !u!114 &878046151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 878046147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 935e5627678bac049a8051b6ec61dab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  scroll: {x: 0, y: 0}
+  scaleFactor: 0
+  scaledScreenWidth: 0
+  depth: 0
 --- !u!1 &1061257463
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,7 +783,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1179125977}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7358405d05d819b478797269aae22f85, type: 3}
   m_Name: 
