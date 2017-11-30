@@ -119,6 +119,15 @@ public class VoxelArray : MonoBehaviour {
         return SearchOctreeRecursive(rootNode, intPosition, createIfMissing);
     }
 
+    public Voxel InstantiateVoxel(Vector3 position)
+    {
+        GameObject voxelObject = Instantiate(voxelPrefab);
+        voxelObject.transform.position = position;
+        voxelObject.transform.parent = transform;
+        voxelObject.name = "Voxel at " + position;
+        return voxelObject.GetComponent<Voxel>();
+    }
+
     private Voxel SearchOctreeRecursive(OctreeNode node, Vector3Int position, bool createIfMissing)
     {
         if (node.size == 1)
@@ -129,12 +138,9 @@ public class VoxelArray : MonoBehaviour {
                 return node.voxel;
             else
             {
-                GameObject voxelObject = Instantiate(voxelPrefab);
-                voxelObject.transform.position = position;
-                voxelObject.transform.parent = transform;
-                voxelObject.name = "Voxel at " + position;
-                node.voxel = voxelObject.GetComponent<Voxel>();
-                return node.voxel;
+                Voxel newVoxel = InstantiateVoxel(position);
+                node.voxel = newVoxel;
+                return newVoxel;
             }
         }
 

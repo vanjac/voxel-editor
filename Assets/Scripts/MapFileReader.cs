@@ -107,7 +107,7 @@ public class MapFileReader {
         if (world["lighting"] != null)
             ReadLighting(world["lighting"].AsObject, materials);
         if (world["map"] != null)
-            ReadMap(world["map"].AsObject, voxelArray, materials);
+            ReadMap(world["map"].AsObject, voxelArray, materials, editor);
     }
 
     private void ReadLighting(JSONObject lighting, List<Material> materials)
@@ -134,7 +134,7 @@ public class MapFileReader {
         }
     }
 
-    private void ReadMap(JSONObject map, VoxelArray voxelArray, List<Material> materials)
+    private void ReadMap(JSONObject map, VoxelArray voxelArray, List<Material> materials, bool editor)
     {
         voxelArray.ClearAll();
         if (map["voxels"] != null)
@@ -142,18 +142,27 @@ public class MapFileReader {
             foreach (JSONNode voxelNode in map["voxels"].AsArray)
             {
                 JSONObject voxelObject = voxelNode.AsObject;
-                ReadVoxel(voxelObject, voxelArray, materials);
+                ReadVoxel(voxelObject, voxelArray, materials, editor);
             }
         }
         voxelArray.UpdateAll();
     }
 
-    private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray, List<Material> materials)
+    private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray, List<Material> materials, bool editor)
     {
         if (voxelObject["at"] == null)
             return;
         Vector3 position = ReadVector3(voxelObject["at"].AsArray);
-        Voxel voxel = voxelArray.VoxelAt(position, true);
+        Voxel voxel;
+        if (!editor)
+        {
+            // slightly faster -- doesn't add to octree
+            voxel = voxelArray.InstantiateVoxel(position);
+        }
+        else
+        {
+            voxel = voxelArray.VoxelAt(position, true);
+        }
 
         if (voxelObject["f"] != null)
         {
