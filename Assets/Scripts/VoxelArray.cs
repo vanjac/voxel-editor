@@ -25,6 +25,14 @@ public class VoxelArray : MonoBehaviour {
         public int size;
         public OctreeNode[] branches = new OctreeNode[8];
         public Voxel voxel;
+        public Bounds bounds
+        {
+            get
+            {
+                Vector3 sizeVector = new Vector3(size, size, size);
+                return new Bounds(position + sizeVector / 2, sizeVector);
+            }
+        }
 
         public OctreeNode(Vector3Int position, int size)
         {
@@ -414,28 +422,47 @@ public class VoxelArray : MonoBehaviour {
             return;
         SetMoveAxes(selectionBounds.center);
 
-        Bounds largerSelectionBounds = selectionBounds;
-        // Bounds is by reference, not value, so this won't modify selectionBounds
-        largerSelectionBounds.Expand(new Vector3(0.1f, 0.1f, 0.1f));
-
         // update selection...
-        foreach (Voxel checkVoxel in IterateVoxels())
+        for (int i = selectedFaces.Count - 1; i >= 0; i--)
         {
-            for (int checkFaceI = 0; checkFaceI < 6; checkFaceI++)
+            VoxelFaceReference faceRef = selectedFaces[i];
+            if (!FaceInBoxSelection(faceRef.voxel, faceRef.faceI, selectionBounds))
+                DeselectFace(faceRef);
+        }
+        UpdateBoxSelectionRecursive(rootNode, selectionBounds);
+    }
+
+    private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds)
+    {
+        if (node == null)
+            return;
+        if (!bounds.Intersects(node.bounds))
+            return;
+        if (node.size == 1)
+        {
+            Voxel voxel = node.voxel;
+            for (int faceI = 0; faceI < 6; faceI++)
             {
-                if (checkVoxel.faces[checkFaceI].IsEmpty())
+                if (voxel.faces[faceI].IsEmpty())
                     continue;
-                Bounds checkBounds = checkVoxel.GetFaceBounds(checkFaceI);
-                bool checkFaceSelected;
-                // if checkBounds fully inside selectionBounds
-                checkFaceSelected = largerSelectionBounds.Contains(checkBounds.min)
-                    && largerSelectionBounds.Contains(checkBounds.max);
-                if (checkFaceSelected)
-                    SelectFace(checkVoxel, checkFaceI);
+                if (FaceInBoxSelection(voxel, faceI, bounds))
+                    SelectFace(voxel, faceI);
                 else
-                    DeselectFace(checkVoxel, checkFaceI);
+                    DeselectFace(voxel, faceI);
             }
         }
+        else
+        {
+            foreach (OctreeNode branch in node.branches)
+                UpdateBoxSelectionRecursive(branch, bounds);
+        }
+    }
+
+    private bool FaceInBoxSelection(Voxel voxel, int faceI, Bounds bounds)
+    {
+        bounds.Expand(new Vector3(0.1f, 0.1f, 0.1f));
+        Bounds faceBounds = voxel.GetFaceBounds(faceI);
+        return bounds.Contains(faceBounds.min) && bounds.Contains(faceBounds.max);
     }
 
     public void FaceSelectFloodFill(Voxel voxel, int faceI)
