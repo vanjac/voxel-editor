@@ -8,12 +8,11 @@ using UnityEngine.UI;
 public class Menu : MonoBehaviour {
     public Dropdown mapSelect;
     public InputField mapNameInput;
-    private string defaultMap;
+    public TextAsset defaultMap;
 
     public void Start()
     {
         UpdateMapList();
-        defaultMap = Resources.Load<TextAsset>("default").text;
     }
 
     public void OpenEditor()
@@ -35,7 +34,7 @@ public class Menu : MonoBehaviour {
         {
             using (var sw = new StreamWriter(fileStream))
             {
-                sw.Write(defaultMap);
+                sw.Write(defaultMap.text);
                 sw.Flush();
             }
         }

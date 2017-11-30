@@ -486,8 +486,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 343818283}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 408.5, y: 211, z: 0}
-  m_LocalScale: {x: 1.02125, y: 1.02125, z: 1.02125}
+  m_LocalPosition: {x: 391, y: 209, z: 0}
+  m_LocalScale: {x: 0.9775, y: 0.9775, z: 0.9775}
   m_Children:
   - {fileID: 1369138132}
   - {fileID: 1813312183}
@@ -1370,6 +1370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapSelect: {fileID: 1061722328}
   mapNameInput: {fileID: 1369138133}
+  defaultMap: {fileID: 4900000, guid: def87d4fc2d1e4c469422477861bcc22, type: 3}
 --- !u!4 &1221938359
 Transform:
   m_ObjectHideFlags: 0
