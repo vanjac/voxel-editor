@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PropertiesGUI : GUIPanel {
 
-    const float SLIDE_HIDDEN = -160;
+    const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
 
     float slide = 0;
     public VoxelArray voxelArray;
@@ -61,9 +61,9 @@ public class PropertiesGUI : GUIPanel {
             if (Event.current.type == EventType.Repaint)
             {
                 if (slide > SLIDE_HIDDEN / 2)
-                    slide += 5 * scaleFactor;
+                    slide += 30 * scaleFactor;
                 else
-                    slide -= 5 * scaleFactor;
+                    slide -= 30 * scaleFactor;
             }
         }
         if (slide > 0)
