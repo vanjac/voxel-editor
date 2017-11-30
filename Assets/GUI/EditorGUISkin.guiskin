@@ -545,7 +545,7 @@ MonoBehaviour:
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
-    m_FixedHeight: 56
+    m_FixedHeight: 40
     m_StretchWidth: 1
     m_StretchHeight: 0
   m_horizontalSliderThumb:
@@ -600,8 +600,8 @@ MonoBehaviour:
     m_Overflow:
       m_Left: -1
       m_Right: -1
-      m_Top: 0
-      m_Bottom: 0
+      m_Top: 5
+      m_Bottom: 5
     m_Font: {fileID: 0}
     m_FontSize: 0
     m_FontStyle: 0
@@ -612,7 +612,7 @@ MonoBehaviour:
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 56
-    m_FixedHeight: 56
+    m_FixedHeight: 40
     m_StretchWidth: 0
     m_StretchHeight: 0
   m_verticalSlider:
