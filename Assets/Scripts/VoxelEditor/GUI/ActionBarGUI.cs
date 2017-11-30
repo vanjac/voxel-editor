@@ -11,41 +11,50 @@ public class ActionBarGUI : GUIPanel
     {
         base.OnGUI();
 
-        panelRect = new Rect(190, 10, scaledScreenWidth - 190, 20);
+        Rect windowRect = new Rect(targetHeight * .55f, 0, scaledScreenWidth - targetHeight * .55f, targetHeight);
+        panelRect = new Rect(windowRect.xMin, windowRect.yMin, windowRect.width, GUI.skin.font.fontSize * 2);
+        GUILayout.BeginArea(windowRect);
+        GUILayout.BeginHorizontal();
 
         if (voxelArray.selectMode != VoxelArray.SelectMode.NONE)
         {
-            if (GUI.Button(new Rect(panelRect.xMin, panelRect.yMin, 120, 20), "Apply Selection"))
+            if (GUILayout.Button("Apply Selection", GUILayout.ExpandWidth(false)))
             {
                 voxelArray.StoreSelection();
             }
         }
         else if (voxelArray.SomethingIsSelected())
         {
-            if (GUI.Button(new Rect(panelRect.xMin, panelRect.yMin, 120, 20), "Clear Selection"))
+            if (GUILayout.Button("Clear Selection", GUILayout.ExpandWidth(false)))
             {
                 voxelArray.ClearStoredSelection();
                 voxelArray.ClearSelection();
             }
         }
 
-        if (GUI.Button(new Rect(panelRect.xMin + 130, panelRect.yMin, 80, 20), "Play"))
+        if (GUILayout.Button("Play", GUILayout.ExpandWidth(false)))
         {
 
             editorFile.Play();
         }
 
-        if (GUI.Button(new Rect(panelRect.xMin + 220, panelRect.yMin, 80, 20), "Close"))
+        if (GUILayout.Button("Close", GUILayout.ExpandWidth(false)))
         {
             editorFile.Close();
         }
+
+        GUILayout.EndHorizontal();
+
+        GUILayout.FlexibleSpace();
 
         Vector3 selectionSize = voxelArray.selectionBounds.size;
         if (selectionSize != Vector3.zero)
         {
             GUI.skin.label.alignment = TextAnchor.LowerRight;
-            GUI.Label(new Rect(panelRect.xMin, targetHeight - 24, panelRect.width - 10, 24), selectionSize.ToString());
-            GUI.skin.label.alignment = TextAnchor.UpperRight;
+            GUILayout.Label(selectionSize.ToString());
+            GUI.skin.label.alignment = TextAnchor.UpperLeft;
         }
+
+        GUILayout.EndArea();
     }
 }

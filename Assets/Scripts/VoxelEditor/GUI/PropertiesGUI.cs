@@ -16,8 +16,12 @@ public class PropertiesGUI : GUIPanel {
     {
         base.OnGUI();
 
-        panelRect = new Rect(slide, 0, 180, targetHeight);
-        GUI.Box(panelRect, voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties");
+        panelRect = new Rect(slide, 0, targetHeight / 2, targetHeight);
+        GUILayout.BeginArea(panelRect, GUI.skin.box);
+
+        GUI.skin.label.alignment = TextAnchor.UpperCenter;
+        GUILayout.Label(voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties");
+        GUI.skin.label.alignment = TextAnchor.UpperLeft;
 
         if (slidingPanel)
         {
@@ -25,14 +29,7 @@ public class PropertiesGUI : GUIPanel {
             GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
         }
 
-        Rect scrollBox = new Rect(panelRect.xMin, panelRect.yMin + 25, panelRect.width, panelRect.height - 25);
-        float scrollAreaWidth = panelRect.width - 1;
-        float scrollAreaHeight = scrollBox.height - 1; // TODO
-        Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
-        scroll = GUI.BeginScrollView(scrollBox, scroll, scrollArea);
-
-        Rect paddedScrollArea = new Rect(scrollArea.xMin + 10, scrollArea.yMin, scrollArea.width - 20, scrollArea.height);
-        GUILayout.BeginArea(paddedScrollArea);
+        scroll = GUILayout.BeginScrollView(scroll);
 
         if (voxelArray.SomethingIsSelected())
             SelectionPropertiesGUI();
@@ -74,8 +71,8 @@ public class PropertiesGUI : GUIPanel {
         if (slide < SLIDE_HIDDEN)
             slide = SLIDE_HIDDEN;
 
+        GUILayout.EndScrollView();
         GUILayout.EndArea();
-        GUI.EndScrollView();
     }
 
     private void SelectionPropertiesGUI()

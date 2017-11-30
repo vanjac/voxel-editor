@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GUIPanel : MonoBehaviour {
 
-    public const float targetHeight = 360;
+    public const float targetHeight = 1080;
 
     static GUISkin globalGUISkin = null;
     public GUISkin guiSkin;

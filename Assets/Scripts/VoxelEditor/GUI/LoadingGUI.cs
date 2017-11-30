@@ -10,12 +10,12 @@ public class LoadingGUI : GUIPanel
     {
         base.OnGUI();
 
-        panelRect = new Rect(scaledScreenWidth / 2 - 100, targetHeight / 2 - 50, 200, 100);
+        panelRect = new Rect(scaledScreenWidth / 2 - targetHeight * 0.2f, targetHeight * 0.3f, targetHeight * 0.4f, targetHeight * 0.4f);
 
         GUI.Box(panelRect, "");
 
         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
         GUI.Label(panelRect, "Loading map...");
-        GUI.skin.label.alignment = TextAnchor.UpperRight;
+        GUI.skin.label.alignment = TextAnchor.UpperLeft;
     }
 }

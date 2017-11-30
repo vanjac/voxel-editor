@@ -15,7 +15,7 @@ MonoBehaviour:
   m_box:
     m_Name: box
     m_Normal:
-      m_Background: {fileID: 2800000, guid: 18c3311821199f64c917d17672558a0e, type: 3}
+      m_Background: {fileID: 2800000, guid: ff8cd3bee67794e439f01331d52b1213, type: 3}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
@@ -47,20 +47,20 @@ MonoBehaviour:
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Border:
-      m_Left: 6
-      m_Right: 6
-      m_Top: 6
-      m_Bottom: 6
+      m_Left: 16
+      m_Right: 16
+      m_Top: 16
+      m_Bottom: 16
     m_Margin:
       m_Left: 4
       m_Right: 4
       m_Top: 4
       m_Bottom: 4
     m_Padding:
-      m_Left: 4
-      m_Right: 4
-      m_Top: 4
-      m_Bottom: 4
+      m_Left: 12
+      m_Right: 12
+      m_Top: 12
+      m_Bottom: 12
     m_Overflow:
       m_Left: 0
       m_Right: 0
@@ -82,7 +82,7 @@ MonoBehaviour:
   m_button:
     m_Name: button
     m_Normal:
-      m_Background: {fileID: 2800000, guid: 0420fbf2e21d2284b833979c85413c83, type: 3}
+      m_Background: {fileID: 2800000, guid: 6d63332d341f8584eb889c7596ce8ad0, type: 3}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
@@ -90,7 +90,7 @@ MonoBehaviour:
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Active:
-      m_Background: {fileID: 2800000, guid: af9d3b46733a3934d87239ecf0dff7dd, type: 3}
+      m_Background: {fileID: 2800000, guid: 8f89cc70e20aee24890047b7963f9d94, type: 3}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Focused:
@@ -114,20 +114,20 @@ MonoBehaviour:
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Border:
-      m_Left: 6
-      m_Right: 6
-      m_Top: 6
-      m_Bottom: 4
+      m_Left: 16
+      m_Right: 16
+      m_Top: 16
+      m_Bottom: 16
     m_Margin:
-      m_Left: 4
-      m_Right: 4
-      m_Top: 4
-      m_Bottom: 4
+      m_Left: 12
+      m_Right: 12
+      m_Top: 12
+      m_Bottom: 12
     m_Padding:
-      m_Left: 6
-      m_Right: 6
-      m_Top: 3
-      m_Bottom: 3
+      m_Left: 60
+      m_Right: 60
+      m_Top: 16
+      m_Bottom: 16
     m_Overflow:
       m_Left: 0
       m_Right: 0
@@ -253,15 +253,15 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Margin:
-      m_Left: 4
-      m_Right: 4
-      m_Top: 4
-      m_Bottom: 4
-    m_Padding:
       m_Left: 0
       m_Right: 0
-      m_Top: 3
-      m_Bottom: 3
+      m_Top: 12
+      m_Bottom: 12
+    m_Padding:
+      m_Left: 40
+      m_Right: 40
+      m_Top: 12
+      m_Bottom: 12
     m_Overflow:
       m_Left: 0
       m_Right: 0
@@ -521,10 +521,10 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Margin:
-      m_Left: 4
-      m_Right: 4
-      m_Top: 4
-      m_Bottom: 4
+      m_Left: 16
+      m_Right: 16
+      m_Top: 16
+      m_Bottom: 16
     m_Padding:
       m_Left: -1
       m_Right: -1
@@ -545,7 +545,7 @@ MonoBehaviour:
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
-    m_FixedHeight: 16
+    m_FixedHeight: 56
     m_StretchWidth: 1
     m_StretchHeight: 0
   m_horizontalSliderThumb:
@@ -611,8 +611,8 @@ MonoBehaviour:
     m_TextClipping: 1
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 16
-    m_FixedHeight: 16
+    m_FixedWidth: 56
+    m_FixedHeight: 56
     m_StretchWidth: 0
     m_StretchHeight: 0
   m_verticalSlider:

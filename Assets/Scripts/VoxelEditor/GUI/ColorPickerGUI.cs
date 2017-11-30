@@ -20,27 +20,27 @@ public class ColorPickerGUI : GUIPanel
     {
         base.OnGUI();
 
-        panelRect = new Rect(190, 20, 180, 180);
+        panelRect = new Rect(targetHeight * .55f, targetHeight * .1f, targetHeight / 2, targetHeight / 2);
+        GUILayout.BeginArea(panelRect, GUI.skin.box);
 
-        GUI.Box(panelRect, "Change Color");
-
-        Rect paddedPanelRect = new Rect(panelRect.xMin + 10, panelRect.yMin + 25, panelRect.width - 20, panelRect.height - 25);
-        GUILayout.BeginArea(paddedPanelRect);
+        GUI.skin.label.alignment = TextAnchor.UpperCenter;
+        GUILayout.Label("Change Color");
+        GUI.skin.label.alignment = TextAnchor.UpperLeft;
 
         Color oldColor = color;
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("R", GUILayout.ExpandWidth(false));
+        GUILayout.Label("R ", GUILayout.ExpandWidth(false));
         color.r = GUILayout.HorizontalSlider(color.r, 0, 1);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("G", GUILayout.ExpandWidth(false));
+        GUILayout.Label("G ", GUILayout.ExpandWidth(false));
         color.g = GUILayout.HorizontalSlider(color.g, 0, 1);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("B", GUILayout.ExpandWidth(false));
+        GUILayout.Label("B ", GUILayout.ExpandWidth(false));
         color.b = GUILayout.HorizontalSlider(color.b, 0, 1);
         GUILayout.EndHorizontal();
 
@@ -48,7 +48,9 @@ public class ColorPickerGUI : GUIPanel
         solidColorTexture.SetPixel(0, 0, color);
         solidColorTexture.Apply();
 
-        GUI.DrawTexture(new Rect(0, 80, 40, 40),
+        Rect colorRect = GUILayoutUtility.GetAspectRect(1.0f);
+
+        GUI.DrawTexture(colorRect,
             solidColorTexture);
 
         GUILayout.EndArea();

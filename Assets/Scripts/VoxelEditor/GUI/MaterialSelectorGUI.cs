@@ -31,53 +31,46 @@ public class MaterialSelectorGUI : GUIPanel
     {
         base.OnGUI();
 
-        panelRect = new Rect(scaledScreenWidth - 180, 0, 180, PropertiesGUI.targetHeight);
+        panelRect = new Rect(scaledScreenWidth - targetHeight / 2, 0, targetHeight / 2, PropertiesGUI.targetHeight);
+        GUILayout.BeginArea(panelRect, GUI.skin.box);
 
-        GUI.Box(panelRect, "Assign Material");
+        GUI.skin.label.alignment = TextAnchor.UpperCenter;
+        GUILayout.Label("Assign Material");
+        GUI.skin.label.alignment = TextAnchor.UpperLeft;
 
         if (materialPreviews == null)
             return;
-        Rect scrollBox = new Rect(panelRect.xMin, panelRect.yMin + 25, panelRect.width, panelRect.height - 25);
-        float scrollAreaWidth = panelRect.width - 1;
-        float buttonWidth = scrollAreaWidth - 20;
-        float scrollAreaHeight = materialSubDirectories.Count * 25 + materialPreviews.Count * buttonWidth;
-        if (allowNullMaterial)
-            scrollAreaHeight += 25;
-        Rect scrollArea = new Rect(0, 0, scrollAreaWidth, scrollAreaHeight);
-        scroll = GUI.BeginScrollView(scrollBox, scroll, scrollArea);
-        float y = 0;
+        scroll = GUILayout.BeginScrollView(scroll);
         if (allowNullMaterial)
         {
-            if (GUI.Button(new Rect(10, y, buttonWidth, 20), "Clear"))
+            if (GUILayout.Button("Clear"))
             {
                 MaterialSelected(null);
             }
-            y += 25;
         }
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
             string subDir = materialSubDirectories[i];
-            if (GUI.Button(new Rect(10, y, buttonWidth, 20), subDir))
+            if (GUILayout.Button(subDir))
             {
                 scroll = new Vector2(0, 0);
                 MaterialDirectorySelected(materialSubDirectories[i]);
             }
-            y += 25;
         }
         for (int i = 0; i < materialPreviews.Count; i++)
         {
             Texture materialPreview = materialPreviews[i];
-            Rect buttonRect = new Rect(10, y, buttonWidth, buttonWidth);
-            Rect textureRect = new Rect(buttonRect.xMin + 10, buttonRect.yMin + 10,
-                buttonRect.width - 20, buttonRect.height - 20);
+            Rect buttonRect = GUILayoutUtility.GetAspectRect(1.0f);
+            Rect textureRect = new Rect(buttonRect.xMin + 40, buttonRect.yMin + 40,
+                buttonRect.width - 80, buttonRect.height - 80);
             if (GUI.Button(buttonRect, ""))
             {
                 MaterialSelected(materialNames[i]);
             }
             GUI.DrawTexture(textureRect, materialPreview, ScaleMode.ScaleToFit, false);
-            y += buttonWidth;
         }
-        GUI.EndScrollView();
+        GUILayout.EndScrollView();
+        GUILayout.EndArea();
     }
 
     void UpdateMaterialDirectory()
