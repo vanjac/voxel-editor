@@ -5,8 +5,8 @@ using UnityEngine;
 using SimpleJSON;
 
 public class MapFileWriter {
-    public const int VERSION = 0;
-    private const int FILE_MIN_READER_VERSION = 0;
+    public const int VERSION = 1;
+    private const int FILE_MIN_READER_VERSION = 1;
 
     private string fileName;
 

@@ -85,14 +85,12 @@ public class Voxel : MonoBehaviour
 
     public static Vector3 NormalForFaceI(int faceI)
     {
-        if (FaceIIsSubstance(faceI))
-            faceI = OppositeFaceI(faceI);
-        return DirectionForFaceI(faceI);
+        return DirectionForFaceI(OppositeFaceI(faceI));
     }
 
     public static Vector3 DirectionForFaceI(int faceI)
     {
-        switch (faceI % 6)
+        switch (faceI)
         {
             case 0:
                 return Vector3.right;
@@ -111,27 +109,22 @@ public class Voxel : MonoBehaviour
         }
     }
 
-    public static int FaceIForNormal(Vector3 normal)
+    public static int FaceIForDirection(Vector3 direction)
     {
-        if (normal == Vector3.right)
+        if (direction == Vector3.left)
             return 0;
-        else if (normal == Vector3.left)
+        else if (direction == Vector3.right)
             return 1;
-        else if (normal == Vector3.up)
+        else if (direction == Vector3.down)
             return 2;
-        else if (normal == Vector3.down)
+        else if (direction == Vector3.up)
             return 3;
-        else if (normal == Vector3.forward)
+        else if (direction == Vector3.back)
             return 4;
-        else if (normal == Vector3.back)
+        else if (direction == Vector3.forward)
             return 5;
         else
             return -1;
-    }
-
-    public static int SubstanceFaceIForNormal(Vector3 normal)
-    {
-        return OppositeFaceI(FaceIForNormal(normal)) + 6;
     }
 
     public static int OppositeFaceI(int faceI)
@@ -142,28 +135,17 @@ public class Voxel : MonoBehaviour
     public static int SideFaceI(int faceI, int sideNum)
     {
         sideNum %= 4;
-        bool substance = FaceIIsSubstance(faceI);
-        if (substance)
-            faceI -= 6;
         faceI = (faceI / 2) * 2 + 2 + sideNum;
         faceI %= 6;
-        if (substance)
-            faceI += 6;
         return faceI;
     }
 
     public static int FaceIAxis(int faceI)
     {
-        return (faceI / 2) % 3;
+        return faceI / 2;
     }
 
-    public static bool FaceIIsSubstance(int faceI)
-    {
-        return faceI >= 6;
-    }
-
-    // xMin, xMax, yMin, yMax, zMin, zMax; 6 more for substances
-    public VoxelFace[] faces = new VoxelFace[12];
+    public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
 
 	void Start ()
     {
@@ -173,7 +155,7 @@ public class Voxel : MonoBehaviour
     public Bounds GetFaceBounds(int faceI)
     {
         Bounds bounds;
-        switch (faceI % 6)
+        switch (faceI)
         {
             case 0:
                 bounds = new Bounds(new Vector3(0, 0.5f, 0.5f), new Vector3(0, 1, 1));
@@ -246,14 +228,12 @@ public class Voxel : MonoBehaviour
         };
         numFilledFaces = 0;
         int numMaterials = 0;
-        for (int faceI = 0; faceI < 12; faceI++)
+        for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            VoxelFace face = faces[faceI];
+            VoxelFace face = faces[faceNum];
             if (face.IsEmpty())
                 continue;
-            int faceNum = faceI % 6;
-            bool substance = FaceIIsSubstance(faceI);
-            int axis = FaceIAxis(faceI);
+            int axis = FaceIAxis(faceNum);
 
             // example for faceNum = 5 (z min)
             // 0 bottom left
@@ -304,7 +284,7 @@ public class Voxel : MonoBehaviour
 
         numFilledFaces = 0;
         numMaterials = 0;
-        for (int faceI = 0; faceI < 12; faceI++)
+        for (int faceI = 0; faceI < 6; faceI++)
         {
             VoxelFace face = faces[faceI];
             if (face.IsEmpty())
@@ -312,7 +292,7 @@ public class Voxel : MonoBehaviour
 
             var triangles = new int[6];
 
-            if (faceI % 2 == 0 ^ FaceIIsSubstance(faceI))
+            if (faceI % 2 == 1)
             {
                 triangles[0] = numFilledFaces * 4 + 0;
                 triangles[1] = numFilledFaces * 4 + 1;

@@ -8,6 +8,7 @@ public class MapFileReader {
     public const int VERSION = MapFileWriter.VERSION;
 
     private string fileName;
+    private int fileWriterVersion;
 
     public MapFileReader(string fileName)
     {
@@ -39,6 +40,7 @@ public class MapFileReader {
             Debug.Log("This map file is for a new version of the editor!");
             return;
         }
+        fileWriterVersion = root["writerVersion"].AsInt;
 
         if (editor && cameraPivot != null)
         {
@@ -140,8 +142,12 @@ public class MapFileReader {
         if (voxelObject["at"] == null)
             return;
         Vector3 position = ReadVector3(voxelObject["at"].AsArray);
-        Voxel voxel;
-        if (!editor)
+        Voxel voxel = null;
+        if(fileWriterVersion == 0)
+        {
+            // faces were oriented differently. Get voxel for each face
+        }
+        else if (!editor)
         {
             // slightly faster -- doesn't add to octree
             voxel = voxelArray.InstantiateVoxel(position);
@@ -156,6 +162,11 @@ public class MapFileReader {
             foreach (JSONNode faceNode in voxelObject["f"].AsArray)
             {
                 JSONObject faceObject = faceNode.AsObject;
+                if (fileWriterVersion == 0)
+                {
+                    int faceI = faceObject["i"].AsInt;
+                    voxel = voxelArray.VoxelAt(position + Voxel.NormalForFaceI(faceI), true);
+                }
                 ReadFace(faceObject, voxel, materials);
             }
         }
@@ -166,6 +177,8 @@ public class MapFileReader {
         if (faceObject["i"] == null)
             return;
         int faceI = faceObject["i"].AsInt;
+        if (fileWriterVersion == 0)
+            faceI = Voxel.OppositeFaceI(faceI);
         if (faceObject["mat"] != null)
         {
             int matI = faceObject["mat"].AsInt;

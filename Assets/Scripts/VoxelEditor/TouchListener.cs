@@ -57,14 +57,7 @@ public class TouchListener : MonoBehaviour {
                 if (hitObject.tag == "Voxel")
                 {
                     hitVoxel = hitObject.GetComponent<Voxel>();
-                    // check if face was a wall or substance face
-                    Bounds voxelBounds = hitVoxel.GetBounds();
-                    voxelBounds.Expand(0.1f);
-                    bool substance = !voxelBounds.Contains(hit.point + hit.normal / 2);
-                    if (substance)
-                        hitFaceI = Voxel.SubstanceFaceIForNormal(hit.normal);
-                    else
-                        hitFaceI = Voxel.FaceIForNormal(hit.normal);
+                    hitFaceI = Voxel.FaceIForDirection(hit.normal);
 
                     if (hitFaceI == -1)
                         hitVoxel = null;

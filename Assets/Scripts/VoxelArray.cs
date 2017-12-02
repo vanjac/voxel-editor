@@ -506,8 +506,8 @@ public class VoxelArray : MonoBehaviour {
             VoxelFaceReference faceRef = selectedFaces[i];
             int faceI = faceRef.faceI;
             int oppositeFaceI = Voxel.OppositeFaceI(faceI);
-            bool pulling = Voxel.FaceIForNormal(adjustDirection) == faceI % 6;
-            bool pushing = Voxel.FaceIForNormal(adjustDirection) == oppositeFaceI % 6;
+            bool pushing = Voxel.FaceIForDirection(adjustDirection) == oppositeFaceI;
+            bool pulling = Voxel.FaceIForDirection(adjustDirection) == faceI;
             bool pushingOrPulling = pushing || pulling;
             Voxel oldVoxel = faceRef.voxel;
             Vector3 oldPos = oldVoxel.transform.position;
@@ -528,12 +528,12 @@ public class VoxelArray : MonoBehaviour {
             bool blocked = false; // is something blocking the face from moving here?
             if((!pushingOrPulling) && newVoxel.faces[faceI].IsEmpty())
                 blocked = true;
-            if (pulling && !oldVoxel.faces[oppositeFaceI].IsEmpty() && !oldVoxel.faces[oppositeFaceI].selected)
+            if (pushing && !oldVoxel.faces[oppositeFaceI].IsEmpty() && !oldVoxel.faces[oppositeFaceI].selected)
             {
                 blocked = true;
                 faceChangeQueue.Add(new FaceChange(oldVoxel, oppositeFaceI, Voxel.EMPTY_FACE));
             }
-            if (pushing)
+            if (pulling)
             {
                 Voxel voxelAhead = VoxelAt(newPos + adjustDirection, false);
                 if (voxelAhead != null && !voxelAhead.faces[oppositeFaceI].IsEmpty() && !voxelAhead.faces[oppositeFaceI].selected)
@@ -558,7 +558,7 @@ public class VoxelArray : MonoBehaviour {
                 faceChangeQueue.Add(moveFaceChange);
             }
 
-            if (pulling)
+            if (pushing)
             {
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
@@ -570,7 +570,7 @@ public class VoxelArray : MonoBehaviour {
                         // expand side
                         if (sideVoxel.faces[oppositeFaceI].IsEmpty())
                         {
-                            // prevent edge case when pulling a face away that was previously cater-corner to another open region
+                            // prevent edge case when pushing a face away that was previously cater-corner to another open region
                             Voxel newSideVoxel = VoxelAt(oldPos + Voxel.DirectionForFaceI(sideFaceI), true);
                             faceChangeQueue.Add(new FaceChange(newSideVoxel, sideFaceI, sideVoxel.faces[sideFaceI]));
                         }
@@ -591,8 +591,8 @@ public class VoxelArray : MonoBehaviour {
                         faceChangeQueue.Add(new FaceChange(newSideVoxel, sideFaceI, faceRef.face));
                     }
                 }
-            } // end if pulling
-            else if (pushing)
+            } // end if pushing
+            else if (pulling)
             {
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
@@ -624,7 +624,7 @@ public class VoxelArray : MonoBehaviour {
                         faceChangeQueue.Add(new FaceChange(newVoxel, oppositeSideFaceI, faceRef.face));
                     }
                 }
-            } // end if pushing
+            } // end if pulling
 
             //if (!blocked)
                 selectedFaces[i] = new VoxelFaceReference(newVoxel, faceI);
