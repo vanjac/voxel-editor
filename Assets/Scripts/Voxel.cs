@@ -146,6 +146,7 @@ public class Voxel : MonoBehaviour
     }
 
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
+    public Substance substance = null;
 
 	void Start ()
     {
