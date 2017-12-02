@@ -480,7 +480,7 @@ public class VoxelArray : MonoBehaviour {
         for (int sideNum = 0; sideNum < 4; sideNum++)
         {
             int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
-            Vector3 newPos = position + Voxel.NormalForFaceI(sideFaceI);
+            Vector3 newPos = position + Voxel.DirectionForFaceI(sideFaceI);
             FaceSelectFloodFill(VoxelAt(newPos, false), faceI);
         }
 
@@ -489,7 +489,7 @@ public class VoxelArray : MonoBehaviour {
         else
             selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
         selectMode = SelectMode.FACE;
-        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.NormalForFaceI(faceI) / 2);
+        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.DirectionForFaceI(faceI) / 2);
     }
 
     public void Adjust(Vector3 adjustDirection)
