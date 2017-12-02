@@ -56,11 +56,11 @@ public class GUIPanel : MonoBehaviour {
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
                 touchStartPos = touch.position;
-            if ((!verticalSlide) && Mathf.Abs((touch.position - touchStartPos).x) > 20 * scaleFactor)
+            if ((!verticalSlide) && Mathf.Abs((touch.position - touchStartPos).x) > Screen.height * .06)
             {
                 horizontalSlide = true;
             }
-            if ((!horizontalSlide) && Mathf.Abs((touch.position - touchStartPos).y) > 20 * scaleFactor)
+            if ((!horizontalSlide) && Mathf.Abs((touch.position - touchStartPos).y) > Screen.height * .06)
             {
                 verticalSlide = true;
             }
