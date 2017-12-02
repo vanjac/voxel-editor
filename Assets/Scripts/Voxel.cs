@@ -85,6 +85,8 @@ public class Voxel : MonoBehaviour
 
     public static Vector3 NormalForFaceI(int faceI)
     {
+        if (FaceIIsSubstance(faceI))
+            faceI = OppositeFaceI(faceI % 6);
         switch (faceI)
         {
             case 0:
@@ -127,6 +129,16 @@ public class Voxel : MonoBehaviour
         return (faceI / 2) * 2 + (faceI % 2 == 0 ? 1 : 0);
     }
 
+    public static int FaceIAxis(int faceI)
+    {
+        return (faceI / 2) % 3;
+    }
+
+    public static bool FaceIIsSubstance(int faceI)
+    {
+        return faceI >= 6;
+    }
+
     // xMin, xMax, yMin, yMax, zMin, zMax; 6 more for substances
     public VoxelFace[] faces = new VoxelFace[12];
 
@@ -138,7 +150,7 @@ public class Voxel : MonoBehaviour
     public Bounds GetFaceBounds(int faceI)
     {
         Bounds bounds;
-        switch (faceI)
+        switch (faceI % 6)
         {
             case 0:
                 bounds = new Bounds(new Vector3(0, 0.5f, 0.5f), new Vector3(0, 1, 1));
@@ -212,8 +224,8 @@ public class Voxel : MonoBehaviour
             if (face.IsEmpty())
                 continue;
             int faceNum = faceI % 6;
-            bool substance = faceI >= 6;
-            int axis = faceNum / 2;
+            bool substance = FaceIIsSubstance(faceI);
+            int axis = FaceIAxis(faceI);
 
             // example for faceNum = 5 (z min)
             // 0 bottom left
@@ -269,11 +281,10 @@ public class Voxel : MonoBehaviour
             VoxelFace face = faces[faceI];
             if (face.IsEmpty())
                 continue;
-            bool substance = faceI >= 6;
 
             var triangles = new int[6];
 
-            if (faceI % 2 == 0 ^ substance)
+            if (faceI % 2 == 0 ^ FaceIIsSubstance(faceI))
             {
                 triangles[0] = numFilledFaces * 4 + 0;
                 triangles[1] = numFilledFaces * 4 + 1;
