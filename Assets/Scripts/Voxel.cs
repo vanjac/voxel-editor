@@ -83,30 +83,30 @@ public class Voxel : MonoBehaviour
 
     public static Material selectedMaterial; // set by VoxelArray instance
 
-    public static Vector3 NormalForFaceI(int faceI)
-    {
-        return DirectionForFaceI(OppositeFaceI(faceI));
-    }
-
     public static Vector3 DirectionForFaceI(int faceI)
     {
         switch (faceI)
         {
             case 0:
-                return Vector3.right;
-            case 1:
                 return Vector3.left;
+            case 1:
+                return Vector3.right;
             case 2:
-                return Vector3.up;
-            case 3:
                 return Vector3.down;
+            case 3:
+                return Vector3.up;
             case 4:
-                return Vector3.forward;
-            case 5:
                 return Vector3.back;
+            case 5:
+                return Vector3.forward;
             default:
                 return Vector3.zero;
         }
+    }
+
+    public static Vector3 OppositeDirectionForFaceI(int faceI)
+    {
+        return DirectionForFaceI(OppositeFaceI(faceI));
     }
 
     public static int FaceIForDirection(Vector3 direction)

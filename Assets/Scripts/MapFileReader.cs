@@ -165,7 +165,7 @@ public class MapFileReader {
                 if (fileWriterVersion == 0)
                 {
                     int faceI = faceObject["i"].AsInt;
-                    voxel = voxelArray.VoxelAt(position + Voxel.NormalForFaceI(faceI), true);
+                    voxel = voxelArray.VoxelAt(position + Voxel.DirectionForFaceI(faceI), true);
                 }
                 ReadFace(faceObject, voxel, materials);
             }
