@@ -441,7 +441,7 @@ public class VoxelArray : MonoBehaviour {
         if (node.size == 1)
         {
             Voxel voxel = node.voxel;
-            for (int faceI = 0; faceI < 6; faceI++)
+            for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
             {
                 if (voxel.faces[faceI].IsEmpty())
                     continue;

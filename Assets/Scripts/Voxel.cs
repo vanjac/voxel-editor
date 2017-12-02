@@ -124,6 +124,11 @@ public class Voxel : MonoBehaviour
             return -1;
     }
 
+    public static int SubstanceFaceIForNormal(Vector3 normal)
+    {
+        return OppositeFaceI(FaceIForNormal(normal)) + 6;
+    }
+
     public static int OppositeFaceI(int faceI)
     {
         return (faceI / 2) * 2 + (faceI % 2 == 0 ? 1 : 0);
@@ -176,6 +181,11 @@ public class Voxel : MonoBehaviour
         }
         bounds.center += transform.position;
         return bounds;
+    }
+
+    public Bounds GetBounds()
+    {
+        return new Bounds(transform.position + new Vector3(0.5f,0.5f,0.5f), Vector3.one);
     }
 
     public bool IsEmpty()
