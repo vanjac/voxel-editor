@@ -127,7 +127,8 @@ public class Voxel : MonoBehaviour
         return (faceI / 2) * 2 + (faceI % 2 == 0 ? 1 : 0);
     }
 
-    public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
+    // xMin, xMax, yMin, yMax, zMin, zMax; 6 more for substances
+    public VoxelFace[] faces = new VoxelFace[12];
 
 	void Start ()
     {
@@ -205,11 +206,13 @@ public class Voxel : MonoBehaviour
         };
         numFilledFaces = 0;
         int numMaterials = 0;
-        for (int faceNum = 0; faceNum < 6; faceNum++)
+        for (int faceI = 0; faceI < 12; faceI++)
         {
-            VoxelFace face = faces[faceNum];
+            VoxelFace face = faces[faceI];
             if (face.IsEmpty())
                 continue;
+            int faceNum = faceI % 6;
+            bool substance = faceI >= 6;
             int axis = faceNum / 2;
 
             // example for faceNum = 5 (z min)
@@ -261,15 +264,16 @@ public class Voxel : MonoBehaviour
 
         numFilledFaces = 0;
         numMaterials = 0;
-        for (int faceNum = 0; faceNum < 6; faceNum++)
+        for (int faceI = 0; faceI < 12; faceI++)
         {
-            VoxelFace face = faces[faceNum];
+            VoxelFace face = faces[faceI];
             if (face.IsEmpty())
                 continue;
+            bool substance = faceI >= 6;
 
             var triangles = new int[6];
 
-            if (faceNum % 2 == 0)
+            if (faceI % 2 == 0 ^ substance)
             {
                 triangles[0] = numFilledFaces * 4 + 0;
                 triangles[1] = numFilledFaces * 4 + 1;
@@ -317,5 +321,5 @@ public class Voxel : MonoBehaviour
         MeshCollider collider = GetComponent<MeshCollider>();
         if (collider != null)
             collider.sharedMesh = mesh;
-    }
+    } // end UpdateVoxel()
 }

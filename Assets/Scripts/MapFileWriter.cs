@@ -122,7 +122,7 @@ public class MapFileWriter {
         JSONObject voxelObject = new JSONObject();
         voxelObject["at"] = WriteIntVector3(voxel.transform.position);
         JSONArray faces = new JSONArray();
-        for (int faceI = 0; faceI < 6; faceI++)
+        for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
         {
             VoxelFace face = voxel.faces[faceI];
             if (face.IsEmpty())
