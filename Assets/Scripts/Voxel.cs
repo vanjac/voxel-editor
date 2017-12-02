@@ -86,8 +86,13 @@ public class Voxel : MonoBehaviour
     public static Vector3 NormalForFaceI(int faceI)
     {
         if (FaceIIsSubstance(faceI))
-            faceI = OppositeFaceI(faceI % 6);
-        switch (faceI)
+            faceI = OppositeFaceI(faceI);
+        return DirectionForFaceI(faceI);
+    }
+
+    public static Vector3 DirectionForFaceI(int faceI)
+    {
+        switch (faceI % 6)
         {
             case 0:
                 return Vector3.right;
@@ -132,6 +137,19 @@ public class Voxel : MonoBehaviour
     public static int OppositeFaceI(int faceI)
     {
         return (faceI / 2) * 2 + (faceI % 2 == 0 ? 1 : 0);
+    }
+
+    public static int SideFaceI(int faceI, int sideNum)
+    {
+        sideNum %= 4;
+        bool substance = FaceIIsSubstance(faceI);
+        if (substance)
+            faceI -= 6;
+        faceI = (faceI / 2) * 2 + 2 + sideNum;
+        faceI %= 6;
+        if (substance)
+            faceI += 6;
+        return faceI;
     }
 
     public static int FaceIAxis(int faceI)
