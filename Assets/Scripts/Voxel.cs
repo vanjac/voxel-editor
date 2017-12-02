@@ -12,7 +12,7 @@ public struct VoxelFace
     {
         get
         {
-            return addSelected || storedSelected;
+            return (!IsEmpty()) && (addSelected || storedSelected);
         }
     }
 

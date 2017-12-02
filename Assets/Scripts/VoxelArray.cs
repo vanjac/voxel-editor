@@ -4,21 +4,6 @@ using UnityEngine;
 
 public class VoxelArray : MonoBehaviour {
 
-    private struct FaceChange
-    {
-        public VoxelFaceReference faceRef;
-        public VoxelFace newFace;
-        public bool updateSelect, updateFace;
-
-        public FaceChange(Voxel voxel, int faceI, VoxelFace newFace)
-        {
-            faceRef = new VoxelFaceReference(voxel, faceI);
-            this.newFace = newFace;
-            updateSelect = false;
-            updateFace = true;
-        }
-    }
-
     private class OctreeNode
     {
         public Vector3Int position;
@@ -499,172 +484,135 @@ public class VoxelArray : MonoBehaviour {
         // and ignore the storedSelected property and the storedSelectedFaces list
         // face.selected can be a substitute for face.addSelected
 
-        var faceChangeQueue = new List<FaceChange>();
+        int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
+        int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
+        bool negativeAdjustAxis = adjustDirFaceI % 2 == 0;
+
+        // sort selectedFaces in order along the adjustDirection vector
+        selectedFaces.Sort(delegate(VoxelFaceReference a, VoxelFaceReference b)
+        {
+            // positive means A is greater than B
+            // so positive means B will be adjusted before A
+            Vector3 aCenter = a.voxel.GetFaceBounds(a.faceI).center;
+            Vector3 bCenter = b.voxel.GetFaceBounds(b.faceI).center;
+            float diff = 0;
+            switch (adjustAxis)
+            {
+                case 0:
+                    diff = bCenter.x - aCenter.x;
+                    break;
+                case 1:
+                    diff = bCenter.y - aCenter.y;
+                    break;
+                case 2:
+                    diff = bCenter.z - aCenter.z;
+                    break;
+            }
+            if (negativeAdjustAxis)
+                diff = -diff;
+            if (diff > 0)
+                return 1;
+            if (diff < 0)
+                return -1;
+            return 0;
+        });
+
+        // HashSets prevent duplicate elements
+        var voxelsToUpdate = new HashSet<Voxel>();
 
         for (int i = 0; i < selectedFaces.Count; i++)
         {
             VoxelFaceReference faceRef = selectedFaces[i];
-            int faceI = faceRef.faceI;
-            int oppositeFaceI = Voxel.OppositeFaceI(faceI);
-            bool pushing = Voxel.FaceIForDirection(adjustDirection) == oppositeFaceI;
-            bool pulling = Voxel.FaceIForDirection(adjustDirection) == faceI;
-            bool pushingOrPulling = pushing || pulling;
+
             Voxel oldVoxel = faceRef.voxel;
             Vector3 oldPos = oldVoxel.transform.position;
             Vector3 newPos = oldPos + adjustDirection;
             Voxel newVoxel = VoxelAt(newPos, true);
-            Voxel voxelMovingToOldPos = VoxelAt(oldPos - adjustDirection, false);
-            bool oldPosWillNotBeReplaced = voxelMovingToOldPos == null || !voxelMovingToOldPos.faces[faceI].selected;
 
-            if (oldPosWillNotBeReplaced)
-            {
-                FaceChange faceChange = new FaceChange(oldVoxel, faceI, Voxel.EMPTY_FACE);
-                faceChange.updateSelect = true;
-                if (!pushingOrPulling)
-                    faceChange.updateFace = false;
-                faceChangeQueue.Add(faceChange);
-            }
+            int faceI = faceRef.faceI;
+            int oppositeFaceI = Voxel.OppositeFaceI(faceI);
+            bool pushing = adjustDirFaceI == oppositeFaceI;
+            bool pulling = adjustDirFaceI == faceI;
 
-            bool blocked = false; // is something blocking the face from moving here?
-            if((!pushingOrPulling) && newVoxel.faces[faceI].IsEmpty())
-                blocked = true;
-            if (pushing && !oldVoxel.faces[oppositeFaceI].IsEmpty() && !oldVoxel.faces[oppositeFaceI].selected)
-            {
-                blocked = true;
-                faceChangeQueue.Add(new FaceChange(oldVoxel, oppositeFaceI, Voxel.EMPTY_FACE));
-            }
-            if (pulling)
-            {
-                Voxel voxelAhead = VoxelAt(newPos + adjustDirection, false);
-                if (voxelAhead != null && !voxelAhead.faces[oppositeFaceI].IsEmpty() && !voxelAhead.faces[oppositeFaceI].selected)
-                {
-                    blocked = true;
-                    faceChangeQueue.Add(new FaceChange(voxelAhead, oppositeFaceI, Voxel.EMPTY_FACE));
-                }
-            }
+            VoxelFace movingFace = oldVoxel.faces[faceI];
+            movingFace.addSelected = false;
 
-            if (blocked)
-            {
-                // make sure the new voxel updates, in case it needs to be deleted
-                FaceChange faceChange = new FaceChange(newVoxel, faceI, Voxel.EMPTY_FACE);
-                faceChange.updateFace = false;
-                faceChange.updateSelect = false;
-                faceChangeQueue.Add(faceChange);
-            }
-            else
-            {
-                FaceChange moveFaceChange = new FaceChange(newVoxel, faceI, faceRef.face);
-                moveFaceChange.updateSelect = true;
-                faceChangeQueue.Add(moveFaceChange);
-            }
+            bool blocked = false; // is movement blocked?
 
             if (pushing)
             {
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
-
-                    Voxel sideVoxel = VoxelAt(oldPos - adjustDirection + Voxel.OppositeDirectionForFaceI(sideFaceI), false);
-                    if (sideVoxel != null && (!sideVoxel.faces[sideFaceI].IsEmpty()))
+                    if (oldVoxel.faces[sideFaceI].IsEmpty())
                     {
-                        // expand side
-                        if (sideVoxel.faces[oppositeFaceI].IsEmpty())
-                        {
-                            // prevent edge case when pushing a face away that was previously cater-corner to another open region
-                            Voxel newSideVoxel = VoxelAt(oldPos + Voxel.OppositeDirectionForFaceI(sideFaceI), true);
-                            faceChangeQueue.Add(new FaceChange(newSideVoxel, sideFaceI, sideVoxel.faces[sideFaceI]));
-                        }
-                    }
-
-                    if (!oldVoxel.faces[sideFaceI].IsEmpty())
-                    {
-                        // contract side
-                        faceChangeQueue.Add(new FaceChange(oldVoxel, sideFaceI, Voxel.EMPTY_FACE));
-                    }
-
-                    Voxel adjacentVoxel = VoxelAt(oldPos + Voxel.OppositeDirectionForFaceI(sideFaceI), false);
-                    if (adjacentVoxel != null && (!adjacentVoxel.faces[faceI].IsEmpty())
-                        && (!adjacentVoxel.faces[faceI].selected))
-                    {
-                        // create side
-                        Voxel newSideVoxel = VoxelAt(oldPos + Voxel.OppositeDirectionForFaceI(sideFaceI), true);
-                        faceChangeQueue.Add(new FaceChange(newSideVoxel, sideFaceI, faceRef.face));
+                        Voxel sideVoxel = VoxelAt(oldPos + Voxel.DirectionForFaceI(sideFaceI), true);
+                        sideVoxel.faces[Voxel.OppositeFaceI(sideFaceI)] = movingFace;
+                        voxelsToUpdate.Add(sideVoxel);
                     }
                 }
-            } // end if pushing
+
+                if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
+                    blocked = true;
+                oldVoxel.Clear();
+            }
             else if (pulling)
             {
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
                     int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
-
-                    if (!oldVoxel.faces[sideFaceI].IsEmpty())
+                    Voxel sideVoxel = VoxelAt(newPos + Voxel.DirectionForFaceI(sideFaceI), true);
+                    if (sideVoxel.faces[oppositeSideFaceI].IsEmpty())
+                        newVoxel.faces[sideFaceI] = movingFace;
+                    else
                     {
-                        // expand side
-                        Voxel sideVoxelCheck = VoxelAt(newPos + Voxel.OppositeDirectionForFaceI(oppositeSideFaceI), false);
-                        if (sideVoxelCheck == null || sideVoxelCheck.faces[oppositeSideFaceI].IsEmpty())
-                            // prevent edge case when expanding directly next to an open region
-                            // the other face will be deleted with the contract side code below
-                            faceChangeQueue.Add(new FaceChange(newVoxel, sideFaceI, oldVoxel.faces[sideFaceI]));
-                    }
-
-                    Voxel sideVoxel = VoxelAt(newPos + Voxel.OppositeDirectionForFaceI(sideFaceI), false);
-                    if (sideVoxel != null && !sideVoxel.faces[sideFaceI].IsEmpty())
-                    {
-                        // contract side
-                        faceChangeQueue.Add(new FaceChange(sideVoxel, sideFaceI, Voxel.EMPTY_FACE));
-                    }
-
-                    Voxel adjacentVoxel = VoxelAt(oldPos + Voxel.OppositeDirectionForFaceI(sideFaceI), false);
-                    if (adjacentVoxel != null && (!adjacentVoxel.faces[faceI].IsEmpty())
-                        && (!adjacentVoxel.faces[faceI].selected))
-                    {
-                        // create side
-                        faceChangeQueue.Add(new FaceChange(newVoxel, oppositeSideFaceI, faceRef.face));
+                        sideVoxel.faces[oppositeSideFaceI].Clear();
+                        voxelsToUpdate.Add(sideVoxel);
                     }
                 }
-            } // end if pulling
 
-            //if (!blocked)
+                Voxel blockingVoxel = VoxelAt(newPos + adjustDirection, false);
+                if (blockingVoxel != null && !blockingVoxel.faces[oppositeFaceI].IsEmpty())
+                {
+                    blocked = true;
+                    blockingVoxel.faces[oppositeFaceI].Clear();
+                    voxelsToUpdate.Add(blockingVoxel);
+                }
+                oldVoxel.faces[faceI].Clear();
+            }
+            else // sliding
+            {
+                oldVoxel.faces[faceI].addSelected = false;
+
+                if (newVoxel.faces[faceI].IsEmpty())
+                    blocked = true;
+            }
+
+            if (!blocked)
+            {
+                // move the face
+                newVoxel.faces[faceI] = movingFace;
+                newVoxel.faces[faceI].addSelected = true;
                 selectedFaces[i] = new VoxelFaceReference(newVoxel, faceI);
+            }
+            else
+            {
+                // clear the selection; will be deleted later
+                selectedFaces[i] = new VoxelFaceReference(null, -1);
+            }
+
+            voxelsToUpdate.Add(newVoxel);
+            voxelsToUpdate.Add(oldVoxel);
         } // end for each selected face
 
-        foreach (FaceChange faceChange in faceChangeQueue)
-        {
-            Voxel voxel = faceChange.faceRef.voxel;
-            int faceI = faceChange.faceRef.faceI;
-            if (faceChange.updateFace)
-            {
-                bool oldSelect = voxel.faces[faceI].addSelected;
-                if (voxel.faces[faceI].IsEmpty())
-                    oldSelect = false;
-                voxel.faces[faceI] = faceChange.newFace;
-                if (voxel.faces[faceI].IsEmpty())
-                    voxel.faces[faceI].addSelected = false;
-                else
-                    voxel.faces[faceI].addSelected = oldSelect;
-            }
-            if (faceChange.updateSelect && !voxel.faces[faceI].IsEmpty())
-            {
-                voxel.faces[faceI].addSelected = faceChange.newFace.addSelected;
-            }
-        }
-        foreach (FaceChange faceChange in faceChangeQueue)
-            VoxelModified(faceChange.faceRef.voxel);
+        foreach (Voxel voxel in voxelsToUpdate)
+            VoxelModified(voxel);
 
         for (int i = selectedFaces.Count - 1; i >= 0; i--)
         {
-            VoxelFaceReference faceRef = selectedFaces[i];
-            if (faceRef.voxel == null || faceRef.voxel.gameObject == null || faceRef.face.IsEmpty())
-            {
+            if (selectedFaces[i].voxel == null)
                 selectedFaces.RemoveAt(i);
-                continue;
-            }
-            if (!faceRef.face.addSelected)
-            {
-                faceRef.voxel.faces[faceRef.faceI].addSelected = true;
-            }
         }
     } // end Adjust()
 
