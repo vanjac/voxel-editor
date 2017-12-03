@@ -16,6 +16,11 @@ public class ActionBarGUI : GUIPanel
         GUILayout.BeginArea(windowRect);
         GUILayout.BeginHorizontal();
 
+        if (GUILayout.Button("Create", GUILayout.ExpandWidth(false)))
+        {
+            voxelArray.SubstanceTest();
+        }
+
         if (voxelArray.selectMode != VoxelArray.SelectMode.NONE)
         {
             if (GUILayout.Button("Apply Selection", GUILayout.ExpandWidth(false)))
@@ -33,15 +38,10 @@ public class ActionBarGUI : GUIPanel
         }
 
         if (GUILayout.Button("Play", GUILayout.ExpandWidth(false)))
-        {
-
             editorFile.Play();
-        }
 
         if (GUILayout.Button("Close", GUILayout.ExpandWidth(false)))
-        {
             editorFile.Close();
-        }
 
         GUILayout.EndHorizontal();
 

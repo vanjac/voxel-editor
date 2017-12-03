@@ -656,4 +656,13 @@ public class VoxelArray : MonoBehaviour {
             VoxelModified(faceRef.voxel);
         }
     }
+
+    public void SubstanceTest()
+    {
+        Substance substance = new Substance();
+        foreach (VoxelFaceReference faceRef in IterateSelected())
+        {
+            faceRef.voxel.substance = substance;
+        }
+    }
 }

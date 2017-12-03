@@ -146,7 +146,20 @@ public class Voxel : MonoBehaviour
     }
 
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
-    public Substance substance = null;
+    public int substanceDebug = 0;
+    private Substance _substance = null;
+    public Substance substance
+    {
+        get
+        {
+            return _substance;
+        }
+        set
+        {
+            _substance = value;
+            substanceDebug = value.GetHashCode();
+        }
+    }
 
 	void Start ()
     {
