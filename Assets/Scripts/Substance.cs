@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Substance
+public class Substance : DynamicEntity
 {
     public Substance() { }
 }
