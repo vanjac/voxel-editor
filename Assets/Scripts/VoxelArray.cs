@@ -576,9 +576,12 @@ public class VoxelArray : MonoBehaviour {
                 Voxel blockingVoxel = VoxelAt(newPos + adjustDirection, false);
                 if (blockingVoxel != null && !blockingVoxel.faces[oppositeFaceI].IsEmpty())
                 {
-                    blocked = true;
-                    blockingVoxel.faces[oppositeFaceI].Clear();
-                    voxelsToUpdate.Add(blockingVoxel);
+                    if (movingSubstance == blockingVoxel.substance)
+                    {
+                        blocked = true;
+                        blockingVoxel.faces[oppositeFaceI].Clear();
+                        voxelsToUpdate.Add(blockingVoxel);
+                    }
                 }
                 oldVoxel.faces[faceI].Clear();
             }
