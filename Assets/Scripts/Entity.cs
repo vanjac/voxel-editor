@@ -106,11 +106,55 @@ public struct EntityOutput
 }
 
 
-public class DynamicEntity : Entity
+public class SimpleEntity : Entity
 {
     List<EntityOutput> outputList = new List<EntityOutput>();
     List<Entity> behaviorList = new List<Entity>();
 
+
+    public virtual string EntityTypeName()
+    {
+        return "Entity";
+    }
+
+    public virtual byte GetTag()
+    {
+        return EntityTag.GREY;
+    }
+
+    public virtual ICollection<EntityProperty> Properties()
+    {
+        return new EntityProperty[] { };
+    }
+
+    public virtual ICollection<EntityAction> Actions()
+    {
+        var actions = new List<EntityAction>();
+        foreach (EntityProperty property in Properties())
+            if (property.dynamic)
+                actions.Add(new EntityAction("Set " + property.name, property.gui));
+        return actions;
+    }
+
+    public virtual ICollection<EntityEvent> Events()
+    {
+        return new EntityEvent[] { };
+    }
+
+    public List<EntityOutput> OutputList()
+    {
+        return outputList;
+    }
+
+    public List<Entity> BehaviorList()
+    {
+        return behaviorList;
+    }
+}
+
+
+public class DynamicEntity : SimpleEntity
+{
     bool enabled = true;
     byte tag = EntityTag.GREY;
     // only for editor; makes object transparent allowing you to zoom/select through it
@@ -118,18 +162,12 @@ public class DynamicEntity : Entity
     bool visible = true;
     bool solid = true;
 
-
-    public string EntityTypeName()
-    {
-        return "Entity";
-    }
-
-    public byte GetTag()
+    public override byte GetTag()
     {
         return tag;
     }
 
-    public ICollection<EntityProperty> Properties()
+    public override ICollection<EntityProperty> Properties()
     {
         return new EntityProperty[]
         {
@@ -156,12 +194,9 @@ public class DynamicEntity : Entity
         };
     }
 
-    public ICollection<EntityAction> Actions()
+    public override ICollection<EntityAction> Actions()
     {
-        var actions = new List<EntityAction>();
-        foreach (EntityProperty property in Properties())
-            if (property.dynamic)
-                actions.Add(new EntityAction("Set " + property.name, property.gui));
+        var actions = new List<EntityAction>(base.Actions());
         actions.AddRange(new EntityAction[]
         {
             new EntityAction("Destroy"),
@@ -172,7 +207,7 @@ public class DynamicEntity : Entity
         return actions;
     }
 
-    public ICollection<EntityEvent> Events()
+    public override ICollection<EntityEvent> Events()
     {
         return new EntityEvent[]
         {
@@ -184,15 +219,5 @@ public class DynamicEntity : Entity
             new EntityEvent("Player Look Away", false),
             new EntityEvent("Player Use", false)
         };
-    }
-
-    public List<EntityOutput> OutputList()
-    {
-        return outputList;
-    }
-
-    public List<Entity> BehaviorList()
-    {
-        return behaviorList;
     }
 }
