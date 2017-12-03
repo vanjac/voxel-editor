@@ -538,6 +538,15 @@ public class VoxelArray : MonoBehaviour {
             bool pushing = adjustDirFaceI == oppositeFaceI;
             bool pulling = adjustDirFaceI == faceI;
 
+            if (pulling && (!newVoxel.faces[oppositeFaceI].IsEmpty()) && !newVoxel.faces[oppositeFaceI].selected)
+            {
+                // usually this means there's another substance. push it away before this face
+                newVoxel.faces[oppositeFaceI].addSelected = true;
+                selectedFaces.Insert(i, new VoxelFaceReference(newVoxel, oppositeFaceI));
+                i -= 1;
+                continue;
+            }
+
             VoxelFace movingFace = oldVoxel.faces[faceI];
             movingFace.addSelected = false;
             Substance movingSubstance = oldVoxel.substance;
