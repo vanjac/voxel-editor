@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23478966026683046}
   - component: {fileID: 114305865034769066}
   - component: {fileID: 64047389071111382}
+  - component: {fileID: 65546726630983522}
   m_Layer: 0
   m_Name: VoxelPrefab
   m_TagString: Voxel
@@ -98,6 +99,18 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 0}
+--- !u!65 &65546726630983522
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1695945752962522}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!114 &114305865034769066
 MonoBehaviour:
   m_ObjectHideFlags: 1

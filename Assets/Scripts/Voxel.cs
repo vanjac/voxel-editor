@@ -357,12 +357,27 @@ public class Voxel : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
             renderer.materials = materials;
-        MeshCollider collider = GetComponent<MeshCollider>();
-        if (collider != null)
+        MeshCollider meshCollider = GetComponent<MeshCollider>();
+        BoxCollider boxCollider = GetComponent<BoxCollider>();
+        if (substance == null)
         {
-            collider.sharedMesh = mesh;
-            collider.convex = (substance != null);
-            collider.isTrigger = (substance != null);
+            if (boxCollider != null)
+                boxCollider.enabled = false;
+            if (meshCollider != null)
+            {
+                meshCollider.enabled = true;
+                meshCollider.sharedMesh = mesh;
+            }
+        }
+        else // substance is not null
+        {
+            if (boxCollider != null)
+                boxCollider.enabled = true;
+            if (meshCollider != null)
+            {
+                meshCollider.sharedMesh = null;
+                meshCollider.enabled = false;
+            }
         }
     } // end UpdateVoxel()
 }
