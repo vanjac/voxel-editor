@@ -536,6 +536,7 @@ public class VoxelArray : MonoBehaviour {
 
             VoxelFace movingFace = oldVoxel.faces[faceI];
             movingFace.addSelected = false;
+            Substance movingSubstance = oldVoxel.substance;
 
             bool blocked = false; // is movement blocked?
 
@@ -594,6 +595,7 @@ public class VoxelArray : MonoBehaviour {
                 // move the face
                 newVoxel.faces[faceI] = movingFace;
                 newVoxel.faces[faceI].addSelected = true;
+                newVoxel.substance = movingSubstance;
                 selectedFaces[i] = new VoxelFaceReference(newVoxel, faceI);
             }
             else

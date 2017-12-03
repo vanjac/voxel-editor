@@ -157,7 +157,10 @@ public class Voxel : MonoBehaviour
         set
         {
             _substance = value;
-            substanceDebug = value.GetHashCode();
+            if (_substance == null)
+                substanceDebug = 0;
+            else
+                substanceDebug = _substance.GetHashCode();
         }
     }
 
@@ -218,6 +221,7 @@ public class Voxel : MonoBehaviour
         {
             faces[faceI].Clear();
         }
+        substance = null;
     }
 
     void OnDestroy()
