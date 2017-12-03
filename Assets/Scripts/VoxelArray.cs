@@ -518,6 +518,10 @@ public class VoxelArray : MonoBehaviour {
                 return 1;
             if (diff < 0)
                 return -1;
+            if (a.faceI == Voxel.OppositeFaceI(adjustDirFaceI))
+                return -1; // move one substance back before moving other forward
+            if (b.faceI == Voxel.OppositeFaceI(adjustDirFaceI))
+                return 1;
             return 0;
         });
 
