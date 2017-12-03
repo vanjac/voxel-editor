@@ -361,6 +361,7 @@ public class Voxel : MonoBehaviour
         if (collider != null)
         {
             collider.sharedMesh = mesh;
+            collider.convex = (substance != null);
             collider.isTrigger = (substance != null);
         }
     } // end UpdateVoxel()
