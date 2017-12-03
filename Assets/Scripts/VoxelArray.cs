@@ -60,6 +60,7 @@ public class VoxelArray : MonoBehaviour {
     // all faces where face.storedSelected == true
     private List<VoxelFaceReference> storedSelectedFaces = new List<VoxelFaceReference>();
     private Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
+    private Substance boxSelectSubstance = null;
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     private bool unloadUnusedAssets = false;
@@ -268,6 +269,7 @@ public class VoxelArray : MonoBehaviour {
         selectMode = SelectMode.BOX;
         boxSelectStartBounds = voxel.GetFaceBounds(faceI);
         selectionBounds = boxSelectStartBounds;
+        boxSelectSubstance = voxel.substance;
         UpdateBoxSelection();
     }
 
@@ -414,10 +416,10 @@ public class VoxelArray : MonoBehaviour {
             if (!FaceInBoxSelection(faceRef.voxel, faceRef.faceI, selectionBounds))
                 DeselectFace(faceRef);
         }
-        UpdateBoxSelectionRecursive(rootNode, selectionBounds);
+        UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
     }
 
-    private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds)
+    private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)
     {
         if (node == null)
             return;
@@ -426,20 +428,20 @@ public class VoxelArray : MonoBehaviour {
         if (node.size == 1)
         {
             Voxel voxel = node.voxel;
+            if (voxel.substance != substance)
+                return;
             for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
             {
                 if (voxel.faces[faceI].IsEmpty())
                     continue;
                 if (FaceInBoxSelection(voxel, faceI, bounds))
                     SelectFace(voxel, faceI);
-                else
-                    DeselectFace(voxel, faceI);
             }
         }
         else
         {
             foreach (OctreeNode branch in node.branches)
-                UpdateBoxSelectionRecursive(branch, bounds);
+                UpdateBoxSelectionRecursive(branch, bounds, substance);
         }
     }
 
