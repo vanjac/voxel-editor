@@ -81,6 +81,7 @@ public class PropertiesGUI : GUIPanel {
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
             materialSelector.voxelArray = voxelArray;
+            materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
             materialSelector.handler = voxelArray.AssignMaterial;
         }
 

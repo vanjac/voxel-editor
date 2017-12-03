@@ -207,6 +207,8 @@ public class Voxel : MonoBehaviour
 
     public bool IsEmpty()
     {
+        if (substance != null)
+            return false;
         foreach (VoxelFace face in faces)
         {
             if (!face.IsEmpty())
