@@ -6,37 +6,193 @@ public interface Entity
 {
     string EntityTypeName();
 
-    bool SupportsTag();
     byte GetTag();
-    void SetTag(byte tag);
 
-    string[] PropertyNames();
-    string GetProperty(string name);
-    void SetProperty(string name, string value);
-    string PropertyGUI(string name, string value);
+    ICollection<EntityProperty> Properties();
+    ICollection<EntityAction> Actions();
+    ICollection<EntityEvent> Events();
 
-    string[] ActionNames();
-    string ActionArgumentGUI(string name, string value);
-
-    string[] EventNames();
-    bool EventHasActivator();
-
-    List<Output> OutputList(); // can be null if outputs not supported
+    List<EntityOutput> OutputList(); // can be null if outputs not supported
 
     List<Entity> BehaviorList(); // can be null if behaviors not supported
 }
 
-public struct Output
+public class EntityTag
 {
-    Entity targetEntity; // null for Self or Activator
-    bool targetEntityIsActivator;
-    string targetAction;
-    string actionArgument;
+    public const byte GREY = 0;
+    public const byte RED = 1;
+    public const byte ORANGE = 2;
+    public const byte YELLOW = 3;
+    public const byte GREEN = 4;
+    public const byte CYAN = 5;
+    public const byte BLUE = 6;
+    public const byte PURPLE = 7;
+}
+
+public delegate string GetProperty();
+public delegate void SetProperty(string value);
+public delegate string PropertyGUI(string value);
+
+public struct EntityProperty
+{
+    public string name;
+    public GetProperty getter;
+    public SetProperty setter;
+    public PropertyGUI gui;
+    public bool dynamic; // can change in game
+
+    public EntityProperty(string name, GetProperty getter, SetProperty setter, PropertyGUI gui)
+    {
+        this.name = name;
+        this.getter = getter;
+        this.setter = setter;
+        this.gui = gui;
+        dynamic = true;
+    }
+
+    public EntityProperty(string name, GetProperty getter, SetProperty setter, PropertyGUI gui, bool dynamic)
+    {
+        this.name = name;
+        this.getter = getter;
+        this.setter = setter;
+        this.gui = gui;
+        this.dynamic = dynamic;
+    }
+}
+
+public struct EntityAction
+{
+    public string name;
+    public PropertyGUI argumentGUI;
+
+    public EntityAction(string name)
+    {
+        this.name = name;
+        argumentGUI = PropertyGUIs.Empty;
+    }
+
+    public EntityAction(string name, PropertyGUI gui)
+    {
+        this.name = name;
+        argumentGUI = gui;
+    }
+}
+
+public struct EntityEvent
+{
+    public string name;
+    public bool hasActivator;
+
+    public EntityEvent(string name, bool hasActivator)
+    {
+        this.name = name;
+        this.hasActivator = hasActivator;
+    }
+}
+
+public struct EntityOutput
+{
+    public Entity targetEntity; // null for Self or Activator
+    public bool targetEntityIsActivator;
+    public string targetAction;
+    public string actionArgument;
 
     // activator rule...
-    bool[] activatorTagsAllowed;
-    Entity[] activatorEntityList;
-    bool activatorEntityBlacklist;
-    string[] activatorTypeList; // also applies to behaviors
-    bool activatorTypeBlacklist;
+    public bool[] activatorTagsAllowed;
+    public Entity[] activatorEntityList;
+    public bool activatorEntityBlacklist;
+    public string[] activatorTypeList; // also applies to behaviors
+    public bool activatorTypeBlacklist;
+}
+
+
+public class DynamicEntity : Entity
+{
+    List<EntityOutput> outputList = new List<EntityOutput>();
+    List<Entity> behaviorList = new List<Entity>();
+
+    bool enabled = true;
+    byte tag = EntityTag.GREY;
+    // only for editor; makes object transparent allowing you to zoom/select through it
+    bool xRay = false;
+    bool visible = true;
+    bool solid = true;
+
+
+    public string EntityTypeName()
+    {
+        return "Entity";
+    }
+
+    public byte GetTag()
+    {
+        return tag;
+    }
+
+    public ICollection<EntityProperty> Properties()
+    {
+        return new EntityProperty[]
+        {
+            new EntityProperty("Enabled?",
+                Getters.Bool(() => enabled),
+                Setters.Bool(v => enabled = v),
+                PropertyGUIs.Toggle),
+            new EntityProperty("Tag",
+                Getters.Int(() => tag),
+                Setters.Int(v => tag = (byte)v),
+                PropertyGUIs.Text, false),
+            new EntityProperty("X-Ray?",
+                Getters.Bool(() => xRay),
+                Setters.Bool(v => xRay = v),
+                PropertyGUIs.Toggle, false),
+            new EntityProperty("Visible?",
+                Getters.Bool(() => visible),
+                Setters.Bool(v => visible = v),
+                PropertyGUIs.Toggle),
+            new EntityProperty("Solid?",
+                Getters.Bool(() => solid),
+                Setters.Bool(v => solid = v),
+                PropertyGUIs.Toggle)
+        };
+    }
+
+    public ICollection<EntityAction> Actions()
+    {
+        var actions = new List<EntityAction>();
+        foreach (EntityProperty property in Properties())
+            if (property.dynamic)
+                actions.Add(new EntityAction("Set " + property.name, property.gui));
+        actions.AddRange(new EntityAction[]
+        {
+            new EntityAction("Destroy"),
+            new EntityAction("Clone"),
+            new EntityAction("Teleport"),
+            new EntityAction("Teleport Relative")
+        });
+        return actions;
+    }
+
+    public ICollection<EntityEvent> Events()
+    {
+        return new EntityEvent[]
+        {
+            new EntityEvent("Destroyed", true),
+            new EntityEvent("Cloned", false),
+            new EntityEvent("Start Touch", true),
+            new EntityEvent("End Touch", true),
+            new EntityEvent("Player Look Towards", false),
+            new EntityEvent("Player Look Away", false),
+            new EntityEvent("Player Use", false)
+        };
+    }
+
+    public List<EntityOutput> OutputList()
+    {
+        return outputList;
+    }
+
+    public List<Entity> BehaviorList()
+    {
+        return behaviorList;
+    }
 }
