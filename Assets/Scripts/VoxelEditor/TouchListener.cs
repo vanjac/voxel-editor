@@ -99,7 +99,7 @@ public class TouchListener : MonoBehaviour {
                     else if (touch.tapCount == 2)
                     {
                         voxelArray.SelectBackground(); // clear selection first for flood fill to work
-                        voxelArray.FaceSelectFloodFill(hitVoxel, hitFaceI);
+                        voxelArray.FaceSelectFloodFill(hitVoxel, hitFaceI, hitVoxel.substance);
                     }
                 }
                 else if (hitMoveAxis != null)
@@ -113,7 +113,7 @@ public class TouchListener : MonoBehaviour {
                     else if (touch.tapCount == 2)
                     {
                         voxelArray.SelectBackground(); // clear selection first for flood fill to work
-                        voxelArray.FaceSelectFloodFill(lastHitVoxel, lastHitFaceI);
+                        voxelArray.FaceSelectFloodFill(lastHitVoxel, lastHitFaceI, lastHitVoxel.substance);
                     }
                 }
             } // end if currentTouchOperation == NONE

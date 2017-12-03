@@ -452,9 +452,11 @@ public class VoxelArray : MonoBehaviour {
         return bounds.Contains(faceBounds.min) && bounds.Contains(faceBounds.max);
     }
 
-    public void FaceSelectFloodFill(Voxel voxel, int faceI)
+    public void FaceSelectFloodFill(Voxel voxel, int faceI, Substance substance)
     {
         if (voxel == null)
+            return;
+        if (voxel.substance != substance)
             return;
         VoxelFace face = voxel.faces[faceI];
         if (face.IsEmpty())
@@ -468,7 +470,7 @@ public class VoxelArray : MonoBehaviour {
         {
             int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
             Vector3 newPos = position + Voxel.OppositeDirectionForFaceI(sideFaceI);
-            FaceSelectFloodFill(VoxelAt(newPos, false), faceI);
+            FaceSelectFloodFill(VoxelAt(newPos, false), faceI, substance);
         }
 
         if (selectMode != SelectMode.FACE)
