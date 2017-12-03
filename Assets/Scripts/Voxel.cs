@@ -359,6 +359,9 @@ public class Voxel : MonoBehaviour
             renderer.materials = materials;
         MeshCollider collider = GetComponent<MeshCollider>();
         if (collider != null)
+        {
             collider.sharedMesh = mesh;
+            collider.isTrigger = (substance != null);
+        }
     } // end UpdateVoxel()
 }
