@@ -489,6 +489,7 @@ public class VoxelArray : MonoBehaviour {
         // face.selected can be a substitute for face.addSelected
 
         int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
+        int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
         int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
         bool negativeAdjustAxis = adjustDirFaceI % 2 == 0;
 
@@ -518,9 +519,10 @@ public class VoxelArray : MonoBehaviour {
                 return 1;
             if (diff < 0)
                 return -1;
-            if (a.faceI == Voxel.OppositeFaceI(adjustDirFaceI))
-                return -1; // move one substance back before moving other forward
-            if (b.faceI == Voxel.OppositeFaceI(adjustDirFaceI))
+            if (a.faceI == oppositeAdjustDirFaceI)
+                if (b.faceI != oppositeAdjustDirFaceI)
+                    return -1; // move one substance back before moving other forward
+            else if (b.faceI == oppositeAdjustDirFaceI)
                 return 1;
             return 0;
         });
