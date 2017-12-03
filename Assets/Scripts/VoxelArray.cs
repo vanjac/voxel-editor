@@ -563,8 +563,8 @@ public class VoxelArray : MonoBehaviour {
                 {
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
                     int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
-                    Voxel sideVoxel = VoxelAt(newPos + Voxel.DirectionForFaceI(sideFaceI), true);
-                    if (sideVoxel.faces[oppositeSideFaceI].IsEmpty())
+                    Voxel sideVoxel = VoxelAt(newPos + Voxel.DirectionForFaceI(sideFaceI), false);
+                    if (sideVoxel == null || sideVoxel.faces[oppositeSideFaceI].IsEmpty() || movingSubstance != sideVoxel.substance)
                         newVoxel.faces[sideFaceI] = movingFace;
                     else
                     {
