@@ -94,10 +94,19 @@ public class MapFileReader {
             }
         }
 
+        var substances = new List<Substance>();
+        if (world["substances"] != null)
+        {
+            foreach (JSONNode subNode in world["substances"].AsArray)
+            {
+                substances.Add(new Substance());
+            }
+        }
+
         if (world["lighting"] != null)
             ReadLighting(world["lighting"].AsObject, materials);
         if (world["map"] != null)
-            ReadMap(world["map"].AsObject, voxelArray, materials, editor);
+            ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
     }
 
     private void ReadLighting(JSONObject lighting, List<Material> materials)
@@ -124,7 +133,8 @@ public class MapFileReader {
         }
     }
 
-    private void ReadMap(JSONObject map, VoxelArray voxelArray, List<Material> materials, bool editor)
+    private void ReadMap(JSONObject map, VoxelArray voxelArray,
+        List<Material> materials, List<Substance> substances, bool editor)
     {
         voxelArray.ClearAll();
         if (map["voxels"] != null)
@@ -132,30 +142,26 @@ public class MapFileReader {
             foreach (JSONNode voxelNode in map["voxels"].AsArray)
             {
                 JSONObject voxelObject = voxelNode.AsObject;
-                ReadVoxel(voxelObject, voxelArray, materials, editor);
+                ReadVoxel(voxelObject, voxelArray, materials, substances, editor);
             }
         }
     }
 
-    private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray, List<Material> materials, bool editor)
+    private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray,
+        List<Material> materials, List<Substance> substances, bool editor)
     {
         if (voxelObject["at"] == null)
             return;
         Vector3 position = ReadVector3(voxelObject["at"].AsArray);
         Voxel voxel = null;
-        if(fileWriterVersion == 0)
-        {
-            // faces were oriented differently. Get voxel for each face
-        }
-        else if (!editor)
-        {
+        if (!editor)
             // slightly faster -- doesn't add to octree
             voxel = voxelArray.InstantiateVoxel(position);
-        }
         else
-        {
             voxel = voxelArray.VoxelAt(position, true);
-        }
+
+        if (voxelObject["s"] != null)
+            voxel.substance = substances[voxelObject["s"].AsInt];
 
         if (voxelObject["f"] != null)
         {
@@ -164,6 +170,7 @@ public class MapFileReader {
                 JSONObject faceObject = faceNode.AsObject;
                 if (fileWriterVersion == 0)
                 {
+                    // faces were oriented differently. Get voxel for each face
                     int faceI = faceObject["i"].AsInt;
                     voxel = voxelArray.VoxelAt(position + Voxel.DirectionForFaceI(faceI), true);
                 }
