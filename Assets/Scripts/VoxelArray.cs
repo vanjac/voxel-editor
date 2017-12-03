@@ -650,6 +650,8 @@ public class VoxelArray : MonoBehaviour {
     {
         foreach (VoxelFaceReference faceRef in IterateSelected())
         {
+            if (mat == null && faceRef.face.material == null)
+                continue; // can't have no material and no overlay
             faceRef.voxel.faces[faceRef.faceI].overlay = mat;
             VoxelModified(faceRef.voxel);
         }
