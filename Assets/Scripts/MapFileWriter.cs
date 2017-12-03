@@ -47,6 +47,8 @@ public class MapFileWriter {
 
         JSONArray materialsArray = new JSONArray();
         var foundMaterials = new List<string>();
+        JSONArray substancesArray = new JSONArray();
+        var foundSubstances = new List<Substance>();
 
         AddMaterial(RenderSettings.skybox, foundMaterials, materialsArray);
         foreach (Voxel voxel in voxelArray.IterateVoxels())
@@ -56,11 +58,18 @@ public class MapFileWriter {
                 AddMaterial(face.material, foundMaterials, materialsArray);
                 AddMaterial(face.overlay, foundMaterials, materialsArray);
             }
+            if (voxel.substance != null && !foundSubstances.Contains(voxel.substance))
+            {
+                foundSubstances.Add(voxel.substance);
+                substancesArray[-1] = WriteSubstance(voxel.substance);
+            }
         }
 
         world["materials"] = materialsArray;
+        if (foundSubstances.Count != 0)
+            world["substances"] = substancesArray;
         world["lighting"] = WriteLighting(foundMaterials);
-        world["map"] = WriteMap(voxelArray, foundMaterials);
+        world["map"] = WriteMap(voxelArray, foundMaterials, foundSubstances);
 
         return world;
     }
@@ -83,6 +92,12 @@ public class MapFileWriter {
         return materialObject;
     }
 
+    private JSONObject WriteSubstance(Substance substance)
+    {
+        JSONObject substanceObject = new JSONObject();
+        return substanceObject;
+    }
+
     private JSONObject WriteLighting(List<string> materials)
     {
         JSONObject lighting = new JSONObject();
@@ -99,7 +114,7 @@ public class MapFileWriter {
         return lighting;
     }
 
-    private JSONObject WriteMap(VoxelArray voxelArray, List<string> materials)
+    private JSONObject WriteMap(VoxelArray voxelArray, List<string> materials, List<Substance> substances)
     {
         JSONObject map = new JSONObject();
         JSONArray voxels = new JSONArray();
@@ -111,13 +126,13 @@ public class MapFileWriter {
                 voxelArray.VoxelModified(voxel);
                 continue;
             }
-            voxels[-1] = WriteVoxel(voxel, materials);
+            voxels[-1] = WriteVoxel(voxel, materials, substances);
         }
         map["voxels"] = voxels;
         return map;
     }
 
-    private JSONObject WriteVoxel(Voxel voxel, List<string> materials)
+    private JSONObject WriteVoxel(Voxel voxel, List<string> materials, List<Substance> substances)
     {
         JSONObject voxelObject = new JSONObject();
         voxelObject["at"] = WriteIntVector3(voxel.transform.position);
@@ -130,6 +145,9 @@ public class MapFileWriter {
             faces[-1] = WriteFace(face, faceI, materials);
         }
         voxelObject["f"] = faces;
+
+        if (voxel.substance != null)
+            voxelObject["s"].AsInt = substances.IndexOf(voxel.substance);
 
         return voxelObject;
     }

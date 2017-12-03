@@ -685,6 +685,7 @@ public class VoxelArray : MonoBehaviour {
         foreach (VoxelFaceReference faceRef in IterateSelected())
         {
             faceRef.voxel.substance = substance;
+            VoxelModified(faceRef.voxel);
         }
     }
 }
