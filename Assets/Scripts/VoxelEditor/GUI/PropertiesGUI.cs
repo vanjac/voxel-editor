@@ -12,6 +12,8 @@ public class PropertiesGUI : GUIPanel {
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
 
+    private int numSelectedEntities = 0;
+
     public override void OnGUI()
     {
         base.OnGUI();
@@ -120,6 +122,10 @@ public class PropertiesGUI : GUIPanel {
         }
 
         GUILayout.EndHorizontal();
+
+        if (voxelArray.selectionChanged)
+            numSelectedEntities = voxelArray.GetSelectedEntities().Count;
+        GUILayout.Label(numSelectedEntities + " selected entities");
     }
 
     private void MapPropertiesGUI()

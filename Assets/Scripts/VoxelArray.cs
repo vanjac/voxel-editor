@@ -72,6 +72,7 @@ public class VoxelArray : MonoBehaviour {
         Voxel.selectedMaterial = selectedMaterial;
 
         ClearSelection();
+        selectionChanged = false;
 	}
 
     void Update()
@@ -355,6 +356,21 @@ public class VoxelArray : MonoBehaviour {
                 yield return faceRef;
     }
 
+    // including stored selection
+    public bool SomethingIsSelected()
+    {
+        return storedSelectedFaces.Count != 0 || selectedFaces.Count != 0;
+    }
+
+    public ICollection<Entity> GetSelectedEntities()
+    {
+        var selectedEntities = new HashSet<Entity>();
+        foreach (VoxelFaceReference faceRef in IterateSelected())
+            if (faceRef.voxel.substance != null)
+                selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
+        return selectedEntities;
+    }
+
     public void StoreSelection()
     {
         // move faces out of storedSelectedFaces and into selectedFaces
@@ -400,12 +416,6 @@ public class VoxelArray : MonoBehaviour {
         if (selectedFaces.Count == 0)
             ClearMoveAxes();
         selectionChanged = true;
-    }
-
-    // including stored selection
-    public bool SomethingIsSelected()
-    {
-        return storedSelectedFaces.Count != 0 || selectedFaces.Count != 0;
     }
 
     private void UpdateBoxSelection()

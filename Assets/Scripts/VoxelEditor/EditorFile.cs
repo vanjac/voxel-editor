@@ -27,7 +27,9 @@ public class EditorFile : MonoBehaviour
         MapFileReader reader = new MapFileReader(mapName);
         reader.Read(cameraPivot, voxelArray, true);
         // reading the file creates new voxels which sets the unsavedChanges flag
+        // and clears existing voxels which sets the selectionChanged flag
         voxelArray.unsavedChanges = false;
+        voxelArray.selectionChanged = false;
 
         foreach (MonoBehaviour b in disableOnLoad)
             b.enabled = false;
