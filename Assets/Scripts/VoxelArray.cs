@@ -43,6 +43,7 @@ public class VoxelArray : MonoBehaviour {
     public Material selectedMaterial;
 
     public bool unsavedChanges = false; // set by VoxelArray, checked and cleared by EditorFile
+    public bool selectionChanged = false; // set by VoxelArray, checked and cleared by PropertiesGUI
 
     private OctreeNode rootNode;
 
@@ -312,6 +313,7 @@ public class VoxelArray : MonoBehaviour {
             ClearMoveAxes();
         selectMode = SelectMode.NONE;
         selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
+        selectionChanged = true;
     }
 
     private void SelectFace(VoxelFaceReference faceRef)
@@ -321,6 +323,7 @@ public class VoxelArray : MonoBehaviour {
         faceRef.voxel.faces[faceRef.faceI].addSelected = true;
         selectedFaces.Add(faceRef);
         faceRef.voxel.UpdateVoxel();
+        selectionChanged = true;
     }
 
     private void SelectFace(Voxel voxel, int faceI)
@@ -335,6 +338,7 @@ public class VoxelArray : MonoBehaviour {
         faceRef.voxel.faces[faceRef.faceI].addSelected = false;
         selectedFaces.Remove(faceRef);
         faceRef.voxel.UpdateVoxel();
+        selectionChanged = true;
     }
 
     private void DeselectFace(Voxel voxel, int faceI)
@@ -395,6 +399,7 @@ public class VoxelArray : MonoBehaviour {
         storedSelectedFaces.Clear();
         if (selectedFaces.Count == 0)
             ClearMoveAxes();
+        selectionChanged = true;
     }
 
     // including stored selection
@@ -638,6 +643,7 @@ public class VoxelArray : MonoBehaviour {
             if (selectedFaces[i].voxel == null)
                 selectedFaces.RemoveAt(i);
         }
+        selectionChanged = true;
     } // end Adjust()
 
 
