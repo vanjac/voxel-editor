@@ -178,7 +178,7 @@ public class DynamicEntity : SimpleEntity
             new EntityProperty("Tag",
                 Getters.Int(() => tag),
                 Setters.Int(v => tag = (byte)v),
-                PropertyGUIs.Text, false),
+                PropertyGUIs.Tag, false),
             new EntityProperty("X-Ray?",
                 Getters.Bool(() => xRay),
                 Setters.Bool(v => xRay = v),

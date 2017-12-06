@@ -79,4 +79,15 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
         return toggleValue.ToString();
     }
+
+    public static string Tag(string value)
+    {
+        int tag = int.Parse(value);
+        GUILayout.BeginHorizontal();
+        tag = GUILayout.SelectionGrid(tag,
+            new string[] { "Grey", "Red", "Orange", "Yellow", "Green", "Blue", "Cyan", "Purple" },
+            2, GUILayout.ExpandWidth(true));
+        GUILayout.EndHorizontal();
+        return tag.ToString();
+    }
 }
