@@ -61,7 +61,7 @@ public class MapFileWriter {
             if (voxel.substance != null && !foundSubstances.Contains(voxel.substance))
             {
                 foundSubstances.Add(voxel.substance);
-                substancesArray[-1] = WriteSubstance(voxel.substance);
+                substancesArray[-1] = WriteEntity(voxel.substance);
             }
         }
 
@@ -92,10 +92,22 @@ public class MapFileWriter {
         return materialObject;
     }
 
-    private JSONObject WriteSubstance(Substance substance)
+    private JSONObject WriteEntity(Entity entity)
     {
-        JSONObject substanceObject = new JSONObject();
-        return substanceObject;
+        JSONObject entityObject = new JSONObject();
+        JSONArray propertiesArray = new JSONArray();
+        foreach (EntityProperty prop in entity.Properties())
+        {
+            JSONArray propArray = new JSONArray();
+            propArray[0] = prop.name;
+            propArray[1] = prop.getter();
+            propertiesArray[-1] = propArray;
+        }
+        entityObject["properties"] = propertiesArray;
+
+        // TODO: save outputs and behaviors
+
+        return entityObject;
     }
 
     private JSONObject WriteLighting(List<string> materials)
