@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,14 +24,38 @@ public class Setters
     public delegate void BoolSetter(bool b);
     public delegate void IntSetter(int i);
 
+    private static bool parseBool(string s)
+    {
+        try
+        {
+            return bool.Parse(s);
+        }
+        catch (FormatException)
+        {
+            return false;
+        }
+    }
+
+    private static int parseInt(string s)
+    {
+        try
+        {
+            return int.Parse(s);
+        }
+        catch (FormatException)
+        {
+            return 0;
+        }
+    }
+
     public static SetProperty Bool(BoolSetter boolSetter)
     {
-        return s => boolSetter(bool.Parse(s));
+        return s => boolSetter(parseBool(s));
     }
 
     public static SetProperty Int(IntSetter intSetter)
     {
-        return s => intSetter(int.Parse(s));
+        return s => intSetter(parseInt(s));
     }
 }
 
@@ -48,6 +73,6 @@ public class PropertyGUIs
 
     public static string Toggle(string value)
     {
-        return GUILayout.Toggle(bool.Parse(value), "").ToString();
+        return GUILayout.Toggle(bool.Parse(value), "Toggle").ToString();
     }
 }

@@ -12,7 +12,7 @@ public class PropertiesGUI : GUIPanel {
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
 
-    private int numSelectedEntities = 0;
+    List<List<EntityProperty>> selectedEntityProperties = new List<List<EntityProperty>>();
 
     public override void OnGUI()
     {
@@ -124,8 +124,19 @@ public class PropertiesGUI : GUIPanel {
         GUILayout.EndHorizontal();
 
         if (voxelArray.selectionChanged)
-            numSelectedEntities = voxelArray.GetSelectedEntities().Count;
-        GUILayout.Label(numSelectedEntities + " selected entities");
+        {
+            UpdateSelectedEntityProperties();
+        }
+
+        foreach (List<EntityProperty> propList in selectedEntityProperties)
+        {
+            EntityProperty prop = propList[0];
+            GUILayout.Label(prop.name);
+            string oldValue = prop.getter();
+            string newValue = prop.gui(oldValue);
+            if (newValue != oldValue)
+                prop.setter(newValue);
+        }
     }
 
     private void MapPropertiesGUI()
@@ -206,6 +217,47 @@ public class PropertiesGUI : GUIPanel {
     {
         RenderSettings.sun.color = color;
         voxelArray.unsavedChanges = true;
+    }
+
+    private void UpdateSelectedEntityProperties()
+    {
+        selectedEntityProperties.Clear();
+        ICollection<Entity> entities = voxelArray.GetSelectedEntities();
+        if (entities.Count != 0)
+        {
+            // get the first entity (probably a simpler way to do this)
+            var entitiesEnumerator = entities.GetEnumerator();
+            entitiesEnumerator.MoveNext(); // moves to the first entity
+            Entity firstEntity = entitiesEnumerator.Current;
+            entitiesEnumerator.Reset();
+
+            // find properties that are common to all selected entities
+            // by searching through the properties of the first one.
+            // probably a simpler way to this also
+            foreach (EntityProperty prop in firstEntity.Properties())
+            {
+                var identicalProperties = new List<EntityProperty>();
+                foreach (Entity otherEntity in entities)
+                {
+                    bool otherEntityHasProp = false;
+                    foreach (EntityProperty otherProp in otherEntity.Properties())
+                        if (otherProp.name == prop.name)
+                        {
+                            otherEntityHasProp = true;
+                            identicalProperties.Add(otherProp);
+                            break;
+                        }
+                    if (!otherEntityHasProp)
+                    {
+                        identicalProperties = null;
+                        break;
+                    }
+                }
+                if (identicalProperties == null)
+                    continue;
+                selectedEntityProperties.Add(identicalProperties);
+            }
+        }
     }
 
 }
