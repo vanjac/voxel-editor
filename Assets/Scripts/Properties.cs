@@ -73,6 +73,10 @@ public class PropertyGUIs
 
     public static string Toggle(string value)
     {
-        return GUILayout.Toggle(bool.Parse(value), "Toggle").ToString();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        bool toggleValue = GUILayout.Toggle(bool.Parse(value), "");
+        GUILayout.EndHorizontal();
+        return toggleValue.ToString();
     }
 }
