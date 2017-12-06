@@ -130,12 +130,28 @@ public class PropertiesGUI : GUIPanel {
 
         foreach (List<EntityProperty> propList in selectedEntityProperties)
         {
-            EntityProperty prop = propList[0];
-            GUILayout.Label(prop.name);
-            string oldValue = prop.getter();
-            string newValue = prop.gui(oldValue);
-            if (newValue != oldValue)
-                prop.setter(newValue);
+            string commonValue = propList[0].getter();
+            foreach (EntityProperty prop in propList)
+            {
+                if (prop.getter() != commonValue)
+                {
+                    commonValue = null;
+                    break;
+                }
+            }
+
+            if(commonValue == null)
+                GUILayout.Label(propList[0].name + " (different)");
+            else
+            {
+                GUILayout.Label(propList[0].name);
+                string newValue = propList[0].gui(commonValue);
+                if (newValue != commonValue)
+                {
+                    foreach (EntityProperty prop in propList)
+                        prop.setter(newValue);
+                }
+            }
         }
     }
 
