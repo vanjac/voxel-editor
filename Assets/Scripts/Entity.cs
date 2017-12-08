@@ -155,12 +155,12 @@ public class SimpleEntity : Entity
 
 public class DynamicEntity : SimpleEntity
 {
-    bool enabled = true;
+    public bool enabled = true;
     byte tag = EntityTag.GREY;
     // only for editor; makes object transparent allowing you to zoom/select through it
-    bool xRay = false;
-    bool visible = true;
-    bool solid = true;
+    public bool xRay = false;
+    public bool visible = true;
+    public bool solid = true;
 
     public override byte GetTag()
     {

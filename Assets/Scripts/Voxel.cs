@@ -376,7 +376,14 @@ public class Voxel : MonoBehaviour
         else
         {
             boxCollider.enabled = true;
-            boxCollider.isTrigger = (substance != null);
+            if (substance == null)
+            {
+                boxCollider.isTrigger = false;
+            }
+            else
+            {
+                boxCollider.isTrigger = !substance.solid;
+            }
             meshCollider.sharedMesh = null;
             meshCollider.enabled = false;
         }
