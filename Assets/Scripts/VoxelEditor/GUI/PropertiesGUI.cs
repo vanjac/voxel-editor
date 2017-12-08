@@ -130,10 +130,10 @@ public class PropertiesGUI : GUIPanel {
 
         foreach (List<EntityProperty> propList in selectedEntityProperties)
         {
-            string commonValue = propList[0].getter();
+            object commonValue = propList[0].getter();
             foreach (EntityProperty prop in propList)
             {
-                if (prop.getter() != commonValue)
+                if (!prop.getter().Equals(commonValue))
                 {
                     commonValue = null;
                     break;
@@ -145,11 +145,12 @@ public class PropertiesGUI : GUIPanel {
             else
             {
                 GUILayout.Label(propList[0].name);
-                string newValue = propList[0].gui(commonValue);
-                if (newValue != commonValue)
+                object newValue = propList[0].gui(commonValue);
+                if (!newValue.Equals(commonValue))
                 {
                     foreach (EntityProperty prop in propList)
                         prop.setter(newValue);
+                    voxelArray.unsavedChanges = true;
                 }
             }
         }

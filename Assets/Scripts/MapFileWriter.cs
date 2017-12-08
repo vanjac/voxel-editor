@@ -100,7 +100,7 @@ public class MapFileWriter {
         {
             JSONArray propArray = new JSONArray();
             propArray[0] = prop.name;
-            propArray[1] = prop.getter();
+            propArray[1] = prop.getter().ToString();
             propertiesArray[-1] = propArray;
         }
         entityObject["properties"] = propertiesArray;

@@ -29,9 +29,9 @@ public class EntityTag
     public const byte PURPLE = 7;
 }
 
-public delegate string GetProperty();
-public delegate void SetProperty(string value);
-public delegate string PropertyGUI(string value);
+public delegate object GetProperty();
+public delegate void SetProperty(object value);
+public delegate object PropertyGUI(object value);
 
 public struct EntityProperty
 {
@@ -95,7 +95,7 @@ public struct EntityOutput
     public Entity targetEntity; // null for Self or Activator
     public bool targetEntityIsActivator;
     public string targetAction;
-    public string actionArgument;
+    public object actionArgument;
 
     // activator rule...
     public bool[] activatorTagsAllowed;
@@ -172,24 +172,24 @@ public class DynamicEntity : SimpleEntity
         return new EntityProperty[]
         {
             new EntityProperty("Enabled?",
-                Getters.Bool(() => enabled),
-                Setters.Bool(v => enabled = v),
+                () => enabled,
+                v => enabled = (bool)v,
                 PropertyGUIs.Toggle),
             new EntityProperty("Tag",
-                Getters.Int(() => tag),
-                Setters.Int(v => tag = (byte)v),
+                () => tag,
+                v => tag = (byte)v,
                 PropertyGUIs.Tag, false),
             new EntityProperty("X-Ray?",
-                Getters.Bool(() => xRay),
-                Setters.Bool(v => xRay = v),
+                () => xRay,
+                v => xRay = (bool)v,
                 PropertyGUIs.Toggle, false),
             new EntityProperty("Visible?",
-                Getters.Bool(() => visible),
-                Setters.Bool(v => visible = v),
+                () => visible,
+                v => visible = (bool)v,
                 PropertyGUIs.Toggle),
             new EntityProperty("Solid?",
-                Getters.Bool(() => solid),
-                Setters.Bool(v => solid = v),
+                () => solid,
+                v => solid = (bool)v,
                 PropertyGUIs.Toggle)
         };
     }
