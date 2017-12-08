@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public struct VoxelFace
 {
@@ -143,6 +144,12 @@ public class Voxel : MonoBehaviour
     public static int FaceIAxis(int faceI)
     {
         return faceI / 2;
+    }
+
+    private static bool InEditor()
+    {
+        // TODO: better way to check this?
+        return SceneManager.GetActiveScene().name == "editScene";
     }
 
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
@@ -354,30 +361,24 @@ public class Voxel : MonoBehaviour
         
         mesh.RecalculateNormals();
 
+        bool inEditor = InEditor();
+
         Renderer renderer = GetComponent<Renderer>();
-        if (renderer != null)
-            renderer.materials = materials;
+        renderer.materials = materials;
         MeshCollider meshCollider = GetComponent<MeshCollider>();
         BoxCollider boxCollider = GetComponent<BoxCollider>();
-        if (substance == null)
+
+        if (inEditor)
         {
-            if (boxCollider != null)
-                boxCollider.enabled = false;
-            if (meshCollider != null)
-            {
-                meshCollider.enabled = true;
-                meshCollider.sharedMesh = mesh;
-            }
+            meshCollider.enabled = true;
+            meshCollider.sharedMesh = mesh;
         }
-        else // substance is not null
+        else
         {
-            if (boxCollider != null)
-                boxCollider.enabled = true;
-            if (meshCollider != null)
-            {
-                meshCollider.sharedMesh = null;
-                meshCollider.enabled = false;
-            }
+            boxCollider.enabled = true;
+            boxCollider.isTrigger = (substance != null);
+            meshCollider.sharedMesh = null;
+            meshCollider.enabled = false;
         }
     } // end UpdateVoxel()
 }
