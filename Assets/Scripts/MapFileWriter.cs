@@ -3,6 +3,8 @@ using System.IO;
 using System.IO.Compression;
 using UnityEngine;
 using SimpleJSON;
+using System.Xml;
+using System.Xml.Serialization;
 
 public class MapFileWriter {
     public const int VERSION = 1;
@@ -98,9 +100,21 @@ public class MapFileWriter {
         JSONArray propertiesArray = new JSONArray();
         foreach (EntityProperty prop in entity.Properties())
         {
+            // https://stackoverflow.com/a/2434558
+            // https://stackoverflow.com/a/5414665
+            object value = prop.getter();
+            XmlSerializer xmlSerializer = new XmlSerializer(value.GetType());
+            string valueString;
+            using (var textWriter = new StringWriter())
+            using (var xmlWriter = XmlWriter.Create(textWriter,
+                new XmlWriterSettings { Indent = false, OmitXmlDeclaration = true }))
+            {
+                xmlSerializer.Serialize(xmlWriter, value);
+                valueString = textWriter.ToString();
+            }
             JSONArray propArray = new JSONArray();
             propArray[0] = prop.name;
-            propArray[1] = prop.getter().ToString();
+            propArray[1] = valueString;
             propertiesArray[-1] = propArray;
         }
         entityObject["properties"] = propertiesArray;
