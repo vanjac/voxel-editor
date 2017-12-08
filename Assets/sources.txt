@@ -4,8 +4,8 @@ GameAssets/sky5X_textures: Sky5X One (Asset Store)
 GameAssets/skybox_editor: https://developer.valvesoftware.com/wiki/File:Toolsskybox.gif
 GameAssets/SurfaceTextures: Standard Assets
 GameAssets/Water (Basic): Standard Assets (modified)
-GUI/checkbox...: https://materialdesignicons.com/
-GUI/Roboto-Light: https://fonts.google.com/specimen/Roboto
-Scripts/Game/FirstPersonCharacter: Standard Assets (modified)
-Scripts/Libraries/SimpleJSON: http://wiki.unity3d.com/index.php/SimpleJSON
+VoxelEditor/GUI/checkbox...: https://materialdesignicons.com/
+VoxelEditor/GUI/Roboto-Light: https://fonts.google.com/specimen/Roboto
+Game/FirstPersonCharacter: Standard Assets (modified)
+Libraries/SimpleJSON: http://wiki.unity3d.com/index.php/SimpleJSON
 Standard Assets: Standard Assets
