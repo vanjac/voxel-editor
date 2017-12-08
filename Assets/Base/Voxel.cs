@@ -248,6 +248,17 @@ public class Voxel : MonoBehaviour
 
     public void UpdateVoxel()
     {
+        bool inEditor = InEditor();
+        if (substance != null && !inEditor && !substance.enabled)
+        {
+            GetComponent<MeshFilter>().mesh.Clear();
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(true);
+        }
+
         int numFilledFaces = 0;
         foreach (VoxelFace f in faces)
             if (!f.IsEmpty())
@@ -368,7 +379,6 @@ public class Voxel : MonoBehaviour
         
         mesh.RecalculateNormals();
 
-        bool inEditor = InEditor();
         bool xRay = false;
         if (substance != null && inEditor)
             xRay = substance.xRay;
@@ -386,6 +396,7 @@ public class Voxel : MonoBehaviour
 
         if (inEditor)
         {
+            renderer.enabled = true;
             meshCollider.enabled = true;
             meshCollider.sharedMesh = mesh;
             boxCollider.enabled = false;
@@ -395,11 +406,13 @@ public class Voxel : MonoBehaviour
             boxCollider.enabled = true;
             if (substance == null)
             {
+                renderer.enabled = true;
                 boxCollider.isTrigger = false;
             }
             else
             {
                 boxCollider.isTrigger = !substance.solid;
+                renderer.enabled = substance.visible;
             }
             meshCollider.sharedMesh = null;
             meshCollider.enabled = false;
