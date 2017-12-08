@@ -3,6 +3,8 @@ using System.IO;
 using System.IO.Compression;
 using UnityEngine;
 using SimpleJSON;
+using System.Xml;
+using System.Xml.Serialization;
 
 public class MapFileReader {
     public const int VERSION = MapFileWriter.VERSION;
@@ -99,7 +101,9 @@ public class MapFileReader {
         {
             foreach (JSONNode subNode in world["substances"].AsArray)
             {
-                substances.Add(new Substance());
+                Substance s = new Substance();
+                ReadEntity(subNode.AsObject, s);
+                substances.Add(s);
             }
         }
 
@@ -107,6 +111,45 @@ public class MapFileReader {
             ReadLighting(world["lighting"].AsObject, materials);
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
+    }
+
+    private void ReadEntity(JSONObject entityObject, Entity entity)
+    {
+        if (entityObject["properties"] != null)
+        {
+            foreach (JSONNode propNode in entityObject["properties"].AsArray)
+            {
+                JSONArray propArray = propNode.AsArray;
+                string name = propArray[0];
+                string valueString = propArray[1];
+
+                bool foundProp = false;
+                EntityProperty prop = new EntityProperty(null, null, null, null);
+                foreach (EntityProperty checkProp in entity.Properties())
+                {
+                    if (checkProp.name == name)
+                    {
+                        prop = checkProp;
+                        foundProp = true;
+                        break;
+                    }
+                }
+                if (!foundProp)
+                {
+                    Debug.Log("Couldn't find property " + name);
+                    continue;
+                }
+
+                XmlSerializer xmlSerializer = new XmlSerializer(prop.getter().GetType());
+                object value;
+                using (var textReader = new StringReader(valueString))
+                {
+                    value = xmlSerializer.Deserialize(textReader);
+                }
+
+                prop.setter(value);
+            }
+        }
     }
 
     private void ReadLighting(JSONObject lighting, List<Material> materials)
