@@ -181,7 +181,7 @@ public class DynamicEntity : SimpleEntity
                 PropertyGUIs.Tag, false),
             new EntityProperty("X-Ray?",
                 () => xRay,
-                v => xRay = (bool)v,
+                v => {xRay = (bool)v; UpdateEntity();},
                 PropertyGUIs.Toggle, false),
             new EntityProperty("Visible?",
                 () => visible,
@@ -220,4 +220,6 @@ public class DynamicEntity : SimpleEntity
             new EntityEvent("Player Use", false)
         };
     }
+
+    public virtual void UpdateEntity() { }
 }

@@ -41,6 +41,7 @@ public class VoxelArray : MonoBehaviour {
     public Transform axes;
     public GameObject voxelPrefab;
     public Material selectedMaterial;
+    public Material xRayMaterial;
 
     public bool unsavedChanges = false; // set by VoxelArray, checked and cleared by EditorFile
     public bool selectionChanged = false; // set by VoxelArray, checked and cleared by PropertiesGUI
@@ -70,6 +71,7 @@ public class VoxelArray : MonoBehaviour {
         rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
 
         Voxel.selectedMaterial = selectedMaterial;
+        Voxel.xRayMaterial = xRayMaterial;
 
         ClearSelection();
         selectionChanged = false;

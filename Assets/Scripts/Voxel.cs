@@ -83,6 +83,7 @@ public class Voxel : MonoBehaviour
     };
 
     public static Material selectedMaterial; // set by VoxelArray instance
+    public static Material xRayMaterial;
 
     public static Vector3 DirectionForFaceI(int faceI)
     {
@@ -163,11 +164,16 @@ public class Voxel : MonoBehaviour
         }
         set
         {
+            if (_substance != null)
+                _substance.RemoveVoxel(this);
             _substance = value;
             if (_substance == null)
                 substanceDebug = 0;
             else
+            {
                 substanceDebug = _substance.GetHashCode();
+                _substance.AddVoxel(this);
+            }
         }
     }
 
@@ -235,6 +241,7 @@ public class Voxel : MonoBehaviour
 
     void OnDestroy()
     {
+        substance = null; // remove from substance
         VoxelArray array = transform.parent.GetComponent<VoxelArray>();
         array.VoxelDestroyed(this);
     }
@@ -362,8 +369,17 @@ public class Voxel : MonoBehaviour
         mesh.RecalculateNormals();
 
         bool inEditor = InEditor();
+        bool xRay = false;
+        if (substance != null && inEditor)
+            xRay = substance.xRay;
 
         Renderer renderer = GetComponent<Renderer>();
+        if (xRay)
+        {
+            for (int i = 0; i < materials.Length; i++)
+                if (materials[i] != selectedMaterial)
+                    materials[i] = xRayMaterial;
+        }
         renderer.materials = materials;
         MeshCollider meshCollider = GetComponent<MeshCollider>();
         BoxCollider boxCollider = GetComponent<BoxCollider>();
@@ -372,6 +388,7 @@ public class Voxel : MonoBehaviour
         {
             meshCollider.enabled = true;
             meshCollider.sharedMesh = mesh;
+            boxCollider.enabled = false;
         }
         else
         {
