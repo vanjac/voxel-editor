@@ -1,0 +1,249 @@
+Entity (abstract)
+
+Map (Entity)
+    Properties
+        Sky
+        Lighting settings
+        Fog
+
+Face (Entity)
+    Properties
+        Material : no material allowed for substance faces
+        Overlay material or none
+        Orientation : rotate/mirror
+    Actions
+        Set material (material) : non portal faces only
+        Clear material : substance faces only
+        Set overlay (material)
+        Clear overlay
+        Set portal target (other face) : portal face only
+        Rotate right
+        Rotate left
+        Flip horizontal
+        Flip vertical
+
+DynamicEntity (abstract Entity)
+    Properties
+        Tag color : choice of 8
+        X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
+    Actions
+        Destroy
+        Clone : starts at initial position with initial properties
+        Teleport (target entity)
+        Teleport relative (two target entities)
+    Events
+        Destroyed (destroyer)
+        Cloned
+        Start touch (activator)
+        End touch (activator)
+        Player look towards
+        Player look away
+        Player use
+
+Object (abstract DynamicEntity) : objects take up a certain fixed size block of voxels
+    Attributes
+        Orient face : aligns to center of face
+    Properties
+        Rotation about face normal
+    Actions
+        Set rotation (rotation)
+        Rotate (amount)
+
+Substance (DynamicEntity)
+    Attributes
+        Voxels
+    Properties
+        Flat? : substance becomes a flat, double sided plane
+
+Behavior (abstract Entity)
+    Properties
+        Enabled?
+    Actions
+        Enable
+        Disable
+        [actions to change each property]
+
+Character (abstract Object)
+    Properties
+        Health
+    Actions
+        Say (message, time)
+        Set health (health)
+        Hurt/heal (amount)
+    Events
+        Dead (killer)
+
+Player (Character) : 1 in every map; includes general game actions/events
+    Properties
+        Score
+        Score threshold
+        Time limit
+    Actons
+        End game
+        Add score (value)
+        Reset score
+        Give item (item type)
+        Take item (item type)
+    Events
+        Game start
+        Took item (item type)
+        Out of item (item type)
+        Score above threshold
+        Score below zero
+
+Selection of meshes with skin choices
+    Ball
+    [others]
+
+Selection of characters
+
+Tree (abstract Object) : procedural tree
+    Properties
+        [tree generation parameters]
+
+Selection of trees
+
+Neuron (Object) : light that only turns on with a certain threshold energy. Light color is the tag color.
+    Properties
+        Threshold
+        Energy
+        Fire on start?
+        Fire delay
+        Fire interval
+    Actions
+        Energize
+        Deenergize
+        Signal : trigger different different events if neuron is on or off
+    Events
+        Fire (object that most recently called Energize)
+        Stopped firing (object that most recently called Deenergize)
+        Signal on (object that called Signal)
+        Signal off (object that called Signal)
+
+Visible (Behavior for DynamicEntity)
+
+Solid (Behavior for DynamicEntity)
+
+Physics (Behavior for DynamicEntity with Solid)
+    Properties
+        Can be picked up?
+        Velocity
+        [physics parameters including breakability]
+    Actions
+        Add velocity (velocity)
+        Propel towards entity (entity, speed, arc angle)
+
+Look (Behavior for DynamicEntity)
+    Properties
+        Range
+    Events
+        Entity in range (activator)
+        Entity out of range (activator)
+
+Sound (Behavior for DynamicEntity)
+    Properties
+        Sound
+        Loop?
+        Volume
+        Speed
+        Start fade dist
+        End fade dist
+    Actions
+        Restart
+
+MovementBehavior (abstract Behavior for DynamicEntity) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
+    Properties
+        Max speed
+
+MoveWith (MovementBehavior) : like parenting
+    Properties
+        Entity
+
+MoveInDirection (MovementBehavior)
+    Properties
+        Direction
+
+Spin (MovementBehavior)
+
+Wander (MovementBehavior)
+    Properties
+        Rate
+        Pause frequency
+        Focus entity
+        Range
+
+FaceToward (MovementBehavior)
+    Properties
+        Entity
+
+FaceAway (MovementBehavior)
+    Properties
+        Entity
+
+MoveToward (MovementBehavior)
+    Properties
+        Entity
+    Events
+        Reached entity (activator)
+
+MoveAway (MovementBehavior)
+    Properties
+        Entity
+
+NavigateToward (MovementBehavior)
+    Properties
+        Entity
+    Events
+        Reached entity (activator)
+
+NavigateAway (MovementBehavior)
+    Properties
+        Entity
+
+Fog (Behavior for Substance with Visible) : volumetric fog
+    [properties]
+
+Glow (Behavior for Substance with Visible) : a flare effect that emits light
+    Properties
+        Color
+        Intensity
+
+Fire (Behavior for Substance with Visible)
+
+ParticleEffect (abstract Behavior for Substance with Visible)
+    Properties
+        Color
+        Size
+        Density
+
+Rain (ParticleEffect)
+
+Snow (ParticleEffect)
+
+Dust (ParticleEffect)
+
+Wind (Behavior for Substance with ParticleEffect) : only affects particles
+    Properties
+        Direction
+        Speed
+
+Fluid (Behavior for Substance)
+    Properties
+        Resistance
+        Buoyancy
+
+Push (Behavior for Substance)
+    Properties
+        Direction
+        Target velocity
+        Strength
+
+Climbable (Behavior for Substance with Solid)
+
+Linear motion (Behavior for Substance) : solid substances always occupy a certain set of voxels in the shape of the substance. A solid substance will be blocked by faces and other solid substances
+    Properties
+        Speed
+        Direction
+        Distance to move or forever
+    Events
+        Movement blocked
