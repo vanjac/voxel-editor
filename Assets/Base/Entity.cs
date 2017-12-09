@@ -92,8 +92,9 @@ public struct EntityEvent
 
 public struct EntityOutput
 {
-    public Entity targetEntity; // null for Self or Activator
-    public bool targetEntityIsActivator;
+    public Entity[] targetEntities;
+    public bool selfIsTarget;
+    public bool activatorIsTarget;
     public string targetAction;
     public object actionArgument;
 
