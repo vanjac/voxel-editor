@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -99,11 +100,9 @@ public struct EntityOutput
     public object actionArgument;
 
     // activator rule...
-    public bool[] activatorTagsAllowed;
-    public Entity[] activatorEntityList;
-    public bool activatorEntityBlacklist;
-    public string[] activatorTypeList; // also applies to behaviors
-    public bool activatorTypeBlacklist;
+    public bool[] filterActivatorTags;
+    public Type filterActivatorType;
+    public Entity[] filterActivatorEntity;
 }
 
 
