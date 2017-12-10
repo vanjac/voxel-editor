@@ -249,15 +249,6 @@ public class Voxel : MonoBehaviour
     public void UpdateVoxel()
     {
         bool inEditor = InEditor();
-        if (substance != null && !inEditor && !substance.enabled)
-        {
-            GetComponent<MeshFilter>().mesh.Clear();
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            gameObject.SetActive(true);
-        }
 
         int numFilledFaces = 0;
         foreach (VoxelFace f in faces)

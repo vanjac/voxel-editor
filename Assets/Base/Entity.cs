@@ -140,7 +140,6 @@ public abstract class DynamicEntity : SimpleEntity
 {
     List<Entity> behaviorList = new List<Entity>();
 
-    public bool enabled = true;
     byte tag = EntityTag.GREY;
     // only for editor; makes object transparent allowing you to zoom/select through it
     public bool xRay = false;
@@ -156,10 +155,6 @@ public abstract class DynamicEntity : SimpleEntity
     {
         return new EntityProperty[]
         {
-            new EntityProperty("Enabled?",
-                () => enabled,
-                v => enabled = (bool)v,
-                PropertyGUIs.Toggle),
             new EntityProperty("Tag",
                 () => tag,
                 v => tag = (byte)v,
