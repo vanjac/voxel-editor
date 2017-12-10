@@ -154,6 +154,14 @@ public class PropertiesGUI : GUIPanel {
                 }
             }
         }
+
+        GUILayout.Label("Outputs");
+        if (GUILayout.Button("New Output"))
+        {
+            EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
+            picker.voxelArray = voxelArray;
+            picker.handler = (ICollection<Entity> c) => Debug.Log(c);
+        }
     }
 
     private void MapPropertiesGUI()

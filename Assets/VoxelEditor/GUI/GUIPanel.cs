@@ -20,6 +20,7 @@ public class GUIPanel : MonoBehaviour {
 
     protected Vector2 touchStartPos = Vector2.zero;
     protected bool horizontalSlide, verticalSlide;
+    protected bool holdOpen = false;
 
     public virtual void OnEnable()
     {
@@ -72,7 +73,8 @@ public class GUIPanel : MonoBehaviour {
                 if (Event.current.type == EventType.Repaint) // scroll at correct rate
                     scroll.y += touch.deltaPosition.y / scaleFactor;
             }
-            if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position) && depth < 0)
+            if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position)
+                    && depth < 0 && !holdOpen)
                 Destroy(this);
         }
         else

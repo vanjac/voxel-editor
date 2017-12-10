@@ -390,7 +390,7 @@ public class VoxelArray : MonoBehaviour {
         selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
     }
 
-    private void MergeStoredSelected()
+    public void MergeStoredSelected()
     {
         // move faces out of storedSelectedFaces and into selectedFaces
         // opposite of StoreSelection()
