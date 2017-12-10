@@ -1,4 +1,4 @@
-Entity (abstract)
+Entity/SimpleEntity (abstract)
 
 Map (Entity)
     Properties
@@ -23,6 +23,8 @@ Face (Entity)
         Flip vertical
 
 DynamicEntity (abstract Entity)
+    Attributes
+        Behaviors
     Properties
         Tag color : choice of 8
         X-ray? : only for editor; makes object transparent allowing you to zoom/select through it

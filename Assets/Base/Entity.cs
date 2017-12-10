@@ -40,7 +40,6 @@ public struct EntityProperty
     public GetProperty getter;
     public SetProperty setter;
     public PropertyGUI gui;
-    public bool dynamic; // can change in game
 
     public EntityProperty(string name, GetProperty getter, SetProperty setter, PropertyGUI gui)
     {
@@ -48,16 +47,6 @@ public struct EntityProperty
         this.getter = getter;
         this.setter = setter;
         this.gui = gui;
-        dynamic = true;
-    }
-
-    public EntityProperty(string name, GetProperty getter, SetProperty setter, PropertyGUI gui, bool dynamic)
-    {
-        this.name = name;
-        this.getter = getter;
-        this.setter = setter;
-        this.gui = gui;
-        this.dynamic = dynamic;
     }
 }
 
@@ -106,11 +95,9 @@ public struct EntityOutput
 }
 
 
-public class SimpleEntity : Entity
+public abstract class SimpleEntity : Entity
 {
     List<EntityOutput> outputList = new List<EntityOutput>();
-    List<Entity> behaviorList = new List<Entity>();
-
 
     public virtual string EntityTypeName()
     {
@@ -129,11 +116,7 @@ public class SimpleEntity : Entity
 
     public virtual ICollection<EntityAction> Actions()
     {
-        var actions = new List<EntityAction>();
-        foreach (EntityProperty property in Properties())
-            if (property.dynamic)
-                actions.Add(new EntityAction("Set " + property.name, property.gui));
-        return actions;
+        return new EntityAction[] { };
     }
 
     public virtual ICollection<EntityEvent> Events()
@@ -146,15 +129,17 @@ public class SimpleEntity : Entity
         return outputList;
     }
 
-    public List<Entity> BehaviorList()
+    public virtual List<Entity> BehaviorList()
     {
-        return behaviorList;
+        return null;
     }
 }
 
 
-public class DynamicEntity : SimpleEntity
+public abstract class DynamicEntity : SimpleEntity
 {
+    List<Entity> behaviorList = new List<Entity>();
+
     public bool enabled = true;
     byte tag = EntityTag.GREY;
     // only for editor; makes object transparent allowing you to zoom/select through it
@@ -178,11 +163,11 @@ public class DynamicEntity : SimpleEntity
             new EntityProperty("Tag",
                 () => tag,
                 v => tag = (byte)v,
-                PropertyGUIs.Tag, false),
+                PropertyGUIs.Tag),
             new EntityProperty("X-Ray?",
                 () => xRay,
                 v => {xRay = (bool)v; UpdateEntity();},
-                PropertyGUIs.Toggle, false),
+                PropertyGUIs.Toggle),
             new EntityProperty("Visible?",
                 () => visible,
                 v => visible = (bool)v,
@@ -194,32 +179,34 @@ public class DynamicEntity : SimpleEntity
         };
     }
 
-    public override ICollection<EntityAction> Actions()
+    public override List<Entity> BehaviorList()
     {
-        var actions = new List<EntityAction>(base.Actions());
-        actions.AddRange(new EntityAction[]
-        {
-            new EntityAction("Destroy"),
-            new EntityAction("Clone"),
-            new EntityAction("Teleport"),
-            new EntityAction("Teleport Relative")
-        });
-        return actions;
-    }
-
-    public override ICollection<EntityEvent> Events()
-    {
-        return new EntityEvent[]
-        {
-            new EntityEvent("Destroyed", true),
-            new EntityEvent("Cloned", false),
-            new EntityEvent("Start Touch", true),
-            new EntityEvent("End Touch", true),
-            new EntityEvent("Player Look Towards", false),
-            new EntityEvent("Player Look Away", false),
-            new EntityEvent("Player Use", false)
-        };
+        return behaviorList;
     }
 
     public virtual void UpdateEntity() { }
+}
+
+
+public abstract class Behavior : SimpleEntity
+{
+    // properties that can be changed through Actions
+    public virtual ICollection<EntityProperty> DynamicProperties()
+    {
+        return new EntityProperty[] { };
+    }
+
+    public override ICollection<EntityProperty> Properties()
+    {
+        return DynamicProperties();
+    }
+
+    public override ICollection<EntityAction> Actions()
+    {
+        var actions = new List<EntityAction>();
+        foreach (EntityProperty property in DynamicProperties())
+            actions.Add(new EntityAction("Set " + property.name, property.gui));
+        return actions;
+    }
+
 }
