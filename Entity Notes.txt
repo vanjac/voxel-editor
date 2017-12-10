@@ -29,12 +29,12 @@ DynamicEntity (abstract Entity)
         Tag color : choice of 8
         X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
     Actions
-        Destroy
+        Kill
         Clone : starts at initial position with initial properties
         Teleport (target entity)
         Teleport relative (two target entities)
     Events
-        Destroyed (destroyer)
+        Dead (killer)
         Cloned
         Start touch (activator)
         End touch (activator)
@@ -72,8 +72,6 @@ Character (abstract Object)
         Say (message, time)
         Set health (health)
         Hurt/heal (amount)
-    Events
-        Dead (killer)
 
 Player (Character) : 1 in every map; includes general game actions/events
     Properties
