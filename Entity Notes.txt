@@ -185,8 +185,6 @@ FaceAway (MovementBehavior)
 MoveToward (MovementBehavior)
     Properties
         Entity
-    Events
-        Reached entity (activator)
 
 MoveAway (MovementBehavior)
     Properties
@@ -195,8 +193,6 @@ MoveAway (MovementBehavior)
 NavigateToward (MovementBehavior)
     Properties
         Entity
-    Events
-        Reached entity (activator)
 
 NavigateAway (MovementBehavior)
     Properties
@@ -247,5 +243,3 @@ Linear motion (Behavior for Substance) : solid substances always occupy a certai
         Speed
         Direction
         Distance to move or forever
-    Events
-        Movement blocked
