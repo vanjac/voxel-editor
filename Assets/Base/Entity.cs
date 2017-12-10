@@ -174,6 +174,24 @@ public abstract class DynamicEntity : SimpleEntity
         };
     }
 
+    public override ICollection<EntityAction> Actions()
+    {
+        return new EntityAction[]
+        {
+            new EntityAction("Show"),
+            new EntityAction("Hide")
+        };
+    }
+
+    public override ICollection<EntityEvent> Events()
+    {
+        return new EntityEvent[]
+        {
+            new EntityEvent("Start touch", true),
+            new EntityEvent("End touch", true)
+        };
+    }
+
     public override List<Entity> BehaviorList()
     {
         return behaviorList;
