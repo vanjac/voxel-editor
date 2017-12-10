@@ -179,7 +179,6 @@ public class MapFileReader {
     private void ReadMap(JSONObject map, VoxelArray voxelArray,
         List<Material> materials, List<Substance> substances, bool editor)
     {
-        voxelArray.ClearAll();
         if (map["voxels"] != null)
         {
             foreach (JSONNode voxelNode in map["voxels"].AsArray)

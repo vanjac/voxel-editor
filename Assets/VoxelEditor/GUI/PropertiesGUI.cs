@@ -8,7 +8,7 @@ public class PropertiesGUI : GUIPanel {
     const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
 
     float slide = 0;
-    public VoxelArray voxelArray;
+    public VoxelArrayEditor voxelArray;
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
 

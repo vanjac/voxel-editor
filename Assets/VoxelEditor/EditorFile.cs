@@ -11,7 +11,7 @@ public class EditorFile : MonoBehaviour
     public List<MonoBehaviour> disableOnPlay;
     public List<MonoBehaviour> enableOnPlay;
 
-    public VoxelArray voxelArray;
+    public VoxelArrayEditor voxelArray;
     public Transform cameraPivot;
 
     public void Load()

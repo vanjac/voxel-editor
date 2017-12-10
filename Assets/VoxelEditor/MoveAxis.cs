@@ -6,7 +6,7 @@ public class MoveAxis : MonoBehaviour {
 
     public Vector3 forwardDirection;
     public Camera mainCamera;
-    public VoxelArray voxelArray;
+    public VoxelArrayEditor voxelArray;
     float lastUpdatePosition;
     LineRenderer lineRenderer;
 

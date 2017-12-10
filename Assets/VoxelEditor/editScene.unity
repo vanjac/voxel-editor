@@ -150,12 +150,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 213926857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee22b01a6a33b6240b2850cd39fa1304, type: 3}
+  m_Script: {fileID: 11500000, guid: a814eb6b00c098041a697a8d0fa43a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axes: {fileID: 609989223}
   voxelPrefab: {fileID: 1695945752962522, guid: 6aaef85e5238dcc4e9250d27386663fb,
     type: 2}
+  axes: {fileID: 609989223}
   selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
   xRayMaterial: {fileID: 2100000, guid: 8ffa1294a1f85dc43a81fbf0658632b4, type: 2}
   unsavedChanges: 0

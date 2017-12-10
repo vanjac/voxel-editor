@@ -11,7 +11,7 @@ public class TouchListener : MonoBehaviour {
         NONE, SELECT, CAMERA, GUI, MOVE
     }
 
-    public VoxelArray voxelArray;
+    public VoxelArrayEditor voxelArray;
     public Transform axes;
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;

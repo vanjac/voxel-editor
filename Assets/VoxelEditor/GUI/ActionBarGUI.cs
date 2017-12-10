@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ActionBarGUI : GUIPanel
 {
-    public VoxelArray voxelArray;
+    public VoxelArrayEditor voxelArray;
     public EditorFile editorFile;
 
     public override void OnGUI()
@@ -21,7 +21,7 @@ public class ActionBarGUI : GUIPanel
             voxelArray.SubstanceTest();
         }
 
-        if (voxelArray.selectMode != VoxelArray.SelectMode.NONE)
+        if (voxelArray.selectMode != VoxelArrayEditor.SelectMode.NONE)
         {
             if (GUILayout.Button("Apply Selection", GUILayout.ExpandWidth(false)))
             {

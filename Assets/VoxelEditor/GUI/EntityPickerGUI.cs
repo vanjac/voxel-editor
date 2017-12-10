@@ -6,7 +6,7 @@ public class EntityPickerGUI : GUIPanel
 {
     public delegate void EntityPickerHanlder(ICollection<Entity> entities);
 
-    public VoxelArray voxelArray;
+    public VoxelArrayEditor voxelArray;
     public EntityPickerHanlder handler;
 
     public override void OnEnable()
