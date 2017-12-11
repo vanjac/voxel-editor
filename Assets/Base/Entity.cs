@@ -3,17 +3,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Entity
-{
-    string EntityTypeName();
+public delegate object GetProperty();
+public delegate void SetProperty(object value);
+public delegate object PropertyGUI(object value);
 
+public struct Property
+{
+    public string name;
+    public GetProperty getter;
+    public SetProperty setter;
+    public PropertyGUI gui;
+
+    public Property(string name, GetProperty getter, SetProperty setter, PropertyGUI gui)
+    {
+        this.name = name;
+        this.getter = getter;
+        this.setter = setter;
+        this.gui = gui;
+    }
+}
+
+public interface PropertiesObject
+{
+    string TypeName();
+    ICollection<Property> Properties();
+}
+
+public interface Entity : PropertiesObject
+{
     byte GetTag();
 
-    ICollection<EntityProperty> Properties();
     ICollection<EntityAction> Actions();
-    ICollection<EntityEvent> Events();
 
-    List<EntityOutput> OutputList(); // can be null if outputs not supported
+    List<EntityEvent> EventList(); // can be null if events not supported
 
     List<Entity> BehaviorList(); // can be null if behaviors not supported
 }
@@ -28,26 +50,6 @@ public class EntityTag
     public const byte CYAN = 5;
     public const byte BLUE = 6;
     public const byte PURPLE = 7;
-}
-
-public delegate object GetProperty();
-public delegate void SetProperty(object value);
-public delegate object PropertyGUI(object value);
-
-public struct EntityProperty
-{
-    public string name;
-    public GetProperty getter;
-    public SetProperty setter;
-    public PropertyGUI gui;
-
-    public EntityProperty(string name, GetProperty getter, SetProperty setter, PropertyGUI gui)
-    {
-        this.name = name;
-        this.getter = getter;
-        this.setter = setter;
-        this.gui = gui;
-    }
 }
 
 public struct EntityAction
@@ -68,38 +70,43 @@ public struct EntityAction
     }
 }
 
-public struct EntityEvent
+public abstract class EntityEvent : PropertiesObject
 {
-    public string name;
-    public bool hasActivator;
+    public List<EntityOutput> outputs;
 
-    public EntityEvent(string name, bool hasActivator)
+    public virtual string TypeName()
     {
-        this.name = name;
-        this.hasActivator = hasActivator;
+        return "Event";
+    }
+
+    public virtual ICollection<Property> Properties()
+    {
+        return new Property[] { };
     }
 }
 
 public struct EntityOutput
 {
+    public const byte START = 0;
+    public const byte DELAY = 1;
+    public const byte INTERVAL = 2;
+    public const byte END = 3;
+
     public Entity[] targetEntities;
-    public bool selfIsTarget;
     public bool activatorIsTarget;
     public string targetAction;
     public object actionArgument;
 
-    // activator rule...
-    public bool[] filterActivatorTags;
-    public Type filterActivatorType;
-    public Entity[] filterActivatorEntity;
+    public byte outputType;
+    public float time;
 }
 
 
 public abstract class SimpleEntity : Entity
 {
-    List<EntityOutput> outputList = new List<EntityOutput>();
+    List<EntityEvent> eventList = new List<EntityEvent>();
 
-    public virtual string EntityTypeName()
+    public virtual string TypeName()
     {
         return "Entity";
     }
@@ -109,9 +116,9 @@ public abstract class SimpleEntity : Entity
         return EntityTag.GREY;
     }
 
-    public virtual ICollection<EntityProperty> Properties()
+    public virtual ICollection<Property> Properties()
     {
-        return new EntityProperty[] { };
+        return new Property[] { };
     }
 
     public virtual ICollection<EntityAction> Actions()
@@ -119,14 +126,9 @@ public abstract class SimpleEntity : Entity
         return new EntityAction[] { };
     }
 
-    public virtual ICollection<EntityEvent> Events()
+    public List<EntityEvent> EventList()
     {
-        return new EntityEvent[] { };
-    }
-
-    public List<EntityOutput> OutputList()
-    {
-        return outputList;
+        return eventList;
     }
 
     public virtual List<Entity> BehaviorList()
@@ -151,23 +153,23 @@ public abstract class DynamicEntity : SimpleEntity
         return tag;
     }
 
-    public override ICollection<EntityProperty> Properties()
+    public override ICollection<Property> Properties()
     {
-        return new EntityProperty[]
+        return new Property[]
         {
-            new EntityProperty("Tag",
+            new Property("Tag",
                 () => tag,
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
-            new EntityProperty("X-Ray?",
+            new Property("X-Ray?",
                 () => xRay,
                 v => {xRay = (bool)v; UpdateEntity();},
                 PropertyGUIs.Toggle),
-            new EntityProperty("Visible?",
+            new Property("Visible?",
                 () => visible,
                 v => visible = (bool)v,
                 PropertyGUIs.Toggle),
-            new EntityProperty("Solid?",
+            new Property("Solid?",
                 () => solid,
                 v => solid = (bool)v,
                 PropertyGUIs.Toggle)
@@ -183,15 +185,6 @@ public abstract class DynamicEntity : SimpleEntity
         };
     }
 
-    public override ICollection<EntityEvent> Events()
-    {
-        return new EntityEvent[]
-        {
-            new EntityEvent("Start touch", true),
-            new EntityEvent("End touch", true)
-        };
-    }
-
     public override List<Entity> BehaviorList()
     {
         return behaviorList;
@@ -204,12 +197,12 @@ public abstract class DynamicEntity : SimpleEntity
 public abstract class Behavior : SimpleEntity
 {
     // properties that can be changed through Actions
-    public virtual ICollection<EntityProperty> DynamicProperties()
+    public virtual ICollection<Property> DynamicProperties()
     {
-        return new EntityProperty[] { };
+        return new Property[] { };
     }
 
-    public override ICollection<EntityProperty> Properties()
+    public override ICollection<Property> Properties()
     {
         return DynamicProperties();
     }
@@ -217,7 +210,7 @@ public abstract class Behavior : SimpleEntity
     public override ICollection<EntityAction> Actions()
     {
         var actions = new List<EntityAction>();
-        foreach (EntityProperty property in DynamicProperties())
+        foreach (Property property in DynamicProperties())
             actions.Add(new EntityAction("Set " + property.name, property.gui));
         return actions;
     }

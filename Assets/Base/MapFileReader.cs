@@ -124,8 +124,8 @@ public class MapFileReader {
                 string valueString = propArray[1];
 
                 bool foundProp = false;
-                EntityProperty prop = new EntityProperty(null, null, null, null);
-                foreach (EntityProperty checkProp in entity.Properties())
+                Property prop = new Property(null, null, null, null);
+                foreach (Property checkProp in entity.Properties())
                 {
                     if (checkProp.name == name)
                     {

@@ -98,7 +98,7 @@ public class MapFileWriter {
     {
         JSONObject entityObject = new JSONObject();
         JSONArray propertiesArray = new JSONArray();
-        foreach (EntityProperty prop in entity.Properties())
+        foreach (Property prop in entity.Properties())
         {
             // https://stackoverflow.com/a/2434558
             // https://stackoverflow.com/a/5414665

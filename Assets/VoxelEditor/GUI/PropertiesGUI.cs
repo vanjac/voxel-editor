@@ -12,7 +12,7 @@ public class PropertiesGUI : GUIPanel {
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
 
-    List<List<EntityProperty>> selectedEntityProperties = new List<List<EntityProperty>>();
+    List<List<Property>> selectedEntityProperties = new List<List<Property>>();
 
     public override void OnGUI()
     {
@@ -128,10 +128,10 @@ public class PropertiesGUI : GUIPanel {
             UpdateSelectedEntityProperties();
         }
 
-        foreach (List<EntityProperty> propList in selectedEntityProperties)
+        foreach (List<Property> propList in selectedEntityProperties)
         {
             object commonValue = propList[0].getter();
-            foreach (EntityProperty prop in propList)
+            foreach (Property prop in propList)
             {
                 if (!prop.getter().Equals(commonValue))
                 {
@@ -148,7 +148,7 @@ public class PropertiesGUI : GUIPanel {
                 object newValue = propList[0].gui(commonValue);
                 if (!newValue.Equals(commonValue))
                 {
-                    foreach (EntityProperty prop in propList)
+                    foreach (Property prop in propList)
                         prop.setter(newValue);
                     voxelArray.unsavedChanges = true;
                 }
@@ -259,13 +259,13 @@ public class PropertiesGUI : GUIPanel {
             // find properties that are common to all selected entities
             // by searching through the properties of the first one.
             // probably a simpler way to this also
-            foreach (EntityProperty prop in firstEntity.Properties())
+            foreach (Property prop in firstEntity.Properties())
             {
-                var identicalProperties = new List<EntityProperty>();
+                var identicalProperties = new List<Property>();
                 foreach (Entity otherEntity in entities)
                 {
                     bool otherEntityHasProp = false;
-                    foreach (EntityProperty otherProp in otherEntity.Properties())
+                    foreach (Property otherProp in otherEntity.Properties())
                         if (otherProp.name == prop.name)
                         {
                             otherEntityHasProp = true;
