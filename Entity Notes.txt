@@ -1,4 +1,6 @@
-Entity/SimpleEntity (abstract)
+PropertiesObject (abstract)
+
+Entity/SimpleEntity (abstract PropertiesObject)
 
 Map (Entity)
     Properties
@@ -25,6 +27,7 @@ Face (Entity)
 DynamicEntity (abstract Entity)
     Attributes
         Behaviors
+        Events
     Properties
         Tag color : choice of 8
         X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
@@ -33,14 +36,6 @@ DynamicEntity (abstract Entity)
         Clone : starts at initial position with initial properties
         Teleport (target entity)
         Teleport relative (two target entities)
-    Events
-        Dead (killer)
-        Cloned
-        Start touch (activator)
-        End touch (activator)
-        Player look towards
-        Player look away
-        Player use
 
 Object (abstract DynamicEntity) : objects take up a certain fixed size block of voxels
     Attributes
@@ -65,6 +60,35 @@ Behavior (abstract Entity)
         Disable
         [actions to change each property]
 
+Event (abstract PropertiesObject)
+    Properties
+        Start outputs
+        End outputs
+        Interval outputs
+        Interval
+        Check neuron
+        Require neuron on/off?
+
+ActivatedEvent (abstract Event)
+    Properties
+        Each activator tag allowed?
+        Required activator base type
+        Specific allowed activator entities
+
+AliveEvent (Event for DynamicEntity)
+
+TouchEvent (ActivatedEvent for DynamicEntity)
+
+InRangeEvent (ActivatedEvent for DynamicEntity)
+    Properties
+        Look range
+
+PlayerLookAtEvent (Event for DynamicEntity)
+
+PlayerUseEvent (Event for DynamicEntity)
+
+GameRunningEvent (Event for Player)
+
 Character (abstract Object)
     Properties
         Health
@@ -73,23 +97,12 @@ Character (abstract Object)
         Set health (health)
         Hurt/heal (amount)
 
-Player (Character) : 1 in every map; includes general game actions/events
+Player (Character) : 1 in every map
     Properties
-        Score
-        Score threshold
+        Score neurons and labels
         Time limit
     Actons
         End game
-        Add score (value)
-        Reset score
-        Give item (item type)
-        Take item (item type)
-    Events
-        Game start
-        Took item (item type)
-        Out of item (item type)
-        Score above threshold
-        Score below zero
 
 Selection of meshes with skin choices
     Ball
@@ -105,20 +118,16 @@ Selection of trees
 
 Neuron (Object) : light that only turns on with a certain threshold energy. Light color is the tag color.
     Properties
-        Threshold
         Energy
-        Fire on start?
+        Threshold
         Fire delay
         Fire interval
     Actions
-        Energize
-        Deenergize
-        Signal : trigger different different events if neuron is on or off
-    Events
-        Fire (object that most recently called Energize)
-        Stopped firing (object that most recently called Deenergize)
-        Signal on (object that called Signal)
-        Signal off (object that called Signal)
+        Reset
+        Energize (amount)
+        Deenergize (amount)
+
+NeuronFireEvent (Event for Neuron)
 
 Visible (Behavior for DynamicEntity)
 
@@ -132,13 +141,6 @@ Physics (Behavior for DynamicEntity with Solid)
     Actions
         Add velocity (velocity)
         Propel towards entity (entity, speed, arc angle)
-
-Look (Behavior for DynamicEntity)
-    Properties
-        Range
-    Events
-        Entity in range (activator)
-        Entity out of range (activator)
 
 Sound (Behavior for DynamicEntity)
     Properties
