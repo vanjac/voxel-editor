@@ -12,7 +12,6 @@ public class TouchListener : MonoBehaviour {
     }
 
     public VoxelArrayEditor voxelArray;
-    public Transform axes;
 
     TouchOperation currentTouchOperation = TouchOperation.NONE;
     MoveAxis movingAxis;
@@ -20,7 +19,6 @@ public class TouchListener : MonoBehaviour {
 
     Voxel lastHitVoxel;
     int lastHitFaceI;
-    bool axesEnabled = false;
 
     void Start()
     {
@@ -29,17 +27,10 @@ public class TouchListener : MonoBehaviour {
 
 	void Update ()
     {
-        // axes enabled should always equal (currentTouchOperation != TouchOperation.SELECT)
-        if (axesEnabled != (currentTouchOperation != TouchOperation.SELECT))
-        {
-            axesEnabled = currentTouchOperation != TouchOperation.SELECT;
-            // VoxelArray sets root node; TouchListener sets children
-            foreach (Transform child in axes)
-                child.gameObject.SetActive(axesEnabled);
-        }
-
         if (Input.touchCount == 0)
         {
+            if (currentTouchOperation == TouchOperation.SELECT)
+                voxelArray.TouchUp();
             currentTouchOperation = TouchOperation.NONE;
         }
         else if (Input.touchCount == 1)
@@ -74,10 +65,14 @@ public class TouchListener : MonoBehaviour {
             }
 
             if (touch.phase == TouchPhase.Began)
+            {
+                if (currentTouchOperation == TouchOperation.SELECT)
+                    voxelArray.TouchUp();
                 // this seems to improve the reliability of double-taps when things are running slowly.
                 // I think it's because there's not always a long enough gap between taps
                 // for the touch operation to be cleared.
                 currentTouchOperation = TouchOperation.NONE;
+            }
 
             if (currentTouchOperation == TouchOperation.NONE)
             {
@@ -87,18 +82,18 @@ public class TouchListener : MonoBehaviour {
                 { } // wait until moved or released, in case a multitouch operation is about to begin
                 else if (!rayHitSomething)
                 {
-                    voxelArray.SelectBackground();
+                    voxelArray.TouchDown(null, -1);
                 }
                 else if (hitVoxel != null)
                 {
                     if (touch.tapCount == 1)
                     {
                         currentTouchOperation = TouchOperation.SELECT;
-                        voxelArray.SelectDown(hitVoxel, hitFaceI);
+                        voxelArray.TouchDown(hitVoxel, hitFaceI);
                     }
                     else if (touch.tapCount == 2)
                     {
-                        voxelArray.SelectBackground(); // clear selection first for flood fill to work
+                        voxelArray.ClearSelection(); // clear selection first for flood fill to work
                         voxelArray.FaceSelectFloodFill(hitVoxel, hitFaceI, hitVoxel.substance);
                     }
                 }
@@ -112,7 +107,7 @@ public class TouchListener : MonoBehaviour {
                     }
                     else if (touch.tapCount == 2)
                     {
-                        voxelArray.SelectBackground(); // clear selection first for flood fill to work
+                        voxelArray.ClearSelection(); // clear selection first for flood fill to work
                         voxelArray.FaceSelectFloodFill(lastHitVoxel, lastHitFaceI, lastHitVoxel.substance);
                     }
                 }
@@ -122,7 +117,7 @@ public class TouchListener : MonoBehaviour {
             {
                 if (hitVoxel != null)
                 {
-                    voxelArray.SelectDrag(hitVoxel, hitFaceI);
+                    voxelArray.TouchDrag(hitVoxel, hitFaceI);
                 }
             }
             else if (currentTouchOperation == TouchOperation.MOVE)

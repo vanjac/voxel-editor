@@ -47,14 +47,14 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     // called by TouchListener
-    public void SelectBackground()
+    public void TouchDown(Voxel voxel, int faceI)
     {
-        ClearSelection();
-    }
-
-    // called by TouchListener
-    public void SelectDown(Voxel voxel, int faceI)
-    {
+        SetMoveAxesEnabled(false);
+        if (voxel == null)
+        {
+            ClearSelection();
+            return;
+        }
         selectMode = SelectMode.BOX;
         boxSelectStartBounds = voxel.GetFaceBounds(faceI);
         selectionBounds = boxSelectStartBounds;
@@ -63,7 +63,7 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     // called by TouchListener
-    public void SelectDrag(Voxel voxel, int faceI)
+    public void TouchDrag(Voxel voxel, int faceI)
     {
         if (selectMode != SelectMode.BOX)
             return;
@@ -74,11 +74,11 @@ public class VoxelArrayEditor : VoxelArray
             UpdateBoxSelection();
     }
 
-    private void ClearMoveAxes()
+    // called by TouchListener
+    public void TouchUp()
     {
-        if (axes == null)
-            return;
-        axes.gameObject.SetActive(false);
+        if (SomethingIsSelected())
+            SetMoveAxesEnabled(true);
     }
 
     private void SetMoveAxes(Vector3 position)
@@ -86,7 +86,13 @@ public class VoxelArrayEditor : VoxelArray
         if (axes == null)
             return;
         axes.position = position;
-        axes.gameObject.SetActive(true);
+    }
+
+    private void SetMoveAxesEnabled(bool enabled)
+    {
+        if (axes == null)
+            return;
+        axes.gameObject.SetActive(enabled);
     }
 
     public void ClearSelection()
@@ -97,8 +103,8 @@ public class VoxelArrayEditor : VoxelArray
             faceRef.voxel.UpdateVoxel();
         }
         selectedFaces.Clear();
-        if (storedSelectedFaces.Count == 0)
-            ClearMoveAxes();
+        if (!SomethingIsSelected())
+            SetMoveAxesEnabled(false);
         selectMode = SelectMode.NONE;
         selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
         selectionChanged = true;
@@ -200,8 +206,8 @@ public class VoxelArrayEditor : VoxelArray
             faceRef.voxel.UpdateVoxel();
         }
         storedSelectedFaces.Clear();
-        if (selectedFaces.Count == 0)
-            ClearMoveAxes();
+        if (!SomethingIsSelected())
+            SetMoveAxesEnabled(false);
         selectionChanged = true;
     }
 
