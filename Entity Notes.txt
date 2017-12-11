@@ -61,12 +61,9 @@ Behavior (abstract Entity)
         [actions to change each property]
 
 Event (abstract PropertiesObject)
+    Attributes
+        Outputs
     Properties
-        Start outputs
-        End outputs
-        Interval outputs
-        Interval
-        Multiple intervals?
         Check neuron
         Require neuron on/off?
 
