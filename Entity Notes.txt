@@ -66,6 +66,7 @@ Event (abstract PropertiesObject)
         End outputs
         Interval outputs
         Interval
+        Multiple intervals?
         Check neuron
         Require neuron on/off?
 
@@ -120,8 +121,6 @@ Neuron (Object) : light that only turns on with a certain threshold energy. Ligh
     Properties
         Energy
         Threshold
-        Fire delay
-        Fire interval
     Actions
         Reset
         Energize (amount)
