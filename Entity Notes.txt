@@ -70,7 +70,7 @@ Event (abstract PropertiesObject)
 ActivatedEvent (abstract Event)
     Properties
         Each activator tag allowed?
-        Required activator base type
+        Required base type for activator Entity or Behaviors
         Specific allowed activator entities
 
 AliveEvent (Event for DynamicEntity)
