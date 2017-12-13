@@ -64,7 +64,7 @@ Event (abstract PropertiesObject)
     Attributes
         Outputs
     Properties
-        Not?
+        Start/end?
 
 ActivatedEvent (abstract Event)
     Properties
@@ -115,7 +115,7 @@ Selection of trees
 
 Neuron (Object) : light that only turns on with a certain threshold energy. Light color is the tag color.
     Properties
-        Energy
+        Starting energy
         Threshold
         Power up time
         Power down time
