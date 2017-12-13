@@ -68,8 +68,7 @@ Event (abstract PropertiesObject)
 
 ActivatedEvent (abstract Event)
     Properties
-        Optional required tag color
-        Required base type for activator Entity or Behaviors
+        Required base type or tag color for activator Entity or Behaviors
         Specific allowed activator entities : instead of above filters
 
 AliveEvent (Event for DynamicEntity)
