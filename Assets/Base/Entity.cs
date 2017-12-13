@@ -87,7 +87,7 @@ public abstract class EntityEvent : PropertiesObject
 
 public struct EntityOutput
 {
-    public Entity[] targetEntities;
+    public Entity targetEntity;
     public bool activatorIsTarget;
     public string targetAction;
     public object actionArgument;
