@@ -87,18 +87,10 @@ public abstract class EntityEvent : PropertiesObject
 
 public struct EntityOutput
 {
-    public const byte START = 0;
-    public const byte DELAY = 1;
-    public const byte INTERVAL = 2;
-    public const byte END = 3;
-
     public Entity[] targetEntities;
     public bool activatorIsTarget;
     public string targetAction;
     public object actionArgument;
-
-    public byte outputType;
-    public float time;
 }
 
 

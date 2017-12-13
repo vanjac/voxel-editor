@@ -64,6 +64,7 @@ Event (abstract PropertiesObject)
     Attributes
         Outputs
     Properties
+        Not?
         Check neuron
         Require neuron on/off?
 
@@ -118,6 +119,8 @@ Neuron (Object) : light that only turns on with a certain threshold energy. Ligh
     Properties
         Energy
         Threshold
+        Power up time
+        Power down time
     Actions
         Reset
         Energize (amount)
