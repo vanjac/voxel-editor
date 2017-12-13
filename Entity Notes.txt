@@ -65,8 +65,6 @@ Event (abstract PropertiesObject)
         Outputs
     Properties
         Not?
-        Check neuron
-        Require neuron on/off?
 
 ActivatedEvent (abstract Event)
     Properties
@@ -123,8 +121,9 @@ Neuron (Object) : light that only turns on with a certain threshold energy. Ligh
         Power down time
     Actions
         Reset
-        Energize (amount)
-        Deenergize (amount)
+        Energize
+        Deenergize
+        Pulse : energize then deenergize
 
 NeuronFireEvent (Event for Neuron)
 
