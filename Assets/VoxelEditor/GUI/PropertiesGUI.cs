@@ -155,6 +155,18 @@ public class PropertiesGUI : GUIPanel {
             }
         }
 
+        GUILayout.Label("Behaviors");
+        if (GUILayout.Button("New Behavior"))
+        {
+            SimpleMenuGUI behaviorMenu = gameObject.AddComponent<SimpleMenuGUI>();
+            var behaviorNames = new List<string>();
+            foreach (var behaviorType in BuiltInEntities.behaviors)
+            {
+                behaviorNames.Add(behaviorType.ToString());
+            }
+            behaviorMenu.items = behaviorNames.ToArray();
+        }
+
         GUILayout.Label("Outputs");
         if (GUILayout.Button("New Output"))
         {
