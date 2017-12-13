@@ -194,7 +194,7 @@ public abstract class DynamicEntity : SimpleEntity
 }
 
 
-public abstract class Behavior : SimpleEntity
+public abstract class EntityBehavior : SimpleEntity
 {
     // properties that can be changed through Actions
     public virtual ICollection<Property> DynamicProperties()
