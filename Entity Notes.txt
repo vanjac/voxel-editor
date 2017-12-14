@@ -29,7 +29,7 @@ DynamicEntity (abstract Entity)
         Behaviors
         Events
     Properties
-        Tag color : choice of 8
+        Tag : limited selection; colors and shapes
         X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
     Actions
         Kill
@@ -68,8 +68,7 @@ Event (abstract PropertiesObject)
 
 ActivatedEvent (abstract Event)
     Properties
-        Required base type or tag color for activator Entity or Behaviors
-        Specific allowed activator entities : instead of above filters
+        Activtor entity filter: required base type for entity/behaviors, tag, or specific entity
 
 AliveEvent (Event for DynamicEntity)
 
