@@ -85,6 +85,8 @@ PlayerUseEvent (Event for DynamicEntity)
 
 GameRunningEvent (Event for Player)
 
+MovementEvent (Event for DynamicEntity with MovementBehavior or Physics)
+
 Character (abstract Object)
     Properties
         Health
@@ -153,8 +155,6 @@ Sound (Behavior for DynamicEntity)
 MovementBehavior (abstract Behavior for DynamicEntity) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
     Properties
         Max speed
-
-MovementEvent (Event for DynamicEntity with MovementBehavior)
 
 MoveWith (MovementBehavior) : like parenting
     Properties
