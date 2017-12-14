@@ -141,7 +141,7 @@ Physics (Behavior for DynamicEntity with Solid)
         Add velocity (velocity)
         Propel towards entity (entity, speed, arc angle)
 
-Sound (Behavior for DynamicEntity)
+Sound (Behavior for DynamicEntity) : disables when sound stops
     Properties
         Sound
         Loop?
@@ -149,8 +149,6 @@ Sound (Behavior for DynamicEntity)
         Speed
         Start fade dist
         End fade dist
-    Actions
-        Restart
 
 MovementBehavior (abstract Behavior for DynamicEntity) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
     Properties
