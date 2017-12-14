@@ -154,6 +154,8 @@ MovementBehavior (abstract Behavior for DynamicEntity) : different objects will 
     Properties
         Max speed
 
+MovementEvent (Event for DynamicEntity with MovementBehavior)
+
 MoveWith (MovementBehavior) : like parenting
     Properties
         Entity
@@ -163,9 +165,10 @@ MoveInDirection (MovementBehavior)
         Direction : 6 choices
         Max distance
 
-MoveDistanceEvent (Event for DynamicEntity with MoveInDirection)
-
 Spin (MovementBehavior)
+    Properties
+        Direction : 2 choices
+        Max rotation
 
 Wander (MovementBehavior)
     Properties
