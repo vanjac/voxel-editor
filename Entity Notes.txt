@@ -160,7 +160,10 @@ MoveWith (MovementBehavior) : like parenting
 
 MoveInDirection (MovementBehavior)
     Properties
-        Direction
+        Direction : 6 choices
+        Max distance
+
+MoveDistanceEvent (Event for DynamicEntity with MoveInDirection)
 
 Spin (MovementBehavior)
 
@@ -235,8 +238,3 @@ Push (Behavior for Substance)
 
 Climbable (Behavior for Substance with Solid)
 
-Linear motion (Behavior for Substance) : solid substances always occupy a certain set of voxels in the shape of the substance. A solid substance will be blocked by faces and other solid substances
-    Properties
-        Speed
-        Direction
-        Distance to move or forever
