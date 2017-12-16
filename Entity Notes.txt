@@ -1,110 +1,82 @@
 PropertiesObject (abstract)
 
-Entity/SimpleEntity (abstract PropertiesObject)
-
-Map (Entity)
+Map (PropertiesObject)
     Properties
         Sky
         Lighting settings
         Fog
 
-Face (Entity)
+Face (PropertiesObject)
     Properties
         Material : no material allowed for substance faces
         Overlay material or none
         Orientation : rotate/mirror
-    Actions
-        Set material (material) : non portal faces only
-        Clear material : substance faces only
-        Set overlay (material)
-        Clear overlay
-        Set portal target (other face) : portal face only
-        Rotate right
-        Rotate left
-        Flip horizontal
-        Flip vertical
+        Portal target
 
-DynamicEntity (abstract Entity)
+Entity (abstract PropertiesObject)
     Attributes
         Behaviors
-        Events
+        Sensor
     Properties
-        Tag : limited selection; colors and shapes
         X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
-        Start on?
-    Actions
-        On
-        Off
-        Kill
-        Clone : starts at initial position with initial properties
-        Teleport (target entity)
-        Teleport relative (two target entities)
+        Tag : limited selection; colors and shapes
+        Invert sensor?
+        Turn on time
+        Max on time, or infinite
+        Turn off time, or infinite
+        Health
 
-Object (abstract DynamicEntity) : objects take up a certain fixed size block of voxels
+Object (abstract Entity) : objects take up a certain fixed size block of voxels
     Attributes
         Orient face : aligns to center of face
     Properties
         Rotation about face normal
-    Actions
-        Set rotation (rotation)
-        Rotate (amount)
 
-Substance (DynamicEntity)
+Substance (Entity)
     Attributes
         Voxels
     Properties
         Flat? : substance becomes a flat, double sided plane
 
-Behavior (abstract Entity)
-    Properties
-        Condition: On/Off/Both
 
-Event (abstract PropertiesObject)
-    Attributes
-        Outputs
-    Properties
-        Start/end?
+Sensor (abstract PropertiesObject)
 
-ActivatedEvent (abstract Event)
+ActivatedSensor (abstract Sensor)
     Properties
         Activtor entity filter: required base type for entity/behaviors, tag, or specific entity
 
-AliveEvent (Event for DynamicEntity)
+OffSensor (Sensor)
 
-TouchEvent (ActivatedEvent for DynamicEntity)
+InputSensor (Sensor)
+    Properties
+        Input entities
+        For each input entity:
+            Change on turn on: -1/0/1
+            Change on turn off: -1/0/1
+        Input threshold
 
-InRangeEvent (ActivatedEvent for DynamicEntity)
+TouchSensor (ActivatedSensor)
+
+InRangeSensor (ActivatedSensor)
     Properties
         Look range
 
-PlayerLookAtEvent (Event for DynamicEntity)
+PlayerLookAtSensor (Sensor)
 
-PlayerUseEvent (Event for DynamicEntity)
+PlayerUseSensor (Sensor)
 
-GameRunningEvent (Event for Player)
+MovementSensor (Sensor)
 
-MovementEvent (Event for DynamicEntity with MovementBehavior or Physics)
 
 Character (abstract Object)
-    Properties
-        Health
-    Actions
-        Say (message, time)
-        Set health (health)
-        Hurt/heal (amount)
 
 Player (Character) : 1 in every map
-    Properties
-        Score neurons and labels
-        Time limit
-    Actons
-        End game
+
+Selection of characters
 
 Selection of meshes with skin choices
     Ball
     [others]
-
-Selection of characters
 
 Tree (abstract Object) : procedural tree
     Properties
@@ -112,34 +84,49 @@ Tree (abstract Object) : procedural tree
 
 Selection of trees
 
-Neuron (Object) : light that only turns on with a certain threshold energy. Light color is the tag color.
+
+Behavior (abstract Entity)
     Properties
-        Starting energy
-        Threshold
-        Power up time
-        Power down time
-    Actions
-        Reset
-        Energize
-        Deenergize
-        Pulse : energize then deenergize
+        Condition: On/Off/Both
+        Optionally apply behavior to another entity instead, or whichever entities activated the ActivatedSensor
 
-NeuronFireEvent (Event for Neuron)
+Visible (Behavior)
 
-Visible (Behavior for DynamicEntity)
+Solid (Behavior)
 
-Solid (Behavior for DynamicEntity)
+Hurt/heal (Behavior)
+    Properties
+        Amount
+        Continuous?
 
-Physics (Behavior for DynamicEntity with Solid)
+Clone (Behavior) : once when enabled. clone starts at initial position with initial properties
+
+Teleport (Behavior)
+    Properties
+        1 or 2 target entities : With 2 entities, move the relative distance between them
+
+Physics (Behavior for Entity with Solid)
     Properties
         Can be picked up?
         Velocity
         [physics parameters including breakability]
-    Actions
-        Add velocity (velocity)
-        Propel towards entity (entity, speed, arc angle)
 
-Sound (Behavior for DynamicEntity) : disables when sound stops
+Propel (Behavior for Entity with Physics)
+    Properties
+        Direction, speed
+
+PropelTowards (Behavior for Entity with Physics)
+    Properties
+        Entity
+        Speed
+        Arc angle
+
+Thruster (Behavior for Entity with Physics)
+    Properties
+        Direction
+        Strength
+
+Sound (Behavior) : disables when sound stops
     Properties
         Sound
         Loop?
@@ -148,7 +135,11 @@ Sound (Behavior for DynamicEntity) : disables when sound stops
         Start fade dist
         End fade dist
 
-MovementBehavior (abstract Behavior for DynamicEntity) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
+Speech bubble (Behavior)
+    Properties
+        Message
+
+MovementBehavior (abstract Behavior) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
     Properties
         Max speed
 
@@ -236,4 +227,3 @@ Push (Behavior for Substance)
         Strength
 
 Climbable (Behavior for Substance with Solid)
-
