@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spin : EntityBehavior
 {
-    float speed;
+    float speed = 50;
 
     public override string TypeName()
     {

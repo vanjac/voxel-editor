@@ -34,7 +34,7 @@ public abstract class Entity : PropertiesObject
     public Sensor sensor;
     public SensorSettings sensorSettings;
     public List<EntityBehavior> behaviors = new List<EntityBehavior>();
-    public byte tag;
+    public byte tag = 0;
 
     public virtual string TypeName()
     {
@@ -65,8 +65,8 @@ public abstract class EntityBehavior : PropertiesObject
     }
 
     Condition condition = Condition.BOTH;
-    Entity targetEntity; // null for self
-    bool targetEntityIsActivator;
+    Entity targetEntity = null; // null for self
+    bool targetEntityIsActivator = false;
 
     public virtual string TypeName()
     {
