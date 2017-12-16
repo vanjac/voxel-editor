@@ -33,7 +33,7 @@ public abstract class Entity : PropertiesObject
 {
     public Sensor sensor;
     public SensorSettings sensorSettings;
-    public List<EntityBehavior> behaviors;
+    public List<EntityBehavior> behaviors = new List<EntityBehavior>();
     public byte tag;
 
     public virtual string TypeName()
