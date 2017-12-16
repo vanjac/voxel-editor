@@ -96,9 +96,27 @@ public class MapFileWriter {
 
     private JSONObject WriteEntity(Entity entity)
     {
-        JSONObject entityObject = new JSONObject();
+        JSONObject entityObject = WritePropertiesObject(entity);
+
+        if (entity.behaviors.Count != 0) {
+            JSONArray behaviorsArray = new JSONArray();
+            foreach (EntityBehavior behavior in entity.behaviors)
+            {
+                JSONObject behaviorObject = WritePropertiesObject(behavior);
+                behaviorObject["name"] = behavior.TypeName();
+                behaviorsArray[-1] = behaviorObject;
+            }
+            entityObject["behaviors"] = behaviorsArray;
+        }
+
+        return entityObject;
+    }
+
+    private JSONObject WritePropertiesObject(PropertiesObject obj)
+    {
+        JSONObject propsObject = new JSONObject();
         JSONArray propertiesArray = new JSONArray();
-        foreach (Property prop in entity.Properties())
+        foreach (Property prop in obj.Properties())
         {
             // https://stackoverflow.com/a/2434558
             // https://stackoverflow.com/a/5414665
@@ -117,11 +135,9 @@ public class MapFileWriter {
             propArray[1] = valueString;
             propertiesArray[-1] = propArray;
         }
-        entityObject["properties"] = propertiesArray;
+        propsObject["properties"] = propertiesArray;
 
-        // TODO: save outputs and behaviors
-
-        return entityObject;
+        return propsObject;
     }
 
     private JSONObject WriteLighting(List<string> materials)
