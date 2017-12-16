@@ -126,7 +126,7 @@ Thruster (Behavior for Entity with Physics)
         Direction
         Strength
 
-Sound (Behavior) : disables when sound stops
+Sound (Behavior)
     Properties
         Sound
         Loop?
