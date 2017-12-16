@@ -207,6 +207,14 @@ Paint (Behavior for FaceEntity)
 
 Climbable (Behavior for FaceEntity)
 
+Bouncy (Behavior for FaceEntity)
+    Properties
+        Bounciness
+
+Slippery (Behavior for FaceEntity)
+    Properties
+        Friction
+
 Conveyor (Behavior for FaceEntity)
     Properties
         Direction : 4 choices
