@@ -6,33 +6,40 @@ Map (PropertiesObject)
         Lighting settings
         Fog
 
-Face (PropertiesObject)
-    Properties
-        Material : no material allowed for substance faces
-        Overlay material or none
-        Orientation : rotate/mirror
-        Portal target
-
 Entity (abstract PropertiesObject)
     Attributes
-        Behaviors
         Sensor
     Properties
-        X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
-        Tag : limited selection; colors and shapes
         Invert sensor?
         Turn on time
         Max on time, or infinite
         Turn off time, or infinite
+
+DynamicEntity (abstract Entity)
+    Attributes
+        Behaviors
+    Properties
+        X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
+        Tag : limited selection; colors and shapes
         Health
 
-Object (abstract Entity) : objects take up a certain fixed size block of voxels
+FaceEntity (Entity) : can be assigned to a face
+    Properties
+        ON material
+        ON overlay material
+        ON orientation
+
+Portal (Entity) : can be assigned to a face
+    Properties
+        Target face
+
+Object (abstract DynamicEntity) : objects take up a certain fixed size block of voxels
     Attributes
         Orient face : aligns to center of face
     Properties
         Rotation about face normal
 
-Substance (Entity)
+Substance (DynamicEntity)
     Attributes
         Voxels
     Properties
@@ -85,7 +92,7 @@ Tree (abstract Object) : procedural tree
 Selection of trees
 
 
-Behavior (abstract Entity)
+Behavior (abstract PropertiesObject)
     Properties
         Condition: On/Off/Both
         Optionally apply behavior to another entity instead, or whichever entities activated the ActivatedSensor
