@@ -83,6 +83,12 @@ public class GUIPanel : MonoBehaviour {
             verticalSlide = false;
         }
 
+        if (Input.GetButtonDown("Cancel"))
+        {
+            if (depth == frontDepth && depth < 0)
+                Destroy(this);
+        }
+
         scaleFactor = Screen.height / targetHeight;
         GUI.matrix = Matrix4x4.Scale(new Vector3(scaleFactor, scaleFactor, 1));
         scaledScreenWidth = Screen.width / scaleFactor;

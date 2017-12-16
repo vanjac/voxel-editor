@@ -15,6 +15,12 @@ public class Menu : MonoBehaviour {
         UpdateMapList();
     }
 
+    void Update()
+    {
+        if (Input.GetButtonDown("Cancel"))
+            Application.Quit();
+    }
+
     public void OpenEditor()
     {
         GameObject selectedMap = GameObject.Find("SelectedMap");

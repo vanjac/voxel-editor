@@ -15,5 +15,10 @@ public class GameLoad : MonoBehaviour {
     {
         SceneManager.LoadScene("editScene");
     }
-	
+
+    void Update()
+    {
+        if (Input.GetButtonDown("Cancel"))
+            Close();
+    }
 }
