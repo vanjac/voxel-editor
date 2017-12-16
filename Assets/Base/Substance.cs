@@ -14,6 +14,11 @@ public class Substance : DynamicEntity
         voxels = new HashSet<Voxel>();
     }
 
+    public override string TypeName()
+    {
+        return "Substance";
+    }
+
     public override ICollection<Property> Properties()
     {
         List<Property> props = new List<Property>(base.Properties());
