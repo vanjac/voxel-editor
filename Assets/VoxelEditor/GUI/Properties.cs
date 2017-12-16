@@ -46,7 +46,7 @@ public class PropertyGUIs
             if (float.IsNaN(fValue)) // keyboard should be open
             {
                 if (numberKeyboard == null)
-                    return 0;
+                    return 0.0f;
                 else if (numberKeyboard.status != TouchScreenKeyboard.Status.Visible)
                 {
                     try
