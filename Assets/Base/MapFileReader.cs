@@ -115,9 +115,40 @@ public class MapFileReader {
 
     private void ReadEntity(JSONObject entityObject, Entity entity)
     {
-        if (entityObject["properties"] != null)
+        ReadPropertiesObject(entityObject, entity);
+
+        if (entityObject["behaviors"] != null)
         {
-            foreach (JSONNode propNode in entityObject["properties"].AsArray)
+            foreach (JSONNode behaviorNode in entityObject["behaviors"].AsArray)
+            {
+                JSONObject behaviorObject = behaviorNode.AsObject;
+                string behaviorName = behaviorObject["name"];
+                System.Type behaviorType = null;
+                foreach (System.Type checkType in BuiltInEntities.behaviors)
+                    // TODO: these might not always match
+                    if (checkType.ToString() == behaviorName)
+                    {
+                        behaviorType = checkType;
+                        break;
+                    }
+                if (behaviorType == null)
+                {
+                    Debug.Log("Couldn't find behavior type " + behaviorName + "!");
+                    continue;
+                }
+                EntityBehavior newBehavior =
+                    (EntityBehavior)System.Activator.CreateInstance(behaviorType);
+                ReadPropertiesObject(behaviorObject, newBehavior);
+                entity.behaviors.Add(newBehavior);
+            }
+        }
+    }
+
+    private void ReadPropertiesObject(JSONObject propsObject, PropertiesObject obj)
+    {
+        if (propsObject["properties"] != null)
+        {
+            foreach (JSONNode propNode in propsObject["properties"].AsArray)
             {
                 JSONArray propArray = propNode.AsArray;
                 string name = propArray[0];
@@ -125,7 +156,7 @@ public class MapFileReader {
 
                 bool foundProp = false;
                 Property prop = new Property(null, null, null, null);
-                foreach (Property checkProp in entity.Properties())
+                foreach (Property checkProp in obj.Properties())
                 {
                     if (checkProp.name == name)
                     {
