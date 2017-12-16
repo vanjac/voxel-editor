@@ -64,9 +64,9 @@ public abstract class EntityBehavior : PropertiesObject
         ON=0, OFF=1, BOTH=2
     }
 
-    Condition condition = Condition.BOTH;
-    Entity targetEntity = null; // null for self
-    bool targetEntityIsActivator = false;
+    public Condition condition = Condition.BOTH;
+    public Entity targetEntity = null; // null for self
+    public bool targetEntityIsActivator = false;
 
     public virtual string TypeName()
     {
@@ -100,12 +100,12 @@ public abstract class Sensor : PropertiesObject
 
 public struct SensorSettings
 {
-    bool invert;
-    float turnOnTime;
-    float turnOffTime;
-    float minOnTime;
-    float maxOnTime;
-    float minOffTime;
+    public bool invert;
+    public float turnOnTime;
+    public float turnOffTime;
+    public float minOnTime;
+    public float maxOnTime;
+    public float minOffTime;
 }
 
 
