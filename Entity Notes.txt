@@ -149,28 +149,7 @@ MoveWith (MovementBehavior) : like parenting
 
 MoveInDirection (MovementBehavior)
     Properties
-        Direction : 6 choices
-        Max distance
-
-Spin (MovementBehavior)
-    Properties
-        Direction : 2 choices
-        Max rotation
-
-Wander (MovementBehavior)
-    Properties
-        Rate
-        Pause frequency
-        Focus entity
-        Range
-
-FaceToward (MovementBehavior)
-    Properties
-        Entity
-
-FaceAway (MovementBehavior)
-    Properties
-        Entity
+        Direction
 
 MoveToward (MovementBehavior)
     Properties
@@ -180,6 +159,17 @@ MoveAway (MovementBehavior)
     Properties
         Entity
 
+Spin (MovementBehavior)
+
+Rotate to (MovementBehavior)
+    Properties
+        Rotation
+
+FaceToward (MovementBehavior)
+    Properties
+        Opposite?
+        Entity
+
 NavigateToward (MovementBehavior)
     Properties
         Entity
@@ -187,6 +177,13 @@ NavigateToward (MovementBehavior)
 NavigateAway (MovementBehavior)
     Properties
         Entity
+
+Wander (MovementBehavior)
+    Properties
+        Change direction rate
+        Pause frequency (percentage)
+        Focus entity
+        Range
 
 Fog (Behavior for Substance with Visible) : volumetric fog
     [properties]
