@@ -59,12 +59,12 @@ public abstract class Entity : PropertiesObject
 
 public abstract class EntityBehavior : PropertiesObject
 {
-    public enum BehaviorCondition : byte
+    public enum Condition : byte
     {
-        ON, OFF, BOTH
+        ON=0, OFF=1, BOTH=2
     }
 
-    BehaviorCondition condition;
+    Condition condition = Condition.BOTH;
     Entity targetEntity; // null for self
     bool targetEntityIsActivator;
 
@@ -75,7 +75,13 @@ public abstract class EntityBehavior : PropertiesObject
 
     public virtual ICollection<Property> Properties()
     {
-        return new Property[] { };
+        return new Property[]
+        {
+            new Property("Condition",
+                () => condition,
+                v => condition = (Condition)v,
+                PropertyGUIs.BehaviorCondition)
+        };
     }
 }
 

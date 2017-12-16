@@ -24,16 +24,6 @@ public class PropertyGUIs
         return toggleValue;
     }
 
-    public static object Tag(object value)
-    {
-        int tag = (byte)value;
-        GUILayout.BeginHorizontal();
-        tag = GUILayout.SelectionGrid(tag,
-            new string[] { "A", "B", "C" }, 3);
-        GUILayout.EndHorizontal();
-        return (byte)tag;
-    }
-
     public static object Float(object value)
     {
         float fValue = (float)value;
@@ -52,5 +42,24 @@ public class PropertyGUIs
             catch (FormatException) { }
         }
         return fValue;
+    }
+
+    public static object Tag(object value)
+    {
+        int tag = (byte)value;
+        tag = GUILayout.SelectionGrid(tag,
+            new string[] { "A", "B", "C" }, 3);
+        return (byte)tag;
+    }
+
+    public static object BehaviorCondition(object value)
+    {
+        var gridStyle = new GUIStyle(GUI.skin.button);
+        gridStyle.padding.left = 0;
+        gridStyle.padding.right = 0;
+        var condition = (EntityBehavior.Condition)value;
+        condition = (EntityBehavior.Condition)GUILayout.SelectionGrid(
+            (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
+        return condition;
     }
 }
