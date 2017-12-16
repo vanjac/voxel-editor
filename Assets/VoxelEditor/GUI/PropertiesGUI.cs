@@ -165,12 +165,18 @@ public class PropertiesGUI : GUIPanel {
                 entity.behaviors.Add(newBehavior);
             };
         }
+
+        EntityBehavior behaviorToRemove = null;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
             GUILayout.BeginVertical(GUI.skin.box);
             PropertiesObjectGUI(behavior);
+            if (GUILayout.Button("Remove"))
+                behaviorToRemove = behavior;
             GUILayout.EndVertical();
         }
+        if (behaviorToRemove != null)
+            entity.behaviors.Remove(behaviorToRemove);
     }
 
     private void PropertiesObjectGUI(PropertiesObject obj)
