@@ -38,32 +38,52 @@ public class PropertyGUIs
         {
             if (GUILayout.Button(sValue, GUI.skin.textField))
                 if (numberKeyboard == null)
+                {
                     numberKeyboard =
                         TouchScreenKeyboard.Open(sValue, TouchScreenKeyboardType.NumbersAndPunctuation);
+                    return float.NaN;
+                }
             if (float.IsNaN(fValue)) // keyboard should be open
             {
                 if (numberKeyboard == null)
                     return 0;
-                else if (numberKeyboard.done)
-                    sValue = numberKeyboard.text;
+                else if (numberKeyboard.status != TouchScreenKeyboard.Status.Visible)
+                {
+                    try
+                    {
+                        return float.Parse(numberKeyboard.text);
+                    }
+                    catch (FormatException)
+                    {
+                        return fValue;
+                    }
+                    finally
+                    {
+                        numberKeyboard = null;
+                    }
+                }
+                else
+                    return float.NaN;
             }
+            else
+                return fValue;
         }
         else // TouchScreenKeyboard not supported
         {
             sValue = GUILayout.TextField(sValue);
-        }
 
-        if (sValue.Length == 0)
-            fValue = float.NaN;
-        else
-        {
-            try
+            if (sValue.Length == 0)
+                fValue = float.NaN;
+            else
             {
-                fValue = float.Parse(sValue);
+                try
+                {
+                    fValue = float.Parse(sValue);
+                }
+                catch (FormatException) { }
             }
-            catch (FormatException) { }
+            return fValue;
         }
-        return fValue;
     }
 
     public static object Tag(object value)
