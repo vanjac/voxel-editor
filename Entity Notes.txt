@@ -72,15 +72,15 @@ PlayerUseSensor (Sensor)
 MovementSensor (Sensor)
 
 
-Character (abstract Object)
-
-Player (Character) : 1 in every map
-
-Selection of characters
+Player (Object) : 1 in every map
 
 Selection of meshes with skin choices
     Ball
     [others]
+
+Character (abstract Object)
+
+Selection of characters
 
 Tree (abstract Object) : procedural tree
     Properties
