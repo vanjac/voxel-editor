@@ -9,25 +9,25 @@ Map (PropertiesObject)
 Entity (abstract PropertiesObject)
     Attributes
         Sensor
+        Behaviors
     Properties
+        Tag : limited selection; colors and shapes
         Invert sensor?
         Turn on time
         Max on time, or infinite
         Turn off time, or infinite
 
 DynamicEntity (abstract Entity)
-    Attributes
-        Behaviors
     Properties
         X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
-        Tag : limited selection; colors and shapes
         Health
 
 FaceEntity (Entity) : can be assigned to a face
     Properties
-        ON material
-        ON overlay material
-        ON orientation
+        Each of these properties for Off state and On state:
+            Material
+            Overlay material
+            Orientation
 
 Portal (Entity) : can be assigned to a face
     Properties
@@ -97,43 +97,43 @@ Behavior (abstract PropertiesObject)
         Condition: On/Off/Both
         Optionally apply behavior to another entity instead, or whichever entities activated the ActivatedSensor
 
-Visible (Behavior)
+Visible (Behavior for DynamicEntity)
 
-Solid (Behavior)
+Solid (Behavior for DynamicEntity)
 
-Hurt/heal (Behavior)
+Hurt/heal (Behavior for DynamicEntity)
     Properties
         Amount
         Continuous?
 
-Clone (Behavior) : once when enabled. clone starts at initial position with initial properties
+Clone (Behavior for DynamicEntity) : once when enabled. clone starts at initial position with initial properties
 
-Teleport (Behavior)
+Teleport (Behavior for DynamicEntity)
     Properties
         1 or 2 target entities : With 2 entities, move the relative distance between them
 
-Physics (Behavior for Entity with Solid)
+Physics (Behavior for DynamicEntity with Solid)
     Properties
         Can be picked up?
         Velocity
         [physics parameters including breakability]
 
-Propel (Behavior for Entity with Physics)
+Propel (Behavior for DynamicEntity with Physics)
     Properties
         Direction, speed
 
-PropelTowards (Behavior for Entity with Physics)
+PropelTowards (Behavior for DynamicEntity with Physics)
     Properties
         Entity
         Speed
         Arc angle
 
-Thruster (Behavior for Entity with Physics)
+Thruster (Behavior for DynamicEntity with Physics)
     Properties
         Direction
         Strength
 
-Sound (Behavior)
+Sound (Behavior for DynamicEntity)
     Properties
         Sound
         Loop?
@@ -142,11 +142,7 @@ Sound (Behavior)
         Start fade dist
         End fade dist
 
-Speech bubble (Behavior)
-    Properties
-        Message
-
-MovementBehavior (abstract Behavior) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
+MovementBehavior (abstract Behavior for DynamicEntity) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
     Properties
         Max speed
 
@@ -156,7 +152,7 @@ MoveWith (MovementBehavior) : like parenting
 
 MoveInDirection (MovementBehavior)
     Properties
-        Direction
+        Direction : 6 choices
 
 MoveToward (MovementBehavior)
     Properties
@@ -192,15 +188,29 @@ Wander (MovementBehavior)
         Focus entity
         Range
 
-Fog (Behavior for Substance with Visible) : volumetric fog
-    [properties]
-
-Glow (Behavior for Substance with Visible) : a flare effect that emits light
+Speech bubble (Behavior for Entity)
     Properties
+        Message
+
+Climbable (Behavior for FaceEntity)
+
+Conveyor (Behavior for FaceEntity)
+    Properties
+        Direction : 4 choices
+        Speed
+
+Glow (Behavior for Entity) : a flare effect that emits light
+    Properties
+        Size
         Color
         Intensity
 
-Fire (Behavior for Substance with Visible)
+Fire (Behavior for Entity)
+    Properties
+        Size
+
+Fog (Behavior for Substance with Visible) : volumetric fog
+    [properties]
 
 ParticleEffect (abstract Behavior for Substance with Visible)
     Properties
@@ -229,5 +239,3 @@ Push (Behavior for Substance)
         Direction
         Target velocity
         Strength
-
-Climbable (Behavior for Substance with Solid)
