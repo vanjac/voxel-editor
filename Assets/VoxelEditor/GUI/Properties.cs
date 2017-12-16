@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PropertyGUIs
 {
+    static TouchScreenKeyboard numberKeyboard = null;
+
     public static object Empty(object value)
     {
         return value;
@@ -27,10 +29,30 @@ public class PropertyGUIs
     public static object Float(object value)
     {
         float fValue = (float)value;
+
         string sValue = "";
-        if(!float.IsNaN(fValue))
+        if (!float.IsNaN(fValue))
             sValue = fValue.ToString();
-        sValue = GUILayout.TextField(sValue);
+
+        if (TouchScreenKeyboard.isSupported)
+        {
+            if (GUILayout.Button(sValue, GUI.skin.textField))
+                if (numberKeyboard == null)
+                    numberKeyboard =
+                        TouchScreenKeyboard.Open(sValue, TouchScreenKeyboardType.NumbersAndPunctuation);
+            if (float.IsNaN(fValue)) // keyboard should be open
+            {
+                if (numberKeyboard == null)
+                    return 0;
+                else if (numberKeyboard.done)
+                    sValue = numberKeyboard.text;
+            }
+        }
+        else // TouchScreenKeyboard not supported
+        {
+            sValue = GUILayout.TextField(sValue);
+        }
+
         if (sValue.Length == 0)
             fValue = float.NaN;
         else
