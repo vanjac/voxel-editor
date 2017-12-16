@@ -6,6 +6,11 @@ public class Spin : EntityBehavior
 {
     float speed;
 
+    public override string TypeName()
+    {
+        return "Spin";
+    }
+
     public override ICollection<Property> Properties()
     {
         var props = new List<Property>(base.Properties());
