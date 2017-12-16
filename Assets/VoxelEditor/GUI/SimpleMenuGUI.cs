@@ -6,6 +6,7 @@ public class SimpleMenuGUI : GUIPanel
 {
     public delegate void MenuHandler(int itemI, string itemName);
 
+    public MenuHandler handler;
     public string[] items;
 
     public override void OnEnable()
@@ -22,8 +23,12 @@ public class SimpleMenuGUI : GUIPanel
             scaledScreenWidth * .5f, targetHeight * .5f);
         GUILayout.BeginArea(panelRect, GUI.skin.box);
 
-        foreach (string item in items)
-            GUILayout.Button(item);
+        for (int i = 0; i < items.Length; i++ )
+            if (GUILayout.Button(items[i]))
+            {
+                handler(i, items[i]);
+                Destroy(this);
+            }
 
         GUILayout.EndArea();
     }
