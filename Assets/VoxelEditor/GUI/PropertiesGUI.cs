@@ -9,14 +9,25 @@ public class PropertiesGUI : GUIPanel {
 
     float slide = 0;
     public VoxelArrayEditor voxelArray;
+    public Font titleFont;
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
+
+    private bool guiInit = false;
+    private GUIStyle titleStyle;
 
     List<Entity> selectedEntities;
 
     public override void OnGUI()
     {
         base.OnGUI();
+
+        if (!guiInit)
+        {
+            guiInit = true;
+            titleStyle = new GUIStyle(GUI.skin.label);
+            titleStyle.font = titleFont;
+        }
 
         panelRect = new Rect(slide, 0, targetHeight / 2, targetHeight);
         GUILayout.BeginArea(panelRect, GUI.skin.box);
@@ -134,20 +145,10 @@ public class PropertiesGUI : GUIPanel {
 
     private void EntityPropertiesGUI(Entity entity)
     {
-        foreach (Property prop in entity.Properties())
-        {
-            GUILayout.Label(prop.name);
-            object oldValue = prop.getter();
-            object newValue = prop.gui(oldValue);
-            if (!newValue.Equals(oldValue))
-            {
-                prop.setter(newValue);
-                voxelArray.unsavedChanges = true;
-            }
-        }
+        PropertiesObjectGUI(entity);
 
         GUILayout.Label("Behaviors");
-        if (GUILayout.Button("New Behavior"))
+        if (GUILayout.Button("Add Behavior"))
         {
             SimpleMenuGUI behaviorMenu = gameObject.AddComponent<SimpleMenuGUI>();
             var behaviorNames = new List<string>();
@@ -163,6 +164,28 @@ public class PropertiesGUI : GUIPanel {
                     (EntityBehavior)System.Activator.CreateInstance(selectedBehaviorType);
                 entity.behaviors.Add(newBehavior);
             };
+        }
+        foreach (EntityBehavior behavior in entity.behaviors)
+        {
+            GUILayout.BeginVertical(GUI.skin.box);
+            PropertiesObjectGUI(behavior);
+            GUILayout.EndVertical();
+        }
+    }
+
+    private void PropertiesObjectGUI(PropertiesObject obj)
+    {
+        GUILayout.Label(obj.TypeName() + ":", titleStyle);
+        foreach (Property prop in obj.Properties())
+        {
+            GUILayout.Label(prop.name);
+            object oldValue = prop.getter();
+            object newValue = prop.gui(oldValue);
+            if (!newValue.Equals(oldValue))
+            {
+                prop.setter(newValue);
+                voxelArray.unsavedChanges = true;
+            }
         }
     }
 
