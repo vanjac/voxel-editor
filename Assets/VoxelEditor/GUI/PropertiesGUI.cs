@@ -12,7 +12,7 @@ public class PropertiesGUI : GUIPanel {
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
 
-    List<List<Property>> selectedEntityProperties = new List<List<Property>>();
+    List<Entity> selectedEntities;
 
     public override void OnGUI()
     {
@@ -125,33 +125,24 @@ public class PropertiesGUI : GUIPanel {
 
         if (voxelArray.selectionChanged)
         {
-            UpdateSelectedEntityProperties();
+            selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
         }
 
-        foreach (List<Property> propList in selectedEntityProperties)
-        {
-            object commonValue = propList[0].getter();
-            foreach (Property prop in propList)
-            {
-                if (!prop.getter().Equals(commonValue))
-                {
-                    commonValue = null;
-                    break;
-                }
-            }
+        if (selectedEntities.Count == 1)
+            EntityPropertiesGUI(selectedEntities[0]);
+    }
 
-            if(commonValue == null)
-                GUILayout.Label(propList[0].name + " (different)");
-            else
+    private void EntityPropertiesGUI(Entity entity)
+    {
+        foreach (Property prop in entity.Properties())
+        {
+            GUILayout.Label(prop.name);
+            object oldValue = prop.getter();
+            object newValue = prop.gui(oldValue);
+            if (!newValue.Equals(oldValue))
             {
-                GUILayout.Label(propList[0].name);
-                object newValue = propList[0].gui(commonValue);
-                if (!newValue.Equals(commonValue))
-                {
-                    foreach (Property prop in propList)
-                        prop.setter(newValue);
-                    voxelArray.unsavedChanges = true;
-                }
+                prop.setter(newValue);
+                voxelArray.unsavedChanges = true;
             }
         }
 
@@ -165,14 +156,13 @@ public class PropertiesGUI : GUIPanel {
                 behaviorNames.Add(behaviorType.ToString());
             }
             behaviorMenu.items = behaviorNames.ToArray();
-        }
-
-        GUILayout.Label("Outputs");
-        if (GUILayout.Button("New Output"))
-        {
-            EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
-            picker.voxelArray = voxelArray;
-            picker.handler = (ICollection<Entity> c) => Debug.Log(c);
+            behaviorMenu.handler = (int itemI, string itemName) =>
+            {
+                var selectedBehaviorType = BuiltInEntities.behaviors[itemI];
+                EntityBehavior newBehavior =
+                    (EntityBehavior)System.Activator.CreateInstance(selectedBehaviorType);
+                entity.behaviors.Add(newBehavior);
+            };
         }
     }
 
@@ -254,47 +244,6 @@ public class PropertiesGUI : GUIPanel {
     {
         RenderSettings.sun.color = color;
         voxelArray.unsavedChanges = true;
-    }
-
-    private void UpdateSelectedEntityProperties()
-    {
-        selectedEntityProperties.Clear();
-        ICollection<Entity> entities = voxelArray.GetSelectedEntities();
-        if (entities.Count != 0)
-        {
-            // get the first entity (probably a simpler way to do this)
-            var entitiesEnumerator = entities.GetEnumerator();
-            entitiesEnumerator.MoveNext(); // moves to the first entity
-            Entity firstEntity = entitiesEnumerator.Current;
-            entitiesEnumerator.Reset();
-
-            // find properties that are common to all selected entities
-            // by searching through the properties of the first one.
-            // probably a simpler way to this also
-            foreach (Property prop in firstEntity.Properties())
-            {
-                var identicalProperties = new List<Property>();
-                foreach (Entity otherEntity in entities)
-                {
-                    bool otherEntityHasProp = false;
-                    foreach (Property otherProp in otherEntity.Properties())
-                        if (otherProp.name == prop.name)
-                        {
-                            otherEntityHasProp = true;
-                            identicalProperties.Add(otherProp);
-                            break;
-                        }
-                    if (!otherEntityHasProp)
-                    {
-                        identicalProperties = null;
-                        break;
-                    }
-                }
-                if (identicalProperties == null)
-                    continue;
-                selectedEntityProperties.Add(identicalProperties);
-            }
-        }
     }
 
 }
