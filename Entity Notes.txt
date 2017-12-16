@@ -23,11 +23,6 @@ DynamicEntity (abstract Entity)
         Health
 
 FaceEntity (Entity) : can be assigned to a face
-    Properties
-        Each of these properties for Off state and On state:
-            Material
-            Overlay material
-            Orientation
 
 Portal (Entity) : can be assigned to a face
     Properties
@@ -192,13 +187,6 @@ Speech bubble (Behavior for Entity)
     Properties
         Message
 
-Climbable (Behavior for FaceEntity)
-
-Conveyor (Behavior for FaceEntity)
-    Properties
-        Direction : 4 choices
-        Speed
-
 Glow (Behavior for Entity) : a flare effect that emits light
     Properties
         Size
@@ -208,6 +196,24 @@ Glow (Behavior for Entity) : a flare effect that emits light
 Fire (Behavior for Entity)
     Properties
         Size
+
+Paint (Behavior for FaceEntity)
+    Properties
+        New material
+        New overlay
+        New orientation
+
+Climbable (Behavior for FaceEntity)
+
+Conveyor (Behavior for FaceEntity)
+    Properties
+        Direction : 4 choices
+        Speed
+
+Scroll (Behavior for FaceEntity)
+    Properties
+        Direction : 4 choices
+        Speed
 
 Fog (Behavior for Substance with Visible) : volumetric fog
     [properties]
