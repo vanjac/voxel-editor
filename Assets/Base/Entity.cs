@@ -29,124 +29,19 @@ public interface PropertiesObject
     ICollection<Property> Properties();
 }
 
-public interface Entity : PropertiesObject
+public abstract class Entity : PropertiesObject
 {
-    byte GetTag();
-
-    ICollection<EntityAction> Actions();
-
-    List<EntityEvent> EventList(); // can be null if events not supported
-
-    List<Entity> BehaviorList(); // can be null if behaviors not supported
-}
-
-public class EntityTag
-{
-    public const byte GREY = 0;
-    public const byte RED = 1;
-    public const byte ORANGE = 2;
-    public const byte YELLOW = 3;
-    public const byte GREEN = 4;
-    public const byte CYAN = 5;
-    public const byte BLUE = 6;
-    public const byte PURPLE = 7;
-}
-
-public struct EntityAction
-{
-    public string name;
-    public PropertyGUI argumentGUI;
-
-    public EntityAction(string name)
-    {
-        this.name = name;
-        argumentGUI = PropertyGUIs.Empty;
-    }
-
-    public EntityAction(string name, PropertyGUI gui)
-    {
-        this.name = name;
-        argumentGUI = gui;
-    }
-}
-
-public abstract class EntityEvent : PropertiesObject
-{
-    public List<EntityOutput> outputs;
-
-    public virtual string TypeName()
-    {
-        return "Event";
-    }
-
-    public virtual ICollection<Property> Properties()
-    {
-        return new Property[] { };
-    }
-}
-
-public struct EntityOutput
-{
-    public Entity targetEntity;
-    public bool targetIsSelf;
-    public bool targetIsActivator;
-    public string targetAction;
-    public object actionArgument;
-}
-
-
-public abstract class SimpleEntity : Entity
-{
-    List<EntityEvent> eventList = new List<EntityEvent>();
+    public Sensor sensor;
+    public SensorSettings sensorSettings;
+    public List<EntityBehavior> behaviors;
+    public byte tag;
 
     public virtual string TypeName()
     {
         return "Entity";
     }
 
-    public virtual byte GetTag()
-    {
-        return EntityTag.GREY;
-    }
-
     public virtual ICollection<Property> Properties()
-    {
-        return new Property[] { };
-    }
-
-    public virtual ICollection<EntityAction> Actions()
-    {
-        return new EntityAction[] { };
-    }
-
-    public List<EntityEvent> EventList()
-    {
-        return eventList;
-    }
-
-    public virtual List<Entity> BehaviorList()
-    {
-        return null;
-    }
-}
-
-
-public abstract class DynamicEntity : SimpleEntity
-{
-    List<Entity> behaviorList = new List<Entity>();
-
-    byte tag = EntityTag.GREY;
-    // only for editor; makes object transparent allowing you to zoom/select through it
-    public bool xRay = false;
-    public bool visible = true;
-    public bool solid = true;
-
-    public override byte GetTag()
-    {
-        return tag;
-    }
-
-    public override ICollection<Property> Properties()
     {
         return new Property[]
         {
@@ -154,58 +49,82 @@ public abstract class DynamicEntity : SimpleEntity
                 () => tag,
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
+            new Property("Sensor Settings",
+                () => sensorSettings,
+                v => sensorSettings = (SensorSettings)v,
+                PropertyGUIs.Empty)
+        };
+    }
+}
+
+public abstract class EntityBehavior : PropertiesObject
+{
+    public enum BehaviorCondition : byte
+    {
+        ON, OFF, BOTH
+    }
+
+    BehaviorCondition condition;
+    Entity targetEntity; // null for self
+    bool targetEntityIsActivator;
+
+    public virtual string TypeName()
+    {
+        return "Behavior";
+    }
+
+    public virtual ICollection<Property> Properties()
+    {
+        return new Property[] { };
+    }
+}
+
+public abstract class Sensor : PropertiesObject
+{
+    public virtual string TypeName()
+    {
+        return "Sensor";
+    }
+
+    public virtual ICollection<Property> Properties()
+    {
+        return new Property[] { };
+    }
+}
+
+public struct SensorSettings
+{
+    bool invert;
+    float turnOnTime;
+    float turnOffTime;
+    float minOnTime;
+    float maxOnTime;
+    float minOffTime;
+}
+
+
+public abstract class DynamicEntity : Entity
+{
+    // only for editor; makes object transparent allowing you to zoom/select through it
+    public bool xRay = false;
+    public float health = 100;
+
+    public override ICollection<Property> Properties()
+    {
+        List<Property> props = new List<Property>(base.Properties());
+        props.AddRange(new Property[]
+        {
             new Property("X-Ray?",
                 () => xRay,
                 v => {xRay = (bool)v; UpdateEntity();},
                 PropertyGUIs.Toggle),
-            new Property("Visible?",
-                () => visible,
-                v => visible = (bool)v,
-                PropertyGUIs.Toggle),
-            new Property("Solid?",
-                () => solid,
-                v => solid = (bool)v,
-                PropertyGUIs.Toggle)
-        };
-    }
-
-    public override ICollection<EntityAction> Actions()
-    {
-        return new EntityAction[]
-        {
-            new EntityAction("Show"),
-            new EntityAction("Hide")
-        };
-    }
-
-    public override List<Entity> BehaviorList()
-    {
-        return behaviorList;
+            new Property("Health",
+                () => health,
+                v => health = (float)v,
+                PropertyGUIs.Empty)
+        });
+        return props;
     }
 
     public virtual void UpdateEntity() { }
-}
-
-
-public abstract class EntityBehavior : SimpleEntity
-{
-    // properties that can be changed through Actions
-    public virtual ICollection<Property> DynamicProperties()
-    {
-        return new Property[] { };
-    }
-
-    public override ICollection<Property> Properties()
-    {
-        return DynamicProperties();
-    }
-
-    public override ICollection<EntityAction> Actions()
-    {
-        var actions = new List<EntityAction>();
-        foreach (Property property in DynamicProperties())
-            actions.Add(new EntityAction("Set " + property.name, property.gui));
-        return actions;
-    }
-
 }

@@ -6,9 +6,9 @@ public class Spin : EntityBehavior
 {
     float speed;
 
-    public override ICollection<Property> DynamicProperties()
+    public override ICollection<Property> Properties()
     {
-        var props = new List<Property>(base.DynamicProperties());
+        var props = new List<Property>(base.Properties());
         props.AddRange(new Property[]
         {
             new Property("Speed",
