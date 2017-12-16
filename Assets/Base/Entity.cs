@@ -121,7 +121,7 @@ public abstract class DynamicEntity : Entity
             new Property("Health",
                 () => health,
                 v => health = (float)v,
-                PropertyGUIs.Empty)
+                PropertyGUIs.Float)
         });
         return props;
     }

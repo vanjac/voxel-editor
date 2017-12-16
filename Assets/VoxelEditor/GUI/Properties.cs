@@ -34,4 +34,24 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
         return (byte)tag;
     }
+
+    public static object Float(object value)
+    {
+        float fValue = (float)value;
+        string sValue = "";
+        if(!float.IsNaN(fValue))
+            sValue = fValue.ToString();
+        sValue = GUILayout.TextField(sValue);
+        if (sValue.Length == 0)
+            fValue = float.NaN;
+        else
+        {
+            try
+            {
+                fValue = float.Parse(sValue);
+            }
+            catch (FormatException) { }
+        }
+        return fValue;
+    }
 }

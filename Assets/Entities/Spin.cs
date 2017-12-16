@@ -19,7 +19,7 @@ public class Spin : EntityBehavior
             new Property("Speed",
                 () => speed,
                 v => speed = (float)v,
-                PropertyGUIs.Empty)
+                PropertyGUIs.Float)
         });
         return props;
     }
