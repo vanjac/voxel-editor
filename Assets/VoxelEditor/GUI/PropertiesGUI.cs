@@ -173,7 +173,11 @@ public class PropertiesGUI : GUIPanel {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
             materialSelector.voxelArray = voxelArray;
             materialSelector.materialDirectory = "GameAssets/Skies";
-            materialSelector.handler = SetSkybox;
+            materialSelector.handler = (Material sky) =>
+            {
+                RenderSettings.skybox = sky;
+                voxelArray.unsavedChanges = true;
+            };
         }
 
         GUILayout.Label("Ambient light intensity:");
@@ -202,7 +206,11 @@ public class PropertiesGUI : GUIPanel {
         {
             ColorPickerGUI colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.color = RenderSettings.sun.color;
-            colorPicker.handler = SetSunColor;
+            colorPicker.handler = (Color color) =>
+            {
+                RenderSettings.sun.color = color;
+                voxelArray.unsavedChanges = true;
+            };
         }
 
         GUILayout.Label("Sun Pitch:");
@@ -232,18 +240,6 @@ public class PropertiesGUI : GUIPanel {
             voxelArray.unsavedChanges = true;
             adjustingSlider = true;
         }
-    }
-
-    private void SetSkybox(Material sky)
-    {
-        RenderSettings.skybox = sky;
-        voxelArray.unsavedChanges = true;
-    }
-
-    private void SetSunColor(Color color)
-    {
-        RenderSettings.sun.color = color;
-        voxelArray.unsavedChanges = true;
     }
 
 }
