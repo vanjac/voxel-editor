@@ -147,7 +147,7 @@ public class PropertiesGUI : GUIPanel {
     {
         PropertiesObjectGUI(entity);
 
-        GUILayout.Label("Behaviors");
+        GUILayout.Label("Behaviors:", titleStyle);
         if (GUILayout.Button("Add Behavior"))
         {
             SimpleMenuGUI behaviorMenu = gameObject.AddComponent<SimpleMenuGUI>();
