@@ -31,7 +31,10 @@ DynamicEntity (abstract Entity)
     Properties
         Tag : limited selection; colors and shapes
         X-ray? : only for editor; makes object transparent allowing you to zoom/select through it
+        Start on?
     Actions
+        On
+        Off
         Kill
         Clone : starts at initial position with initial properties
         Teleport (target entity)
@@ -54,11 +57,7 @@ Substance (DynamicEntity)
 
 Behavior (abstract Entity)
     Properties
-        Enabled?
-    Actions
-        Enable
-        Disable
-        [actions to change each property]
+        Condition: On/Off/Both
 
 Event (abstract PropertiesObject)
     Attributes
