@@ -29,8 +29,7 @@ public class PropertyGUIs
         int tag = (byte)value;
         GUILayout.BeginHorizontal();
         tag = GUILayout.SelectionGrid(tag,
-            new string[] { "Grey", "Red", "Orange", "Yellow", "Green", "Blue", "Cyan", "Purple" },
-            2, GUILayout.ExpandWidth(true));
+            new string[] { "A", "B", "C" }, 3);
         GUILayout.EndHorizontal();
         return (byte)tag;
     }
