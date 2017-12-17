@@ -163,6 +163,7 @@ public class PropertiesGUI : GUIPanel {
                 EntityBehavior newBehavior =
                     (EntityBehavior)System.Activator.CreateInstance(selectedBehaviorType);
                 entity.behaviors.Add(newBehavior);
+                voxelArray.unsavedChanges = true;
             };
         }
 
@@ -176,7 +177,10 @@ public class PropertiesGUI : GUIPanel {
             GUILayout.EndVertical();
         }
         if (behaviorToRemove != null)
+        {
             entity.behaviors.Remove(behaviorToRemove);
+            voxelArray.unsavedChanges = true;
+        }
     }
 
     private void PropertiesObjectGUI(PropertiesObject obj)
