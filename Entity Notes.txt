@@ -66,7 +66,7 @@ PlayerLookAtSensor (Sensor)
 
 PlayerUseSensor (Sensor)
 
-MovementSensor (Sensor)
+MotionSensor (Sensor)
 
 
 Player (Object) : 1 in every map
@@ -127,51 +127,55 @@ Thruster (Behavior for DynamicEntity with Physics)
         Direction
         Strength
 
-MovementBehavior (abstract Behavior for DynamicEntity) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
+MotionBehavior (abstract Behavior for DynamicEntity) : different objects will achieve motion in different ways. For example, characters will walk, and meshes will float
     Properties
-        Max speed
+        Speed : meters/second
 
-MoveWith (MovementBehavior) : like parenting
+MoveWith (MotionBehavior) : like parenting
     Properties
         Entity
 
-MoveInDirection (MovementBehavior)
+MoveInDirection (MotionBehavior)
     Properties
         Direction : 6 choices
 
-MoveToward (MovementBehavior)
+MoveToward (MotionBehavior)
     Properties
         Entity
 
-MoveAway (MovementBehavior)
+MoveAway (MotionBehavior)
     Properties
         Entity
 
-Spin (MovementBehavior)
-
-Rotate to (MovementBehavior)
-    Properties
-        Rotation
-
-FaceToward (MovementBehavior)
-    Properties
-        Opposite?
-        Entity
-
-NavigateToward (MovementBehavior)
+NavigateToward (MotionBehavior)
     Properties
         Entity
 
-NavigateAway (MovementBehavior)
+NavigateAway (MotionBehavior)
     Properties
         Entity
 
-Wander (MovementBehavior)
+Wander (MotionBehavior)
     Properties
         Change direction rate
         Pause frequency (percentage)
         Focus entity
         Range
+
+RotationBehavior (abstract Behavior for DynamicEntity)
+    Properties
+        Speed : degrees/second
+
+Spin (RotationBehavior)
+
+Rotate to (RotationBehavior)
+    Properties
+        Rotation
+
+FaceToward (RotationBehavior)
+    Properties
+        Opposite?
+        Entity
 
 Sound (Behavior for Entity)
     Properties
