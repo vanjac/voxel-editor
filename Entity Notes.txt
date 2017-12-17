@@ -26,10 +26,6 @@ DynamicEntity (abstract Entity)
 
 FaceEntity (Entity) : can be assigned to a face
 
-Portal (Entity) : can be assigned to a face
-    Properties
-        Target face
-
 Object (abstract DynamicEntity) : objects take up a certain fixed size block of voxels
     Attributes
         Orient face : aligns to center of face
@@ -205,6 +201,10 @@ Paint (Behavior for FaceEntity)
         New material
         New overlay
         New orientation
+
+Portal (Behavior for FaceEntity)
+    Properties
+        Target face
 
 Climbable (Behavior for FaceEntity)
 
