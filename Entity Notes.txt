@@ -209,6 +209,7 @@ Paint (Behavior for FaceEntity)
 Portal (Behavior for FaceEntity)
     Properties
         Target face
+        Allow movement through?
 
 Climbable (Behavior for FaceEntity)
 
