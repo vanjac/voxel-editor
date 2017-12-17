@@ -127,15 +127,6 @@ Thruster (Behavior for DynamicEntity with Physics)
         Direction
         Strength
 
-Sound (Behavior for DynamicEntity)
-    Properties
-        Sound
-        Loop?
-        Volume
-        Speed
-        Start fade dist
-        End fade dist
-
 MovementBehavior (abstract Behavior for DynamicEntity) : different objects will achieve movement in different ways. For example, characters will walk, and meshes will float
     Properties
         Max speed
@@ -181,6 +172,15 @@ Wander (MovementBehavior)
         Pause frequency (percentage)
         Focus entity
         Range
+
+Sound (Behavior for Entity)
+    Properties
+        Sound
+        Loop?
+        Volume
+        Speed
+        Start fade dist
+        End fade dist
 
 Speech bubble (Behavior for Entity)
     Properties
