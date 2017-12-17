@@ -83,6 +83,8 @@ public abstract class EntityBehavior : PropertiesObject
                 PropertyGUIs.BehaviorCondition)
         };
     }
+
+    public abstract Component MakeComponent(GameObject gameObject);
 }
 
 public abstract class Sensor : PropertiesObject

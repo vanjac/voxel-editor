@@ -101,7 +101,7 @@ public class MapFileReader {
         {
             foreach (JSONNode subNode in world["substances"].AsArray)
             {
-                Substance s = new Substance();
+                Substance s = new Substance(voxelArray);
                 ReadEntity(subNode.AsObject, s);
                 substances.Add(s);
             }

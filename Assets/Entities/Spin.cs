@@ -23,4 +23,21 @@ public class Spin : EntityBehavior
         });
         return props;
     }
+
+    public override Component MakeComponent(GameObject gameObject)
+    {
+        SpinComponent spin = gameObject.AddComponent<SpinComponent>();
+        spin.speed = speed;
+        return spin;
+    }
+}
+
+public class SpinComponent : MonoBehaviour
+{
+    public float speed = 50;
+
+    void Update()
+    {
+        transform.Rotate(Vector3.up, speed / 60);
+    }
 }

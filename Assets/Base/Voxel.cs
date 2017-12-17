@@ -147,7 +147,7 @@ public class Voxel : MonoBehaviour
         return faceI / 2;
     }
 
-    private static bool InEditor()
+    public static bool InEditor()
     {
         // TODO: better way to check this?
         return SceneManager.GetActiveScene().name == "editScene";
@@ -243,7 +243,8 @@ public class Voxel : MonoBehaviour
     {
         substance = null; // remove from substance
         VoxelArray array = transform.parent.GetComponent<VoxelArray>();
-        array.VoxelDestroyed(this);
+        if (array != null)
+            array.VoxelDestroyed(this);
     }
 
     public void UpdateVoxel()

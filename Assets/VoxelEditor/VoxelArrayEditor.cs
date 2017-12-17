@@ -505,7 +505,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void SubstanceTest()
     {
-        Substance substance = new Substance();
+        Substance substance = new Substance(this);
         foreach (VoxelFaceReference faceRef in IterateSelected())
         {
             faceRef.voxel.substance = substance;
