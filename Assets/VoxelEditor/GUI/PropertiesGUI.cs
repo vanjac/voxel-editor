@@ -124,12 +124,12 @@ public class PropertiesGUI : GUIPanel {
 
         if (GUILayout.Button("Flip H"))
         {
-            voxelArray.OrientFaces(7);
+            voxelArray.OrientFaces(5);
         }
 
         if (GUILayout.Button("Flip V"))
         {
-            voxelArray.OrientFaces(5);
+            voxelArray.OrientFaces(7);
         }
 
         GUILayout.EndHorizontal();
