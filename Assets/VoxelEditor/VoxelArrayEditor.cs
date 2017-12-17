@@ -81,6 +81,15 @@ public class VoxelArrayEditor : VoxelArray
             SetMoveAxesEnabled(true);
     }
 
+    // called by TouchListener
+    public void DoubleTouch(Voxel voxel, int faceI)
+    {
+        ClearSelection();
+        FaceSelectFloodFill(voxel, faceI, voxel.substance);
+        if(SomethingIsSelected())
+            SetMoveAxesEnabled(true);
+    }
+
     private void SetMoveAxes(Vector3 position)
     {
         if (axes == null)
