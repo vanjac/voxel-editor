@@ -21,6 +21,14 @@ public struct Property
         this.setter = setter;
         this.gui = gui;
     }
+
+    public static ICollection<Property> JoinProperties(
+        ICollection<Property> props1, ICollection<Property> props2)
+    {
+        var props = new List<Property>(props1);
+        props.AddRange(props2);
+        return props;
+    }
 }
 
 public interface PropertiesObject
@@ -126,8 +134,7 @@ public abstract class DynamicEntity : Entity
 
     public override ICollection<Property> Properties()
     {
-        List<Property> props = new List<Property>(base.Properties());
-        props.AddRange(new Property[]
+        return Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("X-Ray?",
                 () => xRay,
@@ -138,7 +145,6 @@ public abstract class DynamicEntity : Entity
                 v => health = (float)v,
                 PropertyGUIs.Float)
         });
-        return props;
     }
 
     public virtual void UpdateEntity() { }

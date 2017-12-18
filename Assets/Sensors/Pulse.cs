@@ -14,8 +14,7 @@ public class Pulse : Sensor
 
     public override ICollection<Property> Properties()
     {
-        var props = new List<Property>(base.Properties());
-        props.AddRange(new Property[]
+        return Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("Off time",
                 () => offTime,
@@ -26,7 +25,6 @@ public class Pulse : Sensor
                 v => onTime = (float)v,
                 PropertyGUIs.Time)
         });
-        return props;
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

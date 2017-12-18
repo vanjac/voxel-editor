@@ -13,15 +13,13 @@ public class Spin : EntityBehavior
 
     public override ICollection<Property> Properties()
     {
-        var props = new List<Property>(base.Properties());
-        props.AddRange(new Property[]
+        return Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("Speed",
                 () => speed,
                 v => speed = (float)v,
                 PropertyGUIs.Float)
         });
-        return props;
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)
