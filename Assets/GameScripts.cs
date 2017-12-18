@@ -37,10 +37,15 @@ public class GameScripts
         return new NamedType("", null);
     }
 
+
+    public static NamedType[] sensors = new NamedType[]
+    {
+        new NamedType("Pulse", typeof(Pulse))
+    };
+
     public static NamedType[] behaviors = new NamedType[]
     {
         new NamedType("Spin", typeof(Spin))
     };
-
 
 }
