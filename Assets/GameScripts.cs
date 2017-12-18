@@ -21,11 +21,24 @@ public class GameScripts
         }
     }
 
-    public static string[] ListNames(NamedType[] namedTypes)
+    public static string[] ListNames(NamedType[] namedTypes, bool includeNone=false)
     {
-        var names = new string[namedTypes.Length];
+        int numItems = namedTypes.Length;
+        if (includeNone)
+            numItems += 1;
+        var names = new string[numItems];
+        if (includeNone)
+        {
+            names[0] = "None";
+            numItems = 1;
+        }
+        else
+            numItems = 0;
         for (int i = 0; i < namedTypes.Length; i++)
-            names[i] = namedTypes[i].name;
+        {
+            names[numItems] = namedTypes[i].name;
+            numItems++;
+        }
         return names;
     }
 

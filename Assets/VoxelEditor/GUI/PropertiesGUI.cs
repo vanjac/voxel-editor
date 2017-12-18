@@ -147,6 +147,29 @@ public class PropertiesGUI : GUIPanel {
     {
         PropertiesObjectGUI(entity);
 
+        GUILayout.Label("Sensor:", titleStyle);
+        GUILayout.BeginVertical(GUI.skin.box);
+        PropertiesObjectGUI(entity.sensor);
+        GUILayout.EndVertical();
+        if (GUILayout.Button("Change"))
+        {
+            SimpleMenuGUI sensorMenu = gameObject.AddComponent<SimpleMenuGUI>();
+            sensorMenu.items = GameScripts.ListNames(GameScripts.sensors, includeNone: true);
+            sensorMenu.handler = (int itemI, string itemName) =>
+            {
+                if (itemI == 0)
+                    entity.sensor = null;
+                else
+                {
+                    var selectedSensorType = GameScripts.sensors[itemI - 1];
+                    Sensor newSensor =
+                        (Sensor)selectedSensorType.Instantiate();
+                    entity.sensor = newSensor;
+                }
+                voxelArray.unsavedChanges = true;
+            };
+        }
+
         GUILayout.Label("Behaviors:", titleStyle);
         if (GUILayout.Button("Add Behavior"))
         {
@@ -180,6 +203,11 @@ public class PropertiesGUI : GUIPanel {
 
     private void PropertiesObjectGUI(PropertiesObject obj)
     {
+        if (obj == null)
+        {
+            GUILayout.Label("None", titleStyle);
+            return;
+        }
         GUILayout.Label(obj.TypeName() + ":", titleStyle);
         foreach (Property prop in obj.Properties())
         {
