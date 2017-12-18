@@ -39,6 +39,7 @@ Map (Volume)
         Sky
         Lighting settings
 
+SENSORS:
 
 Sensor (abstract PropertiesObject)
 
@@ -47,9 +48,9 @@ ActivatedSensor (abstract Sensor)
         Activtor entity filter: required base type for entity/behaviors, tag, or specific entity
         Optionally require on/off state
 
-OffSensor (Sensor)
+Off (Sensor)
 
-InputSensor (Sensor)
+Inputs (Sensor)
     Properties
         Input entities
         For each input entity:
@@ -57,26 +58,27 @@ InputSensor (Sensor)
             Change on turn off: -1/0/1
         Input threshold
 
-PulseSensor (Sensor)
+Pulse (Sensor)
     Properties
         On time
         Off time
 
-TouchSensor (ActivatedSensor)
+Touch (ActivatedSensor)
 
-InRangeSensor (ActivatedSensor)
+In Range (ActivatedSensor)
     Properties
         Look range
 
-PlayerLookAtSensor (Sensor)
+Player Look At (Sensor)
 
-PlayerUseSensor (Sensor)
+Player Use (Sensor)
 
-MotionSensor (Sensor)
+Motion (Sensor)
     Properties
         Min velocity : meters/second
         Min rotation veloctiy : degrees/second
 
+OBJECTS:
 
 Player (Object) : 1 in every map
 
@@ -94,6 +96,7 @@ Tree (abstract Object) : procedural tree
 
 Selection of trees
 
+BEHAVIORS:
 
 Behavior (abstract PropertiesObject)
     Properties
@@ -125,7 +128,7 @@ Propel (Behavior for DynamicEntity with Physics)
     Properties
         Direction, speed
 
-PropelTowards (Behavior for DynamicEntity with Physics)
+Propel Towards (Behavior for DynamicEntity with Physics)
     Properties
         Entity
         Speed
@@ -140,27 +143,27 @@ MotionBehavior (abstract Behavior for DynamicEntity) : different objects will ac
     Properties
         Speed : meters/second
 
-MoveWith (MotionBehavior) : like parenting
+Move With (MotionBehavior) : like parenting
     Properties
         Entity
 
-MoveInDirection (MotionBehavior)
+Move In Direction (MotionBehavior)
     Properties
         Direction : 6 choices
 
-MoveToward (MotionBehavior)
+Move Toward (MotionBehavior)
     Properties
         Entity
 
-MoveAway (MotionBehavior)
+Move Away (MotionBehavior)
     Properties
         Entity
 
-NavigateToward (MotionBehavior)
+Navigate Toward (MotionBehavior)
     Properties
         Entity
 
-NavigateAway (MotionBehavior)
+Navigate Away (MotionBehavior)
     Properties
         Entity
 
@@ -177,11 +180,11 @@ RotationBehavior (abstract Behavior for DynamicEntity)
 
 Spin (RotationBehavior)
 
-Rotate to (RotationBehavior)
+Rotate To (RotationBehavior)
     Properties
         Rotation
 
-FaceToward (RotationBehavior)
+Face Toward (RotationBehavior)
     Properties
         Opposite?
         Entity
@@ -195,7 +198,7 @@ Sound (Behavior for Entity)
         Start fade dist
         End fade dist
 
-Speech bubble (Behavior for Entity)
+Speech Bubble (Behavior for Entity)
     Properties
         Message
 
