@@ -84,7 +84,7 @@ public abstract class EntityBehavior : PropertiesObject
         };
     }
 
-    public abstract Component MakeComponent(GameObject gameObject);
+    public abstract Behaviour MakeComponent(GameObject gameObject);
 }
 
 public abstract class Sensor : PropertiesObject

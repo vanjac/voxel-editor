@@ -24,7 +24,7 @@ public class Spin : EntityBehavior
         return props;
     }
 
-    public override Component MakeComponent(GameObject gameObject)
+    public override Behaviour MakeComponent(GameObject gameObject)
     {
         SpinComponent spin = gameObject.AddComponent<SpinComponent>();
         spin.speed = speed;

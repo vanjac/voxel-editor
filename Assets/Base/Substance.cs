@@ -74,6 +74,9 @@ public class SubstanceComponent : MonoBehaviour
 {
     public Substance substance;
 
+    private List<Behaviour> offComponents = new List<Behaviour>();
+    private List<Behaviour> onComponents = new List<Behaviour>();
+
     private SensorComponent sensorComponent;
     private bool sensorWasOn;
 
@@ -95,7 +98,14 @@ public class SubstanceComponent : MonoBehaviour
         sensorWasOn = false;
         foreach (EntityBehavior behavior in substance.behaviors)
         {
-            behavior.MakeComponent(gameObject);
+            Behaviour c = behavior.MakeComponent(gameObject);
+            if (behavior.condition == EntityBehavior.Condition.OFF)
+                offComponents.Add(c);
+            else if (behavior.condition == EntityBehavior.Condition.ON)
+            {
+                onComponents.Add(c);
+                c.enabled = false;
+            }
         }
     }
 
@@ -106,11 +116,17 @@ public class SubstanceComponent : MonoBehaviour
         bool sensorIsOn = sensorComponent.isOn();
         if (sensorIsOn && !sensorWasOn)
         {
-            Debug.Log("Turned on!");
+            foreach (Behaviour onComponent in onComponents)
+                onComponent.enabled = true;
+            foreach (Behaviour offComponent in offComponents)
+                offComponent.enabled = false;
         }
         else if (!sensorIsOn && sensorWasOn)
         {
-            Debug.Log("Turned off!");
+            foreach (Behaviour onComponent in onComponents)
+                onComponent.enabled = false;
+            foreach (Behaviour offComponent in offComponents)
+                offComponent.enabled = true;
         }
         sensorWasOn = sensorIsOn;
     }
