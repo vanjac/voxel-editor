@@ -72,6 +72,9 @@ PlayerLookAtSensor (Sensor)
 PlayerUseSensor (Sensor)
 
 MotionSensor (Sensor)
+    Properties
+        Min velocity : meters/second
+        Min rotation veloctiy : degrees/second
 
 
 Player (Object) : 1 in every map
