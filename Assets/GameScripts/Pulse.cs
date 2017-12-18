@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pulse : Sensor
 {
-    public float rate;
+    public float rate = 1;
 
     public override string TypeName()
     {
