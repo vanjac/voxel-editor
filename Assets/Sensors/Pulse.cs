@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Pulse : Sensor
 {
-    public float rate = 1;
+    public float offTime = 1;
+    public float onTime = 1;
 
     public override string TypeName()
     {
@@ -16,10 +17,14 @@ public class Pulse : Sensor
         var props = new List<Property>(base.Properties());
         props.AddRange(new Property[]
         {
-            new Property("Rate",
-                () => rate,
-                v => rate = (float)v,
-                PropertyGUIs.Float)
+            new Property("Off time",
+                () => offTime,
+                v => offTime = (float)v,
+                PropertyGUIs.Time),
+            new Property("On time",
+                () => onTime,
+                v => onTime = (float)v,
+                PropertyGUIs.Time)
         });
         return props;
     }
@@ -27,14 +32,15 @@ public class Pulse : Sensor
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
         PulseComponent pulse = gameObject.AddComponent<PulseComponent>();
-        pulse.rate = rate;
+        pulse.offTime = offTime;
+        pulse.onTime = onTime;
         return pulse;
     }
 }
 
 public class PulseComponent : SensorComponent
 {
-    public float rate;
+    public float offTime, onTime;
     private float startTime;
 
     void Start()
@@ -44,6 +50,6 @@ public class PulseComponent : SensorComponent
 
     public override bool isOn()
     {
-        return (Time.time - startTime) % (rate * 2) > rate;
+        return (Time.time - startTime) % (offTime + onTime) >= offTime;
     }
 }

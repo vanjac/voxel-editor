@@ -86,6 +86,11 @@ public class PropertyGUIs
         }
     }
 
+    public static object Time(object value)
+    {
+        return Float(value);
+    }
+
     public static object Tag(object value)
     {
         int tag = (byte)value;
