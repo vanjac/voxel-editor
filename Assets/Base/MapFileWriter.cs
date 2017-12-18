@@ -125,12 +125,14 @@ public class MapFileWriter {
             // https://stackoverflow.com/a/5414665
             object value = prop.getter();
             XmlSerializer xmlSerializer = new XmlSerializer(value.GetType());
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", ""); // skip xsi/xsd namespaces: https://stackoverflow.com/a/935749
             string valueString;
             using (var textWriter = new StringWriter())
             using (var xmlWriter = XmlWriter.Create(textWriter,
                 new XmlWriterSettings { Indent = false, OmitXmlDeclaration = true }))
             {
-                xmlSerializer.Serialize(xmlWriter, value);
+                xmlSerializer.Serialize(xmlWriter, value, ns);
                 valueString = textWriter.ToString();
             }
             JSONArray propArray = new JSONArray();
