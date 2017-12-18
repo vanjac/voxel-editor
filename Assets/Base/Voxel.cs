@@ -406,7 +406,7 @@ public class Voxel : MonoBehaviour
             else
             {
                 boxCollider.isTrigger = !substance.solid;
-                renderer.enabled = substance.visible;
+                renderer.enabled = false;
             }
             meshCollider.sharedMesh = null;
             meshCollider.enabled = false;

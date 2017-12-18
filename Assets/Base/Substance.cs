@@ -6,7 +6,6 @@ public class Substance : DynamicEntity
 {
     public HashSet<Voxel> voxels;
 
-    public bool visible = true;
     public bool solid = true;
 
     private VoxelArray voxelArray;
@@ -35,10 +34,6 @@ public class Substance : DynamicEntity
         List<Property> props = new List<Property>(base.Properties());
         props.AddRange(new Property[]
         {
-            new Property("Visible?",
-                () => visible,
-                v => visible = (bool)v,
-                PropertyGUIs.Toggle),
             new Property("Solid?",
                 () => solid,
                 v => solid = (bool)v,
