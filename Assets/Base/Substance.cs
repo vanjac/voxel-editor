@@ -93,6 +93,10 @@ public class SubstanceComponent : MonoBehaviour
         foreach (Voxel voxel in substance.voxels)
             voxel.transform.position -= centerPoint;
 
+        // a rigidBody is required for collision detection
+        Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>();
+        rigidBody.isKinematic = true; // no physics by default
+
         if (substance.sensor != null)
             sensorComponent = substance.sensor.MakeComponent(gameObject);
         sensorWasOn = false;
