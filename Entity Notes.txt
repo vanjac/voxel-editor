@@ -1,11 +1,5 @@
 PropertiesObject (abstract)
 
-Map (PropertiesObject)
-    Properties
-        Sky
-        Lighting settings
-        Fog
-
 Entity (abstract PropertiesObject)
     Attributes
         Sensor
@@ -32,11 +26,18 @@ Object (abstract DynamicEntity) : objects take up a certain fixed size block of 
     Properties
         Rotation about face normal
 
-Substance (DynamicEntity)
+Volume (abstract Entity)
+
+Substance (DynamicEntity,Volume)
     Attributes
         Voxels
     Properties
         Flat? : substance becomes a flat, double sided plane
+
+Map (Volume)
+    Properties
+        Sky
+        Lighting settings
 
 
 Sensor (abstract PropertiesObject)
@@ -239,10 +240,10 @@ Scroll (Behavior for FaceEntity)
         Direction : 4 choices
         Speed
 
-Fog (Behavior for Substance with Visible) : volumetric fog
+Fog (Behavior for Volume) : volumetric fog
     [properties]
 
-ParticleEffect (abstract Behavior for Substance with Visible)
+ParticleEffect (abstract Behavior for Volume)
     Properties
         Color
         Size
@@ -254,17 +255,17 @@ Snow (ParticleEffect)
 
 Dust (ParticleEffect)
 
-Wind (Behavior for Substance with ParticleEffect) : only affects particles
+Wind (Behavior for Volume with ParticleEffect) : only affects particles
     Properties
         Direction
         Speed
 
-Fluid (Behavior for Substance)
+Fluid (Behavior for Volume)
     Properties
         Resistance
         Buoyancy
 
-Push (Behavior for Substance)
+Push (Behavior for Volume)
     Properties
         Direction
         Target velocity
