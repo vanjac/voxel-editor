@@ -56,6 +56,11 @@ InputSensor (Sensor)
             Change on turn off: -1/0/1
         Input threshold
 
+PulseSensor (Sensor)
+    Properties
+        On time
+        Off time
+
 TouchSensor (ActivatedSensor)
 
 InRangeSensor (ActivatedSensor)
