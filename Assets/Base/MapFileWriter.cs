@@ -63,7 +63,7 @@ public class MapFileWriter {
             if (voxel.substance != null && !foundSubstances.Contains(voxel.substance))
             {
                 foundSubstances.Add(voxel.substance);
-                substancesArray[-1] = WriteEntity(voxel.substance);
+                substancesArray[-1] = WriteEntity(voxel.substance, false);
             }
         }
 
@@ -94,27 +94,30 @@ public class MapFileWriter {
         return materialObject;
     }
 
-    private JSONObject WriteEntity(Entity entity)
+    private JSONObject WriteEntity(Entity entity, bool includeName)
     {
-        JSONObject entityObject = WritePropertiesObject(entity);
+        JSONObject entityObject = WritePropertiesObject(entity, includeName);
+
+        if (entity.sensor != null)
+            entityObject["sensor"] = WritePropertiesObject(entity.sensor, true);
 
         if (entity.behaviors.Count != 0) {
             JSONArray behaviorsArray = new JSONArray();
             foreach (EntityBehavior behavior in entity.behaviors)
-            {
-                JSONObject behaviorObject = WritePropertiesObject(behavior);
-                behaviorObject["name"] = behavior.TypeName();
-                behaviorsArray[-1] = behaviorObject;
-            }
+                behaviorsArray[-1] = WritePropertiesObject(behavior, true);
             entityObject["behaviors"] = behaviorsArray;
         }
 
         return entityObject;
     }
 
-    private JSONObject WritePropertiesObject(PropertiesObject obj)
+    private JSONObject WritePropertiesObject(PropertiesObject obj, bool includeName)
     {
         JSONObject propsObject = new JSONObject();
+
+        if (includeName)
+            propsObject["name"] = obj.TypeName();
+
         JSONArray propertiesArray = new JSONArray();
         foreach (Property prop in obj.Properties())
         {

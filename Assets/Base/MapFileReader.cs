@@ -117,6 +117,21 @@ public class MapFileReader {
     {
         ReadPropertiesObject(entityObject, entity);
 
+        if (entityObject["sensor"] != null)
+        {
+            JSONObject sensorObject = entityObject["sensor"].AsObject;
+            string sensorName = sensorObject["name"];
+            var sensorType = GameScripts.FindWithName(GameScripts.sensors, sensorName);
+            if (sensorType.type == null)
+                Debug.Log("Couldn't find sensor type " + sensorName + "!");
+            else
+            {
+                Sensor newSensor = (Sensor)sensorType.Instantiate();
+                ReadPropertiesObject(sensorObject, newSensor);
+                entity.sensor = newSensor;
+            }
+        }
+
         if (entityObject["behaviors"] != null)
         {
             foreach (JSONNode behaviorNode in entityObject["behaviors"].AsArray)
