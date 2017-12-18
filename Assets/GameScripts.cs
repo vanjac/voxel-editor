@@ -60,6 +60,7 @@ public class GameScripts
     public static NamedType[] behaviors = new NamedType[]
     {
         new NamedType("Visible", typeof(Visible)),
+        new NamedType("Solid", typeof(Solid)),
         new NamedType("Spin", typeof(Spin))
     };
 

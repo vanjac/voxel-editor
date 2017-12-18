@@ -6,8 +6,6 @@ public class Substance : DynamicEntity
 {
     public HashSet<Voxel> voxels;
 
-    public bool solid = true;
-
     private VoxelArray voxelArray;
     public GameObject substanceObject;
 
@@ -27,19 +25,6 @@ public class Substance : DynamicEntity
     public override string TypeName()
     {
         return "Substance";
-    }
-
-    public override ICollection<Property> Properties()
-    {
-        List<Property> props = new List<Property>(base.Properties());
-        props.AddRange(new Property[]
-        {
-            new Property("Solid?",
-                () => solid,
-                v => solid = (bool)v,
-                PropertyGUIs.Toggle)
-        });
-        return props;
     }
 
     // called by voxel

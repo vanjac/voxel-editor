@@ -26,18 +26,18 @@ public class VisibleComponent : MonoBehaviour
             yield return childRenderer;
     }
 
-    void OnEnable()
-    {
-        foreach (Renderer r in IterateRenderers())
-            r.enabled = true;
-    }
-
     void Start()
     {
         if (enabled)
             OnEnable();
         else
             OnDisable();
+    }
+
+    void OnEnable()
+    {
+        foreach (Renderer r in IterateRenderers())
+            r.enabled = true;
     }
 
     void OnDisable()
