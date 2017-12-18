@@ -151,17 +151,12 @@ public class PropertiesGUI : GUIPanel {
         if (GUILayout.Button("Add Behavior"))
         {
             SimpleMenuGUI behaviorMenu = gameObject.AddComponent<SimpleMenuGUI>();
-            var behaviorNames = new List<string>();
-            foreach (var behaviorType in BuiltInEntities.behaviors)
-            {
-                behaviorNames.Add(behaviorType.ToString());
-            }
-            behaviorMenu.items = behaviorNames.ToArray();
+            behaviorMenu.items = GameScripts.ListNames(GameScripts.behaviors);
             behaviorMenu.handler = (int itemI, string itemName) =>
             {
-                var selectedBehaviorType = BuiltInEntities.behaviors[itemI];
+                var selectedBehaviorType = GameScripts.behaviors[itemI];
                 EntityBehavior newBehavior =
-                    (EntityBehavior)System.Activator.CreateInstance(selectedBehaviorType);
+                    (EntityBehavior)selectedBehaviorType.Instantiate();
                 entity.behaviors.Add(newBehavior);
                 voxelArray.unsavedChanges = true;
             };

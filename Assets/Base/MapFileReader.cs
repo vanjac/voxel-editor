@@ -123,21 +123,14 @@ public class MapFileReader {
             {
                 JSONObject behaviorObject = behaviorNode.AsObject;
                 string behaviorName = behaviorObject["name"];
-                System.Type behaviorType = null;
-                foreach (System.Type checkType in BuiltInEntities.behaviors)
-                    // TODO: these might not always match
-                    if (checkType.ToString() == behaviorName)
-                    {
-                        behaviorType = checkType;
-                        break;
-                    }
-                if (behaviorType == null)
+                var behaviorType = GameScripts.FindWithName(GameScripts.behaviors, behaviorName);
+                if (behaviorType.type == null)
                 {
                     Debug.Log("Couldn't find behavior type " + behaviorName + "!");
                     continue;
                 }
                 EntityBehavior newBehavior =
-                    (EntityBehavior)System.Activator.CreateInstance(behaviorType);
+                    (EntityBehavior)behaviorType.Instantiate();
                 ReadPropertiesObject(behaviorObject, newBehavior);
                 entity.behaviors.Add(newBehavior);
             }
