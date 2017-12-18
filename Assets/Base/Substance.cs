@@ -73,6 +73,10 @@ public class Substance : DynamicEntity
 public class SubstanceComponent : MonoBehaviour
 {
     public Substance substance;
+
+    private SensorComponent sensorComponent;
+    private bool sensorWasOn;
+
     void Start()
     {
         Bounds voxelBounds = new Bounds();
@@ -85,9 +89,29 @@ public class SubstanceComponent : MonoBehaviour
         transform.position = centerPoint;
         foreach (Voxel voxel in substance.voxels)
             voxel.transform.position -= centerPoint;
+
+        if (substance.sensor != null)
+            sensorComponent = substance.sensor.MakeComponent(gameObject);
+        sensorWasOn = false;
         foreach (EntityBehavior behavior in substance.behaviors)
         {
             behavior.MakeComponent(gameObject);
         }
+    }
+
+    void Update()
+    {
+        if (sensorComponent == null)
+            return;
+        bool sensorIsOn = sensorComponent.isOn();
+        if (sensorIsOn && !sensorWasOn)
+        {
+            Debug.Log("Turned on!");
+        }
+        else if (!sensorIsOn && sensorWasOn)
+        {
+            Debug.Log("Turned off!");
+        }
+        sensorWasOn = sensorIsOn;
     }
 }

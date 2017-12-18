@@ -98,6 +98,8 @@ public abstract class Sensor : PropertiesObject
     {
         return new Property[] { };
     }
+
+    public abstract SensorComponent MakeComponent(GameObject gameObject);
 }
 
 public struct SensorSettings
@@ -108,6 +110,11 @@ public struct SensorSettings
     public float minOnTime;
     public float maxOnTime;
     public float minOffTime;
+}
+
+public abstract class SensorComponent : MonoBehaviour
+{
+    public abstract bool isOn();
 }
 
 

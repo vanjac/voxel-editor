@@ -23,4 +23,27 @@ public class Pulse : Sensor
         });
         return props;
     }
+
+    public override SensorComponent MakeComponent(GameObject gameObject)
+    {
+        PulseComponent pulse = gameObject.AddComponent<PulseComponent>();
+        pulse.rate = rate;
+        return pulse;
+    }
+}
+
+public class PulseComponent : SensorComponent
+{
+    public float rate;
+    private float startTime;
+
+    void Start()
+    {
+        startTime = Time.time;
+    }
+
+    public override bool isOn()
+    {
+        return (Time.time - startTime) % (rate * 2) > rate;
+    }
 }
