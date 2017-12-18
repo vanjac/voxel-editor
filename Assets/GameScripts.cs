@@ -53,7 +53,8 @@ public class GameScripts
 
     public static NamedType[] sensors = new NamedType[]
     {
-        new NamedType("Pulse", typeof(Pulse))
+        new NamedType("Pulse", typeof(Pulse)),
+        new NamedType("Touch", typeof(TouchSensor))
     };
 
     public static NamedType[] behaviors = new NamedType[]
