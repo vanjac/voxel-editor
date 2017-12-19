@@ -86,6 +86,11 @@ public class PropertyGUIs
         }
     }
 
+    public static object Int(object value)
+    {
+        return (int)(float)Float((float)(int)value);
+    }
+
     public static object Time(object value)
     {
         return Float(value);

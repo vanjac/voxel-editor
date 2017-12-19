@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pulse : Sensor
+public class PulseSensor : Sensor
 {
     public float offTime = 1;
     public float onTime = 1;
@@ -14,7 +14,7 @@ public class Pulse : Sensor
 
     public override ICollection<Property> Properties()
     {
-        return Property.JoinProperties(base.Properties(), new Property[]
+        return Property.JoinProperties(new Property[]
         {
             new Property("Off time",
                 () => offTime,
@@ -24,7 +24,7 @@ public class Pulse : Sensor
                 () => onTime,
                 v => onTime = (float)v,
                 PropertyGUIs.Time)
-        });
+        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)
