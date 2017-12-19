@@ -5,17 +5,23 @@ using UnityEngine;
 
 public class LoadingGUI : GUIPanel
 {
-
-    public override void OnGUI()
+    public override void OnEnable()
     {
-        base.OnGUI();
+        holdOpen = true;
+        base.OnEnable();
+    }
 
-        panelRect = new Rect(scaledScreenWidth / 2 - targetHeight * 0.2f, targetHeight * 0.3f, targetHeight * 0.4f, targetHeight * 0.4f);
+    public override Rect GetRect(float width, float height)
+    {
+        return new Rect(width / 2 - height * 0.2f, height * 0.3f, height * 0.4f, height * 0.4f);
+    }
 
-        GUI.Box(panelRect, "");
-
-        GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-        GUI.Label(panelRect, "Loading map...");
-        GUI.skin.label.alignment = TextAnchor.UpperLeft;
+    public override void WindowGUI()
+    {
+        GUIStyle centered = new GUIStyle(GUI.skin.label);
+        centered.alignment = TextAnchor.UpperCenter;
+        GUILayout.FlexibleSpace();
+        GUILayout.Label("Loading map...", centered);
+        GUILayout.FlexibleSpace();
     }
 }

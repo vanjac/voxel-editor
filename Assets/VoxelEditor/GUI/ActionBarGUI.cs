@@ -7,13 +7,19 @@ public class ActionBarGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public EditorFile editorFile;
 
-    public override void OnGUI()
+    public override void OnEnable()
     {
-        base.OnGUI();
+        holdOpen = true;
+        base.OnEnable();
+    }
 
-        Rect windowRect = new Rect(targetHeight * .55f, 0, scaledScreenWidth - targetHeight * .55f, targetHeight);
-        panelRect = new Rect(windowRect.xMin, windowRect.yMin, windowRect.width, GUI.skin.font.fontSize * 2);
-        GUILayout.BeginArea(windowRect);
+    public override Rect GetRect(float width, float height)
+    {
+        return new Rect(height * .5f, 0, width - height * .5f, 0);
+    }
+
+    public override void WindowGUI()
+    {
         GUILayout.BeginHorizontal();
 
         if (GUILayout.Button("Create", GUILayout.ExpandWidth(false)))
@@ -23,14 +29,14 @@ public class ActionBarGUI : GUIPanel
 
         if (voxelArray.selectMode != VoxelArrayEditor.SelectMode.NONE)
         {
-            if (GUILayout.Button("Apply Selection", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("+ Select", GUILayout.ExpandWidth(false)))
             {
                 voxelArray.StoreSelection();
             }
         }
         else if (voxelArray.SomethingIsSelected())
         {
-            if (GUILayout.Button("Clear Selection", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("- Select", GUILayout.ExpandWidth(false)))
             {
                 voxelArray.ClearStoredSelection();
                 voxelArray.ClearSelection();
@@ -43,18 +49,18 @@ public class ActionBarGUI : GUIPanel
         if (GUILayout.Button("Close", GUILayout.ExpandWidth(false)))
             editorFile.Close();
 
-        GUILayout.EndHorizontal();
-
         GUILayout.FlexibleSpace();
 
         Vector3 selectionSize = voxelArray.selectionBounds.size;
         if (selectionSize != Vector3.zero)
         {
-            GUI.skin.label.alignment = TextAnchor.LowerRight;
             GUILayout.Label(selectionSize.ToString());
-            GUI.skin.label.alignment = TextAnchor.UpperLeft;
+        }
+        else
+        {
+            GUILayout.Label("");
         }
 
-        GUILayout.EndArea();
+        GUILayout.EndHorizontal();
     }
 }

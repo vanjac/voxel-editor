@@ -10,23 +10,18 @@ public class ColorPickerGUI : GUIPanel
     public Color color = Color.red;
     public ColorChangeHandler handler;
 
-    public override void OnEnable()
+    public override Rect GetRect(float width, float height)
     {
-        depth = -1;
-        base.OnEnable();
+        return new Rect(height * .55f, height * .1f, height / 2, 0);
     }
 
-    public override void OnGUI()
+    public override string GetName()
     {
-        base.OnGUI();
+        return "Change Color";
+    }
 
-        panelRect = new Rect(targetHeight * .55f, targetHeight * .1f, targetHeight / 2, targetHeight / 2);
-        GUILayout.BeginArea(panelRect, GUI.skin.box);
-
-        GUI.skin.label.alignment = TextAnchor.UpperCenter;
-        GUILayout.Label("Change Color");
-        GUI.skin.label.alignment = TextAnchor.UpperLeft;
-
+    public override void WindowGUI()
+    {
         Color oldColor = color;
 
         GUILayout.BeginHorizontal();
@@ -48,12 +43,10 @@ public class ColorPickerGUI : GUIPanel
         solidColorTexture.SetPixel(0, 0, color);
         solidColorTexture.Apply();
 
-        Rect colorRect = GUILayoutUtility.GetAspectRect(1.0f);
+        Rect colorRect = GUILayoutUtility.GetAspectRect(3.0f);
 
         GUI.DrawTexture(colorRect,
             solidColorTexture);
-
-        GUILayout.EndArea();
 
         if (oldColor != color)
         {

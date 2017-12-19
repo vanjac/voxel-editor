@@ -16,28 +16,23 @@ public class MaterialSelectorGUI : GUIPanel
     List<Texture> materialPreviews;
     List<string> materialSubDirectories;
 
-    public override void OnEnable()
-    {
-        depth = -1;
-        base.OnEnable();
-    }
-
     void Start()
     {
         UpdateMaterialDirectory();
     }
 
-    public override void OnGUI()
+    public override Rect GetRect(float width, float height)
     {
-        base.OnGUI();
+        return new Rect(width - height / 2, 0, height / 2, height);
+    }
 
-        panelRect = new Rect(scaledScreenWidth - targetHeight / 2, 0, targetHeight / 2, PropertiesGUI.targetHeight);
-        GUILayout.BeginArea(panelRect, GUI.skin.box);
+    public override string GetName()
+    {
+        return "Assign Material";
+    }
 
-        GUI.skin.label.alignment = TextAnchor.UpperCenter;
-        GUILayout.Label("Assign Material");
-        GUI.skin.label.alignment = TextAnchor.UpperLeft;
-
+    public override void WindowGUI()
+    {
         if (materialPreviews == null)
             return;
         scroll = GUILayout.BeginScrollView(scroll);
@@ -70,7 +65,6 @@ public class MaterialSelectorGUI : GUIPanel
             GUI.DrawTexture(textureRect, materialPreview, ScaleMode.ScaleToFit, false);
         }
         GUILayout.EndScrollView();
-        GUILayout.EndArea();
     }
 
     void UpdateMaterialDirectory()

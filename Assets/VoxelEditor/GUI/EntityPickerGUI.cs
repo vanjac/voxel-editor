@@ -11,7 +11,6 @@ public class EntityPickerGUI : GUIPanel
 
     public override void OnEnable()
     {
-        depth = -1;
         holdOpen = true;
         base.OnEnable();
     }
@@ -21,12 +20,13 @@ public class EntityPickerGUI : GUIPanel
         voxelArray.StoreSelection();
     }
 
-    public override void OnGUI()
+    public override Rect GetRect(float width, float height)
     {
-        base.OnGUI();
+        return new Rect(height * .55f, height * .9f, height * .65f, height * .1f);
+    }
 
-        panelRect = new Rect(targetHeight * .55f, targetHeight * .9f, targetHeight * .65f, targetHeight * .1f);
-        GUILayout.BeginArea(panelRect, GUI.skin.box);
+    public override void WindowGUI()
+    {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Pick an object...");
         if (GUILayout.Button("Done"))
@@ -37,6 +37,5 @@ public class EntityPickerGUI : GUIPanel
             Destroy(this);
         }
         GUILayout.EndHorizontal();
-        GUILayout.EndArea();
     }
 }

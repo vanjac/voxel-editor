@@ -18,23 +18,30 @@ public class PropertiesGUI : GUIPanel {
 
     List<Entity> selectedEntities;
 
-    public override void OnGUI()
+    public override void OnEnable()
     {
-        base.OnGUI();
+        holdOpen = true;
+        base.OnEnable();
+    }
 
+    public override Rect GetRect(float width, float height)
+    {
+        return new Rect(slide, 0, height / 2, height);
+    }
+
+    public override string GetName()
+    {
+        return voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties";
+    }
+
+    public override void WindowGUI()
+    {
         if (!guiInit)
         {
             guiInit = true;
             titleStyle = new GUIStyle(GUI.skin.label);
             titleStyle.font = titleFont;
         }
-
-        panelRect = new Rect(slide, 0, targetHeight / 2, targetHeight);
-        GUILayout.BeginArea(panelRect, GUI.skin.box);
-
-        GUI.skin.label.alignment = TextAnchor.UpperCenter;
-        GUILayout.Label(voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties");
-        GUI.skin.label.alignment = TextAnchor.UpperLeft;
 
         if (slidingPanel)
         {
@@ -85,7 +92,6 @@ public class PropertiesGUI : GUIPanel {
             slide = SLIDE_HIDDEN;
 
         GUILayout.EndScrollView();
-        GUILayout.EndArea();
     }
 
     private void SelectionPropertiesGUI()

@@ -9,27 +9,18 @@ public class TypePickerGUI : GUIPanel
     public TypeHandler handler;
     public GameScripts.NamedType[] items;
 
-    public override void OnEnable()
+    public override Rect GetRect(float width, float height)
     {
-        depth = -1;
-        base.OnEnable();
+        return new Rect(width * .25f, height * .25f, width * .5f, height * .5f);
     }
 
-    public override void OnGUI()
+    public override void WindowGUI()
     {
-        base.OnGUI();
-
-        panelRect = new Rect(scaledScreenWidth * .25f, targetHeight * .25f,
-            scaledScreenWidth * .5f, targetHeight * .5f);
-        GUILayout.BeginArea(panelRect, GUI.skin.box);
-
         for (int i = 0; i < items.Length; i++ )
             if (GUILayout.Button(items[i].name))
             {
                 handler(items[i].type);
                 Destroy(this);
             }
-
-        GUILayout.EndArea();
     }
 }
