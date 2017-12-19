@@ -92,10 +92,10 @@ public abstract class EntityBehavior : PropertiesObject
 
 public abstract class Sensor : PropertiesObject
 {
-    public bool invert;
-    public float turnOnTime;
-    public float minOnTime;
-    public float maxOnTime;
+    public bool invert = false;
+    public float turnOnTime = 0;
+    public float minOnTime = 0;
+    public float maxOnTime = 9999;
 
     public virtual string TypeName()
     {
