@@ -49,18 +49,28 @@ public class ActionBarGUI : GUIPanel
         if (GUILayout.Button("Close", GUILayout.ExpandWidth(false)))
             editorFile.Close();
 
-        GUILayout.FlexibleSpace();
-
-        Vector3 selectionSize = voxelArray.selectionBounds.size;
-        if (selectionSize != Vector3.zero)
-        {
-            GUILayout.Label(selectionSize.ToString());
-        }
-        else
-        {
-            GUILayout.Label("");
-        }
+        GUIStyle rightAlign = new GUIStyle(GUI.skin.label);
+        rightAlign.alignment = TextAnchor.UpperRight;
+        GUILayout.Label(SelectionString(voxelArray.selectionBounds.size), rightAlign);
 
         GUILayout.EndHorizontal();
+    }
+
+    private string SelectionString(Vector3 selectionSize)
+    {
+        if (selectionSize == Vector3.zero)
+            return "";
+        else if (selectionSize.x == 0)
+            return Mathf.RoundToInt(selectionSize.y)
+                + "x" + Mathf.RoundToInt(selectionSize.z);
+        else if (selectionSize.y == 0)
+            return Mathf.RoundToInt(selectionSize.x)
+                + "x" + Mathf.RoundToInt(selectionSize.z);
+        else if (selectionSize.z == 0)
+            return Mathf.RoundToInt(selectionSize.x)
+                + "x" + Mathf.RoundToInt(selectionSize.y);
+        else return Mathf.RoundToInt(selectionSize.x)
+                + "x" + Mathf.RoundToInt(selectionSize.y)
+                + "x" + Mathf.RoundToInt(selectionSize.z);
     }
 }
