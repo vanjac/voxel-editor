@@ -6,12 +6,6 @@ Entity (abstract PropertiesObject)
         Behaviors
     Properties
         Tag : limited selection; colors and shapes
-        Invert sensor?
-        Turn on time
-        Turn off time
-        Min on time, or infinite
-        Max on time, or infinite
-        Min off time after turning off, or infinite
 
 DynamicEntity (abstract Entity)
     Properties
@@ -42,6 +36,11 @@ Map (Volume)
 SENSORS:
 
 Sensor (abstract PropertiesObject)
+    Properties
+        Invert?
+        Turn on time
+        Min on time, or infinite
+        Max on time, or infinite
 
 ActivatedSensor (abstract Sensor)
     Properties

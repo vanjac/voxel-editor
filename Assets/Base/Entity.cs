@@ -40,7 +40,6 @@ public interface PropertiesObject
 public abstract class Entity : PropertiesObject
 {
     public Sensor sensor;
-    public SensorSettings sensorSettings;
     public List<EntityBehavior> behaviors = new List<EntityBehavior>();
     public byte tag = 0;
 
@@ -57,10 +56,6 @@ public abstract class Entity : PropertiesObject
                 () => tag,
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
-            new Property("Sensor Settings",
-                () => sensorSettings,
-                v => sensorSettings = (SensorSettings)v,
-                PropertyGUIs.Empty)
         };
     }
 }
@@ -97,6 +92,11 @@ public abstract class EntityBehavior : PropertiesObject
 
 public abstract class Sensor : PropertiesObject
 {
+    public bool invert;
+    public float turnOnTime;
+    public float minOnTime;
+    public float maxOnTime;
+
     public virtual string TypeName()
     {
         return "Sensor";
@@ -104,20 +104,28 @@ public abstract class Sensor : PropertiesObject
 
     public virtual ICollection<Property> Properties()
     {
-        return new Property[] { };
+        return new Property[]
+        {
+            new Property("Invert?",
+                () => invert,
+                v => invert = (bool)v,
+                PropertyGUIs.Toggle),
+            new Property("Turn on delay",
+                () => turnOnTime,
+                v => turnOnTime = (float)v,
+                PropertyGUIs.Time),
+            new Property("Min on time",
+                () => minOnTime,
+                v => minOnTime = (float)v,
+                PropertyGUIs.Time),
+            new Property("Max on time",
+                () => maxOnTime,
+                v => maxOnTime = (float)v,
+                PropertyGUIs.Time)
+        };
     }
 
     public abstract SensorComponent MakeComponent(GameObject gameObject);
-}
-
-public struct SensorSettings
-{
-    public bool invert;
-    public float turnOnTime;
-    public float turnOffTime;
-    public float minOnTime;
-    public float maxOnTime;
-    public float minOffTime;
 }
 
 public abstract class SensorComponent : MonoBehaviour
