@@ -121,12 +121,12 @@ public class MapFileReader {
         {
             JSONObject sensorObject = entityObject["sensor"].AsObject;
             string sensorName = sensorObject["name"];
-            var sensorType = GameScripts.FindWithName(GameScripts.sensors, sensorName);
-            if (sensorType.type == null)
+            var sensorType = GameScripts.FindTypeWithName(GameScripts.sensors, sensorName);
+            if (sensorType == null)
                 Debug.Log("Couldn't find sensor type " + sensorName + "!");
             else
             {
-                Sensor newSensor = (Sensor)sensorType.Instantiate();
+                Sensor newSensor = (Sensor)System.Activator.CreateInstance(sensorType);
                 ReadPropertiesObject(sensorObject, newSensor);
                 entity.sensor = newSensor;
             }
@@ -138,14 +138,14 @@ public class MapFileReader {
             {
                 JSONObject behaviorObject = behaviorNode.AsObject;
                 string behaviorName = behaviorObject["name"];
-                var behaviorType = GameScripts.FindWithName(GameScripts.behaviors, behaviorName);
-                if (behaviorType.type == null)
+                var behaviorType = GameScripts.FindTypeWithName(GameScripts.behaviors, behaviorName);
+                if (behaviorType == null)
                 {
                     Debug.Log("Couldn't find behavior type " + behaviorName + "!");
                     continue;
                 }
                 EntityBehavior newBehavior =
-                    (EntityBehavior)behaviorType.Instantiate();
+                    (EntityBehavior)System.Activator.CreateInstance(behaviorType);
                 ReadPropertiesObject(behaviorObject, newBehavior);
                 entity.behaviors.Add(newBehavior);
             }

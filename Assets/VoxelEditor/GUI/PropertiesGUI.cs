@@ -153,17 +153,15 @@ public class PropertiesGUI : GUIPanel {
         GUILayout.EndVertical();
         if (GUILayout.Button("Change"))
         {
-            SimpleMenuGUI sensorMenu = gameObject.AddComponent<SimpleMenuGUI>();
-            sensorMenu.items = GameScripts.ListNames(GameScripts.sensors, includeNone: true);
-            sensorMenu.handler = (int itemI, string itemName) =>
+            TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
+            sensorMenu.items = GameScripts.sensors;
+            sensorMenu.handler = (System.Type type) =>
             {
-                if (itemI == 0)
+                if (type == null)
                     entity.sensor = null;
                 else
                 {
-                    var selectedSensorType = GameScripts.sensors[itemI - 1];
-                    Sensor newSensor =
-                        (Sensor)selectedSensorType.Instantiate();
+                    Sensor newSensor = (Sensor)System.Activator.CreateInstance(type);
                     entity.sensor = newSensor;
                 }
                 voxelArray.unsavedChanges = true;
@@ -173,13 +171,12 @@ public class PropertiesGUI : GUIPanel {
         GUILayout.Label("Behaviors:", titleStyle);
         if (GUILayout.Button("Add Behavior"))
         {
-            SimpleMenuGUI behaviorMenu = gameObject.AddComponent<SimpleMenuGUI>();
-            behaviorMenu.items = GameScripts.ListNames(GameScripts.behaviors);
-            behaviorMenu.handler = (int itemI, string itemName) =>
+            TypePickerGUI behaviorMenu = gameObject.AddComponent<TypePickerGUI>();
+            behaviorMenu.items = GameScripts.behaviors;
+            behaviorMenu.handler = (System.Type type) =>
             {
-                var selectedBehaviorType = GameScripts.behaviors[itemI];
                 EntityBehavior newBehavior =
-                    (EntityBehavior)selectedBehaviorType.Instantiate();
+                    (EntityBehavior)System.Activator.CreateInstance(type);
                 entity.behaviors.Add(newBehavior);
                 voxelArray.unsavedChanges = true;
             };

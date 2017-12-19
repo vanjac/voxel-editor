@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleMenuGUI : GUIPanel
+public class TypePickerGUI : GUIPanel
 {
-    public delegate void MenuHandler(int itemI, string itemName);
+    public delegate void TypeHandler(System.Type type);
 
-    public MenuHandler handler;
-    public string[] items;
+    public TypeHandler handler;
+    public GameScripts.NamedType[] items;
 
     public override void OnEnable()
     {
@@ -24,9 +24,9 @@ public class SimpleMenuGUI : GUIPanel
         GUILayout.BeginArea(panelRect, GUI.skin.box);
 
         for (int i = 0; i < items.Length; i++ )
-            if (GUILayout.Button(items[i]))
+            if (GUILayout.Button(items[i].name))
             {
-                handler(i, items[i]);
+                handler(items[i].type);
                 Destroy(this);
             }
 

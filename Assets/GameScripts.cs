@@ -14,45 +14,20 @@ public class GameScripts
             this.name = name;
             this.type = type;
         }
-
-        public object Instantiate()
-        {
-            return System.Activator.CreateInstance(type);
-        }
     }
 
-    public static string[] ListNames(NamedType[] namedTypes, bool includeNone=false)
-    {
-        int numItems = namedTypes.Length;
-        if (includeNone)
-            numItems += 1;
-        var names = new string[numItems];
-        if (includeNone)
-        {
-            names[0] = "None";
-            numItems = 1;
-        }
-        else
-            numItems = 0;
-        for (int i = 0; i < namedTypes.Length; i++)
-        {
-            names[numItems] = namedTypes[i].name;
-            numItems++;
-        }
-        return names;
-    }
-
-    public static NamedType FindWithName(NamedType[] namedTypes, string name)
+    public static System.Type FindTypeWithName(NamedType[] namedTypes, string name)
     {
         for (int i = 0; i < namedTypes.Length; i++)
             if (namedTypes[i].name == name)
-                return namedTypes[i];
-        return new NamedType("", null);
+                return namedTypes[i].type;
+        return null;
     }
 
 
     public static NamedType[] sensors = new NamedType[]
     {
+        new NamedType("None", null),
         new NamedType("Inputs", typeof(InputsSensor)),
         new NamedType("Pulse", typeof(PulseSensor)),
         new NamedType("Touch", typeof(TouchSensor))
