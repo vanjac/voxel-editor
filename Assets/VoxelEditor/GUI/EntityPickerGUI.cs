@@ -9,15 +9,24 @@ public class EntityPickerGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public EntityPickerHanlder handler;
 
+    private VoxelArrayEditor.SelectionState selectionState;
+
     public override void OnEnable()
     {
         holdOpen = true;
         base.OnEnable();
     }
 
-    public void Start()
+    void Start()
     {
-        voxelArray.StoreSelection();
+        selectionState = voxelArray.GetSelectionState();
+        voxelArray.ClearSelection();
+        voxelArray.ClearStoredSelection();
+    }
+
+    void OnDestroy()
+    {
+        voxelArray.RecallSelectionState(selectionState);
     }
 
     public override Rect GetRect(float width, float height)
@@ -32,8 +41,6 @@ public class EntityPickerGUI : GUIPanel
         if (GUILayout.Button("Done"))
         {
             handler(voxelArray.GetSelectedEntities());
-            voxelArray.ClearSelection();
-            voxelArray.MergeStoredSelected();
             Destroy(this);
         }
         GUILayout.EndHorizontal();

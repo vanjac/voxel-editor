@@ -29,6 +29,12 @@ public class VoxelArrayEditor : VoxelArray
     private Substance boxSelectSubstance = null;
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
+    public struct SelectionState
+    {
+        public List<VoxelFaceReference> selectedFaces;
+        public List<VoxelFaceReference> storedSelectedFaces;
+    }
+
     public override void Awake()
     {
         base.Awake();
@@ -296,6 +302,27 @@ public class VoxelArrayEditor : VoxelArray
             selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
         selectMode = SelectMode.FACE;
         SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
+    }
+
+    public SelectionState GetSelectionState()
+    {
+        SelectionState state;
+        state.selectedFaces = new List<VoxelFaceReference>(selectedFaces);
+        state.storedSelectedFaces = new List<VoxelFaceReference>(storedSelectedFaces);
+        return state;
+    }
+
+    public void RecallSelectionState(SelectionState state)
+    {
+        ClearSelection();
+        ClearStoredSelection();
+        foreach (VoxelFaceReference faceRef in state.storedSelectedFaces)
+            SelectFace(faceRef);
+        StoreSelection();
+        foreach (VoxelFaceReference faceRef in state.selectedFaces)
+            SelectFace(faceRef);
+        if (SomethingIsSelected())
+            SetMoveAxesEnabled(true);
     }
 
     public void Adjust(Vector3 adjustDirection)

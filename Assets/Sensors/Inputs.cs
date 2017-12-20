@@ -31,12 +31,27 @@ public class InputsSensor : Sensor
             new Property("Inputs",
                 () => inputs,
                 v => inputs = (Input[])v,
-                PropertyGUIs.Empty)
+                InputsGUI)
         }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
         throw new System.NotImplementedException();
+    }
+
+    private object InputsGUI(object value)
+    {
+        if (GUILayout.Button("Add Input"))
+        {
+            // TODO: do all this without using GameObject.Find
+            EntityPickerGUI picker = GameObject.Find("GUI").AddComponent<EntityPickerGUI>();
+            picker.voxelArray = GameObject.Find("VoxelArray").GetComponent<VoxelArrayEditor>();
+            picker.handler = (ICollection<Entity> entities) =>
+            {
+                Debug.Log(entities);
+            };
+        }
+        return value;
     }
 }

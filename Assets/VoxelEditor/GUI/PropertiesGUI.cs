@@ -21,6 +21,7 @@ public class PropertiesGUI : GUIPanel {
     public override void OnEnable()
     {
         holdOpen = true;
+        stealFocus = false;
         base.OnEnable();
     }
 

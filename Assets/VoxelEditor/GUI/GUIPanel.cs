@@ -16,6 +16,7 @@ public abstract class GUIPanel : MonoBehaviour
     protected Vector2 touchStartPos = Vector2.zero;
     protected bool horizontalSlide, verticalSlide;
     protected bool holdOpen = false;
+    protected bool stealFocus = true;
     protected float scaleFactor;
 
     private Rect panelRect;
@@ -36,7 +37,7 @@ public abstract class GUIPanel : MonoBehaviour
         {
             if (openPanels[i] == this)
                 return true;
-            if (!openPanels[i].holdOpen)
+            if (openPanels[i].stealFocus)
                 return false;
         }
         return false;
