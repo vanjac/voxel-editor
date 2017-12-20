@@ -14,7 +14,18 @@ public class EntityPickerGUI : GUIPanel
     public override void OnEnable()
     {
         holdOpen = true;
+        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
+        if (actionBar != null)
+            actionBar.enabled = false;
         base.OnEnable();
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
+        if (actionBar != null)
+            actionBar.enabled = true;
     }
 
     void Start()
@@ -31,18 +42,39 @@ public class EntityPickerGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(height * .55f, height * .9f, height * .65f, height * .1f);
+        return new Rect(height * .5f, 0, width - height * .5f, 0);
     }
 
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Pick an object...");
-        if (GUILayout.Button("Done"))
+        GUILayout.Label("Pick an object... ", GUILayout.ExpandWidth(false));
+
+        // from ActionBarGUI...
+
+        if (voxelArray.selectMode != VoxelArrayEditor.SelectMode.NONE)
+        {
+            if (GUILayout.Button("+ Select", GUILayout.ExpandWidth(false)))
+            {
+                voxelArray.StoreSelection();
+            }
+        }
+        else if (voxelArray.SomethingIsSelected())
+        {
+            if (GUILayout.Button("- Select", GUILayout.ExpandWidth(false)))
+            {
+                voxelArray.ClearStoredSelection();
+                voxelArray.ClearSelection();
+            }
+        }
+
+        // Toggle that looks like a button, but with On style
+        if (!GUILayout.Toggle(true, "Done", GUI.skin.button, GUILayout.ExpandWidth(false)))
         {
             handler(voxelArray.GetSelectedEntities());
             Destroy(this);
         }
+
         GUILayout.EndHorizontal();
     }
 }
