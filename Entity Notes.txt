@@ -16,7 +16,7 @@ FaceEntity (Entity) : can be assigned to a face
 
 Object (abstract DynamicEntity) : objects take up a certain fixed size block of voxels
     Attributes
-        Orient face : aligns to center of face
+        Orient face : aligns to center of face. Some objects only allow certain faces
     Properties
         Rotation about face normal
 
@@ -63,6 +63,8 @@ Pulse (Sensor)
         Off time
 
 Touch (ActivatedSensor)
+    Properties
+        Min velocity : meters/second
 
 In Range (ActivatedSensor)
     Properties
@@ -81,8 +83,11 @@ OBJECTS:
 
 Player (Object) : 1 in every map
 
+Ball
+    Color
+    Size
+
 Selection of meshes with skin choices
-    Ball
     [others]
 
 Character (abstract Object)
@@ -109,7 +114,7 @@ Solid (Behavior for DynamicEntity)
 Hurt/heal (Behavior for DynamicEntity)
     Properties
         Amount
-        Continuous?
+        Rate
 
 Clone (Behavior for DynamicEntity) : once when enabled. clone starts at initial position with initial properties
 
@@ -119,9 +124,8 @@ Teleport (Behavior for DynamicEntity)
 
 Physics (Behavior for DynamicEntity with Solid)
     Properties
+        [physics parameters]
         Can be picked up?
-        Velocity
-        [physics parameters including breakability]
 
 Propel (Behavior for DynamicEntity with Physics)
     Properties
@@ -194,8 +198,8 @@ Sound (Behavior for Entity)
         Loop?
         Volume
         Speed
-        Start fade dist
-        End fade dist
+        Start fade distance
+        End fade distance
 
 Speech Bubble (Behavior for Entity)
     Properties
@@ -209,7 +213,8 @@ Glow (Behavior for Entity) : a flare effect that emits light
 
 Fire (Behavior for Entity)
     Properties
-        Size
+        Spread
+        Height
 
 Paint (Behavior for FaceEntity)
     Properties
