@@ -93,17 +93,21 @@ public abstract class GUIPanel : MonoBehaviour
 
     private void _WindowGUI(int id)
     {
-        if (IsFocused())
-            GUI.color = Color.white;
-        else
-            GUI.color = new Color(1, 1, 1, 0.4f);
-
-        if (verticalSlide && Input.touchCount == 1 && IsFocused())
+        if (!IsFocused())
+        {
+            GUI.enabled = false;
+            GUI.color = new Color(1, 1, 1, 0.8f);
+        } else if (verticalSlide && Input.touchCount == 1 && IsFocused())
         {
             GUI.enabled = false;
             GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
             if (Event.current.type == EventType.Repaint) // scroll at correct rate
                 scroll.y += Input.GetTouch(0).deltaPosition.y / scaleFactor;
+        }
+        else
+        {
+            GUI.enabled = true;
+            GUI.color = Color.white;
         }
 
         if (GetName() != "")
