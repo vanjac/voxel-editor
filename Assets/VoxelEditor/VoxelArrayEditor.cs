@@ -33,6 +33,9 @@ public class VoxelArrayEditor : VoxelArray
     {
         public List<VoxelFaceReference> selectedFaces;
         public List<VoxelFaceReference> storedSelectedFaces;
+
+        public SelectMode selectMode;
+        public Vector3 axes;
     }
 
     public override void Awake()
@@ -309,6 +312,8 @@ public class VoxelArrayEditor : VoxelArray
         SelectionState state;
         state.selectedFaces = new List<VoxelFaceReference>(selectedFaces);
         state.storedSelectedFaces = new List<VoxelFaceReference>(storedSelectedFaces);
+        state.selectMode = selectMode;
+        state.axes = axes.position;
         return state;
     }
 
@@ -321,6 +326,8 @@ public class VoxelArrayEditor : VoxelArray
         StoreSelection();
         foreach (VoxelFaceReference faceRef in state.selectedFaces)
             SelectFace(faceRef);
+        selectMode = state.selectMode;
+        axes.position = state.axes;
         if (SomethingIsSelected())
             SetMoveAxesEnabled(true);
     }
