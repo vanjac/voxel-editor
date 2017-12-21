@@ -81,7 +81,11 @@ Motion (Sensor)
 
 OBJECTS:
 
-Player (Object) : 1 in every map
+Entrance (Object) : 1 in every map
+
+Exit (Object)
+
+Player (Object) : 1 in every map, attached to entrance
 
 Ball
     Color
