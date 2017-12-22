@@ -48,7 +48,11 @@ public class EntityPickerGUI : GUIPanel
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Pick an object... ", GUILayout.ExpandWidth(false));
+        int numSelectedEntities = voxelArray.GetSelectedEntities().Count;
+        if (numSelectedEntities == 0)
+            GUILayout.Label("Pick an object... ", GUILayout.ExpandWidth(false));
+        else
+            GUILayout.Label(numSelectedEntities + " objects selected ", GUILayout.ExpandWidth(false));
 
         // from ActionBarGUI...
 
