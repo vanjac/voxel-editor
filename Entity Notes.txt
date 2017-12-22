@@ -52,8 +52,8 @@ Inputs (Sensor)
     Properties
         Input entities
         For each input entity:
-            Change on turn on: -1/0/1
-            Change on turn off: -1/0/1
+            Change on turn on: -1/0/+1
+            Change on turn off: -1/0/+1
         Input threshold
 
 Pulse (Sensor)

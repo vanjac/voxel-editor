@@ -80,10 +80,10 @@ public class InputsSensor : Sensor
             newLabelStyle.padding = new RectOffset();
             GUILayout.Label("On: ", newLabelStyle, GUILayout.ExpandWidth(false));
             inputs[i].onChange = (sbyte)(GUILayout.SelectionGrid(inputs[i].onChange + 1,
-                new string[] { "-1", "0", "1" }, 3, changeGridStyle) - 1);
+                new string[] { "-1", "0", "+1" }, 3, changeGridStyle) - 1);
             GUILayout.Label("Off: ", newLabelStyle, GUILayout.ExpandWidth(false));
             inputs[i].offChange = (sbyte)(GUILayout.SelectionGrid(inputs[i].offChange + 1,
-                new string[] { "-1", "0", "1" }, 3, changeGridStyle) - 1);
+                new string[] { "-1", "0", "+1" }, 3, changeGridStyle) - 1);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
