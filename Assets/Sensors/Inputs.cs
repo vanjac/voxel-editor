@@ -6,15 +6,16 @@ using UnityEngine;
 public class InputsSensor : Sensor
 {
     // public so it can be serialized
+    // this is serialized so don't change it!
     public struct Input
     {
-        public Entity entity;
+        public EntityReference entityRef;
         public sbyte onChange;
         public sbyte offChange;
 
         public Input(Entity entity)
         {
-            this.entity = entity;
+            entityRef = new EntityReference(entity);
             onChange = 1;
             offChange = -1;
         }
@@ -66,7 +67,7 @@ public class InputsSensor : Sensor
         {
             GUILayout.BeginVertical(GUI.skin.box);
             GUILayout.BeginHorizontal();
-            GUILayout.Label(inputs[i].entity.TypeName() + " ");
+            GUILayout.Label(inputs[i].entityRef.entity.TypeName() + " ");
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("X"))
                 inputToDelete = i;

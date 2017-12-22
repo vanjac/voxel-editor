@@ -150,6 +150,12 @@ public class MapFileReader {
                 entity.behaviors.Add(newBehavior);
             }
         }
+
+        if (entityObject["id"] != null)
+        {
+            System.Guid id = new System.Guid(entityObject["id"]);
+            EntityReference.AddExistingEntityId(entity, id);
+        }
     }
 
     private void ReadPropertiesObject(JSONObject propsObject, PropertiesObject obj)
