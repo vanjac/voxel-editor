@@ -61,14 +61,24 @@ public class InputsSensor : Sensor
         else
             inputs = (Input[])value;
 
-        foreach (Input input in inputs)
+        for (int i = 0; i < inputs.Length; i++)
         {
             GUILayout.BeginVertical(GUI.skin.box);
             GUILayout.BeginHorizontal();
-            GUILayout.Label(input.entity.TypeName());
+            GUILayout.Label(inputs[i].entity.TypeName());
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-
+            GUIStyle changeGridStyle = new GUIStyle(GUI.skin.button);
+            changeGridStyle.padding = new RectOffset(0, 0, 16, 16);
+            changeGridStyle.margin = new RectOffset(0, 0, 0, 0);
+            GUIStyle newLabelStyle = new GUIStyle(GUI.skin.label);
+            newLabelStyle.padding = new RectOffset();
+            GUILayout.Label("On: ", newLabelStyle, GUILayout.ExpandWidth(false));
+            inputs[i].onChange = (sbyte)(GUILayout.SelectionGrid(inputs[i].onChange + 1,
+                new string[] { "-1", "0", "1" }, 3, changeGridStyle) - 1);
+            GUILayout.Label("Off: ", newLabelStyle, GUILayout.ExpandWidth(false));
+            inputs[i].offChange = (sbyte)(GUILayout.SelectionGrid(inputs[i].offChange + 1,
+                new string[] { "-1", "0", "1" }, 3, changeGridStyle) - 1);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
