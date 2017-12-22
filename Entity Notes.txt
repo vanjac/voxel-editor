@@ -45,7 +45,6 @@ Sensor (abstract PropertiesObject)
 ActivatedSensor (abstract Sensor)
     Properties
         Activtor entity filter: required base type for entity/behaviors, tag, or specific entity
-        Optionally require on/off state
 
 Off (Sensor)
 
