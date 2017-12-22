@@ -61,11 +61,15 @@ public class InputsSensor : Sensor
         else
             inputs = (Input[])value;
 
+        int inputToDelete = -1;
         for (int i = 0; i < inputs.Length; i++)
         {
             GUILayout.BeginVertical(GUI.skin.box);
             GUILayout.BeginHorizontal();
-            GUILayout.Label(inputs[i].entity.TypeName());
+            GUILayout.Label(inputs[i].entity.TypeName() + " ");
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("X"))
+                inputToDelete = i;
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUIStyle changeGridStyle = new GUIStyle(GUI.skin.button);
@@ -81,6 +85,13 @@ public class InputsSensor : Sensor
                 new string[] { "-1", "0", "1" }, 3, changeGridStyle) - 1);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
+        }
+        if (inputToDelete != -1)
+        {
+            Input[] newInputs = new Input[inputs.Length - 1];
+            Array.Copy(inputs, newInputs, inputToDelete);
+            Array.Copy(inputs, inputToDelete + 1, newInputs, inputToDelete, newInputs.Length - inputToDelete);
+            inputs = newInputs;
         }
 
         if (GUILayout.Button("Add Input"))
