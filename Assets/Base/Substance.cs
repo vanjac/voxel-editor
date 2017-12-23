@@ -55,7 +55,7 @@ public class SubstanceComponent : EntityComponent
 {
     public Substance substance;
 
-    void Start()
+    public override void Start()
     {
         base.Start();
 
