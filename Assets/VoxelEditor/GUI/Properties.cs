@@ -88,7 +88,19 @@ public class PropertyGUIs
 
     public static object Int(object value)
     {
-        return (int)(float)Float((float)(int)value);
+        // for Float() NaN represents a value currently being edited
+        // Int() uses MinValue instead
+        int iValue = (int)value;
+        float fValue;
+        if (iValue == int.MinValue)
+            fValue = float.NaN;
+        else
+            fValue = (float)iValue;
+        fValue = (float)Float(fValue);
+        if (float.IsNaN(fValue))
+            return int.MinValue;
+        else
+            return (int)fValue;
     }
 
     public static object Time(object value)
