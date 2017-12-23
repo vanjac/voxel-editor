@@ -46,7 +46,10 @@ public class InputsSensor : Sensor
 
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
-        throw new System.NotImplementedException();
+        InputsComponent component = gameObject.AddComponent<InputsComponent>();
+        component.inputs = inputs;
+        component.threshold = threshold;
+        return component;
     }
 
     private static Input[] handlerResult = null;
@@ -114,5 +117,45 @@ public class InputsSensor : Sensor
         }
 
         return inputs;
+    }
+}
+
+public class InputsComponent : SensorComponent
+{
+    public InputsSensor.Input[] inputs;
+    public float threshold;
+
+    private float value = 0;
+    private bool[] entitiesAreOn;
+
+    void Start()
+    {
+        entitiesAreOn = new bool[inputs.Length];
+        for (int i = 0; i < entitiesAreOn.Length; i++)
+            entitiesAreOn[i] = false;
+    }
+
+    void Update()
+    {
+        for (int i = 0; i < inputs.Length; i++)
+        {
+            bool isOn = inputs[i].entityRef.entity.component.IsOn();
+            bool wasOn = entitiesAreOn[i];
+            if (isOn && !wasOn)
+            {
+                entitiesAreOn[i] = true;
+                value += inputs[i].onChange;
+            }
+            if (!isOn && wasOn)
+            {
+                entitiesAreOn[i] = false;
+                value += inputs[i].offChange;
+            }
+        }
+    }
+
+    public override bool IsOn()
+    {
+        return value >= threshold;
     }
 }
