@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputsSensor : Sensor
+public class InputThresholdSensor : Sensor
 {
     // public so it can be serialized
     // this is serialized so don't change it!
@@ -26,7 +26,7 @@ public class InputsSensor : Sensor
 
     public override string TypeName()
     {
-        return "Inputs";
+        return "Input Threshold";
     }
 
     public override ICollection<Property> Properties()
@@ -46,7 +46,7 @@ public class InputsSensor : Sensor
 
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
-        InputsComponent component = gameObject.AddComponent<InputsComponent>();
+        InputThresholdComponent component = gameObject.AddComponent<InputThresholdComponent>();
         component.inputs = inputs;
         component.threshold = threshold;
         return component;
@@ -120,9 +120,9 @@ public class InputsSensor : Sensor
     }
 }
 
-public class InputsComponent : SensorComponent
+public class InputThresholdComponent : SensorComponent
 {
-    public InputsSensor.Input[] inputs;
+    public InputThresholdSensor.Input[] inputs;
     public float threshold;
 
     private float value = 0;
