@@ -15,8 +15,7 @@ public class PulseSensor : Sensor
 
     public override ICollection<Property> Properties()
     {
-        // don't add to base properties -- the timing properties are redundant
-        return new Property[]
+        return Property.JoinProperties(new Property[]
         {
             new Property("Start on?",
                 () => startOn,
@@ -30,7 +29,7 @@ public class PulseSensor : Sensor
                 () => onTime,
                 v => onTime = (float)v,
                 PropertyGUIs.Time)
-        };
+        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

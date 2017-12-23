@@ -36,10 +36,6 @@ Map (Volume)
 SENSORS:
 
 Sensor (abstract PropertiesObject)
-    Properties
-        Turn on time
-        Min on time, or infinite
-        Max on time, or infinite
 
 ActivatedSensor (abstract Sensor)
     Properties
@@ -47,7 +43,7 @@ ActivatedSensor (abstract Sensor)
 
 Off (Sensor)
 
-Inputs (Sensor)
+Input Threshold (Sensor)
     Properties
         Input entities
         For each input entity:
@@ -55,8 +51,15 @@ Inputs (Sensor)
             Change on turn off: -1/0/+1
         Input threshold
 
+Input Delay (Sensor)
+    Properties
+        Input entity
+        Turn on time
+        Turn off time
+
 Pulse (Sensor)
     Properties
+        Start on?
         On time
         Off time
 

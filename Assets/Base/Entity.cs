@@ -63,58 +63,19 @@ public abstract class Entity : PropertiesObject
 
 public abstract class EntityComponent : MonoBehaviour
 {
-    private enum SensorCycle
-    {
-        OFF, TURNING_ON, ON, TURNING_OFF, TIMED_OUT
-    }
-
-    private static bool SensorOn(SensorCycle cycle)
-    {
-        return cycle == SensorCycle.TURNING_ON
-            || cycle == SensorCycle.ON
-            || cycle == SensorCycle.TIMED_OUT;
-    }
-
-    private static bool BehaviorsOn(SensorCycle cycle)
-    {
-        return cycle == SensorCycle.ON || cycle == SensorCycle.TURNING_OFF;
-    }
-
     public Entity entity;
 
     private List<Behaviour> offComponents = new List<Behaviour>();
     private List<Behaviour> onComponents = new List<Behaviour>();
 
     private SensorComponent sensorComponent;
-    private SensorCycle _sensorCycle;
-    private SensorCycle sensorCycle
-    {
-        get
-        {
-            return _sensorCycle;
-        }
-        set
-        {
-            if (SensorOn(value) && !SensorOn(_sensorCycle))
-                t_sensorOn = Time.time;
-            if (BehaviorsOn(value) && !BehaviorsOn(_sensorCycle))
-            {
-                SetBehaviors(true);
-                t_behaviorsOn = Time.time;
-            }
-            else if (!BehaviorsOn(value) && BehaviorsOn(_sensorCycle))
-                SetBehaviors(false);
-            _sensorCycle = value;
-        }
-    }
-    private float t_behaviorsOn;
-    private float t_sensorOn;
+    private bool sensorWasOn;
 
     public virtual void Start()
     {
         if (entity.sensor != null)
             sensorComponent = entity.sensor.MakeComponent(gameObject);
-        sensorCycle = SensorCycle.OFF;
+        sensorWasOn = false;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
             Behaviour c = behavior.MakeComponent(gameObject);
@@ -132,53 +93,13 @@ public abstract class EntityComponent : MonoBehaviour
     {
         if (sensorComponent == null)
             return;
-        bool sensorIsOn = sensorComponent.IsOn();
-
-        // change cycle state based on sensor
-        switch (sensorCycle)
-        {
-            case SensorCycle.OFF:
-                if (sensorIsOn)
-                    sensorCycle = SensorCycle.TURNING_ON;
-                break;
-            case SensorCycle.TURNING_ON:
-                if (!sensorIsOn)
-                    sensorCycle = SensorCycle.OFF;
-                break;
-            case SensorCycle.ON:
-                if (!sensorIsOn)
-                    sensorCycle = SensorCycle.TURNING_OFF;
-                break;
-            case SensorCycle.TURNING_OFF:
-                if (sensorIsOn)
-                    sensorCycle = SensorCycle.ON;
-                break;
-            case SensorCycle.TIMED_OUT:
-                if (!sensorIsOn)
-                    sensorCycle = SensorCycle.OFF;
-                break;
-        }
-
-        float time = Time.time;
-
-        // change cycle state based on time
-        switch (sensorCycle)
-        {
-            case SensorCycle.TURNING_ON:
-                if (time - t_sensorOn > entity.sensor.turnOnTime)
-                    sensorCycle = SensorCycle.ON;
-                break;
-            case SensorCycle.ON:
-                if (time - t_behaviorsOn > entity.sensor.maxOnTime)
-                    sensorCycle = SensorCycle.TIMED_OUT;
-                break;
-            case SensorCycle.TURNING_OFF:
-                // timeSinceChange is time since ON, not time since TURNING_OFF
-                if (time - t_behaviorsOn > entity.sensor.minOnTime)
-                    sensorCycle = SensorCycle.OFF;
-                break;
-        }
-    } // Update()
+        bool sensorIsOn = IsOn();
+        if (sensorIsOn && !sensorWasOn)
+            SetBehaviors(true);
+        else if (!sensorIsOn && sensorWasOn)
+            SetBehaviors(false);
+        sensorWasOn = sensorIsOn;
+    }
 
     private void SetBehaviors(bool on)
     {
@@ -190,7 +111,7 @@ public abstract class EntityComponent : MonoBehaviour
 
     public bool IsOn()
     {
-        return BehaviorsOn(sensorCycle);
+        return sensorComponent.IsOn();
     }
 }
 
@@ -226,10 +147,6 @@ public abstract class EntityBehavior : PropertiesObject
 
 public abstract class Sensor : PropertiesObject
 {
-    public float turnOnTime = 0;
-    public float minOnTime = 0;
-    public float maxOnTime = 9999;
-
     public virtual string TypeName()
     {
         return "Sensor";
@@ -237,21 +154,7 @@ public abstract class Sensor : PropertiesObject
 
     public virtual ICollection<Property> Properties()
     {
-        return new Property[]
-        {
-            new Property("Turn on delay",
-                () => turnOnTime,
-                v => turnOnTime = (float)v,
-                PropertyGUIs.Time),
-            new Property("Min on time",
-                () => minOnTime,
-                v => minOnTime = (float)v,
-                PropertyGUIs.Time),
-            new Property("Max on time",
-                () => maxOnTime,
-                v => maxOnTime = (float)v,
-                PropertyGUIs.Time)
-        };
+        return new Property[] { };
     }
 
     public abstract SensorComponent MakeComponent(GameObject gameObject);
