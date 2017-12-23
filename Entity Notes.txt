@@ -37,7 +37,6 @@ SENSORS:
 
 Sensor (abstract PropertiesObject)
     Properties
-        Invert?
         Turn on time
         Min on time, or infinite
         Max on time, or infinite

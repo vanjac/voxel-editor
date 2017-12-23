@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PulseSensor : Sensor
 {
-    public float offTime = 1;
-    public float onTime = 1;
+    private bool startOn = false;
+    private float offTime = 1;
+    private float onTime = 1;
 
     public override string TypeName()
     {
@@ -18,8 +19,8 @@ public class PulseSensor : Sensor
         return new Property[]
         {
             new Property("Start on?",
-                () => invert,
-                v => invert = (bool)v,
+                () => startOn,
+                v => startOn = (bool)v,
                 PropertyGUIs.Toggle),
             new Property("Off time",
                 () => offTime,
@@ -37,12 +38,14 @@ public class PulseSensor : Sensor
         PulseComponent pulse = gameObject.AddComponent<PulseComponent>();
         pulse.offTime = offTime;
         pulse.onTime = onTime;
+        pulse.startOn = startOn;
         return pulse;
     }
 }
 
 public class PulseComponent : SensorComponent
 {
+    public bool startOn;
     public float offTime, onTime;
     private float startTime;
 
@@ -53,6 +56,10 @@ public class PulseComponent : SensorComponent
 
     public override bool IsOn()
     {
-        return (Time.time - startTime) % (offTime + onTime) >= offTime;
+        float cycleTime = (Time.time - startTime) % (offTime + onTime);
+        if (startOn)
+            return cycleTime < onTime;
+        else
+            return cycleTime >= offTime;
     }
 }

@@ -132,7 +132,7 @@ public abstract class EntityComponent : MonoBehaviour
     {
         if (sensorComponent == null)
             return;
-        bool sensorIsOn = sensorComponent.IsOn() ^ entity.sensor.invert;
+        bool sensorIsOn = sensorComponent.IsOn();
 
         // change cycle state based on sensor
         switch (sensorCycle)
@@ -226,7 +226,6 @@ public abstract class EntityBehavior : PropertiesObject
 
 public abstract class Sensor : PropertiesObject
 {
-    public bool invert = false;
     public float turnOnTime = 0;
     public float minOnTime = 0;
     public float maxOnTime = 9999;
@@ -240,10 +239,6 @@ public abstract class Sensor : PropertiesObject
     {
         return new Property[]
         {
-            new Property("Invert?",
-                () => invert,
-                v => invert = (bool)v,
-                PropertyGUIs.Toggle),
             new Property("Turn on delay",
                 () => turnOnTime,
                 v => turnOnTime = (float)v,
