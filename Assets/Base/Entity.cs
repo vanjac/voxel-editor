@@ -5,14 +5,29 @@ using UnityEngine;
 
 public delegate object GetProperty();
 public delegate void SetProperty(object value);
-public delegate object PropertyGUI(object value);
+public delegate void PropertyGUI(Property property);
 
 public struct Property
 {
     public string name;
-    public GetProperty getter;
-    public SetProperty setter;
+    private GetProperty getter;
+    private SetProperty setter;
     public PropertyGUI gui;
+    public object value
+    {
+        get
+        {
+            return getter();
+        }
+        set
+        {
+            if (!getter().Equals(value))
+            {
+                setter(value);
+                VoxelArrayEditor.instance.unsavedChanges = true;
+            }
+        }
+    }
 
     public Property(string name, GetProperty getter, SetProperty setter, PropertyGUI gui)
     {

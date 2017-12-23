@@ -220,16 +220,7 @@ public class PropertiesGUI : GUIPanel {
         }
         GUILayout.Label(obj.TypeName() + ":", titleStyle);
         foreach (Property prop in props)
-        {
-            GUILayout.Label(prop.name);
-            object oldValue = prop.getter();
-            object newValue = prop.gui(oldValue);
-            if (!newValue.Equals(oldValue))
-            {
-                prop.setter(newValue);
-                voxelArray.unsavedChanges = true;
-            }
-        }
+            prop.gui(prop);
     }
 
     private void MapPropertiesGUI()

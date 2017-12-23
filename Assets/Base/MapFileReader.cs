@@ -185,14 +185,14 @@ public class MapFileReader {
                     continue;
                 }
 
-                XmlSerializer xmlSerializer = new XmlSerializer(prop.getter().GetType());
+                XmlSerializer xmlSerializer = new XmlSerializer(prop.value.GetType());
                 object value;
                 using (var textReader = new StringReader(valueString))
                 {
                     value = xmlSerializer.Deserialize(textReader);
                 }
 
-                prop.setter(value);
+                prop.value = value;
             }
         }
     }

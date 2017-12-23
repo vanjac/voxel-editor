@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class VoxelArrayEditor : VoxelArray
 {
+    public static VoxelArrayEditor instance = null;
+
     public Transform axes;
 
     public Material selectedMaterial;
@@ -41,6 +43,9 @@ public class VoxelArrayEditor : VoxelArray
     public override void Awake()
     {
         base.Awake();
+
+        if (instance == null)
+            instance = this;
 
         Voxel.selectedMaterial = selectedMaterial;
         Voxel.xRayMaterial = xRayMaterial;

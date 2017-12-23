@@ -52,19 +52,11 @@ public class InputThresholdSensor : Sensor
         return component;
     }
 
-    private static Input[] handlerResult = null;
-
-    private object InputsGUI(object value)
+    private void InputsGUI(Property property)
     {
-        Input[] inputs;
-        if (handlerResult != null)
-        {
-            inputs = handlerResult;
-            handlerResult = null;
-        }
-        else
-            inputs = (Input[])value;
+        Input[] inputs = (Input[])property.value;
 
+        GUILayout.Label("Inputs:");
         if (GUILayout.Button("Add Input"))
         {
             // TODO: do all this without using GameObject.Find
@@ -72,17 +64,19 @@ public class InputThresholdSensor : Sensor
             picker.voxelArray = GameObject.Find("VoxelArray").GetComponent<VoxelArrayEditor>();
             picker.handler = (ICollection<Entity> entities) =>
             {
-                handlerResult = new Input[inputs.Length + entities.Count];
-                Array.Copy(inputs, handlerResult, inputs.Length);
+                Input[] newInputs = new Input[inputs.Length + entities.Count];
+                Array.Copy(inputs, newInputs, inputs.Length);
                 int i = 0;
                 foreach (Entity entity in entities)
                 {
-                    handlerResult[inputs.Length + i] = new Input(entity);
+                    newInputs[inputs.Length + i] = new Input(entity);
                     i++;
                 }
+                property.value = newInputs;
             };
         }
 
+        bool copyArray = false;
         int inputToDelete = -1;
         for (int i = 0; i < inputs.Length; i++)
         {
@@ -93,6 +87,7 @@ public class InputThresholdSensor : Sensor
             if (GUILayout.Button("X"))
                 inputToDelete = i;
             GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal();
             GUIStyle changeGridStyle = new GUIStyle(GUI.skin.button);
             changeGridStyle.padding = new RectOffset(0, 0, 16, 16);
@@ -100,11 +95,17 @@ public class InputThresholdSensor : Sensor
             GUIStyle newLabelStyle = new GUIStyle(GUI.skin.label);
             newLabelStyle.padding = new RectOffset();
             GUILayout.Label("On: ", newLabelStyle, GUILayout.ExpandWidth(false));
-            inputs[i].onChange = (sbyte)(GUILayout.SelectionGrid(inputs[i].onChange + 1,
+            sbyte oldOnChange = inputs[i].onChange;
+            inputs[i].onChange = (sbyte)(GUILayout.SelectionGrid(oldOnChange + 1,
                 new string[] { "-1", "0", "+1" }, 3, changeGridStyle) - 1);
+            if (oldOnChange != inputs[i].onChange)
+                copyArray = true;
             GUILayout.Label("Off: ", newLabelStyle, GUILayout.ExpandWidth(false));
-            inputs[i].offChange = (sbyte)(GUILayout.SelectionGrid(inputs[i].offChange + 1,
+            sbyte oldOffChange = inputs[i].offChange;
+            inputs[i].offChange = (sbyte)(GUILayout.SelectionGrid(oldOffChange + 1,
                 new string[] { "-1", "0", "+1" }, 3, changeGridStyle) - 1);
+            if (oldOffChange != inputs[i].offChange)
+                copyArray = true;
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
@@ -113,10 +114,14 @@ public class InputThresholdSensor : Sensor
             Input[] newInputs = new Input[inputs.Length - 1];
             Array.Copy(inputs, newInputs, inputToDelete);
             Array.Copy(inputs, inputToDelete + 1, newInputs, inputToDelete, newInputs.Length - inputToDelete);
-            inputs = newInputs;
+            property.value = newInputs;
         }
-
-        return inputs;
+        else if (copyArray)
+        {
+            Input[] newInputs = new Input[inputs.Length];
+            Array.Copy(inputs, newInputs, inputs.Length);
+            property.value = newInputs; // mark unsaved changes flag
+        }
     }
 }
 

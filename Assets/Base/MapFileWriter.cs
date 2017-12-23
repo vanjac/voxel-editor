@@ -126,7 +126,7 @@ public class MapFileWriter {
         {
             // https://stackoverflow.com/a/2434558
             // https://stackoverflow.com/a/5414665
-            object value = prop.getter();
+            object value = prop.value;
             XmlSerializer xmlSerializer = new XmlSerializer(value.GetType());
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", ""); // skip xsi/xsd namespaces: https://stackoverflow.com/a/935749

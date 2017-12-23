@@ -5,125 +5,102 @@ using UnityEngine;
 
 public class PropertyGUIs
 {
-    static TouchScreenKeyboard numberKeyboard = null;
+    private static TouchScreenKeyboard numberKeyboard = null;
+    private delegate void KeyboardHandler(string text);
+    private static KeyboardHandler keyboardHandler;
 
-    public static object Empty(object value)
-    {
-        return value;
-    }
+    public static void Empty(Property property) { }
 
-    public static object Text(object value)
-    {
-        return GUILayout.TextField((string)value);
-    }
-
-    public static object Toggle(object value)
+    public static void Text(Property property)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        bool toggleValue = GUILayout.Toggle((bool)value, "");
+        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        property.value = GUILayout.TextField((string)property.value);
         GUILayout.EndHorizontal();
-        return toggleValue;
     }
 
-    public static object Float(object value)
+    public static void Toggle(Property property)
     {
-        float fValue = (float)value;
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        GUILayout.FlexibleSpace();
+        property.value = GUILayout.Toggle((bool)property.value, "");
+        GUILayout.EndHorizontal();
+    }
 
-        string sValue = "";
-        if (!float.IsNaN(fValue))
-            sValue = fValue.ToString();
+    public static void Float(Property property)
+    {
+        float fValue = (float)property.value;
+        string sValue = fValue.ToString();
 
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
         if (TouchScreenKeyboard.isSupported)
         {
-            if (GUILayout.Button(sValue, GUI.skin.textField))
-                if (numberKeyboard == null)
-                {
-                    numberKeyboard =
-                        TouchScreenKeyboard.Open(sValue, TouchScreenKeyboardType.NumbersAndPunctuation);
-                    return float.NaN;
-                }
-            if (float.IsNaN(fValue)) // keyboard should be open
+            if (numberKeyboard != null && numberKeyboard.status != TouchScreenKeyboard.Status.Visible)
             {
-                if (numberKeyboard == null)
-                    return 0.0f;
-                else if (numberKeyboard.status != TouchScreenKeyboard.Status.Visible)
+                keyboardHandler(numberKeyboard.text);
+                numberKeyboard = null;
+                keyboardHandler = null;
+            }
+            if (GUILayout.Button(sValue, GUI.skin.textField) && numberKeyboard == null)
+            {
+                numberKeyboard = TouchScreenKeyboard.Open(sValue,
+                    TouchScreenKeyboardType.NumbersAndPunctuation);
+                keyboardHandler = text =>
                 {
                     try
                     {
-                        return float.Parse(numberKeyboard.text);
+                        property.value = float.Parse(text);
                     }
-                    catch (FormatException)
-                    {
-                        return fValue;
-                    }
-                    finally
-                    {
-                        numberKeyboard = null;
-                    }
-                }
-                else
-                    return float.NaN;
+                    catch (FormatException) { }
+                };
             }
-            else
-                return fValue;
         }
         else // TouchScreenKeyboard not supported
         {
             sValue = GUILayout.TextField(sValue);
-
-            if (sValue.Length == 0)
-                fValue = float.NaN;
-            else
+            try
             {
-                try
-                {
-                    fValue = float.Parse(sValue);
-                }
-                catch (FormatException) { }
+                property.value = float.Parse(sValue);
             }
-            return fValue;
+            catch (FormatException) { }
         }
+        GUILayout.EndHorizontal();
     }
 
-    public static object Int(object value)
+    public static void Int(Property property)
     {
-        // for Float() NaN represents a value currently being edited
-        // Int() uses MinValue instead
-        int iValue = (int)value;
-        float fValue;
-        if (iValue == int.MinValue)
-            fValue = float.NaN;
-        else
-            fValue = (float)iValue;
-        fValue = (float)Float(fValue);
-        if (float.IsNaN(fValue))
-            return int.MinValue;
-        else
-            return (int)fValue;
+        Property wrapper = new Property(
+            property.name,
+            () => (float)(int)property.value,
+            v => property.value = (int)(float)v,
+            PropertyGUIs.Empty);
+        Float(wrapper);
     }
 
-    public static object Time(object value)
+    public static void Time(Property property)
     {
-        return Float(value);
+        Float(property);
     }
 
-    public static object Tag(object value)
+    public static void Tag(Property property)
     {
-        int tag = (byte)value;
+        int tag = (byte)property.value;
+        GUILayout.Label(property.name);
         tag = GUILayout.SelectionGrid(tag,
             new string[] { "A", "B", "C" }, 3);
-        return (byte)tag;
+        property.value = (byte)tag;
     }
 
-    public static object BehaviorCondition(object value)
+    public static void BehaviorCondition(Property property)
     {
         var gridStyle = new GUIStyle(GUI.skin.button);
         gridStyle.padding.left = 0;
         gridStyle.padding.right = 0;
-        var condition = (EntityBehavior.Condition)value;
-        condition = (EntityBehavior.Condition)GUILayout.SelectionGrid(
+        var condition = (EntityBehavior.Condition)property.value;
+        GUILayout.Label(property.name);
+        property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
             (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
-        return condition;
     }
 }
