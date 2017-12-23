@@ -155,10 +155,7 @@ public class PropertiesGUI : GUIPanel {
         PropertiesObjectGUI(entity);
 
         GUILayout.Label("Sensor:", titleStyle);
-        GUILayout.BeginVertical(GUI.skin.box);
-        PropertiesObjectGUI(entity.sensor);
-        GUILayout.EndVertical();
-        if (GUILayout.Button("Change"))
+        if (GUILayout.Button("Change Sensor"))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.items = GameScripts.sensors;
@@ -174,6 +171,9 @@ public class PropertiesGUI : GUIPanel {
                 voxelArray.unsavedChanges = true;
             };
         }
+        GUILayout.BeginVertical(GUI.skin.box);
+        PropertiesObjectGUI(entity.sensor);
+        GUILayout.EndVertical();
 
         GUILayout.Label("Behaviors:", titleStyle);
         if (GUILayout.Button("Add Behavior"))

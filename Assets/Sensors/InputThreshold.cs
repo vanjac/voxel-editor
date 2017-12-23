@@ -65,6 +65,24 @@ public class InputThresholdSensor : Sensor
         else
             inputs = (Input[])value;
 
+        if (GUILayout.Button("Add Input"))
+        {
+            // TODO: do all this without using GameObject.Find
+            EntityPickerGUI picker = GameObject.Find("GUI").AddComponent<EntityPickerGUI>();
+            picker.voxelArray = GameObject.Find("VoxelArray").GetComponent<VoxelArrayEditor>();
+            picker.handler = (ICollection<Entity> entities) =>
+            {
+                handlerResult = new Input[inputs.Length + entities.Count];
+                Array.Copy(inputs, handlerResult, inputs.Length);
+                int i = 0;
+                foreach (Entity entity in entities)
+                {
+                    handlerResult[inputs.Length + i] = new Input(entity);
+                    i++;
+                }
+            };
+        }
+
         int inputToDelete = -1;
         for (int i = 0; i < inputs.Length; i++)
         {
@@ -96,24 +114,6 @@ public class InputThresholdSensor : Sensor
             Array.Copy(inputs, newInputs, inputToDelete);
             Array.Copy(inputs, inputToDelete + 1, newInputs, inputToDelete, newInputs.Length - inputToDelete);
             inputs = newInputs;
-        }
-
-        if (GUILayout.Button("Add Input"))
-        {
-            // TODO: do all this without using GameObject.Find
-            EntityPickerGUI picker = GameObject.Find("GUI").AddComponent<EntityPickerGUI>();
-            picker.voxelArray = GameObject.Find("VoxelArray").GetComponent<VoxelArrayEditor>();
-            picker.handler = (ICollection<Entity> entities) =>
-            {
-                handlerResult = new Input[inputs.Length + entities.Count];
-                Array.Copy(inputs, handlerResult, inputs.Length);
-                int i = 0;
-                foreach (Entity entity in entities)
-                {
-                    handlerResult[inputs.Length + i] = new Input(entity);
-                    i++;
-                }
-            };
         }
 
         return inputs;
