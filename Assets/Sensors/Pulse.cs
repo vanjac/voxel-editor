@@ -51,7 +51,7 @@ public class PulseComponent : SensorComponent
         startTime = Time.time;
     }
 
-    public override bool isOn()
+    public override bool IsOn()
     {
         return (Time.time - startTime) % (offTime + onTime) >= offTime;
     }

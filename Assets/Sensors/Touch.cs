@@ -19,7 +19,7 @@ public class TouchComponent : SensorComponent
 {
     private int touchCount = 0;
 
-    public override bool isOn()
+    public override bool IsOn()
     {
         return touchCount > 0;
     }
