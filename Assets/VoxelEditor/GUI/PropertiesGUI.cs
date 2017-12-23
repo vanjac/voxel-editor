@@ -212,8 +212,14 @@ public class PropertiesGUI : GUIPanel {
             GUILayout.Label("None", titleStyle);
             return;
         }
+        var props = obj.Properties();
+        if (props.Count == 0)
+        {
+            GUILayout.Label(obj.TypeName(), titleStyle);
+            return;
+        }
         GUILayout.Label(obj.TypeName() + ":", titleStyle);
-        foreach (Property prop in obj.Properties())
+        foreach (Property prop in props)
         {
             GUILayout.Label(prop.name);
             object oldValue = prop.getter();
