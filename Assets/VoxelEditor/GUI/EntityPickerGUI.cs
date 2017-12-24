@@ -48,6 +48,7 @@ public class EntityPickerGUI : GUIPanel
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
+        // TODO: not efficient to keep generating a list of selected entities
         int numSelectedEntities = voxelArray.GetSelectedEntities().Count;
         if (numSelectedEntities == 0)
             GUILayout.Label("Pick an object... ", GUILayout.ExpandWidth(false));
