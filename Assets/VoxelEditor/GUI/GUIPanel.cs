@@ -122,7 +122,7 @@ public abstract class GUIPanel : MonoBehaviour
         if (Event.current.type == EventType.Repaint)
         {
             scroll += scrollVelocity * Time.deltaTime;
-            scrollVelocity *= .94f;
+            scrollVelocity *= .92f;
         }
 
         if (GetName() != "")
