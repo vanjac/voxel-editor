@@ -152,6 +152,7 @@ public class PropertiesGUI : GUIPanel {
 
     private void EntityPropertiesGUI(Entity entity)
     {
+        EntityReferencePropertyManager.Reset(entity);
         PropertiesObjectGUI(entity);
 
         GUILayout.Label("Sensor:", titleStyle);

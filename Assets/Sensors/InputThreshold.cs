@@ -78,11 +78,15 @@ public class InputThresholdSensor : Sensor
 
         bool copyArray = false;
         int inputToDelete = -1;
+        Color baseColor = GUI.color;
         for (int i = 0; i < inputs.Length; i++)
         {
+            EntityReferencePropertyManager.Next();
+            GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
             GUILayout.BeginVertical(GUI.skin.box);
             GUILayout.BeginHorizontal();
-            GUILayout.Label(inputs[i].entityRef.entity.TypeName() + " ");
+            GUILayout.Label(EntityReferencePropertyManager.GetName(
+                inputs[i].entityRef.entity) + " ");
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("X"))
                 inputToDelete = i;
@@ -109,6 +113,7 @@ public class InputThresholdSensor : Sensor
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
+        GUI.color = baseColor;
         if (inputToDelete != -1)
         {
             Input[] newInputs = new Input[inputs.Length - 1];
