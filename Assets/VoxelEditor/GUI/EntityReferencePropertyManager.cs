@@ -7,6 +7,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static Entity currentEntity;
     private static List<Entity> targetEntities = new List<Entity>();
 
+    public Material lineMaterial;
+
     public static void Reset(Entity entity)
     {
         currentEntity = entity;
@@ -53,7 +55,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
             line.startColor = line.endColor = ColorI(i);
             line.startWidth = line.endWidth = 0.1f;
-            line.material = new Material(Shader.Find("Mobile/Particles/Alpha Blended"));
+            line.material = lineMaterial;
             line.SetPosition(0, sourcePosition);
             line.SetPosition(1, EntityPosition(targetEntity));
             i += 1;
