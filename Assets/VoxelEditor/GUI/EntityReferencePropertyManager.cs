@@ -40,25 +40,31 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     void Update()
     {
-        // TODO: this is not efficient at all
-        foreach (Transform child in transform)
-            Destroy(child.gameObject);
+        // draw a line to each target entity
+        if (transform.childCount != targetEntities.Count)
+        {
+            foreach (Transform child in transform)
+                Destroy(child.gameObject);
+            for (int i = 0; i < targetEntities.Count; i++)
+            {
+                GameObject lineObject = new GameObject();
+                lineObject.transform.parent = transform;
+                LineRenderer line = lineObject.AddComponent<LineRenderer>();
+                line.startWidth = line.endWidth = 0.1f;
+                line.material = lineMaterial;
+            }
+        }
         if (currentEntity == null || targetEntities.Count == 0)
             return;
         Vector3 sourcePosition = EntityPosition(currentEntity);
-        int i = 0;
-        foreach (Entity targetEntity in targetEntities)
+        int j = 0;
+        foreach (Transform lineTransform in transform)
         {
-            GameObject lineObject = new GameObject();
-            lineObject.transform.parent = transform;
-            LineRenderer line = lineObject.AddComponent<LineRenderer>();
-
-            line.startColor = line.endColor = ColorI(i);
-            line.startWidth = line.endWidth = 0.1f;
-            line.material = lineMaterial;
+            LineRenderer line = lineTransform.GetComponent<LineRenderer>();
+            line.startColor = line.endColor = ColorI(j);
             line.SetPosition(0, sourcePosition);
-            line.SetPosition(1, EntityPosition(targetEntity));
-            i += 1;
+            line.SetPosition(1, EntityPosition(targetEntities[j]));
+            j += 1;
         }
     }
 
