@@ -55,7 +55,10 @@ public class PropertiesGUI : GUIPanel {
         if (voxelArray.SomethingIsSelected())
             SelectionPropertiesGUI();
         else
+        {
             MapPropertiesGUI();
+            EntityReferencePropertyManager.Reset(null);
+        }
 
         if (Input.touchCount == 1)
         {
@@ -148,6 +151,8 @@ public class PropertiesGUI : GUIPanel {
 
         if (selectedEntities.Count == 1)
             EntityPropertiesGUI(selectedEntities[0]);
+        else
+            EntityReferencePropertyManager.Reset(null);
     }
 
     private void EntityPropertiesGUI(Entity entity)
