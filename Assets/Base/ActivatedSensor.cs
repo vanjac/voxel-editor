@@ -12,14 +12,14 @@ public abstract class ActivatedSensor : Sensor
         }
 
         public Mode mode;
-        public Entity entity;
-        public System.Type entityType;
+        public EntityReference entityRef;
+        public string entityType; // https://stackoverflow.com/a/12342
         public byte tag;
 
         public Filter SetEntity(Entity e)
         {
             mode = Mode.ENTITY;
-            entity = e;
+            entityRef = new EntityReference(e);
             entityType = null;
             tag = 0;
             return this;
@@ -28,8 +28,8 @@ public abstract class ActivatedSensor : Sensor
         public Filter SetEntityType(System.Type type)
         {
             mode = Mode.ENTITY_TYPE;
-            entity = null;
-            entityType = type;
+            entityRef = new EntityReference(null);
+            entityType = type.FullName;
             tag = 0;
             return this;
         }
@@ -37,7 +37,7 @@ public abstract class ActivatedSensor : Sensor
         public Filter SetTag(byte t)
         {
             mode = Mode.TAG;
-            entity = null;
+            entityRef = new EntityReference(null);
             entityType = null;
             tag = t;
             return this;
@@ -49,9 +49,9 @@ public abstract class ActivatedSensor : Sensor
             switch (mode)
             {
                 case Mode.ENTITY:
-                    return e == entity;
+                    return e == entityRef.entity;
                 case Mode.ENTITY_TYPE:
-                    return entityType.IsInstanceOfType(e);
+                    return System.Type.GetType(entityType).IsInstanceOfType(e);
                 case Mode.TAG:
                     return e.tag == tag;
             }
@@ -63,9 +63,9 @@ public abstract class ActivatedSensor : Sensor
             switch (mode)
             {
                 case Mode.ENTITY:
-                    return entity.ToString();
+                    return entityRef.entity.ToString();
                 case Mode.ENTITY_TYPE:
-                    return entityType.ToString();
+                    return System.Type.GetType(entityType).ToString();
                 case Mode.TAG:
                     return Entity.TagToString(tag);
             }

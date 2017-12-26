@@ -14,7 +14,7 @@ public struct EntityReference
     {
         get
         {
-            if (_entity == null) // this happens when the reference is deserialized
+            if (_entity == null && guid != Guid.Empty) // this happens when the reference is deserialized
                 _entity = existingEntityIds[guid];
             return _entity;
         }
@@ -26,7 +26,9 @@ public struct EntityReference
     public EntityReference(Entity entity)
     {
         _entity = entity;
-        if (!entityIds.ContainsKey(entity))
+        if (entity == null)
+            guid = Guid.Empty;
+        else if (!entityIds.ContainsKey(entity))
         {
             guid = Guid.NewGuid();
             entityIds[entity] = guid;
