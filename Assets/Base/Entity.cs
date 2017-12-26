@@ -59,6 +59,16 @@ public abstract class Entity : PropertiesObject
     public List<EntityBehavior> behaviors = new List<EntityBehavior>();
     public byte tag = 0;
 
+    public static string TagToString(byte tag)
+    {
+        return "★♥☁".Substring(tag, 1);
+    }
+
+    public override string ToString()
+    {
+        return TagToString(tag) + " " + TypeName();
+    }
+
     public virtual string TypeName()
     {
         return "Entity";

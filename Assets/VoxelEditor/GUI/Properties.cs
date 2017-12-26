@@ -88,8 +88,12 @@ public class PropertyGUIs
     {
         int tag = (byte)property.value;
         GUILayout.Label(property.name);
-        tag = GUILayout.SelectionGrid(tag,
-            new string[] { "A", "B", "C" }, 3);
+        tag = GUILayout.SelectionGrid(tag, new string[]
+        {
+            Entity.TagToString(0),
+            Entity.TagToString(1),
+            Entity.TagToString(2)
+        }, 3);
         property.value = (byte)tag;
     }
 
@@ -102,5 +106,14 @@ public class PropertyGUIs
         GUILayout.Label(property.name);
         property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
             (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
+    }
+
+    public static void Filter(Property property)
+    {
+        var filter = (ActivatedSensor.Filter)property.value;
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        if (GUILayout.Button(filter.ToString(), GUI.skin.textField)) { }
+        GUILayout.EndHorizontal();
     }
 }

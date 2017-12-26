@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TouchSensor : Sensor
+public class TouchSensor : ActivatedSensor
 {
     public override string TypeName()
     {

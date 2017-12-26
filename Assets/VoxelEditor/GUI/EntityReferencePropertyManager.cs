@@ -35,7 +35,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         Entity entity = targetEntities[targetEntities.Count - 1];
         if (entity == currentEntity)
             return "Self";
-        return entity.TypeName();
+        return entity.ToString();
     }
 
     void Update()
