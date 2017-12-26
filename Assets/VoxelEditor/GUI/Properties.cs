@@ -86,15 +86,19 @@ public class PropertyGUIs
 
     public static void Tag(Property property)
     {
-        int tag = (byte)property.value;
-        GUILayout.Label(property.name);
-        tag = GUILayout.SelectionGrid(tag, new string[]
+        string tagString = Entity.TagToString((byte)property.value);
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        if (GUILayout.Button(tagString, GUI.skin.textField))
         {
-            Entity.TagToString(0),
-            Entity.TagToString(1),
-            Entity.TagToString(2)
-        }, 3);
-        property.value = (byte)tag;
+            // TODO: don't use GameObject.Find
+            TagPickerGUI picker = GameObject.Find("GUI").AddComponent<TagPickerGUI>();
+            picker.handler = (byte tag) =>
+            {
+                property.value = tag;
+            };
+        }
+        GUILayout.EndHorizontal();
     }
 
     public static void BehaviorCondition(Property property)

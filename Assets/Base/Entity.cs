@@ -58,10 +58,12 @@ public abstract class Entity : PropertiesObject
     public Sensor sensor;
     public List<EntityBehavior> behaviors = new List<EntityBehavior>();
     public byte tag = 0;
+    public const byte NUM_TAGS = 16;
 
     public static string TagToString(byte tag)
     {
-        return "★♥☁".Substring(tag, 1);
+        // interesting unicode symbols start at U+25A0
+        return "■□▲△●○★☆♥♡♦♢♠♤♣♧".Substring(tag, 1);
     }
 
     public override string ToString()
