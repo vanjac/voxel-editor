@@ -61,6 +61,8 @@ public class EntityPickerGUI : ActionBarGUI
 
         SelectionGUI();
 
+        GUILayout.FlexibleSpace();
+
         if (HighlightedActionBarButton(doneIcon))
         {
             handler(voxelArray.GetSelectedEntities());
