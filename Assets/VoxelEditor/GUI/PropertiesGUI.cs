@@ -30,11 +30,6 @@ public class PropertiesGUI : GUIPanel
         return new Rect(slide, 0, height / 2, height);
     }
 
-    public override string GetName()
-    {
-        return voxelArray.SomethingIsSelected() ? "Properties" : "Map Properties";
-    }
-
     public override void WindowGUI()
     {
         if (!guiInit)
@@ -100,50 +95,6 @@ public class PropertiesGUI : GUIPanel
 
     private void SelectionPropertiesGUI()
     {
-        if (GUILayout.Button("Set Material"))
-        {
-            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-            materialSelector.voxelArray = voxelArray;
-            materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
-            materialSelector.handler = voxelArray.AssignMaterial;
-        }
-
-        if (GUILayout.Button("Set Overlay"))
-        {
-            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-            materialSelector.voxelArray = voxelArray;
-            materialSelector.materialDirectory = "GameAssets/Overlays";
-            materialSelector.allowNullMaterial = true;
-            materialSelector.handler = voxelArray.AssignOverlay;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Left"))
-        {
-            voxelArray.OrientFaces(3);
-        }
-
-        if (GUILayout.Button("Right"))
-        {
-            voxelArray.OrientFaces(1);
-        }
-
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Flip H"))
-        {
-            voxelArray.OrientFaces(5);
-        }
-
-        if (GUILayout.Button("Flip V"))
-        {
-            voxelArray.OrientFaces(7);
-        }
-
-        GUILayout.EndHorizontal();
-
         if (voxelArray.selectionChanged)
         {
             selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
@@ -231,6 +182,8 @@ public class PropertiesGUI : GUIPanel
 
     private void MapPropertiesGUI()
     {
+        GUILayout.Label("World:", titleStyle);
+
         if (GUILayout.Button("Set Sky"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();

@@ -93,7 +93,12 @@ public class ActionBarGUI : GUIPanel
     {
         if (!voxelArray.SomethingIsSelected())
             return;
-        if (ActionBarButton(paintIcon)) { }
+
+        if (ActionBarButton(paintIcon))
+        {
+            PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
+            paintGUI.voxelArray = voxelArray;
+        }
 
         if (ActionBarButton(createIcon))
         {
