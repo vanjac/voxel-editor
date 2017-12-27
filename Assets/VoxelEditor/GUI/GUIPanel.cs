@@ -69,7 +69,12 @@ public abstract class GUIPanel : MonoBehaviour
             }
 
             if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position) && !holdOpen)
-                Destroy(this);
+            {
+                GUIPanel touchedPanel = PanelContainingPoint(touch.position);
+                // if the panel is behind this one
+                if (openPanels.IndexOf(touchedPanel) < openPanels.IndexOf(this))
+                    Destroy(this);
+            }
         }
         else
         {
