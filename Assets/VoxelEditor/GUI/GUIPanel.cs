@@ -93,7 +93,7 @@ public abstract class GUIPanel : MonoBehaviour
         if (newPanelRect.height == 0)
             newPanelRect.height = panelRect.height;
         panelRect = newPanelRect;
-        panelRect = GUILayout.Window(GetHashCode(), panelRect, _WindowGUI, "", GUILayout.ExpandHeight(true));
+        panelRect = GUILayout.Window(GetHashCode(), panelRect, _WindowGUI, "", GetStyle(), GUILayout.ExpandHeight(true));
     }
 
     private void _WindowGUI(int id)
@@ -139,6 +139,11 @@ public abstract class GUIPanel : MonoBehaviour
     }
 
     public abstract Rect GetRect(float width, float height);
+
+    public virtual GUIStyle GetStyle()
+    {
+        return GUI.skin.window;
+    }
 
     public virtual string GetName()
     {

@@ -7,54 +7,107 @@ public class ActionBarGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public EditorFile editorFile;
 
+    private static bool guiInit = false;
+    protected static GUIStyle buttonStyle;
+    protected static GUIStyle labelStyle;
+
+    public Texture closeIcon;
+    public Texture createIcon;
+    public Texture applySelectionIcon;
+    public Texture clearSelectionIcon;
+    public Texture paintIcon;
+    public Texture playIcon;
+    public Texture overflowIcon;
+    public Texture doneIcon; // for Entity picker
+
     public override void OnEnable()
     {
         holdOpen = true;
         stealFocus = false;
+
         base.OnEnable();
     }
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(height * .5f, 0, width - height * .5f, 0);
+        return new Rect(height/2, 0, width - height/2, height * .12f);
+    }
+
+    public override GUIStyle GetStyle()
+    {
+        return new GUIStyle();
     }
 
     public override void WindowGUI()
     {
+        if (!guiInit)
+        {
+            guiInit = true;
+            buttonStyle = new GUIStyle(GUI.skin.button);
+            buttonStyle.padding = new RectOffset(40, 40, 16, 16);
+            labelStyle = new GUIStyle(GUI.skin.label);
+            labelStyle.alignment = TextAnchor.MiddleCenter;
+        }
+
         GUILayout.BeginHorizontal();
 
-        if (GUILayout.Button("Create", GUILayout.ExpandWidth(false)))
+        if (ActionBarButton(closeIcon))
+            editorFile.Close();
+
+        SelectionGUI();
+        EditGUI();
+
+        GUILayout.FlexibleSpace();
+
+        if (ActionBarButton(playIcon))
+            editorFile.Play();
+
+        if (ActionBarButton(overflowIcon)) { }
+
+        GUILayout.EndHorizontal();
+    }
+
+    protected void SelectionGUI()
+    {
+        if (voxelArray.SomethingIsAddSelected())
         {
-            voxelArray.SubstanceTest();
+            if (ActionBarButton(applySelectionIcon))
+                voxelArray.StoreSelection();
         }
 
-        if (voxelArray.selectMode != VoxelArrayEditor.SelectMode.NONE)
+        if(voxelArray.SomethingIsStoredSelected())
         {
-            if (GUILayout.Button("+ Select", GUILayout.ExpandWidth(false)))
-            {
-                voxelArray.StoreSelection();
-            }
-        }
-        else if (voxelArray.SomethingIsSelected())
-        {
-            if (GUILayout.Button("- Select", GUILayout.ExpandWidth(false)))
+            if (ActionBarButton(clearSelectionIcon))
             {
                 voxelArray.ClearStoredSelection();
                 voxelArray.ClearSelection();
             }
         }
+    }
 
-        if (GUILayout.Button("Play", GUILayout.ExpandWidth(false)))
-            editorFile.Play();
+    protected void EditGUI()
+    {
+        if (!voxelArray.SomethingIsSelected())
+            return;
+        if (ActionBarButton(paintIcon)) { }
 
-        if (GUILayout.Button("Close", GUILayout.ExpandWidth(false)))
-            editorFile.Close();
+        if (ActionBarButton(createIcon))
+        {
+            voxelArray.SubstanceTest();
+        }
 
-        GUIStyle rightAlign = new GUIStyle(GUI.skin.label);
-        rightAlign.alignment = TextAnchor.UpperRight;
-        GUILayout.Label(SelectionString(voxelArray.selectionBounds.size), rightAlign);
+        GUILayout.Label(SelectionString(voxelArray.selectionBounds.size),
+            labelStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+    }
 
-        GUILayout.EndHorizontal();
+    protected bool ActionBarButton(Texture icon)
+    {
+        return GUILayout.Button(icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+    }
+
+    protected bool HighlightedActionBarButton(Texture icon)
+    {
+        return !GUILayout.Toggle(true, icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
     }
 
     private string SelectionString(Vector3 selectionSize)

@@ -22,7 +22,7 @@ public class VoxelArrayEditor : VoxelArray
         FACE // fill-select adjacent faces
     }
 
-    public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
+    private SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
     // all faces where face.addSelected == true
     private List<VoxelFaceReference> selectedFaces = new List<VoxelFaceReference>();
     // all faces where face.storedSelected == true
@@ -175,7 +175,17 @@ public class VoxelArrayEditor : VoxelArray
     // including stored selection
     public bool SomethingIsSelected()
     {
-        return storedSelectedFaces.Count != 0 || selectedFaces.Count != 0;
+        return SomethingIsAddSelected() || SomethingIsStoredSelected();
+    }
+
+    public bool SomethingIsAddSelected()
+    {
+        return selectedFaces.Count != 0;
+    }
+
+    public bool SomethingIsStoredSelected()
+    {
+        return storedSelectedFaces.Count != 0;
     }
 
     public ICollection<Entity> GetSelectedEntities()

@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityPickerGUI : GUIPanel
+public class EntityPickerGUI : ActionBarGUI
 {
     public delegate void EntityPickerHanlder(ICollection<Entity> entities);
-
-    public VoxelArrayEditor voxelArray;
     public EntityPickerHanlder handler;
 
     private VoxelArrayEditor.SelectionState selectionState;
 
     public override void OnEnable()
     {
-        holdOpen = true;
-        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
-        if (actionBar != null)
-            actionBar.enabled = false;
         base.OnEnable();
+        stealFocus = true;
+        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
+        if (actionBar != null) {
+            actionBar.enabled = false;
+            closeIcon = actionBar.closeIcon;
+            applySelectionIcon = actionBar.applySelectionIcon;
+            clearSelectionIcon = actionBar.clearSelectionIcon;
+            doneIcon = actionBar.doneIcon;
+        }
     }
 
     public override void OnDisable()
@@ -40,41 +43,25 @@ public class EntityPickerGUI : GUIPanel
         voxelArray.RecallSelectionState(selectionState);
     }
 
-    public override Rect GetRect(float width, float height)
-    {
-        return new Rect(height * .5f, 0, width - height * .5f, 0);
-    }
-
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
+
+        if (ActionBarButton(closeIcon))
+            Destroy(this);
+
         // TODO: not efficient to keep generating a list of selected entities
+        string labelText;
         int numSelectedEntities = voxelArray.GetSelectedEntities().Count;
         if (numSelectedEntities == 0)
-            GUILayout.Label("Pick an object... ", GUILayout.ExpandWidth(false));
+            labelText = "Pick an object...";
         else
-            GUILayout.Label(numSelectedEntities + " objects selected ", GUILayout.ExpandWidth(false));
+            labelText = numSelectedEntities + " objects selected";
+        GUILayout.Label(labelText, labelStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
 
-        // from ActionBarGUI...
+        SelectionGUI();
 
-        if (voxelArray.selectMode != VoxelArrayEditor.SelectMode.NONE)
-        {
-            if (GUILayout.Button("+ Select", GUILayout.ExpandWidth(false)))
-            {
-                voxelArray.StoreSelection();
-            }
-        }
-        else if (voxelArray.SomethingIsSelected())
-        {
-            if (GUILayout.Button("- Select", GUILayout.ExpandWidth(false)))
-            {
-                voxelArray.ClearStoredSelection();
-                voxelArray.ClearSelection();
-            }
-        }
-
-        // Toggle that looks like a button, but with On style
-        if (!GUILayout.Toggle(true, "Done", GUI.skin.button, GUILayout.ExpandWidth(false)))
+        if (HighlightedActionBarButton(doneIcon))
         {
             handler(voxelArray.GetSelectedEntities());
             Destroy(this);
