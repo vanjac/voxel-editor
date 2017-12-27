@@ -59,8 +59,7 @@ public class InputThresholdSensor : Sensor
         GUILayout.Label("Inputs:");
         if (GUILayout.Button("Add Input"))
         {
-            // TODO: don't use GameObject.Find
-            EntityPickerGUI picker = GameObject.Find("GUI").AddComponent<EntityPickerGUI>();
+            EntityPickerGUI picker = GUIPanel.guiGameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = VoxelArrayEditor.instance;
             picker.handler = (ICollection<Entity> entities) =>
             {

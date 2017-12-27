@@ -16,7 +16,7 @@ public class PropertiesGUI : GUIPanel
     private bool guiInit = false;
     private GUIStyle titleStyle;
 
-    List<Entity> selectedEntities;
+    List<Entity> selectedEntities = new List<Entity>();
 
     public override void OnEnable()
     {
@@ -52,12 +52,19 @@ public class PropertiesGUI : GUIPanel
 
         scroll = GUILayout.BeginScrollView(scroll);
 
-        if (voxelArray.SomethingIsSelected())
-            SelectionPropertiesGUI();
+        if (voxelArray.selectionChanged)
+            selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
+        if (selectedEntities.Count == 1)
+            EntityPropertiesGUI(selectedEntities[0]);
         else
         {
-            MapPropertiesGUI();
             EntityReferencePropertyManager.Reset(null);
+            if (!voxelArray.SomethingIsSelected())
+            {
+                GUILayout.BeginVertical(GUI.skin.box);
+                PropertiesObjectGUI(voxelArray.world);
+                GUILayout.EndVertical();
+            }
         }
 
         if (Input.touchCount == 1)
@@ -96,19 +103,6 @@ public class PropertiesGUI : GUIPanel
             slide = SLIDE_HIDDEN;
 
         GUILayout.EndScrollView();
-    }
-
-    private void SelectionPropertiesGUI()
-    {
-        if (voxelArray.selectionChanged)
-        {
-            selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
-        }
-
-        if (selectedEntities.Count == 1)
-            EntityPropertiesGUI(selectedEntities[0]);
-        else
-            EntityReferencePropertyManager.Reset(null);
     }
 
     private void EntityPropertiesGUI(Entity entity)
@@ -186,87 +180,15 @@ public class PropertiesGUI : GUIPanel
         }
         GUILayout.Label(obj.TypeName() + suffix + ":", titleStyle);
         foreach (Property prop in props)
-            prop.gui(prop);
-    }
-
-    private void MapPropertiesGUI()
-    {
-        GUILayout.BeginVertical(GUI.skin.box);
-        GUILayout.Label("World:", titleStyle);
-
-        if (GUILayout.Button("Set Sky"))
         {
-            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-            materialSelector.voxelArray = voxelArray;
-            materialSelector.materialDirectory = "GameAssets/Skies";
-            materialSelector.handler = (Material sky) =>
+            Property wrappedProp = prop;
+            wrappedProp.setter = v =>
             {
-                RenderSettings.skybox = sky;
+                prop.setter(v);
                 voxelArray.unsavedChanges = true;
+                adjustingSlider = true;
             };
+            prop.gui(wrappedProp);
         }
-
-        GUILayout.Label("Ambient light intensity:");
-
-        float oldValue = RenderSettings.ambientIntensity;
-        float newValue = GUILayout.HorizontalSlider(oldValue, 0, 3);
-        if (newValue != oldValue)
-        {
-            RenderSettings.ambientIntensity = newValue;
-            voxelArray.unsavedChanges = true;
-            adjustingSlider = true;
-        }
-
-        GUILayout.Label("Sun intensity:");
-
-        oldValue = RenderSettings.sun.intensity;
-        newValue = GUILayout.HorizontalSlider(oldValue, 0, 3);
-        if (newValue != oldValue)
-        {
-            RenderSettings.sun.intensity = newValue;
-            voxelArray.unsavedChanges = true;
-            adjustingSlider = true;
-        }
-
-        if (GUILayout.Button("Sun Color"))
-        {
-            ColorPickerGUI colorPicker = gameObject.AddComponent<ColorPickerGUI>();
-            colorPicker.color = RenderSettings.sun.color;
-            colorPicker.handler = (Color color) =>
-            {
-                RenderSettings.sun.color = color;
-                voxelArray.unsavedChanges = true;
-            };
-        }
-
-        GUILayout.Label("Sun Pitch:");
-
-        oldValue = RenderSettings.sun.transform.rotation.eulerAngles.x;
-        if (oldValue > 270)
-            oldValue -= 360;
-        newValue = GUILayout.HorizontalSlider(oldValue, -90, 90);
-        if (newValue != oldValue)
-        {
-            Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
-            eulerAngles.x = newValue;
-            RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
-            voxelArray.unsavedChanges = true;
-            adjustingSlider = true;
-        }
-
-        GUILayout.Label("Sun Yaw:");
-
-        oldValue = RenderSettings.sun.transform.rotation.eulerAngles.y;
-        newValue = GUILayout.HorizontalSlider(oldValue, 0, 360);
-        if (newValue != oldValue)
-        {
-            Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
-            eulerAngles.y = newValue;
-            RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
-            voxelArray.unsavedChanges = true;
-            adjustingSlider = true;
-        }
-        GUILayout.EndVertical();
     }
-
 }

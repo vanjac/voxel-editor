@@ -11,6 +11,15 @@ public abstract class GUIPanel : MonoBehaviour
 
     private static List<GUIPanel> openPanels = new List<GUIPanel>();
 
+    public static GameObject guiGameObject
+    {
+        get
+        {
+            // TODO: don't use GameObject.Find
+            return GameObject.Find("GUI");
+        }
+    }
+
     public Vector2 scroll = Vector2.zero;
     private Vector2 scrollVelocity = Vector2.zero;
 

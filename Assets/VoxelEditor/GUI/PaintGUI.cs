@@ -16,7 +16,6 @@ public class PaintGUI : GUIPanel
         if (GUILayout.Button("Set Material"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-            materialSelector.voxelArray = voxelArray;
             materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
             materialSelector.handler = voxelArray.AssignMaterial;
         }
@@ -24,7 +23,6 @@ public class PaintGUI : GUIPanel
         if (GUILayout.Button("Set Overlay"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-            materialSelector.voxelArray = voxelArray;
             materialSelector.materialDirectory = "GameAssets/Overlays";
             materialSelector.allowNullMaterial = true;
             materialSelector.handler = voxelArray.AssignOverlay;

@@ -7,7 +7,6 @@ public class MaterialSelectorGUI : GUIPanel
 {
     public delegate void MaterialSelectHandler(Material material);
 
-    public VoxelArray voxelArray;
     public MaterialSelectHandler handler;
     public string materialDirectory = "GameAssets/Materials";
     public bool allowNullMaterial = false;

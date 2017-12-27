@@ -10,8 +10,8 @@ public delegate void PropertyGUI(Property property);
 public struct Property
 {
     public string name;
-    private GetProperty getter;
-    private SetProperty setter;
+    public GetProperty getter;
+    public SetProperty setter;
     public PropertyGUI gui;
     public object value
     {
@@ -22,10 +22,7 @@ public struct Property
         set
         {
             if (!getter().Equals(value))
-            {
                 setter(value);
-                VoxelArrayEditor.instance.unsavedChanges = true;
-            }
         }
     }
 

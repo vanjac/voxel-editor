@@ -91,8 +91,7 @@ public class PropertyGUIs
         GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
         if (GUILayout.Button(tagString, GUI.skin.textField))
         {
-            // TODO: don't use GameObject.Find
-            TagPickerGUI picker = GameObject.Find("GUI").AddComponent<TagPickerGUI>();
+            TagPickerGUI picker = GUIPanel.guiGameObject.AddComponent<TagPickerGUI>();
             picker.handler = (byte tag) =>
             {
                 property.value = tag;
@@ -119,5 +118,49 @@ public class PropertyGUIs
         GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
         if (GUILayout.Button(filter.ToString(), GUI.skin.textField)) { }
         GUILayout.EndHorizontal();
+    }
+
+    public static PropertyGUI Material(string materialDirectory)
+    {
+        return (Property property) =>
+        {
+            if (GUILayout.Button("Set " + property.name))
+            {
+                MaterialSelectorGUI materialSelector
+                    = GUIPanel.guiGameObject.AddComponent<MaterialSelectorGUI>();
+                materialSelector.materialDirectory = materialDirectory;
+                materialSelector.handler = (Material mat) =>
+                {
+                    property.value = mat;
+                };
+            }
+        };
+    }
+
+    public static PropertyGUI Slider(float minValue, float maxValue)
+    {
+        return (Property property) =>
+        {
+            GUILayout.Label(property.name + ":");
+            property.value = GUILayout.HorizontalSlider(
+                (float)property.value, minValue, maxValue);
+        };
+    }
+
+    public static void Color(Property property)
+    {
+        Color baseColor = GUI.color;
+        Color valueColor = (Color)property.value;
+        GUI.color = baseColor * valueColor;
+        if (GUILayout.Button(property.name))
+        {
+            ColorPickerGUI colorPicker = GUIPanel.guiGameObject.AddComponent<ColorPickerGUI>();
+            colorPicker.color = valueColor;
+            colorPicker.handler = (Color color) =>
+            {
+                property.value = color;
+            };
+        }
+        GUI.color = baseColor;
     }
 }
