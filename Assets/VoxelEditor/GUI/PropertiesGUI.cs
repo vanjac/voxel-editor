@@ -30,6 +30,11 @@ public class PropertiesGUI : GUIPanel
         return new Rect(slide, 0, height / 2, height);
     }
 
+    public override GUIStyle GetStyle()
+    {
+        return new GUIStyle();
+    }
+
     public override void WindowGUI()
     {
         if (!guiInit)
@@ -109,9 +114,11 @@ public class PropertiesGUI : GUIPanel
     private void EntityPropertiesGUI(Entity entity)
     {
         EntityReferencePropertyManager.Reset(entity);
-        PropertiesObjectGUI(entity);
 
-        GUILayout.Label("Sensor:", titleStyle);
+        GUILayout.BeginVertical(GUI.skin.box);
+        PropertiesObjectGUI(entity);
+        GUILayout.EndVertical();
+
         if (GUILayout.Button("Change Sensor"))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
@@ -129,10 +136,9 @@ public class PropertiesGUI : GUIPanel
             };
         }
         GUILayout.BeginVertical(GUI.skin.box);
-        PropertiesObjectGUI(entity.sensor);
+        PropertiesObjectGUI(entity.sensor, " Sensor");
         GUILayout.EndVertical();
 
-        GUILayout.Label("Behaviors:", titleStyle);
         if (GUILayout.Button("Add Behavior"))
         {
             TypePickerGUI behaviorMenu = gameObject.AddComponent<TypePickerGUI>();
@@ -150,7 +156,7 @@ public class PropertiesGUI : GUIPanel
         foreach (EntityBehavior behavior in entity.behaviors)
         {
             GUILayout.BeginVertical(GUI.skin.box);
-            PropertiesObjectGUI(behavior);
+            PropertiesObjectGUI(behavior, " Behavior");
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
@@ -162,26 +168,30 @@ public class PropertiesGUI : GUIPanel
         }
     }
 
-    private void PropertiesObjectGUI(PropertiesObject obj)
+    private void PropertiesObjectGUI(PropertiesObject obj, string suffix = "")
     {
         if (obj == null)
         {
-            GUILayout.Label("None", titleStyle);
+            if (suffix.Length != 0)
+                GUILayout.Label("No " + suffix, titleStyle);
+            else
+                GUILayout.Label("None", titleStyle);
             return;
         }
         var props = obj.Properties();
         if (props.Count == 0)
         {
-            GUILayout.Label(obj.TypeName(), titleStyle);
+            GUILayout.Label(obj.TypeName() + suffix, titleStyle);
             return;
         }
-        GUILayout.Label(obj.TypeName() + ":", titleStyle);
+        GUILayout.Label(obj.TypeName() + suffix + ":", titleStyle);
         foreach (Property prop in props)
             prop.gui(prop);
     }
 
     private void MapPropertiesGUI()
     {
+        GUILayout.BeginVertical(GUI.skin.box);
         GUILayout.Label("World:", titleStyle);
 
         if (GUILayout.Button("Set Sky"))
@@ -256,6 +266,7 @@ public class PropertiesGUI : GUIPanel
             voxelArray.unsavedChanges = true;
             adjustingSlider = true;
         }
+        GUILayout.EndVertical();
     }
 
 }
