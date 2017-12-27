@@ -12,6 +12,7 @@ public class PropertiesGUI : GUIPanel
     public Font titleFont;
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
+    private bool normallyOpen = true;
 
     private bool guiInit = false;
     private GUIStyle titleStyle;
@@ -54,8 +55,14 @@ public class PropertiesGUI : GUIPanel
 
         if (voxelArray.selectionChanged)
             selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
+
+        bool propertiesDisplayed = false;
+
         if (selectedEntities.Count == 1)
+        {
             EntityPropertiesGUI(selectedEntities[0]);
+            propertiesDisplayed = true;
+        }
         else
         {
             EntityReferencePropertyManager.Reset(null);
@@ -64,6 +71,7 @@ public class PropertiesGUI : GUIPanel
                 GUILayout.BeginVertical(GUI.skin.box);
                 PropertiesObjectGUI(voxelArray.world);
                 GUILayout.EndVertical();
+                propertiesDisplayed = true;
             }
         }
 
@@ -83,18 +91,16 @@ public class PropertiesGUI : GUIPanel
         if (slidingPanel)
         {
             Touch touch = Input.GetTouch(0);
-            slidingPanel = true;
             if (Event.current.type == EventType.Repaint) // scroll at correct rate
                 slide += touch.deltaPosition.x / scaleFactor;
+            normallyOpen = slide > SLIDE_HIDDEN / 2;
         }
         else
         {
             if (Event.current.type == EventType.Repaint)
             {
-                if (slide > SLIDE_HIDDEN / 2)
-                    slide += 30 * scaleFactor;
-                else
-                    slide -= 30 * scaleFactor;
+                bool shouldOpen = normallyOpen && propertiesDisplayed;
+                slide += 6000 * scaleFactor * Time.deltaTime * (shouldOpen ? 1 : -1);
             }
         }
         if (slide > 0)
