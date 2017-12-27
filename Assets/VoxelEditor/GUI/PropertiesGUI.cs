@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PropertiesGUI : GUIPanel {
-
+public class PropertiesGUI : GUIPanel
+{
     const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
 
-    float slide = 0;
+    public float slide = 0;
     public VoxelArrayEditor voxelArray;
     public Font titleFont;
     private bool slidingPanel = false;

@@ -20,17 +20,21 @@ public class ActionBarGUI : GUIPanel
     public Texture overflowIcon;
     public Texture doneIcon; // for Entity picker
 
+    private PropertiesGUI propertiesGUI;
+
     public override void OnEnable()
     {
         holdOpen = true;
         stealFocus = false;
+        propertiesGUI = GetComponent<PropertiesGUI>();
 
         base.OnEnable();
     }
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(height/2, 0, width - height/2, height * .12f);
+        return new Rect(height/2 + propertiesGUI.slide, 0,
+            width - height/2 - propertiesGUI.slide, height * .12f);
     }
 
     public override GUIStyle GetStyle()
