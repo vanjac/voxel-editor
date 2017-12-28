@@ -9,14 +9,10 @@ public class PropertiesGUI : GUIPanel
 
     public float slide = SLIDE_HIDDEN;
     public VoxelArrayEditor voxelArray;
-    public Font titleFont;
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
     public bool normallyOpen = true;
     public bool worldSelected = false;
-
-    private bool guiInit = false;
-    private GUIStyle titleStyle;
 
     List<Entity> selectedEntities = new List<Entity>();
 
@@ -39,13 +35,6 @@ public class PropertiesGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (!guiInit)
-        {
-            guiInit = true;
-            titleStyle = new GUIStyle(GUI.skin.label);
-            titleStyle.font = titleFont;
-        }
-
         if (slidingPanel)
         {
             GUI.enabled = false;
@@ -170,18 +159,18 @@ public class PropertiesGUI : GUIPanel
         if (obj == null)
         {
             if (suffix.Length != 0)
-                GUILayout.Label("No " + suffix, titleStyle);
+                GUILayout.Label("No " + suffix, GUI.skin.customStyles[0]);
             else
-                GUILayout.Label("None", titleStyle);
+                GUILayout.Label("None", GUI.skin.customStyles[0]);
             return;
         }
         var props = obj.Properties();
         if (props.Count == 0)
         {
-            GUILayout.Label(obj.ObjectType().fullName + suffix, titleStyle);
+            GUILayout.Label(obj.ObjectType().fullName + suffix, GUI.skin.customStyles[0]);
             return;
         }
-        GUILayout.Label(obj.ObjectType().fullName + suffix + ":", titleStyle);
+        GUILayout.Label(obj.ObjectType().fullName + suffix + ":", GUI.skin.customStyles[0]);
         foreach (Property prop in props)
         {
             Property wrappedProp = prop;

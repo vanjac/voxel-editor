@@ -23,8 +23,8 @@ public class TypePickerGUI : GUIPanel
             GUILayout.BeginHorizontal(GUI.skin.box);
             GUILayout.Label(item.icon);
             GUILayout.BeginVertical();
-            GUILayout.Label(item.fullName);
-            GUILayout.Label(item.description);
+            GUILayout.Label(item.fullName, GUI.skin.customStyles[0]);
+            GUILayout.Label(item.description, GUI.skin.customStyles[1]);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             Rect buttonRect = GUILayoutUtility.GetLastRect();

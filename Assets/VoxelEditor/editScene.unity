@@ -492,7 +492,6 @@ MonoBehaviour:
   scroll: {x: 0, y: 0}
   slide: -486
   voxelArray: {fileID: 213926859}
-  titleFont: {fileID: 12800000, guid: 7520657f27b79e144b14015465e1c7a7, type: 3}
   normallyOpen: 1
   worldSelected: 0
 --- !u!4 &878046149
