@@ -156,21 +156,31 @@ public class PropertiesGUI : GUIPanel
 
     private void PropertiesObjectGUI(PropertiesObject obj, string suffix = "")
     {
+        string title;
         if (obj == null)
         {
             if (suffix.Length != 0)
-                GUILayout.Label("No " + suffix, GUI.skin.customStyles[0]);
+                title = "No " + suffix;
             else
-                GUILayout.Label("None", GUI.skin.customStyles[0]);
-            return;
+                title = "None";
         }
-        var props = obj.Properties();
-        if (props.Count == 0)
+        else
         {
-            GUILayout.Label(obj.ObjectType().fullName + suffix, GUI.skin.customStyles[0]);
-            return;
+            title = obj.ObjectType().fullName + suffix;
+            if (obj.Properties().Count > 0)
+                title += ":";
         }
-        GUILayout.Label(obj.ObjectType().fullName + suffix + ":", GUI.skin.customStyles[0]);
+        GUILayout.BeginHorizontal();
+        if (obj != null)
+        {
+            GUILayout.Label(obj.ObjectType().icon, GUI.skin.customStyles[2]);
+        }
+        GUILayout.Label(title, GUI.skin.customStyles[0]);
+        GUILayout.EndHorizontal();
+
+        if (obj == null)
+            return;
+        var props = obj.Properties();
         foreach (Property prop in props)
         {
             Property wrappedProp = prop;

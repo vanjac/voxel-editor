@@ -6,7 +6,7 @@ using UnityEngine;
 public class InputThresholdSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Input Threshold", "Active when a certain threshold of other objects are active", "altimeter", typeof(InputThresholdSensor));
+        "Threshold", "Active when a certain threshold of other objects are active", "altimeter", typeof(InputThresholdSensor));
 
     // public so it can be serialized
     // this is serialized so don't change it!
