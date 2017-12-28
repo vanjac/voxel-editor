@@ -490,6 +490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   scroll: {x: 0, y: 0}
+  slide: 0
   voxelArray: {fileID: 213926859}
   titleFont: {fileID: 12800000, guid: 7520657f27b79e144b14015465e1c7a7, type: 3}
 --- !u!4 &878046149
@@ -527,6 +528,7 @@ MonoBehaviour:
   paintIcon: {fileID: 2800000, guid: b716f268f2cc0c644817a72b0bf3d6ce, type: 3}
   playIcon: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
   overflowIcon: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
+  worldIcon: {fileID: 2800000, guid: 9076f51e512308e48b81eeabfeae83c6, type: 3}
   doneIcon: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
 --- !u!114 &878046151
 MonoBehaviour:

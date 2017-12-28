@@ -7,12 +7,13 @@ public class PropertiesGUI : GUIPanel
 {
     const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
 
-    public float slide = 0;
+    public float slide = SLIDE_HIDDEN;
     public VoxelArrayEditor voxelArray;
     public Font titleFont;
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
-    private bool normallyOpen = true;
+    public bool normallyOpen = true;
+    public bool worldSelected = false;
 
     private bool guiInit = false;
     private GUIStyle titleStyle;
@@ -33,7 +34,7 @@ public class PropertiesGUI : GUIPanel
 
     public override GUIStyle GetStyle()
     {
-        return new GUIStyle();
+        return GUIStyle.none;
     }
 
     public override void WindowGUI()
@@ -54,26 +55,29 @@ public class PropertiesGUI : GUIPanel
         scroll = GUILayout.BeginScrollView(scroll);
 
         if (voxelArray.selectionChanged)
+        {
             selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
+            worldSelected = false;
+            voxelArray.selectionChanged = false;
+        }
 
         bool propertiesDisplayed = false;
 
-        if (selectedEntities.Count == 1)
+        if (worldSelected)
+        {
+            GUILayout.BeginVertical(GUI.skin.box);
+            PropertiesObjectGUI(voxelArray.world);
+            GUILayout.EndVertical();
+            propertiesDisplayed = true;
+            EntityReferencePropertyManager.Reset(null);
+        }
+        else if (selectedEntities.Count == 1)
         {
             EntityPropertiesGUI(selectedEntities[0]);
             propertiesDisplayed = true;
         }
         else
-        {
             EntityReferencePropertyManager.Reset(null);
-            if (!voxelArray.SomethingIsSelected())
-            {
-                GUILayout.BeginVertical(GUI.skin.box);
-                PropertiesObjectGUI(voxelArray.world);
-                GUILayout.EndVertical();
-                propertiesDisplayed = true;
-            }
-        }
 
         if (Input.touchCount == 1)
         {

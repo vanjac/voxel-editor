@@ -18,6 +18,8 @@ public class ActionBarGUI : GUIPanel
     public Texture paintIcon;
     public Texture playIcon;
     public Texture overflowIcon;
+    // for overflow menu:
+    public Texture worldIcon;
     public Texture doneIcon; // for Entity picker
 
     private PropertiesGUI propertiesGUI;
@@ -39,7 +41,7 @@ public class ActionBarGUI : GUIPanel
 
     public override GUIStyle GetStyle()
     {
-        return new GUIStyle();
+        return GUIStyle.none;
     }
 
     public override void WindowGUI()
@@ -66,7 +68,10 @@ public class ActionBarGUI : GUIPanel
         if (ActionBarButton(playIcon))
             editorFile.Play();
 
-        if (ActionBarButton(overflowIcon)) { }
+        if (ActionBarButton(overflowIcon))
+        {
+            gameObject.AddComponent<OverflowMenuGUI>();
+        }
 
         GUILayout.EndHorizontal();
     }
