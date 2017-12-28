@@ -46,11 +46,10 @@ public class OverflowMenuGUI : GUIPanel
     {
         bool pressed = GUILayout.Button(name, GUILayout.Height(buttonHeight));
         Rect iconRect = GUILayoutUtility.GetLastRect();
-        iconRect.xMin += iconRect.height * .1f;
-        iconRect.yMin += iconRect.height * .1f;
-        iconRect.height *= .8f;
         iconRect.width = iconRect.height;
-        GUI.DrawTexture(iconRect, icon);
+        GUIStyle iconAlign = new GUIStyle(GUI.skin.label);
+        iconAlign.alignment = TextAnchor.MiddleCenter;
+        GUI.Label(iconRect, icon, iconAlign);
         if (pressed)
             Destroy(this);
         return pressed;
