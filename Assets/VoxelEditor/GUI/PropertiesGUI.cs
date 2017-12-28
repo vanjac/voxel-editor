@@ -104,7 +104,7 @@ public class PropertiesGUI : GUIPanel
             if (Event.current.type == EventType.Repaint)
             {
                 bool shouldOpen = normallyOpen && propertiesDisplayed;
-                slide += 6000 * scaleFactor * Time.deltaTime * (shouldOpen ? 1 : -1);
+                slide += 2000 * Time.deltaTime * (shouldOpen ? 1 : -1);
             }
         }
         if (slide > 0)

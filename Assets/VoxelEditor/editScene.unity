@@ -490,9 +490,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   scroll: {x: 0, y: 0}
-  slide: 0
+  slide: -486
   voxelArray: {fileID: 213926859}
   titleFont: {fileID: 12800000, guid: 7520657f27b79e144b14015465e1c7a7, type: 3}
+  normallyOpen: 1
+  worldSelected: 0
 --- !u!4 &878046149
 Transform:
   m_ObjectHideFlags: 0
