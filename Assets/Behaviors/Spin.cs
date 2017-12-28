@@ -5,7 +5,7 @@ using UnityEngine;
 public class Spin : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Spin", "Rotate continuously", typeof(Spin));
+        "Spin", "Rotate continuously", "format-rotate-90", typeof(Spin));
 
     float speed = 50;
 

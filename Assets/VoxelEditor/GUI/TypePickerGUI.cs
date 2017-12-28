@@ -16,11 +16,24 @@ public class TypePickerGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        for (int i = 0; i < items.Length; i++ )
-            if (GUILayout.Button(items[i].fullName))
+        GUILayout.BeginScrollView(scroll);
+        for (int i = 0; i < items.Length; i++)
+        {
+            PropertiesObjectType item = items[i];
+            GUILayout.BeginHorizontal(GUI.skin.box);
+            GUILayout.Label(item.icon);
+            GUILayout.BeginVertical();
+            GUILayout.Label(item.fullName);
+            GUILayout.Label(item.description);
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+            Rect buttonRect = GUILayoutUtility.GetLastRect();
+            if (GUI.Button(buttonRect, "", GUIStyle.none))
             {
-                handler(items[i]);
+                handler(item);
                 Destroy(this);
             }
+        }
+        GUILayout.EndScrollView();
     }
 }

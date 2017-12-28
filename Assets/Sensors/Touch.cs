@@ -5,7 +5,7 @@ using UnityEngine;
 public class TouchSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Touch", "Active when touching another object", typeof(TouchSensor));
+        "Touch", "Active when touching another object", "vector-combine", typeof(TouchSensor));
 
     public override PropertiesObjectType ObjectType()
     {

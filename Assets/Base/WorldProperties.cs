@@ -5,7 +5,7 @@ using UnityEngine;
 public class WorldProperties : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "World", "Properties that affect the entire world", typeof(WorldProperties));
+        "World", "Properties that affect the entire world", "earth", typeof(WorldProperties));
 
     public PropertiesObjectType ObjectType()
     {

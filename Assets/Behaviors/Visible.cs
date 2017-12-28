@@ -5,7 +5,7 @@ using UnityEngine;
 public class Visible : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Visible", "Object is visible in the game", typeof(Visible));
+        "Visible", "Object is visible in the game", "eye", typeof(Visible));
 
     public override PropertiesObjectType ObjectType()
     {

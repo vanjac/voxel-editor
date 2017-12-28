@@ -55,6 +55,17 @@ public class PropertiesObjectType
     public readonly Type type;
     private readonly PropertiesObjectConstructor constructor;
 
+    private Texture _icon;
+    public Texture icon
+    {
+        get
+        {
+            if (_icon == null && iconName.Length > 0)
+                _icon = Resources.Load<Texture>("Icons/" + iconName);
+            return _icon;
+        }
+    }
+
     public PropertiesObjectType(string fullName, Type type) {
         this.fullName = fullName;
         description = "";
@@ -113,7 +124,7 @@ public interface PropertiesObject
 public abstract class Entity : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Entity", "Any object in the game", typeof(Entity));
+        "Entity", "Any object in the game", "circle-outline", typeof(Entity));
 
     public EntityComponent component;
     public Sensor sensor;

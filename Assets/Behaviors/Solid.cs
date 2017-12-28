@@ -5,7 +5,7 @@ using UnityEngine;
 public class Solid : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Solid", "Blocks and collides with other objects", typeof(Solid));
+        "Solid", "Blocks and collides with other objects", "cube", typeof(Solid));
 
     public override PropertiesObjectType ObjectType()
     {
