@@ -21,7 +21,7 @@ public class TypePickerGUI : GUIPanel
         {
             PropertiesObjectType item = items[i];
             GUILayout.BeginHorizontal(GUI.skin.box);
-            GUILayout.Label(item.icon);
+            GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();
             GUILayout.Label(item.fullName, GUI.skin.customStyles[0]);
             GUILayout.Label(item.description, GUI.skin.customStyles[1]);
