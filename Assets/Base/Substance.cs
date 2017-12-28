@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Substance : DynamicEntity
 {
+    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+        "Substance", "An object made of blocks", typeof(Substance));
+
     public HashSet<Voxel> voxels;
 
     private VoxelArray voxelArray;
@@ -23,9 +26,9 @@ public class Substance : DynamicEntity
         }
     }
 
-    public override string TypeName()
+    public override PropertiesObjectType ObjectType()
     {
-        return "Substance";
+        return objectType;
     }
 
     // called by voxel

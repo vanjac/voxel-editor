@@ -13,7 +13,7 @@ public abstract class ActivatedSensor : Sensor
 
         public Mode mode;
         public EntityReference entityRef;
-        public string entityType; // https://stackoverflow.com/a/12342
+        public PropertiesObjectType entityType;
         public byte tag;
 
         public Filter SetEntity(Entity e)
@@ -25,11 +25,11 @@ public abstract class ActivatedSensor : Sensor
             return this;
         }
 
-        public Filter SetEntityType(System.Type type)
+        public Filter SetEntityType(PropertiesObjectType type)
         {
             mode = Mode.ENTITY_TYPE;
             entityRef = new EntityReference(null);
-            entityType = type.FullName;
+            entityType = type;
             tag = 0;
             return this;
         }
@@ -51,7 +51,7 @@ public abstract class ActivatedSensor : Sensor
                 case Mode.ENTITY:
                     return e == entityRef.entity;
                 case Mode.ENTITY_TYPE:
-                    return System.Type.GetType(entityType).IsInstanceOfType(e);
+                    return entityType.type.IsInstanceOfType(e); // TODO: check behaviors
                 case Mode.TAG:
                     return e.tag == tag;
             }
@@ -65,7 +65,7 @@ public abstract class ActivatedSensor : Sensor
                 case Mode.ENTITY:
                     return entityRef.entity.ToString();
                 case Mode.ENTITY_TYPE:
-                    return System.Type.GetType(entityType).ToString();
+                    return entityType.fullName;
                 case Mode.TAG:
                     return Entity.TagToString(tag);
             }
@@ -73,7 +73,7 @@ public abstract class ActivatedSensor : Sensor
         }
     }
 
-    private Filter filter = new Filter().SetEntityType(typeof(Entity));
+    private Filter filter = new Filter().SetEntityType(Entity.objectType);
 
     public override ICollection<Property> Properties()
     {

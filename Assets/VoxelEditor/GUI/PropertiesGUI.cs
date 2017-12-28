@@ -127,15 +127,9 @@ public class PropertiesGUI : GUIPanel
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.items = GameScripts.sensors;
-            sensorMenu.handler = (System.Type type) =>
+            sensorMenu.handler = (PropertiesObjectType type) =>
             {
-                if (type == null)
-                    entity.sensor = null;
-                else
-                {
-                    Sensor newSensor = (Sensor)System.Activator.CreateInstance(type);
-                    entity.sensor = newSensor;
-                }
+                entity.sensor = (Sensor)type.Create();
                 voxelArray.unsavedChanges = true;
             };
         }
@@ -147,10 +141,9 @@ public class PropertiesGUI : GUIPanel
         {
             TypePickerGUI behaviorMenu = gameObject.AddComponent<TypePickerGUI>();
             behaviorMenu.items = GameScripts.behaviors;
-            behaviorMenu.handler = (System.Type type) =>
+            behaviorMenu.handler = (PropertiesObjectType type) =>
             {
-                EntityBehavior newBehavior =
-                    (EntityBehavior)System.Activator.CreateInstance(type);
+                EntityBehavior newBehavior = (EntityBehavior)type.Create();
                 entity.behaviors.Add(newBehavior);
                 voxelArray.unsavedChanges = true;
             };
@@ -185,10 +178,10 @@ public class PropertiesGUI : GUIPanel
         var props = obj.Properties();
         if (props.Count == 0)
         {
-            GUILayout.Label(obj.TypeName() + suffix, titleStyle);
+            GUILayout.Label(obj.ObjectType().fullName + suffix, titleStyle);
             return;
         }
-        GUILayout.Label(obj.TypeName() + suffix + ":", titleStyle);
+        GUILayout.Label(obj.ObjectType().fullName + suffix + ":", titleStyle);
         foreach (Property prop in props)
         {
             Property wrappedProp = prop;

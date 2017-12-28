@@ -119,7 +119,7 @@ public class MapFileWriter {
         JSONObject propsObject = new JSONObject();
 
         if (includeName)
-            propsObject["name"] = obj.TypeName();
+            propsObject["name"] = obj.ObjectType().fullName;
 
         JSONArray propertiesArray = new JSONArray();
         foreach (Property prop in obj.Properties())

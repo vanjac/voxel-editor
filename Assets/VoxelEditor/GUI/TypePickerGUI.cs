@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class TypePickerGUI : GUIPanel
 {
-    public delegate void TypeHandler(System.Type type);
+    public delegate void TypeHandler(PropertiesObjectType type);
 
     public TypeHandler handler;
-    public GameScripts.NamedType[] items;
+    public PropertiesObjectType[] items;
 
     public override Rect GetRect(float width, float height)
     {
@@ -17,9 +17,9 @@ public class TypePickerGUI : GUIPanel
     public override void WindowGUI()
     {
         for (int i = 0; i < items.Length; i++ )
-            if (GUILayout.Button(items[i].name))
+            if (GUILayout.Button(items[i].fullName))
             {
-                handler(items[i].type);
+                handler(items[i]);
                 Destroy(this);
             }
     }

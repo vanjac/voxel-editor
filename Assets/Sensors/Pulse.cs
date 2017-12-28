@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class PulseSensor : Sensor
 {
+    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+        "Pulse", "Turns on and off continuously", typeof(PulseSensor));
+
     private bool startOn = false;
     private float offTime = 1;
     private float onTime = 1;
 
-    public override string TypeName()
+    public override PropertiesObjectType ObjectType()
     {
-        return "Pulse";
+        return objectType;
     }
 
     public override ICollection<Property> Properties()

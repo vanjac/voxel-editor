@@ -126,7 +126,7 @@ public class MapFileReader {
                 Debug.Log("Couldn't find sensor type " + sensorName + "!");
             else
             {
-                Sensor newSensor = (Sensor)System.Activator.CreateInstance(sensorType);
+                Sensor newSensor = (Sensor)sensorType.Create();
                 ReadPropertiesObject(sensorObject, newSensor);
                 entity.sensor = newSensor;
             }
@@ -144,8 +144,7 @@ public class MapFileReader {
                     Debug.Log("Couldn't find behavior type " + behaviorName + "!");
                     continue;
                 }
-                EntityBehavior newBehavior =
-                    (EntityBehavior)System.Activator.CreateInstance(behaviorType);
+                EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
                 ReadPropertiesObject(behaviorObject, newBehavior);
                 entity.behaviors.Add(newBehavior);
             }

@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class InputThresholdSensor : Sensor
 {
+    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+        "Input Threshold", "Active when a certain threshold of other objects are active", typeof(InputThresholdSensor));
+
     // public so it can be serialized
     // this is serialized so don't change it!
     public struct Input
@@ -24,9 +27,9 @@ public class InputThresholdSensor : Sensor
     public int threshold = 1;
     private Input[] inputs = new Input[0];
 
-    public override string TypeName()
+    public override PropertiesObjectType ObjectType()
     {
-        return "Input Threshold";
+        return objectType;
     }
 
     public override ICollection<Property> Properties()

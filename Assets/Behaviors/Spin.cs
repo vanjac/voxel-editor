@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class Spin : EntityBehavior
 {
+    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+        "Spin", "Rotate continuously", typeof(Spin));
+
     float speed = 50;
 
-    public override string TypeName()
+    public override PropertiesObjectType ObjectType()
     {
-        return "Spin";
+        return objectType;
     }
 
     public override ICollection<Property> Properties()

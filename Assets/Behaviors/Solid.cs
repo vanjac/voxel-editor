@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Solid : EntityBehavior
 {
-    public override string TypeName()
+    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+        "Solid", "Blocks and collides with other objects", typeof(Solid));
+
+    public override PropertiesObjectType ObjectType()
     {
-        return "Solid";
+        return objectType;
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

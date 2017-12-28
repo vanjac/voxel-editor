@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class TouchSensor : ActivatedSensor
 {
-    public override string TypeName()
+    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+        "Touch", "Active when touching another object", typeof(TouchSensor));
+
+    public override PropertiesObjectType ObjectType()
     {
-        return "Touch";
+        return objectType;
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

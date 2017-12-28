@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class WorldProperties : PropertiesObject
 {
-    public string TypeName()
+    public static PropertiesObjectType objectType = new PropertiesObjectType(
+        "World", "Properties that affect the entire world", typeof(WorldProperties));
+
+    public PropertiesObjectType ObjectType()
     {
-        return "World";
+        return objectType;
     }
 
     public ICollection<Property> Properties()

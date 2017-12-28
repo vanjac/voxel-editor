@@ -43,14 +43,78 @@ public struct Property
     }
 }
 
+public class PropertiesObjectType
+{
+    public static readonly PropertiesObjectType NONE = new PropertiesObjectType("None", null);
+
+    public delegate PropertiesObject PropertiesObjectConstructor();
+
+    public readonly string fullName;
+    public readonly string description;
+    public readonly string iconName;
+    public readonly Type type;
+    private readonly PropertiesObjectConstructor constructor;
+
+    public PropertiesObjectType(string fullName, Type type) {
+        this.fullName = fullName;
+        description = "";
+        iconName = "";
+        this.type = type;
+        constructor = DefaultConstructor;
+    }
+
+    public PropertiesObjectType(string fullName, string description, Type type)
+    {
+        this.fullName = fullName;
+        this.description = description;
+        iconName = "";
+        this.type = type;
+        constructor = DefaultConstructor;
+    }
+
+    public PropertiesObjectType(string fullName, string description, string iconName, Type type)
+    {
+        this.fullName = fullName;
+        this.description = description;
+        this.iconName = iconName;
+        this.type = type;
+        constructor = DefaultConstructor;
+    }
+
+    public PropertiesObjectType(string fullName, string description, string iconName,
+        Type type, PropertiesObjectConstructor constructor)
+    {
+        this.fullName = fullName;
+        this.description = description;
+        this.iconName = iconName;
+        this.type = type;
+        this.constructor = constructor;
+    }
+
+    private PropertiesObject DefaultConstructor()
+    {
+        if (type == null)
+            return null;
+        return (PropertiesObject)System.Activator.CreateInstance(type);
+    }
+
+    public PropertiesObject Create()
+    {
+        return constructor();
+    }
+}
+
 public interface PropertiesObject
 {
-    string TypeName();
+    PropertiesObjectType ObjectType();
     ICollection<Property> Properties();
 }
 
 public abstract class Entity : PropertiesObject
 {
+    public static PropertiesObjectType objectType = new PropertiesObjectType(
+        "Entity", "Any object in the game", typeof(Entity));
+
     public EntityComponent component;
     public Sensor sensor;
     public List<EntityBehavior> behaviors = new List<EntityBehavior>();
@@ -65,12 +129,12 @@ public abstract class Entity : PropertiesObject
 
     public override string ToString()
     {
-        return TagToString(tag) + " " + TypeName();
+        return TagToString(tag) + " " + ObjectType().fullName;
     }
 
-    public virtual string TypeName()
+    public virtual PropertiesObjectType ObjectType()
     {
-        return "Entity";
+        return objectType;
     }
 
     public virtual ICollection<Property> Properties()
@@ -141,6 +205,9 @@ public abstract class EntityComponent : MonoBehaviour
 
 public abstract class EntityBehavior : PropertiesObject
 {
+    public static PropertiesObjectType objectType = new PropertiesObjectType(
+        "Behavior", typeof(EntityBehavior));
+
     public enum Condition : byte
     {
         ON=0, OFF=1, BOTH=2
@@ -150,9 +217,9 @@ public abstract class EntityBehavior : PropertiesObject
     public Entity targetEntity = null; // null for self
     public bool targetEntityIsActivator = false;
 
-    public virtual string TypeName()
+    public virtual PropertiesObjectType ObjectType()
     {
-        return "Behavior";
+        return objectType;
     }
 
     public virtual ICollection<Property> Properties()
@@ -171,9 +238,12 @@ public abstract class EntityBehavior : PropertiesObject
 
 public abstract class Sensor : PropertiesObject
 {
-    public virtual string TypeName()
+    public static PropertiesObjectType objectType = new PropertiesObjectType(
+        "Sensor", typeof(Sensor));
+
+    public virtual PropertiesObjectType ObjectType()
     {
-        return "Sensor";
+        return objectType;
     }
 
     public virtual ICollection<Property> Properties()

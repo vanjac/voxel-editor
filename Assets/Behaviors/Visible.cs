@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Visible : EntityBehavior
 {
-    public override string TypeName()
+    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+        "Visible", "Object is visible in the game", typeof(Visible));
+
+    public override PropertiesObjectType ObjectType()
     {
-        return "Visible";
+        return objectType;
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)
