@@ -5,18 +5,35 @@ using UnityEngine;
 
 public abstract class ActivatedSensor : Sensor
 {
-    public class Filter
+    public interface Filter
     {
-        public enum Mode : byte
+        bool EntityMatches(EntityComponent entityComponent);
+    }
+
+    public class EntityFilter : Filter
+    {
+        public EntityReference entityRef;
+
+        public EntityFilter() { } // deserialization
+
+        public EntityFilter(Entity e)
         {
-            ENTITY, ENTITY_TYPE, TAG
+            entityRef = new EntityReference(e);
         }
 
-        public Mode mode;
+        public bool EntityMatches(EntityComponent entityComponent)
+        {
+            return entityComponent.entity == entityRef.entity;
+        }
 
-        public EntityReference entityRef;
-        public byte tag;
+        public override string ToString()
+        {
+            return "Only " + entityRef.entity.ToString();
+        }
+    }
 
+    public class EntityTypeFilter : Filter
+    {
         // :(
         public PropertiesObjectType _entityType; // will be serialized
         [XmlIgnore]
@@ -52,64 +69,47 @@ public abstract class ActivatedSensor : Sensor
             }
         }
 
-        public Filter SetEntity(Entity e)
-        {
-            mode = Mode.ENTITY;
-            entityRef = new EntityReference(e);
-            entityType = null;
-            tag = 0;
-            return this;
-        }
+        public EntityTypeFilter() { } // deserialization
 
-        public Filter SetEntityType(PropertiesObjectType type)
+        public EntityTypeFilter(PropertiesObjectType type)
         {
-            mode = Mode.ENTITY_TYPE;
-            entityRef = new EntityReference(null);
             entityType = type;
-            tag = 0;
-            return this;
-        }
-
-        public Filter SetTag(byte t)
-        {
-            mode = Mode.TAG;
-            entityRef = new EntityReference(null);
-            entityType = null;
-            tag = t;
-            return this;
         }
 
         public bool EntityMatches(EntityComponent entityComponent)
         {
-            Entity e = entityComponent.entity;
-            switch (mode)
-            {
-                case Mode.ENTITY:
-                    return e == entityRef.entity;
-                case Mode.ENTITY_TYPE:
-                    return entityType.type.IsInstanceOfType(e); // TODO: check behaviors
-                case Mode.TAG:
-                    return e.tag == tag;
-            }
-            return true;
+            return entityType.type.IsInstanceOfType(entityComponent.entity); // TODO: check behaviors
         }
 
         public override string ToString()
         {
-            switch (mode)
-            {
-                case Mode.ENTITY:
-                    return entityRef.entity.ToString();
-                case Mode.ENTITY_TYPE:
-                    return entityType.fullName;
-                case Mode.TAG:
-                    return Entity.TagToString(tag);
-            }
-            return "Filter";
+            return entityType.fullName;
         }
     }
 
-    private Filter filter = new Filter().SetEntityType(Entity.objectType);
+    public class TagFilter : Filter
+    {
+        public byte tag;
+
+        public TagFilter() { } // deserialization
+
+        public TagFilter(byte tag)
+        {
+            this.tag = tag;
+        }
+
+        public bool EntityMatches(EntityComponent entityComponent)
+        {
+            return entityComponent.entity.tag == tag;
+        }
+
+        public override string ToString()
+        {
+            return "With tag " + Entity.TagToString(tag);
+        }
+    }
+
+    private Filter filter = new EntityTypeFilter(Entity.objectType);
 
     public override ICollection<Property> Properties()
     {
