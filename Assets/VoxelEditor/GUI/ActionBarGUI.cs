@@ -107,7 +107,13 @@ public class ActionBarGUI : GUIPanel
 
         if (ActionBarButton(createIcon))
         {
-            voxelArray.SubstanceTest();
+            TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
+            picker.items = GameScripts.entityTemplates;
+            picker.handler = (PropertiesObjectType type) =>
+            {
+                Substance substance = (Substance)type.Create();
+                voxelArray.SubstanceTest(substance);
+            };
         }
 
         GUILayout.Label(SelectionString(voxelArray.selectionBounds.size),

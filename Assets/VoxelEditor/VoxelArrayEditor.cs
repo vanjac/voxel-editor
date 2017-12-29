@@ -554,13 +554,13 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
-    public void SubstanceTest()
+    public void SubstanceTest(Substance substance)
     {
-        Substance substance = new Substance(this);
         foreach (VoxelFaceReference faceRef in IterateSelected())
         {
             faceRef.voxel.substance = substance;
             VoxelModified(faceRef.voxel);
         }
+        selectionChanged = true;
     }
 }

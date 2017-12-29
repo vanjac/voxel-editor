@@ -13,6 +13,20 @@ public class GameScripts
     }
 
 
+    public static PropertiesObjectType[] entityTemplates = new PropertiesObjectType[]
+    {
+        new PropertiesObjectType("Solid Substance",
+            "A block that is solid and opaque by default",
+            "cube",
+            typeof(Substance),
+            () => {
+                Substance substance = new Substance(VoxelArrayEditor.instance);
+                substance.behaviors.Add(new Visible());
+                substance.behaviors.Add(new Solid());
+                return substance;
+            })
+    };
+
     public static PropertiesObjectType[] sensors = new PropertiesObjectType[]
     {
         PropertiesObjectType.NONE,
