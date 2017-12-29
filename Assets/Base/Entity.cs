@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public delegate object GetProperty();
@@ -43,6 +44,11 @@ public struct Property
     }
 }
 
+
+// needs to support serialization since it is a part of ActivatedSensor.Filter
+// PropertiesObjectType is only serialized with its full name
+// after it is deserialized, it is replaced with the correct instance of PropertiesObjectType
+// with all the missing data (this is done by Filter)
 public class PropertiesObjectType
 {
     public static readonly PropertiesObjectType NONE = new PropertiesObjectType("None", null);
@@ -50,8 +56,11 @@ public class PropertiesObjectType
     public delegate PropertiesObject PropertiesObjectConstructor();
 
     public readonly string fullName;
+    [XmlIgnore]
     public readonly string description;
+    [XmlIgnore]
     public readonly string iconName;
+    [XmlIgnore]
     public readonly Type type;
     private readonly PropertiesObjectConstructor constructor;
 
@@ -65,6 +74,9 @@ public class PropertiesObjectType
             return _icon;
         }
     }
+
+    // empty constructor for deserialization
+    public PropertiesObjectType() { }
 
     public PropertiesObjectType(string fullName, Type type) {
         this.fullName = fullName;

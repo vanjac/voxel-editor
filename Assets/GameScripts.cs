@@ -42,4 +42,10 @@ public class GameScripts
         Spin.objectType
     };
 
+    public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]
+    {
+        Entity.objectType,
+        Substance.objectType
+    };
+
 }

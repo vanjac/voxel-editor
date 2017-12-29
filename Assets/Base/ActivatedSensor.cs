@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public abstract class ActivatedSensor : Sensor
 {
-    public struct Filter
+    public class Filter
     {
         public enum Mode : byte
         {
@@ -12,9 +13,44 @@ public abstract class ActivatedSensor : Sensor
         }
 
         public Mode mode;
+
         public EntityReference entityRef;
-        public PropertiesObjectType entityType;
         public byte tag;
+
+        // :(
+        public PropertiesObjectType _entityType; // will be serialized
+        [XmlIgnore]
+        public PropertiesObjectType entityType
+        {
+            get
+            {
+                if (_entityType != null && _entityType.type == null)
+                {
+                    // was deserialized. See comment on PropertiesObjectType for more info
+                    PropertiesObjectType instance = GameScripts.FindTypeWithName(
+                        GameScripts.entityFilterTypes, _entityType.fullName);
+                    if (instance != null)
+                    {
+                        _entityType = instance;
+                        return _entityType;
+                    }
+                    instance = GameScripts.FindTypeWithName(
+                            GameScripts.behaviors, _entityType.fullName);
+                    if (instance != null)
+                    {
+                        _entityType = instance;
+                        return _entityType;
+                    }
+                    Debug.Log("Couldn't find matching filter type for " + _entityType.fullName + "!");
+                    _entityType = null;
+                }
+                return _entityType;
+            }
+            set
+            {
+                _entityType = value;
+            }
+        }
 
         public Filter SetEntity(Entity e)
         {
