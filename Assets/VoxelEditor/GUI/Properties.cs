@@ -9,12 +9,19 @@ public class PropertyGUIs
     private delegate void KeyboardHandler(string text);
     private static KeyboardHandler keyboardHandler;
 
+    private static void AlignedLabel(Property property)
+    {
+        GUIStyle style = new GUIStyle(GUI.skin.label);
+        style.alignment = TextAnchor.MiddleLeft;
+        GUILayout.Label(property.name, style, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+    }
+
     public static void Empty(Property property) { }
 
     public static void Text(Property property)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        AlignedLabel(property);
         property.value = GUILayout.TextField((string)property.value);
         GUILayout.EndHorizontal();
     }
@@ -22,7 +29,7 @@ public class PropertyGUIs
     public static void Toggle(Property property)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        AlignedLabel(property);
         GUILayout.FlexibleSpace();
         property.value = GUILayout.Toggle((bool)property.value, "");
         GUILayout.EndHorizontal();
@@ -34,7 +41,7 @@ public class PropertyGUIs
         string sValue = fValue.ToString();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        AlignedLabel(property);
         if (TouchScreenKeyboard.isSupported)
         {
             if (numberKeyboard != null && numberKeyboard.status != TouchScreenKeyboard.Status.Visible)
@@ -88,7 +95,7 @@ public class PropertyGUIs
     {
         string tagString = Entity.TagToString((byte)property.value);
         GUILayout.BeginHorizontal();
-        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        AlignedLabel(property);
         if (GUILayout.Button(tagString, GUI.skin.textField))
         {
             TagPickerGUI picker = GUIPanel.guiGameObject.AddComponent<TagPickerGUI>();
@@ -115,7 +122,7 @@ public class PropertyGUIs
     {
         var filter = (ActivatedSensor.Filter)property.value;
         GUILayout.BeginHorizontal();
-        GUILayout.Label(property.name + " ", GUILayout.ExpandWidth(false));
+        AlignedLabel(property);
         if (GUILayout.Button(filter.ToString(), GUI.skin.textField)) { }
         GUILayout.EndHorizontal();
     }

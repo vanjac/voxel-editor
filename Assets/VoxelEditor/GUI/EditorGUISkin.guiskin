@@ -320,15 +320,15 @@ MonoBehaviour:
       m_Top: 4
       m_Bottom: 4
     m_Margin:
-      m_Left: 4
-      m_Right: 4
-      m_Top: 4
-      m_Bottom: 4
+      m_Left: 36
+      m_Right: 36
+      m_Top: 12
+      m_Bottom: 12
     m_Padding:
-      m_Left: 3
-      m_Right: 3
-      m_Top: 3
-      m_Bottom: 3
+      m_Left: 20
+      m_Right: 20
+      m_Top: 12
+      m_Bottom: 12
     m_Overflow:
       m_Left: 0
       m_Right: 0
