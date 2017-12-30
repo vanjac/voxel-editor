@@ -54,6 +54,8 @@ public class ActionBarGUI : GUIPanel
             buttonStyle.padding = new RectOffset(40, 40, 16, 16);
             labelStyle = new GUIStyle(GUI.skin.label);
             labelStyle.alignment = TextAnchor.MiddleCenter;
+            labelStyle.normal.background = GUI.skin.box.normal.background;
+            labelStyle.border = GUI.skin.box.border;
         }
 
         GUILayout.BeginHorizontal();
@@ -119,15 +121,14 @@ public class ActionBarGUI : GUIPanel
             };
         }
 
-        string labelText;
+        GUILayout.FlexibleSpace();
         int moveCount = 0;
         if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE)
             moveCount = Mathf.Abs(touchListener.movingAxis.moveCount);
         if (moveCount != 0)
-            labelText = moveCount.ToString();
+            ActionBarLabel(moveCount.ToString());
         else
-            labelText = SelectionString(voxelArray.selectionBounds.size);
-        GUILayout.Label(labelText, labelStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
     }
 
     protected bool ActionBarButton(Texture icon)
@@ -138,6 +139,13 @@ public class ActionBarGUI : GUIPanel
     protected bool HighlightedActionBarButton(Texture icon)
     {
         return !GUILayout.Toggle(true, icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+    }
+
+    protected void ActionBarLabel(string text)
+    {
+        if (text.Length == 0)
+            return;
+        GUILayout.Label(text, labelStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
     }
 
     private string SelectionString(Vector3 selectionSize)

@@ -40,9 +40,9 @@ public class CreateSubstanceGUI : ActionBarGUI
             Destroy(this);
         }
 
-        GUILayout.Label("Push or pull to create a substance.", labelStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
-
         SelectionGUI();
+        GUILayout.FlexibleSpace();
+        ActionBarLabel("Push or pull to create a substance");
 
         GUILayout.FlexibleSpace();
 

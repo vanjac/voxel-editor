@@ -50,16 +50,15 @@ public class EntityPickerGUI : ActionBarGUI
         if (ActionBarButton(closeIcon))
             Destroy(this);
 
+        SelectionGUI();
+        GUILayout.FlexibleSpace();
+
         // TODO: not efficient to keep generating a list of selected entities
-        string labelText;
         int numSelectedEntities = voxelArray.GetSelectedEntities().Count;
         if (numSelectedEntities == 0)
-            labelText = "Pick an object...";
+            ActionBarLabel("Pick an object...");
         else
-            labelText = numSelectedEntities + " objects selected";
-        GUILayout.Label(labelText, labelStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
-
-        SelectionGUI();
+            ActionBarLabel(numSelectedEntities + " objects selected");
 
         GUILayout.FlexibleSpace();
 
