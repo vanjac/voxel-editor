@@ -24,7 +24,8 @@ public abstract class GUIPanel : MonoBehaviour
     private Vector2 scrollVelocity = Vector2.zero;
 
     protected Vector2 touchStartPos = Vector2.zero;
-    protected bool horizontalSlide, verticalSlide;
+    protected bool panelSlide, horizontalSlide, verticalSlide;
+
     protected bool holdOpen = false;
     protected bool stealFocus = true;
     protected float scaleFactor;
@@ -66,27 +67,30 @@ public abstract class GUIPanel : MonoBehaviour
             {
                 touchStartPos = touch.position;
                 if (PanelContainsPoint(touch.position))
+                {
                     scrollVelocity = Vector2.zero;
+                    panelSlide = true;
+                }
+                else if (!holdOpen)
+                {
+                    GUIPanel touchedPanel = PanelContainingPoint(touch.position);
+                    // if the panel is behind this one
+                    if (openPanels.IndexOf(touchedPanel) < openPanels.IndexOf(this))
+                        Destroy(this);
+                }
             }
-            if ((!verticalSlide) && Mathf.Abs((touch.position - touchStartPos).x) > Screen.height * .06)
+            if (panelSlide && !verticalSlide && Mathf.Abs((touch.position - touchStartPos).x) > Screen.height * .06)
             {
                 horizontalSlide = true;
             }
-            if ((!horizontalSlide) && Mathf.Abs((touch.position - touchStartPos).y) > Screen.height * .06)
+            if (panelSlide && !horizontalSlide && Mathf.Abs((touch.position - touchStartPos).y) > Screen.height * .06)
             {
                 verticalSlide = true;
-            }
-
-            if (touch.phase == TouchPhase.Began && !PanelContainsPoint(touch.position) && !holdOpen)
-            {
-                GUIPanel touchedPanel = PanelContainingPoint(touch.position);
-                // if the panel is behind this one
-                if (openPanels.IndexOf(touchedPanel) < openPanels.IndexOf(this))
-                    Destroy(this);
             }
         }
         else
         {
+            panelSlide = false;
             horizontalSlide = false;
             verticalSlide = false;
         }
