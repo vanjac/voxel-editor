@@ -33,6 +33,8 @@ public class VoxelArrayEditor : VoxelArray
     private Substance boxSelectSubstance = null;
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
+    public Substance substanceToCreate = null;
+
     public struct SelectionState
     {
         public List<VoxelFaceReference> selectedFaces;
@@ -397,6 +399,7 @@ public class VoxelArrayEditor : VoxelArray
 
         // HashSets prevent duplicate elements
         var voxelsToUpdate = new HashSet<Voxel>();
+        bool createdSubstance = false;
 
         for (int i = 0; i < selectedFaces.Count; i++)
         {
@@ -426,6 +429,7 @@ public class VoxelArrayEditor : VoxelArray
             Substance movingSubstance = oldVoxel.substance;
 
             bool blocked = false; // is movement blocked?
+            Voxel newSubstanceBlock = null;
 
             if (pushing)
             {
@@ -443,6 +447,12 @@ public class VoxelArrayEditor : VoxelArray
                 if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
                     blocked = true;
                 oldVoxel.Clear();
+            }
+            else if (pulling && substanceToCreate != null)
+            {
+                newSubstanceBlock = CreateSubstanceBlock(newPos, substanceToCreate, movingFace);
+                oldVoxel.faces[faceI].addSelected = false;
+                blocked = true;
             }
             else if (pulling)
             {
@@ -487,11 +497,25 @@ public class VoxelArrayEditor : VoxelArray
                 newVoxel.faces[faceI].addSelected = true;
                 newVoxel.substance = movingSubstance;
                 selectedFaces[i] = new VoxelFaceReference(newVoxel, faceI);
+
+                if (pushing && substanceToCreate != null)
+                    newSubstanceBlock = CreateSubstanceBlock(oldPos, substanceToCreate, movingFace);
             }
             else
             {
                 // clear the selection; will be deleted later
                 selectedFaces[i] = new VoxelFaceReference(null, -1);
+            }
+
+            if (newSubstanceBlock != null)
+            {
+                createdSubstance = true;
+                if (!newSubstanceBlock.faces[adjustDirFaceI].IsEmpty())
+                {
+                    newSubstanceBlock.faces[adjustDirFaceI].addSelected = true;
+                    selectedFaces.Insert(0, new VoxelFaceReference(newSubstanceBlock, adjustDirFaceI));
+                    i += 1;
+                }
             }
 
             voxelsToUpdate.Add(newVoxel);
@@ -507,7 +531,38 @@ public class VoxelArrayEditor : VoxelArray
                 selectedFaces.RemoveAt(i);
         }
         selectionChanged = true;
+
+        if (substanceToCreate != null && createdSubstance)
+            substanceToCreate = null;
     } // end Adjust()
+
+    private Voxel CreateSubstanceBlock(Vector3 position, Substance substance, VoxelFace faceTemplate)
+    {
+        Voxel voxel = VoxelAt(position, true);
+        if (!voxel.IsEmpty())
+        {
+            if (voxel.substance == substance)
+                return voxel;
+            return null; // doesn't work
+        }
+        voxel.substance = substance;
+        for (int faceI = 0; faceI < 6; faceI++)
+        {
+            Voxel adjacentVoxel = VoxelAt(position + Voxel.DirectionForFaceI(faceI), false);
+            if (adjacentVoxel == null || adjacentVoxel.substance != substance)
+            {
+                // create boundary
+                voxel.faces[faceI] = faceTemplate;
+            }
+            else
+            {
+                // remove boundary
+                adjacentVoxel.faces[Voxel.OppositeFaceI(faceI)].Clear();
+                voxel.faces[faceI].Clear();
+            }
+        }
+        return voxel;
+    }
 
 
     public void AssignMaterial(Material mat)

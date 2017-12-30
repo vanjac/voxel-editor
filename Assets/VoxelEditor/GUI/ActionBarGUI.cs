@@ -112,7 +112,7 @@ public class ActionBarGUI : GUIPanel
             picker.handler = (PropertiesObjectType type) =>
             {
                 Substance substance = (Substance)type.Create();
-                voxelArray.SubstanceTest(substance);
+                voxelArray.substanceToCreate = substance;
             };
         }
 
