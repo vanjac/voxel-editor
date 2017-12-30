@@ -155,7 +155,7 @@ public class PropertyGUIs
         if (GUILayout.Button(property.name))
         {
             ColorPickerGUI colorPicker = GUIPanel.guiGameObject.AddComponent<ColorPickerGUI>();
-            colorPicker.color = valueColor;
+            colorPicker.SetColor(valueColor);
             colorPicker.handler = (Color color) =>
             {
                 property.value = color;
