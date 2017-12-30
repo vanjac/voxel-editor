@@ -113,6 +113,8 @@ public class ActionBarGUI : GUIPanel
             {
                 Substance substance = (Substance)type.Create();
                 voxelArray.substanceToCreate = substance;
+                var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
+                createGUI.voxelArray = voxelArray;
             };
         }
 
