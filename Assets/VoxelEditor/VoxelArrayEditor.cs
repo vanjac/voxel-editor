@@ -608,14 +608,4 @@ public class VoxelArrayEditor : VoxelArray
             VoxelModified(faceRef.voxel);
         }
     }
-
-    public void SubstanceTest(Substance substance)
-    {
-        foreach (VoxelFaceReference faceRef in IterateSelected())
-        {
-            faceRef.voxel.substance = substance;
-            VoxelModified(faceRef.voxel);
-        }
-        selectionChanged = true;
-    }
 }
