@@ -6,6 +6,7 @@ public class ActionBarGUI : GUIPanel
 {
     public VoxelArrayEditor voxelArray;
     public EditorFile editorFile;
+    public TouchListener touchListener;
 
     private static bool guiInit = false;
     protected static GUIStyle buttonStyle;
@@ -118,8 +119,15 @@ public class ActionBarGUI : GUIPanel
             };
         }
 
-        GUILayout.Label(SelectionString(voxelArray.selectionBounds.size),
-            labelStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+        string labelText;
+        int moveCount = 0;
+        if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE)
+            moveCount = Mathf.Abs(touchListener.movingAxis.moveCount);
+        if (moveCount != 0)
+            labelText = moveCount.ToString();
+        else
+            labelText = SelectionString(voxelArray.selectionBounds.size);
+        GUILayout.Label(labelText, labelStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
     }
 
     protected bool ActionBarButton(Texture icon)

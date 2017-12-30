@@ -6,19 +6,19 @@ using UnityEngine.EventSystems;
 
 public class TouchListener : MonoBehaviour
 {
-    enum TouchOperation
+    public enum TouchOperation
     {
         NONE, SELECT, CAMERA, GUI, MOVE
     }
 
     public VoxelArrayEditor voxelArray;
 
-    TouchOperation currentTouchOperation = TouchOperation.NONE;
-    MoveAxis movingAxis;
-    Transform pivot;
+    public TouchOperation currentTouchOperation = TouchOperation.NONE;
+    public MoveAxis movingAxis;
+    private Transform pivot;
 
-    Voxel lastHitVoxel;
-    int lastHitFaceI;
+    private Voxel lastHitVoxel;
+    private int lastHitFaceI;
 
     void Start()
     {

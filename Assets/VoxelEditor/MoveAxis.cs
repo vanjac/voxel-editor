@@ -9,6 +9,7 @@ public class MoveAxis : MonoBehaviour
     public VoxelArrayEditor voxelArray;
     private float lastUpdatePosition;
     private LineRenderer lineRenderer;
+    public int moveCount = 0;
 
     void Start ()
     {
@@ -32,6 +33,7 @@ public class MoveAxis : MonoBehaviour
     public void TouchDown(Touch touch)
     {
         lastUpdatePosition = GetPosition();
+        moveCount = 0;
     }
 
     public void TouchDrag(Touch touch)
@@ -49,11 +51,13 @@ public class MoveAxis : MonoBehaviour
         while (position - lastUpdatePosition > 1)
         {
             lastUpdatePosition++;
+            moveCount++;
             voxelArray.Adjust(forwardDirection);
         }
         while(position - lastUpdatePosition < -1)
         {
             lastUpdatePosition--;
+            moveCount--;
             voxelArray.Adjust(-forwardDirection);
         }
     }

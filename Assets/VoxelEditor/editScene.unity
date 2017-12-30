@@ -333,6 +333,7 @@ MonoBehaviour:
   forwardDirection: {x: 0, y: 1, z: 0}
   mainCamera: {fileID: 1179125980}
   voxelArray: {fileID: 213926859}
+  moveCount: 0
 --- !u!1 &609989222
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +523,7 @@ MonoBehaviour:
   scroll: {x: 0, y: 0}
   voxelArray: {fileID: 213926859}
   editorFile: {fileID: 213926860}
+  touchListener: {fileID: 1179125982}
   closeIcon: {fileID: 2800000, guid: d93908596c8ffe74f929d4417b01a750, type: 3}
   createIcon: {fileID: 2800000, guid: 8bb23b4cef324ea428433ef09ab2bc6e, type: 3}
   applySelectionIcon: {fileID: 2800000, guid: 026b56777602f674e9f7c304b242258f, type: 3}
@@ -588,6 +590,7 @@ MonoBehaviour:
   forwardDirection: {x: 0, y: 0, z: 1}
   mainCamera: {fileID: 1179125980}
   voxelArray: {fileID: 213926859}
+  moveCount: 0
 --- !u!120 &1061257465
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -794,6 +797,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
+  currentTouchOperation: 0
+  movingAxis: {fileID: 0}
 --- !u!1 &1185221136
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,3 +944,4 @@ MonoBehaviour:
   forwardDirection: {x: 1, y: 0, z: 0}
   mainCamera: {fileID: 1179125980}
   voxelArray: {fileID: 213926859}
+  moveCount: 0
