@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectedMap : MonoBehaviour {
-
+public class SelectedMap : MonoBehaviour
+{
     public string mapName;
 
     void Start () {

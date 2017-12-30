@@ -6,7 +6,8 @@ using SimpleJSON;
 using System.Xml;
 using System.Xml.Serialization;
 
-public class MapFileReader {
+public class MapFileReader
+{
     public const int VERSION = MapFileWriter.VERSION;
 
     private string fileName;

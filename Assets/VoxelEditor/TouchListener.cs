@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TouchListener : MonoBehaviour {
-
+public class TouchListener : MonoBehaviour
+{
     enum TouchOperation
     {
         NONE, SELECT, CAMERA, GUI, MOVE
@@ -25,7 +25,7 @@ public class TouchListener : MonoBehaviour {
         pivot = transform.parent;
     }
 
-	void Update ()
+    void Update ()
     {
         if (Input.touchCount == 0)
         {
@@ -180,5 +180,5 @@ public class TouchListener : MonoBehaviour {
                 pivot.localScale *= newDistanceToCamera / currentDistanceToCamera;
             }
         }
-	}
+    }
 }

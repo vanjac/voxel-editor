@@ -4,26 +4,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class GameTouchControl : MonoBehaviour {
-
+public class GameTouchControl : MonoBehaviour
+{
     CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     int lookTouchId;
 
-	void OnEnable ()
+    void OnEnable ()
     {
         hAxis = new CrossPlatformInputManager.VirtualAxis("Mouse X");
         CrossPlatformInputManager.RegisterVirtualAxis(hAxis);
         vAxis = new CrossPlatformInputManager.VirtualAxis("Mouse Y");
         CrossPlatformInputManager.RegisterVirtualAxis(vAxis);
-	}
+    }
 
     void OnDisable()
     {
         hAxis.Remove();
         vAxis.Remove();
     }
-	
-	void Update ()
+
+    void Update ()
     {
         bool setAxes = false;
         for (int i = 0; i < Input.touchCount; i++)
@@ -46,5 +46,5 @@ public class GameTouchControl : MonoBehaviour {
             hAxis.Update(0);
             vAxis.Update(0);
         }
-	}
+    }
 }

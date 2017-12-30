@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Menu : MonoBehaviour {
+public class Menu : MonoBehaviour
+{
     public Dropdown mapSelect;
     public InputField mapNameInput;
     public TextAsset defaultMap;

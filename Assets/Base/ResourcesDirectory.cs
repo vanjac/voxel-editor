@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class ResourcesDirectory {
+public class ResourcesDirectory
+{
     private static string[] _dirList = null;
     public static string[] dirList
     {

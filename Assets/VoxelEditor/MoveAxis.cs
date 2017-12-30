@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveAxis : MonoBehaviour {
-
+public class MoveAxis : MonoBehaviour
+{
     public Vector3 forwardDirection;
     public Camera mainCamera;
     public VoxelArrayEditor voxelArray;
-    float lastUpdatePosition;
-    LineRenderer lineRenderer;
+    private float lastUpdatePosition;
+    private LineRenderer lineRenderer;
 
-	// Use this for initialization
-	void Start () {
+    void Start ()
+    {
         lineRenderer = GetComponent<LineRenderer>();
-	}
+    }
 
     void Update()
     {

@@ -72,7 +72,6 @@ public struct VoxelFaceReference
 
 public class Voxel : MonoBehaviour
 {
-
     public static VoxelFace EMPTY_FACE = new VoxelFace();
     public static Vector2[] SQUARE_LOOP = new Vector2[]
     {
@@ -177,10 +176,10 @@ public class Voxel : MonoBehaviour
         }
     }
 
-	void Start ()
+    void Start ()
     {
         UpdateVoxel();
-	}
+    }
 
     public Bounds GetFaceBounds(int faceI)
     {

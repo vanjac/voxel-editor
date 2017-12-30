@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameLoad : MonoBehaviour {
-
+public class GameLoad : MonoBehaviour
+{
     void Start()
     {
         MapFileReader reader = new MapFileReader(SelectedMap.GetSelectedMapName());
         reader.Read(null, GetComponent<VoxelArray>(), false);
-	}
+    }
 
     public void Close()
     {

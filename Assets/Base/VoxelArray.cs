@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VoxelArray : MonoBehaviour {
-
+public class VoxelArray : MonoBehaviour
+{
     protected class OctreeNode
     {
         public Vector3Int position;
