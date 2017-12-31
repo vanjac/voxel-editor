@@ -125,10 +125,11 @@ public abstract class GUIPanel : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             GUI.enabled = false;
             GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
+            float scrollVel = touch.deltaPosition.y / scaleFactor;
             if (Event.current.type == EventType.Repaint) // scroll at correct rate
-                scroll.y += touch.deltaPosition.y / scaleFactor;
+                scroll.y += scrollVel;
             if (touch.phase == TouchPhase.Ended)
-                scrollVelocity = new Vector2(0, touch.deltaPosition.y / touch.deltaTime);
+                scrollVelocity = new Vector2(0, scrollVel / touch.deltaTime);
             else
                 scrollVelocity = Vector2.zero;
         }
