@@ -32,6 +32,7 @@ public abstract class ActivatedSensor : Sensor
         }
     }
 
+    // matches type of Entity or any of its Behaviors
     public class EntityTypeFilter : Filter
     {
         // :(
@@ -78,7 +79,19 @@ public abstract class ActivatedSensor : Sensor
 
         public bool EntityMatches(EntityComponent entityComponent)
         {
-            return entityType.type.IsInstanceOfType(entityComponent.entity); // TODO: check behaviors
+            if (entityType.type.IsInstanceOfType(entityComponent.entity))
+                return true;
+            bool isOn = entityComponent.IsOn();
+            foreach (EntityBehavior behavior in entityComponent.entity.behaviors)
+            {
+                if (isOn && behavior.condition == EntityBehavior.Condition.OFF)
+                    continue; // not active
+                if (!isOn && behavior.condition == EntityBehavior.Condition.ON)
+                    continue; // not active
+                if (entityType.type.IsInstanceOfType(behavior))
+                    return true;
+            }
+            return false;
         }
 
         public override string ToString()
