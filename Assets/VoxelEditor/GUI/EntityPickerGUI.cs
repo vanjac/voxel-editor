@@ -22,6 +22,7 @@ public class EntityPickerGUI : ActionBarGUI
             clearSelectionIcon = actionBar.clearSelectionIcon;
             doneIcon = actionBar.doneIcon;
         }
+        propertiesGUI.normallyOpen = false; // hide properties panel
     }
 
     public override void OnDisable()
@@ -30,6 +31,7 @@ public class EntityPickerGUI : ActionBarGUI
         ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
         if (actionBar != null)
             actionBar.enabled = true;
+        propertiesGUI.normallyOpen = true; // show properties panel
     }
 
     void Start()

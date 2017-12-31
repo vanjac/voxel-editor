@@ -23,7 +23,7 @@ public class ActionBarGUI : GUIPanel
     public Texture worldIcon;
     public Texture doneIcon; // for Entity picker
 
-    private PropertiesGUI propertiesGUI;
+    protected PropertiesGUI propertiesGUI;
 
     public override void OnEnable()
     {
