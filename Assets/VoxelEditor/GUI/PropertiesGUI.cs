@@ -35,7 +35,7 @@ public class PropertiesGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (slidingPanel)
+        if (slidingPanel && GUI.enabled)
         {
             GUI.enabled = false;
             GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
