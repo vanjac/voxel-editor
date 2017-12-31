@@ -6,6 +6,7 @@ public class EntityPickerGUI : ActionBarGUI
 {
     public delegate void EntityPickerHanlder(ICollection<Entity> entities);
     public EntityPickerHanlder handler;
+    public bool allowNone = true, allowMultiple = true;
 
     private VoxelArrayEditor.SelectionState selectionState;
 
@@ -62,7 +63,12 @@ public class EntityPickerGUI : ActionBarGUI
 
         GUILayout.FlexibleSpace();
 
-        if (HighlightedActionBarButton(doneIcon))
+        bool ready = true;
+        if (!allowNone && numSelectedEntities == 0)
+            ready = false;
+        if (!allowMultiple && numSelectedEntities > 1)
+            ready = false;
+        if (ready && HighlightedActionBarButton(doneIcon))
         {
             handler(voxelArray.GetSelectedEntities());
             Destroy(this);

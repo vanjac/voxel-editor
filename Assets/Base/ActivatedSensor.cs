@@ -28,7 +28,7 @@ public abstract class ActivatedSensor : Sensor
 
         public override string ToString()
         {
-            return "Only " + entityRef.entity.ToString();
+            return entityRef.entity.ToString();
         }
     }
 

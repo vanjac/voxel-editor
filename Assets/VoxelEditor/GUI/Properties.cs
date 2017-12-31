@@ -121,10 +121,31 @@ public class PropertyGUIs
     public static void Filter(Property property)
     {
         var filter = (ActivatedSensor.Filter)property.value;
+        string filterString = filter.ToString();
+
+        Color baseColor = GUI.color;
+        ActivatedSensor.EntityFilter entityFilter = filter as ActivatedSensor.EntityFilter;
+        if (entityFilter != null)
+        {
+            EntityReferencePropertyManager.Next(entityFilter.entityRef.entity);
+            GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
+            filterString = EntityReferencePropertyManager.GetName();
+        }
+
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(filter.ToString(), GUI.skin.textField)) { }
+        if (GUILayout.Button(filterString, GUI.skin.textField))
+        {
+            FilterGUI filterGUI = GUIPanel.guiGameObject.AddComponent<FilterGUI>();
+            filterGUI.voxelArray = VoxelArrayEditor.instance;
+            filterGUI.handler = (ActivatedSensor.Filter newFilter) =>
+            {
+                property.value = newFilter;
+            };
+        }
         GUILayout.EndHorizontal();
+
+        GUI.color = baseColor;
     }
 
     public static PropertyGUI Material(string materialDirectory)
