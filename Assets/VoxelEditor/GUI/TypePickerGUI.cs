@@ -20,7 +20,7 @@ public class TypePickerGUI : GUIPanel
         for (int i = 0; i < items.Length; i++)
         {
             PropertiesObjectType item = items[i];
-            GUILayout.BeginHorizontal(GUI.skin.box);
+            GUILayout.BeginHorizontal(GUI.skin.button);
             GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();
             GUILayout.Label(item.fullName, GUI.skin.customStyles[0]);
