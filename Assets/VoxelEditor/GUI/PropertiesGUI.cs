@@ -135,6 +135,7 @@ public class PropertiesGUI : GUIPanel
                 EntityBehavior newBehavior = (EntityBehavior)type.Create();
                 entity.behaviors.Add(newBehavior);
                 voxelArray.unsavedChanges = true;
+                scroll = new Vector2(0, 999999); // scroll to bottom
             };
         }
 
