@@ -16,6 +16,7 @@ public class CreateSubstanceGUI : ActionBarGUI
             applySelectionIcon = actionBar.applySelectionIcon;
             clearSelectionIcon = actionBar.clearSelectionIcon;
         }
+        propertiesGUI.normallyOpen = false; // hide properties panel
     }
 
     public override void OnDisable()
@@ -24,6 +25,7 @@ public class CreateSubstanceGUI : ActionBarGUI
         ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
         if (actionBar != null)
             actionBar.enabled = true;
+        propertiesGUI.normallyOpen = true; // show properties panel
     }
 
     public override void WindowGUI()

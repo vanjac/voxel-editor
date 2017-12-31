@@ -15,7 +15,8 @@ public class EntityPickerGUI : ActionBarGUI
         base.OnEnable();
         stealFocus = true;
         ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
-        if (actionBar != null) {
+        if (actionBar != null)
+        {
             actionBar.enabled = false;
             closeIcon = actionBar.closeIcon;
             applySelectionIcon = actionBar.applySelectionIcon;
