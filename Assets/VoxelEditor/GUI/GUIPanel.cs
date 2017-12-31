@@ -21,7 +21,7 @@ public abstract class GUIPanel : MonoBehaviour
     }
 
     public Vector2 scroll = Vector2.zero;
-    private Vector2 scrollVelocity = Vector2.zero;
+    protected Vector2 scrollVelocity = Vector2.zero;
 
     protected Vector2 touchStartPos = Vector2.zero;
     protected bool panelSlide, horizontalSlide, verticalSlide;
