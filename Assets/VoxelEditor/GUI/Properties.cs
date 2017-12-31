@@ -13,7 +13,7 @@ public class PropertyGUIs
     {
         GUIStyle style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.MiddleLeft;
-        GUILayout.Label(property.name, style, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+        GUILayout.Label(property.name, style, GUILayout.ExpandWidth(false));
     }
 
     public static void Empty(Property property) { }
