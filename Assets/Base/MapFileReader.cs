@@ -185,14 +185,17 @@ public class MapFileReader
                     continue;
                 }
 
-                XmlSerializer xmlSerializer = new XmlSerializer(prop.value.GetType());
-                object value;
+                System.Type propType;
+                if(propArray.Count > 2)
+                    propType = System.Type.GetType(propArray[2]); // explicit type
+                else
+                    propType = prop.value.GetType();
+
+                XmlSerializer xmlSerializer = new XmlSerializer(propType);
                 using (var textReader = new StringReader(valueString))
                 {
-                    value = xmlSerializer.Deserialize(textReader);
+                    prop.value = xmlSerializer.Deserialize(textReader);
                 }
-
-                prop.value = value;
             }
         }
     }

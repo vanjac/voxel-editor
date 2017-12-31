@@ -142,6 +142,8 @@ public class MapFileWriter
             JSONArray propArray = new JSONArray();
             propArray[0] = prop.name;
             propArray[1] = valueString;
+            if (prop.explicitType)
+                propArray[2] = value.GetType().FullName;
             propertiesArray[-1] = propArray;
         }
         propsObject["properties"] = propertiesArray;

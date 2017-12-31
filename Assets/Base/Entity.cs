@@ -26,6 +26,7 @@ public struct Property
                 setter(value);
         }
     }
+    public bool explicitType; // store object type with property in file
 
     public Property(string name, GetProperty getter, SetProperty setter, PropertyGUI gui)
     {
@@ -33,6 +34,17 @@ public struct Property
         this.getter = getter;
         this.setter = setter;
         this.gui = gui;
+        explicitType = false;
+    }
+
+    public Property(string name, GetProperty getter, SetProperty setter, PropertyGUI gui,
+        bool explicitType)
+    {
+        this.name = name;
+        this.getter = getter;
+        this.setter = setter;
+        this.gui = gui;
+        this.explicitType = explicitType;
     }
 
     public static ICollection<Property> JoinProperties(

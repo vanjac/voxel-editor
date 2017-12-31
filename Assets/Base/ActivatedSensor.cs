@@ -131,7 +131,8 @@ public abstract class ActivatedSensor : Sensor
             new Property("Filter",
                 () => filter,
                 v => filter = (Filter)v,
-                PropertyGUIs.Filter)
+                PropertyGUIs.Filter,
+                true) // explicit type
         }, base.Properties());
     }
 }
