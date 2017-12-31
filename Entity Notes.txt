@@ -97,7 +97,6 @@ Ball
     Size
 
 Selection of meshes with skin choices
-    [others]
 
 Character (abstract Object)
 
@@ -136,20 +135,13 @@ Physics (Behavior for DynamicEntity with Solid)
         [physics parameters]
         Can be picked up?
 
-Propel (Behavior for DynamicEntity with Physics)
-    Properties
-        Direction, speed
-
-Propel Towards (Behavior for DynamicEntity with Physics)
-    Properties
-        Entity
-        Speed
-        Arc angle
-
 Thruster (Behavior for DynamicEntity with Physics)
     Properties
-        Direction
+        Continuous?
         Strength
+        Choose one:
+            Direction: choice of 6
+            Target entity, arc angle
 
 MotionBehavior (abstract Behavior for DynamicEntity) : different objects will achieve motion in different ways. For example, characters will walk, and meshes will float
     Properties
@@ -214,7 +206,7 @@ Speech Bubble (Behavior for Entity)
     Properties
         Message
 
-Glow (Behavior for Entity) : a flare effect that emits light
+Glow (Behavior for Entity) : point light with halo
     Properties
         Size
         Color
