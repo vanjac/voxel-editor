@@ -110,6 +110,12 @@ Selection of trees
 
 BEHAVIORS:
 
+DIRECTION
+    A data structure which either has:
+        A target entity and a towards/away option
+    OR
+        One of 6 direction choices
+
 Behavior (abstract PropertiesObject)
     Properties
         Condition: On/Off/Both
@@ -139,9 +145,8 @@ Thruster (Behavior for DynamicEntity with Physics)
     Properties
         Continuous?
         Strength
-        Choose one:
-            Direction: choice of 6
-            Target entity, arc angle
+        DIRECTION
+        Arc angle
 
 MotionBehavior (abstract Behavior for DynamicEntity) : different objects will achieve motion in different ways. For example, characters will walk, and meshes will float
     Properties
@@ -151,25 +156,14 @@ Move With (MotionBehavior) : like parenting
     Properties
         Entity
 
-Move In Direction (MotionBehavior)
-    Properties
-        Direction : 6 choices
-
 Move Toward (MotionBehavior)
     Properties
-        Entity
+        DIRECTION
 
-Move Away (MotionBehavior)
+Navigate (MotionBehavior)
     Properties
         Entity
-
-Navigate Toward (MotionBehavior)
-    Properties
-        Entity
-
-Navigate Away (MotionBehavior)
-    Properties
-        Entity
+        Toward/Away?
 
 Wander (MotionBehavior)
     Properties
@@ -184,14 +178,9 @@ RotationBehavior (abstract Behavior for DynamicEntity)
 
 Spin (RotationBehavior)
 
-Rotate To (RotationBehavior)
-    Properties
-        Rotation
-
 Face Toward (RotationBehavior)
     Properties
-        Opposite?
-        Entity
+        DIRECTION
 
 Sound (Behavior for Entity)
     Properties
@@ -265,7 +254,7 @@ Dust (ParticleEffect)
 
 Wind (Behavior for Volume with ParticleEffect) : only affects particles
     Properties
-        Direction
+        Direction : 6 choices
         Speed
 
 Fluid (Behavior for Volume)
@@ -275,6 +264,6 @@ Fluid (Behavior for Volume)
 
 Push (Behavior for Volume)
     Properties
-        Direction
+        Direction : 6 choices
         Target velocity
         Strength
