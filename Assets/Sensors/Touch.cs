@@ -14,12 +14,15 @@ public class TouchSensor : ActivatedSensor
 
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
-        return gameObject.AddComponent<TouchComponent>();
+        TouchComponent component = gameObject.AddComponent<TouchComponent>();
+        component.filter = filter;
+        return component;
     }
 }
 
 public class TouchComponent : SensorComponent
 {
+    public ActivatedSensor.Filter filter;
     private int touchCount = 0;
 
     public override bool IsOn()
@@ -27,23 +30,25 @@ public class TouchComponent : SensorComponent
         return touchCount > 0;
     }
 
-    public void OnTriggerEnter()
+    public void OnTriggerEnter(Collider c)
     {
-        touchCount++;
+        if (filter.EntityMatches(EntityComponent.FindEntityComponent(c)))
+            touchCount++;
     }
 
-    public void OnTriggerExit()
+    public void OnTriggerExit(Collider c)
     {
-        touchCount--;
+        if (filter.EntityMatches(EntityComponent.FindEntityComponent(c)))
+            touchCount--;
     }
 
-    public void OnCollisionEnter()
+    public void OnCollisionEnter(Collision c)
     {
-        OnTriggerEnter();
+        OnTriggerEnter(c.collider);
     }
 
-    public void OnCollisionExit()
+    public void OnCollisionExit(Collision c)
     {
-        OnTriggerExit();
+        OnTriggerExit(c.collider);
     }
 }
