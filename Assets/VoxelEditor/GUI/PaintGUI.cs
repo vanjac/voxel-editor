@@ -101,9 +101,13 @@ public class PaintGUI : GUIPanel
     {
         if (mat == null)
             return;
+        Rect texCoords = new Rect(Vector2.zero, Vector2.one);
         Texture texture = whiteTexture;
         if (mat.mainTexture != null)
+        {
             texture = mat.mainTexture;
+            texCoords = new Rect(Vector2.zero, mat.mainTextureScale);
+        }
         else if (mat.HasProperty("_ColorControl"))
             // water shader
             texture = mat.GetTexture("_ColorControl");
@@ -114,7 +118,7 @@ public class PaintGUI : GUIPanel
         Color baseColor = GUI.color;
         if (mat.HasProperty("_Color"))
             GUI.color *= mat.color;
-        GUI.DrawTexture(rect, texture, ScaleMode.ScaleToFit, alpha);
+        GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
         GUI.color = baseColor;
     }
 }
