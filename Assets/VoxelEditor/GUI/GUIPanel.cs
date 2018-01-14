@@ -185,4 +185,33 @@ public abstract class GUIPanel : MonoBehaviour
                 return openPanels[i];
         return null;
     }
+
+    public static void BeginButtonHorizontal(string name)
+    {
+        GUILayout.BeginHorizontal(GUI.skin.button);
+    }
+
+    public static bool EndButtonHorizontal(string name)
+    {
+        GUILayout.EndHorizontal();
+        return EndButtonGroup(name);
+    }
+
+    public static void BeginButtonVertical(string name)
+    {
+        GUILayout.BeginVertical(GUI.skin.button);
+    }
+
+    public static bool EndButtonVertical(string name)
+    {
+        GUILayout.EndVertical();
+        return EndButtonGroup(name);
+    }
+
+
+    public static bool EndButtonGroup(string name)
+    {
+        Rect buttonRect = GUILayoutUtility.GetLastRect();
+        return GUI.Button(buttonRect, "", GUIStyle.none);
+    }
 }
