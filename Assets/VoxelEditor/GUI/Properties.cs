@@ -99,6 +99,7 @@ public class PropertyGUIs
         if (GUILayout.Button(tagString, GUI.skin.textField))
         {
             TagPickerGUI picker = GUIPanel.guiGameObject.AddComponent<TagPickerGUI>();
+            picker.title = "Change " + property.name;
             picker.handler = (byte tag) =>
             {
                 property.value = tag;
@@ -137,6 +138,7 @@ public class PropertyGUIs
         if (GUILayout.Button(filterString, GUI.skin.textField))
         {
             FilterGUI filterGUI = GUIPanel.guiGameObject.AddComponent<FilterGUI>();
+            filterGUI.title = property.name + " by...";
             filterGUI.voxelArray = VoxelArrayEditor.instance;
             filterGUI.handler = (ActivatedSensor.Filter newFilter) =>
             {
@@ -152,10 +154,11 @@ public class PropertyGUIs
     {
         return (Property property) =>
         {
-            if (GUILayout.Button("Set " + property.name))
+            if (GUILayout.Button("Change " + property.name))
             {
                 MaterialSelectorGUI materialSelector
                     = GUIPanel.guiGameObject.AddComponent<MaterialSelectorGUI>();
+                materialSelector.title = "Change " + property.name;
                 materialSelector.materialDirectory = materialDirectory;
                 materialSelector.handler = (Material mat) =>
                 {
@@ -183,6 +186,7 @@ public class PropertyGUIs
         if (GUILayout.Button(property.name))
         {
             ColorPickerGUI colorPicker = GUIPanel.guiGameObject.AddComponent<ColorPickerGUI>();
+            colorPicker.title = property.name;
             colorPicker.SetColor(valueColor);
             colorPicker.handler = (Color color) =>
             {

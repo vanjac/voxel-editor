@@ -13,16 +13,18 @@ public class PaintGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button("Set Material"))
+        if (GUILayout.Button("Change Material"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
+            materialSelector.title = "Change Material";
             materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
             materialSelector.handler = voxelArray.AssignMaterial;
         }
 
-        if (GUILayout.Button("Set Overlay"))
+        if (GUILayout.Button("Change Overlay"))
         {
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
+            materialSelector.title = "Change Overlay";
             materialSelector.materialDirectory = "GameAssets/Overlays";
             materialSelector.allowNullMaterial = true;
             materialSelector.handler = voxelArray.AssignOverlay;

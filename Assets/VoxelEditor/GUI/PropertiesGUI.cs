@@ -115,6 +115,7 @@ public class PropertiesGUI : GUIPanel
         if (GUILayout.Button("Change Sensor"))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
+            sensorMenu.title = "Change Sensor";
             sensorMenu.items = GameScripts.sensors;
             sensorMenu.handler = (PropertiesObjectType type) =>
             {
@@ -129,6 +130,7 @@ public class PropertiesGUI : GUIPanel
         if (GUILayout.Button("Add Behavior"))
         {
             TypePickerGUI behaviorMenu = gameObject.AddComponent<TypePickerGUI>();
+            behaviorMenu.title = "Add Behavior";
             behaviorMenu.items = GameScripts.behaviors;
             behaviorMenu.handler = (PropertiesObjectType type) =>
             {

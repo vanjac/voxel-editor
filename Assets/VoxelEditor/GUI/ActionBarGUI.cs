@@ -105,12 +105,14 @@ public class ActionBarGUI : GUIPanel
         if (ActionBarButton(paintIcon))
         {
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
+            paintGUI.title = "Paint Faces";
             paintGUI.voxelArray = voxelArray;
         }
 
         if (ActionBarButton(createIcon))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
+            picker.title = "Create Object";
             picker.items = GameScripts.entityTemplates;
             picker.handler = (PropertiesObjectType type) =>
             {

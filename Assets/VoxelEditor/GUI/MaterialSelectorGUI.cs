@@ -25,11 +25,6 @@ public class MaterialSelectorGUI : GUIPanel
         return new Rect(width - height / 2, 0, height / 2, height);
     }
 
-    public override string GetName()
-    {
-        return "Assign Material";
-    }
-
     public override void WindowGUI()
     {
         if (materialPreviews == null)

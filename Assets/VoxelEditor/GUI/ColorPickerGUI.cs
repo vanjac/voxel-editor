@@ -19,11 +19,6 @@ public class ColorPickerGUI : GUIPanel
         return new Rect(height * .55f, height * .1f, width * .4f, 0);
     }
 
-    public override string GetName()
-    {
-        return "Change Color";
-    }
-
     public void SetColor(Color c)
     {
         color = c;

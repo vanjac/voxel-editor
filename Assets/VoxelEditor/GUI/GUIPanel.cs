@@ -20,6 +20,8 @@ public abstract class GUIPanel : MonoBehaviour
         }
     }
 
+    public string title = "";
+
     public Vector2 scroll = Vector2.zero;
     protected Vector2 scrollVelocity = Vector2.zero;
 
@@ -144,11 +146,11 @@ public abstract class GUIPanel : MonoBehaviour
             scrollVelocity *= .92f;
         }
 
-        if (GetName() != "")
+        if (title != "")
         {
             GUIStyle centered = new GUIStyle(GUI.skin.label);
             centered.alignment = TextAnchor.UpperCenter;
-            GUILayout.Label(GetName(), centered);
+            GUILayout.Label(title, centered);
         }
 
         WindowGUI();
@@ -162,11 +164,6 @@ public abstract class GUIPanel : MonoBehaviour
     public virtual GUIStyle GetStyle()
     {
         return GUI.skin.window;
-    }
-
-    public virtual string GetName()
-    {
-        return "";
     }
 
     public abstract void WindowGUI();
