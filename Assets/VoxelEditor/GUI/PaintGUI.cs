@@ -12,10 +12,19 @@ public class PaintGUI : GUIPanel
 
     private Rect windowRect;
 
+    private Texture2D whiteTexture;
+
     public override Rect GetRect(float width, float height)
     {
         windowRect = new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
         return windowRect;
+    }
+
+    void Start()
+    {
+        whiteTexture = new Texture2D(1, 1);
+        whiteTexture.SetPixel(0, 0, Color.white);
+        whiteTexture.Apply();
     }
 
     public override void WindowGUI()
@@ -83,33 +92,29 @@ public class PaintGUI : GUIPanel
         }
         GUI.matrix *= Matrix4x4.Rotate(Quaternion.Euler(new Vector3(0, 0, rotation)));
         GUI.matrix *= Matrix4x4.Translate(-translation);
-        if (paint.material != null)
-            GUI.DrawTexture(rect, MaterialPreview(paint.material), ScaleMode.ScaleToFit, false);
-        if (paint.overlay != null)
-            GUI.DrawTexture(rect, MaterialPreview(paint.overlay), ScaleMode.ScaleToFit, true);
+        DrawMaterialTexture(paint.material, rect, false);
+        DrawMaterialTexture(paint.overlay, rect, true);
         GUI.matrix = baseMatrix;
     }
 
-    private Texture MaterialPreview(Material mat)
+    private void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
     {
+        if (mat == null)
+            return;
+        Texture texture = whiteTexture;
         if (mat.mainTexture != null)
-            return mat.mainTexture;
-        else if (mat.HasProperty("_Color"))
-            return ColorPreview(mat.color);
+            texture = mat.mainTexture;
         else if (mat.HasProperty("_ColorControl"))
             // water shader
-            return mat.GetTexture("_ColorControl");
+            texture = mat.GetTexture("_ColorControl");
         else if (mat.HasProperty("_FrontTex"))
             // skybox
-            return mat.GetTexture("_FrontTex");
-        return ColorPreview(Color.white);
-    }
+            texture = mat.GetTexture("_FrontTex");
 
-    private Texture ColorPreview(Color c)
-    {
-        Texture2D texture = new Texture2D(1, 1);
-        texture.SetPixel(0, 0, c);
-        texture.Apply();
-        return texture;
+        Color baseColor = GUI.color;
+        if (mat.HasProperty("_Color"))
+            GUI.color *= mat.color;
+        GUI.DrawTexture(rect, texture, ScaleMode.ScaleToFit, alpha);
+        GUI.color = baseColor;
     }
 }
