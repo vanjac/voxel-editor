@@ -107,6 +107,7 @@ public class ActionBarGUI : GUIPanel
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
             paintGUI.title = "Paint Faces";
             paintGUI.voxelArray = voxelArray;
+            paintGUI.paint = voxelArray.GetSelectedPaint();
         }
 
         if (ActionBarButton(createIcon))

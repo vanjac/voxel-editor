@@ -564,6 +564,17 @@ public class VoxelArrayEditor : VoxelArray
         return voxel;
     }
 
+    public VoxelFace GetSelectedPaint()
+    {
+        foreach (VoxelFaceReference faceRef in IterateSelected())
+        {
+            VoxelFace face = faceRef.face;
+            face.addSelected = false;
+            face.storedSelected = false;
+            return face;
+        }
+        return new VoxelFace();
+    }
 
     public void AssignMaterial(Material mat)
     {
