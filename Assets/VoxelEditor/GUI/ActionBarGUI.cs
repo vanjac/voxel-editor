@@ -12,17 +12,6 @@ public class ActionBarGUI : GUIPanel
     protected static GUIStyle buttonStyle;
     protected static GUIStyle labelStyle;
 
-    public Texture closeIcon;
-    public Texture createIcon;
-    public Texture applySelectionIcon;
-    public Texture clearSelectionIcon;
-    public Texture paintIcon;
-    public Texture playIcon;
-    public Texture overflowIcon;
-    // for overflow menu:
-    public Texture worldIcon;
-    public Texture doneIcon; // for Entity picker
-
     protected PropertiesGUI propertiesGUI;
 
     public override void OnEnable()
@@ -60,7 +49,7 @@ public class ActionBarGUI : GUIPanel
 
         GUILayout.BeginHorizontal();
 
-        if (ActionBarButton(closeIcon))
+        if (ActionBarButton(GUIIconSet.instance.close))
             editorFile.Close();
 
         SelectionGUI();
@@ -68,10 +57,10 @@ public class ActionBarGUI : GUIPanel
 
         GUILayout.FlexibleSpace();
 
-        if (ActionBarButton(playIcon))
+        if (ActionBarButton(GUIIconSet.instance.play))
             editorFile.Play();
 
-        if (ActionBarButton(overflowIcon))
+        if (ActionBarButton(GUIIconSet.instance.overflow))
         {
             gameObject.AddComponent<OverflowMenuGUI>();
         }
@@ -83,13 +72,13 @@ public class ActionBarGUI : GUIPanel
     {
         if (voxelArray.SomethingIsAddSelected())
         {
-            if (ActionBarButton(applySelectionIcon))
+            if (ActionBarButton(GUIIconSet.instance.applySelection))
                 voxelArray.StoreSelection();
         }
 
         if(voxelArray.SomethingIsStoredSelected())
         {
-            if (ActionBarButton(clearSelectionIcon))
+            if (ActionBarButton(GUIIconSet.instance.clearSelection))
             {
                 voxelArray.ClearStoredSelection();
                 voxelArray.ClearSelection();
@@ -102,7 +91,7 @@ public class ActionBarGUI : GUIPanel
         if (!voxelArray.SomethingIsSelected())
             return;
 
-        if (ActionBarButton(paintIcon))
+        if (ActionBarButton(GUIIconSet.instance.paint))
         {
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
             paintGUI.title = "Paint Faces";
@@ -113,7 +102,7 @@ public class ActionBarGUI : GUIPanel
             paintGUI.paint = voxelArray.GetSelectedPaint();
         }
 
-        if (ActionBarButton(createIcon))
+        if (ActionBarButton(GUIIconSet.instance.create))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Create Object";

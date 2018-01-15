@@ -16,13 +16,7 @@ public class EntityPickerGUI : ActionBarGUI
         stealFocus = true;
         ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
         if (actionBar != null)
-        {
             actionBar.enabled = false;
-            closeIcon = actionBar.closeIcon;
-            applySelectionIcon = actionBar.applySelectionIcon;
-            clearSelectionIcon = actionBar.clearSelectionIcon;
-            doneIcon = actionBar.doneIcon;
-        }
         propertiesGUI.normallyOpen = false; // hide properties panel
     }
 
@@ -51,7 +45,7 @@ public class EntityPickerGUI : ActionBarGUI
     {
         GUILayout.BeginHorizontal();
 
-        if (ActionBarButton(closeIcon))
+        if (ActionBarButton(GUIIconSet.instance.close))
             Destroy(this);
 
         SelectionGUI();
@@ -71,7 +65,7 @@ public class EntityPickerGUI : ActionBarGUI
             ready = false;
         if (!allowMultiple && numSelectedEntities > 1)
             ready = false;
-        if (ready && HighlightedActionBarButton(doneIcon))
+        if (ready && HighlightedActionBarButton(GUIIconSet.instance.done))
         {
             handler(voxelArray.GetSelectedEntities());
             Destroy(this);

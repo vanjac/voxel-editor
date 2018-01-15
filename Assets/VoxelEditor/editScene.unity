@@ -471,6 +471,7 @@ GameObject:
   - component: {fileID: 878046148}
   - component: {fileID: 878046150}
   - component: {fileID: 878046152}
+  - component: {fileID: 878046153}
   m_Layer: 0
   m_Name: GUI
   m_TagString: Untagged
@@ -490,6 +491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
+  title: 
   scroll: {x: 0, y: 0}
   slide: -486
   voxelArray: {fileID: 213926859}
@@ -520,19 +522,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 0}
+  title: 
   scroll: {x: 0, y: 0}
   voxelArray: {fileID: 213926859}
   editorFile: {fileID: 213926860}
   touchListener: {fileID: 1179125982}
-  closeIcon: {fileID: 2800000, guid: d93908596c8ffe74f929d4417b01a750, type: 3}
-  createIcon: {fileID: 2800000, guid: 8bb23b4cef324ea428433ef09ab2bc6e, type: 3}
-  applySelectionIcon: {fileID: 2800000, guid: 026b56777602f674e9f7c304b242258f, type: 3}
-  clearSelectionIcon: {fileID: 2800000, guid: 00d830bfa0543c74f89a94d7894a19d3, type: 3}
-  paintIcon: {fileID: 2800000, guid: b716f268f2cc0c644817a72b0bf3d6ce, type: 3}
-  playIcon: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
-  overflowIcon: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
-  worldIcon: {fileID: 2800000, guid: 9076f51e512308e48b81eeabfeae83c6, type: 3}
-  doneIcon: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
 --- !u!114 &878046151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,6 +539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
+  title: 
   scroll: {x: 0, y: 0}
 --- !u!114 &878046152
 MonoBehaviour:
@@ -558,6 +553,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineMaterial: {fileID: 2100000, guid: 2558a126d923bbd4c9f2dfc7bbd99124, type: 2}
+--- !u!114 &878046153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 878046147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f0502d5ffcf65c47918ac612478a3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  close: {fileID: 2800000, guid: d93908596c8ffe74f929d4417b01a750, type: 3}
+  create: {fileID: 2800000, guid: 8bb23b4cef324ea428433ef09ab2bc6e, type: 3}
+  applySelection: {fileID: 2800000, guid: 026b56777602f674e9f7c304b242258f, type: 3}
+  clearSelection: {fileID: 2800000, guid: 00d830bfa0543c74f89a94d7894a19d3, type: 3}
+  paint: {fileID: 2800000, guid: b716f268f2cc0c644817a72b0bf3d6ce, type: 3}
+  play: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
+  overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
+  world: {fileID: 2800000, guid: 9076f51e512308e48b81eeabfeae83c6, type: 3}
+  done: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
 --- !u!1 &1061257463
 GameObject:
   m_ObjectHideFlags: 0

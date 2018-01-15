@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class OverflowMenuGUI : GUIPanel
 {
-    private Texture worldIcon;
     private float buttonHeight;
 
     public override Rect GetRect(float width, float height)
@@ -21,17 +20,12 @@ public class OverflowMenuGUI : GUIPanel
     public override void OnEnable()
     {
         stealFocus = false;
-        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
-        if (actionBar != null)
-        {
-            worldIcon = actionBar.worldIcon;
-        }
         base.OnEnable();
     }
 
     public override void WindowGUI()
     {
-        if (MenuButton("World", worldIcon))
+        if (MenuButton("World", GUIIconSet.instance.world))
         {
             PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
             if (propsGUI != null)
