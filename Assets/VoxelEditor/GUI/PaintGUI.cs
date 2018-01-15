@@ -6,12 +6,12 @@ public class PaintGUI : GUIPanel
 {
     private const int PREVIEW_SIZE = 250;
 
+    public delegate void PaintHandler(VoxelFace paint);
+
+    public PaintHandler handler;
     public VoxelFace paint;
 
-    public VoxelArrayEditor voxelArray;
-
     private Rect windowRect;
-
     private Texture2D whiteTexture;
 
     public override Rect GetRect(float width, float height)
@@ -39,7 +39,12 @@ public class PaintGUI : GUIPanel
             MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
             materialSelector.title = "Change Material";
             materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
-            materialSelector.handler = voxelArray.AssignMaterial;
+            materialSelector.handler = (Material mat) =>
+            {
+                if (mat != null || paint.overlay != null)
+                    paint.material = mat;
+                handler(paint);
+            };
         }
 
         if (GUILayout.Button("Change Overlay"))
@@ -48,19 +53,24 @@ public class PaintGUI : GUIPanel
             materialSelector.title = "Change Overlay";
             materialSelector.materialDirectory = "GameAssets/Overlays";
             materialSelector.allowNullMaterial = true;
-            materialSelector.handler = voxelArray.AssignOverlay;
+            materialSelector.handler = (Material mat) =>
+            {
+                if (mat != null || paint.material != null)
+                    paint.overlay = mat;
+                handler(paint);
+            };
         }
 
         GUILayout.BeginHorizontal();
 
         if (GUILayout.Button("Left"))
         {
-            voxelArray.OrientFaces(3);
+            Orient(3);
         }
 
         if (GUILayout.Button("Right"))
         {
-            voxelArray.OrientFaces(1);
+            Orient(1);
         }
 
         GUILayout.EndHorizontal();
@@ -68,15 +78,31 @@ public class PaintGUI : GUIPanel
 
         if (GUILayout.Button("Flip H"))
         {
-            voxelArray.OrientFaces(5);
+           Orient(5);
         }
 
         if (GUILayout.Button("Flip V"))
         {
-            voxelArray.OrientFaces(7);
+            Orient(7);
         }
 
         GUILayout.EndHorizontal();
+    }
+
+    private void Orient(byte change)
+    {
+        int changeRotation = VoxelFace.GetOrientationRotation(change);
+        bool changeFlip = VoxelFace.GetOrientationMirror(change);
+        int paintRotation = VoxelFace.GetOrientationRotation(paint.orientation);
+        bool paintFlip = VoxelFace.GetOrientationMirror(paint.orientation);
+        if (paintFlip ^ changeFlip)
+            paintRotation += 4 - changeRotation;
+        else
+            paintRotation += changeRotation;
+        if (changeFlip)
+            paintFlip = !paintFlip;
+        paint.orientation = VoxelFace.Orientation(paintRotation, paintFlip);
+        handler(paint);
     }
 
     private void DrawPaint(VoxelFace paint, Rect rect)

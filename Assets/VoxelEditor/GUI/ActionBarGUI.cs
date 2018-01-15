@@ -106,7 +106,10 @@ public class ActionBarGUI : GUIPanel
         {
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
             paintGUI.title = "Paint Faces";
-            paintGUI.voxelArray = voxelArray;
+            paintGUI.handler = (VoxelFace paint) =>
+            {
+                voxelArray.PaintSelectedFaces(paint);
+            };
             paintGUI.paint = voxelArray.GetSelectedPaint();
         }
 

@@ -576,47 +576,16 @@ public class VoxelArrayEditor : VoxelArray
         return new VoxelFace();
     }
 
-    public void AssignMaterial(Material mat)
+    public void PaintSelectedFaces(VoxelFace paint)
     {
         foreach (VoxelFaceReference faceRef in IterateSelected())
         {
-            if (mat == null && (faceRef.voxel.substance == null || faceRef.face.overlay == null))
-                continue; // only allow null material on substances with an overlay
-            faceRef.voxel.faces[faceRef.faceI].material = mat;
+            if (paint.material != null || faceRef.voxel.substance != null)
+                faceRef.voxel.faces[faceRef.faceI].material = paint.material;
+            faceRef.voxel.faces[faceRef.faceI].overlay = paint.overlay;
+            faceRef.voxel.faces[faceRef.faceI].orientation = paint.orientation;
             VoxelModified(faceRef.voxel);
         }
     }
 
-    public void AssignOverlay(Material mat)
-    {
-        foreach (VoxelFaceReference faceRef in IterateSelected())
-        {
-            if (mat == null && faceRef.face.material == null)
-                continue; // can't have no material and no overlay
-            faceRef.voxel.faces[faceRef.faceI].overlay = mat;
-            VoxelModified(faceRef.voxel);
-        }
-    }
-
-    public void OrientFaces(byte change)
-    {
-        int changeRotation = VoxelFace.GetOrientationRotation(change);
-        bool changeFlip = VoxelFace.GetOrientationMirror(change);
-        foreach (VoxelFaceReference faceRef in IterateSelected())
-        {
-            byte faceOrientation = faceRef.face.orientation;
-            int faceRotation = VoxelFace.GetOrientationRotation(faceOrientation);
-            bool faceFlip = VoxelFace.GetOrientationMirror(faceOrientation);
-            int faceI = faceRef.faceI;
-            if (faceFlip ^ (changeFlip && (faceI == 0 || faceI == 3 || faceI == 5)))
-                faceRotation += 4 - changeRotation;
-            else
-                faceRotation += changeRotation;
-            if (changeFlip)
-                faceFlip = !faceFlip;
-            faceOrientation = VoxelFace.Orientation(faceRotation, faceFlip);
-            faceRef.voxel.faces[faceRef.faceI].orientation = faceOrientation;
-            VoxelModified(faceRef.voxel);
-        }
-    }
 }

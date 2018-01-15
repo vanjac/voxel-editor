@@ -284,17 +284,35 @@ public class Voxel : MonoBehaviour
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
                 vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+
                 int uvNum = VoxelFace.GetOrientationRotation(face.orientation);
-                if (faceNum == 0 || faceNum == 3 || faceNum == 5)
-                    uvNum += 1;
-                if ((VoxelFace.GetOrientationMirror(face.orientation) ^ (faceNum % 2) == 0))
-                    uvNum += i;
+                bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
+                if (faceNum % 2 == 0)
+                {
+                    if (mirrored)
+                        uvNum += -i + 5;
+                    else
+                        uvNum += i + 1;
+                }
                 else
-                    uvNum += 4 - i;
+                {
+                    if (mirrored)
+                        uvNum += i + 2;
+                    else
+                        uvNum += -i + 4;
+                }
+                if (faceNum == 4 || faceNum == 5)
+                {
+                    if (mirrored ^ faceNum == 4)
+                        uvNum -= 1;
+                    else
+                        uvNum += 1;
+                }
                 uvNum %= 4;
+
                 Vector2 uvOrigin; // materials can span multiple voxels
                 if (VoxelFace.GetOrientationRotation(face.orientation) % 2 == 1
-                        ^ (faceNum == 0 || faceNum == 1)
+                        ^ (faceNum != 4 && faceNum != 5)
                         ^ VoxelFace.GetOrientationMirror(face.orientation))
                     uvOrigin = new Vector2(transformPos[(axis + 2) % 3], transformPos[(axis + 1) % 3]);
                 else
