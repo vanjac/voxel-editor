@@ -29,10 +29,24 @@ public class PaintGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        GUILayout.BeginVertical(GUILayout.Height(PREVIEW_SIZE));
+        GUILayout.BeginHorizontal();
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(PREVIEW_SIZE), GUILayout.Height(PREVIEW_SIZE));
         DrawPaint(paint, GUILayoutUtility.GetLastRect());
+        GUILayout.BeginVertical();
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Left"))
+            Orient(3);
+        if (GUILayout.Button("Right"))
+            Orient(1);
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Flip H"))
+            Orient(5);
+        if (GUILayout.Button("Flip V"))
+            Orient(7);
+        GUILayout.EndHorizontal();
         GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
 
         if (GUILayout.Button("Change Material"))
         {
@@ -60,33 +74,6 @@ public class PaintGUI : GUIPanel
                 handler(paint);
             };
         }
-
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Left"))
-        {
-            Orient(3);
-        }
-
-        if (GUILayout.Button("Right"))
-        {
-            Orient(1);
-        }
-
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Flip H"))
-        {
-           Orient(5);
-        }
-
-        if (GUILayout.Button("Flip V"))
-        {
-            Orient(7);
-        }
-
-        GUILayout.EndHorizontal();
     }
 
     private void Orient(byte change)
