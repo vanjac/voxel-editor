@@ -15,6 +15,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     public MaterialSelectHandler handler;
     public string rootDirectory = "GameAssets/Materials";
+    public bool allowAlpha = false;
     public bool allowNullMaterial = false;
     public bool closeOnSelect = true;
     public Material highlightMaterial = null;
@@ -119,7 +120,7 @@ public class MaterialSelectorGUI : GUIPanel
                 selected = GUI.Button(buttonRect, "");
             if (selected)
                 MaterialSelected(material);
-            DrawMaterialTexture(material, textureRect, false);
+            DrawMaterialTexture(material, textureRect, allowAlpha);
         }
         GUILayout.EndScrollView();
     }

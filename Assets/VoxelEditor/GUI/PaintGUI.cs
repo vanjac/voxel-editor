@@ -94,6 +94,7 @@ public class PaintGUI : GUIPanel
         else
         {
             materialSelector.rootDirectory = "GameAssets/Overlays";
+            materialSelector.allowAlpha = true;
             materialSelector.handler = (Material mat) =>
             {
                 if (mat != null || paint.material != null)
