@@ -23,6 +23,7 @@ public class MaterialSelectorGUI : GUIPanel
     private string materialDirectory;
     private List<Material> materials;
     private List<string> materialSubDirectories;
+    private ColorPickerGUI colorPicker;
 
     private GUIStyle condensedButtonStyle = null;
 
@@ -54,6 +55,8 @@ public class MaterialSelectorGUI : GUIPanel
 
         if (tab == 0)
             ColorTab();
+        else if (colorPicker != null)
+            Destroy(colorPicker);
         if (tab == 1)
             TextureTab();
         if (tab == 2)
@@ -62,7 +65,13 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void ColorTab()
     {
-
+        if (colorPicker == null)
+        {
+            colorPicker = gameObject.AddComponent<ColorPickerGUI>();
+            colorPicker.enabled = false;
+            colorPicker.SetColor(Color.red);
+        }
+        colorPicker.WindowGUI();
     }
 
     private void TextureTab()

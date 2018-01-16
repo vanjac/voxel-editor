@@ -88,7 +88,8 @@ public class ColorPickerGUI : GUIPanel
         if (oldHue != hue || oldSaturation != saturation || oldValue != value)
         {
             color = Color.HSVToRGB(hue, saturation, value);
-            handler(color);
+            if (handler != null)
+                handler(color);
             UpdateTexture();
         }
 
