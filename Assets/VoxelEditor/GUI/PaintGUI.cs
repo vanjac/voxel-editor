@@ -82,7 +82,7 @@ public class PaintGUI : GUIPanel
         materialSelector.closeOnSelect = false;
         if (selectedLayer == 0)
         {
-            materialSelector.materialDirectory = "GameAssets/Materials";
+            materialSelector.rootDirectory = "GameAssets/Materials";
             materialSelector.handler = (Material mat) =>
             {
                 if (mat != null || paint.overlay != null)
@@ -92,7 +92,7 @@ public class PaintGUI : GUIPanel
         }
         else
         {
-            materialSelector.materialDirectory = "GameAssets/Overlays";
+            materialSelector.rootDirectory = "GameAssets/Overlays";
             materialSelector.handler = (Material mat) =>
             {
                 if (mat != null || paint.material != null)

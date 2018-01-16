@@ -8,19 +8,25 @@ public class MaterialSelectorGUI : GUIPanel
     private static Texture2D whiteTexture;
     private const int NUM_COLUMNS = 4;
     private const int TEXTURE_MARGIN = 10;
+    private const float CATEGORY_BUTTON_ASPECT = 3.0f;
+    private const string BACK_BUTTON = "Back";
 
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
-    public string materialDirectory = "GameAssets/Materials";
+    public string rootDirectory = "GameAssets/Materials";
     public bool allowNullMaterial = false;
     public bool closeOnSelect = true;
 
-    List<Material> materials;
-    List<string> materialSubDirectories;
+    private string materialDirectory;
+    private List<Material> materials;
+    private List<string> materialSubDirectories;
+
+    private GUIStyle condensedButtonStyle = null;
 
     public void Start()
     {
+        materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
     }
 
@@ -31,29 +37,47 @@ public class MaterialSelectorGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        if (condensedButtonStyle == null)
+        {
+            condensedButtonStyle = new GUIStyle(GUI.skin.button);
+            condensedButtonStyle.padding.left = 16;
+            condensedButtonStyle.padding.right = 16;
+        }
+
         if (materials == null)
             return;
         scroll = GUILayout.BeginScrollView(scroll);
         if (allowNullMaterial)
             if (GUILayout.Button("Clear"))
                 MaterialSelected(null);
+        Rect rowRect = new Rect();
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
+            if (i % NUM_COLUMNS == 0)
+                rowRect = GUILayoutUtility.GetAspectRect(NUM_COLUMNS * CATEGORY_BUTTON_ASPECT);
+            Rect buttonRect = rowRect;
+            buttonRect.width = buttonRect.height * CATEGORY_BUTTON_ASPECT;
+            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
             string subDir = materialSubDirectories[i];
-            if (GUILayout.Button(subDir))
+            bool selected;
+            if (subDir == BACK_BUTTON)
+                // highlight the button
+                selected = !GUI.Toggle(buttonRect, true, subDir, condensedButtonStyle);
+            else
+                selected = GUI.Button(buttonRect, subDir, condensedButtonStyle);
+            if (selected)
             {
                 scroll = new Vector2(0, 0);
                 MaterialDirectorySelected(materialSubDirectories[i]);
             }
         }
-        Rect rowRect = new Rect();
         for (int i = 0; i < materials.Count; i++)
         {
             if (i % NUM_COLUMNS == 0)
                 rowRect = GUILayoutUtility.GetAspectRect(NUM_COLUMNS);
             Rect buttonRect = rowRect;
             buttonRect.width = buttonRect.height;
-            buttonRect.x = buttonRect.height * (i % NUM_COLUMNS);
+            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
             Rect textureRect = new Rect(
                 buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
@@ -67,7 +91,8 @@ public class MaterialSelectorGUI : GUIPanel
     void UpdateMaterialDirectory()
     {
         materialSubDirectories = new List<string>();
-        materialSubDirectories.Add("..");
+        if (materialDirectory != rootDirectory)
+            materialSubDirectories.Add(BACK_BUTTON);
         materials = new List<Material>();
         foreach (string dirEntry in ResourcesDirectory.dirList)
         {
@@ -91,7 +116,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void MaterialDirectorySelected(string name)
     {
-        if (name == "..")
+        if (name == BACK_BUTTON)
         {
             if (materialDirectory.Trim() != "")
                 materialDirectory = Path.GetDirectoryName(materialDirectory);
