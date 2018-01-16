@@ -6,6 +6,8 @@ using UnityEngine;
 public class MaterialSelectorGUI : GUIPanel
 {
     private static Texture2D whiteTexture;
+    private const int NUM_COLUMNS = 4;
+    private const int TEXTURE_MARGIN = 10;
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -44,11 +46,17 @@ public class MaterialSelectorGUI : GUIPanel
                 MaterialDirectorySelected(materialSubDirectories[i]);
             }
         }
+        Rect rowRect = new Rect();
         for (int i = 0; i < materials.Count; i++)
         {
-            Rect buttonRect = GUILayoutUtility.GetAspectRect(1.0f);
-            Rect textureRect = new Rect(buttonRect.xMin + 40, buttonRect.yMin + 40,
-                buttonRect.width - 80, buttonRect.height - 80);
+            if (i % NUM_COLUMNS == 0)
+                rowRect = GUILayoutUtility.GetAspectRect(NUM_COLUMNS);
+            Rect buttonRect = rowRect;
+            buttonRect.width = buttonRect.height;
+            buttonRect.x = buttonRect.height * (i % NUM_COLUMNS);
+            Rect textureRect = new Rect(
+                buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
+                buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
             if (GUI.Button(buttonRect, ""))
                 MaterialSelected(materials[i]);
             DrawMaterialTexture(materials[i], textureRect, false);
