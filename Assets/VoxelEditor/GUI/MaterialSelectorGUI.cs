@@ -12,18 +12,19 @@ public class MaterialSelectorGUI : GUIPanel
     public MaterialSelectHandler handler;
     public string materialDirectory = "GameAssets/Materials";
     public bool allowNullMaterial = false;
+    public bool closeOnSelect = true;
 
     List<Material> materials;
     List<string> materialSubDirectories;
 
-    void Start()
+    public void Start()
     {
         UpdateMaterialDirectory();
     }
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width - height / 2, 0, height / 2, height);
+        return new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
     }
 
     public override void WindowGUI()
@@ -103,7 +104,8 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (handler != null)
             handler(material);
-        Destroy(this);
+        if (closeOnSelect)
+            Destroy(this);
     }
 
     public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)

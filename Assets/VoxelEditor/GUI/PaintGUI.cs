@@ -13,13 +13,19 @@ public class PaintGUI : GUIPanel
 
     private Rect windowRect;
     private int selectedLayer = 0;
+    private MaterialSelectorGUI materialSelector;
 
     private GUIStyle condensedButtonStyle = null;
 
     public override Rect GetRect(float width, float height)
     {
-        windowRect = new Rect(width * .25f, height * .1f, width * .5f, 0);
+        windowRect = new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
         return windowRect;
+    }
+
+    void Start()
+    {
+        UpdateMaterialSelector();
     }
 
     public override void WindowGUI()
@@ -49,17 +55,34 @@ public class PaintGUI : GUIPanel
             Orient(5);
         if (GUILayout.Button(GUIIconSet.instance.flipVertical, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(7);
+        int oldSelectedLayer = selectedLayer;
         selectedLayer = GUILayout.SelectionGrid(
             selectedLayer, new string[] { "Material", "Overlay" }, 2, condensedButtonStyle);
+        if (oldSelectedLayer != selectedLayer)
+            UpdateMaterialSelector();
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
 
-        if (GUILayout.Button("Change Material"))
+        if (materialSelector != null)
         {
-            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-            materialSelector.title = "Change Material";
-            materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
+            materialSelector.scroll = scroll;
+            materialSelector.WindowGUI();
+            scroll = materialSelector.scroll;
+        }
+    }
+
+    private void UpdateMaterialSelector()
+    {
+        if (materialSelector != null)
+            Destroy(materialSelector);
+        materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
+        materialSelector.enabled = false;
+        materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
+        materialSelector.closeOnSelect = false;
+        if (selectedLayer == 0)
+        {
+            materialSelector.materialDirectory = "GameAssets/Materials";
             materialSelector.handler = (Material mat) =>
             {
                 if (mat != null || paint.overlay != null)
@@ -67,13 +90,9 @@ public class PaintGUI : GUIPanel
                 handler(paint);
             };
         }
-
-        if (GUILayout.Button("Change Overlay"))
+        else
         {
-            MaterialSelectorGUI materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
-            materialSelector.title = "Change Overlay";
             materialSelector.materialDirectory = "GameAssets/Overlays";
-            materialSelector.allowNullMaterial = true;
             materialSelector.handler = (Material mat) =>
             {
                 if (mat != null || paint.material != null)
@@ -81,6 +100,7 @@ public class PaintGUI : GUIPanel
                 handler(paint);
             };
         }
+        materialSelector.Start(); // not enabled so wouldn't be called normally
     }
 
     private void Orient(byte change)
