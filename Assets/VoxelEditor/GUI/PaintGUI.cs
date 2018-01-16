@@ -19,7 +19,7 @@ public class PaintGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        windowRect = new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
+        windowRect = new Rect(width * .15f, height * .05f, width * .7f, height * .9f);
         return windowRect;
     }
 
