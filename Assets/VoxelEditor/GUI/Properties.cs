@@ -160,6 +160,7 @@ public class PropertyGUIs
                     = GUIPanel.guiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = "Change " + property.name;
                 materialSelector.rootDirectory = materialDirectory;
+                materialSelector.highlightMaterial = (Material)property.value;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.value = mat;
