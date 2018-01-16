@@ -48,6 +48,7 @@ public class PaintGUI : GUIPanel
             Orient(3);
         if (GUILayout.Button(GUIIconSet.instance.rotateRight, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(1);
+        GUILayout.FlexibleSpace();
         if (GUILayout.Button("Done"))
             Destroy(this);
         GUILayout.EndHorizontal();
