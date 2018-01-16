@@ -7,7 +7,7 @@ public class MaterialSelectorGUI : GUIPanel
 {
     private static Texture2D whiteTexture;
     private const int NUM_COLUMNS = 4;
-    private const int TEXTURE_MARGIN = 10;
+    private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_ASPECT = 3.0f;
     private const string BACK_BUTTON = "Back";
 
