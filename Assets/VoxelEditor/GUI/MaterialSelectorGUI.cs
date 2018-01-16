@@ -10,6 +10,7 @@ public class MaterialSelectorGUI : GUIPanel
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_ASPECT = 3.0f;
     private const string BACK_BUTTON = "Back";
+    private const string COLOR_MATERIAL_NAME = "Color";
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -32,7 +33,10 @@ public class MaterialSelectorGUI : GUIPanel
     {
         materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
-        tab = 1; // TODO: choose based on material type
+        if (highlightMaterial != null && highlightMaterial.name == COLOR_MATERIAL_NAME)
+            tab = 0;
+        else
+            tab = 1;
     }
 
     public override Rect GetRect(float width, float height)
@@ -66,11 +70,23 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void ColorTab()
     {
+        if (highlightMaterial == null || highlightMaterial.name != COLOR_MATERIAL_NAME)
+        {
+            highlightMaterial = new Material(Shader.Find("Standard"));
+            highlightMaterial.name = COLOR_MATERIAL_NAME;
+            highlightMaterial.color = Color.red;
+            MaterialSelected(highlightMaterial);
+        }
         if (colorPicker == null)
         {
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
-            colorPicker.SetColor(Color.red);
+            colorPicker.SetColor(highlightMaterial.color);
+            colorPicker.handler = (Color c) =>
+            {
+                highlightMaterial.color = c;
+                MaterialSelected(highlightMaterial);
+            };
         }
         colorPicker.WindowGUI();
     }
