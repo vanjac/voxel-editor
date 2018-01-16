@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class MaterialSelectorGUI : GUIPanel
 {
+    private static Texture2D whiteTexture;
+
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
     public string materialDirectory = "GameAssets/Materials";
     public bool allowNullMaterial = false;
 
-    List<string> materialNames;
-    List<Texture> materialPreviews;
+    List<Material> materials;
     List<string> materialSubDirectories;
 
     void Start()
@@ -27,16 +28,12 @@ public class MaterialSelectorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (materialPreviews == null)
+        if (materials == null)
             return;
         scroll = GUILayout.BeginScrollView(scroll);
         if (allowNullMaterial)
-        {
             if (GUILayout.Button("Clear"))
-            {
                 MaterialSelected(null);
-            }
-        }
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
             string subDir = materialSubDirectories[i];
@@ -46,17 +43,14 @@ public class MaterialSelectorGUI : GUIPanel
                 MaterialDirectorySelected(materialSubDirectories[i]);
             }
         }
-        for (int i = 0; i < materialPreviews.Count; i++)
+        for (int i = 0; i < materials.Count; i++)
         {
-            Texture materialPreview = materialPreviews[i];
             Rect buttonRect = GUILayoutUtility.GetAspectRect(1.0f);
             Rect textureRect = new Rect(buttonRect.xMin + 40, buttonRect.yMin + 40,
                 buttonRect.width - 80, buttonRect.height - 80);
             if (GUI.Button(buttonRect, ""))
-            {
-                MaterialSelected(materialNames[i]);
-            }
-            GUI.DrawTexture(textureRect, materialPreview, ScaleMode.ScaleToFit, false);
+                MaterialSelected(materials[i]);
+            DrawMaterialTexture(materials[i], textureRect, false);
         }
         GUILayout.EndScrollView();
     }
@@ -65,8 +59,7 @@ public class MaterialSelectorGUI : GUIPanel
     {
         materialSubDirectories = new List<string>();
         materialSubDirectories.Add("..");
-        materialNames = new List<string>();
-        materialPreviews = new List<Texture>();
+        materials = new List<Material>();
         foreach (string dirEntry in ResourcesDirectory.dirList)
         {
             if (dirEntry.Length <= 2)
@@ -81,43 +74,13 @@ public class MaterialSelectorGUI : GUIPanel
             if (extension == "")
                 materialSubDirectories.Add(Path.GetFileName(newDirEntry));
             else if (extension == ".mat")
-            {
-                materialNames.Add(Path.GetFileNameWithoutExtension(newDirEntry));
-                Material material = ResourcesDirectory.GetMaterial(newDirEntry);
-                if (material == null)
-                {
-                    materialPreviews.Add(null);
-                    continue;
-                }
-
-                Texture previewTexture = null;
-                Color color = Color.white;
-
-                if (material.mainTexture != null)
-                    previewTexture = material.mainTexture;
-                else if (material.HasProperty("_Color"))
-                    color = material.color;
-                else if (material.HasProperty("_ColorControl"))
-                    // water shader
-                    previewTexture = material.GetTexture("_ColorControl");
-                else if (material.HasProperty("_FrontTex"))
-                    // skybox
-                    previewTexture = material.GetTexture("_FrontTex");
-                if (previewTexture == null)
-                {
-                    Texture2D solidColorTexture = new Texture2D(1, 1);
-                    solidColorTexture.SetPixel(0, 0, color);
-                    solidColorTexture.Apply();
-                    previewTexture = solidColorTexture;
-                }
-                materialPreviews.Add(previewTexture);
-            }
+                materials.Add(ResourcesDirectory.GetMaterial(newDirEntry));
         }
 
         Resources.UnloadUnusedAssets();
     }
 
-    void MaterialDirectorySelected(string name)
+    private void MaterialDirectorySelected(string name)
     {
         if (name == "..")
         {
@@ -136,13 +99,41 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
-    void MaterialSelected(string name)
+    private void MaterialSelected(Material material)
     {
-        Material material = null;
-        if (name != null)
-            material = ResourcesDirectory.GetMaterial(materialDirectory + "/" + name);
         if (handler != null)
             handler(material);
         Destroy(this);
+    }
+
+    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
+    {
+        if (mat == null)
+            return;
+        if (whiteTexture == null)
+        {
+            whiteTexture = new Texture2D(1, 1);
+            whiteTexture.SetPixel(0, 0, Color.white);
+            whiteTexture.Apply();
+        }
+        Rect texCoords = new Rect(Vector2.zero, Vector2.one);
+        Texture texture = whiteTexture;
+        if (mat.mainTexture != null)
+        {
+            texture = mat.mainTexture;
+            texCoords = new Rect(Vector2.zero, mat.mainTextureScale);
+        }
+        else if (mat.HasProperty("_ColorControl"))
+            // water shader
+            texture = mat.GetTexture("_ColorControl");
+        else if (mat.HasProperty("_FrontTex"))
+            // skybox
+            texture = mat.GetTexture("_FrontTex");
+
+        Color baseColor = GUI.color;
+        if (mat.HasProperty("_Color"))
+            GUI.color *= mat.color;
+        GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
+        GUI.color = baseColor;
     }
 }

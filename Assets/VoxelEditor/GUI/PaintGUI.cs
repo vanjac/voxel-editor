@@ -12,22 +12,14 @@ public class PaintGUI : GUIPanel
     public VoxelFace paint;
 
     private Rect windowRect;
-    private Texture2D whiteTexture;
     private int selectedLayer = 0;
 
     private GUIStyle condensedButtonStyle = null;
 
     public override Rect GetRect(float width, float height)
     {
-        windowRect = new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
+        windowRect = new Rect(width * .25f, height * .1f, width * .5f, 0);
         return windowRect;
-    }
-
-    void Start()
-    {
-        whiteTexture = new Texture2D(1, 1);
-        whiteTexture.SetPixel(0, 0, Color.white);
-        whiteTexture.Apply();
     }
 
     public override void WindowGUI()
@@ -120,33 +112,8 @@ public class PaintGUI : GUIPanel
         }
         GUI.matrix *= Matrix4x4.Rotate(Quaternion.Euler(new Vector3(0, 0, rotation)));
         GUI.matrix *= Matrix4x4.Translate(-translation);
-        DrawMaterialTexture(paint.material, rect, false);
-        DrawMaterialTexture(paint.overlay, rect, true);
+        MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false);
+        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true);
         GUI.matrix = baseMatrix;
-    }
-
-    private void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
-    {
-        if (mat == null)
-            return;
-        Rect texCoords = new Rect(Vector2.zero, Vector2.one);
-        Texture texture = whiteTexture;
-        if (mat.mainTexture != null)
-        {
-            texture = mat.mainTexture;
-            texCoords = new Rect(Vector2.zero, mat.mainTextureScale);
-        }
-        else if (mat.HasProperty("_ColorControl"))
-            // water shader
-            texture = mat.GetTexture("_ColorControl");
-        else if (mat.HasProperty("_FrontTex"))
-            // skybox
-            texture = mat.GetTexture("_FrontTex");
-
-        Color baseColor = GUI.color;
-        if (mat.HasProperty("_Color"))
-            GUI.color *= mat.color;
-        GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
-        GUI.color = baseColor;
     }
 }
