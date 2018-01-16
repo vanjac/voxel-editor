@@ -202,6 +202,12 @@ public class MaterialSelectorGUI : GUIPanel
         Color baseColor = GUI.color;
         if (mat.HasProperty("_Color"))
             GUI.color *= mat.color;
+        else if (texture == whiteTexture)
+        {
+            // no color or texture
+            texture = GUIIconSet.instance.missingTexture;
+            alpha = true;
+        }
         GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
         GUI.color = baseColor;
     }
