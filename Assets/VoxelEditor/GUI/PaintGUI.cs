@@ -13,6 +13,9 @@ public class PaintGUI : GUIPanel
 
     private Rect windowRect;
     private Texture2D whiteTexture;
+    private int selectedLayer = 0;
+
+    private GUIStyle condensedButtonStyle = null;
 
     public override Rect GetRect(float width, float height)
     {
@@ -29,21 +32,32 @@ public class PaintGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        if (condensedButtonStyle == null)
+        {
+            condensedButtonStyle = new GUIStyle(GUI.skin.button);
+            condensedButtonStyle.padding.left = 16;
+            condensedButtonStyle.padding.right = 16;
+        }
+
         GUILayout.BeginHorizontal();
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(PREVIEW_SIZE), GUILayout.Height(PREVIEW_SIZE));
         DrawPaint(paint, GUILayoutUtility.GetLastRect());
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Left"))
+        if (GUILayout.Button(GUIIconSet.instance.rotateLeft, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(3);
-        if (GUILayout.Button("Right"))
+        if (GUILayout.Button(GUIIconSet.instance.rotateRight, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(1);
+        if (GUILayout.Button("Done"))
+            Destroy(this);
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Flip H"))
+        if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(5);
-        if (GUILayout.Button("Flip V"))
+        if (GUILayout.Button(GUIIconSet.instance.flipVertical, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(7);
+        selectedLayer = GUILayout.SelectionGrid(
+            selectedLayer, new string[] { "Material", "Overlay" }, 2, condensedButtonStyle);
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();

@@ -15,6 +15,10 @@ public class GUIIconSet : MonoBehaviour
     public Texture overflow;
     public Texture world;
     public Texture done;
+    public Texture rotateLeft;
+    public Texture rotateRight;
+    public Texture flipHorizontal;
+    public Texture flipVertical;
 
     public void Start()
     {
