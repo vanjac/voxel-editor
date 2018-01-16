@@ -89,6 +89,7 @@ public class PaintGUI : GUIPanel
                     paint.material = mat;
                 handler(paint);
             };
+            materialSelector.highlightMaterial = paint.material;
         }
         else
         {
@@ -99,6 +100,7 @@ public class PaintGUI : GUIPanel
                     paint.overlay = mat;
                 handler(paint);
             };
+            materialSelector.highlightMaterial = paint.overlay;
         }
         materialSelector.Start(); // not enabled so wouldn't be called normally
     }

@@ -17,6 +17,7 @@ public class MaterialSelectorGUI : GUIPanel
     public string rootDirectory = "GameAssets/Materials";
     public bool allowNullMaterial = false;
     public bool closeOnSelect = true;
+    public Material highlightMaterial = null;
 
     private string materialDirectory;
     private List<Material> materials;
@@ -81,9 +82,16 @@ public class MaterialSelectorGUI : GUIPanel
             Rect textureRect = new Rect(
                 buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
-            if (GUI.Button(buttonRect, ""))
-                MaterialSelected(materials[i]);
-            DrawMaterialTexture(materials[i], textureRect, false);
+            Material material = materials[i];
+            bool selected;
+            if (material == highlightMaterial)
+                // highlight the button
+                selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
+            else
+                selected = GUI.Button(buttonRect, "");
+            if (selected)
+                MaterialSelected(material);
+            DrawMaterialTexture(material, textureRect, false);
         }
         GUILayout.EndScrollView();
     }
@@ -135,6 +143,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void MaterialSelected(Material material)
     {
+        highlightMaterial = material;
         if (handler != null)
             handler(material);
         if (closeOnSelect)
