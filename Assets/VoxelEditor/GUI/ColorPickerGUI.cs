@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ColorPickerGUI : GUIPanel
 {
+    private const int PREVIEW_SIZE = 250;
+
     public delegate void ColorChangeHandler(Color color);
 
     private Color color;
@@ -76,14 +78,16 @@ public class ColorPickerGUI : GUIPanel
 
         float oldHue = hue, oldSaturation = saturation, oldValue = value;
 
+        GUILayout.BeginHorizontal();
+
+        GUILayout.BeginVertical();
         GUILayout.Label("Hue:");
         hue = GUILayout.HorizontalSlider(hue, 0, 1, hueSliderStyle, GUI.skin.horizontalSliderThumb);
-
         GUILayout.Label("Saturation:");
         saturation = GUILayout.HorizontalSlider(saturation, 0, 1, saturationSliderStyle, GUI.skin.horizontalSliderThumb);
-
         GUILayout.Label("Brightness:");
         value = GUILayout.HorizontalSlider(value, 0, 1, valueSliderStyle, GUI.skin.horizontalSliderThumb);
+        GUILayout.EndVertical();
 
         if (oldHue != hue || oldSaturation != saturation || oldValue != value)
         {
@@ -93,9 +97,11 @@ public class ColorPickerGUI : GUIPanel
             UpdateTexture();
         }
 
-        Rect colorRect = GUILayoutUtility.GetAspectRect(4.0f);
+        GUILayout.Box("", GUIStyle.none, GUILayout.Width(PREVIEW_SIZE), GUILayout.Height(PREVIEW_SIZE));
+        GUI.DrawTexture(GUILayoutUtility.GetLastRect(), colorTexture);
 
-        GUI.DrawTexture(colorRect, colorTexture);
+        GUILayout.EndHorizontal();
+        GUILayout.Space(30);
     }
 
     private GUIStyle NewColorSliderStyle()
