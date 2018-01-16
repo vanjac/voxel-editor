@@ -211,7 +211,12 @@ public class MaterialSelectorGUI : GUIPanel
 
         Color baseColor = GUI.color;
         if (mat.HasProperty("_Color"))
+        {
+            if (GUI.color.a > 1)
+                // fixes transparent colors becoming opaque while scrolling
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
             GUI.color *= mat.color;
+        }
         else if (texture == whiteTexture)
         {
             // no color or texture
