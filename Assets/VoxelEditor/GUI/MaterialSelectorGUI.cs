@@ -19,6 +19,7 @@ public class MaterialSelectorGUI : GUIPanel
     public bool closeOnSelect = true;
     public Material highlightMaterial = null;
 
+    private int tab;
     private string materialDirectory;
     private List<Material> materials;
     private List<string> materialSubDirectories;
@@ -29,6 +30,7 @@ public class MaterialSelectorGUI : GUIPanel
     {
         materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
+        tab = 1; // TODO: choose based on material type
     }
 
     public override Rect GetRect(float width, float height)
@@ -45,12 +47,29 @@ public class MaterialSelectorGUI : GUIPanel
             condensedButtonStyle.padding.right = 16;
         }
 
+        if (allowNullMaterial)
+            tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture", "None" }, 3);
+        else
+            tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture" }, 2);
+
+        if (tab == 0)
+            ColorTab();
+        if (tab == 1)
+            TextureTab();
+        if (tab == 2)
+            NoneTab();
+    }
+
+    private void ColorTab()
+    {
+
+    }
+
+    private void TextureTab()
+    {
         if (materials == null)
             return;
         scroll = GUILayout.BeginScrollView(scroll);
-        if (allowNullMaterial)
-            if (GUILayout.Button("Clear"))
-                MaterialSelected(null);
         Rect rowRect = new Rect();
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
@@ -94,6 +113,12 @@ public class MaterialSelectorGUI : GUIPanel
             DrawMaterialTexture(material, textureRect, false);
         }
         GUILayout.EndScrollView();
+    }
+
+    private void NoneTab()
+    {
+        if (highlightMaterial != null)
+            MaterialSelected(null);
     }
 
     void UpdateMaterialDirectory()
