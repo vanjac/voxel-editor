@@ -74,7 +74,10 @@ public class MaterialSelectorGUI : GUIPanel
         {
             highlightMaterial = new Material(Shader.Find("Standard"));
             highlightMaterial.name = COLOR_MATERIAL_NAME;
-            highlightMaterial.color = Color.red;
+            if (allowAlpha)
+                highlightMaterial.color = new Color(0, 0, 1, 0.25f);
+            else
+                highlightMaterial.color = Color.red;
             MaterialSelected(highlightMaterial);
         }
         if (colorPicker == null)
@@ -82,6 +85,7 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
             colorPicker.SetColor(highlightMaterial.color);
+            colorPicker.includeAlpha = allowAlpha;
             colorPicker.handler = (Color c) =>
             {
                 highlightMaterial.color = c;
