@@ -10,7 +10,6 @@ public class MaterialSelectorGUI : GUIPanel
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_ASPECT = 3.0f;
     private const string BACK_BUTTON = "Back";
-    private const string COLOR_MATERIAL_NAME = "Color";
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -33,7 +32,7 @@ public class MaterialSelectorGUI : GUIPanel
     {
         materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
-        if (highlightMaterial != null && highlightMaterial.name == COLOR_MATERIAL_NAME)
+        if (highlightMaterial != null && ResourcesDirectory.IsCustomMaterial(highlightMaterial))
             tab = 0;
         else
             tab = 1;
@@ -75,10 +74,9 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void ColorTab()
     {
-        if (highlightMaterial == null || highlightMaterial.name != COLOR_MATERIAL_NAME)
+        if (highlightMaterial == null || !ResourcesDirectory.IsCustomMaterial(highlightMaterial))
         {
-            highlightMaterial = new Material(Shader.Find("Standard"));
-            highlightMaterial.name = COLOR_MATERIAL_NAME;
+            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"));
             if (allowAlpha)
                 highlightMaterial.color = new Color(0, 0, 1, 0.25f);
             else
