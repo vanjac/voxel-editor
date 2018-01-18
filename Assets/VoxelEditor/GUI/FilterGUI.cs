@@ -16,7 +16,6 @@ public class FilterGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        GUILayout.Label("Filter by...");
         if (GUILayout.Button("Specific object"))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
@@ -37,6 +36,7 @@ public class FilterGUI : GUIPanel
         if (GUILayout.Button("Object type"))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
+            picker.title = "Filter by object type";
             picker.items = GameScripts.entityFilterTypes;
             picker.handler = (PropertiesObjectType type) =>
             {
@@ -47,6 +47,7 @@ public class FilterGUI : GUIPanel
         if (GUILayout.Button("Active behavior type"))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
+            picker.title = "Filter by behavior type";
             picker.items = GameScripts.behaviors;
             picker.handler = (PropertiesObjectType type) =>
             {
@@ -57,6 +58,7 @@ public class FilterGUI : GUIPanel
         if (GUILayout.Button("Tag"))
         {
             TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
+            picker.title = "Filter by tag";
             picker.handler = (byte tag) =>
             {
                 handler(new ActivatedSensor.TagFilter(tag));

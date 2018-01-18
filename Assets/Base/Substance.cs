@@ -60,8 +60,6 @@ public class SubstanceComponent : EntityComponent
 
     public override void Start()
     {
-        base.Start();
-
         Bounds voxelBounds = new Bounds();
         foreach (Voxel voxel in substance.voxels)
             if (voxelBounds.extents == Vector3.zero)
@@ -75,6 +73,9 @@ public class SubstanceComponent : EntityComponent
 
         // a rigidBody is required for collision detection
         Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>();
-        rigidBody.isKinematic = true; // no physics by default
+        // no physics by default (could be disabled by a Physics behavior)
+        rigidBody.isKinematic = true;
+
+        base.Start();
     }
 }

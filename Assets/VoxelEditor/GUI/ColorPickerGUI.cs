@@ -5,23 +5,21 @@ using UnityEngine;
 
 public class ColorPickerGUI : GUIPanel
 {
+    private const int PREVIEW_SIZE = 250;
+
     public delegate void ColorChangeHandler(Color color);
 
     private Color color;
     private float hue, saturation, value;
     private Texture2D colorTexture = null;
-    private Texture2D hueTexture, saturationTexture, valueTexture;
-    private GUIStyle hueSliderStyle = null, saturationSliderStyle = null, valueSliderStyle = null;
+    private Texture2D hueTexture, saturationTexture, valueTexture, alphaTexture;
+    private GUIStyle hueSliderStyle = null, saturationSliderStyle = null, valueSliderStyle = null, alphaSliderStyle = null;
     public ColorChangeHandler handler;
+    public bool includeAlpha = false;
 
     public override Rect GetRect(float width, float height)
     {
         return new Rect(height * .55f, height * .1f, width * .4f, 0);
-    }
-
-    public override string GetName()
-    {
-        return "Change Color";
     }
 
     public void SetColor(Color c)
@@ -67,6 +65,16 @@ public class ColorPickerGUI : GUIPanel
             valueTexture.Apply();
             valueSliderStyle.normal.background = valueTexture;
         }
+
+        if (alphaSliderStyle != null)
+        {
+            if (alphaTexture == null)
+                alphaTexture = new Texture2D(256, 1);
+            for (int x = 0; x < alphaTexture.width; x++)
+                alphaTexture.SetPixel(x, 0, new Color(color.r, color.g, color.b, 1 - x / 256.0f));
+            alphaTexture.Apply();
+            alphaSliderStyle.normal.background = alphaTexture;
+        }
     }
 
     public override void WindowGUI()
@@ -76,30 +84,43 @@ public class ColorPickerGUI : GUIPanel
             hueSliderStyle = NewColorSliderStyle();
             saturationSliderStyle = NewColorSliderStyle();
             valueSliderStyle = NewColorSliderStyle();
+            alphaSliderStyle = NewColorSliderStyle();
             UpdateTexture();
         }
 
-        float oldHue = hue, oldSaturation = saturation, oldValue = value;
+        float oldHue = hue, oldSaturation = saturation, oldValue = value, oldAlpha = color.a;
 
+        GUILayout.BeginHorizontal();
+
+        GUILayout.BeginVertical();
         GUILayout.Label("Hue:");
         hue = GUILayout.HorizontalSlider(hue, 0, 1, hueSliderStyle, GUI.skin.horizontalSliderThumb);
-
         GUILayout.Label("Saturation:");
         saturation = GUILayout.HorizontalSlider(saturation, 0, 1, saturationSliderStyle, GUI.skin.horizontalSliderThumb);
-
         GUILayout.Label("Brightness:");
         value = GUILayout.HorizontalSlider(value, 0, 1, valueSliderStyle, GUI.skin.horizontalSliderThumb);
-
-        if (oldHue != hue || oldSaturation != saturation || oldValue != value)
+        if (includeAlpha)
         {
-            color = Color.HSVToRGB(hue, saturation, value);
-            handler(color);
+            GUILayout.Label("Transparency:");
+            color.a = 1 - GUILayout.HorizontalSlider(1 - color.a, 0, 1, alphaSliderStyle, GUI.skin.horizontalSliderThumb);
+        }
+        GUILayout.EndVertical();
+
+        if (oldHue != hue || oldSaturation != saturation || oldValue != value || oldAlpha != color.a)
+        {
+            Color newColor = Color.HSVToRGB(hue, saturation, value);
+            newColor.a = color.a;
+            color = newColor;
+            if (handler != null)
+                handler(color);
             UpdateTexture();
         }
 
-        Rect colorRect = GUILayoutUtility.GetAspectRect(4.0f);
+        GUILayout.Box("", GUIStyle.none, GUILayout.Width(PREVIEW_SIZE), GUILayout.Height(PREVIEW_SIZE));
+        GUI.DrawTexture(GUILayoutUtility.GetLastRect(), colorTexture);
 
-        GUI.DrawTexture(colorRect, colorTexture);
+        GUILayout.EndHorizontal();
+        GUILayout.Space(30);
     }
 
     private GUIStyle NewColorSliderStyle()

@@ -26,4 +26,16 @@ public class ResourcesDirectory
         path = Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path);
         return Resources.Load<Material>(path);
     }
+
+    public static Material MakeCustomMaterial(Shader shader)
+    {
+        Material material = new Material(shader);
+        material.name = "Custom" + System.Guid.NewGuid();
+        return material;
+    }
+
+    public static bool IsCustomMaterial(Material material)
+    {
+        return material.name.StartsWith("Custom");
+    }
 }

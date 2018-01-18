@@ -5,73 +5,161 @@ using UnityEngine;
 
 public class MaterialSelectorGUI : GUIPanel
 {
+    private static Texture2D whiteTexture;
+    private const int NUM_COLUMNS = 4;
+    private const int TEXTURE_MARGIN = 20;
+    private const float CATEGORY_BUTTON_ASPECT = 3.0f;
+    private const string BACK_BUTTON = "Back";
+
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
-    public string materialDirectory = "GameAssets/Materials";
+    public string rootDirectory = "GameAssets/Materials";
+    public bool allowAlpha = false;
     public bool allowNullMaterial = false;
+    public bool closeOnSelect = true;
+    public Material highlightMaterial = null;
 
-    List<string> materialNames;
-    List<Texture> materialPreviews;
-    List<string> materialSubDirectories;
+    private int tab;
+    private string materialDirectory;
+    private List<Material> materials;
+    private List<string> materialSubDirectories;
+    private ColorPickerGUI colorPicker;
 
-    void Start()
+    private GUIStyle condensedButtonStyle = null;
+
+    public void Start()
     {
+        materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
+        if (highlightMaterial != null && ResourcesDirectory.IsCustomMaterial(highlightMaterial))
+            tab = 0;
+        else
+            tab = 1;
     }
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width - height / 2, 0, height / 2, height);
-    }
-
-    public override string GetName()
-    {
-        return "Assign Material";
+        return new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
     }
 
     public override void WindowGUI()
     {
-        if (materialPreviews == null)
+        if (condensedButtonStyle == null)
+        {
+            condensedButtonStyle = new GUIStyle(GUI.skin.button);
+            condensedButtonStyle.padding.left = 16;
+            condensedButtonStyle.padding.right = 16;
+        }
+
+        if (allowNullMaterial)
+            tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture", "None" }, 3);
+        else
+            tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture" }, 2);
+
+        if (tab == 0)
+            ColorTab();
+        else if (colorPicker != null)
+            Destroy(colorPicker);
+        if (tab == 1)
+            TextureTab();
+        else if (materialDirectory != rootDirectory)
+        {
+            materialDirectory = rootDirectory;
+            UpdateMaterialDirectory();
+        }
+        if (tab == 2)
+            NoneTab();
+    }
+
+    private void ColorTab()
+    {
+        if (highlightMaterial == null || !ResourcesDirectory.IsCustomMaterial(highlightMaterial))
+        {
+            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"));
+            if (allowAlpha)
+                highlightMaterial.color = new Color(0, 0, 1, 0.25f);
+            else
+                highlightMaterial.color = Color.red;
+            MaterialSelected(highlightMaterial);
+        }
+        if (colorPicker == null)
+        {
+            colorPicker = gameObject.AddComponent<ColorPickerGUI>();
+            colorPicker.enabled = false;
+            colorPicker.SetColor(highlightMaterial.color);
+            colorPicker.includeAlpha = allowAlpha;
+            colorPicker.handler = (Color c) =>
+            {
+                highlightMaterial.color = c;
+                MaterialSelected(highlightMaterial);
+            };
+        }
+        colorPicker.WindowGUI();
+    }
+
+    private void TextureTab()
+    {
+        if (materials == null)
             return;
         scroll = GUILayout.BeginScrollView(scroll);
-        if (allowNullMaterial)
-        {
-            if (GUILayout.Button("Clear"))
-            {
-                MaterialSelected(null);
-            }
-        }
+        Rect rowRect = new Rect();
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
+            if (i % NUM_COLUMNS == 0)
+                rowRect = GUILayoutUtility.GetAspectRect(NUM_COLUMNS * CATEGORY_BUTTON_ASPECT);
+            Rect buttonRect = rowRect;
+            buttonRect.width = buttonRect.height * CATEGORY_BUTTON_ASPECT;
+            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
             string subDir = materialSubDirectories[i];
-            if (GUILayout.Button(subDir))
+            bool selected;
+            if (subDir == BACK_BUTTON)
+                // highlight the button
+                selected = !GUI.Toggle(buttonRect, true, subDir, condensedButtonStyle);
+            else
+                selected = GUI.Button(buttonRect, subDir, condensedButtonStyle);
+            if (selected)
             {
                 scroll = new Vector2(0, 0);
                 MaterialDirectorySelected(materialSubDirectories[i]);
             }
         }
-        for (int i = 0; i < materialPreviews.Count; i++)
+        for (int i = 0; i < materials.Count; i++)
         {
-            Texture materialPreview = materialPreviews[i];
-            Rect buttonRect = GUILayoutUtility.GetAspectRect(1.0f);
-            Rect textureRect = new Rect(buttonRect.xMin + 40, buttonRect.yMin + 40,
-                buttonRect.width - 80, buttonRect.height - 80);
-            if (GUI.Button(buttonRect, ""))
-            {
-                MaterialSelected(materialNames[i]);
-            }
-            GUI.DrawTexture(textureRect, materialPreview, ScaleMode.ScaleToFit, false);
+            if (i % NUM_COLUMNS == 0)
+                rowRect = GUILayoutUtility.GetAspectRect(NUM_COLUMNS);
+            Rect buttonRect = rowRect;
+            buttonRect.width = buttonRect.height;
+            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
+            Rect textureRect = new Rect(
+                buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
+                buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
+            Material material = materials[i];
+            bool selected;
+            if (material == highlightMaterial)
+                // highlight the button
+                selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
+            else
+                selected = GUI.Button(buttonRect, "");
+            if (selected)
+                MaterialSelected(material);
+            DrawMaterialTexture(material, textureRect, allowAlpha);
         }
         GUILayout.EndScrollView();
+    }
+
+    private void NoneTab()
+    {
+        if (highlightMaterial != null)
+            MaterialSelected(null);
     }
 
     void UpdateMaterialDirectory()
     {
         materialSubDirectories = new List<string>();
-        materialSubDirectories.Add("..");
-        materialNames = new List<string>();
-        materialPreviews = new List<Texture>();
+        if (materialDirectory != rootDirectory)
+            materialSubDirectories.Add(BACK_BUTTON);
+        materials = new List<Material>();
         foreach (string dirEntry in ResourcesDirectory.dirList)
         {
             if (dirEntry.Length <= 2)
@@ -86,45 +174,15 @@ public class MaterialSelectorGUI : GUIPanel
             if (extension == "")
                 materialSubDirectories.Add(Path.GetFileName(newDirEntry));
             else if (extension == ".mat")
-            {
-                materialNames.Add(Path.GetFileNameWithoutExtension(newDirEntry));
-                Material material = ResourcesDirectory.GetMaterial(newDirEntry);
-                if (material == null)
-                {
-                    materialPreviews.Add(null);
-                    continue;
-                }
-
-                Texture previewTexture = null;
-                Color color = Color.white;
-
-                if (material.mainTexture != null)
-                    previewTexture = material.mainTexture;
-                else if (material.HasProperty("_Color"))
-                    color = material.color;
-                else if (material.HasProperty("_ColorControl"))
-                    // water shader
-                    previewTexture = material.GetTexture("_ColorControl");
-                else if (material.HasProperty("_FrontTex"))
-                    // skybox
-                    previewTexture = material.GetTexture("_FrontTex");
-                if (previewTexture == null)
-                {
-                    Texture2D solidColorTexture = new Texture2D(1, 1);
-                    solidColorTexture.SetPixel(0, 0, color);
-                    solidColorTexture.Apply();
-                    previewTexture = solidColorTexture;
-                }
-                materialPreviews.Add(previewTexture);
-            }
+                materials.Add(ResourcesDirectory.GetMaterial(newDirEntry));
         }
 
         Resources.UnloadUnusedAssets();
     }
 
-    void MaterialDirectorySelected(string name)
+    private void MaterialDirectorySelected(string name)
     {
-        if (name == "..")
+        if (name == BACK_BUTTON)
         {
             if (materialDirectory.Trim() != "")
                 materialDirectory = Path.GetDirectoryName(materialDirectory);
@@ -141,13 +199,54 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
-    void MaterialSelected(string name)
+    private void MaterialSelected(Material material)
     {
-        Material material = null;
-        if (name != null)
-            material = ResourcesDirectory.GetMaterial(materialDirectory + "/" + name);
+        highlightMaterial = material;
         if (handler != null)
             handler(material);
-        Destroy(this);
+        if (closeOnSelect)
+            Destroy(this);
+    }
+
+    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
+    {
+        if (mat == null)
+            return;
+        if (whiteTexture == null)
+        {
+            whiteTexture = new Texture2D(1, 1);
+            whiteTexture.SetPixel(0, 0, Color.white);
+            whiteTexture.Apply();
+        }
+        Rect texCoords = new Rect(Vector2.zero, Vector2.one);
+        Texture texture = whiteTexture;
+        if (mat.mainTexture != null)
+        {
+            texture = mat.mainTexture;
+            texCoords = new Rect(Vector2.zero, mat.mainTextureScale);
+        }
+        else if (mat.HasProperty("_ColorControl"))
+            // water shader
+            texture = mat.GetTexture("_ColorControl");
+        else if (mat.HasProperty("_FrontTex"))
+            // skybox
+            texture = mat.GetTexture("_FrontTex");
+
+        Color baseColor = GUI.color;
+        if (mat.HasProperty("_Color"))
+        {
+            if (GUI.color.a > 1)
+                // fixes transparent colors becoming opaque while scrolling
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
+            GUI.color *= mat.color;
+        }
+        else if (texture == whiteTexture)
+        {
+            // no color or texture
+            texture = GUIIconSet.instance.missingTexture;
+            alpha = true;
+        }
+        GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
+        GUI.color = baseColor;
     }
 }

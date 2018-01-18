@@ -10,12 +10,7 @@ public class CreateSubstanceGUI : ActionBarGUI
         stealFocus = true;
         ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
         if (actionBar != null)
-        {
             actionBar.enabled = false;
-            closeIcon = actionBar.closeIcon;
-            applySelectionIcon = actionBar.applySelectionIcon;
-            clearSelectionIcon = actionBar.clearSelectionIcon;
-        }
         propertiesGUI.normallyOpen = false; // hide properties panel
     }
 
@@ -32,7 +27,7 @@ public class CreateSubstanceGUI : ActionBarGUI
     {
         GUILayout.BeginHorizontal();
 
-        if (ActionBarButton(closeIcon))
+        if (ActionBarButton(GUIIconSet.instance.close))
         {
             voxelArray.substanceToCreate = null;
             Destroy(this);

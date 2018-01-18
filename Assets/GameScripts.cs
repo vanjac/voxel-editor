@@ -39,6 +39,7 @@ public class GameScripts
     {
         Visible.objectType,
         Solid.objectType,
+        PhysicsBehavior.objectType,
         Spin.objectType
     };
 

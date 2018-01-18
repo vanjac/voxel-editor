@@ -1,8 +1,8 @@
 # voxel-editor
 
-A mobile app for building 3D interactive worlds.
+A mobile app for building 3D interactive worlds. This is a work in progress.
 
-The app has been tested with Unity 2017.2 on Android. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
+The app has been tested with Unity 2017.2 on Android. There's no Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
 The first scene is `Menu/menuScene`. It's a placeholder interface for what will eventually be a file selection menu. Right now you can type a file name in the upper box and press New to make a new file, then choose the file in the dropdown and press Open to edit the file.
 
@@ -20,17 +20,28 @@ This will open `VoxelEditor/editScene`. If you open this scene directly from Uni
 
 Some of these only appear in certain contexts.
 
-- Back arrow: close the map
-- 2 overlapping dotted boxes: select something else, in addition to tbe current selection
-- Box with a line through it: clear selection
-- Paint roller: show the Paint interface (this is a placeholder interface right now) allowing you to paint the selected faces
-- Cube: create a Substance. Substances are independent objects that can move, change, and respond to interaction
-- Play: play the map, allowing you to walk around and interact with objects
-- Overflow menu...
-    - World: edit global World properties
+- ![Back arrow](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/arrow-left.png): Close the map
+- ![2 overlapping dotted boxes](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/vector-selection.png): Select something else, in addition to the current selection
+- ![Box with a line through it](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/selection-off.png): Clear selection
+- ![Paint roller](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/format-paint.png): Show the Paint interface (this is a placeholder interface right now) allowing you to paint the selected faces
+- ![Cube](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/cube-send.png): Create a Substance. Substances are independent objects that can move, change, and respond to interaction
+- ![Play](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/play.png): Play the map, allowing you to walk around and interact with objects
+- ![3 dots](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/dots-vertical.png) Overflow menu...
+    - ![](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/earth.png) World: Edit global World properties
 
-### Properties panel
+## Objects
 
-This appears when a substance is selected. You can swipe left to temporarily hide it (swipe right to show).
+Besides the walls forming the boundaries of the world, there will be different type of objects you can create to add interactivity. Right now, there are only Substances (see above for how to create one). You can tap a substance to show the Properties panel (swipe left to temporarily hide it).
 
-TODO
+### Sensors
+
+Objects are always either On or Off - the state is determined by the object's Sensor. There are multiple types of sensors which can be added to an object:
+
+- Pulse: turns on and off repeatedly
+- Touch: turns on when touching another object. A Filter can be applied so only certain objects activate the sensor.
+- Threshold: turns on when other specific objects are on, above a certain threshold
+- There will be more
+
+### Behaviors
+
+Behaviors affect the object's behavior in the game. They can be set to only be active when the sensor is On or Off, or always be active. Behaviors will include Visible and Solid, as well as graphical effects, motion, and physics.

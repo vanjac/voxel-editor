@@ -23,6 +23,8 @@ public abstract class ActivatedSensor : Sensor
 
         public bool EntityMatches(EntityComponent entityComponent)
         {
+            if (entityComponent == null)
+                return false;
             return entityComponent.entity == entityRef.entity;
         }
 
@@ -79,6 +81,8 @@ public abstract class ActivatedSensor : Sensor
 
         public bool EntityMatches(EntityComponent entityComponent)
         {
+            if (entityComponent == null)
+                return false;
             if (entityType.type.IsInstanceOfType(entityComponent.entity))
                 return true;
             bool isOn = entityComponent.IsOn();
@@ -113,6 +117,8 @@ public abstract class ActivatedSensor : Sensor
 
         public bool EntityMatches(EntityComponent entityComponent)
         {
+            if (entityComponent == null)
+                return false;
             return entityComponent.entity.tag == tag;
         }
 
@@ -122,7 +128,7 @@ public abstract class ActivatedSensor : Sensor
         }
     }
 
-    private Filter filter = new EntityTypeFilter(Entity.objectType);
+    protected Filter filter = new EntityTypeFilter(Entity.objectType);
 
     public override ICollection<Property> Properties()
     {

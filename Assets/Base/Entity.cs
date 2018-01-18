@@ -194,6 +194,22 @@ public abstract class EntityComponent : MonoBehaviour
     private SensorComponent sensorComponent;
     private bool sensorWasOn;
 
+    public static EntityComponent FindEntityComponent(GameObject obj)
+    {
+        EntityComponent component = obj.GetComponent<EntityComponent>();
+        if (component != null)
+            return component;
+        Transform parent = obj.transform.parent;
+        if (parent != null)
+            return parent.GetComponent<EntityComponent>();
+        return null;
+    }
+
+    public static EntityComponent FindEntityComponent(Component c)
+    {
+        return FindEntityComponent(c.gameObject);
+    }
+
     public virtual void Start()
     {
         if (entity.sensor != null)
@@ -234,6 +250,8 @@ public abstract class EntityComponent : MonoBehaviour
 
     public bool IsOn()
     {
+        if (sensorComponent == null)
+            return false;
         return sensorComponent.IsOn();
     }
 }
