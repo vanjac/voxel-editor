@@ -70,30 +70,7 @@ public class MapFileReader
             foreach (JSONNode matNode in world["materials"].AsArray)
             {
                 JSONObject matObject = matNode.AsObject;
-                if (matObject["name"] == null)
-                {
-                    materials.Add(null);
-                    continue;
-                }
-                string name = matObject["name"];
-                Material mat = null;
-                foreach (string dirEntry in ResourcesDirectory.dirList)
-                {
-                    if (dirEntry.Length <= 2)
-                        continue;
-                    string newDirEntry = dirEntry.Substring(2);
-                    string checkFileName = Path.GetFileNameWithoutExtension(newDirEntry);
-                    if((!editor) && checkFileName.StartsWith("$")) // special alternate materials for game
-                        checkFileName = checkFileName.Substring(1);
-                    if (checkFileName == name)
-                    {
-                        mat = ResourcesDirectory.GetMaterial(newDirEntry);
-                        break;
-                    }
-                }
-                if (mat == null)
-                    Debug.Log("No material found: " + name);
-                materials.Add(mat);
+                materials.Add(ReadMaterial(matObject, editor));
             }
         }
 
@@ -112,6 +89,37 @@ public class MapFileReader
             ReadLighting(world["lighting"].AsObject, materials);
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
+    }
+
+    private Material ReadMaterial(JSONObject matObject, bool editor)
+    {
+        if (matObject["name"] != null)
+        {
+            string name = matObject["name"];
+            foreach (string dirEntry in ResourcesDirectory.dirList)
+            {
+                if (dirEntry.Length <= 2)
+                    continue;
+                string newDirEntry = dirEntry.Substring(2);
+                string checkFileName = Path.GetFileNameWithoutExtension(newDirEntry);
+                if ((!editor) && checkFileName.StartsWith("$")) // special alternate materials for game
+                    checkFileName = checkFileName.Substring(1);
+                if (checkFileName == name)
+                    return ResourcesDirectory.GetMaterial(newDirEntry);
+            }
+            Debug.Log("No material found: " + name);
+            return null;
+        }
+        else if (matObject["shader"] != null)
+        {
+            Shader shader = Shader.Find(matObject["shader"]);
+            Material mat = ResourcesDirectory.MakeCustomMaterial(shader);
+            if (matObject["color"] != null)
+                mat.color = ReadColor(matObject["color"].AsArray);
+            return mat;
+        }
+        else
+            return null;
     }
 
     private void ReadEntity(JSONObject entityObject, Entity entity)

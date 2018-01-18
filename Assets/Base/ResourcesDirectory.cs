@@ -30,12 +30,12 @@ public class ResourcesDirectory
     public static Material MakeCustomMaterial(Shader shader)
     {
         Material material = new Material(shader);
-        material.name = "Custom";
+        material.name = "Custom" + System.Guid.NewGuid();
         return material;
     }
 
     public static bool IsCustomMaterial(Material material)
     {
-        return material.name == "Custom";
+        return material.name.StartsWith("Custom");
     }
 }
