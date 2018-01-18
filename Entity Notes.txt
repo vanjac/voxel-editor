@@ -30,6 +30,8 @@ Map (Volume)
     Properties
         Sky
         Lighting settings
+	Gravity direction : 6 choices
+	Gravity strength
 
 SENSORS:
 
@@ -145,6 +147,11 @@ Thruster (Behavior for DynamicEntity with Physics)
         Strength
         DIRECTION
         Arc angle
+
+Alternate Gravity (Behavior for DynamicEntity with Physics)
+    Properties
+        Direction : 6 choices
+	Strength
 
 MotionBehavior (abstract Behavior for DynamicEntity) : different objects will achieve motion in different ways. For example, characters will walk, and meshes will float
     Properties
