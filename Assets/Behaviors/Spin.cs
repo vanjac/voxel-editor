@@ -7,7 +7,7 @@ public class Spin : EntityBehavior
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Spin", "Rotate continuously", "format-rotate-90", typeof(Spin));
 
-    float speed = 50;
+    private float speed = 50;
 
     public override PropertiesObjectType ObjectType()
     {
@@ -35,10 +35,10 @@ public class Spin : EntityBehavior
 
 public class SpinComponent : MonoBehaviour
 {
-    public float speed = 50;
+    public float speed;
 
     void Update()
     {
-        transform.Rotate(Vector3.up, speed / 60);
+        transform.Rotate(Vector3.up, speed * Time.deltaTime);
     }
 }
