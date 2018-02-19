@@ -48,7 +48,8 @@ public class EntityPickerGUI : ActionBarGUI
         if (ActionBarButton(GUIIconSet.instance.close))
             Destroy(this);
 
-        SelectionGUI();
+        if (allowMultiple)
+            SelectionGUI();
         GUILayout.FlexibleSpace();
 
         // TODO: not efficient to keep generating a list of selected entities
