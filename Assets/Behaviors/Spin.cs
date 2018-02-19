@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spin : EntityBehavior
+public class SpinBehavior : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Spin", "Rotate continuously", "format-rotate-90", typeof(Spin));
+        "Spin", "Rotate continuously", "format-rotate-90", typeof(SpinBehavior));
 
     private float speed = 50;
 

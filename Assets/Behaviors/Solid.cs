@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Solid : EntityBehavior
+public class SolidBehavior : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Solid", "Blocks and collides with other objects", "cube", typeof(Solid));
+        "Solid", "Blocks and collides with other objects", "cube", typeof(SolidBehavior));
 
     public override PropertiesObjectType ObjectType()
     {

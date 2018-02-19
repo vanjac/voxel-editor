@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Move : EntityBehavior
+public class MoveBehavior : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Move", "Move in a direction or toward an object",
-        "arrow-right-bold-box-outline", typeof(Move));
+        "arrow-right-bold-box-outline", typeof(MoveBehavior));
 
     private Target target = new Target(0);
     private float speed = 1;

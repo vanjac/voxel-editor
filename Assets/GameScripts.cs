@@ -21,8 +21,8 @@ public class GameScripts
             typeof(Substance),
             () => {
                 Substance substance = new Substance(VoxelArrayEditor.instance);
-                substance.behaviors.Add(new Visible());
-                substance.behaviors.Add(new Solid());
+                substance.behaviors.Add(new VisibleBehavior());
+                substance.behaviors.Add(new SolidBehavior());
                 return substance;
             })
     };
@@ -37,11 +37,11 @@ public class GameScripts
 
     public static PropertiesObjectType[] behaviors = new PropertiesObjectType[]
     {
-        Visible.objectType,
-        Solid.objectType,
+        VisibleBehavior.objectType,
+        SolidBehavior.objectType,
         PhysicsBehavior.objectType,
-        Move.objectType,
-        Spin.objectType
+        MoveBehavior.objectType,
+        SpinBehavior.objectType
     };
 
     public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Visible : EntityBehavior
+public class VisibleBehavior : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Visible", "Object is visible in the game", "eye", typeof(Visible));
+        "Visible", "Object is visible in the game", "eye", typeof(VisibleBehavior));
 
     public override PropertiesObjectType ObjectType()
     {
