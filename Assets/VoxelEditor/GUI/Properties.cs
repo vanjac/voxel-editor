@@ -196,4 +196,28 @@ public class PropertyGUIs
         }
         GUI.color = baseColor;
     }
+
+    public static void Target(Property property)
+    {
+        var target = (Target)property.value;
+        string targetString = target.ToString();
+
+        Color baseColor = GUI.color;
+        if (target.entityRef.entity != null)
+        {
+            EntityReferencePropertyManager.Next(target.entityRef.entity);
+            GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
+            targetString = EntityReferencePropertyManager.GetName();
+        }
+
+        GUILayout.BeginHorizontal();
+        AlignedLabel(property);
+        if (GUILayout.Button(targetString, GUI.skin.textField))
+        {
+
+        }
+        GUILayout.EndHorizontal();
+
+        GUI.color = baseColor;
+    }
 }

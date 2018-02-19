@@ -24,10 +24,10 @@ public class MoveBehavior : EntityBehavior
                 () => speed,
                 v => speed = (float)v,
                 PropertyGUIs.Float),
-            new Property("Target",
+            new Property("Toward",
                 () => target,
                 v => target = (Target)v,
-                PropertyGUIs.Empty)
+                PropertyGUIs.Target)
         });
     }
 

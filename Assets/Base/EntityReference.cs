@@ -60,7 +60,7 @@ public struct Target
     public Target(Entity entity)
     {
         entityRef = new EntityReference(entity);
-        direction = -1;
+        direction = 0;
     }
 
     public Target(sbyte direction)
@@ -75,5 +75,29 @@ public struct Target
             return Voxel.DirectionForFaceI(direction);
         else
             return (entityRef.entity.component.transform.position - point).normalized;
+    }
+
+    public override string ToString()
+    {
+        if (entityRef.entity != null)
+            return entityRef.entity.ToString();
+        else
+            switch (direction)
+            {
+                case 0:
+                    return "West";
+                case 1:
+                    return "East";
+                case 2:
+                    return "Down";
+                case 3:
+                    return "Up";
+                case 4:
+                    return "South";
+                case 5:
+                    return "North";
+                default:
+                    return "";
+            }
     }
 }
