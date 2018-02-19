@@ -110,7 +110,7 @@ Selection of trees
 
 BEHAVIORS:
 
-DIRECTION
+TARGET
     A data structure which either has:
         A target entity and a towards/away option
     OR
@@ -145,7 +145,7 @@ Thruster (Behavior for DynamicEntity with Physics)
     Properties
         Continuous?
         Strength
-        DIRECTION
+        TARGET
         Arc angle
 
 Alternate Gravity (Behavior for DynamicEntity with Physics)
@@ -161,9 +161,9 @@ Move With (MotionBehavior) : like parenting
     Properties
         Entity
 
-Move Toward (MotionBehavior)
+Move (MotionBehavior)
     Properties
-        DIRECTION
+        TARGET
 
 Navigate (MotionBehavior)
     Properties
@@ -185,7 +185,7 @@ Spin (RotationBehavior)
 
 Face Toward (RotationBehavior)
     Properties
-        DIRECTION
+        TARGET
 
 Sound (Behavior for Entity)
     Properties

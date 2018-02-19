@@ -40,6 +40,7 @@ public class GameScripts
         Visible.objectType,
         Solid.objectType,
         PhysicsBehavior.objectType,
+        Move.objectType,
         Spin.objectType
     };
 

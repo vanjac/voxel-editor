@@ -50,3 +50,30 @@ public struct EntityReference
         existingEntityIds[guid] = entity;
     }
 }
+
+
+public struct Target
+{
+    public EntityReference entityRef;
+    public sbyte direction;
+
+    public Target(Entity entity)
+    {
+        entityRef = new EntityReference(entity);
+        direction = -1;
+    }
+
+    public Target(sbyte direction)
+    {
+        entityRef = new EntityReference(null);
+        this.direction = direction;
+    }
+
+    public Vector3 directionFrom(Vector3 point)
+    {
+        if (entityRef.entity == null)
+            return Voxel.DirectionForFaceI(direction);
+        else
+            return (entityRef.entity.component.transform.position - point).normalized;
+    }
+}
