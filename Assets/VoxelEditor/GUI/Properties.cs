@@ -214,7 +214,13 @@ public class PropertyGUIs
         AlignedLabel(property);
         if (GUILayout.Button(targetString, GUI.skin.textField))
         {
-
+            TargetGUI targetGUI = GUIPanel.guiGameObject.AddComponent<TargetGUI>();
+            targetGUI.title = property.name;
+            targetGUI.voxelArray = VoxelArrayEditor.instance;
+            targetGUI.handler = (Target newTarget) =>
+            {
+                property.value = newTarget;
+            };
         }
         GUILayout.EndHorizontal();
 
