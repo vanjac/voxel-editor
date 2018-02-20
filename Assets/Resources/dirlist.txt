@@ -1,5 +1,4 @@
 .
-./default.json
 ./dirlist.txt
 ./GameAssets
 ./GameAssets/Materials
@@ -49,13 +48,6 @@
 ./GameAssets/Materials/blocks/StonePaversFlagstoneGray.mat
 ./GameAssets/Materials/blocks/StonePaversWalk.mat
 ./GameAssets/Materials/blocks/StoneSandstoneAshlarLight.mat
-./GameAssets/Materials/colors
-./GameAssets/Materials/colors/Blue.mat
-./GameAssets/Materials/colors/Cyan.mat
-./GameAssets/Materials/colors/Green.mat
-./GameAssets/Materials/colors/Magenta.mat
-./GameAssets/Materials/colors/Red.mat
-./GameAssets/Materials/colors/Yellow.mat
 ./GameAssets/Materials/concrete
 ./GameAssets/Materials/concrete/ConcreteAggregateSmoke.mat
 ./GameAssets/Materials/concrete/ConcreteForm4x8.mat
@@ -291,3 +283,15 @@
 ./GameAssets/Skies/sky_black.mat
 ./GameAssets/Skies/sky_procedural.mat
 ./GameAssets/Skies/sky_white.mat
+./Icons
+./Icons/altimeter.png
+./Icons/arrow-right-bold-box-outline.png
+./Icons/circle-outline.png
+./Icons/cube-outline.png
+./Icons/cube.png
+./Icons/earth.png
+./Icons/eye.png
+./Icons/format-rotate-90.png
+./Icons/pulse.png
+./Icons/soccer.png
+./Icons/vector-combine.png
