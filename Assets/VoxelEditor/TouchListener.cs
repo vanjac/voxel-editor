@@ -181,9 +181,10 @@ public class TouchListener : MonoBehaviour
             Vector2 move = new Vector2(0, 0);
             for (int i = 0; i < 3; i++)
                 move += Input.GetTouch(i).deltaPosition;
-            move /= 3;
-            pivot.position -= move.x * pivot.right * pivot.localScale.z / 60;
-            pivot.position -= move.y * pivot.up * pivot.localScale.z / 60;
+            move *= 4.0f;
+            move /= GetComponent<Camera>().pixelHeight;
+            pivot.position -= move.x * pivot.right * pivot.localScale.z;
+            pivot.position -= move.y * pivot.up * pivot.localScale.z;
         }
     }
 
