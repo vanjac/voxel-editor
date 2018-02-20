@@ -45,7 +45,7 @@ public class MoveComponent : MonoBehaviour
     public Target target;
     public float speed;
 
-    Rigidbody rigidBody;
+    private Rigidbody rigidBody;
 
     void Start()
     {
@@ -54,6 +54,8 @@ public class MoveComponent : MonoBehaviour
 
     void FixedUpdate()
     {
+        rigidBody.velocity = Vector3.zero;
+        rigidBody.angularVelocity = Vector3.zero;
         Vector3 move = target.directionFrom(transform.position) * speed * Time.fixedDeltaTime;
         if (rigidBody != null)
             rigidBody.MovePosition(rigidBody.position + move);
