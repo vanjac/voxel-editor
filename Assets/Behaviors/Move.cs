@@ -52,10 +52,28 @@ public class MoveComponent : MonoBehaviour
         rigidBody = gameObject.GetComponent<Rigidbody>();
     }
 
+    void OnCollisionEnter()
+    {
+        rigidBody.velocity = Vector3.zero;
+    }
+
+    void OnEnable()
+    {
+        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
+        if (rigidBody != null)
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+    }
+
+    void OnDisable()
+    {
+        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
+        if (rigidBody != null)
+            rigidBody.constraints = RigidbodyConstraints.None;
+    }
+
     void FixedUpdate()
     {
         rigidBody.velocity = Vector3.zero;
-        rigidBody.angularVelocity = Vector3.zero;
         Vector3 move = target.directionFrom(transform.position) * speed * Time.fixedDeltaTime;
         if (rigidBody != null)
             rigidBody.MovePosition(rigidBody.position + move);
