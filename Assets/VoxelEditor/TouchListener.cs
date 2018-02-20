@@ -202,7 +202,6 @@ public class TouchListener : MonoBehaviour
             avg = new Vector2(camera.pixelWidth / 2, camera.pixelHeight / 2);
 
         Ray ray = camera.ScreenPointToRay(avg);
-        Debug.DrawRay(ray.origin, ray.direction, Color.black);
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
