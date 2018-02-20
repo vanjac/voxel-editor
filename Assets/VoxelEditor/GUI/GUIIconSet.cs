@@ -20,6 +20,7 @@ public class GUIIconSet : MonoBehaviour
     public Texture flipHorizontal;
     public Texture flipVertical;
     public Texture missingTexture;
+    public Texture compass;
 
     public void Start()
     {
