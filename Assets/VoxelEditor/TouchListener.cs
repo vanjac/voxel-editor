@@ -6,6 +6,9 @@ using UnityEngine.EventSystems;
 
 public class TouchListener : MonoBehaviour
 {
+    private const float MAX_ZOOM = 20.0f;
+    private const float MIN_ZOOM = .05f;
+
     public enum TouchOperation
     {
         NONE, SELECT, CAMERA, GUI, MOVE
@@ -147,7 +150,13 @@ public class TouchListener : MonoBehaviour
 
             float scaleFactor = Mathf.Pow(1.005f, deltaMagnitudeDiff);
             if (scaleFactor != 1)
+            {
                 pivot.localScale *= scaleFactor;
+                if (pivot.localScale.x > MAX_ZOOM)
+                    pivot.localScale = new Vector3(MAX_ZOOM, MAX_ZOOM, MAX_ZOOM);
+                if (pivot.localScale.x < MIN_ZOOM)
+                    pivot.localScale = new Vector3(MIN_ZOOM, MIN_ZOOM, MIN_ZOOM);
+            }
 
             Vector3 move = (touchZero.deltaPosition + touchOne.deltaPosition) / 2;
             Vector3 pivotRotationEuler = pivot.rotation.eulerAngles;
