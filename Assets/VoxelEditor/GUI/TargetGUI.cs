@@ -16,17 +16,21 @@ public class TargetGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        Color baseColor = GUI.color;
         GUILayout.BeginHorizontal();
+        GUI.color = baseColor * Color.blue;
         if (GUILayout.Button("North"))
         {
             handler(new Target(5));
             Destroy(this);
         }
+        GUI.color = baseColor * Color.red;
         if (GUILayout.Button("East"))
         {
             handler(new Target(1));
             Destroy(this);
         }
+        GUI.color = baseColor * Color.green;
         if (GUILayout.Button("Up"))
         {
             handler(new Target(3));
@@ -34,22 +38,26 @@ public class TargetGUI : GUIPanel
         }
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
+        GUI.color = baseColor * Color.blue;
         if (GUILayout.Button("South"))
         {
             handler(new Target(4));
             Destroy(this);
         }
+        GUI.color = baseColor * Color.red;
         if (GUILayout.Button("West"))
         {
             handler(new Target(0));
             Destroy(this);
         }
+        GUI.color = baseColor * Color.green;
         if (GUILayout.Button("Down"))
         {
             handler(new Target(2));
             Destroy(this);
         }
         GUILayout.EndHorizontal();
+        GUI.color = baseColor;
         if (GUILayout.Button("Pick object"))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
