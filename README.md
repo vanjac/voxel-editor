@@ -2,7 +2,7 @@
 
 A mobile app for building 3D interactive worlds. This is a work in progress.
 
-The app has been tested with Unity 2017.2 on Android. There's no Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
+The app has been tested with Unity 2017.3 on Android. There's no Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
 The first scene is `Menu/menuScene`. It's a placeholder interface for what will eventually be a file selection menu. Right now you can type a file name in the upper box and press New to make a new file, then choose the file in the dropdown and press Open to edit the file.
 
