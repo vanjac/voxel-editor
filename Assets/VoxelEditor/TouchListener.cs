@@ -90,6 +90,7 @@ public class TouchListener : MonoBehaviour
                     {
                         currentTouchOperation = TouchOperation.SELECT;
                         voxelArray.TouchDown(hitVoxel, hitFaceI);
+                        UpdateZoomDepth();
                     }
                     else if (touch.tapCount == 2)
                     {
@@ -126,7 +127,10 @@ public class TouchListener : MonoBehaviour
         else if (Input.touchCount == 2)
         {
             if (currentTouchOperation == TouchOperation.NONE)
+            {
                 currentTouchOperation = TouchOperation.CAMERA;
+                UpdateZoomDepth();
+            }
             if (currentTouchOperation != TouchOperation.CAMERA)
                 return;
 
@@ -158,7 +162,10 @@ public class TouchListener : MonoBehaviour
         else if (Input.touchCount == 3)
         {
             if (currentTouchOperation == TouchOperation.NONE)
+            {
                 currentTouchOperation = TouchOperation.CAMERA;
+                UpdateZoomDepth();
+            }
             if (currentTouchOperation != TouchOperation.CAMERA)
                 return;
 
@@ -168,17 +175,32 @@ public class TouchListener : MonoBehaviour
             move /= 3;
             pivot.position -= move.x * pivot.right * pivot.localScale.z / 60;
             pivot.position -= move.y * pivot.up * pivot.localScale.z / 60;
+        }
+    }
 
-            // as the camera is moving, adjust the depth of the pivot point to the depth at the center of the screen
-            RaycastHit hit;
-            Debug.DrawRay(transform.position, transform.forward * 20, Color.black);
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
-            {
-                float currentDistanceToCamera = (pivot.position - transform.position).magnitude;
-                float newDistanceToCamera = (hit.point - transform.position).magnitude;
-                pivot.position = hit.point;
-                pivot.localScale *= newDistanceToCamera / currentDistanceToCamera;
-            }
+    private void UpdateZoomDepth()
+    {
+        Camera camera = GetComponent<Camera>();
+        // adjust the depth of the pivot point to the depth at the average point between the fingers
+        int touchCount = Input.touchCount;
+        Vector2 avg = Vector2.zero;
+        for (int i = 0; i < touchCount; i++)
+            avg += Input.GetTouch(i).position;
+        if (touchCount > 0)
+            avg /= touchCount;
+        else
+            avg = new Vector2(camera.pixelWidth / 2, camera.pixelHeight / 2);
+
+        Ray ray = camera.ScreenPointToRay(avg);
+        Debug.DrawRay(ray.origin, ray.direction, Color.black);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            float currentDistanceToCamera = (pivot.position - transform.position).magnitude;
+            float newDistanceToCamera = (hit.point - transform.position).magnitude;
+            pivot.position = (pivot.position - transform.position).normalized * newDistanceToCamera + transform.position;
+            pivot.localScale *= newDistanceToCamera / currentDistanceToCamera;
         }
     }
 }
