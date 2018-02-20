@@ -45,10 +45,19 @@ public class MoveComponent : MonoBehaviour
     public Target target;
     public float speed;
 
-    void Update()
+    Rigidbody rigidBody;
+
+    void Start()
     {
-        Vector3 move = target.directionFrom(transform.position);
-        move *= speed * Time.deltaTime;
-        transform.Translate(move);
+        rigidBody = gameObject.GetComponent<Rigidbody>();
+    }
+
+    void FixedUpdate()
+    {
+        Vector3 move = target.directionFrom(transform.position) * speed * Time.fixedDeltaTime;
+        if (rigidBody != null)
+            rigidBody.MovePosition(rigidBody.position + move);
+        else
+            transform.Translate(move);
     }
 }

@@ -37,8 +37,19 @@ public class SpinComponent : MonoBehaviour
 {
     public float speed;
 
-    void Update()
+    Rigidbody rigidBody;
+
+    void Start()
     {
-        transform.Rotate(Vector3.up, speed * Time.deltaTime);
+        rigidBody = gameObject.GetComponent<Rigidbody>();
+    }
+
+    void FixedUpdate()
+    {
+        Quaternion rotation = Quaternion.AngleAxis(speed * Time.fixedDeltaTime, Vector3.up);
+        if (rigidBody != null)
+            rigidBody.MoveRotation(rigidBody.rotation * rotation);
+        else
+            transform.rotation *= rotation;
     }
 }
