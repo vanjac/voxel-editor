@@ -139,7 +139,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1420913224}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -968,3 +969,38 @@ MonoBehaviour:
   mainCamera: {fileID: 1179125980}
   voxelArray: {fileID: 213926859}
   moveCount: 0
+--- !u!4 &1420913224 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4758731107863916, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 1475779284}
+--- !u!1001 &1475779284
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 213926858}
+    m_Modifications:
+    - target: {fileID: 1620276401902050, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
+      propertyPath: m_Name
+      value: PlayerStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758731107863916, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758731107863916, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758731107863916, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758731107863916, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
+  m_IsPrefabParent: 0

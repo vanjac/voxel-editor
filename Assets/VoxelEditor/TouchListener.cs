@@ -45,6 +45,7 @@ public class TouchListener : MonoBehaviour
             Voxel hitVoxel = null;
             int hitFaceI = -1;
             MoveAxis hitMoveAxis = null;
+            ObjectMarker hitMarker = null;
             if (rayHitSomething)
             {
                 GameObject hitObject = hit.transform.gameObject;
@@ -55,6 +56,10 @@ public class TouchListener : MonoBehaviour
 
                     if (hitFaceI == -1)
                         hitVoxel = null;
+                }
+                else if (hitObject.tag == "ObjectMarker")
+                {
+                    hitMarker = hitObject.GetComponent<ObjectMarker>();
                 }
                 else if (hitObject.tag == "MoveAxis")
                 {
@@ -93,12 +98,18 @@ public class TouchListener : MonoBehaviour
                     {
                         currentTouchOperation = TouchOperation.SELECT;
                         voxelArray.TouchDown(hitVoxel, hitFaceI);
-                        UpdateZoomDepth();
                     }
                     else if (touch.tapCount == 2)
                     {
                         voxelArray.DoubleTouch(hitVoxel, hitFaceI);
                     }
+                    UpdateZoomDepth();
+                }
+                else if (hitMarker != null)
+                {
+                    currentTouchOperation = TouchOperation.SELECT;
+                    // do something
+                    UpdateZoomDepth();
                 }
                 else if (hitMoveAxis != null)
                 {
@@ -112,6 +123,7 @@ public class TouchListener : MonoBehaviour
                     {
                         voxelArray.DoubleTouch(lastHitVoxel, lastHitFaceI);
                     }
+                    UpdateZoomDepth();
                 }
             } // end if currentTouchOperation == NONE
 

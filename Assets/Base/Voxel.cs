@@ -50,10 +50,47 @@ public struct VoxelFace
     }
 }
 
-public struct VoxelFaceReference
+public struct VoxelFaceReference : VoxelArrayEditor.Selectable
 {
     public Voxel voxel;
     public int faceI;
+
+    public bool addSelected
+    {
+        get
+        {
+            return face.addSelected;
+        }
+        set
+        {
+            voxel.faces[faceI].addSelected = value;
+        }
+    }
+    public bool storedSelected
+    {
+        get
+        {
+            return face.storedSelected;
+        }
+        set
+        {
+            voxel.faces[faceI].storedSelected = value;
+        }
+    }
+    public bool selected
+    {
+        get
+        {
+            return face.selected;
+        }
+    }
+    public Bounds bounds
+    {
+        get
+        {
+            return voxel.GetFaceBounds(faceI);
+        }
+    }
 
     public VoxelFaceReference(Voxel voxel, int faceI)
     {
@@ -67,6 +104,11 @@ public struct VoxelFaceReference
         {
             return voxel.faces[faceI];
         }
+    }
+
+    public void SelectionStateUpdated()
+    {
+        voxel.UpdateVoxel();
     }
 }
 
