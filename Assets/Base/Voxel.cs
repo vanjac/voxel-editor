@@ -153,7 +153,6 @@ public class Voxel : MonoBehaviour
     }
 
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
-    public int substanceDebug = 0;
     private Substance _substance = null;
     public Substance substance
     {
@@ -166,13 +165,8 @@ public class Voxel : MonoBehaviour
             if (_substance != null)
                 _substance.RemoveVoxel(this);
             _substance = value;
-            if (_substance == null)
-                substanceDebug = 0;
-            else
-            {
-                substanceDebug = _substance.GetHashCode();
+            if (_substance != null)
                 _substance.AddVoxel(this);
-            }
         }
     }
 
