@@ -14,6 +14,68 @@ public class VoxelArrayEditor : VoxelArray
         void SelectionStateUpdated();
     }
 
+    private struct VoxelFaceReference : VoxelArrayEditor.Selectable
+    {
+        public Voxel voxel;
+        public int faceI;
+
+        public bool addSelected
+        {
+            get
+            {
+                return face.addSelected;
+            }
+            set
+            {
+                voxel.faces[faceI].addSelected = value;
+            }
+        }
+        public bool storedSelected
+        {
+            get
+            {
+                return face.storedSelected;
+            }
+            set
+            {
+                voxel.faces[faceI].storedSelected = value;
+            }
+        }
+        public bool selected
+        {
+            get
+            {
+                return (!face.IsEmpty()) && (face.addSelected || face.storedSelected);
+            }
+        }
+        public Bounds bounds
+        {
+            get
+            {
+                return voxel.GetFaceBounds(faceI);
+            }
+        }
+
+        public VoxelFaceReference(Voxel voxel, int faceI)
+        {
+            this.voxel = voxel;
+            this.faceI = faceI;
+        }
+
+        public VoxelFace face
+        {
+            get
+            {
+                return voxel.faces[faceI];
+            }
+        }
+
+        public void SelectionStateUpdated()
+        {
+            voxel.UpdateVoxel();
+        }
+    }
+
     public static VoxelArrayEditor instance = null;
 
     public Transform axes;
@@ -316,7 +378,7 @@ public class VoxelArrayEditor : VoxelArray
         VoxelFace face = voxel.faces[faceI];
         if (face.IsEmpty())
             return;
-        if (face.selected) // stop at boundaries of stored selection
+        if (face.addSelected || face.storedSelected) // stop at boundaries of stored selection
             return;
         SelectFace(voxel, faceI);
 
@@ -366,7 +428,6 @@ public class VoxelArrayEditor : VoxelArray
         MergeStoredSelected();
         // now we can safely look only the face addSelected property and the selectedThings list
         // and ignore the storedSelected property and the storedSelectedThings list
-        // face.selected can be a substitute for face.addSelected
 
         int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
         int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
@@ -433,7 +494,7 @@ public class VoxelArrayEditor : VoxelArray
             bool pushing = adjustDirFaceI == oppositeFaceI;
             bool pulling = adjustDirFaceI == faceI;
 
-            if (pulling && (!newVoxel.faces[oppositeFaceI].IsEmpty()) && !newVoxel.faces[oppositeFaceI].selected)
+            if (pulling && (!newVoxel.faces[oppositeFaceI].IsEmpty()) && !newVoxel.faces[oppositeFaceI].addSelected)
             {
                 // usually this means there's another substance. push it away before this face
                 newVoxel.faces[oppositeFaceI].addSelected = true;

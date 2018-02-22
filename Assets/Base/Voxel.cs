@@ -9,13 +9,6 @@ public struct VoxelFace
     public Material overlay;
     public byte orientation;
     public bool addSelected, storedSelected;
-    public bool selected
-    {
-        get
-        {
-            return (!IsEmpty()) && (addSelected || storedSelected);
-        }
-    }
 
     public bool IsEmpty()
     {
@@ -47,68 +40,6 @@ public struct VoxelFace
             rotation += 4;
         rotation %= 4;
         return (byte)(rotation + (mirror ? 4 : 0));
-    }
-}
-
-public struct VoxelFaceReference : VoxelArrayEditor.Selectable
-{
-    public Voxel voxel;
-    public int faceI;
-
-    public bool addSelected
-    {
-        get
-        {
-            return face.addSelected;
-        }
-        set
-        {
-            voxel.faces[faceI].addSelected = value;
-        }
-    }
-    public bool storedSelected
-    {
-        get
-        {
-            return face.storedSelected;
-        }
-        set
-        {
-            voxel.faces[faceI].storedSelected = value;
-        }
-    }
-    public bool selected
-    {
-        get
-        {
-            return face.selected;
-        }
-    }
-    public Bounds bounds
-    {
-        get
-        {
-            return voxel.GetFaceBounds(faceI);
-        }
-    }
-
-    public VoxelFaceReference(Voxel voxel, int faceI)
-    {
-        this.voxel = voxel;
-        this.faceI = faceI;
-    }
-
-    public VoxelFace face
-    {
-        get
-        {
-            return voxel.faces[faceI];
-        }
-    }
-
-    public void SelectionStateUpdated()
-    {
-        voxel.UpdateVoxel();
     }
 }
 
@@ -361,7 +292,7 @@ public class Voxel : MonoBehaviour
                 numMaterials++;
             if (face.overlay != null)
                 numMaterials++;
-            if (face.selected)
+            if (face.addSelected || face.storedSelected)
                 numMaterials++;
         }
         
@@ -414,7 +345,7 @@ public class Voxel : MonoBehaviour
                 mesh.SetTriangles(triangles, numMaterials);
                 numMaterials++;
             }
-            if (face.selected)
+            if (face.addSelected || face.storedSelected)
             {
                 materials[numMaterials] = selectedMaterial;
                 mesh.SetTriangles(triangles, numMaterials);
