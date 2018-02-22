@@ -53,6 +53,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
                 line.startWidth = line.endWidth = 0.1f;
                 line.material = lineMaterial;
             }
+            return; // wait a frame to let the new/deleted objects update
         }
         if (currentEntity == null || targetEntities.Count == 0)
             return;
