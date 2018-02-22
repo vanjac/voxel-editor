@@ -14,14 +14,17 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         }
     }
 
+    public Bounds bounds
+    {
+        get
+        {
+            // TODO
+            return new Bounds(transform.position, Vector3.zero);
+        }
+    }
+
     public void SelectionStateUpdated()
     {
         // TODO
-    }
-
-    public Bounds GetBounds()
-    {
-        // TODO
-        return new Bounds(transform.position, Vector3.zero);
     }
 }

@@ -374,12 +374,12 @@ public class VoxelArrayEditor : VoxelArray
         bool negativeAdjustAxis = adjustDirFaceI % 2 == 0;
 
         // sort selectedThings in order along the adjustDirection vector
-        selectedThings.Sort(delegate(VoxelFaceReference a, VoxelFaceReference b)
+        selectedThings.Sort(delegate(Selectable a, Selectable b)
         {
             // positive means A is greater than B
             // so positive means B will be adjusted before A
-            Vector3 aCenter = a.voxel.GetFaceBounds(a.faceI).center;
-            Vector3 bCenter = b.voxel.GetFaceBounds(b.faceI).center;
+            Vector3 aCenter = a.bounds.center;
+            Vector3 bCenter = b.bounds.center;
             float diff = 0;
             switch (adjustAxis)
             {
@@ -399,11 +399,16 @@ public class VoxelArrayEditor : VoxelArray
                 return 1;
             if (diff < 0)
                 return -1;
-            if (a.faceI == oppositeAdjustDirFaceI)
-                if (b.faceI != oppositeAdjustDirFaceI)
-                    return -1; // move one substance back before moving other forward
-                else if (b.faceI == oppositeAdjustDirFaceI)
-                    return 1;
+            if (a is VoxelFaceReference && b is VoxelFaceReference)
+            {
+                var aFace = (VoxelFaceReference)a;
+                var bFace = (VoxelFaceReference)b;
+                if (aFace.faceI == oppositeAdjustDirFaceI)
+                    if (bFace.faceI != oppositeAdjustDirFaceI)
+                        return -1; // move one substance back before moving other forward
+                    else if (bFace.faceI == oppositeAdjustDirFaceI)
+                        return 1;
+            }
             return 0;
         });
 
@@ -413,7 +418,10 @@ public class VoxelArrayEditor : VoxelArray
 
         for (int i = 0; i < selectedThings.Count; i++)
         {
-            VoxelFaceReference faceRef = selectedThings[i];
+            Selectable thing = selectedThings[i];
+            if (!(thing is VoxelFaceReference))
+                continue;
+            VoxelFaceReference faceRef = (VoxelFaceReference)thing;
 
             Voxel oldVoxel = faceRef.voxel;
             Vector3 oldPos = oldVoxel.transform.position;
@@ -537,7 +545,9 @@ public class VoxelArrayEditor : VoxelArray
 
         for (int i = selectedThings.Count - 1; i >= 0; i--)
         {
-            if (selectedThings[i].voxel == null)
+            Selectable thing = selectedThings[i];
+            if ((thing is VoxelFaceReference)
+                    && ((VoxelFaceReference)thing).voxel == null)
                 selectedThings.RemoveAt(i);
         }
         selectionChanged = true;
