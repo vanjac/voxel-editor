@@ -90,7 +90,7 @@ public class TouchListener : MonoBehaviour
                 { } // wait until moved or released, in case a multitouch operation is about to begin
                 else if (!rayHitSomething)
                 {
-                    voxelArray.TouchDown(null, -1);
+                    voxelArray.TouchDown(null);
                 }
                 else if (hitVoxel != null)
                 {

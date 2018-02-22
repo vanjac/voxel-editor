@@ -139,27 +139,40 @@ public class VoxelArrayEditor : VoxelArray
     // called by TouchListener
     public void TouchDown(Voxel voxel, int faceI)
     {
+        TouchDown(new VoxelFaceReference(voxel, faceI));
+    }
+
+    public void TouchDown(Selectable thing)
+    {
         SetMoveAxesEnabled(false);
-        if (voxel == null)
+        if (thing == null)
         {
             ClearSelection();
             return;
         }
         selectMode = SelectMode.BOX;
-        boxSelectStartBounds = voxel.GetFaceBounds(faceI);
+        boxSelectStartBounds = thing.bounds;
         selectionBounds = boxSelectStartBounds;
-        boxSelectSubstance = voxel.substance;
+        if (thing is VoxelFaceReference)
+            boxSelectSubstance = ((VoxelFaceReference)thing).voxel.substance;
+        else
+            boxSelectSubstance = null;
         UpdateBoxSelection();
     }
 
     // called by TouchListener
     public void TouchDrag(Voxel voxel, int faceI)
     {
+        TouchDrag(new VoxelFaceReference(voxel, faceI));
+    }
+
+    public void TouchDrag(Selectable thing)
+    {
         if (selectMode != SelectMode.BOX)
             return;
         Bounds oldSelectionBounds = selectionBounds;
         selectionBounds = boxSelectStartBounds;
-        selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
+        selectionBounds.Encapsulate(thing.bounds);
         if (oldSelectionBounds != selectionBounds)
             UpdateBoxSelection();
     }
