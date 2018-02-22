@@ -239,13 +239,20 @@ public class VoxelArrayEditor : VoxelArray
         DeselectThing(new VoxelFaceReference(voxel, faceI));
     }
 
-    private System.Collections.Generic.IEnumerable<VoxelFaceReference> IterateSelected()
+    private System.Collections.Generic.IEnumerable<Selectable> IterateSelected()
     {
-        foreach (VoxelFaceReference faceRef in selectedThings)
-            yield return faceRef;
-        foreach (VoxelFaceReference faceRef in storedSelectedThings)
-            if (!faceRef.face.addSelected) // make sure the face isn't also in selectedThings
-                yield return faceRef;
+        foreach (Selectable thing in selectedThings)
+            yield return thing;
+        foreach (Selectable thing in storedSelectedThings)
+            if (!thing.addSelected) // make sure the thing isn't also in selectedThings
+                yield return thing;
+    }
+
+    private System.Collections.Generic.IEnumerable<VoxelFaceReference> IterateSelectedFaces()
+    {
+        foreach (Selectable thing in IterateSelected())
+            if (thing is VoxelFaceReference)
+                yield return (VoxelFaceReference)thing;
     }
 
     // including stored selection
@@ -267,7 +274,7 @@ public class VoxelArrayEditor : VoxelArray
     public ICollection<Entity> GetSelectedEntities()
     {
         var selectedEntities = new HashSet<Entity>();
-        foreach (VoxelFaceReference faceRef in IterateSelected())
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
             if (faceRef.voxel.substance != null)
                 selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
         return selectedEntities;
@@ -275,14 +282,14 @@ public class VoxelArrayEditor : VoxelArray
 
     public void StoreSelection()
     {
-        // move faces out of storedSelectedThings and into selectedThings
-        foreach (VoxelFaceReference faceRef in selectedThings)
+        // move things out of storedSelectedThings and into selectedThings
+        foreach (Selectable thing in selectedThings)
         {
-            faceRef.voxel.faces[faceRef.faceI].addSelected = false;
-            if (faceRef.face.storedSelected)
+            thing.addSelected = false;
+            if (thing.storedSelected)
                 continue; // already in storedSelectedThings
-            faceRef.voxel.faces[faceRef.faceI].storedSelected = true;
-            storedSelectedThings.Add(faceRef);
+            thing.storedSelected = true;
+            storedSelectedThings.Add(thing);
             // shouldn't need to update the voxel since it should have already been selected
         }
         selectedThings.Clear();
@@ -292,15 +299,15 @@ public class VoxelArrayEditor : VoxelArray
 
     public void MergeStoredSelected()
     {
-        // move faces out of storedSelectedThings and into selectedThings
+        // move things out of storedSelectedThings and into selectedThings
         // opposite of StoreSelection()
-        foreach (VoxelFaceReference faceRef in storedSelectedThings)
+        foreach (Selectable thing in storedSelectedThings)
         {
-            faceRef.voxel.faces[faceRef.faceI].storedSelected = false;
-            if (faceRef.face.addSelected)
+            thing.storedSelected = false;
+            if (thing.addSelected)
                 continue; // already in selectedThings
-            faceRef.voxel.faces[faceRef.faceI].addSelected = true;
-            selectedThings.Add(faceRef);
+            thing.addSelected = true;
+            selectedThings.Add(thing);
             // shouldn't need to update the voxel since it should have already been selected
         }
         storedSelectedThings.Clear();
@@ -309,10 +316,10 @@ public class VoxelArrayEditor : VoxelArray
 
     public void ClearStoredSelection()
     {
-        foreach (VoxelFaceReference faceRef in storedSelectedThings)
+        foreach (Selectable thing in storedSelectedThings)
         {
-            faceRef.voxel.faces[faceRef.faceI].storedSelected = false;
-            faceRef.voxel.UpdateVoxel();
+            thing.storedSelected = false;
+            thing.SelectionStateUpdated();
         }
         storedSelectedThings.Clear();
         if (!SomethingIsSelected())
@@ -412,11 +419,11 @@ public class VoxelArrayEditor : VoxelArray
     {
         ClearSelection();
         ClearStoredSelection();
-        foreach (VoxelFaceReference faceRef in state.storedSelectedThings)
-            SelectThing(faceRef);
+        foreach (Selectable thing in state.storedSelectedThings)
+            SelectThing(thing);
         StoreSelection();
-        foreach (VoxelFaceReference faceRef in state.selectedThings)
-            SelectThing(faceRef);
+        foreach (Selectable thing in state.selectedThings)
+            SelectThing(thing);
         selectMode = state.selectMode;
         axes.position = state.axes;
         if (SomethingIsSelected())
@@ -647,7 +654,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public VoxelFace GetSelectedPaint()
     {
-        foreach (VoxelFaceReference faceRef in IterateSelected())
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
         {
             VoxelFace face = faceRef.face;
             face.addSelected = false;
@@ -659,7 +666,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void PaintSelectedFaces(VoxelFace paint)
     {
-        foreach (VoxelFaceReference faceRef in IterateSelected())
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
         {
             if (paint.material != null || faceRef.voxel.substance != null)
                 faceRef.voxel.faces[faceRef.faceI].material = paint.material;
