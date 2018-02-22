@@ -984,7 +984,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 1620276401902050, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
       propertyPath: m_Name
-      value: PlayerStart
+      value: PlayerMarker
       objectReference: {fileID: 0}
     - target: {fileID: 4758731107863916, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
       propertyPath: m_RootOrder
@@ -1007,7 +1007,7 @@ Prefab:
   m_IsPrefabParent: 0
 --- !u!114 &1534447424 stripped
 MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114702269681671654, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5,
+  m_PrefabParentObject: {fileID: 114120046931752908, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5,
     type: 2}
   m_PrefabInternal: {fileID: 1475779284}
-  m_Script: {fileID: 11500000, guid: c5e102b66be03044b9ec878cd367ba89, type: 3}
+  m_Script: {fileID: 11500000, guid: c75572be720a1db4cb65fcee0b5e1616, type: 3}

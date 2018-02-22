@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 {
-    public Entity entity = new ObjectEntity();
+    public Entity entity;
 
     public bool addSelected { get; set; }
     public bool storedSelected { get; set; }
