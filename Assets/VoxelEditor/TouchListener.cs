@@ -108,7 +108,7 @@ public class TouchListener : MonoBehaviour
                 else if (hitMarker != null)
                 {
                     currentTouchOperation = TouchOperation.SELECT;
-                    // do something
+                    voxelArray.TouchDown(hitMarker);
                     UpdateZoomDepth();
                 }
                 else if (hitMoveAxis != null)
@@ -132,6 +132,10 @@ public class TouchListener : MonoBehaviour
                 if (hitVoxel != null)
                 {
                     voxelArray.TouchDrag(hitVoxel, hitFaceI);
+                }
+                if (hitMarker != null)
+                {
+                    voxelArray.TouchDrag(hitMarker);
                 }
             }
             else if (currentTouchOperation == TouchOperation.MOVE)

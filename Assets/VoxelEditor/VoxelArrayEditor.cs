@@ -83,6 +83,8 @@ public class VoxelArrayEditor : VoxelArray
     public Material selectedMaterial;
     public Material xRayMaterial;
 
+    public ObjectMarker playerMarker;
+
     public bool unsavedChanges = false; // set by VoxelArrayEditor, checked and cleared by EditorFile
     public bool selectionChanged = false; // set by VoxelArrayEditor, checked and cleared by PropertiesGUI
 
@@ -354,6 +356,8 @@ public class VoxelArrayEditor : VoxelArray
                 DeselectThing(thing);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
+        if (ThingInBoxSelection(playerMarker, selectionBounds))
+            SelectThing(playerMarker);
     }
 
     private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)

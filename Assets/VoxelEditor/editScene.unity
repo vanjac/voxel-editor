@@ -160,6 +160,7 @@ MonoBehaviour:
   axes: {fileID: 609989223}
   selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
   xRayMaterial: {fileID: 2100000, guid: 8ffa1294a1f85dc43a81fbf0658632b4, type: 2}
+  playerMarker: {fileID: 1534447424}
   unsavedChanges: 0
   selectionChanged: 0
   selectionBounds:
@@ -1004,3 +1005,9 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1534447424 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114702269681671654, guid: 9a2cef6f5fba93640bbb4018ba6ff5b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 1475779284}
+  m_Script: {fileID: 11500000, guid: c5e102b66be03044b9ec878cd367ba89, type: 3}

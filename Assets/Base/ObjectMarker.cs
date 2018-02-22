@@ -23,8 +23,32 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         }
     }
 
+    private Material[] storedMaterials;
+
+    public void Start()
+    {
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            storedMaterials = (Material[])renderer.materials.Clone();
+        }
+    }
+
     public void SelectionStateUpdated()
     {
-        // TODO
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            Debug.Log(selected);
+            if (selected)
+            {
+                Material[] newMaterials = new Material[renderer.materials.Length];
+                for (int i = 0; i < newMaterials.Length; i++)
+                    newMaterials[i] = Voxel.selectedMaterial;
+                renderer.materials = newMaterials;
+            }
+            else
+                renderer.materials = storedMaterials;
+        }
     }
 }
