@@ -17,6 +17,6 @@ public class PlayerMarker : ObjectMarker
 {
     void Awake()
     {
-        entity = new PlayerObject();
+        objectEntity = new PlayerObject();
     }
 }

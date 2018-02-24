@@ -297,7 +297,7 @@ public class VoxelArrayEditor : VoxelArray
             if (faceRef.voxel.substance != null)
                 selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
         if (playerMarker.selected)
-            selectedEntities.Add(playerMarker.entity);
+            selectedEntities.Add(playerMarker.objectEntity);
         return selectedEntities;
     }
 
