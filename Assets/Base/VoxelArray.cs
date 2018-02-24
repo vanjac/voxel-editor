@@ -59,7 +59,7 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
-    private Vector3Int Vector3ToInt(Vector3 v)
+    protected static Vector3Int Vector3ToInt(Vector3 v)
     {
         return new Vector3Int(
             Mathf.RoundToInt(v.x),

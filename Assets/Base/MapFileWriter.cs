@@ -108,6 +108,7 @@ public class MapFileWriter
     private JSONObject WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
     {
         JSONObject entityObject = WriteEntity(objectEntity, includeName);
+        entityObject["at"] = WriteIntVector3(objectEntity.position);
 
         return entityObject;
     }

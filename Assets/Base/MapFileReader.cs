@@ -138,6 +138,8 @@ public class MapFileReader
     private void ReadObjectEntity(JSONObject entityObject, ObjectEntity objectEntity)
     {
         ReadEntity(entityObject, objectEntity);
+        if (entityObject["at"] != null)
+            objectEntity.position = ReadVector3Int(entityObject["at"].AsArray);
     }
 
     private void ReadEntity(JSONObject entityObject, Entity entity)
@@ -321,6 +323,11 @@ public class MapFileReader
     private Vector3 ReadVector3(JSONArray a)
     {
         return new Vector3(a[0], a[1], a[2]);
+    }
+
+    private Vector3Int ReadVector3Int(JSONArray a)
+    {
+        return new Vector3Int(a[0], a[1], a[2]);
     }
 
     private Quaternion ReadQuaternion(JSONArray a)

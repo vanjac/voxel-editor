@@ -455,8 +455,15 @@ public class VoxelArrayEditor : VoxelArray
     public void Adjust(Vector3 adjustDirection)
     {
         MergeStoredSelected();
-        // now we can safely look only the face addSelected property and the selectedThings list
+        // now we can safely look only the addSelected property and the selectedThings list
         // and ignore the storedSelected property and the storedSelectedThings list
+
+        if (playerObject.marker.addSelected)
+        {
+            playerObject.position += Vector3ToInt(adjustDirection);
+            playerObject.UpdateEntity();
+            unsavedChanges = true;
+        }
 
         int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
         int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
