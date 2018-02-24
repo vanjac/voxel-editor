@@ -182,6 +182,8 @@ public abstract class Entity : PropertiesObject
                 PropertyGUIs.Tag),
         };
     }
+
+    public virtual void InitEntityGameObject() { }
 }
 
 public abstract class EntityComponent : MonoBehaviour

@@ -89,6 +89,11 @@ public class MapFileReader
             ReadLighting(world["lighting"].AsObject, materials);
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
+
+        if (!editor)
+            // start the game
+            foreach (Substance s in substances)
+                s.InitEntityGameObject();
     }
 
     private Material ReadMaterial(JSONObject matObject, bool editor)

@@ -15,15 +15,6 @@ public class Substance : DynamicEntity
     {
         voxels = new HashSet<Voxel>();
         voxelArray = array;
-        if (!Voxel.InEditor())
-        {
-            GameObject substanceObject = new GameObject();
-            substanceObject.transform.parent = voxelArray.transform;
-            SubstanceComponent component = substanceObject.AddComponent<SubstanceComponent>();
-            component.entity = this;
-            component.substance = this;
-            this.component = component;
-        }
     }
 
     public override PropertiesObjectType ObjectType()
@@ -31,19 +22,25 @@ public class Substance : DynamicEntity
         return objectType;
     }
 
+    public override void InitEntityGameObject()
+    {
+        GameObject substanceObject = new GameObject();
+        substanceObject.transform.parent = voxelArray.transform;
+        SubstanceComponent component = substanceObject.AddComponent<SubstanceComponent>();
+        component.entity = this;
+        component.substance = this;
+        this.component = component;
+    }
+
     // called by voxel
     public void AddVoxel(Voxel v)
     {
         voxels.Add(v);
-        if (component != null)
-            v.transform.parent = component.transform;
     }
 
     public void RemoveVoxel(Voxel v)
     {
         voxels.Remove(v);
-        if (component != null)
-            v.transform.parent = component.transform.parent;
     }
 
     public override void UpdateEntity()
@@ -62,10 +59,13 @@ public class SubstanceComponent : EntityComponent
     {
         Bounds voxelBounds = new Bounds();
         foreach (Voxel voxel in substance.voxels)
+        {
+            voxel.transform.parent = transform;
             if (voxelBounds.extents == Vector3.zero)
                 voxelBounds = voxel.GetBounds();
             else
                 voxelBounds.Encapsulate(voxel.GetBounds());
+        }
         Vector3 centerPoint = voxelBounds.center;
         transform.position = centerPoint;
         foreach (Voxel voxel in substance.voxels)
