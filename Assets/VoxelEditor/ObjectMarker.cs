@@ -4,22 +4,7 @@ using UnityEngine;
 
 public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 {
-    private ObjectEntity _objectEntity;
-    public ObjectEntity objectEntity
-    {
-        get
-        {
-            return _objectEntity;
-        }
-        set
-        {
-            if (_objectEntity != null)
-                _objectEntity.marker = null;
-            _objectEntity = value;
-            if (_objectEntity != null)
-                _objectEntity.marker = this;
-        }
-    }
+    public ObjectEntity objectEntity; // set when created
 
     public bool addSelected { get; set; }
     public bool storedSelected { get; set; }
@@ -49,6 +34,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         {
             storedMaterials = (Material[])renderer.materials.Clone();
         }
+        UpdateMaterials();
     }
 
     public void SelectionStateUpdated()

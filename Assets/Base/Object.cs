@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectEntity : DynamicEntity
+public abstract class ObjectEntity : DynamicEntity
 {
-    public ObjectMarker marker; // set by ObjectMarker
+    public ObjectMarker marker;
 
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Object", "An object not made of blocks", "circle", typeof(ObjectEntity));
@@ -19,4 +19,6 @@ public class ObjectEntity : DynamicEntity
         if (marker != null)
             marker.UpdateMaterials();
     }
+
+    public abstract void InitObjectMarker();
 }

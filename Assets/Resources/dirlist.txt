@@ -287,11 +287,15 @@
 ./Icons/altimeter.png
 ./Icons/arrow-right-bold-box-outline.png
 ./Icons/circle-outline.png
+./Icons/circle.png
 ./Icons/cube-outline.png
 ./Icons/cube.png
 ./Icons/earth.png
 ./Icons/eye.png
 ./Icons/format-rotate-90.png
+./Icons/human-greeting.png
 ./Icons/pulse.png
 ./Icons/soccer.png
 ./Icons/vector-combine.png
+./ObjectMarkers
+./ObjectMarkers/Player.prefab

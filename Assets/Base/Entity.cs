@@ -183,7 +183,7 @@ public abstract class Entity : PropertiesObject
         };
     }
 
-    public virtual void InitEntityGameObject() { }
+    public abstract void InitEntityGameObject();
 }
 
 public abstract class EntityComponent : MonoBehaviour

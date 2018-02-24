@@ -73,6 +73,7 @@ public class MapFileWriter
             world["substances"] = substancesArray;
         world["lighting"] = WriteLighting(foundMaterials);
         world["map"] = WriteMap(voxelArray, foundMaterials, foundSubstances);
+        world["player"] = WriteObjectEntity(voxelArray.playerObject, false);
 
         return world;
     }
@@ -102,6 +103,13 @@ public class MapFileWriter
             materialObject["name"] = material.name;
         }
         return materialObject;
+    }
+
+    private JSONObject WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
+    {
+        JSONObject entityObject = WriteEntity(objectEntity, includeName);
+
+        return entityObject;
     }
 
     private JSONObject WriteEntity(Entity entity, bool includeName)

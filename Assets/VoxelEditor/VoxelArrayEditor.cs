@@ -83,8 +83,6 @@ public class VoxelArrayEditor : VoxelArray
     public Material selectedMaterial;
     public Material xRayMaterial;
 
-    public ObjectMarker playerMarker;
-
     public bool unsavedChanges = false; // set by VoxelArrayEditor, checked and cleared by EditorFile
     public bool selectionChanged = false; // set by VoxelArrayEditor, checked and cleared by PropertiesGUI
 
@@ -296,8 +294,8 @@ public class VoxelArrayEditor : VoxelArray
         foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
             if (faceRef.voxel.substance != null)
                 selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
-        if (playerMarker.selected)
-            selectedEntities.Add(playerMarker.objectEntity);
+        if (playerObject.marker.selected)
+            selectedEntities.Add(playerObject);
         return selectedEntities;
     }
 
@@ -362,8 +360,9 @@ public class VoxelArrayEditor : VoxelArray
                 DeselectThing(thing);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
-        if (boxSelectSubstance == selectObjectSubstance && ThingInBoxSelection(playerMarker, selectionBounds))
-            SelectThing(playerMarker);
+        if (boxSelectSubstance == selectObjectSubstance
+                && ThingInBoxSelection(playerObject.marker, selectionBounds))
+            SelectThing(playerObject.marker);
     }
 
     private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)
