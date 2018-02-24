@@ -105,6 +105,8 @@ public class VoxelArrayEditor : VoxelArray
     private List<Selectable> storedSelectedThings = new List<Selectable>();
     private Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
     private Substance boxSelectSubstance = null;
+    // dummy Substance to use for boxSelectSubstance when selecting objects
+    private Substance selectObjectSubstance;
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     public Substance substanceToCreate = null;
@@ -124,9 +126,9 @@ public class VoxelArrayEditor : VoxelArray
 
         if (instance == null)
             instance = this;
-
         Voxel.selectedMaterial = selectedMaterial;
         Voxel.xRayMaterial = xRayMaterial;
+        selectObjectSubstance = new Substance(this);
 
         ClearSelection();
         selectionChanged = false;
@@ -157,6 +159,8 @@ public class VoxelArrayEditor : VoxelArray
         selectionBounds = boxSelectStartBounds;
         if (thing is VoxelFaceReference)
             boxSelectSubstance = ((VoxelFaceReference)thing).voxel.substance;
+        else if (thing is ObjectMarker)
+            boxSelectSubstance = selectObjectSubstance;
         else
             boxSelectSubstance = null;
         UpdateBoxSelection();
@@ -358,7 +362,7 @@ public class VoxelArrayEditor : VoxelArray
                 DeselectThing(thing);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
-        if (ThingInBoxSelection(playerMarker, selectionBounds))
+        if (boxSelectSubstance == selectObjectSubstance && ThingInBoxSelection(playerMarker, selectionBounds))
             SelectThing(playerMarker);
     }
 
