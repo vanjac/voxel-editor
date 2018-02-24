@@ -30,6 +30,16 @@ public class PlayerObject : ObjectEntity
 
     public override void InitEntityGameObject()
     {
-        throw new System.NotImplementedException();
+        GameObject playerObject = Resources.Load<GameObject>("ObjectPrefabs/Player");
+        playerObject = GameObject.Instantiate(playerObject);
+        playerObject.transform.parent = voxelArray.transform;
+        PlayerComponent component = playerObject.AddComponent<PlayerComponent>();
+        component.entity = this;
+        this.component = component;
     }
+}
+
+public class PlayerComponent : EntityComponent
+{
+
 }

@@ -94,9 +94,12 @@ public class MapFileReader
             ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
 
         if (!editor)
+        {
             // start the game
             foreach (Substance s in substances)
                 s.InitEntityGameObject();
+            voxelArray.playerObject.InitEntityGameObject();
+        }
         if (editor)
             voxelArray.playerObject.InitObjectMarker();
     }

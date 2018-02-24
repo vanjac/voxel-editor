@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 136984393598774208}
   - component: {fileID: 8200000}
   m_Layer: 0
-  m_Name: FPSController
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,6 +96,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
