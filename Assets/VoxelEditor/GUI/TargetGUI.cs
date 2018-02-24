@@ -45,7 +45,6 @@ public class TargetGUI : GUIPanel
         GUILayout.Label("North:");
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(150), GUILayout.Height(150));
         float compassRotation = -Camera.current.transform.parent.rotation.eulerAngles.y;
-        Debug.Log(compassRotation);
         DrawCompass(GUILayoutUtility.GetLastRect(), compassRotation);
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
