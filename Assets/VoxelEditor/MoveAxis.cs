@@ -44,8 +44,8 @@ public class MoveAxis : MonoBehaviour
         Vector3 offsetScreenPos = mainCamera.WorldToScreenPoint(transform.position + forwardDirection);
         Vector3 screenMoveVector = offsetScreenPos - originScreenPos;
 
-        float moveAmount = Vector3.Dot(touch.deltaPosition, screenMoveVector.normalized);
-        transform.parent.position += forwardDirection * moveAmount * distanceToCam / 500;
+        float moveAmount = Vector3.Dot(touch.deltaPosition * 1.5f / mainCamera.pixelHeight, screenMoveVector.normalized);
+        transform.parent.position += forwardDirection * moveAmount * distanceToCam;
 
         float position = GetPosition();
         while (position - lastUpdatePosition > 1)

@@ -233,19 +233,23 @@ public abstract class EntityComponent : MonoBehaviour
         if (sensorComponent == null)
             return;
         bool sensorIsOn = IsOn();
+        // order is important. behaviors should be disabled before other behaviors are enabled,
+        // especially if identical behaviors are being disabled/enabled
         if (sensorIsOn && !sensorWasOn)
-            SetBehaviors(true);
+        {
+            foreach (Behaviour offComponent in offComponents)
+                offComponent.enabled = false;
+            foreach (Behaviour onComponent in onComponents)
+                onComponent.enabled = true;
+        }
         else if (!sensorIsOn && sensorWasOn)
-            SetBehaviors(false);
+        {
+            foreach (Behaviour onComponent in onComponents)
+                onComponent.enabled = false;
+            foreach (Behaviour offComponent in offComponents)
+                offComponent.enabled = true;
+        }
         sensorWasOn = sensorIsOn;
-    }
-
-    private void SetBehaviors(bool on)
-    {
-        foreach (Behaviour onComponent in onComponents)
-            onComponent.enabled = on;
-        foreach (Behaviour offComponent in offComponents)
-            offComponent.enabled = !on;
     }
 
     public bool IsOn()
