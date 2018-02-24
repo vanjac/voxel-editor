@@ -19,7 +19,7 @@ public class TouchListener : MonoBehaviour
     public TouchOperation currentTouchOperation = TouchOperation.NONE;
     public MoveAxis movingAxis;
     private Transform pivot;
-    private Camera camera;
+    private Camera cam;
 
     private Voxel lastHitVoxel;
     private int lastHitFaceI;
@@ -27,7 +27,7 @@ public class TouchListener : MonoBehaviour
     void Start()
     {
         pivot = transform.parent;
-        camera = GetComponent<Camera>();
+        cam = GetComponent<Camera>();
     }
 
     void Update ()
@@ -43,7 +43,7 @@ public class TouchListener : MonoBehaviour
             Touch touch = Input.GetTouch(0);
 
             RaycastHit hit;
-            bool rayHitSomething = Physics.Raycast(camera.ScreenPointToRay(Input.GetTouch(0).position), out hit);
+            bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position), out hit);
             Voxel hitVoxel = null;
             int hitFaceI = -1;
             MoveAxis hitMoveAxis = null;
@@ -150,7 +150,7 @@ public class TouchListener : MonoBehaviour
 
             float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-            float scaleFactor = Mathf.Pow(1.005f, deltaMagnitudeDiff / camera.pixelHeight * 700f);
+            float scaleFactor = Mathf.Pow(1.005f, deltaMagnitudeDiff / cam.pixelHeight * 700f);
             if (scaleFactor != 1)
             {
                 pivot.localScale *= scaleFactor;
@@ -162,7 +162,7 @@ public class TouchListener : MonoBehaviour
 
             Vector3 move = (touchZero.deltaPosition + touchOne.deltaPosition) / 2;
             move *= 300f;
-            move /= camera.pixelHeight;
+            move /= cam.pixelHeight;
             Vector3 pivotRotationEuler = pivot.rotation.eulerAngles;
             pivotRotationEuler.y += move.x;
             pivotRotationEuler.x -= move.y;
@@ -186,7 +186,7 @@ public class TouchListener : MonoBehaviour
             for (int i = 0; i < 3; i++)
                 move += Input.GetTouch(i).deltaPosition;
             move *= 4.0f;
-            move /= camera.pixelHeight;
+            move /= cam.pixelHeight;
             pivot.position -= move.x * pivot.right * pivot.localScale.z;
             pivot.position -= move.y * pivot.up * pivot.localScale.z;
         }
@@ -202,9 +202,9 @@ public class TouchListener : MonoBehaviour
         if (touchCount > 0)
             avg /= touchCount;
         else
-            avg = new Vector2(camera.pixelWidth / 2, camera.pixelHeight / 2);
+            avg = new Vector2(cam.pixelWidth / 2, cam.pixelHeight / 2);
 
-        Ray ray = camera.ScreenPointToRay(avg);
+        Ray ray = cam.ScreenPointToRay(avg);
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
