@@ -33,7 +33,7 @@ public class PlayerObject : ObjectEntity
         GameObject playerObject = Resources.Load<GameObject>("ObjectPrefabs/Player");
         playerObject = GameObject.Instantiate(playerObject);
         playerObject.transform.parent = voxelArray.transform;
-        playerObject.transform.position = position;
+        playerObject.transform.position = position + new Vector3(0.5f, 0.0f, 0.5f);
         PlayerComponent component = playerObject.AddComponent<PlayerComponent>();
         component.entity = this;
         this.component = component;

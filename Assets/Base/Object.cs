@@ -19,7 +19,7 @@ public abstract class ObjectEntity : DynamicEntity
     {
         if (marker != null)
         {
-            marker.transform.position = position;
+            marker.transform.position = position + new Vector3(0.5f, 0.0f, 0.5f); // TODO
             marker.UpdateMaterials();
         }
     }
