@@ -150,7 +150,7 @@ public class TouchListener : MonoBehaviour
 
             float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-            float scaleFactor = Mathf.Pow(1.005f, deltaMagnitudeDiff);
+            float scaleFactor = Mathf.Pow(1.005f, deltaMagnitudeDiff / camera.pixelHeight * 700f);
             if (scaleFactor != 1)
             {
                 pivot.localScale *= scaleFactor;
