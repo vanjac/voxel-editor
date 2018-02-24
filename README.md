@@ -31,7 +31,7 @@ Some of these only appear in certain contexts.
 
 ## Objects
 
-Besides the walls forming the boundaries of the world, there will be different type of objects you can create to add interactivity. Right now, there are only Substances (see above for how to create one). You can tap a substance to show the Properties panel (swipe left to temporarily hide it).
+Besides the walls forming the boundaries of the world, there will be different type of objects you can create to add interactivity. Right now, there are only Substances (see above for how to create one) and the Player. You can tap an object to show the Properties panel (swipe left to temporarily hide it).
 
 ### Sensors
 
