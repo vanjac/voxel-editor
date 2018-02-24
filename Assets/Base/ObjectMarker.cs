@@ -41,7 +41,6 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
-            Debug.Log(selected);
             if (selected)
             {
                 Material[] newMaterials = new Material[renderer.materials.Length];
