@@ -71,10 +71,16 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     private Vector3 EntityPosition(Entity entity)
     {
-        // TODO: fix this. needs to find center of bounding box,
-        // and eventually work for entities that aren't substances
-        foreach (Voxel voxel in ((Substance)entity).voxels)
-            return voxel.transform.position + Vector3.one * 0.5f;
+        if (entity is Substance)
+        {
+            // TODO: needs to find center of bounding box
+            foreach (Voxel voxel in ((Substance)entity).voxels)
+                return voxel.transform.position + Vector3.one * 0.5f;
+        }
+        else if (entity is ObjectEntity)
+        {
+            return ((ObjectEntity)entity).marker.transform.position;
+        }
         return Vector3.zero;
     }
 }
