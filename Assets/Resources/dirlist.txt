@@ -299,3 +299,5 @@
 ./Icons/vector-combine.png
 ./ObjectMarkers
 ./ObjectMarkers/Player.prefab
+./ObjectPrefabs
+./ObjectPrefabs/Player.prefab

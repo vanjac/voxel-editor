@@ -6,6 +6,7 @@ GameAssets/skybox_editor: https://developer.valvesoftware.com/wiki/File:Toolssky
 GameAssets/SurfaceTextures: Standard Assets
 GameAssets/Water (Basic): Standard Assets (modified)
 Libraries/SimpleJSON: http://wiki.unity3d.com/index.php/SimpleJSON
+Objects/Ethan: Standard Assets
 Resources/Icons:  https://materialdesignicons.com/
 Standard Assets: Standard Assets
 VoxelEditor/GUI/[various icons]: https://materialdesignicons.com/
