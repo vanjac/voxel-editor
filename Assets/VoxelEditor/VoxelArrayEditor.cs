@@ -197,6 +197,20 @@ public class VoxelArrayEditor : VoxelArray
             SetMoveAxesEnabled(true);
     }
 
+    // called by TouchListener
+    public void TripleTouch(Voxel voxel, int faceI)
+    {
+        if (voxel == null || voxel.substance == null)
+            return;
+        ClearSelection();
+        foreach (Voxel v in voxel.substance.voxels)
+            for (int i = 0; i < 6; i++)
+                if (!v.faces[i].IsEmpty())
+                    SelectFace(v, i);
+        if (SomethingIsSelected())
+            SetMoveAxesEnabled(true);
+    }
+
     private void SetMoveAxes(Vector3 position)
     {
         if (axes == null)

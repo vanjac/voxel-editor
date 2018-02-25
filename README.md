@@ -14,6 +14,7 @@ This will open `VoxelEditor/editScene`. If you open this scene directly from Uni
 - Use 3 fingers to pan
 - Tap to select the face of a single block. Tap and drag for a rectangular/box selection
 - Double tap to select all contiguous faces
+- Triple tap to select an entire substance (see below)
 - Drag one of the 3 axes (red/green/blue lines) to move selected faces/objects and "sculpt" the world
 
 ### Toolbar icons

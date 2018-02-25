@@ -105,6 +105,10 @@ public class TouchListener : MonoBehaviour
                     {
                         voxelArray.DoubleTouch(hitVoxel, hitFaceI);
                     }
+                    else if (touch.tapCount == 3)
+                    {
+                        voxelArray.TripleTouch(hitVoxel, hitFaceI);
+                    }
                     UpdateZoomDepth();
                 }
                 else if (hitMarker != null)
@@ -124,6 +128,10 @@ public class TouchListener : MonoBehaviour
                     else if (touch.tapCount == 2)
                     {
                         voxelArray.DoubleTouch(lastHitVoxel, lastHitFaceI);
+                    }
+                    else if (touch.tapCount == 3)
+                    {
+                        voxelArray.TripleTouch(lastHitVoxel, lastHitFaceI);
                     }
                     UpdateZoomDepth();
                 }
