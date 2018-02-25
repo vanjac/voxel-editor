@@ -114,7 +114,7 @@ public class PropertyGUIs
         gridStyle.padding.left = 0;
         gridStyle.padding.right = 0;
         var condition = (EntityBehavior.Condition)property.value;
-        GUILayout.Label(property.name);
+        GUILayout.Label("When sensor is:");
         property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
             (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
     }
