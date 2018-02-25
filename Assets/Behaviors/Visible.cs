@@ -26,7 +26,8 @@ public class VisibleComponent : MonoBehaviour
         if (r != null)
             yield return r;
         foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
-            yield return childRenderer;
+            if (!(childRenderer is LineRenderer)) // LineRenderer used for drawing outline of voxels
+                yield return childRenderer;
     }
 
     void Start()
