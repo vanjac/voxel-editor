@@ -36,8 +36,8 @@ public class GameTouchControl : MonoBehaviour
             if (touch.fingerId == lookTouchId)
             {
                 setAxes = true;
-                hAxis.Update(touch.deltaPosition.x / 10);
-                vAxis.Update(touch.deltaPosition.y / 10);
+                hAxis.Update(touch.deltaPosition.x * 150f / Camera.current.pixelHeight);
+                vAxis.Update(touch.deltaPosition.y * 150f / Camera.current.pixelHeight);
             }
         }
         if (!setAxes)
