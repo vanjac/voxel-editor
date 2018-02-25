@@ -26,12 +26,41 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
         void Start()
         {
+            Color color = ColorI(i);
             LineRenderer line = gameObject.AddComponent<LineRenderer>();
             line.startWidth = line.endWidth = 0.1f;
             line.material = _lineMaterial;
-            line.startColor = line.endColor = ColorI(i);
+            line.startColor = line.endColor = color;
             line.SetPosition(0, EntityPosition(sourceEntity));
             line.SetPosition(1, EntityPosition(targetEntity));
+
+            if (targetEntity is Substance)
+            {
+                Substance substance = (Substance)targetEntity;
+                foreach (Voxel voxel in substance.voxels)
+                {
+                    LineRenderer voxelOutline = voxel.GetComponent<LineRenderer>();
+                    if (voxelOutline != null)
+                    {
+                        voxelOutline.enabled = true;
+                        voxelOutline.startColor = voxelOutline.endColor = color;
+                    }
+                }
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (targetEntity is Substance)
+            {
+                Substance substance = (Substance)targetEntity;
+                foreach (Voxel voxel in substance.voxels)
+                {
+                    LineRenderer voxelOutline = voxel.GetComponent<LineRenderer>();
+                    if (voxelOutline != null)
+                        voxelOutline.enabled = false;
+                }
+            }
         }
     }
 
