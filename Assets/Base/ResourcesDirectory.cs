@@ -14,6 +14,9 @@ public class ResourcesDirectory
             {
                 TextAsset dirListText = Resources.Load<TextAsset>("dirlist");
                 _dirList = dirListText.text.Split('\n');
+                // fix issue when checking out a branch in git:
+                for (int i = 0; i < _dirList.Length; i++)
+                    _dirList[i] = _dirList[i].Trim();
                 Resources.UnloadAsset(dirListText);
             }
             return _dirList;
