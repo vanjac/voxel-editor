@@ -49,6 +49,19 @@ public class Substance : DynamicEntity
         foreach (Voxel v in voxels)
             v.UpdateVoxel();
     }
+
+    public Vector3 CalculateCenterPoint()
+    {
+        Bounds voxelBounds = new Bounds();
+        foreach (Voxel voxel in voxels)
+        {
+            if (voxelBounds.extents == Vector3.zero)
+                voxelBounds = voxel.GetBounds();
+            else
+                voxelBounds.Encapsulate(voxel.GetBounds());
+        }
+        return voxelBounds.center;
+    }
 }
 
 public class SubstanceComponent : EntityComponent
@@ -57,16 +70,9 @@ public class SubstanceComponent : EntityComponent
 
     public override void Start()
     {
-        Bounds voxelBounds = new Bounds();
         foreach (Voxel voxel in substance.voxels)
-        {
             voxel.transform.parent = transform;
-            if (voxelBounds.extents == Vector3.zero)
-                voxelBounds = voxel.GetBounds();
-            else
-                voxelBounds.Encapsulate(voxel.GetBounds());
-        }
-        Vector3 centerPoint = voxelBounds.center;
+        Vector3 centerPoint = substance.CalculateCenterPoint();
         transform.position = centerPoint;
         foreach (Voxel voxel in substance.voxels)
             voxel.transform.position -= centerPoint;

@@ -15,8 +15,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
             if (entity is Substance)
             {
                 // TODO: needs to find center of bounding box
-                foreach (Voxel voxel in ((Substance)entity).voxels)
-                    return voxel.transform.position + Vector3.one * 0.5f;
+                return ((Substance)entity).CalculateCenterPoint();
             }
             else if (entity is ObjectEntity)
             {
@@ -96,7 +95,6 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
         if (updateTargets)
         {
-            Debug.Log("Update targets");
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
             for (int i = 0; i < targetEntities.Count; i++)
