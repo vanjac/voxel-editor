@@ -35,32 +35,15 @@ public class EntityReferencePropertyManager : MonoBehaviour
             line.SetPosition(1, EntityPosition(targetEntity));
 
             if (targetEntity is Substance)
-            {
-                Substance substance = (Substance)targetEntity;
-                foreach (Voxel voxel in substance.voxels)
-                {
-                    LineRenderer voxelOutline = voxel.GetComponent<LineRenderer>();
-                    if (voxelOutline != null)
-                    {
-                        voxelOutline.enabled = true;
-                        voxelOutline.startColor = voxelOutline.endColor = color;
-                    }
-                }
-            }
+                foreach (Voxel voxel in ((Substance)targetEntity).voxels)
+                    voxel.OutlineOn(color);
         }
 
         void OnDestroy()
         {
-            if (targetEntity is Substance)
-            {
-                Substance substance = (Substance)targetEntity;
-                foreach (Voxel voxel in substance.voxels)
-                {
-                    LineRenderer voxelOutline = voxel.GetComponent<LineRenderer>();
-                    if (voxelOutline != null)
-                        voxelOutline.enabled = false;
-                }
-            }
+            if (targetEntity is Substance && targetEntity != currentEntity)
+                foreach (Voxel voxel in ((Substance)targetEntity).voxels)
+                    voxel.OutlineOff();
         }
     }
 
@@ -73,6 +56,15 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static void Reset(Entity entity)
     {
+        if (currentEntity != entity)
+        {
+            if (currentEntity != null && currentEntity is Substance)
+                foreach (Voxel voxel in ((Substance)currentEntity).voxels)
+                    voxel.OutlineOff();
+            if (entity != null && entity is Substance)
+                foreach (Voxel voxel in ((Substance)entity).voxels)
+                    voxel.OutlineOn(Color.white);
+        }
         currentEntity = entity;
         targetEntities.Clear();
     }

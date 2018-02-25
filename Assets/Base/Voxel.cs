@@ -396,4 +396,29 @@ public class Voxel : MonoBehaviour
             meshCollider.enabled = false;
         }
     } // end UpdateVoxel()
+
+    public void OutlineOn(Color color)
+    {
+        LineRenderer outline = GetComponent<LineRenderer>();
+        if (outline != null)
+        {
+            outline.enabled = true;
+            outline.startColor = outline.endColor = color;
+        }
+    }
+
+    public void OutlineOff()
+    {
+        LineRenderer outline = GetComponent<LineRenderer>();
+        if (outline != null)
+            outline.enabled = false;
+    }
+
+    public Color GetOutline()
+    {
+        LineRenderer outline = GetComponent<LineRenderer>();
+        if (outline != null)
+            return outline.startColor;
+        return Color.black;
+    }
 }
