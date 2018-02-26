@@ -48,6 +48,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     }
 
 
+    private static bool updateTargets = false;
     private static Entity currentEntity;
     private static List<Entity> targetEntities = new List<Entity>();
 
@@ -58,6 +59,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     {
         if (currentEntity != entity)
         {
+            updateTargets = true;
             if (currentEntity != null && currentEntity is Substance)
                 foreach (Voxel voxel in ((Substance)currentEntity).voxels)
                     voxel.OutlineOff();
@@ -102,8 +104,6 @@ public class EntityReferencePropertyManager : MonoBehaviour
         if (currentEntity == null && targetEntities.Count != 0)
             targetEntities.Clear();
 
-        bool updateTargets = false;
-
         if (transform.childCount != targetEntities.Count)
             updateTargets = true;
         else
@@ -116,6 +116,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
         if (updateTargets)
         {
+            updateTargets = false;
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
             for (int i = 0; i < targetEntities.Count; i++)
