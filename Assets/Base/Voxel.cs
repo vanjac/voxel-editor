@@ -215,6 +215,7 @@ public class Voxel : MonoBehaviour
 
     public void UpdateVoxel()
     {
+        UpdateHighlight();
         bool inEditor = InEditor();
 
         int numFilledFaces = 0;
@@ -397,28 +398,18 @@ public class Voxel : MonoBehaviour
         }
     } // end UpdateVoxel()
 
-    public void OutlineOn(Color color)
+    public void UpdateHighlight()
     {
         LineRenderer outline = GetComponent<LineRenderer>();
         if (outline != null)
         {
-            outline.enabled = true;
-            outline.startColor = outline.endColor = color;
+            if (substance == null || substance.highlight == Color.clear)
+                outline.enabled = false;
+            else
+            {
+                outline.enabled = true;
+                outline.startColor = outline.endColor = substance.highlight;
+            }
         }
-    }
-
-    public void OutlineOff()
-    {
-        LineRenderer outline = GetComponent<LineRenderer>();
-        if (outline != null)
-            outline.enabled = false;
-    }
-
-    public Color GetOutline()
-    {
-        LineRenderer outline = GetComponent<LineRenderer>();
-        if (outline != null)
-            return outline.startColor;
-        return Color.black;
     }
 }

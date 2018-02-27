@@ -33,17 +33,6 @@ public class EntityReferencePropertyManager : MonoBehaviour
             line.startColor = line.endColor = color;
             line.SetPosition(0, EntityPosition(sourceEntity));
             line.SetPosition(1, EntityPosition(targetEntity));
-
-            if (targetEntity is Substance)
-                foreach (Voxel voxel in ((Substance)targetEntity).voxels)
-                    voxel.OutlineOn(color);
-        }
-
-        void OnDestroy()
-        {
-            if (targetEntity is Substance && targetEntity != currentEntity)
-                foreach (Voxel voxel in ((Substance)targetEntity).voxels)
-                    voxel.OutlineOff();
         }
     }
 
@@ -59,21 +48,40 @@ public class EntityReferencePropertyManager : MonoBehaviour
     {
         if (currentEntity != entity)
         {
-            updateTargets = true;
             if (currentEntity != null && currentEntity is Substance)
-                foreach (Voxel voxel in ((Substance)currentEntity).voxels)
-                    voxel.OutlineOff();
+            {
+                ((Substance)currentEntity).highlight = Color.clear;
+                foreach (Voxel v in ((Substance)currentEntity).voxels)
+                    v.UpdateHighlight();
+            }
             if (entity != null && entity is Substance)
-                foreach (Voxel voxel in ((Substance)entity).voxels)
-                    voxel.OutlineOn(Color.white);
+            {
+                ((Substance)entity).highlight = Color.white;
+                foreach (Voxel v in ((Substance)entity).voxels)
+                    v.UpdateHighlight();
+            }
         }
         currentEntity = entity;
+        foreach (target in targetEntities)
+        {
+            if (!(target is Substance))
+                continue;
+            ((Substance)target).highlight = Color.clear;
+            foreach (Voxel v in ((Substance)target).voxels)
+                v.UpdateHighlight();
+        }
         targetEntities.Clear();
     }
 
     public static void Next(Entity entity)
     {
         targetEntities.Add(entity);
+        if (entity is Substance)
+        {
+            ((Substance)entity).highlight = GetColor();
+            foreach (Voxel v in ((Substance)entity).voxels)
+                v.UpdateHighlight();
+        }
     }
 
     public static Color GetColor()
