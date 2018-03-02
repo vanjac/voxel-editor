@@ -118,8 +118,11 @@ public class EntityReferencePropertyManager : MonoBehaviour
             foreach (Transform child in transform)
             {
                 EntityReferenceLine line = child.GetComponent<EntityReferenceLine>();
-                if (targetEntities[line.i] != line.targetEntity)
+                if (targetEntities[line.i] != line.targetEntity || currentEntity != line.sourceEntity)
+                {
                     updateTargets = true;
+                    break;
+                }
             }
 
         if (updateTargets)
