@@ -14,7 +14,6 @@ public class EntityReferencePropertyManager : MonoBehaviour
         {
             if (entity is Substance)
             {
-                // TODO: needs to find center of bounding box
                 return ((Substance)entity).CalculateCenterPoint();
             }
             else if (entity is ObjectEntity)
