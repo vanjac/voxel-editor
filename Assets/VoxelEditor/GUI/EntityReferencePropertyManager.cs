@@ -45,6 +45,14 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static void Reset(Entity entity)
     {
+        foreach (Entity target in targetEntities)
+        {
+            if (!(target is Substance))
+                continue;
+            ((Substance)target).highlight = Color.clear;
+            foreach (Voxel v in ((Substance)target).voxels)
+                v.UpdateHighlight();
+        }
         if (currentEntity != entity)
         {
             if (currentEntity != null && currentEntity is Substance)
@@ -61,14 +69,6 @@ public class EntityReferencePropertyManager : MonoBehaviour
             }
         }
         currentEntity = entity;
-        foreach (Entity target in targetEntities)
-        {
-            if (!(target is Substance))
-                continue;
-            ((Substance)target).highlight = Color.clear;
-            foreach (Voxel v in ((Substance)target).voxels)
-                v.UpdateHighlight();
-        }
         targetEntities.Clear();
     }
 
