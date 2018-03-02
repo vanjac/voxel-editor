@@ -615,7 +615,7 @@ public class VoxelArrayEditor : VoxelArray
             {
                 oldVoxel.faces[faceI].addSelected = false;
 
-                if (newVoxel.faces[faceI].IsEmpty())
+                if (newVoxel.faces[faceI].IsEmpty() || newVoxel.substance != movingSubstance)
                     blocked = true;
             }
 
