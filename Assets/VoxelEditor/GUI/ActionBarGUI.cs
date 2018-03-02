@@ -88,7 +88,7 @@ public class ActionBarGUI : GUIPanel
 
     protected void EditGUI()
     {
-        if (!voxelArray.SomethingIsSelected())
+        if (!voxelArray.FacesAreSelected())
             return;
 
         if (ActionBarButton(GUIIconSet.instance.paint))

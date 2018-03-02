@@ -302,6 +302,13 @@ public class VoxelArrayEditor : VoxelArray
         return storedSelectedThings.Count != 0;
     }
 
+    public bool FacesAreSelected()
+    {
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+            return true;
+        return false;
+    }
+
     public ICollection<Entity> GetSelectedEntities()
     {
         var selectedEntities = new HashSet<Entity>();
