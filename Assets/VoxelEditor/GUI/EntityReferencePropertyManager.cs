@@ -62,7 +62,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
             }
         }
         currentEntity = entity;
-        foreach (target in targetEntities)
+        foreach (Entity target in targetEntities)
         {
             if (!(target is Substance))
                 continue;
