@@ -6,8 +6,9 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class GameTouchControl : MonoBehaviour
 {
-    CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
-    int lookTouchId;
+    private Camera cam;
+    private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
+    private int lookTouchId;
 
     void OnEnable ()
     {
@@ -36,8 +37,13 @@ public class GameTouchControl : MonoBehaviour
             if (touch.fingerId == lookTouchId)
             {
                 setAxes = true;
-                hAxis.Update(touch.deltaPosition.x * 150f / Camera.current.pixelHeight);
-                vAxis.Update(touch.deltaPosition.y * 150f / Camera.current.pixelHeight);
+                if (cam == null)
+                    cam = Camera.current; // sometimes null for a few cycles
+                if (cam != null)
+                {
+                    hAxis.Update(touch.deltaPosition.x * 150f / cam.pixelHeight);
+                    vAxis.Update(touch.deltaPosition.y * 150f / cam.pixelHeight);
+                }
             }
         }
         if (!setAxes)
