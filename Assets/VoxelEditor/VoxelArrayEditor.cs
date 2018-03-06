@@ -574,8 +574,23 @@ public class VoxelArrayEditor : VoxelArray
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
                     if (oldVoxel.faces[sideFaceI].IsEmpty())
                     {
-                        Voxel sideVoxel = VoxelAt(oldPos + Voxel.DirectionForFaceI(sideFaceI), true);
-                        sideVoxel.faces[Voxel.OppositeFaceI(sideFaceI)] = movingFace;
+                        // add side
+                        Vector3 sideFaceDir = Voxel.DirectionForFaceI(sideFaceI);
+                        Voxel sideVoxel = VoxelAt(oldPos + sideFaceDir, true);
+                        int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
+
+                        // if possible, the new side should have the properties of the adjacent side
+                        Voxel adjacentSideVoxel = VoxelAt(oldPos - adjustDirection + sideFaceDir, false);
+                        if (adjacentSideVoxel != null && !adjacentSideVoxel.faces[oppositeSideFaceI].IsEmpty()
+                            && movingSubstance == adjacentSideVoxel.substance)
+                        {
+                            sideVoxel.faces[oppositeSideFaceI] = adjacentSideVoxel.faces[oppositeSideFaceI];
+                            sideVoxel.faces[oppositeSideFaceI].addSelected = false;
+                        }
+                        else
+                        {
+                            sideVoxel.faces[oppositeSideFaceI] = movingFace;
+                        }
                         voxelsToUpdate.Add(sideVoxel);
                     }
                 }
@@ -598,9 +613,20 @@ public class VoxelArrayEditor : VoxelArray
                     int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
                     Voxel sideVoxel = VoxelAt(newPos + Voxel.DirectionForFaceI(sideFaceI), false);
                     if (sideVoxel == null || sideVoxel.faces[oppositeSideFaceI].IsEmpty() || movingSubstance != sideVoxel.substance)
-                        newVoxel.faces[sideFaceI] = movingFace;
+                    {
+                        // add side
+                        // if possible, the new side should have the properties of the adjacent side
+                        if (!oldVoxel.faces[sideFaceI].IsEmpty())
+                        {
+                            newVoxel.faces[sideFaceI] = oldVoxel.faces[sideFaceI];
+                            newVoxel.faces[sideFaceI].addSelected = false;
+                        }
+                        else
+                            newVoxel.faces[sideFaceI] = movingFace;
+                    }
                     else
                     {
+                        // delete side
                         sideVoxel.faces[oppositeSideFaceI].Clear();
                         voxelsToUpdate.Add(sideVoxel);
                     }
