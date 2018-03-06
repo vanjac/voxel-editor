@@ -18,7 +18,7 @@ public class MaterialSelectorGUI : GUIPanel
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
     public bool closeOnSelect = true;
-    public Material highlightMaterial = null;
+    public Material highlightMaterial = null; // the current selected material
 
     private int tab;
     private string materialDirectory;
@@ -33,7 +33,10 @@ public class MaterialSelectorGUI : GUIPanel
         materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
         if (highlightMaterial != null && ResourcesDirectory.IsCustomMaterial(highlightMaterial))
+        {
+            highlightMaterial = Instantiate(highlightMaterial);
             tab = 0;
+        }
         else
             tab = 1;
     }
