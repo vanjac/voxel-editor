@@ -23,7 +23,7 @@ public class MapFileReader
     {
         if (missingMaterial == null)
         {
-            missingMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Unlit/Color"));
+            missingMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"));
             missingMaterial.color = Color.magenta;
         }
         string jsonString;
