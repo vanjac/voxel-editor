@@ -598,6 +598,8 @@ public class VoxelArrayEditor : VoxelArray
                 if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
                     blocked = true;
                 oldVoxel.Clear();
+                if (substanceToCreate != null)
+                    newSubstanceBlock = CreateSubstanceBlock(oldPos, substanceToCreate, movingFace);
             }
             else if (pulling && substanceToCreate != null)
             {
@@ -659,9 +661,6 @@ public class VoxelArrayEditor : VoxelArray
                 newVoxel.faces[faceI].addSelected = true;
                 newVoxel.substance = movingSubstance;
                 selectedThings[i] = new VoxelFaceReference(newVoxel, faceI);
-
-                if (pushing && substanceToCreate != null)
-                    newSubstanceBlock = CreateSubstanceBlock(oldPos, substanceToCreate, movingFace);
             }
             else
             {
