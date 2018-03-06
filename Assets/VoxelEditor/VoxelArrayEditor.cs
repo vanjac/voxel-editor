@@ -666,6 +666,8 @@ public class VoxelArrayEditor : VoxelArray
             {
                 // clear the selection; will be deleted later
                 selectedThings[i] = new VoxelFaceReference(null, -1);
+                if (pulling && substanceToCreate == null)
+                    newVoxel.substance = movingSubstance;
             }
 
             if (newSubstanceBlock != null)
