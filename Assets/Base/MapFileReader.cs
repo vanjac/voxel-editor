@@ -12,6 +12,7 @@ public class MapFileReader
 
     private string fileName;
     private int fileWriterVersion;
+    private Material missingMaterial; // material to be used when material can't be created
 
     public MapFileReader(string fileName)
     {
@@ -20,6 +21,11 @@ public class MapFileReader
 
     public void Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
+        if (missingMaterial == null)
+        {
+            missingMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Unlit/Color"));
+            missingMaterial.color = Color.magenta;
+        }
         string jsonString;
 
         string filePath = Application.persistentDataPath + "/" + fileName + ".json";
@@ -121,7 +127,7 @@ public class MapFileReader
                     return ResourcesDirectory.GetMaterial(newDirEntry);
             }
             Debug.Log("No material found: " + name);
-            return null;
+            return missingMaterial;
         }
         else if (matObject["shader"] != null)
         {
@@ -132,7 +138,7 @@ public class MapFileReader
             return mat;
         }
         else
-            return null;
+            return missingMaterial;
     }
 
     private void ReadObjectEntity(JSONObject entityObject, ObjectEntity objectEntity)
@@ -233,7 +239,7 @@ public class MapFileReader
         if (lighting["sky"] != null)
         {
             Material skybox = materials[lighting["sky"].AsInt];
-            if (skybox != null) // default skybox is null
+            if (skybox != missingMaterial) // default skybox is null
             {
                 RenderSettings.skybox = skybox;
             }
