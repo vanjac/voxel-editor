@@ -203,10 +203,7 @@ public class VoxelArrayEditor : VoxelArray
         if (voxel == null || voxel.substance == null)
             return;
         ClearSelection();
-        foreach (Voxel v in voxel.substance.voxels)
-            for (int i = 0; i < 6; i++)
-                if (!v.faces[i].IsEmpty())
-                    SelectFace(v, i);
+        SubstanceSelect(voxel.substance);
         if (SomethingIsSelected())
             SetMoveAxesEnabled(true);
     }
@@ -446,6 +443,21 @@ public class VoxelArrayEditor : VoxelArray
             selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
         selectMode = SelectMode.FACE;
         SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
+    }
+
+    public void SubstanceSelect(Substance substance)
+    {
+        foreach (Voxel v in substance.voxels)
+            for (int i = 0; i < 6; i++)
+                if (!v.faces[i].IsEmpty())
+                {
+                    SelectFace(v, i);
+                    if (selectMode != SelectMode.FACE)
+                        selectionBounds = v.GetFaceBounds(i);
+                    else
+                        selectionBounds.Encapsulate(v.GetFaceBounds(i));
+                    selectMode = SelectMode.FACE;
+                }
     }
 
     public SelectionState GetSelectionState()
