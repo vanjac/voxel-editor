@@ -84,7 +84,8 @@ public class MaterialSelectorGUI : GUIPanel
                 highlightMaterial.color = new Color(0, 0, 1, 0.25f);
             else
                 highlightMaterial.color = Color.red;
-            MaterialSelected(highlightMaterial);
+            if (handler != null)
+                handler(highlightMaterial);
         }
         if (colorPicker == null)
         {
@@ -95,7 +96,8 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker.handler = (Color c) =>
             {
                 highlightMaterial.color = c;
-                MaterialSelected(highlightMaterial);
+                if (handler != null)
+                    handler(highlightMaterial);
             };
         }
         colorPicker.WindowGUI();
