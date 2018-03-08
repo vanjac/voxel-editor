@@ -68,6 +68,8 @@ public class MenuGUI : GUIPanel
         if (name.Length == 0)
             return;
         string filePath = GetMapPath(name);
+        if (File.Exists(filePath))
+            return;
         using (FileStream fileStream = File.Create(filePath))
         {
             using (var sw = new StreamWriter(fileStream))
