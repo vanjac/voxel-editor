@@ -15,6 +15,13 @@ public class MenuGUI : GUIPanel
         return new Rect(width * .25f, height * .2f, width * .5f, height * .6f);
     }
 
+    public override void OnEnable()
+    {
+        holdOpen = true;
+        stealFocus = false;
+        base.OnEnable();
+    }
+
     void Start()
     {
         UpdateMapList();
