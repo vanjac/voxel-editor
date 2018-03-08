@@ -90,7 +90,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     private static Color ColorI(int i)
     {
-        return Color.HSVToRGB((i * .618f) % 1.0f, 1.0f, 1.0f);
+        return Color.HSVToRGB((i * .618f) % 1.0f, 0.8f, 1.0f);
     }
 
     public static string GetName()
