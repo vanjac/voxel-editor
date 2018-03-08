@@ -132,10 +132,17 @@ public class MapFileReader
         else if (matObject["shader"] != null)
         {
             Shader shader = Shader.Find(matObject["shader"]);
-            Material mat = ResourcesDirectory.MakeCustomMaterial(shader);
             if (matObject["color"] != null)
-                mat.color = ReadColor(matObject["color"].AsArray);
-            return mat;
+            {
+                Color color = ReadColor(matObject["color"].AsArray);
+                Material mat = ResourcesDirectory.MakeCustomMaterial(shader, color.a != 1);
+                mat.color = color;
+                return mat;
+            }
+            else
+            {
+                return ResourcesDirectory.MakeCustomMaterial(shader);
+            }
         }
         else
             return missingMaterial;

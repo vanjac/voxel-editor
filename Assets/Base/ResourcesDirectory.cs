@@ -30,10 +30,22 @@ public class ResourcesDirectory
         return Resources.Load<Material>(path);
     }
 
-    public static Material MakeCustomMaterial(Shader shader)
+    public static Material MakeCustomMaterial(Shader shader, bool transparent=false)
     {
         Material material = new Material(shader);
         material.name = "Custom" + System.Guid.NewGuid();
+        if (transparent)
+        {
+            // http://answers.unity.com/answers/1265884/view.html
+            // only applies to standard shader!
+            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.SetInt("_ZWrite", 0);
+            material.DisableKeyword("_ALPHATEST_ON");
+            material.DisableKeyword("_ALPHABLEND_ON");
+            material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.renderQueue = 3000;
+        }
         return material;
     }
 

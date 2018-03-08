@@ -80,7 +80,7 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (highlightMaterial == null || !ResourcesDirectory.IsCustomMaterial(highlightMaterial))
         {
-            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find(colorShader));
+            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find(colorShader), allowAlpha);
             if (allowAlpha)
                 highlightMaterial.color = new Color(0, 0, 1, 0.25f);
             else
