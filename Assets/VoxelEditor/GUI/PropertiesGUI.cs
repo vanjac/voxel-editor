@@ -48,6 +48,8 @@ public class PropertiesGUI : GUIPanel
             selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
             worldSelected = false;
             voxelArray.selectionChanged = false;
+            scroll = Vector2.zero;
+            scrollVelocity = Vector2.zero;
         }
 
         bool propertiesDisplayed = false;
