@@ -67,10 +67,15 @@ public class MaterialSelectorGUI : GUIPanel
             Destroy(colorPicker);
         if (tab == 1)
             TextureTab();
-        else if (materialDirectory != rootDirectory)
+        else
         {
-            materialDirectory = rootDirectory;
-            UpdateMaterialDirectory();
+            scroll = Vector2.zero;
+            scrollVelocity = Vector2.zero;
+            if (materialDirectory != rootDirectory)
+            {
+                materialDirectory = rootDirectory;
+                UpdateMaterialDirectory();
+            }
         }
         if (tab == 2)
             NoneTab();
