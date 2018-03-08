@@ -19,7 +19,7 @@ public class WorldProperties : PropertiesObject
             new Property("Sky",
                 () => RenderSettings.skybox,
                 v => RenderSettings.skybox = (Material)v,
-                PropertyGUIs.Material("GameAssets/Skies")),
+                PropertyGUIs.Material("GameAssets/Skies", "Unlit/Color")),
             new Property("Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,

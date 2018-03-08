@@ -150,7 +150,7 @@ public class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory)
+    public static PropertyGUI Material(string materialDirectory, string colorShader=null)
     {
         return (Property property) =>
         {
@@ -161,6 +161,8 @@ public class PropertyGUIs
                 materialSelector.title = "Change " + property.name;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
+                if (colorShader != null)
+                    materialSelector.colorShader = colorShader;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.value = mat;

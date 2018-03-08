@@ -15,6 +15,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     public MaterialSelectHandler handler;
     public string rootDirectory = "GameAssets/Materials";
+    public string colorShader = "Standard";
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
     public bool closeOnSelect = true;
@@ -79,7 +80,7 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (highlightMaterial == null || !ResourcesDirectory.IsCustomMaterial(highlightMaterial))
         {
-            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"));
+            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find(colorShader));
             if (allowAlpha)
                 highlightMaterial.color = new Color(0, 0, 1, 0.25f);
             else
