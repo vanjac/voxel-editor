@@ -19,7 +19,7 @@ public class MoveAxis : MonoBehaviour
     void Update()
     {
         float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
-        transform.localScale = Vector3.one * distanceToCam / 5;
+        transform.localScale = Vector3.one * distanceToCam / 4;
         lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
     }
 
