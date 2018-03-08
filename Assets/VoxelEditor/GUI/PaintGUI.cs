@@ -5,6 +5,11 @@ using UnityEngine;
 public class PaintGUI : GUIPanel
 {
     private const int PREVIEW_SIZE = 250;
+    private const int NUM_RECENT_PAINTS = 4;
+    private const int RECENT_PREVIEW_SIZE = 95;
+    private const int RECENT_MARGIN = 15;
+
+    private static List<VoxelFace> recentPaints = new List<VoxelFace>(); // most recent first
 
     public delegate void PaintHandler(VoxelFace paint);
 
@@ -16,6 +21,7 @@ public class PaintGUI : GUIPanel
     private MaterialSelectorGUI materialSelector;
 
     private GUIStyle condensedButtonStyle = null;
+    private GUIStyle previewBoxStyle = null;
 
     public override Rect GetRect(float width, float height)
     {
@@ -28,6 +34,17 @@ public class PaintGUI : GUIPanel
         UpdateMaterialSelector();
     }
 
+    void OnDestroy()
+    {
+        // add to recent materials list
+        for (int i = recentPaints.Count - 1; i >= 0; i--)
+            if (recentPaints[i].Equals(paint))
+                recentPaints.RemoveAt(i);
+        recentPaints.Insert(0, paint);
+        while (recentPaints.Count > NUM_RECENT_PAINTS)
+            recentPaints.RemoveAt(recentPaints.Count - 1);
+    }
+
     public override void WindowGUI()
     {
         if (condensedButtonStyle == null)
@@ -35,6 +52,9 @@ public class PaintGUI : GUIPanel
             condensedButtonStyle = new GUIStyle(GUI.skin.button);
             condensedButtonStyle.padding.left = 16;
             condensedButtonStyle.padding.right = 16;
+            previewBoxStyle = new GUIStyle(condensedButtonStyle);
+            previewBoxStyle.normal.background = null;
+            previewBoxStyle.active.background = null;
         }
 
         GUILayout.BeginHorizontal();
@@ -46,6 +66,25 @@ public class PaintGUI : GUIPanel
             Orient(3);
         if (GUILayout.Button(GUIIconSet.instance.rotateRight, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(1);
+        GUILayout.FlexibleSpace();
+
+        foreach (VoxelFace recentPaint in recentPaints)
+        {
+            GUILayout.Box("", previewBoxStyle,
+                GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE));
+            Rect buttonRect = GUILayoutUtility.GetLastRect();
+            Rect paintRect = new Rect(
+                buttonRect.xMin + RECENT_MARGIN, buttonRect.yMin + RECENT_MARGIN,
+                buttonRect.width - RECENT_MARGIN * 2, buttonRect.height - RECENT_MARGIN * 2);
+            if (GUI.Button(buttonRect, ""))
+            {
+                paint = recentPaint;
+                handler(paint);
+                UpdateMaterialSelector();
+            }
+            DrawPaint(recentPaint, paintRect);
+        }
+
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Done"))
             Destroy(this);
