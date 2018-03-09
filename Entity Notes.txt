@@ -267,10 +267,9 @@ Wind (Behavior for Volume with ParticleEffect) : only affects particles
         Direction : 6 choices
         Speed
 
-Fluid (Behavior for Volume)
+Water (Behavior for Volume)
     Properties
-        Resistance
-        Buoyancy
+        Density
 
 Push (Behavior for Volume)
     Properties
