@@ -6,9 +6,9 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class NewRigidbodyController : MonoBehaviour
 {
-    public float walkSpeed = 5.0f;
-    public float fallMoveSpeed = 3.0f;
-    public float jumpForce = 60f;
+    public float walkSpeed = 3.5f;
+    public float fallMoveSpeed = 1.5f;
+    public float jumpForce = 55f;
     public float swimForce = 70f;
     public AnimationCurve slopeCurveModifier = new AnimationCurve(new Keyframe(-90.0f, 1.0f), new Keyframe(0.0f, 1.0f), new Keyframe(90.0f, 0.0f));
 

@@ -164,9 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83727d23b5158d43aecefb4df105983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  fallMoveSpeed: 3
-  jumpForce: 60
+  walkSpeed: 3.5
+  fallMoveSpeed: 1.5
+  jumpForce: 55
   swimForce: 70
   slopeCurveModifier:
     serializedVersion: 2
