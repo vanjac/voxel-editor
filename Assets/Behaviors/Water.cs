@@ -8,7 +8,7 @@ public class WaterBehavior : EntityBehavior
         "Water", "Water",
         "water", typeof(WaterBehavior));
 
-    private float density = 1000;
+    private float density = 1.0f;
 
     public override PropertiesObjectType ObjectType()
     {

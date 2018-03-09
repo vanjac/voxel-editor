@@ -116,7 +116,6 @@ public class PhysicsComponent : MonoBehaviour
                 PhysicsComponent physics = GetComponent<PhysicsComponent>();
                 if (physics != null)
                     volume = physics.volume;
-                volume /= 1000.0f; // because.
                 float archimedesForceMagnitude = water.density * Mathf.Abs(Physics.gravity.y) * volume;
                 localArchimedesForce = new Vector3(0, archimedesForceMagnitude, 0) / voxels.Count;
             }
