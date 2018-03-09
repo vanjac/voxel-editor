@@ -46,6 +46,11 @@ public class NewRigidbodyController : MonoBehaviour
     void FixedUpdate()
     {
         GroundCheck();
+        bool underWater = false;
+        PhysicsComponent physicsComponent = GetComponent<PhysicsComponent>();
+        if (physicsComponent != null)
+            underWater = physicsComponent.underWater;
+
         Vector2 input = new Vector2
         {
             x = CrossPlatformInputManager.GetAxis("Horizontal"),
@@ -54,7 +59,7 @@ public class NewRigidbodyController : MonoBehaviour
 
         if (Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon)
         {
-            float maxSpeed = grounded ? walkSpeed : fallMoveSpeed;
+            float maxSpeed = (grounded && !underWater) ? walkSpeed : fallMoveSpeed;
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = cam.transform.forward*input.y + cam.transform.right*input.x;
             desiredMove = Vector3.ProjectOnPlane(desiredMove, groundContactNormal).normalized;
@@ -65,10 +70,6 @@ public class NewRigidbodyController : MonoBehaviour
             }
         }
 
-        bool underWater = false;
-        PhysicsComponent physicsComponent = GetComponent<PhysicsComponent>();
-        if (physicsComponent != null)
-            underWater = physicsComponent.underWater;
         if (grounded || underWater)
         {
             rigidBody.drag = 5f;
