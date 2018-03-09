@@ -41,7 +41,8 @@ public class GameScripts
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
         MoveBehavior.objectType,
-        SpinBehavior.objectType
+        SpinBehavior.objectType,
+        WaterBehavior.objectType
     };
 
     public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]

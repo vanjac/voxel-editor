@@ -295,6 +295,7 @@
 ./Icons/pulse.png
 ./Icons/soccer.png
 ./Icons/vector-combine.png
+./Icons/water.png
 ./ObjectMarkers
 ./ObjectMarkers/Player.prefab
 ./ObjectPrefabs
