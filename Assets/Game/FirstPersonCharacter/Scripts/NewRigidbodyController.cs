@@ -9,6 +9,7 @@ public class NewRigidbodyController : MonoBehaviour
     public float walkSpeed = 5.0f;
     public float fallMoveSpeed = 3.0f;
     public float jumpForce = 60f;
+    public float swimForce = 70f;
     public AnimationCurve slopeCurveModifier = new AnimationCurve(new Keyframe(-90.0f, 1.0f), new Keyframe(0.0f, 1.0f), new Keyframe(90.0f, 0.0f));
 
     public float groundCheckDistance = 0.1f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
@@ -64,7 +65,11 @@ public class NewRigidbodyController : MonoBehaviour
             }
         }
 
-        if (grounded)
+        bool underWater = false;
+        PhysicsComponent physicsComponent = GetComponent<PhysicsComponent>();
+        if (physicsComponent != null)
+            underWater = physicsComponent.underWater;
+        if (grounded || underWater)
         {
             rigidBody.drag = 5f;
 
@@ -72,7 +77,7 @@ public class NewRigidbodyController : MonoBehaviour
             {
                 rigidBody.drag = 0f;
                 rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0f, rigidBody.velocity.z);
-                rigidBody.AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
+                rigidBody.AddForce(new Vector3(0f, underWater ? swimForce : jumpForce, 0f), ForceMode.Impulse);
                 jumping = true;
             }
 

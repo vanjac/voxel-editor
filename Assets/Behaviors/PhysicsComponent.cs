@@ -53,6 +53,9 @@ public class PhysicsComponent : MonoBehaviour
     public float density;
     public bool gravity;
     public float volume = 1.0f;
+    public bool calculateVolumeAndMass = true;
+
+    public bool underWater;
 
     private const float DAMPFER = 0.1f;
     private const float VOXEL_HALF_HEIGHT = 0.5f;
@@ -81,15 +84,19 @@ public class PhysicsComponent : MonoBehaviour
     void OnEnable()
     {
         SubstanceComponent sComponent = GetComponent<SubstanceComponent>();
-        if (sComponent != null)
-            volume = sComponent.substance.voxels.Count;
-        if (volume == 0)
-            volume = 1;
+        if (calculateVolumeAndMass)
+        {
+            if (sComponent != null)
+                volume = sComponent.substance.voxels.Count;
+            if (volume == 0)
+                volume = 1;
+        }
         Rigidbody rigidBody = GetComponent<Rigidbody>();
         if (rigidBody != null)
         {
             rigidBody.isKinematic = false;
-            rigidBody.mass = volume * density;
+            if (calculateVolumeAndMass)
+                rigidBody.mass = volume * density;
             rigidBody.useGravity = gravity;
         }
     }
@@ -112,10 +119,6 @@ public class PhysicsComponent : MonoBehaviour
             if (water != cWater)
             {
                 water = cWater;
-                float volume = 1.0f; // in voxels
-                PhysicsComponent physics = GetComponent<PhysicsComponent>();
-                if (physics != null)
-                    volume = physics.volume;
                 float archimedesForceMagnitude = water.density * Mathf.Abs(Physics.gravity.y) * volume;
                 localArchimedesForce = new Vector3(0, archimedesForceMagnitude, 0) / voxels.Count;
             }
@@ -150,6 +153,7 @@ public class PhysicsComponent : MonoBehaviour
 
     void FixedUpdate()
     {
+        underWater = false;
         foreach (var point in voxels)
         {
             var wp = transform.TransformPoint(point);
@@ -157,6 +161,7 @@ public class PhysicsComponent : MonoBehaviour
 
             if (wp.y - VOXEL_HALF_HEIGHT < waterLevel)
             {
+                underWater = true;
                 float k = (waterLevel - wp.y) / (2 * VOXEL_HALF_HEIGHT) + 0.5f;
                 if (k > 1)
                 {
