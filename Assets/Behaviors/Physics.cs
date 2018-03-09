@@ -8,7 +8,7 @@ public class PhysicsBehavior : EntityBehavior
         "Physics", "Move and interact according to the laws of physics", "soccer",
         typeof(PhysicsBehavior));
 
-    private float mass = 1.0f;
+    private float density = 0.5f;
     private bool gravity = true;
 
     public override PropertiesObjectType ObjectType()
@@ -20,9 +20,9 @@ public class PhysicsBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Mass",
-                () => mass,
-                v => mass = (float)v,
+            new Property("Density",
+                () => density,
+                v => density = (float)v,
                 PropertyGUIs.Float),
             new Property("Gravity?",
                 () => gravity,
@@ -34,7 +34,7 @@ public class PhysicsBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         PhysicsComponent component = gameObject.AddComponent<PhysicsComponent>();
-        component.mass = mass;
+        component.density = density;
         component.gravity = gravity;
         return component;
     }
@@ -42,8 +42,9 @@ public class PhysicsBehavior : EntityBehavior
 
 public class PhysicsComponent : MonoBehaviour
 {
-    public float mass;
+    public float density;
     public bool gravity;
+    public float volume = 1.0f;
 
     void Start()
     {
@@ -55,18 +56,23 @@ public class PhysicsComponent : MonoBehaviour
 
     void OnEnable()
     {
-        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
+        SubstanceComponent sComponent = GetComponent<SubstanceComponent>();
+        if (sComponent != null)
+            volume = sComponent.substance.voxels.Count;
+        if (volume == 0)
+            volume = 1;
+        Rigidbody rigidBody = GetComponent<Rigidbody>();
         if (rigidBody != null)
         {
             rigidBody.isKinematic = false;
-            rigidBody.mass = mass;
+            rigidBody.mass = volume * density;
             rigidBody.useGravity = gravity;
         }
     }
 
     void OnDisable()
     {
-        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
+        Rigidbody rigidBody = GetComponent<Rigidbody>();
         if (rigidBody != null)
             rigidBody.isKinematic = true;
     }
