@@ -251,6 +251,7 @@ public class MapFileReader
                 RenderSettings.skybox = skybox;
             }
         }
+        DynamicGI.UpdateEnvironment(); // update ambient lighting
         if (lighting["ambientIntensity"] != null)
             RenderSettings.ambientIntensity = lighting["ambientIntensity"].AsFloat;
         if (lighting["sun"] != null)

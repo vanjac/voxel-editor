@@ -18,7 +18,10 @@ public class WorldProperties : PropertiesObject
         {
             new Property("Sky",
                 () => RenderSettings.skybox,
-                v => RenderSettings.skybox = (Material)v,
+                v => {
+                    RenderSettings.skybox = (Material)v;
+                    DynamicGI.UpdateEnvironment(); // update ambient lighting
+                },
                 PropertyGUIs.Material("GameAssets/Skies", "Unlit/Color")),
             new Property("Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
