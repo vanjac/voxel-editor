@@ -36,6 +36,28 @@ public class GameScripts
                 substance.defaultPaint = new VoxelFace();
                 substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("GameAssets/Overlays/water/WaterBasicDaytime");
                 return substance;
+            }),
+        new PropertiesObjectType("Trigger",
+            "Invisible, non-solid block with a touch sensor",
+            "vector-combine",
+            typeof(Substance),
+            () => {
+                Substance substance = new Substance(VoxelArrayEditor.instance);
+                substance.sensor = new TouchSensor();
+                substance.xRay = true;
+                return substance;
+            }),
+        new PropertiesObjectType("Glass",
+            "Solid block of glass",
+            "cube",
+            typeof(Substance),
+            () => {
+                Substance substance = new Substance(VoxelArrayEditor.instance);
+                substance.behaviors.Add(new VisibleBehavior());
+                substance.behaviors.Add(new SolidBehavior());
+                substance.defaultPaint = new VoxelFace();
+                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("GameAssets/Overlays/glass/TranslucentGlassSaftey");
+                return substance;
             })
     };
 
