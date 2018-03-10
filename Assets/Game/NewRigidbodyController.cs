@@ -61,7 +61,8 @@ public class NewRigidbodyController : MonoBehaviour
         {
             float maxSpeed = (grounded && !underWater) ? walkSpeed : fallMoveSpeed;
             // always move along the camera forward as it is the direction that it being aimed at
-            Vector3 desiredMove = cam.transform.forward*input.y + cam.transform.right*input.x;
+            Vector3 desiredMove = Quaternion.AngleAxis(cam.transform.rotation.eulerAngles.y, Vector3.up)
+                * new Vector3(input.x, 0, input.y);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, groundContactNormal).normalized;
             desiredMove *= input.magnitude * maxSpeed;
             if (rigidBody.velocity.sqrMagnitude < (maxSpeed * maxSpeed))
