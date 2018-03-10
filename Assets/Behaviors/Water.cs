@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaterBehavior : EntityBehavior
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Water", "Water",
+        "Water", "Simulates buoyancy for player and physics objects",
         "water", typeof(WaterBehavior));
 
     private float density = 1.0f;
