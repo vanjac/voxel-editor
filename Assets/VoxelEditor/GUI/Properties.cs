@@ -165,7 +165,7 @@ public class PropertyGUIs
                     materialSelector.colorShader = colorShader;
                 materialSelector.handler = (Material mat) =>
                 {
-                    property.value = mat;
+                    property.setter(mat); // skip equality check, it could be the same material with a different color
                 };
             }
         };
