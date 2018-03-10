@@ -146,7 +146,7 @@ public class PhysicsComponent : MonoBehaviour
 
     private float GetWaterLevel(float x, float z)
     {
-        if (water != null)
+        if (water != null && water.enabled)
             return water.waterLevel;
         return float.MinValue;
     }
