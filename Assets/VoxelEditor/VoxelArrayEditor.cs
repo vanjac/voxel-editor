@@ -715,6 +715,8 @@ public class VoxelArrayEditor : VoxelArray
 
     private Voxel CreateSubstanceBlock(Vector3 position, Substance substance, VoxelFace faceTemplate)
     {
+        if (!substance.defaultPaint.IsEmpty())
+            faceTemplate = substance.defaultPaint;
         Voxel voxel = VoxelAt(position, true);
         if (!voxel.IsEmpty())
         {

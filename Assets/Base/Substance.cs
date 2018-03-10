@@ -10,6 +10,7 @@ public class Substance : DynamicEntity
     public HashSet<Voxel> voxels;
 
     public Color highlight = Color.clear;
+    public VoxelFace defaultPaint;
 
     private VoxelArray voxelArray;
 

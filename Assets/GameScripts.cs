@@ -24,6 +24,18 @@ public class GameScripts
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 return substance;
+            }),
+        new PropertiesObjectType("Water",
+            "A block of water that you can swim in",
+            "water",
+            typeof(Substance),
+            () => {
+                Substance substance = new Substance(VoxelArrayEditor.instance);
+                substance.behaviors.Add(new VisibleBehavior());
+                substance.behaviors.Add(new WaterBehavior());
+                substance.defaultPaint = new VoxelFace();
+                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("GameAssets/Overlays/water/WaterBasicDaytime");
+                return substance;
             })
     };
 
