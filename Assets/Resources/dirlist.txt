@@ -231,8 +231,6 @@
 ./GameAssets/Materials/wallpaper/WallpaperStripe.mat
 ./GameAssets/Materials/wallpaper/WallpaperThinBrownStripes.mat
 ./GameAssets/Materials/water
-./GameAssets/Materials/water/WaterBasicDaytime.mat
-./GameAssets/Materials/water/WaterBasicNighttime.mat
 ./GameAssets/Materials/water/WaterDarkBlue.mat
 ./GameAssets/Materials/water/WaterDeep.mat
 ./GameAssets/Materials/water/WaterLightBlue.mat
@@ -274,6 +272,9 @@
 ./GameAssets/Overlays/glass/TranslucentGlassSkyReflection.mat
 ./GameAssets/Overlays/glass/TranslucentGlassTinted.mat
 ./GameAssets/Overlays/glass/TranslucentResinCrushGray.mat
+./GameAssets/Overlays/water
+./GameAssets/Overlays/water/WaterBasicDaytime.mat
+./GameAssets/Overlays/water/WaterBasicNighttime.mat
 ./GameAssets/Skies
 ./GameAssets/Skies/sky5X1.mat
 ./GameAssets/Skies/sky5X2.mat

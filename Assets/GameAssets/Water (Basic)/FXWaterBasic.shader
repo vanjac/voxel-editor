@@ -64,7 +64,11 @@ ENDCG
 
 
 Subshader {
-	Tags { "RenderType"="Opaque" }
+	// make the water transparent and double sided! https://forum.unity.com/threads/transparent-water.46991/
+	Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
+	Blend SrcAlpha OneMinusSrcAlpha
+	ColorMask RGB
+	Cull Off
 	Pass {
 
 CGPROGRAM
