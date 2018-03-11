@@ -63,13 +63,17 @@ Shader "FX/Water (Basic)" {
 		ENDCG
 
 
-			Subshader{
+		Subshader{
 			// make the water transparent and double sided! https://forum.unity.com/threads/transparent-water.46991/
 			Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
-			Blend SrcAlpha OneMinusSrcAlpha
-			ColorMask RGB
-			Cull Off
+
+			// render back, then front to have both sides but not have overlap problems
+			// solution from here: https://docs.unity3d.com/Manual/SL-CullAndDepth.html (Glass Culling section)
+
 			Pass{
+				Blend SrcAlpha OneMinusSrcAlpha
+				ColorMask RGB
+				Cull Front
 
 				CGPROGRAM
 #pragma vertex vert
@@ -96,7 +100,39 @@ Shader "FX/Water (Basic)" {
 					return col;
 				}
 					ENDCG
-			}
+			} // end pass
+
+			Pass{ // copy of above, but with Cull Back
+					Blend SrcAlpha OneMinusSrcAlpha
+					ColorMask RGB
+					Cull Back
+
+					CGPROGRAM
+#pragma vertex vert
+#pragma fragment frag
+#pragma multi_compile_fog
+
+					sampler2D _BumpMap;
+					sampler2D _ColorControl;
+
+					half4 frag(v2f i) : COLOR
+					{
+						half3 bump1 = UnpackNormal(tex2D(_BumpMap, i.bumpuv[0])).rgb;
+						half3 bump2 = UnpackNormal(tex2D(_BumpMap, i.bumpuv[1])).rgb;
+						half3 bump = (bump1 + bump2) * 0.5;
+
+						half fresnel = dot(i.viewDir, bump);
+						half4 water = tex2D(_ColorControl, float2(fresnel, fresnel));
+
+							half4 col;
+						col.rgb = lerp(water.rgb, _horizonColor.rgb, water.a);
+						col.a = _horizonColor.a;
+
+						UNITY_APPLY_FOG(i.fogCoord, col);
+						return col;
+					}
+						ENDCG
+				} // end pass
 		}
 
 }
