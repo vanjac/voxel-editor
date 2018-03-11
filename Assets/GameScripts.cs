@@ -45,6 +45,9 @@ public class GameScripts
                 Substance substance = new Substance(VoxelArrayEditor.instance);
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
+                substance.defaultPaint = new VoxelFace();
+                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"), true);
+                substance.defaultPaint.overlay.color = new Color(0, 0, 1, 0.25f);
                 return substance;
             }),
         new PropertiesObjectType("Glass",
