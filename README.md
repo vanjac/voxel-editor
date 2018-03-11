@@ -4,7 +4,7 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 The app has been tested with Unity 2017.3 on Android. There's no Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly. There are also some prebuilt APKs in the Releases section.
 
-The first scene is `Menu/menuScene`. This is a file selection menu. You can create new files by tapping "New...", open files in the editor by tapping their name in the list, and delete files by tapping the "X" next to their name.
+The first scene is `Menu/menuScene`. This is a file selection menu. You can create new files by tapping "New...", open files in the editor by tapping their name in the list, and delete files by tapping the "X" next to their name. Currently the menu only works correctly on Android.
 
 This will open `VoxelEditor/editScene`. If you open this scene directly from Unity without choosing a map file, it will look for a file called "mapsave".
 
