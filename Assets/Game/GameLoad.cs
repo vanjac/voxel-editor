@@ -5,9 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GameLoad : MonoBehaviour
 {
-    public ReflectionProbe reflectionProbe;
-    private bool firstUpdate = true;
-
     void Start()
     {
         MapFileReader reader = new MapFileReader(SelectedMap.GetSelectedMapName());
@@ -21,11 +18,6 @@ public class GameLoad : MonoBehaviour
 
     void Update()
     {
-        if (firstUpdate)
-        {
-            firstUpdate = false;
-            reflectionProbe.RenderProbe();
-        }
         if (Input.GetButtonDown("Cancel"))
             Close();
     }
