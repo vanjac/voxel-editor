@@ -75,6 +75,8 @@ Hurt/heal (Behavior for DynamicEntity)
     Properties
         Amount
         Rate
+        Min health
+        Max health
 
 Clone (Behavior for DynamicEntity) : once when enabled. clone starts at initial position with initial properties
 
