@@ -21,7 +21,7 @@ Map (Volume)
 
 SENSORS:
 
-Input Delay (Sensor)
+Delay (Sensor)
     Properties
         Input entity
         Turn on time
@@ -38,6 +38,8 @@ In Range (ActivatedSensor)
 Player Look At (Sensor)
 
 Player Use (Sensor)
+    Properties
+        On time
 
 Motion (Sensor)
     Properties
