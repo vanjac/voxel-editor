@@ -368,7 +368,10 @@ public class Voxel : MonoBehaviour
             for (int i = 0; i < materials.Length; i++)
                 if (materials[i] != selectedMaterial)
                     materials[i] = xRayMaterial;
+            gameObject.layer = 8; // XRay layer
         }
+        else
+            gameObject.layer = 0; // default
         renderer.materials = materials;
         MeshCollider meshCollider = GetComponent<MeshCollider>();
         BoxCollider boxCollider = GetComponent<BoxCollider>();

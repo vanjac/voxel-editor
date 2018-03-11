@@ -8,6 +8,7 @@ public class TouchListener : MonoBehaviour
 {
     private const float MAX_ZOOM = 20.0f;
     private const float MIN_ZOOM = .05f;
+    private const int ZOOM_RAY_LAYER_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
 
     public enum TouchOperation
     {
@@ -231,7 +232,7 @@ public class TouchListener : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(avg);
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, ZOOM_RAY_LAYER_MASK))
         {
             float currentDistanceToCamera = (pivot.position - transform.position).magnitude;
             float newDistanceToCamera = (hit.point - transform.position).magnitude;
