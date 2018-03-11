@@ -19,7 +19,7 @@ public class TagPickerGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .25f, height * .15f, width * .5f, height * .7f);
+        return new Rect(width * .25f, height * .25f, width * .5f, height * .5f);
     }
 
     public override void WindowGUI()
@@ -27,11 +27,9 @@ public class TagPickerGUI : GUIPanel
         if (buttonStyle == null)
         {
             buttonStyle = new GUIStyle(GUI.skin.button);
-            buttonStyle.fontSize = (int)(GUI.skin.font.fontSize * 1.6f);
+            buttonStyle.fontSize = GUI.skin.font.fontSize * 2;
         }
-        scroll = GUILayout.BeginScrollView(scroll);
-        int selection = GUILayout.SelectionGrid(-1, tags, 4, buttonStyle);
-        GUILayout.EndScrollView();
+        int selection = GUILayout.SelectionGrid(-1, tags, 4, buttonStyle, GUILayout.ExpandHeight(true));
         if (selection != -1)
         {
             handler((byte)selection);
