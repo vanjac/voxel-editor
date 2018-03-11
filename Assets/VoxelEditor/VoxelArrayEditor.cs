@@ -545,6 +545,7 @@ public class VoxelArrayEditor : VoxelArray
         // HashSets prevent duplicate elements
         var voxelsToUpdate = new HashSet<Voxel>();
         bool createdSubstance = false;
+        bool temporarilyBlockPushingANewSubstance = false;
 
         for (int i = 0; i < selectedThings.Count; i++)
         {
@@ -569,6 +570,8 @@ public class VoxelArrayEditor : VoxelArray
                 newVoxel.faces[oppositeFaceI].addSelected = true;
                 selectedThings.Insert(i, new VoxelFaceReference(newVoxel, oppositeFaceI));
                 i -= 1;
+                // need to move the other substance out of the way first
+                temporarilyBlockPushingANewSubstance = true;
                 continue;
             }
 
@@ -610,7 +613,7 @@ public class VoxelArrayEditor : VoxelArray
                 if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
                     blocked = true;
                 oldVoxel.Clear();
-                if (substanceToCreate != null)
+                if (substanceToCreate != null && !temporarilyBlockPushingANewSubstance)
                     newSubstanceBlock = CreateSubstanceBlock(oldPos, substanceToCreate, movingFace);
             }
             else if (pulling && substanceToCreate != null)
@@ -695,6 +698,9 @@ public class VoxelArrayEditor : VoxelArray
 
             voxelsToUpdate.Add(newVoxel);
             voxelsToUpdate.Add(oldVoxel);
+
+            if (temporarilyBlockPushingANewSubstance)
+                temporarilyBlockPushingANewSubstance = false;
         } // end for each selected face
 
         foreach (Voxel voxel in voxelsToUpdate)
