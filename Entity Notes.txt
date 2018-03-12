@@ -42,9 +42,7 @@ In Range (ActivatedSensor)
 
 Player Look At (Sensor)
 
-Player Use (Sensor)
-    Properties
-        On time
+Tap (Sensor)
 
 Motion (Sensor)
     Properties
