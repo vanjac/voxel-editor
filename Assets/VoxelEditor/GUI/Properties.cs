@@ -96,7 +96,10 @@ public class PropertyGUIs
         string tagString = Entity.TagToString((byte)property.value);
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(tagString, GUI.skin.textField))
+        GUILayout.FlexibleSpace();
+        GUIStyle tagFieldStyle = new GUIStyle(GUI.skin.textField);
+        tagFieldStyle.fontSize = GUI.skin.font.fontSize * 2;
+        if (GUILayout.Button(" " + tagString + " ", tagFieldStyle, GUILayout.ExpandWidth(false)))
         {
             TagPickerGUI picker = GUIPanel.guiGameObject.AddComponent<TagPickerGUI>();
             picker.title = "Change " + property.name;
