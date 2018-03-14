@@ -13,14 +13,12 @@ public class InputThresholdSensor : Sensor
     public struct Input
     {
         public EntityReference entityRef;
-        public sbyte onChange;
-        public sbyte offChange;
+        public bool negative;
 
         public Input(Entity entity)
         {
             entityRef = new EntityReference(entity);
-            onChange = 1;
-            offChange = -1;
+            negative = false;
         }
     }
 
@@ -93,25 +91,18 @@ public class InputThresholdSensor : Sensor
                 inputToDelete = i;
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
             GUIStyle changeGridStyle = new GUIStyle(GUI.skin.button);
             changeGridStyle.padding = new RectOffset(0, 0, 16, 16);
             changeGridStyle.margin = new RectOffset(0, 0, 0, 0);
-            GUIStyle newLabelStyle = new GUIStyle(GUI.skin.label);
-            newLabelStyle.padding = new RectOffset();
-            GUILayout.Label("On: ", newLabelStyle, GUILayout.ExpandWidth(false));
-            sbyte oldOnChange = inputs[i].onChange;
-            inputs[i].onChange = (sbyte)(GUILayout.SelectionGrid(oldOnChange + 1,
-                new string[] { "-1", "0", "+1" }, 3, changeGridStyle) - 1);
-            if (oldOnChange != inputs[i].onChange)
+
+            int negativeNum = inputs[i].negative ? 1 : 0;
+            int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
+                new string[] { "Positive", "Negative" }, 2, changeGridStyle);
+            if (negativeNum != newNegativeNum)
+            {
+                inputs[i].negative = newNegativeNum == 1;
                 copyArray = true;
-            GUILayout.Label("Off: ", newLabelStyle, GUILayout.ExpandWidth(false));
-            sbyte oldOffChange = inputs[i].offChange;
-            inputs[i].offChange = (sbyte)(GUILayout.SelectionGrid(oldOffChange + 1,
-                new string[] { "-1", "0", "+1" }, 3, changeGridStyle) - 1);
-            if (oldOffChange != inputs[i].offChange)
-                copyArray = true;
-            GUILayout.EndHorizontal();
+            }
             GUILayout.EndVertical();
         }
         GUI.color = baseColor;
@@ -136,40 +127,27 @@ public class InputThresholdComponent : SensorComponent
     public InputThresholdSensor.Input[] inputs;
     public float threshold;
 
-    private float value = 0;
-    private bool[] entitiesAreOn;
-
-    void Start()
-    {
-        entitiesAreOn = new bool[inputs.Length];
-        for (int i = 0; i < entitiesAreOn.Length; i++)
-            entitiesAreOn[i] = false;
-    }
+    private bool value = false;
 
     void Update()
     {
+        int energy = 0;
         for (int i = 0; i < inputs.Length; i++)
         {
             Entity e = inputs[i].entityRef.entity;
-            bool isOn = false;
-            if (e != null)
-                isOn = e.component.IsOn();
-            bool wasOn = entitiesAreOn[i];
-            if (isOn && !wasOn)
+            if (e != null && e.component.IsOn())
             {
-                entitiesAreOn[i] = true;
-                value += inputs[i].onChange;
-            }
-            if (!isOn && wasOn)
-            {
-                entitiesAreOn[i] = false;
-                value += inputs[i].offChange;
+                if (inputs[i].negative)
+                    energy--;
+                else
+                    energy++;
             }
         }
+        value = energy >= threshold;
     }
 
     public override bool IsOn()
     {
-        return value >= threshold;
+        return value;
     }
 }
