@@ -150,7 +150,10 @@ public class InputThresholdComponent : SensorComponent
     {
         for (int i = 0; i < inputs.Length; i++)
         {
-            bool isOn = inputs[i].entityRef.entity.component.IsOn();
+            Entity e = inputs[i].entityRef.entity;
+            bool isOn = false;
+            if (e != null)
+                isOn = e.component.IsOn();
             bool wasOn = entitiesAreOn[i];
             if (isOn && !wasOn)
             {
