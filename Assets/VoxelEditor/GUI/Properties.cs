@@ -122,6 +122,42 @@ public class PropertyGUIs
             (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
     }
 
+    public static void EntityReference(Property property)
+    {
+        var reference = (EntityReference)property.value;
+        string valueString = "None";
+
+        Color baseColor = GUI.color;
+        if (reference.entity != null)
+        {
+            EntityReferencePropertyManager.Next(reference.entity);
+            GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
+            valueString = EntityReferencePropertyManager.GetName();
+        }
+
+        GUILayout.BeginHorizontal();
+        AlignedLabel(property);
+        if (GUILayout.Button(valueString, GUI.skin.textField))
+        {
+            EntityPickerGUI picker = GUIPanel.guiGameObject.AddComponent<EntityPickerGUI>();
+            picker.voxelArray = VoxelArrayEditor.instance;
+            picker.allowNone = false;
+            picker.allowMultiple = false;
+            picker.handler = (ICollection<Entity> entities) =>
+            {
+                foreach (Entity entity in entities)
+                {
+                    property.value = new EntityReference(entity);
+                    return;
+                }
+                property.value = null;
+            };
+        }
+        GUILayout.EndHorizontal();
+
+        GUI.color = baseColor;
+    }
+
     public static void Filter(Property property)
     {
         var filter = (ActivatedSensor.Filter)property.value;

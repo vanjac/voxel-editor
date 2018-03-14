@@ -67,9 +67,10 @@ public class GameScripts
     public static PropertiesObjectType[] sensors = new PropertiesObjectType[]
     {
         PropertiesObjectType.NONE,
+        TouchSensor.objectType,
         InputThresholdSensor.objectType,
-        PulseSensor.objectType,
-        TouchSensor.objectType
+        ToggleSensor.objectType,
+        PulseSensor.objectType
     };
 
     public static PropertiesObjectType[] behaviors = new PropertiesObjectType[]
