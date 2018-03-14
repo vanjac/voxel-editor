@@ -70,7 +70,8 @@ public class GameScripts
         TouchSensor.objectType,
         InputThresholdSensor.objectType,
         ToggleSensor.objectType,
-        PulseSensor.objectType
+        PulseSensor.objectType,
+        DelaySensor.objectType
     };
 
     public static PropertiesObjectType[] behaviors = new PropertiesObjectType[]
