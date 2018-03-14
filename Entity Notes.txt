@@ -21,17 +21,6 @@ Map (Volume)
 
 SENSORS:
 
-Delay (Sensor)
-    Properties
-        Input entity
-        Turn on time
-        Turn off time
-
-Toggle (Sensor)
-    Properties
-        On input
-        Off input
-
 Touch (ActivatedSensor)
     Properties
         Min velocity : meters/second
