@@ -51,15 +51,36 @@ public class ToggleComponent : SensorComponent
     public EntityReference offInput;
     public EntityReference onInput;
     public bool value;
+    private bool bothOn = false;
 
     void Update()
     {
+        bool offInputOn = false;
         Entity offEntity = offInput.entity;
-        if (offEntity != null && offEntity.component.IsOn())
-            value = false;
+        if (offEntity != null)
+            offInputOn = offEntity.component.IsOn();
+
+        bool onInputOn = false;
         Entity onEntity = onInput.entity;
-        if (onEntity != null && onEntity.component.IsOn())
-            value = true;
+        if (onEntity != null)
+            onInputOn = onEntity.component.IsOn();
+
+        if (offInputOn && onInputOn)
+        {
+            if (!bothOn)
+            {
+                bothOn = true;
+                value = !value;
+            }
+        }
+        else
+        {
+            bothOn = false;
+            if (offInputOn)
+                value = false;
+            else if (onInputOn)
+                value = true;
+        }
     }
 
     public override bool IsOn()
