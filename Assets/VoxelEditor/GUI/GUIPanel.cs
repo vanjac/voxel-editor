@@ -32,7 +32,7 @@ public abstract class GUIPanel : MonoBehaviour
     protected bool stealFocus = true;
     protected float scaleFactor;
 
-    private Rect panelRect;
+    protected Rect panelRect;
 
     public virtual void OnEnable()
     {
@@ -205,10 +205,18 @@ public abstract class GUIPanel : MonoBehaviour
         return EndButtonGroup(name);
     }
 
-
-    public static bool EndButtonGroup(string name)
+    private static bool EndButtonGroup(string name)
     {
         Rect buttonRect = GUILayoutUtility.GetLastRect();
         return GUI.Button(buttonRect, "", GUIStyle.none);
+    }
+
+    protected void RotateAboutPoint(Vector2 point, float rotation, Vector2 scaleFactor)
+    {
+        Vector2 translation = point + panelRect.min;
+        GUI.matrix *= Matrix4x4.Translate(translation);
+        GUI.matrix *= Matrix4x4.Scale(new Vector3(scaleFactor.x, scaleFactor.y, 1));
+        GUI.matrix *= Matrix4x4.Rotate(Quaternion.Euler(new Vector3(0, 0, rotation)));
+        GUI.matrix *= Matrix4x4.Translate(-translation);
     }
 }

@@ -9,12 +9,9 @@ public class TargetGUI : GUIPanel
     public TargetHandler handler;
     public VoxelArrayEditor voxelArray;
 
-    private Rect windowRect;
-
     public override Rect GetRect(float width, float height)
     {
-        windowRect = new Rect(width * .25f, height * .25f, width * .5f, 0);
-        return windowRect;
+        return new Rect(width * .25f, height * .25f, width * .5f, 0);
     }
 
     public override void WindowGUI()
@@ -103,12 +100,8 @@ public class TargetGUI : GUIPanel
 
     private void DrawCompass(Rect rect, float rotation)
     {
-        // partly copied from PaintGUI
         Matrix4x4 baseMatrix = GUI.matrix;
-        Vector2 translation = rect.center + windowRect.min;
-        GUI.matrix *= Matrix4x4.Translate(translation);
-        GUI.matrix *= Matrix4x4.Rotate(Quaternion.Euler(new Vector3(0, 0, rotation)));
-        GUI.matrix *= Matrix4x4.Translate(-translation);
+        RotateAboutPoint(rect.center, rotation, Vector2.one);
         GUI.DrawTexture(rect, GUIIconSet.instance.compass);
         GUI.matrix = baseMatrix;
     }

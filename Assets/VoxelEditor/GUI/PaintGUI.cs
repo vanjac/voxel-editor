@@ -16,7 +16,6 @@ public class PaintGUI : GUIPanel
     public PaintHandler handler;
     public VoxelFace paint;
 
-    private Rect windowRect;
     private int selectedLayer = 0;
     private MaterialSelectorGUI materialSelector;
 
@@ -25,8 +24,7 @@ public class PaintGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        windowRect = new Rect(width * .15f, height * .05f, width * .7f, height * .9f);
-        return windowRect;
+        return new Rect(width * .15f, height * .05f, width * .7f, height * .9f);
     }
 
     void Start()
@@ -163,17 +161,15 @@ public class PaintGUI : GUIPanel
 
     private void DrawPaint(VoxelFace paint, Rect rect)
     {
-        Matrix4x4 baseMatrix = GUI.matrix;
-        Vector2 translation = rect.center + windowRect.min;
-        GUI.matrix *= Matrix4x4.Translate(translation);
         float rotation = VoxelFace.GetOrientationRotation(paint.orientation) * 90;
+        Vector2 scaleFactor = Vector2.one;
         if (VoxelFace.GetOrientationMirror(paint.orientation))
         {
-            GUI.matrix *= Matrix4x4.Scale(new Vector3(-1, 1, 1));
+            scaleFactor = new Vector2(-1, 1);
             rotation += 90;
         }
-        GUI.matrix *= Matrix4x4.Rotate(Quaternion.Euler(new Vector3(0, 0, rotation)));
-        GUI.matrix *= Matrix4x4.Translate(-translation);
+        Matrix4x4 baseMatrix = GUI.matrix;
+        RotateAboutPoint(rect.center, rotation, scaleFactor);
         MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false);
         MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true);
         GUI.matrix = baseMatrix;
