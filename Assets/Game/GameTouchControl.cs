@@ -9,6 +9,7 @@ public class GameTouchControl : MonoBehaviour
     private Camera cam;
     private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
+    private TapComponent touchedTapComponent;
 
     void OnEnable ()
     {
@@ -26,23 +27,40 @@ public class GameTouchControl : MonoBehaviour
 
     void Update ()
     {
+        if (cam == null)
+            cam = Camera.current; // sometimes null for a few cycles
+        if (cam == null)
+            return; // sometimes null for a few cycles
         bool setAxes = false;
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch touch = Input.GetTouch(i);
             if (touch.phase == TouchPhase.Began && !EventSystem.current.IsPointerOverGameObject(touch.fingerId))
             {
+                if (touchedTapComponent != null)
+                    touchedTapComponent.TapEnd();
                 lookTouchId = touch.fingerId;
+
+                RaycastHit hit;
+                if (Physics.Raycast(cam.ScreenPointToRay(touch.position), out hit))
+                {
+                    TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
+                    if (hitTapComponent != null)
+                    {
+                        touchedTapComponent = hitTapComponent;
+                        touchedTapComponent.TapStart();
+                    }
+                }
             }
             if (touch.fingerId == lookTouchId)
             {
                 setAxes = true;
-                if (cam == null)
-                    cam = Camera.current; // sometimes null for a few cycles
-                if (cam != null)
+                hAxis.Update(touch.deltaPosition.x * 150f / cam.pixelHeight);
+                vAxis.Update(touch.deltaPosition.y * 150f / cam.pixelHeight);
+                if (touch.phase == TouchPhase.Ended && touchedTapComponent != null)
                 {
-                    hAxis.Update(touch.deltaPosition.x * 150f / cam.pixelHeight);
-                    vAxis.Update(touch.deltaPosition.y * 150f / cam.pixelHeight);
+                    touchedTapComponent.TapEnd();
+                    touchedTapComponent = null;
                 }
             }
         }
