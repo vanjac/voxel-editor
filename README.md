@@ -34,15 +34,10 @@ Some of these only appear in certain contexts.
 
 Besides the walls forming the boundaries of the world, there will be different type of objects you can create to add interactivity. Right now, there are only Substances (see above for how to create one) and the Player. You can tap an object to show the Properties panel (swipe left to temporarily hide it).
 
-### Sensors
+### Sensors and Behaviors
 
-Objects are always either On or Off - the state is determined by the object's Sensor. There are multiple types of sensors which can be added to an object:
+Behaviors can be added to an object to affect its behavior in the game. Behaviors will include Visible and Solid, as well as graphical effects, motion, and physics.
 
-- Pulse: turns on and off repeatedly
-- Touch: turns on when touching another object. A Filter can be applied so only certain objects activate the sensor.
-- Threshold: turns on when other specific objects are on, above a certain threshold
-- There will be more
+A single Sensor can be selected for each object. Sensors turn On and Off in response to specific events in the game. These events could include touching another object, interaction with the player, or responses to the On/Off states of other objects.
 
-### Behaviors
-
-Behaviors affect the object's behavior in the game. They can be set to only be active when the sensor is On or Off, or always be active. Behaviors will include Visible and Solid, as well as graphical effects, motion, and physics.
+Behaviors can optionally be set to only be active when the Sensor is On of Off. This system allows complex interactive elements to be built.
