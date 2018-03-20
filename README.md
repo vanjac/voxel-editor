@@ -4,9 +4,9 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 The app has been tested with Unity 2017.3 on Android. There's no Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly. There are also some prebuilt APKs in the Releases section.
 
-The first scene is `Menu/menuScene`. This is a file selection menu. You can create new files by tapping "New...", open files in the editor by tapping their name in the list, and delete files by tapping the "X" next to their name. Currently the menu only works correctly on Android.
+The app starts on the file selection menu (scene: `Menu/menuScene`). You can create new files by tapping "New...", open files by tapping their name in the list, and delete files by tapping the "X" next to their name.
 
-Opening a map will open `VoxelEditor/editScene`. If you open this scene directly from Unity without choosing a map file, it will look for a file called "mapsave".
+> If you are testing in the Unity Editor, The New Map button will not work correctly (because it tries to open the touch keyboard). You can create files manually by copying the template `Menu/default.json` to the [Persistent Data Path](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html) (on Windows: `C:\Users\YOUR NAME\AppData\LocalLow\vantjac\Voxel Editor`). JSON files here will show up in the file menu. If you open the Editor scene (`VoxelEditor/editScene`) directly without first choosing a file, it will look for a file called `mapsave.json`.
 
 ## Editor Interface
 
