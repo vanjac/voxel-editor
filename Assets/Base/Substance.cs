@@ -5,7 +5,8 @@ using UnityEngine;
 public class Substance : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Substance", "An entity made of blocks", "cube-outline", typeof(Substance));
+        "Substance", "An entity made of blocks", "cube-outline", typeof(Substance),
+        () => new Substance(VoxelArrayEditor.instance));
 
     public HashSet<Voxel> voxels;
 

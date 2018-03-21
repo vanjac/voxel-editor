@@ -137,6 +137,18 @@ public class PropertiesObjectType
     {
         return constructor();
     }
+
+    // assumes both objects are the same type and have the same order of properties
+    public static void CopyProperties(PropertiesObject source, PropertiesObject dest)
+    {
+        var sourceEnumerator = source.Properties().GetEnumerator();
+        var destEnumerator = dest.Properties().GetEnumerator();
+        while (sourceEnumerator.MoveNext())
+        {
+            destEnumerator.MoveNext();
+            destEnumerator.Current.setter(sourceEnumerator.Current.value);
+        }
+    }
 }
 
 public interface PropertiesObject
@@ -185,6 +197,21 @@ public abstract class Entity : PropertiesObject
     }
 
     public abstract void InitEntityGameObject();
+
+    public virtual Entity Clone()
+    {
+        var newEntity = (Entity)(ObjectType().Create());
+        PropertiesObjectType.CopyProperties(this, newEntity);
+        newEntity.sensor = (Sensor)(sensor.ObjectType().Create());
+        PropertiesObjectType.CopyProperties(sensor, newEntity.sensor);
+        foreach (var behavior in behaviors)
+        {
+            var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
+            PropertiesObjectType.CopyProperties(behavior, newBehavior);
+            newEntity.behaviors.Add(newBehavior);
+        }
+        return newEntity;
+    }
 }
 
 public abstract class EntityComponent : MonoBehaviour

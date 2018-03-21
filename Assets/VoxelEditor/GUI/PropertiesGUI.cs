@@ -114,6 +114,17 @@ public class PropertiesGUI : GUIPanel
         PropertiesObjectGUI(entity);
         GUILayout.EndVertical();
 
+        if (entity is Substance)
+        {
+            if (!GUILayout.Toggle(true, "Clone", GUI.skin.button))
+            {
+                Substance clone = (Substance)(entity.Clone());
+                voxelArray.substanceToCreate = clone;
+                var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
+                createGUI.voxelArray = voxelArray;
+            }
+        }
+
         if (GUILayout.Button("Change Sensor"))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
