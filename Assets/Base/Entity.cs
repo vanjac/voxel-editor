@@ -222,11 +222,18 @@ public abstract class EntityComponent : MonoBehaviour
         {
             Behaviour c = behavior.MakeComponent(gameObject);
             if (behavior.condition == EntityBehavior.Condition.OFF)
+            {
                 offComponents.Add(c);
+                c.enabled = true;
+            }
             else if (behavior.condition == EntityBehavior.Condition.ON)
             {
                 onComponents.Add(c);
                 c.enabled = false;
+            }
+            else
+            {
+                c.enabled = true;
             }
         }
     }
