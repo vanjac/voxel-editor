@@ -70,10 +70,6 @@ Hurt/heal (Behavior for DynamicEntity)
 
 Clone (Behavior for DynamicEntity) : once when enabled. clone starts at initial position with initial properties
 
-Teleport (Behavior for DynamicEntity)
-    Properties
-        1 or 2 target entities : With 2 entities, move the relative distance between them
-
 Physics (Behavior for DynamicEntity with Solid)
     Properties
         [physics parameters]
@@ -95,7 +91,7 @@ MotionBehavior (abstract Behavior for DynamicEntity) : different objects will ac
     Properties
         Speed : meters/second
 
-Move With (MotionBehavior) : like parenting
+Move With (MotionBehavior) : like parenting (use LateUpdate)
     Properties
         Entity
 
