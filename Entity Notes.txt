@@ -31,8 +31,6 @@ In Range (ActivatedSensor)
 
 Player Look At (Sensor)
 
-Tap (Sensor)
-
 Motion (Sensor)
     Properties
         Min velocity : meters/second
