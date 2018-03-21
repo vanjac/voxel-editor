@@ -202,8 +202,14 @@ public abstract class Entity : PropertiesObject
     {
         var newEntity = (Entity)(ObjectType().Create());
         PropertiesObjectType.CopyProperties(this, newEntity);
-        newEntity.sensor = (Sensor)(sensor.ObjectType().Create());
-        PropertiesObjectType.CopyProperties(sensor, newEntity.sensor);
+        if (sensor != null)
+        {
+            newEntity.sensor = (Sensor)(sensor.ObjectType().Create());
+            PropertiesObjectType.CopyProperties(sensor, newEntity.sensor);
+        }
+        else
+            newEntity.sensor = null; // in case the Object Type had a default sensor
+        newEntity.behaviors.Clear(); // in case the Object Type had default behaviors
         foreach (var behavior in behaviors)
         {
             var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
