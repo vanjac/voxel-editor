@@ -82,6 +82,7 @@ public class GameScripts
         PhysicsBehavior.objectType,
         MoveBehavior.objectType,
         SpinBehavior.objectType,
+        TeleportBehavior.objectType,
         WaterBehavior.objectType
     };
 

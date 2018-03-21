@@ -72,6 +72,12 @@ public class EntityReferencePropertyManager : MonoBehaviour
         targetEntities.Clear();
     }
 
+    // TODO: delete this when it is no longer needed
+    public static Entity CurrentEntity()
+    {
+        return currentEntity;
+    }
+
     public static void Next(Entity entity)
     {
         targetEntities.Add(entity);
