@@ -85,6 +85,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static Color GetColor()
     {
+        if (targetEntities[targetEntities.Count - 1] == currentEntity)
+            return Color.white;
         return ColorI(targetEntities.Count - 1);
     }
 
