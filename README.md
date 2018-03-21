@@ -33,7 +33,7 @@ Some of these only appear in certain contexts.
 ## Paint
 Using the Paint interface, faces can be painted with a Material and an Overlay. Materials are opaque, and Overlays are transparent and drawn on top of Materials. Both offer a selection of textures as well as solid colors. The paint can also be rotated and flipped.
 
-A special material is the "Sky" material. This provides a window into the sky -- since a map can't have any holes in it, this is the only way to see the sky.
+A special material is the "Sky" material. This provides a window into the sky -- since a map can't have any holes in it, this is the only way to see the sky. An interesting property of the Sky material is that it blocks everything behind it, giving you an unobstructed view of the sky.
 
 ## Objects
 
