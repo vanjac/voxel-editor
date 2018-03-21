@@ -139,14 +139,33 @@ public class PropertiesObjectType
     }
 
     // assumes both objects are the same type and have the same order of properties
-    public static void CopyProperties(PropertiesObject source, PropertiesObject dest)
+    public static void CopyProperties(PropertiesObject source, PropertiesObject dest,
+        Entity findEntity=null, Entity replaceEntity=null)
     {
         var sourceEnumerator = source.Properties().GetEnumerator();
         var destEnumerator = dest.Properties().GetEnumerator();
         while (sourceEnumerator.MoveNext())
         {
             destEnumerator.MoveNext();
-            destEnumerator.Current.setter(sourceEnumerator.Current.value);
+            var value = sourceEnumerator.Current.value;
+
+            if (findEntity != null)
+            {
+                // change "Self" references...
+                if (value is EntityReference)
+                {
+                    if (((EntityReference)value).entity == findEntity)
+                        value = new EntityReference(replaceEntity);
+                }
+                else if (value is Target)
+                {
+                    if (((Target)value).entityRef.entity == findEntity)
+                        value = new Target(replaceEntity);
+                }
+
+            }
+
+            destEnumerator.Current.setter(value);
         }
     }
 }
@@ -201,11 +220,11 @@ public abstract class Entity : PropertiesObject
     public virtual Entity Clone()
     {
         var newEntity = (Entity)(ObjectType().Create());
-        PropertiesObjectType.CopyProperties(this, newEntity);
+        PropertiesObjectType.CopyProperties(this, newEntity, this, newEntity);
         if (sensor != null)
         {
             newEntity.sensor = (Sensor)(sensor.ObjectType().Create());
-            PropertiesObjectType.CopyProperties(sensor, newEntity.sensor);
+            PropertiesObjectType.CopyProperties(sensor, newEntity.sensor, this, newEntity);
         }
         else
             newEntity.sensor = null; // in case the Object Type had a default sensor
@@ -213,7 +232,7 @@ public abstract class Entity : PropertiesObject
         foreach (var behavior in behaviors)
         {
             var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
-            PropertiesObjectType.CopyProperties(behavior, newBehavior);
+            PropertiesObjectType.CopyProperties(behavior, newBehavior, this, newEntity);
             newEntity.behaviors.Add(newBehavior);
         }
         return newEntity;
