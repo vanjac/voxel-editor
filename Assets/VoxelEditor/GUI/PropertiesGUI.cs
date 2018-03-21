@@ -119,6 +119,9 @@ public class PropertiesGUI : GUIPanel
             if (!GUILayout.Toggle(true, "Clone", GUI.skin.button))
             {
                 Substance clone = (Substance)(entity.Clone());
+                clone.defaultPaint = voxelArray.GetSelectedPaint();
+                clone.defaultPaint.addSelected = false;
+                clone.defaultPaint.storedSelected = false;
                 voxelArray.substanceToCreate = clone;
                 var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
                 createGUI.voxelArray = voxelArray;
