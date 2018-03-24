@@ -36,11 +36,12 @@ public class PlayerObject : ObjectEntity
         playerObject.transform.position = position + new Vector3(0.5f, 0.0f, 0.5f);
         PlayerComponent component = playerObject.AddComponent<PlayerComponent>();
         component.entity = this;
+        component.health = health;
         this.component = component;
     }
 }
 
-public class PlayerComponent : EntityComponent
+public class PlayerComponent : DynamicEntityComponent
 {
 
 }

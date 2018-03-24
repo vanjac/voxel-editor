@@ -19,6 +19,16 @@ public struct EntityReference
             return _entity;
         }
     }
+    public EntityComponent component
+    {
+        get
+        {
+            Entity e = entity;
+            if (e != null)
+                return e.component;
+            return null;
+        }
+    }
 
     private static Dictionary<Guid, Entity> existingEntityIds = new Dictionary<Guid,Entity>();
     private static Dictionary<Entity, Guid> entityIds = new Dictionary<Entity,Guid>();
@@ -74,7 +84,12 @@ public struct Target
         if (entityRef.entity == null)
             return Voxel.DirectionForFaceI(direction);
         else
-            return (entityRef.entity.component.transform.position - point).normalized;
+        {
+            EntityComponent c = entityRef.component;
+            if(c != null)
+                return (c.transform.position - point).normalized;
+            return Vector3.zero;
+        }
     }
 
     public override string ToString()

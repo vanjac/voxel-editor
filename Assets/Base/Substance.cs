@@ -33,6 +33,7 @@ public class Substance : DynamicEntity
         SubstanceComponent component = substanceObject.AddComponent<SubstanceComponent>();
         component.entity = this;
         component.substance = this;
+        component.health = health;
         this.component = component;
     }
 
@@ -68,7 +69,7 @@ public class Substance : DynamicEntity
     }
 }
 
-public class SubstanceComponent : EntityComponent
+public class SubstanceComponent : DynamicEntityComponent
 {
     public Substance substance;
 

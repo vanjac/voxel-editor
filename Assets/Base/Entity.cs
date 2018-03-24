@@ -402,3 +402,28 @@ public abstract class DynamicEntity : Entity
 
     public virtual void UpdateEntity() { }
 }
+
+public abstract class DynamicEntityComponent : EntityComponent
+{
+    public float health;
+
+    public void Hurt(float amount)
+    {
+        health -= amount;
+        if (health <= 0)
+        {
+            health = 0;
+            Die();
+        }
+    }
+
+    public void Heal(float amount)
+    {
+        health += amount;
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+}

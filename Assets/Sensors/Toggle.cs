@@ -56,14 +56,14 @@ public class ToggleComponent : SensorComponent
     void Update()
     {
         bool offInputOn = false;
-        Entity offEntity = offInput.entity;
+        EntityComponent offEntity = offInput.component;
         if (offEntity != null)
-            offInputOn = offEntity.component.IsOn();
+            offInputOn = offEntity.IsOn();
 
         bool onInputOn = false;
-        Entity onEntity = onInput.entity;
+        EntityComponent onEntity = onInput.component;
         if (onEntity != null)
-            onInputOn = onEntity.component.IsOn();
+            onInputOn = onEntity.IsOn();
 
         if (offInputOn && onInputOn)
         {

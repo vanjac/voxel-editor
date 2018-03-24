@@ -66,13 +66,13 @@ public class TeleportComponent : MonoBehaviour
     {
         if (!started)
             return;
-        if (target.entity == null || target.entity.component == null)
+        if (target.component == null)
             return;
         Vector3 originPos;
-        if (origin.entity != null && origin.entity.component != null)
-            originPos = origin.entity.component.transform.position;
+        if (origin.component != null)
+            originPos = origin.component.transform.position;
         else
             originPos = transform.position;
-        transform.position += target.entity.component.transform.position - originPos;
+        transform.position += target.component.transform.position - originPos;
     }
 }

@@ -83,6 +83,7 @@ public class GameScripts
         MoveBehavior.objectType,
         SpinBehavior.objectType,
         TeleportBehavior.objectType,
+        HurtHealBehavior.objectType,
         WaterBehavior.objectType
     };
 

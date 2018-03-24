@@ -65,9 +65,9 @@ public class DelayComponent : SensorComponent
     void Update()
     {
         bool inputOn = false;
-        Entity inputEntity = input.entity;
+        EntityComponent inputEntity = input.component;
         if (inputEntity != null)
-            inputOn = inputEntity.component.IsOn();
+            inputOn = inputEntity.IsOn();
         switch (state)
         {
             case DelayState.OFF:

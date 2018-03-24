@@ -8,6 +8,7 @@ TagManager:
   - VoxelArray
   - MoveAxis
   - ObjectMarker
+  - DeathCamera
   layers:
   - Default
   - TransparentFX
