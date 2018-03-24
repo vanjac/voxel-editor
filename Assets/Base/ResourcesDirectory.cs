@@ -46,6 +46,8 @@ public class ResourcesDirectory
             material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
             material.renderQueue = 3000;
         }
+        if (shader.name == "Standard")
+            material.SetFloat("_Glossiness", 0.2f);
         return material;
     }
 
