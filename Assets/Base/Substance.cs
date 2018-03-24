@@ -37,6 +37,11 @@ public class Substance : DynamicEntity
         this.component = component;
     }
 
+    public override bool AliveInEditor()
+    {
+        return voxels.Count != 0;
+    }
+
     // called by voxel
     public void AddVoxel(Voxel v)
     {

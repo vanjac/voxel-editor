@@ -217,6 +217,8 @@ public abstract class Entity : PropertiesObject
 
     public abstract void InitEntityGameObject();
 
+    public abstract bool AliveInEditor();
+
     public virtual Entity Clone()
     {
         var newEntity = (Entity)(ObjectType().Create());

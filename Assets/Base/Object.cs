@@ -24,5 +24,10 @@ public abstract class ObjectEntity : DynamicEntity
         }
     }
 
+    public override bool AliveInEditor()
+    {
+        return marker != null;
+    }
+
     public abstract void InitObjectMarker();
 }

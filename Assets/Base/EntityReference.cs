@@ -30,8 +30,12 @@ public class EntityReference
             }
 
             Entity target = (Entity)(entityWeakRef.Target);
-            if (target == null)
+            if (target == null || !target.AliveInEditor())
+            {
                 guid = Guid.Empty;
+                entityWeakRef = null;
+                return null;
+            }
             return target;
         }
     }
