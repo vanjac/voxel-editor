@@ -193,7 +193,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         ClearSelection();
         FaceSelectFloodFill(voxel, faceI, voxel.substance);
-        if(SomethingIsSelected())
+        if (SomethingIsSelected())
             SetMoveAxesEnabled(true);
     }
 
@@ -717,6 +717,8 @@ public class VoxelArrayEditor : VoxelArray
 
         if (substanceToCreate != null && createdSubstance)
             substanceToCreate = null;
+
+        SetMoveAxesEnabled(SomethingIsSelected());
     } // end Adjust()
 
     private Voxel CreateSubstanceBlock(Vector3 position, Substance substance, VoxelFace faceTemplate)
