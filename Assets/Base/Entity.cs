@@ -187,6 +187,8 @@ public abstract class Entity : PropertiesObject
     public byte tag = 0;
     public const byte NUM_TAGS = 8;
 
+    public Guid guid = Guid.Empty; // set by EntityReference
+
     public static string TagToString(byte tag)
     {
         // interesting unicode symbols start at U+25A0

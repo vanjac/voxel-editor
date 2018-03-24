@@ -51,6 +51,8 @@ public class MapFileReader
         }
         fileWriterVersion = root["writerVersion"].AsInt;
 
+        EntityReference.ResetEntityIds();
+
         if (editor && cameraPivot != null)
         {
             if (root["camera"]["pan"] != null)

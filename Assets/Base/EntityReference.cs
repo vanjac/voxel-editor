@@ -51,7 +51,6 @@ public class EntityReference
     }
 
     private static Dictionary<Guid, WeakReference> existingEntityIds = new Dictionary<Guid, WeakReference>();
-    private static Dictionary<int, Guid> entityIds = new Dictionary<int, Guid>(); // maps hash code to Guid
 
     EntityReference() { } // deserialization
 
@@ -64,29 +63,26 @@ public class EntityReference
         }
         else
         {
-            int hash = entity.GetHashCode();
-            if (!entityIds.ContainsKey(hash))
-            {
-                guid = Guid.NewGuid();
-                entityIds[hash] = guid;
-            }
-            else
-            {
-                guid = entityIds[hash];
-            }
+            if (entity.guid == Guid.Empty)
+                entity.guid = Guid.NewGuid();
+            guid = entity.guid;
             entityWeakRef = new WeakReference(entity);
-            entity = null;
         }
     }
 
-    public static bool EntityHasId(Entity entity)
+    public static void ResetEntityIds()
     {
-        return entityIds.ContainsKey(entity.GetHashCode());
+        existingEntityIds.Clear();
     }
 
     public static void AddExistingEntityId(Entity entity, Guid guid)
     {
-        entityIds[entity.GetHashCode()] = guid;
+        if (existingEntityIds.ContainsKey(guid))
+        {
+            Debug.Log("ERROR: 2 entities have the same GUID! " + guid);
+            return;
+        }
+        entity.guid = guid;
         existingEntityIds[guid] = new WeakReference(entity);
     }
 }

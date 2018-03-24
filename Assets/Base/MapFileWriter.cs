@@ -127,8 +127,8 @@ public class MapFileWriter
             entityObject["behaviors"] = behaviorsArray;
         }
 
-        if (EntityReference.EntityHasId(entity))
-            entityObject["id"] = new EntityReference(entity).guid.ToString(); // can be referenced by EntityReference properties
+        if (entity.guid != System.Guid.Empty)
+            entityObject["id"] = entity.guid.ToString(); // can be referenced by EntityReference properties
 
         return entityObject;
     }
