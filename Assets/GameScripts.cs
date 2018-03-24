@@ -61,6 +61,22 @@ public class GameScripts
                 substance.defaultPaint = new VoxelFace();
                 substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("GameAssets/Overlays/glass/TranslucentGlassSaftey");
                 return substance;
+            }),
+        new PropertiesObjectType("Neuron",
+            "Logic component",
+            "thought-bubble",
+            typeof(Substance),
+            () => {
+                Substance substance = new Substance(VoxelArrayEditor.instance);
+                substance.sensor = new InputThresholdSensor();
+                EntityBehavior visible = new VisibleBehavior();
+                visible.condition = EntityBehavior.Condition.ON;
+                substance.behaviors.Add(visible);
+                substance.behaviors.Add(new SolidBehavior());
+                substance.defaultPaint = new VoxelFace();
+                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"), true);
+                substance.defaultPaint.overlay.color = new Color(.09f, .38f, .87f, .8f);
+                return substance;
             })
     };
 
