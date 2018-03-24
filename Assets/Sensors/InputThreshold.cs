@@ -81,7 +81,10 @@ public class InputThresholdSensor : Sensor
         Color baseColor = GUI.color;
         for (int i = 0; i < inputs.Length; i++)
         {
-            EntityReferencePropertyManager.Next(inputs[i].entityRef.entity);
+            Entity e = inputs[i].entityRef.entity;
+            if (e == null)
+                inputToDelete = i;
+            EntityReferencePropertyManager.Next(e);
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
             GUILayout.BeginVertical(GUI.skin.box);
             GUILayout.BeginHorizontal();

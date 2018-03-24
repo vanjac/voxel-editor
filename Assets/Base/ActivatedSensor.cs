@@ -30,7 +30,10 @@ public abstract class ActivatedSensor : Sensor
 
         public override string ToString()
         {
-            return entityRef.entity.ToString();
+            Entity e = entityRef.entity;
+            if (e == null)
+                return "None";
+            return e.ToString();
         }
     }
 

@@ -168,9 +168,13 @@ public class PropertyGUIs
         ActivatedSensor.EntityFilter entityFilter = filter as ActivatedSensor.EntityFilter;
         if (entityFilter != null)
         {
-            EntityReferencePropertyManager.Next(entityFilter.entityRef.entity);
-            GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
-            filterString = EntityReferencePropertyManager.GetName();
+            Entity e = entityFilter.entityRef.entity;
+            if (e != null)
+            {
+                EntityReferencePropertyManager.Next(e);
+                GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
+                filterString = EntityReferencePropertyManager.GetName();
+            }
         }
 
         GUILayout.BeginHorizontal();

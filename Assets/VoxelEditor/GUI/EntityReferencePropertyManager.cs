@@ -25,6 +25,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
         void Start()
         {
+            if (sourceEntity == null || targetEntity == null)
+                return;
             Color color = ColorI(i);
             LineRenderer line = gameObject.AddComponent<LineRenderer>();
             line.startWidth = line.endWidth = 0.1f;
@@ -91,7 +93,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static Color GetColor()
     {
-        if (targetEntities[targetEntities.Count - 1] == currentEntity)
+        if (targetEntities[targetEntities.Count - 1] == currentEntity
+                || targetEntities[targetEntities.Count - 1] == null)
             return Color.white;
         return ColorI(targetEntities.Count - 1);
     }
@@ -106,6 +109,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
         Entity entity = targetEntities[targetEntities.Count - 1];
         if (entity == currentEntity)
             return "Self";
+        if (entity == null)
+            return "None";
         return entity.ToString();
     }
 
