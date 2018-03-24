@@ -5,22 +5,34 @@ using System.Xml.Serialization;
 using UnityEngine;
 
 // allows properties that reference entities to be serialized
-public struct EntityReference
+public class EntityReference
 {
     [XmlIgnore]
-    private Entity _entity;
-    public readonly Guid guid;
+    private WeakReference entityWeakRef;
+    public Guid guid;
     public Entity entity
     {
         get
         {
-            if (_entity == null && guid != Guid.Empty) // this happens when the reference is deserialized
+            if (guid == Guid.Empty)
+                return null;
+            else if (entityWeakRef == null) // this happens when the reference is deserialized
+            {
                 try
                 {
-                    _entity = existingEntityIds[guid];
+                    entityWeakRef = existingEntityIds[guid];
                 }
-                catch (KeyNotFoundException) { }
-            return _entity;
+                catch (KeyNotFoundException)
+                {
+                    guid = Guid.Empty;
+                    return null;
+                }
+            }
+
+            Entity target = (Entity)(entityWeakRef.Target);
+            if (target == null)
+                guid = Guid.Empty;
+            return target;
         }
     }
     public EntityComponent component
@@ -34,34 +46,44 @@ public struct EntityReference
         }
     }
 
-    private static Dictionary<Guid, Entity> existingEntityIds = new Dictionary<Guid,Entity>();
-    private static Dictionary<Entity, Guid> entityIds = new Dictionary<Entity,Guid>();
+    private static Dictionary<Guid, WeakReference> existingEntityIds = new Dictionary<Guid, WeakReference>();
+    private static Dictionary<int, Guid> entityIds = new Dictionary<int, Guid>(); // maps hash code to Guid
+
+    EntityReference() { } // deserialization
 
     public EntityReference(Entity entity)
     {
-        _entity = entity;
         if (entity == null)
-            guid = Guid.Empty;
-        else if (!entityIds.ContainsKey(entity))
         {
-            guid = Guid.NewGuid();
-            entityIds[entity] = guid;
+            guid = Guid.Empty;
+            entityWeakRef = null;
         }
         else
         {
-            guid = entityIds[entity];
+            int hash = entity.GetHashCode();
+            if (!entityIds.ContainsKey(hash))
+            {
+                guid = Guid.NewGuid();
+                entityIds[hash] = guid;
+            }
+            else
+            {
+                guid = entityIds[hash];
+            }
+            entityWeakRef = new WeakReference(entity);
+            entity = null;
         }
     }
 
     public static bool EntityHasId(Entity entity)
     {
-        return entityIds.ContainsKey(entity);
+        return entityIds.ContainsKey(entity.GetHashCode());
     }
 
     public static void AddExistingEntityId(Entity entity, Guid guid)
     {
-        entityIds[entity] = guid;
-        existingEntityIds[guid] = entity;
+        entityIds[entity.GetHashCode()] = guid;
+        existingEntityIds[guid] = new WeakReference(entity);
     }
 }
 
