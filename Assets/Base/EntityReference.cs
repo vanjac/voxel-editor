@@ -15,7 +15,11 @@ public struct EntityReference
         get
         {
             if (_entity == null && guid != Guid.Empty) // this happens when the reference is deserialized
-                _entity = existingEntityIds[guid];
+                try
+                {
+                    _entity = existingEntityIds[guid];
+                }
+                catch (KeyNotFoundException) { }
             return _entity;
         }
     }
