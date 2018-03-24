@@ -19,7 +19,7 @@ public class ColorPickerGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(height * .55f, height * .1f, width * .4f, 0);
+        return new Rect(height * .55f, height * .1f, width * .5f, 0);
     }
 
     public void SetColor(Color c)
@@ -93,15 +93,14 @@ public class ColorPickerGUI : GUIPanel
         GUILayout.BeginHorizontal();
 
         GUILayout.BeginVertical();
-        GUILayout.Label("Hue:");
         hue = GUILayout.HorizontalSlider(hue, 0, 1, hueSliderStyle, GUI.skin.horizontalSliderThumb);
-        GUILayout.Label("Saturation:");
+        GUILayout.Space(40);
         saturation = GUILayout.HorizontalSlider(saturation, 0, 1, saturationSliderStyle, GUI.skin.horizontalSliderThumb);
-        GUILayout.Label("Brightness:");
+        GUILayout.Space(40);
         value = GUILayout.HorizontalSlider(value, 0, 1, valueSliderStyle, GUI.skin.horizontalSliderThumb);
         if (includeAlpha)
         {
-            GUILayout.Label("Transparency:");
+            GUILayout.Space(40);
             color.a = 1 - GUILayout.HorizontalSlider(1 - color.a, 0, 1, alphaSliderStyle, GUI.skin.horizontalSliderThumb);
         }
         GUILayout.EndVertical();
