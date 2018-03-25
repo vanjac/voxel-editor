@@ -61,13 +61,6 @@ Behavior (abstract PropertiesObject)
         Condition: On/Off/Both
         Optionally apply behavior to another entity instead, or whichever entities activated the ActivatedSensor
 
-Hurt/heal (Behavior for DynamicEntity)
-    Properties
-        Amount
-        Rate
-        Min health
-        Max health
-
 Clone (Behavior for DynamicEntity) : once when enabled. clone starts at initial position with initial properties
 
 Physics (Behavior for DynamicEntity with Solid)
