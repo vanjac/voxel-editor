@@ -43,6 +43,9 @@ public class PaintGUI : GUIPanel
         recentPaints.Insert(0, paint);
         while (recentPaints.Count > NUM_RECENT_PAINTS)
             recentPaints.RemoveAt(recentPaints.Count - 1);
+
+        if (materialSelector != null)
+            Destroy(materialSelector);
     }
 
     public override void WindowGUI()
