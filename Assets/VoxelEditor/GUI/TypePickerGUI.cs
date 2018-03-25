@@ -16,7 +16,7 @@ public class TypePickerGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        GUILayout.BeginScrollView(scroll);
+        scroll = GUILayout.BeginScrollView(scroll);
         for (int i = 0; i < items.Length; i++)
         {
             PropertiesObjectType item = items[i];
