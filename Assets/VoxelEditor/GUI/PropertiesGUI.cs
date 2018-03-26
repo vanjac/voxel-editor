@@ -145,27 +145,36 @@ public class PropertiesGUI : GUIPanel
 
         if (GUILayout.Button("Add Behavior"))
         {
-            TypePickerGUI behaviorMenu = gameObject.AddComponent<TypePickerGUI>();
+            NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
             behaviorMenu.title = "Add Behavior";
-            behaviorMenu.items = GameScripts.behaviors;
-            behaviorMenu.handler = (PropertiesObjectType type) =>
+            behaviorMenu.voxelArray = voxelArray;
+            behaviorMenu.handler = (EntityBehavior newBehavior) =>
             {
-                EntityBehavior newBehavior = (EntityBehavior)type.Create();
                 entity.behaviors.Add(newBehavior);
                 voxelArray.unsavedChanges = true;
                 scrollVelocity = new Vector2(0, 2000 * entity.behaviors.Count); // scroll to bottom
             };
         }
 
+        Color guiBaseColor = GUI.backgroundColor;
         EntityBehavior behaviorToRemove = null;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
+            string suffix = " Behavior";
+            if (behavior.targetEntity.entity != null)
+            {
+                EntityReferencePropertyManager.Next(behavior.targetEntity.entity);
+                suffix += "\n➜  " + EntityReferencePropertyManager.GetName();
+                GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
+            }
             GUILayout.BeginVertical(GUI.skin.box);
-            PropertiesObjectGUI(behavior, " Behavior");
+            GUI.backgroundColor = guiBaseColor;
+            PropertiesObjectGUI(behavior, suffix);
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
         }
+
         if (behaviorToRemove != null)
         {
             entity.behaviors.Remove(behaviorToRemove);
@@ -211,5 +220,80 @@ public class PropertiesGUI : GUIPanel
             };
             prop.gui(wrappedProp);
         }
+    }
+}
+
+
+public class NewBehaviorGUI : GUIPanel
+{
+    public delegate void BehaviorHandler(EntityBehavior behavior);
+    public BehaviorHandler handler;
+    public VoxelArrayEditor voxelArray;
+
+    private TypePickerGUI typePicker;
+    private EntityPickerGUI entityPicker;
+    private Entity targetEntity;
+
+    public override Rect GetRect(float width, float height)
+    {
+        if (entityPicker != null)
+            // move panel offscreen
+            return new Rect(width, height, width * .5f, height * .8f);
+        else
+            return new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
+    }
+
+    void Start()
+    {
+        typePicker = gameObject.AddComponent<TypePickerGUI>();
+        typePicker.items = GameScripts.behaviors;
+        typePicker.handler = (PropertiesObjectType type) =>
+        {
+            EntityBehavior behavior = (EntityBehavior)type.Create();
+            if (targetEntity != null)
+                behavior.targetEntity = new EntityReference(targetEntity);
+            handler(behavior);
+            Destroy(this);
+        };
+        typePicker.enabled = false;
+    }
+
+    void OnDestroy()
+    {
+        if (typePicker != null)
+            Destroy(typePicker);
+    }
+
+    public override void WindowGUI()
+    {
+        string targetButtonText = "Target...";
+        if (targetEntity != null)
+            targetButtonText = "Target:  " + targetEntity.ToString();
+        if (!GUILayout.Toggle(true, targetButtonText, GUI.skin.button))
+        {
+            entityPicker = gameObject.AddComponent<EntityPickerGUI>();
+            entityPicker.voxelArray = voxelArray;
+            entityPicker.allowNone = true;
+            entityPicker.allowMultiple = false;
+            entityPicker.handler = (ICollection<Entity> entities) =>
+            {
+                entityPicker = null;
+                foreach (Entity entity in entities)
+                {
+                    targetEntity = entity;
+                    return;
+                }
+                targetEntity = null;
+            };
+        }
+        if (typePicker != null)
+        {
+            typePicker.scroll = scroll;
+            typePicker.WindowGUI();
+            scroll = typePicker.scroll;
+        }
+
+        // prevent panel from closing when entity picker closes
+        holdOpen = entityPicker != null;
     }
 }

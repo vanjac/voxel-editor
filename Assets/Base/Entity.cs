@@ -337,7 +337,7 @@ public abstract class EntityBehavior : PropertiesObject
     }
 
     public Condition condition = Condition.BOTH;
-    public Entity targetEntity = null; // null for self
+    public EntityReference targetEntity = new EntityReference(null); // null for self
     public bool targetEntityIsActivator = false;
 
     public virtual PropertiesObjectType ObjectType()
