@@ -164,7 +164,7 @@ public class PropertiesGUI : GUIPanel
             if (behavior.targetEntity.entity != null)
             {
                 EntityReferencePropertyManager.Next(behavior.targetEntity.entity);
-                suffix += "\n➜  " + EntityReferencePropertyManager.GetName();
+                suffix += "\n▶  " + EntityReferencePropertyManager.GetName();
                 GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
             }
             GUILayout.BeginVertical(GUI.skin.box);
