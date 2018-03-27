@@ -70,6 +70,19 @@ public class EntityReference
         }
     }
 
+    public EntityReference(Guid guid)
+    {
+        try
+        {
+            entityWeakRef = existingEntityIds[guid];
+            this.guid = guid;
+        }
+        catch (KeyNotFoundException)
+        {
+            this.guid = Guid.Empty;
+        }
+    }
+
     public static void ResetEntityIds()
     {
         existingEntityIds.Clear();
