@@ -250,6 +250,7 @@ public abstract class EntityComponent : MonoBehaviour
 
     private List<Behaviour> offComponents = new List<Behaviour>();
     private List<Behaviour> onComponents = new List<Behaviour>();
+    private List<Behaviour> targetedComponents = new List<Behaviour>();
 
     private SensorComponent sensorComponent;
     private bool sensorWasOn;
@@ -277,10 +278,16 @@ public abstract class EntityComponent : MonoBehaviour
         sensorWasOn = false;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
-            GameObject targetGameObject = gameObject;
+            Behaviour c;
             if (behavior.targetEntity.entity != null)
-                targetGameObject = behavior.targetEntity.entity.component.gameObject;
-            Behaviour c = behavior.MakeComponent(targetGameObject);
+            {
+                c = behavior.MakeComponent(behavior.targetEntity.entity.component.gameObject);
+                targetedComponents.Add(c);
+            }
+            else
+            {
+                c = behavior.MakeComponent(gameObject);
+            }
             if (behavior.condition == EntityBehavior.Condition.OFF)
             {
                 offComponents.Add(c);
@@ -324,6 +331,12 @@ public abstract class EntityComponent : MonoBehaviour
                     offComponent.enabled = true;
         }
         sensorWasOn = sensorIsOn;
+    }
+
+    void OnDestroy()
+    {
+        foreach (Behaviour c in targetedComponents)
+            Destroy(c);
     }
 
     public bool IsOn()
