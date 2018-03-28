@@ -147,6 +147,14 @@ public class NewRigidbodyController : MonoBehaviour
         {
             grounded = true;
             groundContactNormal = hitInfo.normal;
+            // move with moving object
+            foreach (MoveComponent moveComponent in hitInfo.transform.GetComponents<MoveComponent>())
+                if (moveComponent.enabled)
+                {
+                    Vector3 move = moveComponent.GetMoveFixed();
+                    move.y = 0;
+                    rigidBody.MovePosition(rigidBody.position + move);
+                }
         }
         else
         {
