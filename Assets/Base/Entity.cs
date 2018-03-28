@@ -237,6 +237,7 @@ public abstract class Entity : PropertiesObject
         {
             var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
             PropertiesObjectType.CopyProperties(behavior, newBehavior, this, newEntity);
+            newBehavior.targetEntity = behavior.targetEntity;
             newEntity.behaviors.Add(newBehavior);
         }
         return newEntity;
