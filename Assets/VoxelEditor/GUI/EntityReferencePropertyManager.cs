@@ -42,6 +42,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static Entity currentEntity;
     private static List<Entity> targetEntities = new List<Entity>();
     private static Entity behaviorTarget;
+    private static int currentTargetEntityI = -1;
 
     private static Material _lineMaterial;
     public Material lineMaterial;
@@ -74,6 +75,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         currentEntity = entity;
         behaviorTarget = null;
         targetEntities.Clear();
+        currentTargetEntityI = -1;
     }
 
     // TODO: delete this when it is no longer needed
@@ -84,7 +86,14 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static void Next(Entity entity)
     {
+        int existingIndex = targetEntities.IndexOf(entity); // TODO: not efficient
+        if (existingIndex != -1)
+        {
+            currentTargetEntityI = existingIndex;
+            return;
+        }
         targetEntities.Add(entity);
+        currentTargetEntityI = targetEntities.Count - 1;
         if (entity is Substance)
         {
             ((Substance)entity).highlight = GetColor();
@@ -100,8 +109,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static Color GetColor()
     {
-        if (targetEntities[targetEntities.Count - 1] == currentEntity
-                || targetEntities[targetEntities.Count - 1] == null)
+        if (targetEntities[currentTargetEntityI] == currentEntity
+                || targetEntities[currentTargetEntityI] == null)
             return Color.white;
         return ColorI(targetEntities.Count - 1);
     }
@@ -113,10 +122,10 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static string GetName()
     {
-        Entity entity = targetEntities[targetEntities.Count - 1];
+        Entity entity = targetEntities[currentTargetEntityI];
         if (entity == null)
             return "None";
-        if (entity == currentEntity)
+        else if (entity == currentEntity)
             return "Self";
         else if (entity == behaviorTarget)
             return "Target";
@@ -132,7 +141,10 @@ public class EntityReferencePropertyManager : MonoBehaviour
     void Update()
     {
         if (currentEntity == null && targetEntities.Count != 0)
+        {
             targetEntities.Clear();
+            currentTargetEntityI = -1;
+        }
 
         if (transform.childCount != targetEntities.Count)
             updateTargets = true;
