@@ -54,7 +54,8 @@ public class MoveComponent : MonoBehaviour
 
     void OnCollisionEnter()
     {
-        rigidBody.velocity = Vector3.zero;
+        if (rigidBody != null)
+            rigidBody.velocity = Vector3.zero;
     }
 
     void OnEnable()
@@ -73,11 +74,18 @@ public class MoveComponent : MonoBehaviour
 
     void FixedUpdate()
     {
-        rigidBody.velocity = Vector3.zero;
-        Vector3 move = target.directionFrom(transform.position) * speed * Time.fixedDeltaTime;
+        if (rigidBody != null)
+            rigidBody.velocity = Vector3.zero;
+        Vector3 move = GetMoveFixed();
         if (rigidBody != null)
             rigidBody.MovePosition(rigidBody.position + move);
         else
             transform.Translate(move);
+
+    }
+
+    public Vector3 GetMoveFixed()
+    {
+        return target.directionFrom(transform.position) * speed * Time.fixedDeltaTime;
     }
 }
