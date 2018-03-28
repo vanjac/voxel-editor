@@ -112,7 +112,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         if (targetEntities[currentTargetEntityI] == currentEntity
                 || targetEntities[currentTargetEntityI] == null)
             return Color.white;
-        return ColorI(targetEntities.Count - 1);
+        return ColorI(currentTargetEntityI);
     }
 
     private static Color ColorI(int i)

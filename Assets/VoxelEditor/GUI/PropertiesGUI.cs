@@ -166,6 +166,7 @@ public class PropertiesGUI : GUIPanel
             if (behaviorTarget != null)
             {
                 EntityReferencePropertyManager.Next(behaviorTarget);
+                // behavior target has not been set, so the actual name of the entity will be used
                 suffix += "\n▶  " + EntityReferencePropertyManager.GetName();
                 GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
             }
@@ -176,8 +177,9 @@ public class PropertiesGUI : GUIPanel
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
+            // clear this every time, in case the next target is the same
+            EntityReferencePropertyManager.SetBehaviorTarget(null);
         }
-        EntityReferencePropertyManager.SetBehaviorTarget(null);
 
         if (behaviorToRemove != null)
         {
