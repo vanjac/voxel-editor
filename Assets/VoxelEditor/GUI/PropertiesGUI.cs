@@ -147,6 +147,7 @@ public class PropertiesGUI : GUIPanel
         {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
             behaviorMenu.title = "Add Behavior";
+            behaviorMenu.self = entity;
             behaviorMenu.voxelArray = voxelArray;
             behaviorMenu.handler = (EntityBehavior newBehavior) =>
             {
@@ -228,6 +229,7 @@ public class NewBehaviorGUI : GUIPanel
 {
     public delegate void BehaviorHandler(EntityBehavior behavior);
     public BehaviorHandler handler;
+    public Entity self;
     public VoxelArrayEditor voxelArray;
 
     private TypePickerGUI typePicker;
@@ -266,7 +268,7 @@ public class NewBehaviorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        string targetButtonText = "Target...";
+        string targetButtonText = "Target:  Self";
         if (targetEntity != null)
             targetButtonText = "Target:  " + targetEntity.ToString();
         if (!GUILayout.Toggle(true, targetButtonText, GUI.skin.button))
@@ -280,7 +282,10 @@ public class NewBehaviorGUI : GUIPanel
                 entityPicker = null;
                 foreach (Entity entity in entities)
                 {
-                    targetEntity = entity;
+                    if (entity == self)
+                        targetEntity = null;
+                    else
+                        targetEntity = entity;
                     return;
                 }
                 targetEntity = null;
