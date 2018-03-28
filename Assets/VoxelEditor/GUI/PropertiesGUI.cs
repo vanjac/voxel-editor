@@ -161,10 +161,12 @@ public class PropertiesGUI : GUIPanel
         EntityBehavior behaviorToRemove = null;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
+            Entity behaviorTarget = behavior.targetEntity.entity;
+            EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             string suffix = " Behavior";
-            if (behavior.targetEntity.entity != null)
+            if (behaviorTarget != null)
             {
-                EntityReferencePropertyManager.Next(behavior.targetEntity.entity);
+                EntityReferencePropertyManager.Next(behaviorTarget);
                 suffix += "\n▶  " + EntityReferencePropertyManager.GetName();
                 GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
             }
@@ -175,6 +177,7 @@ public class PropertiesGUI : GUIPanel
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
         }
+        EntityReferencePropertyManager.SetBehaviorTarget(null);
 
         if (behaviorToRemove != null)
         {

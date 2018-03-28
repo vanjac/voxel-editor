@@ -41,6 +41,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static bool updateTargets = false;
     private static Entity currentEntity;
     private static List<Entity> targetEntities = new List<Entity>();
+    private static Entity behaviorTarget;
 
     private static Material _lineMaterial;
     public Material lineMaterial;
@@ -71,6 +72,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
             }
         }
         currentEntity = entity;
+        behaviorTarget = null;
         targetEntities.Clear();
     }
 
@@ -91,6 +93,11 @@ public class EntityReferencePropertyManager : MonoBehaviour
         }
     }
 
+    public static void SetBehaviorTarget(Entity entity)
+    {
+        behaviorTarget = entity;
+    }
+
     public static Color GetColor()
     {
         if (targetEntities[targetEntities.Count - 1] == currentEntity
@@ -107,11 +114,14 @@ public class EntityReferencePropertyManager : MonoBehaviour
     public static string GetName()
     {
         Entity entity = targetEntities[targetEntities.Count - 1];
-        if (entity == currentEntity)
-            return "Self";
         if (entity == null)
             return "None";
-        return entity.ToString();
+        if (entity == currentEntity)
+            return "Self";
+        else if (entity == behaviorTarget)
+            return "Target";
+        else
+            return entity.ToString();
     }
 
     void Awake()
