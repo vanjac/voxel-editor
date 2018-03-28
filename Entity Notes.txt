@@ -56,11 +56,6 @@ Selection of trees
 
 BEHAVIORS:
 
-Behavior (abstract PropertiesObject)
-    Properties
-        Condition: On/Off/Both
-        Optionally apply behavior to another entity instead, or whichever entities activated the ActivatedSensor
-
 Clone (Behavior for DynamicEntity) : once when enabled. clone starts at initial position with initial properties
 
 Physics (Behavior for DynamicEntity with Solid)
@@ -169,11 +164,6 @@ Scroll (Behavior for FaceEntity)
         Direction : 4 choices
         Speed
 
-Flat (Behavior for Substance) : substance becomes a flat, double sided plane
-    Properties
-        Direction : 6 choices
-        [no condition - always on]
-
 Fog (Behavior for Volume) : volumetric fog
     [properties]
 
@@ -203,3 +193,43 @@ Push (Behavior for Volume)
         Direction : 6 choices
         Target velocity
         Strength
+
+EFFECTS:
+
+Effect (Behavior) : effects don't have a condition (they are always on) and can't be targeted
+
+Flat (Effect for Substance) : substance becomes a flat, double sided plane
+    Properties
+        Direction : 6 choices
+
+Pipe (Effect for Substance) : shape of substance is used to create a network of pipes
+    Properties
+        Width
+        Shape : circle/square
+
+DeathEffect (Effect for DynamicEntity) : affects the behavior of the object when it dies; these can be combined. Default is to disappear immediately.
+
+Disappear (DeathEffect)
+    Properties
+        Time
+        Fade out time
+
+Ragdoll (DeathEffect) : physics on
+    Properties
+        Density
+
+Shatter (DeathEffect)
+    Properties
+        Shards
+        Explosiveness
+
+Particles (DeathEffect)
+    Properties
+        Num particles
+        Explosiveness
+
+Ghost (DeathEffect) : rising ghost animation
+    Properties
+        Transparency
+        Time
+        Speed
