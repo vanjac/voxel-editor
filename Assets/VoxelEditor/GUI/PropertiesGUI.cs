@@ -162,7 +162,6 @@ public class PropertiesGUI : GUIPanel
         foreach (EntityBehavior behavior in entity.behaviors)
         {
             Entity behaviorTarget = behavior.targetEntity.entity;
-            EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             string suffix = " Behavior";
             if (behaviorTarget != null)
             {
@@ -170,6 +169,7 @@ public class PropertiesGUI : GUIPanel
                 suffix += "\n▶  " + EntityReferencePropertyManager.GetName();
                 GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
             }
+            EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
             PropertiesObjectGUI(behavior, suffix);
