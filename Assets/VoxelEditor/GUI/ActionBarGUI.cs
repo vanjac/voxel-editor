@@ -131,6 +131,11 @@ public class ActionBarGUI : GUIPanel
         return GUILayout.Button(icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
     }
 
+    protected bool ActionBarButton(string text)
+    {
+        return GUILayout.Button(text, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+    }
+
     protected bool HighlightedActionBarButton(Texture icon)
     {
         return !GUILayout.Toggle(true, icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));

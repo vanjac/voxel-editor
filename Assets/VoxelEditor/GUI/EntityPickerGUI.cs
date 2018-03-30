@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class EntityPickerGUI : ActionBarGUI
 {
+    // dummy entity to represent the "Activator" option being selected
+    public static Entity ACTIVATOR = new Substance(null);
+
     public delegate void EntityPickerHanlder(ICollection<Entity> entities);
     public EntityPickerHanlder handler;
     public bool allowNone = true, allowMultiple = true;
+    public bool activatorOption = false;
 
     private VoxelArrayEditor.SelectionState selectionState;
 
@@ -50,6 +54,14 @@ public class EntityPickerGUI : ActionBarGUI
 
         if (allowMultiple)
             SelectionGUI();
+
+        if (activatorOption)
+            if (ActionBarButton("Activator"))
+            {
+                handler(new Entity[] { ACTIVATOR });
+                Destroy(this);
+            }
+
         GUILayout.FlexibleSpace();
 
         // TODO: not efficient to keep generating a list of selected entities

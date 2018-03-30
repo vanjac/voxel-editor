@@ -125,7 +125,9 @@ public class MapFileWriter
             foreach (EntityBehavior behavior in entity.behaviors)
             {
                 JSONObject behaviorObject = WritePropertiesObject(behavior, true);
-                if (behavior.targetEntity.entity != null)
+                if (behavior.targetEntityIsActivator)
+                    behaviorObject["target"] = "activator";
+                else if (behavior.targetEntity.entity != null)
                     behaviorObject["target"] = behavior.targetEntity.guid.ToString();
                 behaviorsArray[-1] = behaviorObject;
             }

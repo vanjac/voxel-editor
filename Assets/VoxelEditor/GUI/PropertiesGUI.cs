@@ -163,7 +163,11 @@ public class PropertiesGUI : GUIPanel
         {
             Entity behaviorTarget = behavior.targetEntity.entity;
             string suffix = " Behavior";
-            if (behaviorTarget != null)
+            if (behavior.targetEntityIsActivator)
+            {
+                suffix += "\n▶  Activator";
+            }
+            else if (behaviorTarget != null)
             {
                 EntityReferencePropertyManager.Next(behaviorTarget);
                 // behavior target has not been set, so the actual name of the entity will be used
@@ -240,6 +244,7 @@ public class NewBehaviorGUI : GUIPanel
     private TypePickerGUI typePicker;
     private EntityPickerGUI entityPicker;
     private Entity targetEntity;
+    private bool targetEntityIsActivator = false;
 
     public override Rect GetRect(float width, float height)
     {
@@ -257,7 +262,9 @@ public class NewBehaviorGUI : GUIPanel
         typePicker.handler = (PropertiesObjectType type) =>
         {
             EntityBehavior behavior = (EntityBehavior)type.Create();
-            if (targetEntity != null)
+            if (targetEntityIsActivator)
+                behavior.targetEntityIsActivator = true;
+            else if (targetEntity != null)
                 behavior.targetEntity = new EntityReference(targetEntity);
             handler(behavior);
             Destroy(this);
@@ -274,7 +281,9 @@ public class NewBehaviorGUI : GUIPanel
     public override void WindowGUI()
     {
         string targetButtonText = "Target:  Self";
-        if (targetEntity != null)
+        if (targetEntityIsActivator)
+            targetButtonText = "Target:  Activator";
+        else if (targetEntity != null)
             targetButtonText = "Target:  " + targetEntity.ToString();
         if (!GUILayout.Toggle(true, targetButtonText, GUI.skin.button))
         {
@@ -282,15 +291,27 @@ public class NewBehaviorGUI : GUIPanel
             entityPicker.voxelArray = voxelArray;
             entityPicker.allowNone = true;
             entityPicker.allowMultiple = false;
+            entityPicker.activatorOption = true;
             entityPicker.handler = (ICollection<Entity> entities) =>
             {
                 entityPicker = null;
                 foreach (Entity entity in entities)
                 {
                     if (entity == self)
+                    {
                         targetEntity = null;
+                        targetEntityIsActivator = false;
+                    }
+                    else if (entity == EntityPickerGUI.ACTIVATOR)
+                    {
+                        targetEntity = null;
+                        targetEntityIsActivator = true;
+                    }
                     else
+                    {
                         targetEntity = entity;
+                        targetEntityIsActivator = false;
+                    }
                     return;
                 }
                 targetEntity = null;
