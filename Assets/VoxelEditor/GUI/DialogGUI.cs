@@ -45,3 +45,50 @@ public class DialogGUI : GUIPanel
         GUILayout.EndHorizontal();
     }
 }
+
+
+public class TextInputDialogGUI : GUIPanel
+{
+    public delegate void TextHandler(string text);
+
+    public TextHandler handler;
+    public string prompt;
+
+    private TouchScreenKeyboard keyboard;
+
+    public override Rect GetRect(float width, float height)
+    {
+        return new Rect(0, 0, 0, 0);
+    }
+
+    public override GUIStyle GetStyle()
+    {
+        return GUIStyle.none;
+    }
+
+    public override void OnEnable()
+    {
+        holdOpen = true;
+        base.OnEnable();
+    }
+
+    void Start()
+    {
+        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable,
+            false, false, false, false, // autocorrect, multiline, password, alert mode
+            prompt);
+    }
+
+    public override void WindowGUI()
+    {
+        if (keyboard == null)
+            Destroy(this);
+        else if (keyboard.status == TouchScreenKeyboard.Status.Done)
+        {
+            handler(keyboard.text);
+            Destroy(this);
+        }
+        else if (keyboard.status != TouchScreenKeyboard.Status.Visible)
+            Destroy(this);
+    }
+}

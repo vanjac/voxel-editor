@@ -9,7 +9,6 @@ public class MenuGUI : GUIPanel
     public TextAsset defaultMap;
 
     private List<string> mapFiles = new List<string>();
-    private TouchScreenKeyboard nameKeyboard;
 
     public override Rect GetRect(float width, float height)
     {
@@ -30,18 +29,11 @@ public class MenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (nameKeyboard != null)
+        if (GUILayout.Button("New..."))
         {
-            if (nameKeyboard.status == TouchScreenKeyboard.Status.Done)
-                NewMap(nameKeyboard.text);
-            if (nameKeyboard.status != TouchScreenKeyboard.Status.Visible)
-                nameKeyboard = null;
-        }
-        if (GUILayout.Button("New...") && nameKeyboard == null)
-        {
-            nameKeyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable,
-                false, false, false, false, // autocorrect, multiline, password, alert mode
-                "Enter new map name...");
+            TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
+            inputDialog.prompt = "Enter new map name...";
+            inputDialog.handler = NewMap;
         }
         scroll = GUILayout.BeginScrollView(scroll);
         foreach (string fileName in mapFiles)
