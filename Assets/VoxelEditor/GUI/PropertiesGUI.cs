@@ -315,6 +315,7 @@ public class NewBehaviorGUI : GUIPanel
                     return;
                 }
                 targetEntity = null;
+                targetEntityIsActivator = false;
             };
         }
         if (typePicker != null)
