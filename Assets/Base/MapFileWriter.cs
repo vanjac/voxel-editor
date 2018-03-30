@@ -123,7 +123,12 @@ public class MapFileWriter
         if (entity.behaviors.Count != 0) {
             JSONArray behaviorsArray = new JSONArray();
             foreach (EntityBehavior behavior in entity.behaviors)
-                behaviorsArray[-1] = WritePropertiesObject(behavior, true);
+            {
+                JSONObject behaviorObject = WritePropertiesObject(behavior, true);
+                if (behavior.targetEntity.entity != null)
+                    behaviorObject["target"] = behavior.targetEntity.guid.ToString();
+                behaviorsArray[-1] = behaviorObject;
+            }
             entityObject["behaviors"] = behaviorsArray;
         }
 

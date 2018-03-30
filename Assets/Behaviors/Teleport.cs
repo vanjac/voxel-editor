@@ -31,9 +31,12 @@ public class TeleportBehavior : EntityBehavior
                     var reference = (EntityReference)property.value;
                     if (reference.entity == null)
                     {
-                        // TODO: this is not a good solution
-                        property.value = new EntityReference(
-                            EntityReferencePropertyManager.CurrentEntity());
+                        if (targetEntity.entity != null)
+                            property.value = targetEntity;
+                        else
+                            // TODO: this is not a good solution
+                            property.value = new EntityReference(
+                                EntityReferencePropertyManager.CurrentEntity());
                     }
                     PropertyGUIs.EntityReference(property);
                 })

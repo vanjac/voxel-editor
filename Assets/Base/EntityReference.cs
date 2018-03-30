@@ -70,6 +70,11 @@ public class EntityReference
         }
     }
 
+    public EntityReference(Guid guid)
+    {
+        this.guid = guid;
+    }
+
     public static void ResetEntityIds()
     {
         existingEntityIds.Clear();

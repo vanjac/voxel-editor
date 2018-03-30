@@ -237,6 +237,7 @@ public abstract class Entity : PropertiesObject
         {
             var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
             PropertiesObjectType.CopyProperties(behavior, newBehavior, this, newEntity);
+            newBehavior.targetEntity = behavior.targetEntity;
             newEntity.behaviors.Add(newBehavior);
         }
         return newEntity;
@@ -249,6 +250,7 @@ public abstract class EntityComponent : MonoBehaviour
 
     private List<Behaviour> offComponents = new List<Behaviour>();
     private List<Behaviour> onComponents = new List<Behaviour>();
+    private List<Behaviour> targetedComponents = new List<Behaviour>();
 
     private SensorComponent sensorComponent;
     private bool sensorWasOn;
@@ -276,7 +278,16 @@ public abstract class EntityComponent : MonoBehaviour
         sensorWasOn = false;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
-            Behaviour c = behavior.MakeComponent(gameObject);
+            Behaviour c;
+            if (behavior.targetEntity.entity != null)
+            {
+                c = behavior.MakeComponent(behavior.targetEntity.entity.component.gameObject);
+                targetedComponents.Add(c);
+            }
+            else
+            {
+                c = behavior.MakeComponent(gameObject);
+            }
             if (behavior.condition == EntityBehavior.Condition.OFF)
             {
                 offComponents.Add(c);
@@ -304,18 +315,28 @@ public abstract class EntityComponent : MonoBehaviour
         if (sensorIsOn && !sensorWasOn)
         {
             foreach (Behaviour offComponent in offComponents)
-                offComponent.enabled = false;
+                if (offComponent != null)
+                    offComponent.enabled = false;
             foreach (Behaviour onComponent in onComponents)
-                onComponent.enabled = true;
+                if (onComponent != null)
+                    onComponent.enabled = true;
         }
         else if (!sensorIsOn && sensorWasOn)
         {
             foreach (Behaviour onComponent in onComponents)
-                onComponent.enabled = false;
+                if (onComponent != null)
+                    onComponent.enabled = false;
             foreach (Behaviour offComponent in offComponents)
-                offComponent.enabled = true;
+                if (offComponent != null)
+                    offComponent.enabled = true;
         }
         sensorWasOn = sensorIsOn;
+    }
+
+    void OnDestroy()
+    {
+        foreach (Behaviour c in targetedComponents)
+            Destroy(c);
     }
 
     public bool IsOn()
@@ -337,7 +358,7 @@ public abstract class EntityBehavior : PropertiesObject
     }
 
     public Condition condition = Condition.BOTH;
-    public Entity targetEntity = null; // null for self
+    public EntityReference targetEntity = new EntityReference(null); // null for self
     public bool targetEntityIsActivator = false;
 
     public virtual PropertiesObjectType ObjectType()

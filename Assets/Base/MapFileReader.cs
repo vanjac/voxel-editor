@@ -190,6 +190,8 @@ public class MapFileReader
                 }
                 EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
                 ReadPropertiesObject(behaviorObject, newBehavior);
+                if (behaviorObject["target"] != null)
+                    newBehavior.targetEntity = new EntityReference(new System.Guid(behaviorObject["target"]));
                 entity.behaviors.Add(newBehavior);
             }
         }
