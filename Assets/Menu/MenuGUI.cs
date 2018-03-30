@@ -53,10 +53,13 @@ public class MenuGUI : GUIPanel
             {
                 FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
                 dropdown.fileName = fileName;
-                dropdown.location = Input.GetTouch(0).position;
-                dropdown.location.y = Screen.height - dropdown.location.y;
-                dropdown.location /= scaleFactor;
-                dropdown.location -= new Vector2(30, 30);
+                if (Input.touchCount > 0)
+                {
+                    dropdown.location = Input.GetTouch(0).position;
+                    dropdown.location.y = Screen.height - dropdown.location.y;
+                    dropdown.location /= scaleFactor;
+                    dropdown.location -= new Vector2(30, 30);
+                }
                 dropdown.handler = () =>
                 {
                     UpdateMapList();
