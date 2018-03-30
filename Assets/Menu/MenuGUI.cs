@@ -9,7 +9,6 @@ public class MenuGUI : GUIPanel
     public TextAsset defaultMap;
 
     private List<string> mapFiles = new List<string>();
-    private TouchScreenKeyboard nameKeyboard;
 
     public override Rect GetRect(float width, float height)
     {
@@ -30,36 +29,37 @@ public class MenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (nameKeyboard != null)
+        if (GUILayout.Button("New..."))
         {
-            if (nameKeyboard.status == TouchScreenKeyboard.Status.Done)
-                NewMap(nameKeyboard.text);
-            if (nameKeyboard.status != TouchScreenKeyboard.Status.Visible)
-                nameKeyboard = null;
-        }
-        if (GUILayout.Button("New...") && nameKeyboard == null)
-        {
-            nameKeyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable,
-                false, false, false, false, // autocorrect, multiline, password, alert mode
-                "Enter new map name...");
+            TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
+            inputDialog.prompt = "Enter new map name...";
+            inputDialog.handler = NewMap;
         }
         scroll = GUILayout.BeginScrollView(scroll);
-        bool updateMapList = false;
         foreach (string fileName in mapFiles)
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(fileName))
                 OpenMap(fileName);
-            if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("...", GUILayout.ExpandWidth(false)))
             {
-                File.Delete(GetMapPath(fileName));
-                updateMapList = true;
+                FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
+                dropdown.fileName = fileName;
+                if (Input.touchCount > 0)
+                {
+                    dropdown.location = Input.GetTouch(0).position;
+                    dropdown.location.y = Screen.height - dropdown.location.y;
+                    dropdown.location /= scaleFactor;
+                    dropdown.location -= new Vector2(30, 30);
+                }
+                dropdown.handler = () =>
+                {
+                    UpdateMapList();
+                };
             }
             GUILayout.EndHorizontal();
         }
         GUILayout.EndScrollView();
-        if (updateMapList)
-            UpdateMapList();
     }
 
     private void OpenMap(string name)
@@ -92,7 +92,7 @@ public class MenuGUI : GUIPanel
         UpdateMapList();
     }
 
-    private string GetMapPath(string name)
+    public static string GetMapPath(string name)
     {
         return Application.persistentDataPath + "/" + name + ".json";
     }
@@ -103,5 +103,45 @@ public class MenuGUI : GUIPanel
         mapFiles.Clear();
         foreach (string name in files)
             mapFiles.Add(Path.GetFileNameWithoutExtension(name));
+    }
+}
+
+public class FileDropdownGUI : GUIPanel
+{
+    public delegate void UpdateMapListHandler();
+
+    public Vector2 location = new Vector2(100, 100);
+    public string fileName;
+    public UpdateMapListHandler handler;
+
+    public override Rect GetRect(float width, float height)
+    {
+        return new Rect(location.x, location.y, width * .2f, 0);
+    }
+
+    public override GUIStyle GetStyle()
+    {
+        return GUIStyle.none;
+    }
+
+    public override void WindowGUI()
+    {
+        if (GUILayout.Button("Delete"))
+        {
+            DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
+            dialog.message = "Are you sure you want to delete " + fileName + "?";
+            dialog.yesButtonText = "Yes";
+            dialog.noButtonText = "No";
+            dialog.yesButtonHandler = () =>
+            {
+                File.Delete(MenuGUI.GetMapPath(fileName));
+                handler();
+                Destroy(this);
+            };
+            dialog.noButtonHandler = () =>
+            {
+                Destroy(this);
+            };
+        }
     }
 }
