@@ -202,6 +202,7 @@ Effect (Behavior) : effects don't have a condition (they are always on) and can'
 Flat (Effect for Substance) : substance becomes a flat, double sided plane
     Properties
         Direction : 6 choices
+        Depth
 
 Pipe (Effect for Substance) : shape of substance is used to create a network of pipes
     Properties
