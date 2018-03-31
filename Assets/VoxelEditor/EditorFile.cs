@@ -5,11 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class EditorFile : MonoBehaviour
 {
-    public List<MonoBehaviour> disableOnLoad;
+    public LoadingGUI loadingGUI;
     public List<MonoBehaviour> enableOnLoad;
-
-    public List<MonoBehaviour> disableOnPlay;
-    public List<MonoBehaviour> enableOnPlay;
 
     public VoxelArrayEditor voxelArray;
     public Transform cameraPivot;
@@ -19,7 +16,7 @@ public class EditorFile : MonoBehaviour
         StartCoroutine(LoadCoroutine());
     }
 
-    public IEnumerator LoadCoroutine()
+    private IEnumerator LoadCoroutine()
     {
         yield return null;
         string mapName = SelectedMap.GetSelectedMapName();
@@ -31,8 +28,7 @@ public class EditorFile : MonoBehaviour
         voxelArray.unsavedChanges = false;
         voxelArray.selectionChanged = false;
 
-        foreach (MonoBehaviour b in disableOnLoad)
-            b.enabled = false;
+        Destroy(loadingGUI);
         foreach (MonoBehaviour b in enableOnLoad)
             b.enabled = true;
     }
@@ -54,12 +50,7 @@ public class EditorFile : MonoBehaviour
     {
         Debug.unityLogger.Log("EditorFile", "Play");
         Save();
-        SceneManager.LoadSceneAsync("playScene");
-
-        foreach (MonoBehaviour b in disableOnPlay)
-            b.enabled = false;
-        foreach (MonoBehaviour b in enableOnPlay)
-            b.enabled = true;
+        SceneManager.LoadScene("playScene");
     }
 
     public void Close()

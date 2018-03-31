@@ -5,15 +5,24 @@ using UnityEngine.SceneManagement;
 
 public class GameLoad : MonoBehaviour
 {
+    public UnityEngine.UI.Text loadingText;
+
     void Start()
     {
+        StartCoroutine(LoadCoroutine());
+    }
+
+    private IEnumerator LoadCoroutine()
+    {
+        yield return null;
         MapFileReader reader = new MapFileReader(SelectedMap.GetSelectedMapName());
         reader.Read(null, GetComponent<VoxelArray>(), false);
+        loadingText.enabled = false;
     }
 
     public void Close()
     {
-        SceneManager.LoadScene("editScene");
+        SceneManager.LoadScene(SelectedMap.GetReturnFromPlayScene());
     }
 
     void Update()

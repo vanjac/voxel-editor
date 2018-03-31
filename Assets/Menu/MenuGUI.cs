@@ -40,7 +40,7 @@ public class MenuGUI : GUIPanel
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(fileName))
-                OpenMap(fileName, "editScene", false);
+                OpenMap(fileName, "editScene");
             if (GUILayout.Button("...", GUILayout.ExpandWidth(false)))
             {
                 FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
@@ -62,19 +62,18 @@ public class MenuGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
-    public static void OpenMap(string name, string scene, bool async)
+    public static void OpenMap(string name, string scene)
     {
-        GameObject selectedMap = GameObject.Find("SelectedMap");
-        if (selectedMap == null)
+        GameObject selectedMapObject = GameObject.Find("SelectedMap");
+        if (selectedMapObject == null)
         {
-            selectedMap = new GameObject("SelectedMap");
-            selectedMap.AddComponent<SelectedMap>();
+            selectedMapObject = new GameObject("SelectedMap");
+            selectedMapObject.AddComponent<SelectedMap>();
         }
-        selectedMap.GetComponent<SelectedMap>().mapName = name;
-        if (async)
-            SceneManager.LoadSceneAsync(scene);
-        else
-            SceneManager.LoadScene(scene);
+        SelectedMap selectedMap = selectedMapObject.GetComponent<SelectedMap>();
+        selectedMap.mapName = name;
+        selectedMap.returnFromPlayScene = (scene == "playScene") ? "menuScene" : "editScene";
+        SceneManager.LoadScene(scene);
     }
 
     private void NewMap(string name)
@@ -134,9 +133,7 @@ public class FileDropdownGUI : GUIPanel
     {
         if (GUILayout.Button("Play"))
         {
-            MenuGUI.OpenMap(fileName, "playScene", true);
-            gameObject.AddComponent<LoadingGUI>();
-            Destroy(this);
+            MenuGUI.OpenMap(fileName, "playScene");
         }
         if (GUILayout.Button("Rename"))
         {
