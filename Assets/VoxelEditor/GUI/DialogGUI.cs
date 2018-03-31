@@ -14,6 +14,13 @@ public class DialogGUI : GUIPanel
 
     private GUIStyle messageLabelStyle;
 
+    public static void ShowMessageDialog(GameObject gameObject, string message)
+    {
+        DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
+        dialog.message = message;
+        dialog.yesButtonText = "OK";
+    }
+
     public override Rect GetRect(float width, float height)
     {
         return new Rect(width * .35f, height * .35f, width * .3f, height * .3f);
@@ -55,40 +62,64 @@ public class TextInputDialogGUI : GUIPanel
     public string prompt;
 
     private TouchScreenKeyboard keyboard;
+    private bool touchKeyboardSupported;
+    private string text = "";
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(0, 0, 0, 0);
+        if (touchKeyboardSupported)
+            return new Rect(0, 0, 0, 0);
+        else
+            return new Rect(width * .35f, height * .35f, width * .3f, height * .3f);
     }
 
     public override GUIStyle GetStyle()
     {
-        return GUIStyle.none;
+        if (touchKeyboardSupported)
+            return GUIStyle.none;
+        else
+            return GUI.skin.box;
     }
 
     public override void OnEnable()
     {
         holdOpen = true;
+        touchKeyboardSupported = TouchScreenKeyboard.isSupported;
         base.OnEnable();
     }
 
     void Start()
     {
-        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable,
-            false, false, false, false, // autocorrect, multiline, password, alert mode
-            prompt);
+        if (touchKeyboardSupported)
+            keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable,
+                false, false, false, false, // autocorrect, multiline, password, alert mode
+                prompt);
     }
 
     public override void WindowGUI()
     {
-        if (keyboard == null)
-            Destroy(this);
-        else if (keyboard.status == TouchScreenKeyboard.Status.Done)
+        if (touchKeyboardSupported)
         {
-            handler(keyboard.text);
-            Destroy(this);
+            if (keyboard == null)
+                Destroy(this);
+            else if (keyboard.status == TouchScreenKeyboard.Status.Done)
+            {
+                handler(keyboard.text);
+                keyboard = null; // WindowGUI could get called again
+                Destroy(this);
+            }
+            else if (keyboard.status != TouchScreenKeyboard.Status.Visible)
+                Destroy(this);
         }
-        else if (keyboard.status != TouchScreenKeyboard.Status.Visible)
-            Destroy(this);
+        else
+        {
+            text = GUILayout.TextField(text);
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Done"))
+            {
+                handler(text);
+                Destroy(this);
+            }
+        }
     }
 }

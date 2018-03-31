@@ -40,7 +40,7 @@ public class MenuGUI : GUIPanel
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(fileName))
-                OpenMap(fileName);
+                OpenMap(fileName, "editScene", false);
             if (GUILayout.Button("...", GUILayout.ExpandWidth(false)))
             {
                 FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
@@ -62,7 +62,7 @@ public class MenuGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
-    private void OpenMap(string name)
+    public static void OpenMap(string name, string scene, bool async)
     {
         GameObject selectedMap = GameObject.Find("SelectedMap");
         if (selectedMap == null)
@@ -71,7 +71,10 @@ public class MenuGUI : GUIPanel
             selectedMap.AddComponent<SelectedMap>();
         }
         selectedMap.GetComponent<SelectedMap>().mapName = name;
-        SceneManager.LoadScene("editScene");
+        if (async)
+            SceneManager.LoadSceneAsync(scene);
+        else
+            SceneManager.LoadScene(scene);
     }
 
     private void NewMap(string name)
@@ -80,7 +83,10 @@ public class MenuGUI : GUIPanel
             return;
         string filePath = GetMapPath(name);
         if (File.Exists(filePath))
+        {
+            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
             return;
+        }
         using (FileStream fileStream = File.Create(filePath))
         {
             using (var sw = new StreamWriter(fileStream))
@@ -126,6 +132,24 @@ public class FileDropdownGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        if (GUILayout.Button("Play"))
+        {
+            MenuGUI.OpenMap(fileName, "playScene", true);
+            gameObject.AddComponent<LoadingGUI>();
+            Destroy(this);
+        }
+        if (GUILayout.Button("Rename"))
+        {
+            TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
+            inputDialog.prompt = "Enter new name for " + fileName;
+            inputDialog.handler = RenameMap;
+        }
+        if (GUILayout.Button("Copy"))
+        {
+            TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
+            inputDialog.prompt = "Enter new map name...";
+            inputDialog.handler = CopyMap;
+        }
         if (GUILayout.Button("Delete"))
         {
             DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
@@ -143,5 +167,35 @@ public class FileDropdownGUI : GUIPanel
                 Destroy(this);
             };
         }
+    }
+
+    private void RenameMap(string newName)
+    {
+        if (newName.Length == 0)
+            return;
+        string newPath = MenuGUI.GetMapPath(newName);
+        if (File.Exists(newPath))
+        {
+            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            return;
+        }
+        File.Move(MenuGUI.GetMapPath(fileName), newPath);
+        handler();
+        Destroy(this);
+    }
+
+    private void CopyMap(string newName)
+    {
+        if (newName.Length == 0)
+            return;
+        string newPath = MenuGUI.GetMapPath(newName);
+        if (File.Exists(newPath))
+        {
+            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            return;
+        }
+        File.Copy(MenuGUI.GetMapPath(fileName), newPath);
+        handler();
+        Destroy(this);
     }
 }
