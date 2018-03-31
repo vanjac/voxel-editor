@@ -28,7 +28,11 @@ public class GameTouchControl : MonoBehaviour
     void Update ()
     {
         if (cam == null)
+        {
             cam = Camera.current; // sometimes null for a few cycles
+            if (cam.tag == "DeathCamera")
+                cam = null;
+        }
         if (cam == null)
             return; // sometimes null for a few cycles
         bool setAxes = false;
