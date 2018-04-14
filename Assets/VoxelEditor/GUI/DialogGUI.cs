@@ -14,11 +14,12 @@ public class DialogGUI : GUIPanel
 
     private GUIStyle messageLabelStyle;
 
-    public static void ShowMessageDialog(GameObject gameObject, string message)
+    public static DialogGUI ShowMessageDialog(GameObject gameObject, string message)
     {
         DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
         dialog.message = message;
         dialog.yesButtonText = "OK";
+        return dialog;
     }
 
     public override Rect GetRect(float width, float height)
@@ -120,6 +121,49 @@ public class TextInputDialogGUI : GUIPanel
                 handler(text);
                 Destroy(this);
             }
+        }
+    }
+}
+
+
+public class LargeMessageGUI : GUIPanel
+{
+    public delegate void ButtonHandler();
+
+    public string message;
+    public ButtonHandler closeButtonHandler;
+
+    private GUIStyle messageLabelStyle;
+
+    public static LargeMessageGUI ShowLargeMessageDialog(GameObject gameObject, string message)
+    {
+        var dialog = gameObject.AddComponent<LargeMessageGUI>();
+        dialog.message = message;
+        return dialog;
+    }
+
+    public override Rect GetRect(float width, float height)
+    {
+        return new Rect(width * .2f, height * .2f, width * .6f, height * .6f);
+    }
+
+    public override void WindowGUI()
+    {
+        if (messageLabelStyle == null)
+        {
+            messageLabelStyle = new GUIStyle(GUI.skin.label);
+            messageLabelStyle.wordWrap = true;
+        }
+
+        scroll = GUILayout.BeginScrollView(scroll);
+        GUILayout.Label(message, messageLabelStyle);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndScrollView();
+        if (GUILayout.Button("OK"))
+        {
+            if (closeButtonHandler != null)
+                closeButtonHandler();
+            Destroy(this);
         }
     }
 }

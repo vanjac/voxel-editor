@@ -22,7 +22,27 @@ public class EditorFile : MonoBehaviour
         string mapName = SelectedMap.GetSelectedMapName();
         Debug.unityLogger.Log("EditorFile", "Loading " + mapName);
         MapFileReader reader = new MapFileReader(mapName);
-        reader.Read(cameraPivot, voxelArray, true);
+        List<string> warnings;
+        try
+        {
+            warnings = reader.Read(cameraPivot, voxelArray, true);
+        }
+        catch (MapReadException e)
+        {
+            var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
+            dialog.message = e.Message;
+            dialog.yesButtonText = "Close";
+            dialog.yesButtonHandler = () =>
+            {
+                voxelArray.unsavedChanges = false;
+                Close();
+            };
+            // fix issue where message dialog doesn't use correct skin:
+            dialog.guiSkin = loadingGUI.guiSkin;
+            Destroy(loadingGUI);
+            Debug.Log(e.InnerException);
+            yield break;
+        }
         // reading the file creates new voxels which sets the unsavedChanges flag
         // and clears existing voxels which sets the selectionChanged flag
         voxelArray.unsavedChanges = false;
@@ -31,6 +51,12 @@ public class EditorFile : MonoBehaviour
         Destroy(loadingGUI);
         foreach (MonoBehaviour b in enableOnLoad)
             b.enabled = true;
+        if (warnings.Count > 0)
+        {
+            string message = "There were some issues with reading the map:\n\n  •  " +
+                string.Join("\n  •  ", warnings.ToArray());
+            LargeMessageGUI.ShowLargeMessageDialog(loadingGUI.gameObject, message);
+        }
     }
 
     public void Save()

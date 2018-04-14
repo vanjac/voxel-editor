@@ -1,10 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using UnityEngine;
 using SimpleJSON;
 using System.Xml;
 using System.Xml.Serialization;
+
+public class MapReadException : Exception
+{
+    public MapReadException() { }
+    public MapReadException(string message) : base(message) { }
+    public MapReadException(string message, Exception inner) : base(message, inner) { }
+}
 
 public class MapFileReader
 {
@@ -14,12 +22,15 @@ public class MapFileReader
     private int fileWriterVersion;
     private Material missingMaterial; // material to be used when material can't be created
 
+    private List<string> warnings = new List<string>();
+
     public MapFileReader(string fileName)
     {
         this.fileName = fileName;
     }
 
-    public void Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    // return warnings
+    public List<string> Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
         if (missingMaterial == null)
         {
@@ -28,46 +39,76 @@ public class MapFileReader
         }
         string jsonString;
 
-        string filePath = Application.persistentDataPath + "/" + fileName + ".json";
-        using (FileStream fileStream = File.Open(filePath, FileMode.Open))
+        try
         {
-            using (var sr = new StreamReader(fileStream))
+            string filePath = Application.persistentDataPath + "/" + fileName + ".json";
+            using (FileStream fileStream = File.Open(filePath, FileMode.Open))
             {
-                jsonString = sr.ReadToEnd();
+                using (var sr = new StreamReader(fileStream))
+                {
+                    jsonString = sr.ReadToEnd();
+                }
             }
         }
+        catch (Exception e)
+        {
+            throw new MapReadException("An error occurred while reading the file", e);
+        }
 
-        JSONNode rootNode = JSON.Parse(jsonString);
+        JSONNode rootNode;
+        try
+        {
+            rootNode = JSON.Parse(jsonString);
+        }
+        catch (Exception e)
+        {
+            throw new MapReadException("Invalid map file", e);
+        }
+        if (rootNode == null)
+            throw new MapReadException("Invalid map file");
         JSONObject root = rootNode.AsObject;
         if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
         {
-            Debug.Log("Invalid map file!");
-            return;
+            throw new MapReadException("Invalid map file");
         }
         if (root["minReaderVersion"].AsInt > VERSION)
         {
-            Debug.Log("This map file is for a new version of the editor!");
-            return;
+            throw new MapReadException("This map requires a newer version of the app");
         }
         fileWriterVersion = root["writerVersion"].AsInt;
 
         EntityReference.ResetEntityIds();
 
-        if (editor && cameraPivot != null)
+        try
         {
-            if (root["camera"]["pan"] != null)
-                cameraPivot.position = ReadVector3(root["camera"]["pan"].AsArray);
-            if (root["camera"]["rotate"] != null)
-                cameraPivot.rotation = ReadQuaternion(root["camera"]["rotate"].AsArray);
-            if (root["camera"]["scale"] != null)
-            {
-                float scale = root["camera"]["scale"].AsFloat;
-                cameraPivot.localScale = new Vector3(scale, scale, scale);
-            }
+            if (editor && cameraPivot != null && root["camera"] != null)
+                ReadCamera(root["camera"].AsObject, cameraPivot);
+            if (root["world"] != null)
+                ReadWorld(root["world"].AsObject, voxelArray, editor);
+        }
+        catch (MapReadException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new MapReadException("Error reading map file", e);
         }
 
-        if (root["world"] != null)
-            ReadWorld(root["world"].AsObject, voxelArray, editor);
+        return warnings;
+    }
+
+    private void ReadCamera(JSONObject camera, Transform cameraPivot)
+    {
+        if (camera["pan"] != null)
+            cameraPivot.position = ReadVector3(camera["pan"].AsArray);
+        if (camera["rotate"] != null)
+            cameraPivot.rotation = ReadQuaternion(camera["rotate"].AsArray);
+        if (camera["scale"] != null)
+        {
+            float scale = camera["scale"].AsFloat;
+            cameraPivot.localScale = new Vector3(scale, scale, scale);
+        }
     }
 
     private void ReadWorld(JSONObject world, VoxelArray voxelArray, bool editor)
@@ -128,7 +169,7 @@ public class MapFileReader
                 if (checkFileName == name)
                     return ResourcesDirectory.GetMaterial(newDirEntry);
             }
-            Debug.Log("No material found: " + name);
+            warnings.Add("Material not found: " + name);
             return missingMaterial;
         }
         else if (matObject["shader"] != null)
@@ -167,7 +208,7 @@ public class MapFileReader
             string sensorName = sensorObject["name"];
             var sensorType = GameScripts.FindTypeWithName(GameScripts.sensors, sensorName);
             if (sensorType == null)
-                Debug.Log("Couldn't find sensor type " + sensorName + "!");
+                warnings.Add("Couldn't find sensor type: " + sensorName);
             else
             {
                 Sensor newSensor = (Sensor)sensorType.Create();
@@ -185,7 +226,7 @@ public class MapFileReader
                 var behaviorType = GameScripts.FindTypeWithName(GameScripts.behaviors, behaviorName);
                 if (behaviorType == null)
                 {
-                    Debug.Log("Couldn't find behavior type " + behaviorName + "!");
+                    warnings.Add("Couldn't find behavior type: " + behaviorName);
                     continue;
                 }
                 EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
@@ -226,7 +267,7 @@ public class MapFileReader
                 }
                 if (!foundProp)
                 {
-                    Debug.Log("Couldn't find property " + name);
+                    warnings.Add("Couldn't find property: " + name);
                     continue;
                 }
 
