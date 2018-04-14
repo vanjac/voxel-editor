@@ -30,7 +30,7 @@ public class GameTouchControl : MonoBehaviour
         if (cam == null)
         {
             cam = Camera.current; // sometimes null for a few cycles
-            if (cam.tag == "DeathCamera")
+            if (cam != null && cam.tag == "DeathCamera")
                 cam = null;
         }
         if (cam == null)
