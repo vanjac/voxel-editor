@@ -16,7 +16,14 @@ public class GameLoad : MonoBehaviour
     {
         yield return null;
         MapFileReader reader = new MapFileReader(SelectedMap.GetSelectedMapName());
-        reader.Read(null, GetComponent<VoxelArray>(), false);
+        try
+        {
+            reader.Read(null, GetComponent<VoxelArray>(), false);
+        }
+        catch (MapReadException e)
+        {
+            SceneManager.LoadScene("editScene"); // TODO: this is a very bad solution
+        }
         loadingText.enabled = false;
     }
 
