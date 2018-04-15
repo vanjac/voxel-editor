@@ -20,6 +20,12 @@ public class MapFileWriter
 
     public void Write(Transform cameraPivot, VoxelArray voxelArray)
     {
+        if (voxelArray.IsEmpty())
+        {
+            Debug.Log("Map is empty! File will not be written.");
+            return;
+        }
+
         JSONObject root = new JSONObject();
 
         root["writerVersion"] = VERSION;

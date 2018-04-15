@@ -20,7 +20,7 @@ public class GameLoad : MonoBehaviour
         {
             reader.Read(null, GetComponent<VoxelArray>(), false);
         }
-        catch (MapReadException e)
+        catch (MapReadException)
         {
             SceneManager.LoadScene("editScene"); // TODO: this is a very bad solution
         }

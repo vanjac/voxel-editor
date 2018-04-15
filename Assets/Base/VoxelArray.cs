@@ -190,6 +190,13 @@ public class VoxelArray : MonoBehaviour
         RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
     }
 
+    public bool IsEmpty()
+    {
+        foreach (Voxel v in IterateVoxels())
+            return false;
+        return true;
+    }
+
     public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()
     {
         foreach (Voxel v in IterateOctree(rootNode))
