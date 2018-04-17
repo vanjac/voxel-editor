@@ -86,8 +86,6 @@ public class VoxelArrayEditor : VoxelArray
     public bool unsavedChanges = false; // set by VoxelArrayEditor, checked and cleared by EditorFile
     public bool selectionChanged = false; // set by VoxelArrayEditor, checked and cleared by PropertiesGUI
 
-    public WorldProperties world = new WorldProperties();
-
     public enum SelectMode
     {
         NONE, // nothing selected

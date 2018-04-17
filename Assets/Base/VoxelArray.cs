@@ -41,6 +41,7 @@ public class VoxelArray : MonoBehaviour
     public GameObject voxelPrefab;
 
     public ObjectEntity playerObject;
+    public WorldProperties world = new WorldProperties();
     protected OctreeNode rootNode;
 
     private bool unloadUnusedAssets = false;

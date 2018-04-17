@@ -77,7 +77,9 @@ public class MapFileWriter
         world["materials"] = materialsArray;
         if (foundSubstances.Count != 0)
             world["substances"] = substancesArray;
-        world["lighting"] = WriteLighting(foundMaterials);
+        world["global"] = WritePropertiesObject(voxelArray.world, false);
+        // the selected sky can't be serialized so it's stored separately
+        world["sky"].AsInt = foundMaterials.IndexOf(RenderSettings.skybox.name);
         world["map"] = WriteMap(voxelArray, foundMaterials, foundSubstances);
         world["player"] = WriteObjectEntity(voxelArray.playerObject, false);
 
@@ -157,7 +159,17 @@ public class MapFileWriter
             // https://stackoverflow.com/a/2434558
             // https://stackoverflow.com/a/5414665
             object value = prop.value;
-            XmlSerializer xmlSerializer = new XmlSerializer(value.GetType());
+
+            XmlSerializer xmlSerializer;
+            try
+            {
+                xmlSerializer = new XmlSerializer(value.GetType());
+            }
+            catch (System.InvalidOperationException)
+            {
+                Debug.Log(prop.name + " can't be serialized!");
+                continue;
+            }
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", ""); // skip xsi/xsd namespaces: https://stackoverflow.com/a/935749
             string valueString;
@@ -178,22 +190,6 @@ public class MapFileWriter
         propsObject["properties"] = propertiesArray;
 
         return propsObject;
-    }
-
-    private JSONObject WriteLighting(List<string> materials)
-    {
-        JSONObject lighting = new JSONObject();
-        lighting["sky"].AsInt = materials.IndexOf(RenderSettings.skybox.name);
-        lighting["ambientIntensity"].AsFloat = RenderSettings.ambientIntensity;
-
-        JSONObject sun = new JSONObject();
-        sun["intensity"].AsFloat = RenderSettings.sun.intensity;
-        sun["color"] = WriteColor(RenderSettings.sun.color);
-        sun["angle"] = WriteQuaternion(RenderSettings.sun.transform.rotation);
-
-        lighting["sun"] = sun;
-
-        return lighting;
     }
 
     private JSONObject WriteMap(VoxelArray voxelArray, List<string> materials, List<Substance> substances)

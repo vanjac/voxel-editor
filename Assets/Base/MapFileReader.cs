@@ -134,8 +134,17 @@ public class MapFileReader
             }
         }
 
-        if (world["lighting"] != null)
-            ReadLighting(world["lighting"].AsObject, materials);
+        if (world["global"] != null)
+            ReadPropertiesObject(world["global"].AsObject, voxelArray.world);
+        if (world["sky"] != null)
+            {
+                Material skybox = materials[world["sky"].AsInt];
+                if (skybox != missingMaterial) // default skybox is null
+                {
+                    RenderSettings.skybox = skybox;
+                }
+            }
+        DynamicGI.UpdateEnvironment(); // update ambient lighting
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
         voxelArray.playerObject = new PlayerObject(voxelArray);
@@ -283,31 +292,6 @@ public class MapFileReader
                     prop.value = xmlSerializer.Deserialize(textReader);
                 }
             }
-        }
-    }
-
-    private void ReadLighting(JSONObject lighting, List<Material> materials)
-    {
-        if (lighting["sky"] != null)
-        {
-            Material skybox = materials[lighting["sky"].AsInt];
-            if (skybox != missingMaterial) // default skybox is null
-            {
-                RenderSettings.skybox = skybox;
-            }
-        }
-        DynamicGI.UpdateEnvironment(); // update ambient lighting
-        if (lighting["ambientIntensity"] != null)
-            RenderSettings.ambientIntensity = lighting["ambientIntensity"].AsFloat;
-        if (lighting["sun"] != null)
-        {
-            JSONObject sun = lighting["sun"].AsObject;
-            if (sun["intensity"] != null)
-                RenderSettings.sun.intensity = sun["intensity"].AsFloat;
-            if (sun["color"] != null)
-                RenderSettings.sun.color = ReadColor(sun["color"].AsArray);
-            if (sun["angle"] != null)
-                RenderSettings.sun.transform.rotation = ReadQuaternion(sun["angle"].AsArray);
         }
     }
 
