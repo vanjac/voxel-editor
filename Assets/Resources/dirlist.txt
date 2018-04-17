@@ -274,7 +274,9 @@
 ./GameAssets/Overlays/glass/TranslucentResinCrushGray.mat
 ./GameAssets/Overlays/water
 ./GameAssets/Overlays/water/WaterBasicDaytime.mat
+./GameAssets/Overlays/water/WaterBasicDaytime_preview.mat
 ./GameAssets/Overlays/water/WaterBasicNighttime.mat
+./GameAssets/Overlays/water/WaterBasicNighttime_preview.mat
 ./GameAssets/Skies
 ./GameAssets/Skies/sky5X1.mat
 ./GameAssets/Skies/sky5X2.mat
@@ -282,6 +284,7 @@
 ./GameAssets/Skies/sky5X4.mat
 ./GameAssets/Skies/sky5X5.mat
 ./GameAssets/Skies/sky_procedural.mat
+./GameAssets/Skies/sky_procedural_preview.mat
 ./Icons
 ./Icons/altimeter.png
 ./Icons/arrow-right-bold-box-outline.png
@@ -292,9 +295,15 @@
 ./Icons/earth.png
 ./Icons/eye.png
 ./Icons/format-rotate-90.png
+./Icons/gesture-tap.png
+./Icons/heart.png
 ./Icons/human-greeting.png
 ./Icons/pulse.png
+./Icons/send.png
 ./Icons/soccer.png
+./Icons/thought-bubble.png
+./Icons/timer.png
+./Icons/toggle-switch.png
 ./Icons/vector-combine.png
 ./Icons/water.png
 ./ObjectMarkers
