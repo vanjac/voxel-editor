@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeathText : MonoBehaviour
 {
     private UnityEngine.UI.Text text;
+    private bool alive = false;
     private bool dead = false;
 
     void Start()
@@ -14,9 +15,14 @@ public class DeathText : MonoBehaviour
 
     void Update()
     {
-        if (!dead)
+        Camera cam = Camera.current;
+        if (!alive)
         {
-            Camera cam = Camera.current;
+            if (cam != null && cam.tag == "MainCamera")
+                alive = true;
+        }
+        if (alive && !dead)
+        {
             if (cam != null && cam.tag == "DeathCamera")
             {
                 dead = true;

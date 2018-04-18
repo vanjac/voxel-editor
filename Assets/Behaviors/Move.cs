@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class MoveBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+    public static new BehaviorType objectType = new BehaviorType(
         "Move", "Move in a direction or toward an object",
-        "arrow-right-bold-box-outline", typeof(MoveBehavior));
+        "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private Target target = new Target(0);
     private float speed = 1;
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }
@@ -60,14 +60,11 @@ public class MoveComponent : MonoBehaviour
 
     void OnEnable()
     {
-        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
-        if (rigidBody != null)
-            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+        rigidBody = gameObject.GetComponent<Rigidbody>();
     }
 
     void OnDisable()
     {
-        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
         if (rigidBody != null)
             rigidBody.constraints = RigidbodyConstraints.None;
     }
@@ -78,7 +75,17 @@ public class MoveComponent : MonoBehaviour
             rigidBody.velocity = Vector3.zero;
         Vector3 move = GetMoveFixed();
         if (rigidBody != null)
+        {
+            var constraints = RigidbodyConstraints.FreezeRotation;
+            if (move.x == 0)
+                constraints |= RigidbodyConstraints.FreezePositionX;
+            if (move.y == 0)
+                constraints |= RigidbodyConstraints.FreezePositionY;
+            if (move.z == 0)
+                constraints |= RigidbodyConstraints.FreezePositionZ;
+            rigidBody.constraints = constraints;
             rigidBody.MovePosition(rigidBody.position + move);
+        }
         else
             transform.Translate(move);
 

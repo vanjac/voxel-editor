@@ -41,6 +41,7 @@ public class VoxelArray : MonoBehaviour
     public GameObject voxelPrefab;
 
     public ObjectEntity playerObject;
+    public WorldProperties world = new WorldProperties();
     protected OctreeNode rootNode;
 
     private bool unloadUnusedAssets = false;
@@ -188,6 +189,13 @@ public class VoxelArray : MonoBehaviour
     public void VoxelDestroyed(Voxel voxel)
     {
         RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
+    }
+
+    public bool IsEmpty()
+    {
+        foreach (Voxel v in IterateVoxels())
+            return false;
+        return true;
     }
 
     public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()

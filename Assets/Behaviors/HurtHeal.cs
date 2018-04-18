@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class HurtHealBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+    public static new BehaviorType objectType = new BehaviorType(
         "Hurt/Heal", "",
-        "heart", typeof(HurtHealBehavior));
+        "heart", typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private float amount = -30;
     private float rate = 0;
     private float minHealth = 0;
     private float maxHealth = 9999;
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }

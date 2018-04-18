@@ -55,7 +55,24 @@ public class WorldProperties : PropertiesObject
                     eulerAngles.y = (float)v;
                     RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
                 },
-                PropertyGUIs.Slider(0, 360))
+                PropertyGUIs.Slider(0, 360)),
+            new Property("Fog density",
+                () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
+                v => {
+                    float value = (float)v;
+                    if (value == 0)
+                        RenderSettings.fog = false;
+                    else
+                    {
+                        RenderSettings.fog = true;
+                        RenderSettings.fogDensity = value * value;
+                    }
+                },
+                PropertyGUIs.Slider(0, 1)),
+            new Property("Fog color",
+                () => RenderSettings.fogColor,
+                v => RenderSettings.fogColor = (Color) v,
+                PropertyGUIs.Color)
         };
     }
 }

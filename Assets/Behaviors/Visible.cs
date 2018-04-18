@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class VisibleBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Visible", "Object is visible in the game", "eye", typeof(VisibleBehavior));
+    public static new BehaviorType objectType = new BehaviorType(
+        "Visible", "Object is visible in the game",
+        "eye", typeof(VisibleBehavior),
+        BehaviorType.AndRule(
+            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }

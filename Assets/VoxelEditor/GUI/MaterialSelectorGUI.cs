@@ -10,6 +10,8 @@ public class MaterialSelectorGUI : GUIPanel
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_ASPECT = 3.0f;
     private const string BACK_BUTTON = "Back";
+    private const string PREVIEW_SUFFIX = "_preview";
+    private const string PREVIEW_SUFFIX_EXT = PREVIEW_SUFFIX + ".mat";
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -176,16 +178,21 @@ public class MaterialSelectorGUI : GUIPanel
             if (dirEntry.Length <= 2)
                 continue;
             string newDirEntry = dirEntry.Substring(2);
-            if (Path.GetFileName(newDirEntry).StartsWith("$"))
-                continue; // special alternate materials for game
+            string fileName = Path.GetFileName(newDirEntry);
+            string extension = Path.GetExtension(newDirEntry);
             string directory = Path.GetDirectoryName(newDirEntry);
+            if (fileName.StartsWith("$"))
+                continue; // special alternate materials for game
             if (directory != materialDirectory)
                 continue;
-            string extension = Path.GetExtension(newDirEntry);
             if (extension == "")
-                materialSubDirectories.Add(Path.GetFileName(newDirEntry));
+                materialSubDirectories.Add(fileName);
             else if (extension == ".mat")
+            {
+                if (fileName.EndsWith(PREVIEW_SUFFIX_EXT))
+                    materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
                 materials.Add(ResourcesDirectory.GetMaterial(newDirEntry));
+            }
         }
 
         Resources.UnloadUnusedAssets();
@@ -214,7 +221,15 @@ public class MaterialSelectorGUI : GUIPanel
     {
         highlightMaterial = material;
         if (handler != null)
+        {
+            if (material.name.EndsWith(PREVIEW_SUFFIX))
+            {
+                string newPath = materialDirectory + "/"
+                    + material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
+                material = Resources.Load<Material>(newPath);
+            }
             handler(material);
+        }
         if (closeOnSelect)
             Destroy(this);
     }

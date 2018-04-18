@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class TeleportBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+    public static new BehaviorType objectType = new BehaviorType(
         "Teleport", "Instantly teleport to another location",
-        "send", typeof(TeleportBehavior));
+        "send", typeof(TeleportBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private EntityReference target = new EntityReference(null);
     private EntityReference origin = new EntityReference(null);
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }
