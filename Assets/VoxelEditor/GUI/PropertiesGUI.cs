@@ -274,6 +274,11 @@ public class NewBehaviorGUI : GUIPanel
 
     private void UpdateBehaviorList()
     {
+        if (targetEntityIsActivator)
+        {
+            typePicker.items = GameScripts.behaviors;
+            return;
+        }
         var filteredTypes = new List<BehaviorType>();
         foreach(BehaviorType type in GameScripts.behaviors) {
             if (targetEntity == null)
