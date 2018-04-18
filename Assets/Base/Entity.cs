@@ -98,15 +98,6 @@ public class PropertiesObjectType
         constructor = DefaultConstructor;
     }
 
-    public PropertiesObjectType(string fullName, string description, Type type)
-    {
-        this.fullName = fullName;
-        this.description = description;
-        iconName = "";
-        this.type = type;
-        constructor = DefaultConstructor;
-    }
-
     public PropertiesObjectType(string fullName, string description, string iconName, Type type)
     {
         this.fullName = fullName;
@@ -349,7 +340,7 @@ public abstract class EntityComponent : MonoBehaviour
 
 public abstract class EntityBehavior : PropertiesObject
 {
-    public static PropertiesObjectType objectType = new PropertiesObjectType(
+    public static BehaviorType objectType = new BehaviorType(
         "Behavior", typeof(EntityBehavior));
 
     public enum Condition : byte
@@ -361,7 +352,12 @@ public abstract class EntityBehavior : PropertiesObject
     public EntityReference targetEntity = new EntityReference(null); // null for self
     public bool targetEntityIsActivator = false;
 
-    public virtual PropertiesObjectType ObjectType()
+    public PropertiesObjectType ObjectType()
+    {
+        return BehaviorObjectType();
+    }
+
+    public virtual BehaviorType BehaviorObjectType()
     {
         return objectType;
     }
@@ -379,6 +375,63 @@ public abstract class EntityBehavior : PropertiesObject
 
     public abstract Behaviour MakeComponent(GameObject gameObject);
 }
+
+
+public class BehaviorType : PropertiesObjectType
+{
+    public delegate bool BehaviorRule(Entity checkEntity);
+
+    public readonly BehaviorRule rule;
+
+    public BehaviorType(string fullName, Type type)
+        : base(fullName, type)
+    {
+        this.rule = DefaultRule;
+    }
+
+    public BehaviorType(string fullName, string description, string iconName, Type type)
+        : base(fullName, description, iconName, type)
+    {
+        this.rule = DefaultRule;
+    }
+
+    public BehaviorType(string fullName, string description, string iconName, Type type,
+        BehaviorRule rule)
+        : base(fullName, description, iconName, type)
+    {
+        this.rule = rule;
+    }
+
+    private static bool DefaultRule(Entity checkEntity)
+    {
+        return true;
+    }
+
+    public static BehaviorRule AndRule(BehaviorRule r1, BehaviorRule r2)
+    {
+        return (Entity checkEntity) =>
+        {
+            return r1(checkEntity) && r2(checkEntity);
+        };
+    }
+
+    public static BehaviorRule BaseTypeRule(Type baseType)
+    {
+        return (Entity checkEntity) =>
+        {
+            return baseType.IsAssignableFrom(checkEntity.GetType());
+        };
+    }
+
+    public static BehaviorRule NotBaseTypeRule(Type baseType)
+    {
+        return (Entity checkEntity) =>
+        {
+            return !baseType.IsAssignableFrom(checkEntity.GetType());
+        };
+    }
+}
+
 
 public abstract class Sensor : PropertiesObject
 {

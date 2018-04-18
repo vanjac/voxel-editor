@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class MoveBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+    public static new BehaviorType objectType = new BehaviorType(
         "Move", "Move in a direction or toward an object",
-        "arrow-right-bold-box-outline", typeof(MoveBehavior));
+        "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private Target target = new Target(0);
     private float speed = 1;
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }

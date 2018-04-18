@@ -253,7 +253,7 @@ public class NewBehaviorGUI : GUIPanel
     void Start()
     {
         typePicker = gameObject.AddComponent<TypePickerGUI>();
-        typePicker.items = GameScripts.behaviors;
+        UpdateBehaviorList();
         typePicker.handler = (PropertiesObjectType type) =>
         {
             EntityBehavior behavior = (EntityBehavior)type.Create();
@@ -263,6 +263,24 @@ public class NewBehaviorGUI : GUIPanel
             Destroy(this);
         };
         typePicker.enabled = false;
+    }
+
+    private void UpdateBehaviorList()
+    {
+        var filteredTypes = new List<BehaviorType>();
+        foreach(BehaviorType type in GameScripts.behaviors) {
+            if (targetEntity == null)
+            {
+                if (type.rule(self))
+                    filteredTypes.Add(type);
+            }
+            else
+            {
+                if (type.rule(targetEntity))
+                    filteredTypes.Add(type);
+            }
+        }
+        typePicker.items = filteredTypes.ToArray();
     }
 
     void OnDestroy()
@@ -291,9 +309,11 @@ public class NewBehaviorGUI : GUIPanel
                         targetEntity = null;
                     else
                         targetEntity = entity;
+                    UpdateBehaviorList();
                     return;
                 }
                 targetEntity = null;
+                UpdateBehaviorList();
             };
         }
         if (typePicker != null)

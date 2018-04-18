@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class WaterBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
+    public static new BehaviorType objectType = new BehaviorType(
         "Water", "Simulates buoyancy for player and physics objects",
-        "water", typeof(WaterBehavior));
+        "water", typeof(WaterBehavior), BehaviorType.BaseTypeRule(typeof(Substance)));
 
     private float density = 1.0f;
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }

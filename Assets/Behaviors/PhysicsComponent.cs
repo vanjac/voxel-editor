@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class PhysicsBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Physics", "Move and interact according to the laws of physics", "soccer",
-        typeof(PhysicsBehavior));
+    public static new BehaviorType objectType = new BehaviorType(
+        "Physics", "Move and interact according to the laws of physics",
+        "soccer", typeof(PhysicsBehavior),
+        BehaviorType.AndRule(
+            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
     private float density = 0.5f;
     private bool gravity = true;
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }

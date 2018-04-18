@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class SpinBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Spin", "Rotate continuously", "format-rotate-90", typeof(SpinBehavior));
+    public static new BehaviorType objectType = new BehaviorType(
+        "Spin", "Rotate continuously",
+        "format-rotate-90", typeof(SpinBehavior),
+        BehaviorType.AndRule(
+            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
     private float speed = 50;
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }

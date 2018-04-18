@@ -91,7 +91,7 @@ public class GameScripts
         DelaySensor.objectType
     };
 
-    public static PropertiesObjectType[] behaviors = new PropertiesObjectType[]
+    public static BehaviorType[] behaviors = new BehaviorType[]
     {
         VisibleBehavior.objectType,
         SolidBehavior.objectType,

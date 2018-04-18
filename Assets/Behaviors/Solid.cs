@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class SolidBehavior : EntityBehavior
 {
-    public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Solid", "Blocks and collides with other objects", "cube", typeof(SolidBehavior));
+    public static new BehaviorType objectType = new BehaviorType(
+        "Solid", "Blocks and collides with other objects",
+        "cube", typeof(SolidBehavior),
+        BehaviorType.AndRule(
+            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
-    public override PropertiesObjectType ObjectType()
+    public override BehaviorType BehaviorObjectType()
     {
         return objectType;
     }
