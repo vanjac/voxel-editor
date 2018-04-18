@@ -24,16 +24,26 @@ public class TouchComponent : SensorComponent
 {
     public ActivatedSensor.Filter filter;
     private int touchCount = 0;
+    private EntityComponent activator;
 
     public override bool IsOn()
     {
         return touchCount > 0;
     }
 
+    public override EntityComponent GetActivator()
+    {
+        return activator;
+    }
+
     public void OnTriggerEnter(Collider c)
     {
-        if (filter.EntityMatches(EntityComponent.FindEntityComponent(c)))
+        EntityComponent entity = EntityComponent.FindEntityComponent(c);
+        if (filter.EntityMatches(entity))
+        {
             touchCount++;
+            activator = entity;
+        }
     }
 
     public void OnTriggerExit(Collider c)

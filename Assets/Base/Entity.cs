@@ -454,6 +454,12 @@ public abstract class Sensor : PropertiesObject
 public abstract class SensorComponent : MonoBehaviour
 {
     public abstract bool IsOn();
+
+    // will only be called if sensor is on
+    public virtual EntityComponent GetActivator()
+    {
+        return null;
+    }
 }
 
 
