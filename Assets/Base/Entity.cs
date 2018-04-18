@@ -242,6 +242,8 @@ public abstract class EntityComponent : MonoBehaviour
     private List<Behaviour> offComponents = new List<Behaviour>();
     private List<Behaviour> onComponents = new List<Behaviour>();
     private List<Behaviour> targetedComponents = new List<Behaviour>();
+    private List<EntityBehavior> activatorBehaviors = new List<EntityBehavior>();
+    private List<Behaviour> activatorComponents = new List<Behaviour>();
 
     private SensorComponent sensorComponent;
     private bool sensorWasOn;
@@ -269,6 +271,12 @@ public abstract class EntityComponent : MonoBehaviour
         sensorWasOn = false;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
+            if (behavior.targetEntityIsActivator)
+            {
+                activatorBehaviors.Add(behavior);
+                continue;
+            }
+
             Behaviour c;
             if (behavior.targetEntity.entity != null)
             {
@@ -311,6 +319,16 @@ public abstract class EntityComponent : MonoBehaviour
             foreach (Behaviour onComponent in onComponents)
                 if (onComponent != null)
                     onComponent.enabled = true;
+            EntityComponent activator = sensorComponent.GetActivator();
+            if (activator != null)
+            {
+                foreach (EntityBehavior behavior in activatorBehaviors)
+                {
+                    Behaviour c = behavior.MakeComponent(activator.gameObject);
+                    targetedComponents.Add(c);
+                    c.enabled = true;
+                }
+            }
         }
         else if (!sensorIsOn && sensorWasOn)
         {
@@ -320,6 +338,10 @@ public abstract class EntityComponent : MonoBehaviour
             foreach (Behaviour offComponent in offComponents)
                 if (offComponent != null)
                     offComponent.enabled = true;
+            foreach (Behaviour activatorComponent in activatorComponents)
+                if (activatorComponent != null)
+                    Destroy(activatorComponent);
+            activatorComponents.Clear();
         }
         sensorWasOn = sensorIsOn;
     }
@@ -327,7 +349,11 @@ public abstract class EntityComponent : MonoBehaviour
     void OnDestroy()
     {
         foreach (Behaviour c in targetedComponents)
-            Destroy(c);
+            if (c != null)
+                Destroy(c);
+        foreach (Behaviour c in activatorComponents)
+            if (c != null)
+                Destroy(c);
     }
 
     public bool IsOn()
