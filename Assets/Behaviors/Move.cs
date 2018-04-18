@@ -60,12 +60,11 @@ public class MoveComponent : MonoBehaviour
 
     void OnEnable()
     {
-        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
+        rigidBody = gameObject.GetComponent<Rigidbody>();
     }
 
     void OnDisable()
     {
-        Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
         if (rigidBody != null)
             rigidBody.constraints = RigidbodyConstraints.None;
     }
