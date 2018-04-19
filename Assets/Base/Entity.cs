@@ -534,6 +534,14 @@ public abstract class DynamicEntityComponent : EntityComponent
 
     public void Die()
     {
+        // move entity out of any touch sensors so they will have a chance to turn off before it's destroyed
+        transform.position = new Vector3(9999, 9999, 9999);
+        StartCoroutine(DestroyCoroutine());
+    }
+
+    private IEnumerator DestroyCoroutine()
+    {
+        yield return null;
         Destroy(gameObject);
     }
 }
