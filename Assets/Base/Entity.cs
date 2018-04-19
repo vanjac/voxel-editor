@@ -324,6 +324,8 @@ public abstract class EntityComponent : MonoBehaviour
             {
                 foreach (EntityBehavior behavior in activatorBehaviors)
                 {
+                    if (!behavior.BehaviorObjectType().rule(activator.entity))
+                        continue;
                     Behaviour c = behavior.MakeComponent(activator.gameObject);
                     activatorComponents.Add(c);
                     c.enabled = true;
