@@ -22,15 +22,22 @@ public class TapSensor : Sensor
 public class TapComponent : SensorComponent
 {
     private bool value = false;
+    private EntityComponent activator;
 
     public override bool IsOn()
     {
         return value;
     }
 
-    public void TapStart()
+    public override EntityComponent GetActivator()
+    {
+        return activator;
+    }
+
+    public void TapStart(EntityComponent player)
     {
         value = true;
+        activator = player;
     }
 
     public void TapEnd()
