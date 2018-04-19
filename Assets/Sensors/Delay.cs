@@ -61,6 +61,7 @@ public class DelayComponent : SensorComponent
     }
     public DelayState state;
     private float changeTime;
+    private EntityComponent activator;
 
     void Update()
     {
@@ -78,6 +79,7 @@ public class DelayComponent : SensorComponent
                     {
                         state = DelayState.TURNING_ON;
                         changeTime = Time.time;
+                        activator = inputEntity.GetActivator();
                     }
                 break;
             case DelayState.ON:
@@ -108,5 +110,10 @@ public class DelayComponent : SensorComponent
     public override bool IsOn()
     {
         return state == DelayState.ON || state == DelayState.TURNING_OFF;
+    }
+
+    public override EntityComponent GetActivator()
+    {
+        return activator;
     }
 }

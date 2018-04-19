@@ -52,6 +52,7 @@ public class ToggleComponent : SensorComponent
     public EntityReference onInput;
     public bool value;
     private bool bothOn = false;
+    private EntityComponent activator;
 
     void Update()
     {
@@ -71,6 +72,8 @@ public class ToggleComponent : SensorComponent
             {
                 bothOn = true;
                 value = !value;
+                if (value)
+                    activator = onEntity.GetActivator();
             }
         }
         else
@@ -79,12 +82,20 @@ public class ToggleComponent : SensorComponent
             if (offInputOn)
                 value = false;
             else if (onInputOn)
+            {
                 value = true;
+                activator = onEntity.GetActivator();
+            }
         }
     }
 
     public override bool IsOn()
     {
         return value;
+    }
+
+    public override EntityComponent GetActivator()
+    {
+        return activator;
     }
 }

@@ -364,6 +364,13 @@ public abstract class EntityComponent : MonoBehaviour
             return false;
         return sensorComponent.IsOn();
     }
+
+    public EntityComponent GetActivator()
+    {
+        if (sensorComponent == null)
+            return null;
+        return sensorComponent.GetActivator();
+    }
 }
 
 public abstract class EntityBehavior : PropertiesObject
@@ -487,7 +494,7 @@ public abstract class SensorComponent : MonoBehaviour
 {
     public abstract bool IsOn();
 
-    // will only be called if sensor is on
+    // will only be called when sensor turns on
     public virtual EntityComponent GetActivator()
     {
         return null;
