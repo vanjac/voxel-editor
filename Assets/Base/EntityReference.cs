@@ -101,7 +101,7 @@ public struct Target
     public Target(Entity entity)
     {
         entityRef = new EntityReference(entity);
-        direction = 0;
+        direction = -1;
     }
 
     public Target(sbyte direction)
@@ -112,15 +112,18 @@ public struct Target
 
     public Vector3 directionFrom(Vector3 point)
     {
-        if (entityRef.entity == null)
-            return Voxel.DirectionForFaceI(direction);
-        else
+        if (entityRef.entity != null)
         {
+            direction = -1; // older versions had default direction as 0
             EntityComponent c = entityRef.component;
-            if(c != null)
+            if (c != null)
                 return (c.transform.position - point).normalized;
             return Vector3.zero;
         }
+        else if (direction == -1)
+            return Vector3.zero;
+        else
+            return Voxel.DirectionForFaceI(direction);
     }
 
     public override string ToString()
