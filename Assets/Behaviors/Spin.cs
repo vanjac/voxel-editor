@@ -37,15 +37,16 @@ public class SpinBehavior : EntityBehavior
     }
 }
 
-public class SpinComponent : MonoBehaviour
+public class SpinComponent : BehaviorComponent
 {
     public float speed;
 
     Rigidbody rigidBody;
 
-    void Start()
+    public override void Start()
     {
         rigidBody = gameObject.GetComponent<Rigidbody>();
+        base.Start();
     }
 
     void FixedUpdate()
@@ -55,5 +56,15 @@ public class SpinComponent : MonoBehaviour
             rigidBody.MoveRotation(rigidBody.rotation * rotation);
         else
             transform.rotation *= rotation;
+    }
+
+    public override void BehaviorEnabled()
+    {
+        Debug.Log("Behavior enabled!");
+    }
+
+    public override void BehaviorDisabled()
+    {
+        Debug.Log("Behavior disabled!");
     }
 }

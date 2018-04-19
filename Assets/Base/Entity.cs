@@ -416,6 +416,35 @@ public abstract class EntityBehavior : PropertiesObject
 }
 
 
+public abstract class BehaviorComponent : MonoBehaviour
+{
+    private bool started = false;
+
+    // called after object is created and first enabled
+    public virtual void Start()
+    {
+        started = true;
+        if (enabled)
+            BehaviorEnabled();
+    }
+
+    public virtual void OnEnable()
+    {
+        if (started)
+            BehaviorEnabled();
+    }
+
+    public virtual void OnDisable()
+    {
+        if (started)
+            BehaviorDisabled();
+    }
+
+    public virtual void BehaviorEnabled() { }
+    public virtual void BehaviorDisabled() { }
+}
+
+
 public class BehaviorType : PropertiesObjectType
 {
     public delegate bool BehaviorRule(Entity checkEntity);

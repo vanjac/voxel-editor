@@ -52,23 +52,13 @@ public class HurtHealBehavior : EntityBehavior
     }
 }
 
-public class HurtHealComponent : MonoBehaviour
+public class HurtHealComponent : BehaviorComponent
 {
     public float amount, rate, minHealth, maxHealth;
     private float lastTime;
-    private bool started = false;
 
-    void Start()
+    public override void BehaviorEnabled()
     {
-        started = true;
-        if (enabled)
-            OnEnable();
-    }
-
-    void OnEnable()
-    {
-        if (!started)
-            return;
         HurtHeal();
         lastTime = Time.time;
     }

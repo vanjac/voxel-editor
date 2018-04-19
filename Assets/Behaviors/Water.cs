@@ -34,12 +34,12 @@ public class WaterBehavior : EntityBehavior
     }
 }
 
-public class WaterComponent : MonoBehaviour
+public class WaterComponent : BehaviorComponent
 {
     public float density;
     public float waterLevel = float.MinValue;
 
-    void Start()
+    public override void Start()
     {
         SubstanceComponent substanceComponent = GetComponent<SubstanceComponent>();
         if (substanceComponent != null)
@@ -52,5 +52,6 @@ public class WaterComponent : MonoBehaviour
                     waterLevel = top;
             }
         }
+        base.Start();
     }
 }

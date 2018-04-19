@@ -51,7 +51,7 @@ public class PhysicsBehavior : EntityBehavior
 //
 // Terms of use: do whatever you like
 
-public class PhysicsComponent : MonoBehaviour
+public class PhysicsComponent : BehaviorComponent
 {
     public float density;
     public bool gravity;
@@ -68,13 +68,8 @@ public class PhysicsComponent : MonoBehaviour
     private Collider waterCollider;
     private WaterComponent water;
 
-    void Start()
+    public override void Start()
     {
-        if (enabled)
-            OnEnable();
-        else
-            OnDisable();
-
         voxels = new List<Vector3>();
         SubstanceComponent substanceComponent = GetComponent<SubstanceComponent>();
         if (substanceComponent != null)
@@ -82,9 +77,10 @@ public class PhysicsComponent : MonoBehaviour
                 voxels.Add(voxel.GetBounds().center - transform.position);
         else
             voxels.Add(Vector3.zero);
+        base.Start();
     }
 
-    void OnEnable()
+    public override void BehaviorEnabled()
     {
         SubstanceComponent sComponent = GetComponent<SubstanceComponent>();
         if (calculateVolumeAndMass)
@@ -104,7 +100,7 @@ public class PhysicsComponent : MonoBehaviour
         }
     }
 
-    void OnDisable()
+    public override void BehaviorDisabled()
     {
         Rigidbody rigidBody = GetComponent<Rigidbody>();
         if (rigidBody != null)

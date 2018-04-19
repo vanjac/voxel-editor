@@ -22,7 +22,7 @@ public class SolidBehavior : EntityBehavior
     }
 }
 
-public class SolidComponent : MonoBehaviour
+public class SolidComponent : BehaviorComponent
 {
     private System.Collections.Generic.IEnumerable<Collider> IterateColliders()
     {
@@ -33,21 +33,13 @@ public class SolidComponent : MonoBehaviour
             yield return childCollider;
     }
 
-    void Start()
-    {
-        if (enabled)
-            OnEnable();
-        else
-            OnDisable();
-    }
-
-    void OnEnable()
+    public override void BehaviorEnabled()
     {
         foreach (Collider c in IterateColliders())
             c.isTrigger = false;
     }
 
-    void OnDisable()
+    public override void BehaviorDisabled()
     {
         foreach (Collider c in IterateColliders())
             c.isTrigger = true;

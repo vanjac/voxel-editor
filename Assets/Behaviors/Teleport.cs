@@ -52,23 +52,13 @@ public class TeleportBehavior : EntityBehavior
     }
 }
 
-public class TeleportComponent : MonoBehaviour
+public class TeleportComponent : BehaviorComponent
 {
     public EntityReference target;
     public EntityReference origin;
-    private bool started = false;
 
-    void Start()
+    public override void BehaviorEnabled()
     {
-        started = true;
-        if (enabled)
-            OnEnable();
-    }
-
-    void OnEnable()
-    {
-        if (!started)
-            return;
         if (target.component == null)
             return;
         Vector3 originPos;

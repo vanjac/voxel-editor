@@ -22,7 +22,7 @@ public class VisibleBehavior : EntityBehavior
     }
 }
 
-public class VisibleComponent : MonoBehaviour
+public class VisibleComponent : BehaviorComponent
 {
     private System.Collections.Generic.IEnumerable<Renderer> IterateRenderers()
     {
@@ -34,21 +34,13 @@ public class VisibleComponent : MonoBehaviour
                 yield return childRenderer;
     }
 
-    void Start()
-    {
-        if (enabled)
-            OnEnable();
-        else
-            OnDisable();
-    }
-
-    void OnEnable()
+    public override void BehaviorEnabled()
     {
         foreach (Renderer r in IterateRenderers())
             r.enabled = true;
     }
 
-    void OnDisable()
+    public override void BehaviorDisabled()
     {
         foreach (Renderer r in IterateRenderers())
             r.enabled = false;

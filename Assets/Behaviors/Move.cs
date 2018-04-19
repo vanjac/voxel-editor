@@ -40,16 +40,17 @@ public class MoveBehavior : EntityBehavior
     }
 }
 
-public class MoveComponent : MonoBehaviour
+public class MoveComponent : BehaviorComponent
 {
     public Target target;
     public float speed;
 
     private Rigidbody rigidBody;
 
-    void Start()
+    public override void Start()
     {
         rigidBody = gameObject.GetComponent<Rigidbody>();
+        base.Start();
     }
 
     void OnCollisionEnter()
@@ -58,12 +59,7 @@ public class MoveComponent : MonoBehaviour
             rigidBody.velocity = Vector3.zero;
     }
 
-    void OnEnable()
-    {
-        rigidBody = gameObject.GetComponent<Rigidbody>();
-    }
-
-    void OnDisable()
+    public override void BehaviorDisabled()
     {
         if (rigidBody != null)
             rigidBody.constraints = RigidbodyConstraints.None;
