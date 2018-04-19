@@ -390,12 +390,16 @@ public abstract class EntityBehavior : PropertiesObject
 
     public virtual ICollection<Property> Properties()
     {
+        var gui = targetEntityIsActivator ?
+            (PropertyGUI)PropertyGUIs.ActivatorBehaviorCondition
+            : (PropertyGUI)PropertyGUIs.BehaviorCondition;
+
         return new Property[]
         {
             new Property("Condition",
                 () => condition,
                 v => condition = (Condition)v,
-                PropertyGUIs.BehaviorCondition)
+                gui)
         };
     }
 

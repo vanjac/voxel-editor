@@ -123,6 +123,12 @@ public class PropertyGUIs
             (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
     }
 
+    public static void ActivatorBehaviorCondition(Property property)
+    {
+        GUILayout.Label("When sensor is On");
+        property.value = EntityBehavior.Condition.ON;
+    }
+
     public static void EntityReference(Property property)
     {
         var reference = (EntityReference)property.value;
