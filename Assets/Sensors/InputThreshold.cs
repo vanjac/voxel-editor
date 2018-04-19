@@ -131,10 +131,12 @@ public class InputThresholdComponent : SensorComponent
     public float threshold;
 
     private bool value = false;
+    private EntityComponent activator;
 
     void Update()
     {
         int energy = 0;
+        activator = null;
         for (int i = 0; i < inputs.Length; i++)
         {
             EntityComponent e = inputs[i].entityRef.component;
@@ -143,7 +145,11 @@ public class InputThresholdComponent : SensorComponent
                 if (inputs[i].negative)
                     energy--;
                 else
+                {
                     energy++;
+                    if (activator == null)
+                        activator = e.GetActivator();
+                }
             }
         }
         value = energy >= threshold;
@@ -152,5 +158,10 @@ public class InputThresholdComponent : SensorComponent
     public override bool IsOn()
     {
         return value;
+    }
+
+    public override EntityComponent GetActivator()
+    {
+        return activator;
     }
 }
