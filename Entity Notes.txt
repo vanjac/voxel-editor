@@ -84,10 +84,6 @@ Move With (MotionBehavior) : like parenting (use LateUpdate)
     Properties
         Entity
 
-Move (MotionBehavior)
-    Properties
-        TARGET
-
 Navigate (MotionBehavior)
     Properties
         Entity
@@ -103,8 +99,7 @@ Wander (MotionBehavior)
 RotationBehavior (abstract Behavior for DynamicEntity)
     Properties
         Speed : degrees/second
-
-Spin (RotationBehavior)
+        Axis : 3 options
 
 Face Toward (RotationBehavior)
     Properties
