@@ -134,6 +134,13 @@ Fire (Behavior for Entity)
         Spread
         Height
 
+Particles (Behavior for Entity)
+    Properties
+        Num particles
+        Color
+        Explosiveness
+        Continuous?
+
 Paint (Behavior for FaceEntity)
     Properties
         New material
@@ -228,6 +235,7 @@ Shatter (DeathEffect)
 Particles (DeathEffect)
     Properties
         Num particles
+        Color
         Explosiveness
 
 Ghost (DeathEffect) : rising ghost animation
