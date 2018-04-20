@@ -73,14 +73,16 @@ public class DelayComponent : SensorComponent
         {
             case DelayState.OFF:
                 if (inputOn)
+                {
                     if (onTime == 0)
                         state = DelayState.ON;
                     else
                     {
                         state = DelayState.TURNING_ON;
                         changeTime = Time.time;
-                        activator = inputEntity.GetActivator();
                     }
+                    activator = inputEntity.GetActivator();
+                }
                 break;
             case DelayState.ON:
                 if (!inputOn)
