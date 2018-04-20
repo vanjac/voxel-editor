@@ -197,6 +197,8 @@ Push (Behavior for Volume)
         Target velocity
         Strength
 
+Save Checkpoint (Behavior for Entity)
+
 EFFECTS:
 
 Effect (Behavior) : effects don't have a condition (they are always on) and can't be targeted
