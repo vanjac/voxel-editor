@@ -57,14 +57,4 @@ public class SpinComponent : BehaviorComponent
         else
             transform.rotation *= rotation;
     }
-
-    public override void BehaviorEnabled()
-    {
-        Debug.Log("Behavior enabled!");
-    }
-
-    public override void BehaviorDisabled()
-    {
-        Debug.Log("Behavior disabled!");
-    }
 }
