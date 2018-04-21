@@ -565,11 +565,24 @@ public class VoxelArrayEditor : VoxelArray
             if (pulling && (!newVoxel.faces[oppositeFaceI].IsEmpty()) && !newVoxel.faces[oppositeFaceI].addSelected)
             {
                 // usually this means there's another substance. push it away before this face
-                newVoxel.faces[oppositeFaceI].addSelected = true;
-                selectedThings.Insert(i, new VoxelFaceReference(newVoxel, oppositeFaceI));
-                i -= 1;
-                // need to move the other substance out of the way first
-                temporarilyBlockPushingANewSubstance = true;
+                if (newVoxel.substance == substanceToCreate)
+                {
+                    // substance has already been created there!
+                    // substanceToCreate has never existed in the map before Adjust() was called
+                    // so it must have been created earlier in the loop
+                    // remove selection
+                    oldVoxel.faces[faceI].addSelected = false;
+                    selectedThings[i] = new VoxelFaceReference(null, -1);
+                    voxelsToUpdate.Add(oldVoxel);
+                }
+                else
+                {
+                    newVoxel.faces[oppositeFaceI].addSelected = true;
+                    selectedThings.Insert(i, new VoxelFaceReference(newVoxel, oppositeFaceI));
+                    i -= 1;
+                    // need to move the other substance out of the way first
+                    temporarilyBlockPushingANewSubstance = true;
+                }
                 continue;
             }
 
