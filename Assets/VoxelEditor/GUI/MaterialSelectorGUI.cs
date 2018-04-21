@@ -222,7 +222,7 @@ public class MaterialSelectorGUI : GUIPanel
         highlightMaterial = material;
         if (handler != null)
         {
-            if (material.name.EndsWith(PREVIEW_SUFFIX))
+            if (material != null && material.name.EndsWith(PREVIEW_SUFFIX))
             {
                 string newPath = materialDirectory + "/"
                     + material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
