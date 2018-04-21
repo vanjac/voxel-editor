@@ -406,7 +406,16 @@ public class Voxel : MonoBehaviour
         LineRenderer outline = GetComponent<LineRenderer>();
         if (outline != null)
         {
-            if (substance == null || substance.highlight == Color.clear)
+            bool facesEmpty = true;
+            foreach (VoxelFace face in faces)
+            {
+                if (!face.IsEmpty())
+                {
+                    facesEmpty = false;
+                    continue;
+                }
+            }
+            if (facesEmpty || substance == null || substance.highlight == Color.clear)
                 outline.enabled = false;
             else
             {
