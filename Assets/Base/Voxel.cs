@@ -380,6 +380,9 @@ public class Voxel : MonoBehaviour
         {
             renderer.enabled = true;
             meshCollider.enabled = true;
+            // force the collider to update. It otherwise might not since we're using the same mesh object
+            // this fixes a bug where rays would pass through a voxel that used to be empty
+            meshCollider.sharedMesh = null;
             meshCollider.sharedMesh = mesh;
             boxCollider.enabled = false;
         }
