@@ -35,6 +35,7 @@ public class EntityPickerGUI : ActionBarGUI
 
     void Start()
     {
+        propertiesGUI.freezeUpdates = true; // prevent panel resetting scroll
         selectionState = voxelArray.GetSelectionState();
         voxelArray.ClearSelection();
         voxelArray.ClearStoredSelection();
@@ -43,6 +44,8 @@ public class EntityPickerGUI : ActionBarGUI
     void OnDestroy()
     {
         voxelArray.RecallSelectionState(selectionState);
+        voxelArray.selectionChanged = false; // prevent panel resetting scroll
+        propertiesGUI.freezeUpdates = false;
     }
 
     public override void WindowGUI()

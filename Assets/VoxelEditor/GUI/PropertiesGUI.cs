@@ -13,6 +13,7 @@ public class PropertiesGUI : GUIPanel
     private bool adjustingSlider = false;
     public bool normallyOpen = true;
     public bool worldSelected = false;
+    public bool freezeUpdates = false;
 
     List<Entity> selectedEntities = new List<Entity>();
 
@@ -43,7 +44,7 @@ public class PropertiesGUI : GUIPanel
 
         scroll = GUILayout.BeginScrollView(scroll);
 
-        if (voxelArray.selectionChanged)
+        if (voxelArray.selectionChanged && !freezeUpdates)
         {
             selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
             worldSelected = false;
