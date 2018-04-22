@@ -207,6 +207,8 @@ public class Voxel : MonoBehaviour
 
     void OnDestroy()
     {
+        if (!InEditor())
+            return; // this makes it faster, I checked with Profiler
         substance = null; // remove from substance
         VoxelArray array = transform.parent.GetComponent<VoxelArray>();
         if (array != null)

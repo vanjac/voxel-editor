@@ -29,6 +29,22 @@ public class GameLoad : MonoBehaviour
 
     public void Close()
     {
+        StartCoroutine(CloseCoroutine());
+    }
+
+    private IEnumerator CloseCoroutine()
+    {
+        yield return null;
+        foreach (var substance in GetComponent<VoxelArray>().GetComponentsInChildren<SubstanceComponent>())
+        {
+            Rigidbody rigidBody = substance.GetComponent<Rigidbody>();
+            if (rigidBody != null)
+                // this avoids long freezes when unloading the scene. I'm not sure why, but my guess is that
+                // as each voxel child is destroyed it causes the rigidbody to do some calculations to update.
+                // so we make sure the rigidbodies are destroyed before anything else.
+                Destroy(rigidBody);
+        }
+        yield return null;
         SceneManager.LoadScene(SelectedMap.GetReturnFromPlayScene());
     }
 
