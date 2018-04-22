@@ -33,12 +33,12 @@ public class TeleportBehavior : EntityBehavior
                     {
                         if (targetEntity.entity != null)
                             property.value = targetEntity;
-                        else
+                        else if (!targetEntityIsActivator)
                             // TODO: this is not a good solution
                             property.value = new EntityReference(
                                 EntityReferencePropertyManager.CurrentEntity());
                     }
-                    PropertyGUIs.EntityReference(property);
+                    PropertyGUIs._EntityReferenceCustom(property, targetEntityIsActivator);
                 })
         });
     }

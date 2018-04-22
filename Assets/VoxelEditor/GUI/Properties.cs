@@ -131,8 +131,13 @@ public class PropertyGUIs
 
     public static void EntityReference(Property property)
     {
+        _EntityReferenceCustom(property, false);
+    }
+
+    public static void _EntityReferenceCustom(Property property, bool activatorIsNull)
+    {
         var reference = (EntityReference)property.value;
-        string valueString = "None";
+        string valueString = activatorIsNull ? "Activator" : "None";
 
         Color baseColor = GUI.color;
         if (reference.entity != null)
@@ -150,11 +155,15 @@ public class PropertyGUIs
             picker.voxelArray = VoxelArrayEditor.instance;
             picker.allowNone = false;
             picker.allowMultiple = false;
+            picker.activatorOption = activatorIsNull;
             picker.handler = (ICollection<Entity> entities) =>
             {
                 foreach (Entity entity in entities)
                 {
-                    property.value = new EntityReference(entity);
+                    if (entity == EntityPickerGUI.ACTIVATOR)
+                        property.value = new EntityReference(null);
+                    else
+                        property.value = new EntityReference(entity);
                     return;
                 }
                 property.value = null;
