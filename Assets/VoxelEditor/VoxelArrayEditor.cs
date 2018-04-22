@@ -565,7 +565,7 @@ public class VoxelArrayEditor : VoxelArray
             if (pulling && (!newVoxel.faces[oppositeFaceI].IsEmpty()) && !newVoxel.faces[oppositeFaceI].addSelected)
             {
                 // usually this means there's another substance. push it away before this face
-                if (newVoxel.substance == substanceToCreate)
+                if (substanceToCreate != null && newVoxel.substance == substanceToCreate)
                 {
                     // substance has already been created there!
                     // substanceToCreate has never existed in the map before Adjust() was called
