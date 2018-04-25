@@ -3,6 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+class StoredPropertiesObject : PropertiesObject
+{
+    private PropertiesObjectType type;
+    private ICollection<Property> properties;
+
+    public StoredPropertiesObject(PropertiesObject store)
+    {
+        type = store.ObjectType();
+        properties = store.Properties();
+    }
+
+    public PropertiesObjectType ObjectType()
+    {
+        return type;
+    }
+
+    public ICollection<Property> Properties()
+    {
+        return properties;
+    }
+}
+
 public class PropertiesGUI : GUIPanel
 {
     const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
@@ -16,6 +38,9 @@ public class PropertiesGUI : GUIPanel
     public bool freezeUpdates = false;
 
     List<Entity> selectedEntities = new List<Entity>();
+    PropertiesObject editEntity;
+    PropertiesObject editSensor;
+    List<PropertiesObject> editBehaviors = new List<PropertiesObject>();
 
     public override void OnEnable()
     {
@@ -46,11 +71,12 @@ public class PropertiesGUI : GUIPanel
 
         if (voxelArray.selectionChanged && !freezeUpdates)
         {
-            selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
             worldSelected = false;
             voxelArray.selectionChanged = false;
             scroll = Vector2.zero;
             scrollVelocity = Vector2.zero;
+            selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
+            UpdateEditEntity();
         }
 
         bool propertiesDisplayed = false;
@@ -63,9 +89,9 @@ public class PropertiesGUI : GUIPanel
             propertiesDisplayed = true;
             EntityReferencePropertyManager.Reset(null);
         }
-        else if (selectedEntities.Count == 1)
+        else if (editEntity != null)
         {
-            EntityPropertiesGUI(selectedEntities[0]);
+            EntityPropertiesGUI();
             propertiesDisplayed = true;
         }
         else
@@ -107,19 +133,48 @@ public class PropertiesGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
-    private void EntityPropertiesGUI(Entity entity)
+    private void UpdateEditEntity()
     {
-        EntityReferencePropertyManager.Reset(entity);
+        editBehaviors.Clear();
+        if (selectedEntities.Count == 1)
+        {
+            Entity e = null;
+            foreach (Entity e1 in selectedEntities)
+                e = e1;
+            editEntity = new StoredPropertiesObject(e);
+            if (e.sensor != null)
+                editSensor = new StoredPropertiesObject(e.sensor);
+            else
+                editSensor = null;
+            foreach (EntityBehavior behavior in e.behaviors)
+                editBehaviors.Add(new StoredPropertiesObject(behavior));
+        }
+        else
+        {
+            editEntity = null;
+            editSensor = null;
+        }
+    }
+
+    private void EntityPropertiesGUI()
+    {
+        Entity singleSelectedEntity;
+        if (selectedEntities.Count == 1)
+            singleSelectedEntity = selectedEntities[0];
+        if (singleSelectedEntity != null)
+            EntityReferencePropertyManager.Reset(singleSelectedEntity);
+        else
+            ; // TODO: what to do?
 
         GUILayout.BeginVertical(GUI.skin.box);
-        PropertiesObjectGUI(entity);
+        PropertiesObjectGUI(editEntity);
         GUILayout.EndVertical();
 
-        if (entity is Substance)
+        if (singleSelectedEntity != null && singleSelectedEntity is Substance)
         {
             if (!GUILayout.Toggle(true, "Clone", GUI.skin.button))
             {
-                Substance clone = (Substance)(entity.Clone());
+                Substance clone = (Substance)(singleSelectedEntity.Clone());
                 clone.defaultPaint = voxelArray.GetSelectedPaint();
                 clone.defaultPaint.addSelected = false;
                 clone.defaultPaint.storedSelected = false;
@@ -136,31 +191,40 @@ public class PropertiesGUI : GUIPanel
             sensorMenu.items = GameScripts.sensors;
             sensorMenu.handler = (PropertiesObjectType type) =>
             {
-                entity.sensor = (Sensor)type.Create();
+                Sensor newSensor = (Sensor)type.Create();
+                foreach (Entity entity in selectedEntities)
+                    entity.sensor = newSensor;
                 voxelArray.unsavedChanges = true;
+                UpdateEditEntity();
             };
         }
         GUILayout.BeginVertical(GUI.skin.box);
-        PropertiesObjectGUI(entity.sensor, " Sensor");
+        PropertiesObjectGUI(editSensor, " Sensor");
         GUILayout.EndVertical();
 
         if (GUILayout.Button("Add Behavior"))
         {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
             behaviorMenu.title = "Add Behavior";
-            behaviorMenu.self = entity;
+            behaviorMenu.self = singleSelectedEntity;
             behaviorMenu.voxelArray = voxelArray;
             behaviorMenu.handler = (EntityBehavior newBehavior) =>
             {
-                entity.behaviors.Add(newBehavior);
+                foreach (Entity entity in selectedEntities)
+                {
+                    if (!newBehavior.BehaviorObjectType().rule(entity))
+                        continue;
+                    entity.behaviors.Add(newBehavior);
+                }
                 voxelArray.unsavedChanges = true;
-                scrollVelocity = new Vector2(0, 2000 * entity.behaviors.Count); // scroll to bottom
+                UpdateEditEntity();
+                scrollVelocity = new Vector2(0, 2000 * editBehaviors.Count); // scroll to bottom
             };
         }
 
         Color guiBaseColor = GUI.backgroundColor;
         EntityBehavior behaviorToRemove = null;
-        foreach (EntityBehavior behavior in entity.behaviors)
+        foreach (EntityBehavior behavior in editBehaviors) // TODO: editBehaviors doesn't contain EntityBehaviors
         {
             Entity behaviorTarget = behavior.targetEntity.entity;
             string suffix = " Behavior";
@@ -284,7 +348,7 @@ public class NewBehaviorGUI : GUIPanel
         foreach(BehaviorType type in GameScripts.behaviors) {
             if (targetEntity == null)
             {
-                if (type.rule(self))
+                if (self == null || type.rule(self))
                     filteredTypes.Add(type);
             }
             else
