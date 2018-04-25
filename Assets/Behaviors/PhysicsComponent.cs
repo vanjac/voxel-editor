@@ -110,7 +110,7 @@ public class PhysicsComponent : BehaviorComponent
     void OnTriggerEnter(Collider c)
     {
         WaterComponent cWater = c.GetComponent<WaterComponent>();
-        if (cWater == null)
+        if (cWater == null && c.transform.parent != null)
             cWater = c.transform.parent.GetComponent<WaterComponent>();
         if (cWater != null)
         {
