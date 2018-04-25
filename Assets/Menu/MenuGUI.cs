@@ -164,6 +164,13 @@ public class FileDropdownGUI : GUIPanel
                 Destroy(this);
             };
         }
+#if UNITY_ANDROID
+        if (GUILayout.Button("Share"))
+        {
+            string path = MenuGUI.GetMapPath(fileName);
+            ShareMap.ShareAndroid(path);
+        }
+#endif
     }
 
     private void RenameMap(string newName)
