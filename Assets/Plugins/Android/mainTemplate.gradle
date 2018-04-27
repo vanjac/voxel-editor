@@ -13,6 +13,9 @@ allprojects {
       flatDir {
         dirs 'libs'
       }
+	  maven {
+		url "https://maven.google.com"
+	  }
    }
 }
 
@@ -20,6 +23,9 @@ apply plugin: 'com.android.application'
 
 dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile "com.android.support:support-compat:27.1.1"
+	compile "com.android.support:support-core-utils:27.1.1"
+	compile "com.android.support:support-media-compat:27.1.1"
 **DEPS**}
 
 android {

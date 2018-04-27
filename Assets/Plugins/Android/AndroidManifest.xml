@@ -25,5 +25,14 @@
             </intent-filter>
             <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
         </activity>
+
+        <!-- https://github.com/ChrisMaire/unity-native-sharing/issues/33#issuecomment-346729881 -->
+        <provider android:name="android.support.v4.content.FileProvider"
+                  android:authorities="com.vantjac.voxel.provider"
+                  android:exported="false"
+                  android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
+        </provider>
+
     </application>
 </manifest>
