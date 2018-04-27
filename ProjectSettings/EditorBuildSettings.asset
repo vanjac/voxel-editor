@@ -14,3 +14,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/playScene.unity
     guid: 11e8b04196eeb42459e39413b18f720d
+  - enabled: 1
+    path: Assets/Menu/fileReceiveScene.unity
+    guid: f7d64e12fb393074a96f9dddcacda960

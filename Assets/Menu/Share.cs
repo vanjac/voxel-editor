@@ -49,4 +49,23 @@ public class ShareMap
             currentActivity.Call("startActivity", jChooser);
         }
     }
+
+    public static string GetSharedURLAndroid()
+    {
+        var activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+        var intent = activity.Call<AndroidJavaObject>("getIntent");
+        var uri = intent.Call<AndroidJavaObject>("getData");
+        if (uri == null)
+            return "";
+        return uri.Call<string>("toString");
+    }
+
+    public static bool CatchSharedFile()
+    {
+#if UNITY_ANDROID
+        return GetSharedURLAndroid() != "";
+#else
+        return false;
+#endif
+    }
 }

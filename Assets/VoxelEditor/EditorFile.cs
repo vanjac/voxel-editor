@@ -103,5 +103,10 @@ public class EditorFile : MonoBehaviour
         Debug.unityLogger.Log("EditorFile", "OnApplicationPause(" + pauseStatus + ")");
         if (pauseStatus)
             Save();
+        else if (ShareMap.CatchSharedFile())
+        {
+            Save();
+            SceneManager.LoadScene("fileReceiveScene");
+        }
     }
 }

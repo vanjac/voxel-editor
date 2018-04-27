@@ -32,7 +32,7 @@ public class GameLoad : MonoBehaviour
         StartCoroutine(CloseCoroutine());
     }
 
-    private IEnumerator CloseCoroutine()
+    private IEnumerator CloseCoroutine(string scene=null)
     {
         yield return null;
         foreach (var substance in GetComponent<VoxelArray>().GetComponentsInChildren<SubstanceComponent>())
@@ -45,12 +45,23 @@ public class GameLoad : MonoBehaviour
                 Destroy(rigidBody);
         }
         yield return null;
-        SceneManager.LoadScene(SelectedMap.GetReturnFromPlayScene());
+        if (scene == null)
+            SceneManager.LoadScene(SelectedMap.GetReturnFromPlayScene());
+        else
+            SceneManager.LoadScene(scene);
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
             Close();
+    }
+
+    void OnApplicationPause(bool paused)
+    {
+        if (!paused && ShareMap.CatchSharedFile())
+        {
+            StartCoroutine(CloseCoroutine("fileReceiveScene"));
+        }
     }
 }
