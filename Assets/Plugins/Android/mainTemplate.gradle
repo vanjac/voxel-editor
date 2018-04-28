@@ -26,6 +26,8 @@ dependencies {
 	compile "com.android.support:support-compat:27.1.1"
 	compile "com.android.support:support-core-utils:27.1.1"
 	compile "com.android.support:support-media-compat:27.1.1"
+
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
 **DEPS**}
 
 android {

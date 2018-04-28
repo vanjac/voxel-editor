@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidPlugin.iml" filepath="$PROJECT_DIR$/AndroidPlugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pluginlibrary/pluginlibrary.iml" filepath="$PROJECT_DIR$/pluginlibrary/pluginlibrary.iml" />
+    </modules>
+  </component>
+</project>
