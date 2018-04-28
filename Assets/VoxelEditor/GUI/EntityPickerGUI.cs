@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class EntityPickerGUI : ActionBarGUI
 {
-    // dummy entity to represent the "Activator" option being selected
-    public static Entity ACTIVATOR = new Substance(null);
-
     public delegate void EntityPickerHanlder(ICollection<Entity> entities);
     public EntityPickerHanlder handler;
-    public bool allowNone = true, allowMultiple = true;
-    public bool activatorOption = false;
+    public bool allowNone = true, allowMultiple = true, allowNull = false;
+    public string nullName = "None";
 
     private VoxelArrayEditor.SelectionState selectionState;
 
@@ -58,10 +55,10 @@ public class EntityPickerGUI : ActionBarGUI
         if (allowMultiple)
             SelectionGUI();
 
-        if (activatorOption)
-            if (ActionBarButton("Activator"))
+        if (allowNull)
+            if (ActionBarButton(nullName))
             {
-                handler(new Entity[] { ACTIVATOR });
+                handler(new Entity[] { null });
                 Destroy(this);
             }
 

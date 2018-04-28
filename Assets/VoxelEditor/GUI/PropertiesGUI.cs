@@ -315,21 +315,22 @@ public class NewBehaviorGUI : GUIPanel
             entityPicker.voxelArray = voxelArray;
             entityPicker.allowNone = true;
             entityPicker.allowMultiple = false;
-            entityPicker.activatorOption = true;
+            entityPicker.allowNull = true;
+            entityPicker.nullName = "Activator";
             entityPicker.handler = (ICollection<Entity> entities) =>
             {
                 entityPicker = null;
                 foreach (Entity entity in entities)
                 {
-                    if (entity == self)
-                    {
-                        targetEntity = null;
-                        targetEntityIsActivator = false;
-                    }
-                    else if (entity == EntityPickerGUI.ACTIVATOR)
+                    if (entity == null) // activator
                     {
                         targetEntity = null;
                         targetEntityIsActivator = true;
+                    }
+                    else if (entity == self)
+                    {
+                        targetEntity = null;
+                        targetEntityIsActivator = false;
                     }
                     else
                     {

@@ -28,11 +28,11 @@ public class ToggleSensor : Sensor
             new Property("Off input",
                 () => offInput,
                 v => offInput = (EntityReference)v,
-                PropertyGUIs.EntityReference),
+                PropertyGUIs.EntityReferenceWithNull),
             new Property("On input",
                 () => onInput,
                 v => onInput = (EntityReference)v,
-                PropertyGUIs.EntityReference)
+                PropertyGUIs.EntityReferenceWithNull)
         }, base.Properties());
     }
 
