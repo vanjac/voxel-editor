@@ -121,7 +121,10 @@ public class FileDropdownGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(location.x, location.y, width * .2f, 0);
+        float y = location.y;
+        if (y + panelRect.height > height)
+            y = height - panelRect.height;
+        return new Rect(location.x, y, width * .2f, 0);
     }
 
     public override GUIStyle GetStyle()
