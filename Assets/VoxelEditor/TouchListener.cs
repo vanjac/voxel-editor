@@ -37,6 +37,8 @@ public class TouchListener : MonoBehaviour
         {
             if (currentTouchOperation == TouchOperation.SELECT)
                 voxelArray.TouchUp();
+            if (currentTouchOperation == TouchOperation.MOVE)
+                movingAxis.TouchUp();
             currentTouchOperation = TouchOperation.NONE;
         }
         else if (Input.touchCount == 1)
