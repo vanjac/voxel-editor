@@ -11,17 +11,19 @@ public class MoveAxis : MonoBehaviour
     public int moveCount = 0;
     private bool moving;
 
-    void Start ()
+    void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
     }
 
+    void OnEnable()
+    {
+        UpdateSize();
+    }
+
     void Update()
     {
-        float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
-        transform.localScale = Vector3.one * distanceToCam / 4;
-        lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
-
+        UpdateSize();
         if (!moving)
         {
             float move = (GetOriginPosition() - GetAxisPosition()) / 4.0f;
@@ -29,12 +31,19 @@ public class MoveAxis : MonoBehaviour
         }
     }
 
-    float GetAxisPosition()
+    private void UpdateSize()
+    {
+        float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
+        transform.localScale = Vector3.one * distanceToCam / 4;
+        lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
+    }
+
+    private float GetAxisPosition()
     {
         return Vector3.Dot(transform.position, forwardDirection);
     }
 
-    float GetOriginPosition()
+    private float GetOriginPosition()
     {
         return Vector3.Dot(transform.parent.position, forwardDirection);
     }
