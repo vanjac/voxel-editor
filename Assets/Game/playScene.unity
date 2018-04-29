@@ -482,6 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 953d212796a3c01489edfb59c7ae5789, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  joystick: {fileID: 1457520465}
 --- !u!114 &553249413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,6 +794,7 @@ MonoBehaviour:
   axesToUse: 0
   horizontalAxisName: Horizontal
   verticalAxisName: Vertical
+  dragTouchId: -4
 --- !u!114 &1457520466
 MonoBehaviour:
   m_ObjectHideFlags: 0

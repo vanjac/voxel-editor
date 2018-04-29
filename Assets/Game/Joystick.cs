@@ -28,6 +28,8 @@ namespace UnityStandardAssets.CrossPlatformInput
 		CrossPlatformInputManager.VirtualAxis m_HorizontalVirtualAxis; // Reference to the joystick in the cross platform input
 		CrossPlatformInputManager.VirtualAxis m_VerticalVirtualAxis; // Reference to the joystick in the cross platform input
 
+        public int dragTouchId = -4;
+
 		void OnEnable()
 		{
 			CreateVirtualAxes();
@@ -100,12 +102,14 @@ namespace UnityStandardAssets.CrossPlatformInput
 		{
 			transform.position = m_StartPos;
 			UpdateVirtualAxes(m_StartPos);
+            dragTouchId = -4;
 		}
 
 
         public void OnPointerDown(PointerEventData data)
         {
             m_StartDrag = data.position;
+            dragTouchId = data.pointerId;
         }
 
 		void OnDisable()
