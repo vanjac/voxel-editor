@@ -307,7 +307,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 1
     alignment: 0
     textureMode: 0
     generateLightingData: 0
@@ -491,6 +491,7 @@ MonoBehaviour:
   voxelArray: {fileID: 213926859}
   normallyOpen: 1
   worldSelected: 0
+  freezeUpdates: 0
 --- !u!4 &878046149
 Transform:
   m_ObjectHideFlags: 0
@@ -688,7 +689,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 1
     alignment: 0
     textureMode: 0
     generateLightingData: 0
@@ -940,7 +941,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 1
     alignment: 0
     textureMode: 0
     generateLightingData: 0
