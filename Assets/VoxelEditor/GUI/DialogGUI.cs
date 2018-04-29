@@ -58,8 +58,10 @@ public class DialogGUI : GUIPanel
 public class TextInputDialogGUI : GUIPanel
 {
     public delegate void TextHandler(string text);
+    public delegate void CancelHandler();
 
     public TextHandler handler;
+    public CancelHandler cancelHandler;
     public string prompt;
 
     private TouchScreenKeyboard keyboard;
@@ -110,7 +112,11 @@ public class TextInputDialogGUI : GUIPanel
                 Destroy(this);
             }
             else if (keyboard.status != TouchScreenKeyboard.Status.Visible)
+            {
+                if (cancelHandler != null)
+                    cancelHandler();
                 Destroy(this);
+            }
         }
         else
         {

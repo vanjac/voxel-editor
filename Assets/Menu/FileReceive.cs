@@ -13,8 +13,9 @@ public class FileReceive : MonoBehaviour
         ShareMap.MarkIntentUsedAndroid();
 
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-        inputDialog.prompt = "Enter name to save imported map as...";
+        inputDialog.prompt = "Enter name for imported map...";
         inputDialog.handler = ImportMap;
+        inputDialog.cancelHandler = Close;
         inputDialog.guiSkin = guiSkin;
     }
 
