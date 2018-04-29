@@ -2,9 +2,11 @@
 
 A mobile app for building 3D interactive worlds. This is a work in progress.
 
-The app has been tested with Unity 2017.3 on Android. There's no Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly. There are also some prebuilt APKs in the Releases section.
+The app has been tested with Unity 2017.3 on Android. There's not much Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly. There are also some prebuilt APKs in the Releases section.
 
 The app starts on the file selection menu (scene: `Menu/menuScene`). You can create new files by tapping "New...", open files by tapping their name in the list, and view additional options by tapping the "..." button next to their name.
+
+On Android, you can send files in JSON format, and open them from another app (like your Downloads).
 
 > If you are testing in the Unity Editor and open the Editor scene (`VoxelEditor/editScene`) directly without first choosing a file, it will look for a file called `mapsave`.
 
@@ -16,6 +18,8 @@ The app starts on the file selection menu (scene: `Menu/menuScene`). You can cre
 - Double tap to select all contiguous faces
 - Triple tap to select an entire substance (see below)
 - Drag one of the 3 axes (red/green/blue lines) to move selected faces/objects and "sculpt" the world
+    - Moving the axis perpendicular to the selected face will push or pull (extrude) the face
+    - Moving the axes along the surface of the face will shift the face's texture
 
 ### Toolbar icons
 
@@ -37,7 +41,7 @@ A special material is the "Sky" material. This provides a window into the sky --
 
 ## Objects
 
-Besides the walls forming the boundaries of the world, there will be different type of objects you can create to add interactivity. Right now, there are only Substances and the Player. You can tap an object to show the Properties panel (swipe left to temporarily hide it).
+Besides the walls forming the boundaries of the world, there will be different types of objects you can create to add interactivity. Right now, there are only Substances and the Player. You can tap an object to show the Properties panel (swipe left to temporarily hide it).
 
 ### Substances
 
@@ -50,3 +54,5 @@ Behaviors can be added to an object to affect its behavior in the game. Behavior
 A single Sensor can be selected for each object. Sensors turn On and Off in response to specific events in the game. These events could include touching another object, interaction with the player, or responses to the On/Off states of other objects.
 
 Behaviors can optionally be set to only be active when the Sensor is On of Off. This system allows complex interactive elements to be built.
+
+Behaviors can have an optional "target". A behavior will use the sensor of its host object to turn on and off, but act upon its Target object. The target can also be set to the "Activator" of the behavior -- this is whatever object "caused" the sensor to turn on. So if the player touches an object with a Touch sensor, all behaviors in that object which target their Activator will target the player. Activators are also propagated through logic sensors with inputs, like Threshold, Delay, and Toggle.
