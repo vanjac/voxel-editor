@@ -272,6 +272,9 @@
 ./GameAssets/Overlays/glass/TranslucentGlassSkyReflection.mat
 ./GameAssets/Overlays/glass/TranslucentGlassTinted.mat
 ./GameAssets/Overlays/glass/TranslucentResinCrushGray.mat
+./GameAssets/Overlays/symbols
+./GameAssets/Overlays/symbols/alert-outline.mat
+./GameAssets/Overlays/symbols/arrow-up-thick.mat
 ./GameAssets/Overlays/text caps
 ./GameAssets/Overlays/text caps/c065.mat
 ./GameAssets/Overlays/text caps/c066.mat
