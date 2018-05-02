@@ -14,11 +14,13 @@ public class MoveAxis : MonoBehaviour
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
+        UpdateSize();
     }
 
     void OnEnable()
     {
-        UpdateSize();
+        if (lineRenderer != null)
+            UpdateSize();
     }
 
     void Update()
