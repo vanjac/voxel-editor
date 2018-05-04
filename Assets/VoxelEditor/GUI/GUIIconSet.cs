@@ -7,6 +7,8 @@ public class GUIIconSet : MonoBehaviour
     public static GUIIconSet instance;
 
     public Texture close;
+    public Texture x;
+    public Texture next;
     public Texture create;
     public Texture applySelection;
     public Texture clearSelection;
@@ -14,6 +16,7 @@ public class GUIIconSet : MonoBehaviour
     public Texture play;
     public Texture overflow;
     public Texture world;
+    public Texture help;
     public Texture done;
     public Texture rotateLeft;
     public Texture rotateRight;

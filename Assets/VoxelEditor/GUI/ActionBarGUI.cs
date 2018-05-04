@@ -126,22 +126,22 @@ public class ActionBarGUI : GUIPanel
             ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
     }
 
-    protected bool ActionBarButton(Texture icon)
+    public static bool ActionBarButton(Texture icon)
     {
         return GUILayout.Button(icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
     }
 
-    protected bool ActionBarButton(string text)
+    public static bool ActionBarButton(string text)
     {
         return GUILayout.Button(text, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
     }
 
-    protected bool HighlightedActionBarButton(Texture icon)
+    public static bool HighlightedActionBarButton(Texture icon)
     {
         return !GUILayout.Toggle(true, icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
     }
 
-    protected void ActionBarLabel(string text)
+    public static void ActionBarLabel(string text)
     {
         if (text.Length == 0)
             return;

@@ -34,6 +34,11 @@ public class OverflowMenuGUI : GUIPanel
                 propsGUI.normallyOpen = true;
             }
         }
+        if (MenuButton("Help", GUIIconSet.instance.help))
+        {
+            gameObject.AddComponent<TutorialGUI>();
+            TutorialGUI.StartTutorial(Tutorials.PageId.INTRO_WELCOME);
+        }
     }
 
     private bool MenuButton(string name, Texture icon)
