@@ -36,8 +36,8 @@ public class OverflowMenuGUI : GUIPanel
         }
         if (MenuButton("Help", GUIIconSet.instance.help))
         {
-            gameObject.AddComponent<TutorialGUI>();
-            TutorialGUI.StartTutorial(Tutorials.PageId.INTRO_WELCOME);
+            var tutorialGUI = gameObject.AddComponent<TutorialGUI>();
+            tutorialGUI.StartTutorial(Tutorials.PageId.INTRO_WELCOME);
         }
     }
 

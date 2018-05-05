@@ -2,25 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct TutorialPage
+public abstract class TutorialPage
 {
-    public readonly string text;
-    public readonly Tutorials.PageId next;
+    public virtual void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject) { }
+    public virtual void Update(VoxelArrayEditor voxelArray, GameObject guiGameObject) { }
+    public virtual void End(VoxelArrayEditor voxelArray, GameObject guiGameObject) { }
+    public abstract string GetText();
+    public virtual Tutorials.PageId GetNextButtonTarget()
+    {
+        return Tutorials.PageId.NONE;
+    }
+}
 
-    public TutorialPage(string text, Tutorials.PageId next=Tutorials.PageId.NONE)
+public class SimpleTutorialPage : TutorialPage
+{
+    private readonly string text;
+    private Tutorials.PageId next;
+
+    public SimpleTutorialPage(string text, Tutorials.PageId next=Tutorials.PageId.NONE)
     {
         this.text = text;
         this.next = next;
+    }
+
+    public override string GetText()
+    {
+        return text;
+    }
+
+    public override Tutorials.PageId GetNextButtonTarget()
+    {
+        return next;
     }
 }
 
 public class TutorialGUI : GUIPanel
 {
-    private static List<Tutorials.PageId> pageStack = new List<Tutorials.PageId>();
+    public VoxelArrayEditor voxelArray;
 
-    public static void StartTutorial(Tutorials.PageId page) {
+    private static List<Tutorials.PageId> pageStack = new List<Tutorials.PageId>();
+    private TutorialPage currentPage = null;
+
+    private void SetPage(Tutorials.PageId pageId)
+    {
+        TutorialPage newPage = Tutorials.PAGES[(int)pageId]();
+        if (currentPage != null)
+            currentPage.End(voxelArray, gameObject);
+        if (newPage != null)
+            newPage.Start(voxelArray, gameObject);
+        currentPage = newPage;
+    }
+
+    public void StartTutorial(Tutorials.PageId pageId) {
         pageStack.Clear();
-        pageStack.Add(page);
+        pageStack.Add(pageId);
+        SetPage(pageId);
     }
 
     public override void OnEnable()
@@ -47,29 +83,35 @@ public class TutorialGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (pageStack.Count == 0)
+        if (currentPage == null)
         {
             Destroy(this);
             return;
         }
-
-        var page = Tutorials.PAGES[(int)(pageStack[pageStack.Count - 1])];
+        currentPage.Update(voxelArray, gameObject);
 
         GUILayout.BeginHorizontal();
         if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.x))
         {
             pageStack.Clear();
+            SetPage(Tutorials.PageId.NONE);
+            return;
         }
         if (pageStack.Count > 1 && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
         {
+            // pop
             pageStack.RemoveAt(pageStack.Count - 1);
+            SetPage(pageStack[pageStack.Count - 1]);
         }
         GUILayout.BeginHorizontal(GUI.skin.box);
-        GUILayout.Label(page.text, GUILayout.ExpandHeight(true));
+        GUILayout.Label(currentPage.GetText(), GUILayout.ExpandHeight(true));
         GUILayout.EndHorizontal();
-        if (page.next != Tutorials.PageId.NONE && ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
+        var next = currentPage.GetNextButtonTarget();
+        if (next != Tutorials.PageId.NONE && ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
         {
-            pageStack.Add(page.next);
+            // push
+            pageStack.Add(next);
+            SetPage(next);
         }
         GUILayout.EndHorizontal();
     }
