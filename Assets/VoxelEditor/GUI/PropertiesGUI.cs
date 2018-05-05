@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PropertiesGUI : GUIPanel
 {
-    const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
+    public const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
 
     public float slide = SLIDE_HIDDEN;
     public VoxelArrayEditor voxelArray;

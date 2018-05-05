@@ -47,7 +47,10 @@ public class TutorialGUI : GUIPanel
 
     private void SetPage(Tutorials.PageId pageId)
     {
-        TutorialPage newPage = Tutorials.PAGES[(int)pageId]();
+        var factory = Tutorials.PAGES[(int)pageId];
+        TutorialPage newPage = null;
+        if (factory != null)
+            newPage = factory();
         if (currentPage != null)
             currentPage.End(voxelArray, gameObject);
         if (newPage != null)
@@ -74,7 +77,7 @@ public class TutorialGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        float h = propertiesGUI.slide == 0 ? .15f : .12f;
+        float h = .15f - propertiesGUI.slide / PropertiesGUI.SLIDE_HIDDEN * .03f;
         return new Rect(height / 2 + propertiesGUI.slide, height * (1 - h),
             width - height / 2 - propertiesGUI.slide, height * h);
     }
