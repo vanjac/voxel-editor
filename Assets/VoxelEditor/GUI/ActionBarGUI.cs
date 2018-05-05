@@ -145,7 +145,7 @@ public class ActionBarGUI : GUIPanel
     {
         if (text.Length == 0)
             return;
-        GUILayout.Label(text, labelStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+        GUILayout.Label(text, labelStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
     }
 
     private string SelectionString(Vector3 selectionSize)

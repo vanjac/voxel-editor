@@ -40,6 +40,8 @@ public class TutorialGUI : GUIPanel
 {
     public VoxelArrayEditor voxelArray;
 
+    private GUIStyle textStyle;
+
     private static List<Tutorials.PageId> pageStack = new List<Tutorials.PageId>();
     private TutorialPage currentPage = null;
 
@@ -72,8 +74,9 @@ public class TutorialGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(height / 2 + propertiesGUI.slide, height * .88f,
-            width - height / 2 - propertiesGUI.slide, height * .12f);
+        float h = propertiesGUI.slide == 0 ? .15f : .12f;
+        return new Rect(height / 2 + propertiesGUI.slide, height * (1 - h),
+            width - height / 2 - propertiesGUI.slide, height * h);
     }
 
     public override GUIStyle GetStyle()
@@ -83,6 +86,16 @@ public class TutorialGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        if (textStyle == null)
+        {
+            textStyle = new GUIStyle(GUI.skin.label);
+            textStyle.wordWrap = true;
+            textStyle.alignment = TextAnchor.MiddleLeft;
+            textStyle.normal.background = GUI.skin.box.normal.background;
+            textStyle.border = GUI.skin.box.border;
+            textStyle.padding.top = 0;
+            textStyle.padding.bottom = 0;
+        }
         if (currentPage == null)
         {
             Destroy(this);
@@ -103,9 +116,7 @@ public class TutorialGUI : GUIPanel
             pageStack.RemoveAt(pageStack.Count - 1);
             SetPage(pageStack[pageStack.Count - 1]);
         }
-        GUILayout.BeginHorizontal(GUI.skin.box);
-        GUILayout.Label(currentPage.GetText(), GUILayout.ExpandHeight(true));
-        GUILayout.EndHorizontal();
+        GUILayout.Label(currentPage.GetText(), textStyle, GUILayout.ExpandHeight(true));
         var next = currentPage.GetNextButtonTarget();
         if (next != Tutorials.PageId.NONE && ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
         {

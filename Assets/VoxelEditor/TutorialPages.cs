@@ -15,7 +15,9 @@
     {
         PAGES[(int)PageId.NONE] = () => null;
         PAGES[(int)PageId.INTRO_WELCOME] = () =>
-            new SimpleTutorialPage("Welcome to the tutorials!", next:PageId.TEST_PAGE);
+            new SimpleTutorialPage("Welcome to _________! This is a brief tutorial that will guide you through the app. "
+                                   + "You can access this tutorial and others at any time. Press Right to continue.",
+                                   next:PageId.TEST_PAGE);
         PAGES[(int)PageId.TEST_PAGE] = () =>
             new SimpleTutorialPage("Test Page");
     }
