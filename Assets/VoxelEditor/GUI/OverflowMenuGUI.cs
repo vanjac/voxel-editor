@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class OverflowMenuGUI : GUIPanel
 {
+    public VoxelArrayEditor voxelArray;
+    public TouchListener touchListener;
+
     private float buttonHeight;
 
     public override Rect GetRect(float width, float height)
@@ -37,6 +40,8 @@ public class OverflowMenuGUI : GUIPanel
         if (MenuButton("Help", GUIIconSet.instance.help))
         {
             var tutorialGUI = gameObject.AddComponent<TutorialGUI>();
+            tutorialGUI.voxelArray = voxelArray;
+            tutorialGUI.touchListener = touchListener;
             tutorialGUI.StartTutorial(Tutorials.PageId.INTRO_WELCOME);
         }
     }

@@ -786,4 +786,10 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
+    public int GetSelectedFaceNormal()
+    {
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+            return faceRef.faceI;
+        return -1;
+    }
 }

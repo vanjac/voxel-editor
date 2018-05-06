@@ -4,9 +4,15 @@ using UnityEngine;
 
 public abstract class TutorialPage
 {
-    public virtual void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject) { }
-    public virtual void Update(VoxelArrayEditor voxelArray, GameObject guiGameObject) { }
-    public virtual void End(VoxelArrayEditor voxelArray, GameObject guiGameObject) { }
+    public virtual void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+        TouchListener touchListener) { }
+    public virtual Tutorials.PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+        TouchListener touchListener)
+    {
+        return Tutorials.PageId.NONE;
+    }
+    public virtual void End(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+        TouchListener touchListener) { }
     public abstract string GetText();
     public virtual Tutorials.PageId GetNextButtonTarget()
     {
@@ -39,6 +45,7 @@ public class SimpleTutorialPage : TutorialPage
 public class TutorialGUI : GUIPanel
 {
     public VoxelArrayEditor voxelArray;
+    public TouchListener touchListener;
 
     private GUIStyle textStyle;
 
@@ -52,9 +59,9 @@ public class TutorialGUI : GUIPanel
         if (factory != null)
             newPage = factory();
         if (currentPage != null)
-            currentPage.End(voxelArray, gameObject);
+            currentPage.End(voxelArray, gameObject, touchListener);
         if (newPage != null)
-            newPage.Start(voxelArray, gameObject);
+            newPage.Start(voxelArray, gameObject, touchListener);
         currentPage = newPage;
     }
 
@@ -104,7 +111,13 @@ public class TutorialGUI : GUIPanel
             Destroy(this);
             return;
         }
-        currentPage.Update(voxelArray, gameObject);
+        var newPage = currentPage.Update(voxelArray, gameObject, touchListener);
+        if (newPage != Tutorials.PageId.NONE)
+        {
+            // push
+            pageStack.Add(newPage);
+            SetPage(newPage);
+        }
 
         GUILayout.BeginHorizontal();
         if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.x))

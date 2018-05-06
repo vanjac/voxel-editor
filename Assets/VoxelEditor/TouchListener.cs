@@ -19,7 +19,7 @@ public class TouchListener : MonoBehaviour
 
     public TouchOperation currentTouchOperation = TouchOperation.NONE;
     public MoveAxis movingAxis;
-    private Transform pivot;
+    public Transform pivot;
     private Camera cam;
 
     private Voxel lastHitVoxel;

@@ -62,7 +62,9 @@ public class ActionBarGUI : GUIPanel
 
         if (ActionBarButton(GUIIconSet.instance.overflow))
         {
-            gameObject.AddComponent<OverflowMenuGUI>();
+            var overflow = gameObject.AddComponent<OverflowMenuGUI>();
+            overflow.voxelArray = voxelArray;
+            overflow.touchListener = touchListener;
         }
 
         GUILayout.EndHorizontal();
