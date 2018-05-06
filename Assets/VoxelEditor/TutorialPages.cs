@@ -29,12 +29,12 @@ public class Tutorials
     {
         PAGES[(int)PageId.NONE] = () => null;
         PAGES[(int)PageId.INTRO_WELCOME] = () => new SimpleTutorialPage(
-            "Welcome to _________! This is a brief tutorial that will guide you through the app. "
-            + "You can access this tutorial and others at any time. Press Right to continue.",
+            "Welcome! This is a brief tutorial that will guide you through the app. "
+            + "You can access this tutorial and others at any time. Press the right arrow to continue.",
             next: PageId.INTRO_ROOM);
         PAGES[(int)PageId.INTRO_ROOM] = () => new SimpleTutorialPage(
             "Right now you are looking at the interior of a room. One wall is hidden so you can see inside. "
-            + "The green person marks the player start location.",
+            + "The green person marks the player location.",
             next: PageId.INTRO_NAVIGATION);
         PAGES[(int)PageId.INTRO_NAVIGATION] = () => new TutorialIntroNavigation();
         PAGES[(int)PageId.INTRO_SELECT_FACE] = () => new TutorialIntroSelectFace();
