@@ -94,12 +94,12 @@ public class VoxelArrayEditor : VoxelArray
         FACE // fill-select adjacent faces
     }
 
-    private SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
+    public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
     // all faces where face.addSelected == true
     private List<Selectable> selectedThings = new List<Selectable>();
     // all faces where face.storedSelected == true
     private List<Selectable> storedSelectedThings = new List<Selectable>();
-    private Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
+    public Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
     private Substance boxSelectSubstance = null;
     // dummy Substance to use for boxSelectSubstance when selecting objects
     private Substance selectObjectSubstance;

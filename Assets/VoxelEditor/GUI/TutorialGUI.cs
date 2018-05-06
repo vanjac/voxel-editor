@@ -42,6 +42,38 @@ public class SimpleTutorialPage : TutorialPage
     }
 }
 
+public class FullScreenTutorialPage : SimpleTutorialPage
+{
+    private Texture image;
+    private float scale;
+
+    public FullScreenTutorialPage(string text, string imageResourceName,
+        float scale = 1.0f,
+        Tutorials.PageId next = Tutorials.PageId.NONE) : base(text, next)
+    {
+        image = Resources.Load<Texture>(imageResourceName);
+        this.scale = scale;
+    }
+
+    public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+    {
+        var fade = guiGameObject.AddComponent<FadeGUI>();
+        fade.background = image;
+        fade.backgroundScale = scale;
+    }
+
+    public override Tutorials.PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+    {
+        guiGameObject.GetComponent<TutorialGUI>().BringToFront();
+        return Tutorials.PageId.NONE;
+    }
+
+    public override void End(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+    {
+        GameObject.Destroy(guiGameObject.GetComponent<FadeGUI>());
+    }
+}
+
 public class TutorialGUI : GUIPanel
 {
     public VoxelArrayEditor voxelArray;

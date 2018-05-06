@@ -183,6 +183,11 @@ public abstract class GUIPanel : MonoBehaviour
         return null;
     }
 
+    public void BringToFront()
+    {
+        GUI.BringWindowToFront(GetHashCode());
+    }
+
     public static void BeginButtonHorizontal(string name)
     {
         GUILayout.BeginHorizontal(GUI.skin.button);

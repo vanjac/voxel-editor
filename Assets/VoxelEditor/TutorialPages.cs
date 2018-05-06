@@ -41,20 +41,16 @@ public class Tutorials
         PAGES[(int)PageId.INTRO_PULL] = () => new TutorialIntroPull();
         PAGES[(int)PageId.INTRO_PUSH] = () => new TutorialIntroPush();
         PAGES[(int)PageId.INTRO_COLUMN] = () => new TutorialIntroColumn();
-        PAGES[(int)PageId.INTRO_SELECT_BOX] = () => new SimpleTutorialPage(
-            "Tap and drag to select a group of faces in a rectangle or box. <i>Try this a few times.</i>",
-            next: PageId.INTRO_SELECT_WALL);
-        PAGES[(int)PageId.INTRO_SELECT_WALL] = () => new SimpleTutorialPage(
-            "<i>Double tap to select an entire wall.</i>",
-            next: PageId.INTRO_SUMMARY);
+        PAGES[(int)PageId.INTRO_SELECT_BOX] = () => new TutorialIntroSelectBox();
+        PAGES[(int)PageId.INTRO_SELECT_WALL] = () => new TutorialIntroSelectWall();
         PAGES[(int)PageId.INTRO_SUMMARY] = () => new SimpleTutorialPage(
             "By selecting faces and pushing/pulling them, you can sculpt the world.",
             next: PageId.INTRO_BUTTONS);
-        PAGES[(int)PageId.INTRO_BUTTONS] = () => new SimpleTutorialPage(
-            "[toolbar buttons]",
-            next: PageId.INTRO_END);
+        PAGES[(int)PageId.INTRO_BUTTONS] = () => new FullScreenTutorialPage(
+            "These buttons appear at the top of the screen, based on context.",
+            "Tutorials/toolbar_buttons", scale: 1.5f, next: PageId.INTRO_END);
         PAGES[(int)PageId.INTRO_END] = () => new SimpleTutorialPage(
-            "Good luck!");
+            "Good luck! You can access more tutorials by choosing Help in the menu.");
     }
 
     private class TutorialIntroNavigation : TutorialPage
@@ -206,6 +202,7 @@ public class Tutorials
 
     private class TutorialIntroPush : TutorialPage
     {
+        private Bounds startSelectedFace;
         private int faceNormal;
 
         public override string GetText()
@@ -217,9 +214,17 @@ public class Tutorials
             return message;
         }
 
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            startSelectedFace = voxelArray.boxSelectStartBounds;
+        }
+
         public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
-            faceNormal = voxelArray.GetSelectedFaceNormal();
+            if (startSelectedFace == voxelArray.boxSelectStartBounds)
+                faceNormal = -1; // same face selected as before
+            else
+                faceNormal = voxelArray.GetSelectedFaceNormal();
             if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
                 && TutorialIntroPull.AxisMatchesFace(touchListener.movingAxis, faceNormal))
             {
@@ -242,7 +247,7 @@ public class Tutorials
 
     private class TutorialIntroColumn : TutorialPage
     {
-        int lastFaceNormal = -1;
+        private int lastFaceNormal = -1;
 
         public override string GetText()
         {
@@ -260,6 +265,81 @@ public class Tutorials
                 && !voxelArray.SomethingIsSelected())
                 // just made a column
                 return PageId.INTRO_SELECT_BOX;
+            else
+                return PageId.NONE;
+        }
+    }
+
+
+    private class TutorialIntroSelectBox : TutorialPage
+    {
+        private bool boxWasSelected;
+        private int numBoxes;
+        private Bounds lastStartBounds;
+
+        public override string GetText()
+        {
+            return "Tap and drag to select a group of faces in a rectangle or box. <i>Try this a few times.</i>";
+        }
+
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+            TouchListener touchListener)
+        {
+            voxelArray.ClearSelection();
+            voxelArray.ClearStoredSelection();
+        }
+
+        private bool BoxIsSelected(VoxelArrayEditor voxelArray)
+        {
+            return voxelArray.selectMode == VoxelArrayEditor.SelectMode.BOX
+                && voxelArray.selectionBounds.size.sqrMagnitude > 3;
+        }
+
+        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            if (!boxWasSelected)
+            {
+                if (BoxIsSelected(voxelArray))
+                {
+                    Debug.Log("Selected box");
+                    boxWasSelected = true;
+                    numBoxes++;
+                    lastStartBounds = voxelArray.boxSelectStartBounds;
+                }
+            }
+            else
+            {
+                if (!voxelArray.SomethingIsSelected())
+                {
+                    Debug.Log("Deselected box");
+                    boxWasSelected = false;
+                }
+                else if (voxelArray.boxSelectStartBounds != lastStartBounds)
+                {
+                    Debug.Log("Deselected box");
+                    boxWasSelected = false;
+                }
+            }
+
+            if (numBoxes >= 3)
+                return PageId.INTRO_SELECT_WALL;
+            else
+                return PageId.NONE;
+        }
+    }
+
+
+    private class TutorialIntroSelectWall : TutorialPage
+    {
+        public override string GetText()
+        {
+            return "<i>Double tap to select an entire wall.</i>";
+        }
+
+        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.FACE)
+                return PageId.INTRO_SUMMARY;
             else
                 return PageId.NONE;
         }
