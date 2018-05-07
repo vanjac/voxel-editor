@@ -166,7 +166,16 @@ public class TutorialGUI : GUIPanel
         }
         GUILayout.Label(currentPage.GetText(), textStyle, GUILayout.ExpandHeight(true));
         var next = currentPage.GetNextButtonTarget();
-        if (next != Tutorials.PageId.NONE && ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
+        if (next == Tutorials.PageId.END)
+        {
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.done))
+            {
+                pageStack.Clear();
+                SetPage(Tutorials.PageId.NONE);
+                return;
+            }
+        }
+        else if (next != Tutorials.PageId.NONE && ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
         {
             // push
             pageStack.Add(next);

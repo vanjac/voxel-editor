@@ -7,6 +7,7 @@ public class Tutorials
     public enum PageId : int
     {
         NONE,
+        END,
         INTRO_WELCOME,
         INTRO_ROOM,
         INTRO_NAVIGATION,
@@ -19,6 +20,12 @@ public class Tutorials
         INTRO_SUMMARY,
         INTRO_BUTTONS,
         INTRO_END,
+        PAINT_START,
+        PAINT_INTRO,
+        PAINT_TEXTURES,
+        PAINT_OVERLAYS,
+        PAINT_TRANSFORM,
+        PAINT_SKY,
         MAX_PAGES
     }
 
@@ -50,7 +57,29 @@ public class Tutorials
             "These buttons appear at the top of the screen, based on context.",
             "Tutorials/toolbar_buttons", scale: 1.5f, next: PageId.INTRO_END);
         PAGES[(int)PageId.INTRO_END] = () => new SimpleTutorialPage(
-            "Good luck! You can access more tutorials by choosing Help in the menu.");
+            "Good luck! You can access more tutorials by choosing Help in the menu.",
+            next: PageId.END);
+
+        PAGES[(int)PageId.PAINT_START] = () => new SimpleTutorialPage(
+            "Select a face and tap the paintbrush icon to open the Paint panel.",
+            next: PageId.PAINT_INTRO);
+        PAGES[(int)PageId.PAINT_INTRO] = () => new SimpleTutorialPage(
+            "You can use the Paint panel to paint the selected faces with <i>materials</i> and <i>overlays</i>.",
+            next: PageId.PAINT_TEXTURES);
+        PAGES[(int)PageId.PAINT_TEXTURES] = () => new SimpleTutorialPage(
+            "Choose any of the categories in the list to browse textures. Or switch to the Color tab to paint a solid color.",
+            next: PageId.PAINT_OVERLAYS);
+        PAGES[(int)PageId.PAINT_OVERLAYS] = () => new SimpleTutorialPage(
+            "A paint is composed of two parts: an opaque material, and a transparent overlay which covers the material. "
+            + "Use the tabs to switch between the two parts.",
+            next: PageId.PAINT_TRANSFORM);
+        PAGES[(int)PageId.PAINT_TRANSFORM] = () => new SimpleTutorialPage(
+            "Use these buttons to rotate and mirror the paint.",
+            next: PageId.PAINT_SKY);
+        PAGES[(int)PageId.PAINT_SKY] = () => new SimpleTutorialPage(
+            "The “Sky” material is special: in the game it becomes an unobstructed window to the sky. "
+            + "Since the world can't have any holes, this is the only way to see the sky.",
+            next: PageId.END);
     }
 
     private class TutorialIntroNavigation : TutorialPage
