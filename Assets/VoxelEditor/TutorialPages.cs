@@ -60,23 +60,21 @@ public class Tutorials
             "Good luck! You can access more tutorials by choosing Help in the menu.",
             next: PageId.END);
 
-        PAGES[(int)PageId.PAINT_START] = () => new SimpleTutorialPage(
-            "Select a face and tap the paintbrush icon to open the Paint panel.",
-            next: PageId.PAINT_INTRO);
-        PAGES[(int)PageId.PAINT_INTRO] = () => new SimpleTutorialPage(
+        PAGES[(int)PageId.PAINT_START] = () => new TutorialPaintStart();
+        PAGES[(int)PageId.PAINT_INTRO] = () => new TutorialPaintPage(
             "You can use the Paint panel to paint the selected faces with <i>materials</i> and <i>overlays</i>.",
             next: PageId.PAINT_TEXTURES);
-        PAGES[(int)PageId.PAINT_TEXTURES] = () => new SimpleTutorialPage(
+        PAGES[(int)PageId.PAINT_TEXTURES] = () => new TutorialPaintPage(
             "Choose any of the categories in the list to browse textures. Or switch to the Color tab to paint a solid color.",
             next: PageId.PAINT_OVERLAYS);
-        PAGES[(int)PageId.PAINT_OVERLAYS] = () => new SimpleTutorialPage(
+        PAGES[(int)PageId.PAINT_OVERLAYS] = () => new TutorialPaintPage(
             "A paint is composed of two parts: an opaque material, and a transparent overlay which covers the material. "
             + "Use the tabs to switch between the two parts.",
             next: PageId.PAINT_TRANSFORM);
-        PAGES[(int)PageId.PAINT_TRANSFORM] = () => new SimpleTutorialPage(
+        PAGES[(int)PageId.PAINT_TRANSFORM] = () => new TutorialPaintPage(
             "Use these buttons to rotate and mirror the paint.",
             next: PageId.PAINT_SKY);
-        PAGES[(int)PageId.PAINT_SKY] = () => new SimpleTutorialPage(
+        PAGES[(int)PageId.PAINT_SKY] = () => new TutorialPaintPage(
             "The “Sky” material is special: in the game it becomes an unobstructed window to the sky. "
             + "Since the world can't have any holes, this is the only way to see the sky.",
             next: PageId.END);
@@ -371,6 +369,59 @@ public class Tutorials
                 return PageId.INTRO_SUMMARY;
             else
                 return PageId.NONE;
+        }
+    }
+
+
+    private class TutorialPaintStart : TutorialPage
+    {
+        public override string GetText()
+        {
+            return "<i>Select a face and tap the paintbrush icon to open the Paint panel.</i>";
+        }
+
+        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            if (guiGameObject.GetComponent<PaintGUI>() != null)
+                return PageId.PAINT_INTRO;
+            else
+                return PageId.NONE;
+        }
+    }
+
+
+    private class TutorialPaintPage : TutorialPage
+    {
+        private readonly string text;
+        private Tutorials.PageId next;
+        private bool panelOpen;
+
+        public TutorialPaintPage(string text, Tutorials.PageId next)
+        {
+            this.text = text;
+            this.next = next;
+        }
+
+        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            panelOpen = guiGameObject.GetComponent<PaintGUI>() != null;
+            return PageId.NONE;
+        }
+
+        public override string GetText()
+        {
+            if (!panelOpen)
+                return "<i>Reopen the paint panel. (Select a face and tap the paintbrush icon)</i>";
+            else
+                return text;
+        }
+
+        public override PageId GetNextButtonTarget()
+        {
+            if (!panelOpen)
+                return PageId.NONE;
+            else
+                return next;
         }
     }
 }

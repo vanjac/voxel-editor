@@ -186,6 +186,8 @@ public abstract class GUIPanel : MonoBehaviour
     public void BringToFront()
     {
         GUI.BringWindowToFront(GetHashCode());
+        openPanels.Remove(this);
+        openPanels.Add(this);
     }
 
     public static void BeginButtonHorizontal(string name)

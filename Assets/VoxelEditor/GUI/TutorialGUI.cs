@@ -64,7 +64,6 @@ public class FullScreenTutorialPage : SimpleTutorialPage
 
     public override Tutorials.PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
     {
-        guiGameObject.GetComponent<TutorialGUI>().BringToFront();
         return Tutorials.PageId.NONE;
     }
 
@@ -143,6 +142,7 @@ public class TutorialGUI : GUIPanel
             Destroy(this);
             return;
         }
+        BringToFront();
         var newPage = currentPage.Update(voxelArray, gameObject, touchListener);
         if (newPage != Tutorials.PageId.NONE)
         {
