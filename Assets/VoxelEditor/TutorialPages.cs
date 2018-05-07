@@ -74,10 +74,7 @@ public class Tutorials
         PAGES[(int)PageId.PAINT_TRANSFORM] = () => new TutorialPaintPage(
             "Use these buttons to rotate and mirror the paint.",
             next: PageId.PAINT_SKY);
-        PAGES[(int)PageId.PAINT_SKY] = () => new TutorialPaintPage(
-            "The “Sky” material is special: in the game it becomes an unobstructed window to the sky. "
-            + "Since the world can't have any holes, this is the only way to see the sky.",
-            next: PageId.END);
+        PAGES[(int)PageId.PAINT_SKY] = () => new TutorialPaintSky();
     }
 
     private class TutorialIntroNavigation : TutorialPage
@@ -422,6 +419,21 @@ public class Tutorials
                 return PageId.NONE;
             else
                 return next;
+        }
+    }
+
+
+    private class TutorialPaintSky : TutorialPaintPage
+    {
+        public TutorialPaintSky()
+            : base("The “Sky” material is special: in the game it becomes an unobstructed window to the sky. "
+                + "Since the world can't have any holes, this is the only way to see the sky.",
+                next: PageId.END) { }
+
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            PaintGUI paintPanel = guiGameObject.GetComponent<PaintGUI>();
+            paintPanel.scrollVelocity = new Vector2(0, 3000);
         }
     }
 }

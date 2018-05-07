@@ -58,10 +58,12 @@ public class MaterialSelectorGUI : GUIPanel
             condensedButtonStyle.padding.right = 16;
         }
 
+        TutorialGUI.TutorialHighlight(Tutorials.PageId.PAINT_TEXTURES);
         if (allowNullMaterial)
             tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture", "None" }, 3);
         else
             tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture" }, 2);
+        TutorialGUI.ClearHighlight();
 
         if (tab == 0)
             ColorTab();

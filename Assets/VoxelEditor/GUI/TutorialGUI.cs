@@ -83,6 +83,20 @@ public class TutorialGUI : GUIPanel
     private static List<Tutorials.PageId> pageStack = new List<Tutorials.PageId>();
     private TutorialPage currentPage = null;
 
+    public static void TutorialHighlight(Tutorials.PageId page)
+    {
+        if (pageStack.Count == 0)
+            return;
+        if (pageStack[pageStack.Count - 1] == page
+                && Time.time % 0.6f < 0.3f) // blink
+            GUI.backgroundColor = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+    }
+
+    public static void ClearHighlight()
+    {
+        GUI.backgroundColor = Color.white;
+    }
+
     private void SetPage(Tutorials.PageId pageId)
     {
         var factory = Tutorials.PAGES[(int)pageId];
