@@ -68,7 +68,7 @@ public class Tutorials
             "Choose any of the categories in the list to browse textures. Or switch to the Color tab to paint a solid color.",
             next: PageId.PAINT_OVERLAYS);
         PAGES[(int)PageId.PAINT_OVERLAYS] = () => new TutorialPaintPage(
-            "A paint is composed of two parts: an opaque material, and a transparent overlay which covers the material. "
+            "A paint is composed of two parts: an opaque material and a transparent overlay. "
             + "Use the tabs to switch between the two parts.",
             next: PageId.PAINT_TRANSFORM);
         PAGES[(int)PageId.PAINT_TRANSFORM] = () => new TutorialPaintPage(
@@ -426,8 +426,8 @@ public class Tutorials
     private class TutorialPaintSky : TutorialPaintPage
     {
         public TutorialPaintSky()
-            : base("The “Sky” material is special: in the game it becomes an unobstructed window to the sky. "
-                + "Since the world can't have any holes, this is the only way to see the sky.",
+            : base("The “Sky” material is special: in the game it is an unobstructed window to the sky. "
+                + "Since the world can't have holes, this is the only way to see the sky.",
                 next: PageId.END) { }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
