@@ -374,7 +374,7 @@ public class Tutorials
     {
         public override string GetText()
         {
-            return "<i>Select a face and tap the paintbrush icon to open the Paint panel.</i>";
+            return "<i>Select a face and tap the paint roller icon to open the Paint panel.</i>";
         }
 
         public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
@@ -408,7 +408,7 @@ public class Tutorials
         public override string GetText()
         {
             if (!panelOpen)
-                return "<i>Reopen the paint panel. (Select a face and tap the paintbrush icon)</i>";
+                return "<i>Reopen the paint panel. (Select a face and tap the paint roller icon)</i>";
             else
                 return text;
         }
