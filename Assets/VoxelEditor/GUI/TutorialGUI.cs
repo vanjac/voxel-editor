@@ -139,6 +139,12 @@ public class TutorialGUI : GUIPanel
         return GUIStyle.none;
     }
 
+    public void Start()
+    {
+        if (pageStack.Count > 0)
+            SetPage(pageStack[pageStack.Count - 1]);
+    }
+
     public override void WindowGUI()
     {
         if (textStyle == null)
