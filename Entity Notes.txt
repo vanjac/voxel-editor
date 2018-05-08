@@ -26,6 +26,10 @@ Touch (ActivatedSensor)
         Min velocity : meters/second
         Side : 6 choices + Any. Compares relative positions and velocities.
 
+Tap (Sensor)
+    Properties
+        Max range
+
 In Range (ActivatedSensor)
     Properties
         Look range
