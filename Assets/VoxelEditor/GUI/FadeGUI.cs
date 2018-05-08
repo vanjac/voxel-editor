@@ -30,7 +30,6 @@ public class FadeGUI : GUIPanel
         Color baseColor = GUI.backgroundColor;
         GUI.backgroundColor = Color.black;
         GUI.Box(panelRect, "");
-        GUI.Box(panelRect, "");
         GUI.backgroundColor = baseColor;
         if (background != null)
         {

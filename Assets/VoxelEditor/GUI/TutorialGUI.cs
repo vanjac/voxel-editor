@@ -152,8 +152,9 @@ public class TutorialGUI : GUIPanel
             textStyle = new GUIStyle(GUI.skin.label);
             textStyle.wordWrap = true;
             textStyle.alignment = TextAnchor.MiddleLeft;
-            textStyle.normal.background = GUI.skin.box.normal.background;
-            textStyle.border = GUI.skin.box.border;
+            // button is more opaque than box
+            textStyle.normal.background = GUI.skin.button.normal.background;
+            textStyle.border = GUI.skin.button.border;
             textStyle.padding.top = 0;
             textStyle.padding.bottom = 0;
         }
