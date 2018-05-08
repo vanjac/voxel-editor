@@ -433,7 +433,7 @@ public class Tutorials
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             PaintGUI paintPanel = guiGameObject.GetComponent<PaintGUI>();
-            paintPanel.scrollVelocity = new Vector2(0, 3000);
+            paintPanel.TutorialShowSky();
         }
     }
 }

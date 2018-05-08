@@ -185,4 +185,13 @@ public class PaintGUI : GUIPanel
         MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true);
         GUI.matrix = baseMatrix;
     }
+
+    public void TutorialShowSky()
+    {
+        scrollVelocity = new Vector2(0, 3000);
+        selectedLayer = 0;
+        paint.material = ResourcesDirectory.GetMaterial("GameAssets/Materials/Sky");
+        handler(paint);
+        UpdateMaterialSelector();
+    }
 }
