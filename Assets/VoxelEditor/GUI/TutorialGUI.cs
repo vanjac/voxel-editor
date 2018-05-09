@@ -2,33 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TutorialAction
+{
+    NONE, NEXT, BACK, END
+}
+
 public abstract class TutorialPage
 {
     public virtual void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
         TouchListener touchListener) { }
-    public virtual Tutorials.PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+    public virtual TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
         TouchListener touchListener)
     {
-        return Tutorials.PageId.NONE;
+        return TutorialAction.NONE;
     }
     public virtual void End(VoxelArrayEditor voxelArray, GameObject guiGameObject,
         TouchListener touchListener) { }
     public abstract string GetText();
-    public virtual Tutorials.PageId GetNextButtonTarget()
+    public virtual bool ShowNextButton()
     {
-        return Tutorials.PageId.NONE;
+        return false;
+    }
+    public virtual string GetHighlightID()
+    {
+        return "";
     }
 }
+
+public delegate TutorialPage TutorialPageFactory();
 
 public class SimpleTutorialPage : TutorialPage
 {
     private readonly string text;
-    private Tutorials.PageId next;
+    private readonly string highlight;
 
-    public SimpleTutorialPage(string text, Tutorials.PageId next=Tutorials.PageId.NONE)
+    public SimpleTutorialPage(string text, string highlight="")
     {
         this.text = text;
-        this.next = next;
+        this.highlight = highlight;
     }
 
     public override string GetText()
@@ -36,9 +47,14 @@ public class SimpleTutorialPage : TutorialPage
         return text;
     }
 
-    public override Tutorials.PageId GetNextButtonTarget()
+    public override bool ShowNextButton()
     {
-        return next;
+        return true;
+    }
+
+    public override string GetHighlightID()
+    {
+        return highlight;
     }
 }
 
@@ -48,8 +64,7 @@ public class FullScreenTutorialPage : SimpleTutorialPage
     private float scale;
 
     public FullScreenTutorialPage(string text, string imageResourceName,
-        float scale = 1.0f,
-        Tutorials.PageId next = Tutorials.PageId.NONE) : base(text, next)
+        float scale = 1.0f) : base(text)
     {
         image = Resources.Load<Texture>(imageResourceName);
         this.scale = scale;
@@ -60,11 +75,6 @@ public class FullScreenTutorialPage : SimpleTutorialPage
         var fade = guiGameObject.AddComponent<FadeGUI>();
         fade.background = image;
         fade.backgroundScale = scale;
-    }
-
-    public override Tutorials.PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
-    {
-        return Tutorials.PageId.NONE;
     }
 
     public override void End(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
@@ -80,15 +90,14 @@ public class TutorialGUI : GUIPanel
 
     private GUIStyle textStyle;
 
-    private static List<Tutorials.PageId> pageStack = new List<Tutorials.PageId>();
+    private static TutorialPageFactory[] currentTutorial;
+    private static int pageI;
     private TutorialPage currentPage = null;
+    private static string highlightID;
 
-    public static void TutorialHighlight(Tutorials.PageId page)
+    public static void TutorialHighlight(string id)
     {
-        if (pageStack.Count == 0)
-            return;
-        if (pageStack[pageStack.Count - 1] == page
-                && Time.time % 0.6f < 0.3f) // blink
+        if (id == highlightID && Time.time % 0.6f < 0.3f) // blink
             GUI.backgroundColor = new Color(1.0f, 0.5f, 0.5f, 1.0f);
     }
 
@@ -97,12 +106,12 @@ public class TutorialGUI : GUIPanel
         GUI.backgroundColor = Color.white;
     }
 
-    private void SetPage(Tutorials.PageId pageId)
+    private void SetPage(int i)
     {
-        var factory = Tutorials.PAGES[(int)pageId];
+        pageI = i;
         TutorialPage newPage = null;
-        if (factory != null)
-            newPage = factory();
+        if(currentTutorial != null && pageI >= 0 && pageI < currentTutorial.Length)
+            newPage = currentTutorial[pageI]();
         if (currentPage != null)
             currentPage.End(voxelArray, gameObject, touchListener);
         if (newPage != null)
@@ -110,10 +119,10 @@ public class TutorialGUI : GUIPanel
         currentPage = newPage;
     }
 
-    public void StartTutorial(Tutorials.PageId pageId) {
-        pageStack.Clear();
-        pageStack.Add(pageId);
-        SetPage(pageId);
+    public void StartTutorial(TutorialPageFactory[] tutorial)
+    {
+        currentTutorial = tutorial;
+        SetPage(0);
     }
 
     public override void OnEnable()
@@ -141,8 +150,7 @@ public class TutorialGUI : GUIPanel
 
     public void Start()
     {
-        if (pageStack.Count > 0)
-            SetPage(pageStack[pageStack.Count - 1]);
+        SetPage(pageI);
     }
 
     public override void WindowGUI()
@@ -164,44 +172,43 @@ public class TutorialGUI : GUIPanel
             return;
         }
         BringToFront();
-        var newPage = currentPage.Update(voxelArray, gameObject, touchListener);
-        if (newPage != Tutorials.PageId.NONE)
-        {
-            // push
-            pageStack.Add(newPage);
-            SetPage(newPage);
-        }
+        highlightID = currentPage.GetHighlightID();
+        var action = currentPage.Update(voxelArray, gameObject, touchListener);
 
         GUILayout.BeginHorizontal();
         if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.x))
-        {
-            pageStack.Clear();
-            SetPage(Tutorials.PageId.NONE);
-            return;
-        }
-        if (pageStack.Count > 1 && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
-        {
-            // pop
-            pageStack.RemoveAt(pageStack.Count - 1);
-            SetPage(pageStack[pageStack.Count - 1]);
-        }
+            action = TutorialAction.END;
+        if (pageI > 0 && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+            action = TutorialAction.BACK;
         GUILayout.Label(currentPage.GetText(), textStyle, GUILayout.ExpandHeight(true));
-        var next = currentPage.GetNextButtonTarget();
-        if (next == Tutorials.PageId.END)
+        if (currentPage.ShowNextButton())
         {
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.done))
+            if (pageI == currentTutorial.Length - 1)
             {
-                pageStack.Clear();
-                SetPage(Tutorials.PageId.NONE);
-                return;
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.done))
+                    action = TutorialAction.END;
+            }
+            else
+            {
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
+                    action = TutorialAction.NEXT;
             }
         }
-        else if (next != Tutorials.PageId.NONE && ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
-        {
-            // push
-            pageStack.Add(next);
-            SetPage(next);
-        }
         GUILayout.EndHorizontal();
+
+        switch (action)
+        {
+            case TutorialAction.BACK:
+                SetPage(pageI - 1);
+                break;
+            case TutorialAction.NEXT:
+                SetPage(pageI + 1);
+                break;
+            case TutorialAction.END:
+                SetPage(-1);
+                return;
+            case TutorialAction.NONE:
+                break;
+        }
     }
 }

@@ -65,7 +65,7 @@ public class PaintGUI : GUIPanel
         DrawPaint(paint, GUILayoutUtility.GetLastRect());
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
-        TutorialGUI.TutorialHighlight(Tutorials.PageId.PAINT_TRANSFORM);
+        TutorialGUI.TutorialHighlight("paint transform");
         if (GUILayout.Button(GUIIconSet.instance.rotateLeft, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(3);
         if (GUILayout.Button(GUIIconSet.instance.rotateRight, condensedButtonStyle, GUILayout.ExpandWidth(false)))
@@ -95,14 +95,14 @@ public class PaintGUI : GUIPanel
             Destroy(this);
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
-        TutorialGUI.TutorialHighlight(Tutorials.PageId.PAINT_TRANSFORM);
+        TutorialGUI.TutorialHighlight("paint transform");
         if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(5);
         if (GUILayout.Button(GUIIconSet.instance.flipVertical, condensedButtonStyle, GUILayout.ExpandWidth(false)))
             Orient(7);
         TutorialGUI.ClearHighlight();
         int oldSelectedLayer = selectedLayer;
-        TutorialGUI.TutorialHighlight(Tutorials.PageId.PAINT_OVERLAYS);
+        TutorialGUI.TutorialHighlight("paint layer");
         selectedLayer = GUILayout.SelectionGrid(
             selectedLayer, new string[] { "Material", "Overlay" }, 2, condensedButtonStyle);
         TutorialGUI.ClearHighlight();

@@ -20,19 +20,19 @@ public class HelpGUI : GUIPanel
     public override void WindowGUI()
     {
         if (GUILayout.Button("Introduction"))
-            StartTutorial(Tutorials.PageId.INTRO_WELCOME);
+            StartTutorial(Tutorials.INTRO_TUTORIAL);
         if (GUILayout.Button("Painting"))
-            StartTutorial(Tutorials.PageId.PAINT_START);
+            StartTutorial(Tutorials.PAINT_TUTORIAL);
     }
 
-    private void StartTutorial(Tutorials.PageId page)
+    private void StartTutorial(TutorialPageFactory[] tutorial)
     {
         var tutorialGUI = GetComponent<TutorialGUI>();
         if (tutorialGUI == null)
             tutorialGUI = gameObject.AddComponent<TutorialGUI>();
         tutorialGUI.voxelArray = voxelArray;
         tutorialGUI.touchListener = touchListener;
-        tutorialGUI.StartTutorial(page);
+        tutorialGUI.StartTutorial(tutorial);
         Destroy(this);
     }
 }

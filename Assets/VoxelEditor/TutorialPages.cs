@@ -4,78 +4,47 @@ using UnityEngine;
 
 public class Tutorials
 {
-    public enum PageId : int
+    public static TutorialPageFactory[] INTRO_TUTORIAL = new TutorialPageFactory[]
     {
-        NONE,
-        END,
-        INTRO_WELCOME,
-        INTRO_ROOM,
-        INTRO_NAVIGATION,
-        INTRO_SELECT_FACE,
-        INTRO_PULL,
-        INTRO_PUSH,
-        INTRO_COLUMN,
-        INTRO_SELECT_BOX,
-        INTRO_SELECT_WALL,
-        INTRO_SUMMARY,
-        INTRO_BUTTONS,
-        INTRO_END,
-        PAINT_START,
-        PAINT_INTRO,
-        PAINT_TEXTURES,
-        PAINT_OVERLAYS,
-        PAINT_TRANSFORM,
-        PAINT_SKY,
-        MAX_PAGES
-    }
-
-    public delegate TutorialPage TutorialPageFactory();
-    public static TutorialPageFactory[] PAGES = new TutorialPageFactory[(int)PageId.MAX_PAGES];
-
-    static Tutorials()
-    {
-        PAGES[(int)PageId.NONE] = () => null;
-        PAGES[(int)PageId.INTRO_WELCOME] = () => new SimpleTutorialPage(
+        () => new SimpleTutorialPage(
             "Welcome! This is a brief tutorial that will guide you through the app. "
-            + "You can access this tutorial and others at any time. Press the right arrow to continue.",
-            next: PageId.INTRO_ROOM);
-        PAGES[(int)PageId.INTRO_ROOM] = () => new SimpleTutorialPage(
+            + "You can access this tutorial and others at any time. Press the right arrow to continue."),
+        () => new SimpleTutorialPage(
             "Right now you are looking at the interior of a room. One wall is hidden so you can see inside. "
-            + "The green person marks the player location.",
-            next: PageId.INTRO_NAVIGATION);
-        PAGES[(int)PageId.INTRO_NAVIGATION] = () => new TutorialIntroNavigation();
-        PAGES[(int)PageId.INTRO_SELECT_FACE] = () => new TutorialIntroSelectFace();
-        PAGES[(int)PageId.INTRO_PULL] = () => new TutorialIntroPull();
-        PAGES[(int)PageId.INTRO_PUSH] = () => new TutorialIntroPush();
-        PAGES[(int)PageId.INTRO_COLUMN] = () => new TutorialIntroColumn();
-        PAGES[(int)PageId.INTRO_SELECT_BOX] = () => new TutorialIntroSelectBox();
-        PAGES[(int)PageId.INTRO_SELECT_WALL] = () => new TutorialIntroSelectWall();
-        PAGES[(int)PageId.INTRO_SUMMARY] = () => new SimpleTutorialPage(
-            "By selecting faces and pushing/pulling them, you can sculpt the world.",
-            next: PageId.INTRO_BUTTONS);
-        PAGES[(int)PageId.INTRO_BUTTONS] = () => new FullScreenTutorialPage(
+            + "The green person marks the player location."),
+        () => new TutorialIntroNavigation(),
+        () => new TutorialIntroSelectFace(),
+        () => new TutorialIntroPull(),
+        () => new TutorialIntroPush(),
+        () => new TutorialIntroColumn(),
+        () => new TutorialIntroSelectBox(),
+        () => new TutorialIntroSelectWall(),
+        () => new SimpleTutorialPage(
+            "By selecting faces and pushing/pulling them, you can sculpt the world."),
+        () => new FullScreenTutorialPage(
             "These buttons appear at the top of the screen, based on context.",
-            "Tutorials/toolbar_buttons", scale: 1.5f, next: PageId.INTRO_END);
-        PAGES[(int)PageId.INTRO_END] = () => new SimpleTutorialPage(
-            "Good luck! You can access more tutorials by choosing Help in the menu.",
-            next: PageId.END);
+            "Tutorials/toolbar_buttons", scale: 1.5f),
+        () => new SimpleTutorialPage(
+            "Good luck! You can access more tutorials by choosing Help in the menu.")
+    };
 
-        PAGES[(int)PageId.PAINT_START] = () => new TutorialPaintStart();
-        PAGES[(int)PageId.PAINT_INTRO] = () => new TutorialPaintPage(
-            "You can use the Paint panel to paint the selected faces with <i>materials</i> and <i>overlays</i>.",
-            next: PageId.PAINT_TEXTURES);
-        PAGES[(int)PageId.PAINT_TEXTURES] = () => new TutorialPaintPage(
+    public static TutorialPageFactory[] PAINT_TUTORIAL = new TutorialPageFactory[]
+    {
+        () => new TutorialPaintStart(),
+        () => new TutorialPaintPage(
+            "You can use the Paint panel to paint the selected faces with <i>materials</i> and <i>overlays</i>."),
+        () => new TutorialPaintPage(
             "Choose any of the categories in the list to browse textures. Or switch to the Color tab to paint a solid color.",
-            next: PageId.PAINT_OVERLAYS);
-        PAGES[(int)PageId.PAINT_OVERLAYS] = () => new TutorialPaintPage(
+            highlight: "material type"),
+        () => new TutorialPaintPage(
             "A paint is composed of two parts: an opaque material and a transparent overlay. "
             + "Use the tabs to switch between the two parts.",
-            next: PageId.PAINT_TRANSFORM);
-        PAGES[(int)PageId.PAINT_TRANSFORM] = () => new TutorialPaintPage(
+            highlight: "paint layer"),
+        () => new TutorialPaintPage(
             "Use these buttons to rotate and mirror the paint.",
-            next: PageId.PAINT_SKY);
-        PAGES[(int)PageId.PAINT_SKY] = () => new TutorialPaintSky();
-    }
+            highlight: "paint transform"),
+        () => new TutorialPaintSky()
+    };
 
     private class TutorialIntroNavigation : TutorialPage
     {
@@ -100,7 +69,7 @@ public class Tutorials
             startTime = Time.time;
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
         {
             if (!rotate)
@@ -131,9 +100,9 @@ public class Tutorials
                 }
             }
             if (rotate && zoom && pan && Time.time - startTime > 5)
-                return PageId.INTRO_SELECT_FACE;
+                return TutorialAction.NEXT;
             else
-                return PageId.NONE;
+                return TutorialAction.NONE;
         }
     }
 
@@ -152,13 +121,13 @@ public class Tutorials
             voxelArray.ClearStoredSelection();
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
         {
             if (voxelArray.FacesAreSelected())
-                return PageId.INTRO_PULL;
+                return TutorialAction.NEXT;
             else
-                return PageId.NONE;
+                return TutorialAction.NONE;
         }
     }
 
@@ -199,10 +168,10 @@ public class Tutorials
                 (faceNormal / 2) * 2 + 1);
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             if (!voxelArray.FacesAreSelected())
-                return PageId.INTRO_SELECT_FACE;
+                return TutorialAction.BACK;
             faceNormal = voxelArray.GetSelectedFaceNormal();
             if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
                 && AxisMatchesFace(touchListener.movingAxis, faceNormal))
@@ -211,15 +180,15 @@ public class Tutorials
                 if (faceNormal % 2 == 0)
                 {
                     if (moveCount <= -1)
-                        return PageId.INTRO_PUSH;
+                        return TutorialAction.NEXT;
                 }
                 else
                 {
                     if (moveCount >= 1)
-                        return PageId.INTRO_PUSH;
+                        return TutorialAction.NEXT;
                 }
             }
-            return PageId.NONE;
+            return TutorialAction.NONE;
         }
     }
 
@@ -243,7 +212,7 @@ public class Tutorials
             startSelectedFace = voxelArray.boxSelectStartBounds;
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             if (startSelectedFace == voxelArray.boxSelectStartBounds)
                 faceNormal = -1; // same face selected as before
@@ -256,15 +225,15 @@ public class Tutorials
                 if (faceNormal % 2 == 0)
                 {
                     if (moveCount >= 1)
-                        return PageId.INTRO_COLUMN;
+                        return TutorialAction.NEXT;
                 }
                 else
                 {
                     if (moveCount <= -1)
-                        return PageId.INTRO_COLUMN;
+                        return TutorialAction.NEXT;
                 }
             }
-            return PageId.NONE;
+            return TutorialAction.NONE;
         }
     }
 
@@ -279,7 +248,7 @@ public class Tutorials
                 + "Keep pulling as far as you can.</i>";
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             int faceNormal = voxelArray.GetSelectedFaceNormal();
             if (faceNormal != -1)
@@ -288,9 +257,9 @@ public class Tutorials
                 && TutorialIntroPull.AxisMatchesFace(touchListener.movingAxis, lastFaceNormal)
                 && !voxelArray.SomethingIsSelected())
                 // just made a column
-                return PageId.INTRO_SELECT_BOX;
+                return TutorialAction.NEXT;
             else
-                return PageId.NONE;
+                return TutorialAction.NONE;
         }
     }
 
@@ -319,7 +288,7 @@ public class Tutorials
                 && voxelArray.selectionBounds.size.sqrMagnitude > 3;
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             if (!boxWasSelected)
             {
@@ -346,9 +315,9 @@ public class Tutorials
             }
 
             if (numBoxes >= 3)
-                return PageId.INTRO_SELECT_WALL;
+                return TutorialAction.NEXT;
             else
-                return PageId.NONE;
+                return TutorialAction.NONE;
         }
     }
 
@@ -360,12 +329,12 @@ public class Tutorials
             return "<i>Double tap to select an entire wall.</i>";
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.FACE)
-                return PageId.INTRO_SUMMARY;
+                return TutorialAction.NEXT;
             else
-                return PageId.NONE;
+                return TutorialAction.NONE;
         }
     }
 
@@ -377,32 +346,27 @@ public class Tutorials
             return "<i>Select a face and tap the paint roller icon to open the Paint panel.</i>";
         }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             if (guiGameObject.GetComponent<PaintGUI>() != null)
-                return PageId.PAINT_INTRO;
+                return TutorialAction.NEXT;
             else
-                return PageId.NONE;
+                return TutorialAction.NONE;
         }
     }
 
 
-    private class TutorialPaintPage : TutorialPage
+    private class TutorialPaintPage : SimpleTutorialPage
     {
-        private readonly string text;
-        private Tutorials.PageId next;
         private bool panelOpen;
 
-        public TutorialPaintPage(string text, Tutorials.PageId next)
-        {
-            this.text = text;
-            this.next = next;
-        }
+        public TutorialPaintPage(string text, string highlight = "")
+            : base(text, highlight) { }
 
-        public override PageId Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             panelOpen = guiGameObject.GetComponent<PaintGUI>() != null;
-            return PageId.NONE;
+            return TutorialAction.NONE;
         }
 
         public override string GetText()
@@ -410,15 +374,12 @@ public class Tutorials
             if (!panelOpen)
                 return "<i>Reopen the paint panel. (Select a face and tap the paint roller icon)</i>";
             else
-                return text;
+                return base.GetText();
         }
 
-        public override PageId GetNextButtonTarget()
+        public override bool ShowNextButton()
         {
-            if (!panelOpen)
-                return PageId.NONE;
-            else
-                return next;
+            return panelOpen;
         }
     }
 
@@ -427,8 +388,7 @@ public class Tutorials
     {
         public TutorialPaintSky()
             : base("The “Sky” material is special: in the game it is an unobstructed window to the sky. "
-                + "Since the world can't have holes, this is the only way to see the sky.",
-                next: PageId.END) { }
+                + "Since the world can't have holes, this is the only way to see the sky.") { }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
