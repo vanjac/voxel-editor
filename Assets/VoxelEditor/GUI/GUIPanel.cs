@@ -190,34 +190,6 @@ public abstract class GUIPanel : MonoBehaviour
         openPanels.Add(this);
     }
 
-    public static void BeginButtonHorizontal(string name)
-    {
-        GUILayout.BeginHorizontal(GUI.skin.button);
-    }
-
-    public static bool EndButtonHorizontal(string name)
-    {
-        GUILayout.EndHorizontal();
-        return EndButtonGroup(name);
-    }
-
-    public static void BeginButtonVertical(string name)
-    {
-        GUILayout.BeginVertical(GUI.skin.button);
-    }
-
-    public static bool EndButtonVertical(string name)
-    {
-        GUILayout.EndVertical();
-        return EndButtonGroup(name);
-    }
-
-    private static bool EndButtonGroup(string name)
-    {
-        Rect buttonRect = GUILayoutUtility.GetLastRect();
-        return GUI.Button(buttonRect, "", GUIStyle.none);
-    }
-
     protected void RotateAboutPoint(Vector2 point, float rotation, Vector2 scaleFactor)
     {
         Vector2 translation = point + panelRect.min;

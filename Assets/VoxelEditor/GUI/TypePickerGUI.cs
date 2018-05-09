@@ -20,13 +20,13 @@ public class TypePickerGUI : GUIPanel
         for (int i = 0; i < items.Length; i++)
         {
             PropertiesObjectType item = items[i];
-            GUIPanel.BeginButtonHorizontal(item.fullName);
+            GUIUtils.BeginButtonHorizontal(item.fullName);
             GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();
             GUILayout.Label(item.fullName, GUI.skin.customStyles[0]);
             GUILayout.Label(item.description, GUI.skin.customStyles[1]);
             GUILayout.EndVertical();
-            if (GUIPanel.EndButtonHorizontal(item.fullName))
+            if (GUIUtils.EndButtonHorizontal(item.fullName))
             {
                 handler(item);
                 Destroy(this);

@@ -117,7 +117,7 @@ public class PropertiesGUI : GUIPanel
 
         if (entity is Substance)
         {
-            if (!GUILayout.Toggle(true, "Clone", GUI.skin.button))
+            if (GUIUtils.HighlightedButton("Clone"))
             {
                 Substance clone = (Substance)(entity.Clone());
                 clone.defaultPaint = voxelArray.GetSelectedPaint();
@@ -309,7 +309,7 @@ public class NewBehaviorGUI : GUIPanel
             targetButtonText = "Target:  Activator";
         else if (targetEntity != null)
             targetButtonText = "Target:  " + targetEntity.ToString();
-        if (!GUILayout.Toggle(true, targetButtonText, GUI.skin.button))
+        if (GUIUtils.HighlightedButton(targetButtonText))
         {
             entityPicker = gameObject.AddComponent<EntityPickerGUI>();
             entityPicker.voxelArray = voxelArray;
