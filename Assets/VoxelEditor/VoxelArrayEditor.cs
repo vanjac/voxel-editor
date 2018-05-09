@@ -788,8 +788,14 @@ public class VoxelArrayEditor : VoxelArray
 
     public int GetSelectedFaceNormal()
     {
+        int faceI = -1;
         foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
-            return faceRef.faceI;
-        return -1;
+        {
+            if (faceI == -1)
+                faceI = faceRef.faceI;
+            else if (faceRef.faceI != faceI)
+                return -1;
+        }
+        return faceI;
     }
 }

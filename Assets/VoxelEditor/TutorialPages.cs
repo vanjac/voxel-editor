@@ -117,14 +117,17 @@ public class Tutorials
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
         {
-            voxelArray.ClearSelection();
-            voxelArray.ClearStoredSelection();
+            if (voxelArray.GetSelectedFaceNormal() != -1)
+            {
+                voxelArray.ClearSelection();
+                voxelArray.ClearStoredSelection();
+            }
         }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
         {
-            if (voxelArray.FacesAreSelected())
+            if (voxelArray.GetSelectedFaceNormal() != -1)
                 return TutorialAction.NEXT;
             else
                 return TutorialAction.NONE;
@@ -170,9 +173,9 @@ public class Tutorials
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
-            if (!voxelArray.FacesAreSelected())
-                return TutorialAction.BACK;
             faceNormal = voxelArray.GetSelectedFaceNormal();
+            if (faceNormal == -1)
+                return TutorialAction.BACK;
             if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
                 && AxisMatchesFace(touchListener.movingAxis, faceNormal))
             {
