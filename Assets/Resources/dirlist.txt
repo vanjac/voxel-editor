@@ -275,6 +275,9 @@
 ./GameAssets/Overlays/symbols
 ./GameAssets/Overlays/symbols/alert-outline.mat
 ./GameAssets/Overlays/symbols/arrow-up-thick.mat
+./GameAssets/Overlays/symbols/biohazard.mat
+./GameAssets/Overlays/symbols/cancel.mat
+./GameAssets/Overlays/symbols/radioactive.mat
 ./GameAssets/Overlays/text caps
 ./GameAssets/Overlays/text caps/c065.mat
 ./GameAssets/Overlays/text caps/c066.mat
@@ -410,3 +413,5 @@
 ./ObjectMarkers/Player.prefab
 ./ObjectPrefabs
 ./ObjectPrefabs/Player.prefab
+./Tutorials
+./Tutorials/toolbar_buttons.png
