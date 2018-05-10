@@ -109,6 +109,7 @@ public class MenuGUI : GUIPanel
         mapFiles.Clear();
         foreach (string name in files)
             mapFiles.Add(Path.GetFileNameWithoutExtension(name));
+        mapFiles.Sort();
     }
 }
 
