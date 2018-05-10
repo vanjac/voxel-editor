@@ -46,6 +46,39 @@ public class Tutorials
         () => new TutorialPaintSky()
     };
 
+    public static TutorialPageFactory[] SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
+    {
+        () => new SimpleTutorialPage(
+            "<i>Select a face and tap the cube button.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Choose \"Solid Substance\" and follow the instructions.</i>"),
+        () => new SimpleTutorialPage(
+            "This is a <i>Substance</i>. Unlike the static blocks forming the world, "
+            + "substances are independent objects that move and respond to interaction."),
+        () => new SimpleTutorialPage(
+            "Substances are controlled by their <i>Behaviors</i>. "
+            + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game. "
+            + ""),
+        () => new SimpleTutorialPage(
+            "<i>Try adding a Move behavior to the Substance.</i>"),
+        () => new SimpleTutorialPage(
+            "When you play the game now, the substance will move West at a constant rate. "
+            + "<i>Now try making the substance follow the player.</i>"),
+        () => new SimpleTutorialPage(
+            "Substances can have <i>Sensors</i> which turn On and Off in response to events in the game. "
+            + "<i>Add a touch sensor to the substance.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now configure the touch sensor so it only turns on when touching the player.</i>"),
+        () => new SimpleTutorialPage(
+            "To make the sensor have an effect, behaviors can be set to be active only when the sensor is On or Off. "),
+        () => new SimpleTutorialPage(
+            "<i>Add a Hurt behavior which hurts the substance by 100 points when it touches the player.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Try the game. What happens when you touch the substance?</i>"),
+        () => new SimpleTutorialPage(
+            "Read <i>Advanced Game Logic</i> in the Help menu to learn how to add more complex interactivity to games.")
+    };
+
     private class TutorialIntroNavigation : TutorialPage
     {
         private Quaternion startRotation;

@@ -23,6 +23,8 @@ public class HelpGUI : GUIPanel
             StartTutorial(Tutorials.INTRO_TUTORIAL);
         if (GUILayout.Button("Painting"))
             StartTutorial(Tutorials.PAINT_TUTORIAL);
+        if (GUILayout.Button("Substances"))
+            StartTutorial(Tutorials.SUBSTANCE_TUTORIAL);
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial)
