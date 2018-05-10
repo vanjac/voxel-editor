@@ -176,6 +176,7 @@ public class TutorialGUI : GUIPanel
     {
         if (currentPage == null)
         {
+            highlightID = "";
             Destroy(this);
             return;
         }
