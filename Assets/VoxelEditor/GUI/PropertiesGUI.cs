@@ -17,6 +17,14 @@ public class PropertiesGUI : GUIPanel
 
     List<Entity> selectedEntities = new List<Entity>();
 
+    private static readonly Lazy<GUIStyle> iconStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.padding = new RectOffset(0, 0, 0, 0);
+        style.margin = new RectOffset(0, 0, 0, 0);
+        return style;
+    });
+
     public override void OnEnable()
     {
         holdOpen = true;
@@ -212,9 +220,9 @@ public class PropertiesGUI : GUIPanel
         GUILayout.BeginHorizontal();
         if (obj != null)
         {
-            GUILayout.Label(obj.ObjectType().icon, GUI.skin.customStyles[2]);
+            GUILayout.Label(obj.ObjectType().icon, iconStyle.Value);
         }
-        GUILayout.Label(title, GUI.skin.customStyles[0]);
+        GUILayout.Label(title, GUI.skin.GetStyle("label_title"));
         GUILayout.EndHorizontal();
 
         if (obj == null)

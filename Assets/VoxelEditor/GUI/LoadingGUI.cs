@@ -18,10 +18,8 @@ public class LoadingGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        GUIStyle centered = new GUIStyle(GUI.skin.label);
-        centered.alignment = TextAnchor.UpperCenter;
         GUILayout.FlexibleSpace();
-        GUILayout.Label("Loading map...", centered);
+        GUILayout.Label("Loading map...", GUIUtils.LABEL_HORIZ_CENTERED.Value);
         GUILayout.FlexibleSpace();
     }
 }

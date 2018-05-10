@@ -9,12 +9,23 @@ public class PropertyGUIs
     private delegate void KeyboardHandler(string text);
     private static KeyboardHandler keyboardHandler;
 
-    private static void AlignedLabel(Property property)
+    private static readonly Lazy<GUIStyle> alignedLabelStyle = new Lazy<GUIStyle>(() =>
     {
-        GUIStyle style = new GUIStyle(GUI.skin.label);
+        var style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.MiddleLeft;
         style.padding.right = 0;
-        GUILayout.Label(property.name, style, GUILayout.ExpandWidth(false));
+        return style;
+    });
+    private static readonly Lazy<GUIStyle> tagFieldStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.textField);
+        style.fontSize = GUI.skin.font.fontSize * 2;
+        return style;
+    });
+
+    private static void AlignedLabel(Property property)
+    {
+        GUILayout.Label(property.name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
     }
 
     public static void Empty(Property property) { }
@@ -98,9 +109,7 @@ public class PropertyGUIs
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
         GUILayout.FlexibleSpace();
-        GUIStyle tagFieldStyle = new GUIStyle(GUI.skin.textField);
-        tagFieldStyle.fontSize = GUI.skin.font.fontSize * 2;
-        if (GUILayout.Button(" " + tagString + " ", tagFieldStyle, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(" " + tagString + " ", tagFieldStyle.Value, GUILayout.ExpandWidth(false)))
         {
             TagPickerGUI picker = GUIPanel.guiGameObject.AddComponent<TagPickerGUI>();
             picker.title = "Change " + property.name;
@@ -114,13 +123,10 @@ public class PropertyGUIs
 
     public static void BehaviorCondition(Property property)
     {
-        var gridStyle = new GUIStyle(GUI.skin.button);
-        gridStyle.padding.left = 0;
-        gridStyle.padding.right = 0;
         var condition = (EntityBehavior.Condition)property.value;
         GUILayout.Label("When sensor is:");
         property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
-            (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
+            (int)condition, new string[] { "On", "Off", "Both" }, 3, GUI.skin.GetStyle("button_tab"));
     }
 
     public static void ActivatorBehaviorCondition(Property property)

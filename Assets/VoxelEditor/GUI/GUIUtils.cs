@@ -4,6 +4,27 @@ using UnityEngine;
 
 public class GUIUtils
 {
+    public static readonly Lazy<GUIStyle> LABEL_WORD_WRAPPED = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.wordWrap = true;
+        return style;
+    });
+
+    public static readonly Lazy<GUIStyle> LABEL_CENTERED = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.alignment = TextAnchor.MiddleCenter;
+        return style;
+    });
+
+    public static readonly Lazy<GUIStyle> LABEL_HORIZ_CENTERED = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.alignment = TextAnchor.UpperCenter;
+        return style;
+    });
+
     public static bool HighlightedButton(string text, GUIStyle style=null, params GUILayoutOption[] options)
     {
         if(style == null)

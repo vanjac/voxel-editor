@@ -29,7 +29,13 @@ public class MaterialSelectorGUI : GUIPanel
     private List<string> materialSubDirectories;
     private ColorPickerGUI colorPicker;
 
-    private GUIStyle condensedButtonStyle = null;
+    private static readonly Lazy<GUIStyle> directoryButtonStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.button);
+        style.padding.left = 16;
+        style.padding.right = 16;
+        return style;
+    });
 
     public void Start()
     {
@@ -51,13 +57,6 @@ public class MaterialSelectorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (condensedButtonStyle == null)
-        {
-            condensedButtonStyle = new GUIStyle(GUI.skin.button);
-            condensedButtonStyle.padding.left = 16;
-            condensedButtonStyle.padding.right = 16;
-        }
-
         TutorialGUI.TutorialHighlight("material type");
         if (allowNullMaterial)
             tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture", "None" }, 3);
@@ -130,9 +129,9 @@ public class MaterialSelectorGUI : GUIPanel
             bool selected;
             if (subDir == BACK_BUTTON)
                 // highlight the button
-                selected = !GUI.Toggle(buttonRect, true, subDir, condensedButtonStyle);
+                selected = !GUI.Toggle(buttonRect, true, subDir, directoryButtonStyle.Value);
             else
-                selected = GUI.Button(buttonRect, subDir, condensedButtonStyle);
+                selected = GUI.Button(buttonRect, subDir, directoryButtonStyle.Value);
             if (selected)
             {
                 scroll = new Vector2(0, 0);

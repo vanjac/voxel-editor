@@ -88,7 +88,21 @@ public class TutorialGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
-    private GUIStyle textStyle;
+    private static readonly Lazy<GUIStyle> buttonStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.GetStyle("button_large"));
+        style.fixedHeight = 0;
+        return style;
+    });
+    private static readonly Lazy<GUIStyle> textStyle = new Lazy<GUIStyle>(() =>
+    {
+        // keep original background because it's more opaque than Box
+        var style = new GUIStyle(GUI.skin.GetStyle("button_large"));
+        style.wordWrap = true;
+        style.alignment = TextAnchor.MiddleLeft;
+        style.fixedHeight = 0;
+        return style;
+    });
 
     private static TutorialPageFactory[] currentTutorial;
     private static int pageI;
@@ -135,12 +149,14 @@ public class TutorialGUI : GUIPanel
     }
 
     private PropertiesGUI propertiesGUI;
+    private float height;
 
     public override Rect GetRect(float width, float height)
     {
-        float h = .15f - propertiesGUI.slide / PropertiesGUI.SLIDE_HIDDEN * .03f;
-        return new Rect(height / 2 + propertiesGUI.slide, height * (1 - h),
-            width - height / 2 - propertiesGUI.slide, height * h);
+        float minHeight = GUI.skin.GetStyle("button_large").fixedHeight;
+        this.height = minHeight * (1.25f - propertiesGUI.slide / PropertiesGUI.SLIDE_HIDDEN * .25f);
+        return new Rect(height / 2 + propertiesGUI.slide, height - this.height,
+            width - height / 2 - propertiesGUI.slide, this.height);
     }
 
     public override GUIStyle GetStyle()
@@ -155,17 +171,6 @@ public class TutorialGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (textStyle == null)
-        {
-            textStyle = new GUIStyle(GUI.skin.label);
-            textStyle.wordWrap = true;
-            textStyle.alignment = TextAnchor.MiddleLeft;
-            // button is more opaque than box
-            textStyle.normal.background = GUI.skin.button.normal.background;
-            textStyle.border = GUI.skin.button.border;
-            textStyle.padding.top = 0;
-            textStyle.padding.bottom = 0;
-        }
         if (currentPage == null)
         {
             Destroy(this);
@@ -176,21 +181,25 @@ public class TutorialGUI : GUIPanel
         var action = currentPage.Update(voxelArray, gameObject, touchListener);
 
         GUILayout.BeginHorizontal();
-        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.x))
+        if (GUILayout.Button(GUIIconSet.instance.x, buttonStyle.Value,
+                GUILayout.ExpandWidth(false), GUILayout.Height(height)))
             action = TutorialAction.END;
-        if (pageI > 0 && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+        if (pageI > 0 && GUILayout.Button(GUIIconSet.instance.close, buttonStyle.Value,
+                GUILayout.ExpandWidth(false), GUILayout.Height(height)))
             action = TutorialAction.BACK;
-        GUILayout.Label(currentPage.GetText(), textStyle, GUILayout.ExpandHeight(true));
+        GUILayout.Label(currentPage.GetText(), textStyle.Value, GUILayout.Height(height));
         if (currentPage.ShowNextButton())
         {
             if (pageI == currentTutorial.Length - 1)
             {
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.done))
+                if (GUILayout.Button(GUIIconSet.instance.done, buttonStyle.Value,
+                        GUILayout.ExpandWidth(false), GUILayout.Height(height)))
                     action = TutorialAction.END;
             }
             else
             {
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.next))
+                if (GUILayout.Button(GUIIconSet.instance.next, buttonStyle.Value,
+                        GUILayout.ExpandWidth(false), GUILayout.Height(height)))
                     action = TutorialAction.NEXT;
             }
         }

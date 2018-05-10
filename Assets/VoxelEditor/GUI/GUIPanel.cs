@@ -148,9 +148,7 @@ public abstract class GUIPanel : MonoBehaviour
 
         if (title != "")
         {
-            GUIStyle centered = new GUIStyle(GUI.skin.label);
-            centered.alignment = TextAnchor.UpperCenter;
-            GUILayout.Label(title, centered);
+            GUILayout.Label(title, GUIUtils.LABEL_HORIZ_CENTERED.Value);
         }
 
         WindowGUI();

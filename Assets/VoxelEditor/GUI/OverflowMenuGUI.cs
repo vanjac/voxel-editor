@@ -7,11 +7,8 @@ public class OverflowMenuGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
-    private float buttonHeight;
-
     public override Rect GetRect(float width, float height)
     {
-        buttonHeight = height * .12f;
         return new Rect(width - height * .4f, height * .13f, height * .4f, 0);
     }
 
@@ -47,12 +44,10 @@ public class OverflowMenuGUI : GUIPanel
 
     private bool MenuButton(string name, Texture icon)
     {
-        bool pressed = GUILayout.Button(name, GUILayout.Height(buttonHeight));
+        bool pressed = GUILayout.Button(name, GUI.skin.GetStyle("button_large"));
         Rect iconRect = GUILayoutUtility.GetLastRect();
         iconRect.width = iconRect.height;
-        GUIStyle iconAlign = new GUIStyle(GUI.skin.label);
-        iconAlign.alignment = TextAnchor.MiddleCenter;
-        GUI.Label(iconRect, icon, iconAlign);
+        GUI.Label(iconRect, icon, GUIUtils.LABEL_CENTERED.Value);
         if (pressed)
             Destroy(this);
         return pressed;

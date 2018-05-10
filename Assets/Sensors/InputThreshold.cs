@@ -94,13 +94,9 @@ public class InputThresholdSensor : Sensor
                 inputToDelete = i;
             GUILayout.EndHorizontal();
 
-            GUIStyle changeGridStyle = new GUIStyle(GUI.skin.button);
-            changeGridStyle.padding = new RectOffset(0, 0, 16, 16);
-            changeGridStyle.margin = new RectOffset(0, 0, 0, 0);
-
             int negativeNum = inputs[i].negative ? 1 : 0;
             int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
-                new string[] { "Positive", "Negative" }, 2, changeGridStyle);
+                new string[] { "Positive", "Negative" }, 2, GUI.skin.GetStyle("button_tab"));
             if (negativeNum != newNegativeNum)
             {
                 inputs[i].negative = newNegativeNum == 1;

@@ -8,9 +8,14 @@ public class ActionBarGUI : GUIPanel
     public EditorFile editorFile;
     public TouchListener touchListener;
 
-    private static bool guiInit = false;
-    protected static GUIStyle buttonStyle;
-    protected static GUIStyle labelStyle;
+    private static readonly Lazy<GUIStyle> labelStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.GetStyle("button_large"));
+        style.alignment = TextAnchor.MiddleCenter;
+        style.normal.background = GUI.skin.box.normal.background;
+        style.border = GUI.skin.box.border;
+        return style;
+    });
 
     protected PropertiesGUI propertiesGUI;
 
@@ -26,7 +31,7 @@ public class ActionBarGUI : GUIPanel
     public override Rect GetRect(float width, float height)
     {
         return new Rect(height/2 + propertiesGUI.slide, 0,
-            width - height/2 - propertiesGUI.slide, height * .12f);
+            width - height/2 - propertiesGUI.slide, 0);
     }
 
     public override GUIStyle GetStyle()
@@ -36,17 +41,6 @@ public class ActionBarGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (!guiInit)
-        {
-            guiInit = true;
-            buttonStyle = new GUIStyle(GUI.skin.button);
-            buttonStyle.padding = new RectOffset(40, 40, 16, 16);
-            labelStyle = new GUIStyle(GUI.skin.label);
-            labelStyle.alignment = TextAnchor.MiddleCenter;
-            labelStyle.normal.background = GUI.skin.box.normal.background;
-            labelStyle.border = GUI.skin.box.border;
-        }
-
         GUILayout.BeginHorizontal();
 
         if (ActionBarButton(GUIIconSet.instance.close))
@@ -130,24 +124,24 @@ public class ActionBarGUI : GUIPanel
 
     public static bool ActionBarButton(Texture icon)
     {
-        return GUILayout.Button(icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+        return GUILayout.Button(icon, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false));
     }
 
     public static bool ActionBarButton(string text)
     {
-        return GUILayout.Button(text, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+        return GUILayout.Button(text, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false));
     }
 
     public static bool HighlightedActionBarButton(Texture icon)
     {
-        return GUIUtils.HighlightedButton(icon, buttonStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+        return GUIUtils.HighlightedButton(icon, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false));
     }
 
     public static void ActionBarLabel(string text)
     {
         if (text.Length == 0)
             return;
-        GUILayout.Label(text, labelStyle, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true));
+        GUILayout.Label(text, labelStyle.Value, GUILayout.ExpandWidth(false));
     }
 
     private string SelectionString(Vector3 selectionSize)

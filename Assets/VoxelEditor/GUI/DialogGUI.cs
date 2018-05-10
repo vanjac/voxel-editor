@@ -12,8 +12,6 @@ public class DialogGUI : GUIPanel
     public ButtonHandler yesButtonHandler;
     public ButtonHandler noButtonHandler;
 
-    private GUIStyle messageLabelStyle;
-
     public static DialogGUI ShowMessageDialog(GameObject gameObject, string message)
     {
         DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
@@ -29,13 +27,7 @@ public class DialogGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (messageLabelStyle == null)
-        {
-            messageLabelStyle = new GUIStyle(GUI.skin.label);
-            messageLabelStyle.wordWrap = true;
-        }
-
-        GUILayout.Label(message, messageLabelStyle);
+        GUILayout.Label(message, GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
         if (yesButtonText != null && GUILayout.Button(yesButtonText))
@@ -139,8 +131,6 @@ public class LargeMessageGUI : GUIPanel
     public string message;
     public ButtonHandler closeButtonHandler;
 
-    private GUIStyle messageLabelStyle;
-
     public static LargeMessageGUI ShowLargeMessageDialog(GameObject gameObject, string message)
     {
         var dialog = gameObject.AddComponent<LargeMessageGUI>();
@@ -155,14 +145,8 @@ public class LargeMessageGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (messageLabelStyle == null)
-        {
-            messageLabelStyle = new GUIStyle(GUI.skin.label);
-            messageLabelStyle.wordWrap = true;
-        }
-
         scroll = GUILayout.BeginScrollView(scroll);
-        GUILayout.Label(message, messageLabelStyle);
+        GUILayout.Label(message, GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.FlexibleSpace();
         GUILayout.EndScrollView();
         if (GUILayout.Button("OK"))
