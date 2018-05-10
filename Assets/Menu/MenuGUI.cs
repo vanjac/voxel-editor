@@ -12,7 +12,7 @@ public class MenuGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .25f, height * .2f, width * .5f, height * .6f);
+        return new Rect(width * .2f, 0, width * .6f, height);
     }
 
     public override void OnEnable()
@@ -29,7 +29,7 @@ public class MenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button("New..."))
+        if (GUILayout.Button("New...", GUI.skin.GetStyle("button_large")))
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
             inputDialog.prompt = "Enter new map name...";
@@ -39,9 +39,9 @@ public class MenuGUI : GUIPanel
         foreach (string fileName in mapFiles)
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(fileName))
+            if (GUILayout.Button(fileName, GUI.skin.GetStyle("button_large")))
                 OpenMap(fileName, "editScene");
-            if (GUILayout.Button("...", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("...", GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false)))
             {
                 FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
                 dropdown.fileName = fileName;
