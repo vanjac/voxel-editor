@@ -192,13 +192,13 @@ public class TutorialGUI : GUIPanel
         {
             if (pageI == currentTutorial.Length - 1)
             {
-                if (GUILayout.Button(GUIIconSet.instance.done, buttonStyle.Value,
+                if (GUIUtils.HighlightedButton(GUIIconSet.instance.done, buttonStyle.Value,
                         GUILayout.ExpandWidth(false), GUILayout.Height(height)))
                     action = TutorialAction.END;
             }
             else
             {
-                if (GUILayout.Button(GUIIconSet.instance.next, buttonStyle.Value,
+                if (GUIUtils.HighlightedButton(GUIIconSet.instance.next, buttonStyle.Value,
                         GUILayout.ExpandWidth(false), GUILayout.Height(height)))
                     action = TutorialAction.NEXT;
             }
