@@ -125,8 +125,10 @@ public class PropertyGUIs
     {
         var condition = (EntityBehavior.Condition)property.value;
         GUILayout.Label("When sensor is:");
+        TutorialGUI.TutorialHighlight("behavior condition");
         property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
             (int)condition, new string[] { "On", "Off", "Both" }, 3, GUI.skin.GetStyle("button_tab"));
+        TutorialGUI.ClearHighlight();
     }
 
     public static void ActivatorBehaviorCondition(Property property)

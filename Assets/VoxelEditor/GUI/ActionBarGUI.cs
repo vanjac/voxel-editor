@@ -87,6 +87,7 @@ public class ActionBarGUI : GUIPanel
         if (!voxelArray.FacesAreSelected())
             return;
 
+        TutorialGUI.TutorialHighlight("paint");
         if (ActionBarButton(GUIIconSet.instance.paint))
         {
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
@@ -97,7 +98,9 @@ public class ActionBarGUI : GUIPanel
             };
             paintGUI.paint = voxelArray.GetSelectedPaint();
         }
+        TutorialGUI.ClearHighlight();
 
+        TutorialGUI.TutorialHighlight("create object");
         if (ActionBarButton(GUIIconSet.instance.create))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
@@ -111,6 +114,7 @@ public class ActionBarGUI : GUIPanel
                 createGUI.voxelArray = voxelArray;
             };
         }
+        TutorialGUI.ClearHighlight();
 
         GUILayout.FlexibleSpace();
         int moveCount = 0;

@@ -111,8 +111,10 @@ public class TutorialGUI : GUIPanel
 
     public static void TutorialHighlight(string id)
     {
-        if (id == highlightID && Time.time % 0.6f < 0.3f) // blink
-            GUI.backgroundColor = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+        if (id != highlightID)
+            return;
+        float x = 0.5f + Time.time % 1.0f / 2;
+        GUI.backgroundColor = new Color(1.0f, x, x, 1.0f);
     }
 
     public static void ClearHighlight()

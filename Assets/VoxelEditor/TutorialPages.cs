@@ -49,7 +49,8 @@ public class Tutorials
     public static TutorialPageFactory[] SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
     {
         () => new SimpleTutorialPage(
-            "<i>Select a face and tap the cube button.</i>"),
+            "<i>Select a face and tap the cube button.</i>",
+            highlight: "create object"),
         () => new SimpleTutorialPage(
             "<i>Choose \"Solid Substance\" and follow the instructions.</i>"),
         () => new SimpleTutorialPage(
@@ -57,20 +58,22 @@ public class Tutorials
             + "substances are independent objects that move and respond to interaction."),
         () => new SimpleTutorialPage(
             "Substances are controlled by their <i>Behaviors</i>. "
-            + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game. "
-            + ""),
+            + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game."),
         () => new SimpleTutorialPage(
-            "<i>Try adding a Move behavior to the Substance.</i>"),
+            "<i>Try adding a Move behavior to the Substance.</i>",
+            highlight: "add behavior"),
         () => new SimpleTutorialPage(
             "When you play the game now, the substance will move West at a constant rate. "
             + "<i>Now try making the substance follow the player.</i>"),
         () => new SimpleTutorialPage(
             "Substances can have <i>Sensors</i> which turn On and Off in response to events in the game. "
-            + "<i>Add a touch sensor to the substance.</i>"),
+            + "<i>Add a touch sensor to the substance.</i>",
+            highlight: "change sensor"),
         () => new SimpleTutorialPage(
             "<i>Now configure the touch sensor so it only turns on when touching the player.</i>"),
         () => new SimpleTutorialPage(
-            "To make the sensor have an effect, behaviors can be set to be active only when the sensor is On or Off. "),
+            "To make the sensor have an effect, behaviors can be set to be active only when the sensor is On or Off. ",
+            highlight: "behavior condition"),
         () => new SimpleTutorialPage(
             "<i>Add a Hurt behavior which hurts the substance by 100 points when it touches the player.</i>"),
         () => new SimpleTutorialPage(
@@ -382,6 +385,11 @@ public class Tutorials
             return "<i>Select a face and tap the paint roller icon to open the Paint panel.</i>";
         }
 
+        public override string GetHighlightID()
+        {
+            return "paint";
+        }
+
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             if (guiGameObject.GetComponent<PaintGUI>() != null)
@@ -411,6 +419,14 @@ public class Tutorials
                 return "<i>Reopen the paint panel. (Select a face and tap the paint roller icon)</i>";
             else
                 return base.GetText();
+        }
+
+        public override string GetHighlightID()
+        {
+            if (!panelOpen)
+                return "paint";
+            else
+                return base.GetHighlightID();
         }
 
         public override bool ShowNextButton()

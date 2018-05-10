@@ -137,6 +137,7 @@ public class PropertiesGUI : GUIPanel
             }
         }
 
+        TutorialGUI.TutorialHighlight("change sensor");
         if (GUILayout.Button("Change Sensor"))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
@@ -148,10 +149,12 @@ public class PropertiesGUI : GUIPanel
                 voxelArray.unsavedChanges = true;
             };
         }
+        TutorialGUI.ClearHighlight();
         GUILayout.BeginVertical(GUI.skin.box);
         PropertiesObjectGUI(entity.sensor, " Sensor");
         GUILayout.EndVertical();
 
+        TutorialGUI.TutorialHighlight("add behavior");
         if (GUILayout.Button("Add Behavior"))
         {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
@@ -165,6 +168,7 @@ public class PropertiesGUI : GUIPanel
                 scrollVelocity = new Vector2(0, 2000 * entity.behaviors.Count); // scroll to bottom
             };
         }
+        TutorialGUI.ClearHighlight();
 
         Color guiBaseColor = GUI.backgroundColor;
         EntityBehavior behaviorToRemove = null;
