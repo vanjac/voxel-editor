@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum TutorialAction
 {
-    NONE, NEXT, BACK, END
+    NONE, NEXT, BACK
 }
 
 public abstract class TutorialPage
@@ -183,7 +183,10 @@ public class TutorialGUI : GUIPanel
         GUILayout.BeginHorizontal();
         if (GUILayout.Button(GUIIconSet.instance.x, buttonStyle.Value,
                 GUILayout.ExpandWidth(false), GUILayout.Height(height)))
-            action = TutorialAction.END;
+        {
+            SetPage(-1);
+            return;
+        }
         if (pageI > 0 && GUILayout.Button(GUIIconSet.instance.close, buttonStyle.Value,
                 GUILayout.ExpandWidth(false), GUILayout.Height(height)))
             action = TutorialAction.BACK;
@@ -194,7 +197,7 @@ public class TutorialGUI : GUIPanel
             {
                 if (GUIUtils.HighlightedButton(GUIIconSet.instance.done, buttonStyle.Value,
                         GUILayout.ExpandWidth(false), GUILayout.Height(height)))
-                    action = TutorialAction.END;
+                    action = TutorialAction.NEXT;
             }
             else
             {
@@ -213,9 +216,6 @@ public class TutorialGUI : GUIPanel
             case TutorialAction.NEXT:
                 SetPage(pageI + 1);
                 break;
-            case TutorialAction.END:
-                SetPage(-1);
-                return;
             case TutorialAction.NONE:
                 break;
         }
