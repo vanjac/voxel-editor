@@ -108,6 +108,7 @@ public class TutorialGUI : GUIPanel
     private static int pageI;
     private TutorialPage currentPage = null;
     private static string highlightID;
+    private float successTime; // for success animation
 
     public static void TutorialHighlight(string id)
     {
@@ -181,12 +182,18 @@ public class TutorialGUI : GUIPanel
         BringToFront();
         highlightID = currentPage.GetHighlightID();
         var action = currentPage.Update(voxelArray, gameObject, touchListener);
+        if (action == TutorialAction.NEXT)
+            successTime = Time.time;
+
+        if (Time.time - successTime < 1.0)
+            GUI.backgroundColor = new Color(Time.time - successTime, 1.0f, Time.time - successTime);
 
         GUILayout.BeginHorizontal();
         if (GUILayout.Button(GUIIconSet.instance.x, buttonStyle.Value,
                 GUILayout.ExpandWidth(false), GUILayout.Height(height)))
         {
             SetPage(-1);
+            GUI.backgroundColor = Color.white;
             return;
         }
         if (pageI > 0 && GUILayout.Button(GUIIconSet.instance.close, buttonStyle.Value,
@@ -221,5 +228,7 @@ public class TutorialGUI : GUIPanel
             case TutorialAction.NONE:
                 break;
         }
+
+        GUI.backgroundColor = Color.white;
     }
 }
