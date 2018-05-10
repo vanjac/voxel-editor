@@ -16,6 +16,11 @@ public class MenuGUI : GUIPanel
         return new Rect(width * .2f, 0, width * .6f, height);
     }
 
+    public override GUIStyle GetStyle()
+    {
+        return GUIStyle.none;
+    }
+
     public override void OnEnable()
     {
         holdOpen = true;
@@ -30,7 +35,7 @@ public class MenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button("New...", GUI.skin.GetStyle("button_large")))
+        if (GUIUtils.HighlightedButton("New", GUI.skin.GetStyle("button_large")))
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
             inputDialog.prompt = "Enter new map name...";
