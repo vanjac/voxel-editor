@@ -25,6 +25,11 @@ public class HelpGUI : GUIPanel
             StartTutorial(Tutorials.PAINT_TUTORIAL);
         if (GUILayout.Button("Substances"))
             StartTutorial(Tutorials.SUBSTANCE_TUTORIAL);
+        if (GUILayout.Button("Tips and Shortcuts"))
+        {
+            LargeMessageGUI.ShowLargeMessageDialog(gameObject, Tutorials.TIPS_AND_SHORTCUTS_TUTORIAL);
+            Destroy(this);
+        }
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial)
