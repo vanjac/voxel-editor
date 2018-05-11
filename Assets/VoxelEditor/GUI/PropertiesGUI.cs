@@ -174,6 +174,7 @@ public class PropertiesGUI : GUIPanel
         EntityBehavior behaviorToRemove = null;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
+            TutorialGUI.TutorialHighlight("behaviors");
             Entity behaviorTarget = behavior.targetEntity.entity;
             string suffix = " Behavior";
             if (behavior.targetEntityIsActivator)
