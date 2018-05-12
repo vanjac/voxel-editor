@@ -13,11 +13,10 @@ Shader "FX/Water (Basic)" {
 
 #include "UnityCG.cginc"
 
-	uniform float4 _horizonColor;
+		uniform float4 _horizonColor;
 
 		uniform float4 WaveSpeed;
 		uniform float _WaveScale;
-		uniform float4 _WaveOffset;
 
 		struct appdata {
 			float4 vertex : POSITION;
@@ -40,16 +39,16 @@ Shader "FX/Water (Basic)" {
 
 			// animate waves
 			// this should behave the same as the WaterBasic.cs script
-			float4 offset4 = WaveSpeed * (_Time.x * _WaveScale);
-				_WaveOffset.x = fmod(offset4.x, 1.0);
-			_WaveOffset.y = fmod(offset4.y, 1.0);
-			_WaveOffset.z = fmod(offset4.z, 1.0);
-			_WaveOffset.w = fmod(offset4.w, 1.0);
+			float4 waveOffset = WaveSpeed * (_Time.x * _WaveScale);
+			waveOffset.x = fmod(waveOffset.x, 1.0);
+			waveOffset.y = fmod(waveOffset.y, 1.0);
+			waveOffset.z = fmod(waveOffset.z, 1.0);
+			waveOffset.w = fmod(waveOffset.w, 1.0);
 
 			// scroll bump waves
 			float4 temp;
 			float4 wpos = mul(unity_ObjectToWorld, v.vertex);
-				temp.xyzw = wpos.xzxz * _WaveScale + _WaveOffset;
+			temp.xyzw = wpos.xzxz * _WaveScale + waveOffset;
 			o.bumpuv[0] = temp.xy * float2(.4, .45);
 			o.bumpuv[1] = temp.wz;
 
@@ -67,45 +66,11 @@ Shader "FX/Water (Basic)" {
 			// make the water transparent and double sided! https://forum.unity.com/threads/transparent-water.46991/
 			Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
 
-			// render back, then front to have both sides but not have overlap problems
-			// solution from here: https://docs.unity3d.com/Manual/SL-CullAndDepth.html (Glass Culling section)
-
 			Pass{
-				Blend SrcAlpha OneMinusSrcAlpha
-				ColorMask RGB
-				Cull Front
-
-				CGPROGRAM
-#pragma vertex vert
-#pragma fragment frag
-#pragma multi_compile_fog
-
-				sampler2D _BumpMap;
-				sampler2D _ColorControl;
-
-				half4 frag(v2f i) : COLOR
-				{
-					half3 bump1 = UnpackNormal(tex2D(_BumpMap, i.bumpuv[0])).rgb;
-					half3 bump2 = UnpackNormal(tex2D(_BumpMap, i.bumpuv[1])).rgb;
-					half3 bump = (bump1 + bump2) * 0.5;
-
-					half fresnel = dot(i.viewDir, bump);
-					half4 water = tex2D(_ColorControl, float2(fresnel, fresnel));
-
-						half4 col;
-					col.rgb = lerp(water.rgb, _horizonColor.rgb, water.a);
-					col.a = _horizonColor.a;
-
-					UNITY_APPLY_FOG(i.fogCoord, col);
-					return col;
-				}
-					ENDCG
-			} // end pass
-
-			Pass{ // copy of above, but with Cull Back
 					Blend SrcAlpha OneMinusSrcAlpha
 					ColorMask RGB
-					Cull Back
+					Cull Off
+					ZWrite Off
 
 					CGPROGRAM
 #pragma vertex vert
@@ -124,7 +89,7 @@ Shader "FX/Water (Basic)" {
 						half fresnel = dot(i.viewDir, bump);
 						half4 water = tex2D(_ColorControl, float2(fresnel, fresnel));
 
-							half4 col;
+						half4 col;
 						col.rgb = lerp(water.rgb, _horizonColor.rgb, water.a);
 						col.a = _horizonColor.a;
 

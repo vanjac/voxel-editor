@@ -26,6 +26,7 @@ public class HealthText : MonoBehaviour
         if (player == null)
             return;
         text.text = "Health: " + (int)(player.health);
+        //text.text = (int)(1.0f / Time.smoothDeltaTime) + " FPS";
 
         if (player.health != lastHealth)
         {
