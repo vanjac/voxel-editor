@@ -17,6 +17,7 @@ public class GUIIconSet : MonoBehaviour
     public Texture overflow;
     public Texture world;
     public Texture help;
+    public Texture helpCircle;
     public Texture done;
     public Texture rotateLeft;
     public Texture rotateRight;

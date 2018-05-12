@@ -576,6 +576,7 @@ MonoBehaviour:
   overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
   world: {fileID: 2800000, guid: 9076f51e512308e48b81eeabfeae83c6, type: 3}
   help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
+  helpCircle: {fileID: 2800000, guid: fe7fb42b36aa0b34fae803c54f766ab8, type: 3}
   done: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
   rotateLeft: {fileID: 2800000, guid: 0d62748abe8faa04c8f75c80793a80e6, type: 3}
   rotateRight: {fileID: 2800000, guid: 1198250b3cf1af44b9d7b2a93a2cc8ec, type: 3}

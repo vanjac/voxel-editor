@@ -6,6 +6,9 @@ public class TeleportBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Teleport", "Instantly teleport to another location",
+        "Properties:\n•  \"To\": Target location to teleport\n"
+        + "•  \"Relative to\": Optional origin location. If specified, instead of going directly to the \"To\" target,"
+        + " object will move the distance between \"Relative to\" and \"To\" targets.",
         "send", typeof(TeleportBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private EntityReference target = new EntityReference(null);

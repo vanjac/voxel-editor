@@ -228,6 +228,13 @@ public class PropertiesGUI : GUIPanel
             GUILayout.Label(obj.ObjectType().icon, iconStyle.Value);
         }
         GUILayout.Label(title, GUI.skin.GetStyle("label_title"));
+        if (obj != null && obj.ObjectType().description != "")
+            if (GUILayout.Button(GUIIconSet.instance.helpCircle,
+                iconStyle.Value, GUILayout.ExpandWidth(false)))
+            {
+                var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
+                typeInfo.type = obj.ObjectType();
+            }
         GUILayout.EndHorizontal();
 
         if (obj == null)

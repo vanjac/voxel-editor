@@ -71,6 +71,8 @@ public class PropertiesObjectType
     [XmlIgnore]
     public readonly string description;
     [XmlIgnore]
+    public readonly string longDescription;
+    [XmlIgnore]
     public readonly string iconName;
     [XmlIgnore]
     public readonly Type type;
@@ -93,6 +95,7 @@ public class PropertiesObjectType
     public PropertiesObjectType(string fullName, Type type) {
         this.fullName = fullName;
         description = "";
+        longDescription = "";
         iconName = "";
         this.type = type;
         constructor = DefaultConstructor;
@@ -102,6 +105,17 @@ public class PropertiesObjectType
     {
         this.fullName = fullName;
         this.description = description;
+        longDescription = "";
+        this.iconName = iconName;
+        this.type = type;
+        constructor = DefaultConstructor;
+    }
+
+    public PropertiesObjectType(string fullName, string description, string longDescription, string iconName, Type type)
+    {
+        this.fullName = fullName;
+        this.description = description;
+        this.longDescription = longDescription;
         this.iconName = iconName;
         this.type = type;
         constructor = DefaultConstructor;
@@ -112,6 +126,18 @@ public class PropertiesObjectType
     {
         this.fullName = fullName;
         this.description = description;
+        longDescription = "";
+        this.iconName = iconName;
+        this.type = type;
+        this.constructor = constructor;
+    }
+
+    public PropertiesObjectType(string fullName, string description, string iconName, string longDescription,
+        Type type, PropertiesObjectConstructor constructor)
+    {
+        this.fullName = fullName;
+        this.description = description;
+        this.longDescription = longDescription;
         this.iconName = iconName;
         this.type = type;
         this.constructor = constructor;
@@ -463,9 +489,22 @@ public class BehaviorType : PropertiesObjectType
         this.rule = DefaultRule;
     }
 
+    public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type)
+        : base(fullName, description, longDescription, iconName, type)
+    {
+        this.rule = DefaultRule;
+    }
+
     public BehaviorType(string fullName, string description, string iconName, Type type,
         BehaviorRule rule)
         : base(fullName, description, iconName, type)
+    {
+        this.rule = rule;
+    }
+
+    public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type,
+        BehaviorRule rule)
+        : base(fullName, description, longDescription, iconName, type)
     {
         this.rule = rule;
     }
