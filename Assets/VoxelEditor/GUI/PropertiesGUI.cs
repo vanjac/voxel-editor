@@ -223,18 +223,12 @@ public class PropertiesGUI : GUIPanel
                 title += ":";
         }
         GUILayout.BeginHorizontal();
-        if (obj != null)
+        if (obj != null && GUILayout.Button(obj.ObjectType().icon, iconStyle.Value))
         {
-            GUILayout.Label(obj.ObjectType().icon, iconStyle.Value);
+            var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
+            typeInfo.type = obj.ObjectType();
         }
         GUILayout.Label(title, GUI.skin.GetStyle("label_title"));
-        if (obj != null && obj.ObjectType().description != "")
-            if (GUILayout.Button(GUIIconSet.instance.helpCircle,
-                iconStyle.Value, GUILayout.ExpandWidth(false)))
-            {
-                var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
-                typeInfo.type = obj.ObjectType();
-            }
         GUILayout.EndHorizontal();
 
         if (obj == null)
