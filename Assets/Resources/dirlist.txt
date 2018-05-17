@@ -277,6 +277,8 @@
 ./GameAssets/Overlays/symbols/arrow-up-thick.mat
 ./GameAssets/Overlays/symbols/biohazard.mat
 ./GameAssets/Overlays/symbols/cancel.mat
+./GameAssets/Overlays/symbols/check.mat
+./GameAssets/Overlays/symbols/close.mat
 ./GameAssets/Overlays/symbols/radioactive.mat
 ./GameAssets/Overlays/text caps
 ./GameAssets/Overlays/text caps/c065.mat
