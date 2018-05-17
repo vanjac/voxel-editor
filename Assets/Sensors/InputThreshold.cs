@@ -6,7 +6,12 @@ using UnityEngine;
 public class InputThresholdSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Threshold", "Active when a certain threshold of other objects are active", "altimeter", typeof(InputThresholdSensor));
+        "Threshold", "Active when a certain threshold of other objects are active",
+        "The values of all of the inputs are continuously added up. "
+        + "If an Input is on and set to \"Positive\", the total is incremented by one. "
+        + "If an Input is on and set to \"Negative\", the total is decremented by one. "
+        + "The sensor turns on if the total is greater than or equal to the threshold.",
+        "altimeter", typeof(InputThresholdSensor));
 
     // public so it can be serialized
     // this is serialized so don't change it!

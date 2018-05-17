@@ -5,8 +5,9 @@ using UnityEngine;
 public class TapSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Tap", "Detect user tapping the object", "gesture-tap",
-        typeof(TapSensor));
+        "Tap", "Detect user tapping the object",
+        "Object doesn't have to be visible or solid to detect a tap.",
+        "gesture-tap", typeof(TapSensor));
 
     public override PropertiesObjectType ObjectType()
     {

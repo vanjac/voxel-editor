@@ -5,8 +5,9 @@ using UnityEngine;
 public class ToggleSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Toggle", "One input switches it on, one input switches it off", "toggle-switch",
-        typeof(ToggleSensor));
+        "Toggle", "One input switches it on, one input switches it off",
+        "If both inputs turn on simultaneously, the sensor toggles between on/off.",
+        "toggle-switch", typeof(ToggleSensor));
 
     private EntityReference offInput = new EntityReference(null);
     private EntityReference onInput = new EntityReference(null);

@@ -5,7 +5,9 @@ using UnityEngine;
 public class TouchSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Touch", "Active when touching another object", "vector-combine", typeof(TouchSensor));
+        "Touch", "Active when touching or intersecting another object",
+        "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
+        "vector-combine", typeof(TouchSensor));
 
     public override PropertiesObjectType ObjectType()
     {
