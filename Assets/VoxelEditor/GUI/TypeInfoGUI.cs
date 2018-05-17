@@ -8,7 +8,7 @@ public class TypeInfoGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .25f, height * .25f, width * .5f, height * .5f);
+        return new Rect(width * .25f, height * .2f, width * .5f, 0);
     }
 
     public override void WindowGUI()
