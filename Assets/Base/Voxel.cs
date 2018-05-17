@@ -46,7 +46,7 @@ public struct VoxelFace
 public class Voxel : MonoBehaviour
 {
     public static VoxelFace EMPTY_FACE = new VoxelFace();
-    public static Vector2[] SQUARE_LOOP = new Vector2[]
+    private static Vector2[] SQUARE_LOOP = new Vector2[]
     {
         Vector2.zero,
         Vector2.right,
@@ -203,16 +203,6 @@ public class Voxel : MonoBehaviour
             faces[faceI].Clear();
         }
         substance = null;
-    }
-
-    void OnDestroy()
-    {
-        if (!InEditor())
-            return; // this makes it faster, I checked with Profiler
-        substance = null; // remove from substance
-        VoxelArray array = transform.parent.GetComponent<VoxelArray>();
-        if (array != null)
-            array.VoxelDestroyed(this);
     }
 
     public void UpdateVoxel()

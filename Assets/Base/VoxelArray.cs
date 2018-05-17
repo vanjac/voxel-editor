@@ -177,18 +177,13 @@ public class VoxelArray : MonoBehaviour
         if (voxel.IsEmpty())
         {
             Destroy(voxel.gameObject);
+            RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
             unloadUnusedAssets = true;
         }
         else
         {
             voxel.UpdateVoxel();
         }
-    }
-
-    // called by voxels that are being destroyed
-    public void VoxelDestroyed(Voxel voxel)
-    {
-        RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
     }
 
     public bool IsEmpty()
