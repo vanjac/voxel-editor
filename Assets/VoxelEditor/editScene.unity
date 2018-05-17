@@ -187,6 +187,7 @@ MonoBehaviour:
   - {fileID: 878046154}
   voxelArray: {fileID: 213926859}
   cameraPivot: {fileID: 661348387}
+  touchListener: {fileID: 1179125982}
 --- !u!1 &416192707
 GameObject:
   m_ObjectHideFlags: 0

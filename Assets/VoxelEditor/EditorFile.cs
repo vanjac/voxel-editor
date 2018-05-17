@@ -10,6 +10,7 @@ public class EditorFile : MonoBehaviour
 
     public VoxelArrayEditor voxelArray;
     public Transform cameraPivot;
+    public TouchListener touchListener;
 
     public void Load()
     {
@@ -57,6 +58,22 @@ public class EditorFile : MonoBehaviour
                 string.Join("\n  •  ", warnings.ToArray());
             LargeMessageGUI.ShowLargeMessageDialog(loadingGUI.gameObject, message);
         }
+
+        if (!PlayerPrefs.HasKey("last_editScene_version"))
+        {
+            var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
+            dialog.message = "This is your first time using the app. Would you like a tutorial?";
+            dialog.yesButtonText = "Yes";
+            dialog.noButtonText = "No";
+            dialog.yesButtonHandler = () =>
+            {
+                var tutorialGUI = dialog.gameObject.AddComponent<TutorialGUI>();
+                tutorialGUI.voxelArray = voxelArray;
+                tutorialGUI.touchListener = touchListener;
+                tutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL);
+            };
+        }
+        PlayerPrefs.SetString("last_editScene_version", Application.version);
     }
 
     public void Save()
