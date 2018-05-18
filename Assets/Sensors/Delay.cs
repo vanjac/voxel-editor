@@ -8,7 +8,8 @@ public class DelaySensor : Sensor
         "Delay", "Adds a delay to an input turning on or off",
         "If the input has been on for longer than the \"On time\", sensor will turn on. "
         + "If the input has been off for longer than the \"Off time\", sensor will turn off. "
-        + "If the input cycles on/off faster than the on/off time, nothing happens.",
+        + "If the input cycles on/off faster than the on/off time, nothing happens.\n\n"
+        + "Activator: the activator of the input when it turned on",
         "timer", typeof(DelaySensor));
 
     private EntityReference input = new EntityReference(null);

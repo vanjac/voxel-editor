@@ -10,7 +10,8 @@ public class InputThresholdSensor : Sensor
         "The values of all of the inputs are continuously added up. "
         + "If an Input is on and set to \"Positive\", the total is incremented by one. "
         + "If an Input is on and set to \"Negative\", the total is decremented by one. "
-        + "The sensor turns on if the total is greater than or equal to the threshold.",
+        + "The sensor turns on if the total is greater than or equal to the threshold.\n\n"
+        + "Activator: the activator of the first Positive input with an activator",
         "altimeter", typeof(InputThresholdSensor));
 
     // public so it can be serialized
