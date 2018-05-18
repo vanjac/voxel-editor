@@ -119,8 +119,8 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>Play your game.</i> Both Up arrows should function correctly. Why does this work?"),
         () => new SimpleTutorialPage(
-            "Now the elevator needs to go down. This makes three possible states: "
-            + "going up, going down, and stopped. But substances can only be On or Off..."),
+            "Now the elevator needs to go down. This makes 3 possible states: "
+            + "going up, going down, and stopped. But sensors can only be On/Off..."),
         () => new SimpleTutorialPage(
             "To solve this, we use Targeted Behaviors. "
             + "These are behaviors which use their host object to turn on/off, but act upon a Target object."),
