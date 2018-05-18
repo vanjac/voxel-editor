@@ -156,8 +156,8 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>Tap Add Behavior. Tap the Target button, then tap Activator. Then choose the Hurt/Heal behavior.</i>"),
         () => new SimpleTutorialPage(
-            "This behavior targets its \"Activator\", which is the object that “caused” the sensor to turn on. "
-            + "For touch sensors, this is the object that touched it."),
+            "This behavior targets its \"Activator\", which is the object that “caused” the sensor to turn on -- "
+            + "in this case, the object that touched the trigger."),
         () => new SimpleTutorialPage(
             "<i>Make the trigger hurt the Activator by -100 points.</i>"),
         () => new SimpleTutorialPage(
