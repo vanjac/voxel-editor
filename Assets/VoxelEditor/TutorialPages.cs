@@ -142,6 +142,31 @@ public class Tutorials
             "The last step is to stop the elevator after going down one floor. See if you can figure out how, using the red cube.")
     };
 
+    public static TutorialPageFactory[] ADVANCED_GAME_LOGIC_TUTORIAL_2 = new TutorialPageFactory[]
+    {
+        () => new SimpleTutorialPage(
+            "Your task is to build a Pit of Death. Anything that falls in the pit will die."),
+        () => new SimpleTutorialPage(
+            "<i>Make a large room with a pit in the middle.</i> Make sure the pit isn't directly under the player."),
+        () => new SimpleTutorialPage(
+            "<i>Add a Trigger substance spanning the bottom of the pit.</i>"),
+        () => new SimpleTutorialPage(
+            "The trigger should already have a Touch sensor with the filter set to Anything. "
+            + "This is good because nothing escapes the Pit of Death."),
+        () => new SimpleTutorialPage(
+            "<i>Tap Add Behavior. Tap the Target button, then tap Activator. Then choose the Hurt/Heal behavior.</i>"),
+        () => new SimpleTutorialPage(
+            "This behavior targets its \"Activator\", which is the object that “caused” the sensor to turn on. "
+            + "For touch sensors, this is the object that touched it."),
+        () => new SimpleTutorialPage(
+            "<i>Make the trigger hurt the Activator by -100 points.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Play your game. Try jumping in the pit.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now try making some solid substances with Physics behaviors. "
+            + "Then play the game and push them all into the pit.</i> Enjoy."),
+    };
+
     private class TutorialIntroNavigation : TutorialPage
     {
         private Quaternion startRotation;

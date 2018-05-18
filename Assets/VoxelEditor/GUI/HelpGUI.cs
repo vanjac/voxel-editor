@@ -33,10 +33,10 @@ public class HelpGUI : GUIPanel
             Destroy(this);
         }
         if (GUILayout.Button("Advanced game logic 1"))
-        {
             StartTutorialWithTemplate(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1,
                 "Advanced game logic 1", "Tutorials/advanced_game_logic_1");
-        }
+        if (GUILayout.Button("Advanced game logic 2"))
+            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2);
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial)
