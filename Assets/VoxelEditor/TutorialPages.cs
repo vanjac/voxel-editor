@@ -66,7 +66,7 @@ public class Tutorials
             highlight: "behavior condition"),
         () => new TutorialSubstanceHurt(),
         () => new SimpleTutorialPage(
-            "<i>Try the game. What happens when you touch the substance?</i>"),
+            "<i>Try your game. What happens when you touch the substance?</i>"),
         () => new SimpleTutorialPage(
             "Read <i>Advanced Game Logic</i> in the Help menu to learn how to add more complex interactivity to games.")
     };
