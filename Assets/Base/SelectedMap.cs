@@ -4,28 +4,25 @@ using UnityEngine;
 
 public class SelectedMap : MonoBehaviour
 {
-    public string mapName;
-    public string returnFromPlayScene;
+    public string mapName = "mapsave";
+    public string returnFromPlayScene = "editScene";
 
-    void Start () {
+    void Start ()
+    {
         DontDestroyOnLoad(this);
     }
 
-    public static string GetSelectedMapName()
+    public static SelectedMap Instance()
     {
         GameObject selectedMap = GameObject.Find("SelectedMap");
-        if (selectedMap != null)
-            return selectedMap.GetComponent<SelectedMap>().mapName;
+        if (selectedMap == null)
+        {
+            selectedMap = new GameObject("SelectedMap");
+            return selectedMap.AddComponent<SelectedMap>();
+        }
         else
-            return "mapsave";
-    }
-
-    public static string GetReturnFromPlayScene()
-    {
-        GameObject selectedMap = GameObject.Find("SelectedMap");
-        if (selectedMap != null)
-            return selectedMap.GetComponent<SelectedMap>().returnFromPlayScene;
-        else
-            return "editScene";
+        {
+            return selectedMap.GetComponent<SelectedMap>();
+        }
     }
 }

@@ -15,7 +15,7 @@ public class GameLoad : MonoBehaviour
     private IEnumerator LoadCoroutine()
     {
         yield return null;
-        MapFileReader reader = new MapFileReader(SelectedMap.GetSelectedMapName());
+        MapFileReader reader = new MapFileReader(SelectedMap.Instance().mapName);
         try
         {
             reader.Read(null, GetComponent<VoxelArray>(), false);
@@ -46,7 +46,7 @@ public class GameLoad : MonoBehaviour
         }
         yield return null;
         if (scene == null)
-            SceneManager.LoadScene(SelectedMap.GetReturnFromPlayScene());
+            SceneManager.LoadScene(SelectedMap.Instance().returnFromPlayScene);
         else
             SceneManager.LoadScene(scene);
     }

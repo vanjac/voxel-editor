@@ -20,7 +20,7 @@ public class EditorFile : MonoBehaviour
     private IEnumerator LoadCoroutine()
     {
         yield return null;
-        string mapName = SelectedMap.GetSelectedMapName();
+        string mapName = SelectedMap.Instance().mapName;
         Debug.unityLogger.Log("EditorFile", "Loading " + mapName);
         MapFileReader reader = new MapFileReader(mapName);
         List<string> warnings;
@@ -84,7 +84,7 @@ public class EditorFile : MonoBehaviour
             return;
         }
         Debug.unityLogger.Log("EditorFile", "Saving...");
-        MapFileWriter writer = new MapFileWriter(SelectedMap.GetSelectedMapName());
+        MapFileWriter writer = new MapFileWriter(SelectedMap.Instance().mapName);
         writer.Write(cameraPivot, voxelArray);
         voxelArray.unsavedChanges = false;
     }

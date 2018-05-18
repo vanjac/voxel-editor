@@ -70,13 +70,7 @@ public class MenuGUI : GUIPanel
 
     public static void OpenMap(string name, string scene)
     {
-        GameObject selectedMapObject = GameObject.Find("SelectedMap");
-        if (selectedMapObject == null)
-        {
-            selectedMapObject = new GameObject("SelectedMap");
-            selectedMapObject.AddComponent<SelectedMap>();
-        }
-        SelectedMap selectedMap = selectedMapObject.GetComponent<SelectedMap>();
+        SelectedMap selectedMap = SelectedMap.Instance();
         selectedMap.mapName = name;
         selectedMap.returnFromPlayScene = (scene == "playScene") ? "menuScene" : "editScene";
         SceneManager.LoadScene(scene);
