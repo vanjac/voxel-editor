@@ -13,7 +13,7 @@ public class FileReceive : MonoBehaviour
         ShareMap.MarkIntentUsedAndroid();
 
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-        inputDialog.prompt = "Enter name for imported map...";
+        inputDialog.prompt = "Enter name for imported world...";
         inputDialog.handler = ImportMap;
         inputDialog.cancelHandler = Close;
         inputDialog.guiSkin = guiSkin;
@@ -34,7 +34,7 @@ public class FileReceive : MonoBehaviour
         string newPath = MenuGUI.GetMapPath(name);
         if (File.Exists(newPath))
         {
-            var dialog = DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            var dialog = DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             dialog.yesButtonHandler = Close;
             return;
         }
@@ -50,7 +50,7 @@ public class FileReceive : MonoBehaviour
         catch (System.Exception e)
         {
             Debug.Log(e);
-            var dialog = DialogGUI.ShowMessageDialog(gameObject, "Error importing file");
+            var dialog = DialogGUI.ShowMessageDialog(gameObject, "Error importing world");
             dialog.yesButtonHandler = Close;
         }
     }

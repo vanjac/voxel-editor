@@ -38,7 +38,7 @@ public class MenuGUI : GUIPanel
         if (GUIUtils.HighlightedButton("New", GUI.skin.GetStyle("button_large")))
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-            inputDialog.prompt = "Enter new map name...";
+            inputDialog.prompt = "Enter new world name...";
             inputDialog.handler = NewMap;
         }
         scroll = GUILayout.BeginScrollView(scroll);
@@ -89,7 +89,7 @@ public class MenuGUI : GUIPanel
         string filePath = GetMapPath(name);
         if (File.Exists(filePath))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
         using (FileStream fileStream = File.Create(filePath))
@@ -154,7 +154,7 @@ public class FileDropdownGUI : GUIPanel
         if (GUILayout.Button("Copy"))
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-            inputDialog.prompt = "Enter new map name...";
+            inputDialog.prompt = "Enter new world name...";
             inputDialog.handler = CopyMap;
         }
         if (GUILayout.Button("Delete"))
@@ -190,7 +190,7 @@ public class FileDropdownGUI : GUIPanel
         string newPath = MenuGUI.GetMapPath(newName);
         if (File.Exists(newPath))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
         File.Move(MenuGUI.GetMapPath(fileName), newPath);
@@ -205,7 +205,7 @@ public class FileDropdownGUI : GUIPanel
         string newPath = MenuGUI.GetMapPath(newName);
         if (File.Exists(newPath))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
         File.Copy(MenuGUI.GetMapPath(fileName), newPath);
