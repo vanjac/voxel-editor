@@ -196,7 +196,7 @@ public interface PropertiesObject
 public abstract class Entity : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Entity", "Any object in the game", "circle-outline", typeof(Entity));
+        "Anything", "", "circle-outline", typeof(Entity));
 
     public EntityComponent component;
     public Sensor sensor;
