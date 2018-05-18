@@ -47,6 +47,14 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static Material _lineMaterial;
     public Material lineMaterial;
 
+    private void Clear()
+    {
+        targetEntities.Clear();
+        currentEntity = null;
+        behaviorTarget = null;
+        currentTargetEntityI = -1;
+    }
+
     public static void Reset(Entity entity)
     {
         foreach (Entity target in targetEntities)
@@ -136,6 +144,12 @@ public class EntityReferencePropertyManager : MonoBehaviour
     void Awake()
     {
         _lineMaterial = lineMaterial;
+        Clear();
+    }
+
+    void OnDestroy()
+    {
+        Clear();
     }
 
     void Update()
