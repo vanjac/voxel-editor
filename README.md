@@ -25,19 +25,19 @@ On Android, you can send files in JSON format, and open them from another app (l
 
 Some of these only appear in certain contexts.
 
-- ![Back arrow](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/arrow-left.png): Close the map
+- ![Back arrow](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/arrow-left.png): Close the world
 - ![2 overlapping dotted boxes](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/vector-selection.png): Select something else, in addition to the current selection
 - ![Box with a line through it](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/selection-off.png): Clear selection
 - ![Paint roller](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/format-paint.png): Show the Paint interface allowing you to paint the selected faces
 - ![Cube](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/cube-send.png): Create a Substance (see below)
-- ![Play](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/play.png): Play the map, allowing you to walk around and interact with objects
+- ![Play](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/play.png): Play the game, allowing you to walk around and interact with objects
 - ![3 dots](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/dots-vertical.png) Overflow menu...
     - ![](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/VoxelEditor/GUI/earth.png) World: Edit global World properties
 
 ## Paint
 Using the Paint interface, faces can be painted with a Material and an Overlay. Materials are opaque, and Overlays are transparent and drawn on top of Materials. Both offer a selection of textures as well as solid colors. The paint can also be rotated and flipped.
 
-A special material is the "Sky" material. This provides a window into the sky -- since a map can't have any holes in it, this is the only way to see the sky. An interesting property of the Sky material is that it blocks everything behind it, giving you an unobstructed view of the sky.
+A special material is the "Sky" material. This provides a window into the sky -- since the world can't have any holes in it, this is the only way to see the sky. An interesting property of the Sky material is that it blocks everything behind it, giving you an unobstructed view of the sky.
 
 ## Objects
 
