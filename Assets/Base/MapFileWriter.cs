@@ -39,7 +39,7 @@ public class MapFileWriter
 
         root["world"] = WriteWorld(voxelArray);
 
-        string filePath = Application.persistentDataPath + "/" + fileName + ".json";
+        string filePath = WorldFiles.GetFilePath(fileName);
         using (FileStream fileStream = File.Create(filePath))
         {
             using (var sw = new StreamWriter(fileStream))

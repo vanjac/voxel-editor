@@ -86,7 +86,7 @@ public class MenuGUI : GUIPanel
     {
         if (name.Length == 0)
             return;
-        string filePath = GetMapPath(name);
+        string filePath = WorldFiles.GetFilePath(name);
         if (File.Exists(filePath))
         {
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
@@ -103,14 +103,9 @@ public class MenuGUI : GUIPanel
         UpdateMapList();
     }
 
-    public static string GetMapPath(string name)
-    {
-        return Application.persistentDataPath + "/" + name + ".json";
-    }
-
     private void UpdateMapList()
     {
-        string[] files = Directory.GetFiles(Application.persistentDataPath);
+        string[] files = Directory.GetFiles(WorldFiles.GetDirectoryPath());
         mapFiles.Clear();
         foreach (string name in files)
             mapFiles.Add(Path.GetFileNameWithoutExtension(name));
@@ -165,7 +160,7 @@ public class FileDropdownGUI : GUIPanel
             dialog.noButtonText = "No";
             dialog.yesButtonHandler = () =>
             {
-                File.Delete(MenuGUI.GetMapPath(fileName));
+                File.Delete(WorldFiles.GetFilePath(fileName));
                 handler();
                 Destroy(this);
             };
@@ -177,7 +172,7 @@ public class FileDropdownGUI : GUIPanel
 #if UNITY_ANDROID
         if (GUILayout.Button("Share"))
         {
-            string path = MenuGUI.GetMapPath(fileName);
+            string path = WorldFiles.GetFilePath(fileName);
             ShareMap.ShareAndroid(path);
         }
 #endif
@@ -187,13 +182,13 @@ public class FileDropdownGUI : GUIPanel
     {
         if (newName.Length == 0)
             return;
-        string newPath = MenuGUI.GetMapPath(newName);
+        string newPath = WorldFiles.GetFilePath(newName);
         if (File.Exists(newPath))
         {
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Move(MenuGUI.GetMapPath(fileName), newPath);
+        File.Move(WorldFiles.GetFilePath(fileName), newPath);
         handler();
         Destroy(this);
     }
@@ -202,13 +197,13 @@ public class FileDropdownGUI : GUIPanel
     {
         if (newName.Length == 0)
             return;
-        string newPath = MenuGUI.GetMapPath(newName);
+        string newPath = WorldFiles.GetFilePath(newName);
         if (File.Exists(newPath))
         {
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Copy(MenuGUI.GetMapPath(fileName), newPath);
+        File.Copy(WorldFiles.GetFilePath(fileName), newPath);
         handler();
         Destroy(this);
     }

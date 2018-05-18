@@ -31,7 +31,7 @@ public class FileReceive : MonoBehaviour
             Close();
             return;
         }
-        string newPath = MenuGUI.GetMapPath(name);
+        string newPath = WorldFiles.GetFilePath(name);
         if (File.Exists(newPath))
         {
             var dialog = DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");

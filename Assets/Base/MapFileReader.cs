@@ -41,7 +41,7 @@ public class MapFileReader
 
         try
         {
-            string filePath = Application.persistentDataPath + "/" + fileName + ".json";
+            string filePath = WorldFiles.GetFilePath(fileName);
             using (FileStream fileStream = File.Open(filePath, FileMode.Open))
             {
                 using (var sr = new StreamReader(fileStream))
