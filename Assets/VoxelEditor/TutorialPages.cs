@@ -143,9 +143,8 @@ public class Tutorials
     private class TutorialIntroNavigation : TutorialPage
     {
         private Quaternion startRotation;
-        private float startZoom;
         private Vector3 startPan;
-        private bool rotate, zoom, pan;
+        private bool rotate, pan;
         private float startTime;
 
         public override string GetText()
@@ -158,7 +157,6 @@ public class Tutorials
             TouchListener touchListener)
         {
             startRotation = touchListener.pivot.rotation;
-            startZoom = touchListener.pivot.localScale.x;
             startPan = touchListener.pivot.position;
             startTime = Time.time;
         }
@@ -169,31 +167,22 @@ public class Tutorials
             if (!rotate)
             {
                 var currentRotation = touchListener.pivot.rotation;
-                if (Quaternion.Angle(currentRotation, startRotation) > 90)
+                if (Quaternion.Angle(currentRotation, startRotation) > 60)
                 {
                     Debug.Log("Rotate complete");
                     rotate = true;
                 }
             }
-            if (!zoom)
-            {
-                var zoomAmount = touchListener.pivot.localScale.x / startZoom;
-                if (zoomAmount > 2 || zoomAmount < 0.5f)
-                {
-                    Debug.Log("Zoom complete");
-                    zoom = true;
-                }
-            }
             if (!pan)
             {
                 var currentPan = touchListener.pivot.position;
-                if ((currentPan - startPan).magnitude > 5)
+                if ((currentPan - startPan).magnitude > 4)
                 {
                     Debug.Log("Pan complete");
                     pan = true;
                 }
             }
-            if (rotate && zoom && pan && Time.time - startTime > 5)
+            if (rotate && pan && Time.time - startTime > 4)
                 return TutorialAction.NEXT;
             else
                 return TutorialAction.NONE;
