@@ -79,6 +79,67 @@ public class Tutorials
 •  Sliding faces sideways along a wall moves their paints, leaving a trail behind them.
 ";
 
+    public static TutorialPageFactory[] ADVANCED_GAME_LOGIC_TUTORIAL_1 = new TutorialPageFactory[]
+    {
+        () => new SimpleTutorialPage(
+            "Here are three floors with an elevator connecting them. "
+            + "Your task is to make the elevator move when you press the buttons."),
+        () => new SimpleTutorialPage(
+            "We’ll start by making the Up button on the first floor work. <i>Give it a Tap sensor.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now give the elevator a Toggle sensor, and connect the On input to the Up button.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Finally, use a Move behavior to make the elevator go up only when its sensor is On.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Play your game.</i> The elevator should move up when you press the button. Why does it do this?"),
+        () => new SimpleTutorialPage(
+            "The elevator needs to stop when it reaches the next floor. There are multiple ways to do this. "
+            + "One way is to make it turn off after 5 seconds..."),
+        () => new SimpleTutorialPage(
+            "<i>Find the hidden room near the elevator shaft.</i> "
+            + "This room will never be seen in the game, so it's a good place to hide extra logic components."),
+        () => new SimpleTutorialPage(
+            "<i>Select the green cube. Give it a Delay sensor. "
+            + "Connect the input to the elevator and change the On time to 5.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now select the elevator, and connect its Off input to the green cube.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Play your game.</i> The elevator should stop on the second floor. Why does it do this?"),
+        () => new SimpleTutorialPage(
+            "We have one functioning button, but there are still three more. <i>Give them all Tap behaviors.</i> "
+            + "We'll make the second Up button work next..."),
+        () => new SimpleTutorialPage(
+            "The elevator’s Toggle sensor only allows one input, but we have two Up buttons."
+            + " We need to merge them into a single input..."),
+        () => new SimpleTutorialPage(
+            "<i>In the hidden room, select the Up arrow cube. "
+            + "Give it a Threshold sensor, and connect two inputs to both of the Up buttons.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now select the elevator. Change its On input to the Up arrow cube in the hidden room.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Play your game.</i> Both Up arrows should function correctly. Why does this work?"),
+        () => new SimpleTutorialPage(
+            "Now the elevator needs to go down. This makes three possible states: "
+            + "going up, going down, and stopped. But substances can only be On or Off..."),
+        () => new SimpleTutorialPage(
+            "To solve this, we use Targeted Behaviors. "
+            + "These are behaviors which use their host object to turn on/off, but act upon a Target object."),
+        () => new SimpleTutorialPage(
+            "<i>First, connect the hidden Down arrow cube to the two Down buttons, just like the Up arrow cube.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Next, select the blue cube. Give it a Toggle sensor and connect the On input to the Down arrow cube.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now tap Add Behavior. In the behavior menu, tap the \"Target\" button and select the elevator as the target. "
+            + "Then select the Move behavior.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Make the move behavior go Down only when the sensor is On.</i> "
+            + "The sensor of the blue cube will turn it on/off, but the Elevator will move!"),
+        () => new SimpleTutorialPage(
+            "<i>Play the game and try the Down button.</i> The elevator should go down, but not stop when it gets to the bottom."),
+        () => new SimpleTutorialPage(
+            "The last step is to stop the elevator after going down one floor. See if you can figure out how, using the red cube.")
+    };
+
     private class TutorialIntroNavigation : TutorialPage
     {
         private Quaternion startRotation;

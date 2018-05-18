@@ -30,6 +30,8 @@ public class HelpGUI : GUIPanel
             LargeMessageGUI.ShowLargeMessageDialog(gameObject, Tutorials.TIPS_AND_SHORTCUTS_TUTORIAL);
             Destroy(this);
         }
+        if (GUILayout.Button("Advanced game logic 1"))
+            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1);
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial)
