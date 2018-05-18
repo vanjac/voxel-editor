@@ -91,6 +91,8 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>Finally, use a Move behavior to make the elevator go up only when its sensor is On.</i>"),
         () => new SimpleTutorialPage(
+            "To learn more about these sensors and behaviors, you can tap their icons in the Properties panel."),
+        () => new SimpleTutorialPage(
             "<i>Play your game.</i> The elevator should move up when you press the button. Why does it do this?"),
         () => new SimpleTutorialPage(
             "The elevator needs to stop when it reaches the next floor. There are multiple ways to do this. "
