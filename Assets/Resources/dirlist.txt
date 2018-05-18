@@ -416,4 +416,5 @@
 ./ObjectPrefabs
 ./ObjectPrefabs/Player.prefab
 ./Tutorials
+./Tutorials/advanced_game_logic_1.json
 ./Tutorials/toolbar_buttons.png
