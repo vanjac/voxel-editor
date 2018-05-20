@@ -293,7 +293,7 @@ public class Voxel : MonoBehaviour
             }
 
             one_v -= zero_v;
-            Vector4 tangent = new Vector4(one_v.x, one_v.y, one_v.z, 1);
+            Vector4 tangent = new Vector4(one_v.x, one_v.y, one_v.z, -1);
             for (int i = 0; i < 4; i++)
                 tangents[numFilledFaces * 4 + i] = tangent;
 
