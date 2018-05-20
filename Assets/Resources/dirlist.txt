@@ -8,7 +8,15 @@
 ./GameAssets/Materials/Ground/GroundClay008.mat
 ./GameAssets/Materials/Ground/GroundForest002.mat
 ./GameAssets/Materials/Ground/GroundForest003.mat
+./GameAssets/Materials/Ground/GroundGrassFieldBrownPatchy001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldGreen001.mat
+./GameAssets/Materials/Ground/GroundGrassFieldGreenPatchy001.mat
+./GameAssets/Materials/Ground/GroundGravel009.mat
+./GameAssets/Materials/Ground/GroundPebbles001.mat
+./GameAssets/Materials/Ground/GroundPebbles004.mat
+./GameAssets/Materials/Ground/GroundSand001.mat
+./GameAssets/Materials/Ground/GroundSandDesertFlat001.mat
+./GameAssets/Materials/Ground/GroundSandDesertRippled001.mat
 ./GameAssets/Materials/Sky.mat
 ./GameAssets/Materials/Vantablack.mat
 ./GameAssets/Materials/White Light.mat
