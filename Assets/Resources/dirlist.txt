@@ -8,10 +8,12 @@
 ./GameAssets/Materials/Ground/GroundClay008.mat
 ./GameAssets/Materials/Ground/GroundForest002.mat
 ./GameAssets/Materials/Ground/GroundForest003.mat
+./GameAssets/Materials/Ground/GroundGrassAstroTurfRealistic001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldBrownPatchy001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldGreen001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldGreenPatchy001.mat
 ./GameAssets/Materials/Ground/GroundGravel009.mat
+./GameAssets/Materials/Ground/GroundMulch001.mat
 ./GameAssets/Materials/Ground/GroundPebbles001.mat
 ./GameAssets/Materials/Ground/GroundPebbles004.mat
 ./GameAssets/Materials/Ground/GroundSand001.mat
