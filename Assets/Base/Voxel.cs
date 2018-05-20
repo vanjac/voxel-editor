@@ -217,6 +217,8 @@ public class Voxel : MonoBehaviour
 
         var vertices = new Vector3[numFilledFaces * 4];
         var uv = new Vector2[numFilledFaces * 4];
+        var normals = new Vector3[numFilledFaces * 4];
+        var tangents = new Vector4[numFilledFaces * 4];
 
         float[] transformPos = new float[]
         {
@@ -230,6 +232,9 @@ public class Voxel : MonoBehaviour
             if (face.IsEmpty())
                 continue;
             int axis = FaceIAxis(faceNum);
+            Vector3 normal = DirectionForFaceI(faceNum);
+            Vector3 one_v = Vector3.right;
+            Vector3 zero_v = Vector3.zero;
 
             // example for faceNum = 5 (z min)
             // 0 bottom left
@@ -244,6 +249,8 @@ public class Voxel : MonoBehaviour
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
                 vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+
+                normals[vertexI] = normal;
 
                 int uvNum = VoxelFace.GetOrientationRotation(face.orientation);
                 bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
@@ -270,6 +277,11 @@ public class Voxel : MonoBehaviour
                 }
                 uvNum %= 4;
 
+                if (uvNum == 0)
+                    zero_v = vertices[vertexI];
+                if (uvNum == 1)
+                    one_v = vertices[vertexI];
+
                 Vector2 uvOrigin; // materials can span multiple voxels
                 if (VoxelFace.GetOrientationRotation(face.orientation) % 2 == 1
                         ^ (faceNum != 4 && faceNum != 5)
@@ -277,8 +289,13 @@ public class Voxel : MonoBehaviour
                     uvOrigin = new Vector2(transformPos[(axis + 2) % 3], transformPos[(axis + 1) % 3]);
                 else
                     uvOrigin = new Vector2(transformPos[(axis + 1) % 3], transformPos[(axis + 2) % 3]);
-                uv[vertexI] =  uvOrigin + SQUARE_LOOP[uvNum];
+                uv[vertexI] = uvOrigin + SQUARE_LOOP[uvNum];
             }
+
+            one_v -= zero_v;
+            Vector4 tangent = new Vector4(one_v.x, one_v.y, one_v.z, 1);
+            for (int i = 0; i < 4; i++)
+                tangents[numFilledFaces * 4 + i] = tangent;
 
             numFilledFaces++;
             if (face.material != null)
@@ -294,6 +311,8 @@ public class Voxel : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.uv = uv;
+        mesh.normals = normals;
+        mesh.tangents = tangents;
         mesh.subMeshCount = numMaterials;
 
         Material[] materials = new Material[numMaterials];
@@ -347,8 +366,6 @@ public class Voxel : MonoBehaviour
 
             numFilledFaces++;
         }
-        
-        mesh.RecalculateNormals();
 
         bool xRay = false;
         if (substance != null && inEditor)
