@@ -21,6 +21,7 @@ public class WorldProperties : PropertiesObject
                 v => {
                     RenderSettings.skybox = (Material)v;
                     DynamicGI.UpdateEnvironment(); // update ambient lighting
+                    GameObject.Find("ReflectionProbe").GetComponent<ReflectionProbe>().RenderProbe();
                 },
                 PropertyGUIs.Material("GameAssets/Skies", "Unlit/Color")),
             new Property("Ambient light intensity",

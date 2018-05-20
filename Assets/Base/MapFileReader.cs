@@ -145,6 +145,7 @@ public class MapFileReader
                 }
             }
         DynamicGI.UpdateEnvironment(); // update ambient lighting
+        GameObject.Find("ReflectionProbe").GetComponent<ReflectionProbe>().RenderProbe();
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
         voxelArray.playerObject = new PlayerObject(voxelArray);

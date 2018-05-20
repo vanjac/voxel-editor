@@ -188,6 +188,48 @@ MonoBehaviour:
   voxelArray: {fileID: 213926859}
   cameraPivot: {fileID: 661348387}
   touchListener: {fileID: 1179125982}
+--- !u!1001 &311064049
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 55b4745c99361e745bace119196500ad, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &416192707
 GameObject:
   m_ObjectHideFlags: 0
