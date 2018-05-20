@@ -3,6 +3,12 @@
 ./GameAssets
 ./GameAssets/Materials
 ./GameAssets/Materials/$Sky.mat
+./GameAssets/Materials/Ground
+./GameAssets/Materials/Ground/GrassShort001.mat
+./GameAssets/Materials/Ground/GroundClay008.mat
+./GameAssets/Materials/Ground/GroundForest002.mat
+./GameAssets/Materials/Ground/GroundForest003.mat
+./GameAssets/Materials/Ground/GroundGrassFieldGreen001.mat
 ./GameAssets/Materials/Sky.mat
 ./GameAssets/Materials/Vantablack.mat
 ./GameAssets/Materials/White Light.mat
