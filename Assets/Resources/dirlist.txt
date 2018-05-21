@@ -19,6 +19,11 @@
 ./GameAssets/Materials/Ground/GroundSand001.mat
 ./GameAssets/Materials/Ground/GroundSandDesertFlat001.mat
 ./GameAssets/Materials/Ground/GroundSandDesertRippled001.mat
+./GameAssets/Materials/Rock
+./GameAssets/Materials/Rock/CliffGreyChunky008.mat
+./GameAssets/Materials/Rock/RockDark004.mat
+./GameAssets/Materials/Rock/RockGrey004.mat
+./GameAssets/Materials/Rock/RockGrey009.mat
 ./GameAssets/Materials/Sky.mat
 ./GameAssets/Materials/Vantablack.mat
 ./GameAssets/Materials/Vegetation
