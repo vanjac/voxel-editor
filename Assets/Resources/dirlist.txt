@@ -37,6 +37,16 @@
 ./GameAssets/Materials/Vegetation/RockMossyFull001.mat
 ./GameAssets/Materials/Vegetation/RockMossyFull004.mat
 ./GameAssets/Materials/White Light.mat
+./GameAssets/Materials/Wood
+./GameAssets/Materials/Wood/WoodFlooring044.mat
+./GameAssets/Materials/Wood/WoodFlooring062.mat
+./GameAssets/Materials/Wood/WoodFlooring064.mat
+./GameAssets/Materials/Wood/WoodFlooring066.mat
+./GameAssets/Materials/Wood/WoodLogSidingRough001.mat
+./GameAssets/Materials/Wood/WoodPlanks26.mat
+./GameAssets/Materials/Wood/WoodPlanksWorn01.mat
+./GameAssets/Materials/Wood/WoodPlywoodFlooring001.mat
+./GameAssets/Materials/Wood/WoodWallCabin002.mat
 ./GameAssets/old
 ./GameAssets/old/asphalt
 ./GameAssets/old/asphalt/AsphaltNew.mat
