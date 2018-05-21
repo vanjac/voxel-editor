@@ -25,6 +25,10 @@
 ./GameAssets/Materials/Rock/RockGrey004.mat
 ./GameAssets/Materials/Rock/RockGrey009.mat
 ./GameAssets/Materials/Sky.mat
+./GameAssets/Materials/Snow+Ice
+./GameAssets/Materials/Snow+Ice/IceFine001.mat
+./GameAssets/Materials/Snow+Ice/SnowFine003.mat
+./GameAssets/Materials/Snow+Ice/SnowIceDirty002.mat
 ./GameAssets/Materials/Vantablack.mat
 ./GameAssets/Materials/Vegetation
 ./GameAssets/Materials/Vegetation/BarkBirch002.mat
