@@ -21,6 +21,12 @@
 ./GameAssets/Materials/Ground/GroundSandDesertRippled001.mat
 ./GameAssets/Materials/Sky.mat
 ./GameAssets/Materials/Vantablack.mat
+./GameAssets/Materials/Vegetation
+./GameAssets/Materials/Vegetation/BarkBirch002.mat
+./GameAssets/Materials/Vegetation/BarkBrown003.mat
+./GameAssets/Materials/Vegetation/BarkMossySpotty004.mat
+./GameAssets/Materials/Vegetation/RockMossyFull001.mat
+./GameAssets/Materials/Vegetation/RockMossyFull004.mat
 ./GameAssets/Materials/White Light.mat
 ./GameAssets/old
 ./GameAssets/old/asphalt
