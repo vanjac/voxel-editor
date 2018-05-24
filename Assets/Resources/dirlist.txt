@@ -22,7 +22,6 @@
 ./GameAssets/Materials/Ground/GroundClay008.mat
 ./GameAssets/Materials/Ground/GroundForest002.mat
 ./GameAssets/Materials/Ground/GroundForest003.mat
-./GameAssets/Materials/Ground/GroundGrassAstroTurfRealistic001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldBrownPatchy001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldGreen001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldGreenPatchy001.mat
@@ -30,7 +29,6 @@
 ./GameAssets/Materials/Ground/GroundMulch001.mat
 ./GameAssets/Materials/Ground/GroundPebbles001.mat
 ./GameAssets/Materials/Ground/GroundPebbles004.mat
-./GameAssets/Materials/Ground/GroundSand001.mat
 ./GameAssets/Materials/Ground/GroundSandDesertFlat001.mat
 ./GameAssets/Materials/Ground/GroundSandDesertRippled001.mat
 ./GameAssets/Materials/Ground/sandydrysoil.mat
@@ -74,7 +72,6 @@
 ./GameAssets/Materials/Vegetation
 ./GameAssets/Materials/Vegetation/bark1.mat
 ./GameAssets/Materials/Vegetation/BarkBirch002.mat
-./GameAssets/Materials/Vegetation/BarkBrown003.mat
 ./GameAssets/Materials/Vegetation/BarkMossySpotty004.mat
 ./GameAssets/Materials/Vegetation/branches_twisted.mat
 ./GameAssets/Materials/Vegetation/leaf-fall1.mat
