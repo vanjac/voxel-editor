@@ -48,7 +48,6 @@
 ./GameAssets/Materials/Rock/CliffGreyChunky008.mat
 ./GameAssets/Materials/Rock/graniterockface1.mat
 ./GameAssets/Materials/Rock/limestone-rock.mat
-./GameAssets/Materials/Rock/marble-speckled.mat
 ./GameAssets/Materials/Rock/RockDark004.mat
 ./GameAssets/Materials/Rock/RockGrey004.mat
 ./GameAssets/Materials/Rock/RockGrey009.mat
