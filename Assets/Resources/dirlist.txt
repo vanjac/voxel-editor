@@ -57,6 +57,12 @@
 ./GameAssets/Materials/Rock/stonewall.mat
 ./GameAssets/Materials/Rock/waterwornstone1.mat
 ./GameAssets/Materials/Rock/wornstonework1.mat
+./GameAssets/Materials/Roof
+./GameAssets/Materials/Roof/RoofShingles001.mat
+./GameAssets/Materials/Roof/RoofShinglesOld001.mat
+./GameAssets/Materials/Roof/RoofThatched001.mat
+./GameAssets/Materials/Roof/RoofTilesClay002.mat
+./GameAssets/Materials/Roof/RoofTilesClay003.mat
 ./GameAssets/Materials/Sky.mat
 ./GameAssets/Materials/Snow+Ice
 ./GameAssets/Materials/Snow+Ice/IceFine001.mat
