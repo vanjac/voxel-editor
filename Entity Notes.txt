@@ -32,7 +32,7 @@ Tap (Sensor)
 
 In Range (ActivatedSensor)
     Properties
-        Look range
+        Range
 
 Player Look At (Sensor)
 
@@ -44,7 +44,7 @@ Motion (Sensor)
 OBJECTS:
 
 Ball
-    Color
+    Color with alpha
     Size
 
 Selection of meshes with skin choices
@@ -122,11 +122,12 @@ Speech Bubble (Behavior for Entity)
     Properties
         Message
 
-Glow (Behavior for Entity) : point light with halo
+Light (Behavior for Entity) : point light with halo
     Properties
         Size
         Color
         Intensity
+        Glow? : halo effect
 
 Fire (Behavior for Entity)
     Properties
@@ -139,6 +140,9 @@ Particles (Behavior for Entity)
         Color
         Explosiveness
         Continuous?
+        TARGET
+        Velocity
+        Arc angle
 
 Paint (Behavior for FaceEntity)
     Properties
@@ -148,7 +152,7 @@ Paint (Behavior for FaceEntity)
 
 Portal (Behavior for FaceEntity)
     Properties
-        Target face
+        Target face entity
         Allow movement through?
 
 Climbable (Behavior for FaceEntity)
@@ -166,7 +170,7 @@ Conveyor (Behavior for FaceEntity)
         Direction : 4 choices
         Speed
 
-Scroll (Behavior for FaceEntity)
+Scroll (Behavior for FaceEntity or Substance)
     Properties
         Direction : 4 choices
         Speed
@@ -199,6 +203,11 @@ Push (Behavior for Volume)
     Properties
         Direction : 6 choices
         Target velocity
+        Strength
+
+Alternate Gravity Field (Behavior for Volume)
+    Properties
+        Direction : 6 choices
         Strength
 
 Save Checkpoint (Behavior for Entity)
