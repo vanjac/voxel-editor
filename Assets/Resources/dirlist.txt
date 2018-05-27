@@ -5,6 +5,12 @@
 ./GameAssets/Materials/$Sky.mat
 ./GameAssets/Materials/Bricks+Blocks
 ./GameAssets/Materials/Bricks+Blocks/blocksrough.mat
+./GameAssets/Materials/Bricks+Blocks/Bricks01.mat
+./GameAssets/Materials/Bricks+Blocks/Bricks03.mat
+./GameAssets/Materials/Bricks+Blocks/BricksOld01.mat
+./GameAssets/Materials/Bricks+Blocks/CityStreetSidewalk013.mat
+./GameAssets/Materials/Bricks+Blocks/Cobblestone19.mat
+./GameAssets/Materials/Bricks+Blocks/Cobblestone20.mat
 ./GameAssets/Materials/Bricks+Blocks/dungeon-stone1.mat
 ./GameAssets/Materials/Bricks+Blocks/harshbricks.mat
 ./GameAssets/Materials/Bricks+Blocks/mybricks1.mat
