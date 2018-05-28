@@ -43,7 +43,7 @@ Motion (Sensor)
 
 OBJECTS:
 
-Ball
+Ball (Object)
     Color with alpha
     Size
 
@@ -58,6 +58,10 @@ Tree (abstract Object) : procedural tree
         [tree generation parameters]
 
 Selection of trees
+
+Note (Object)
+    Properties
+        Text
 
 BEHAVIORS:
 
