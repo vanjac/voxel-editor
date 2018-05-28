@@ -199,17 +199,6 @@ Water (Behavior for Volume)
     Properties
         Density
 
-Push (Behavior for Volume)
-    Properties
-        Direction : 6 choices
-        Target velocity
-        Strength
-
-Alternate Gravity Field (Behavior for Volume)
-    Properties
-        Direction : 6 choices
-        Strength
-
 Save Checkpoint (Behavior for Entity)
 
 EFFECTS:
