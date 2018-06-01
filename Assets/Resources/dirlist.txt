@@ -79,6 +79,15 @@
 ./GameAssets/Materials/Tile/bathroomtile2.mat
 ./GameAssets/Materials/Tile/darktiles1.mat
 ./GameAssets/Materials/Tile/tile4b.mat
+./GameAssets/Materials/Tile/Tiles043.mat
+./GameAssets/Materials/Tile/Tiles18.mat
+./GameAssets/Materials/Tile/Tiles30.mat
+./GameAssets/Materials/Tile/Tiles40.mat
+./GameAssets/Materials/Tile/TilesRectangularMirrorColoredGrunge001.mat
+./GameAssets/Materials/Tile/TilesRectangularSubway001.mat
+./GameAssets/Materials/Tile/TilesSquareGraphiteSlate001.mat
+./GameAssets/Materials/Tile/TilesSquareGray001.mat
+./GameAssets/Materials/Tile/TilesSquarePoolMixed001.mat
 ./GameAssets/Materials/Vantablack.mat
 ./GameAssets/Materials/Vegetation
 ./GameAssets/Materials/Vegetation/bark1.mat
