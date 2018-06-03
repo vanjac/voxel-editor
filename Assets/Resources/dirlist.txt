@@ -19,6 +19,10 @@
 ./GameAssets/Materials/Bricks+Blocks/sewerbrick10.mat
 ./GameAssets/Materials/Bricks+Blocks/tiledstone1.mat
 ./GameAssets/Materials/Concrete
+./GameAssets/Materials/Concrete/Concrete07.mat
+./GameAssets/Materials/Concrete/Concrete18.mat
+./GameAssets/Materials/Concrete/ConcretePlates07.mat
+./GameAssets/Materials/Concrete/ConcretePlatesStudded002.mat
 ./GameAssets/Materials/Concrete/patchy_cement1.mat
 ./GameAssets/Materials/Concrete/pockedconcrete1.mat
 ./GameAssets/Materials/Ground
