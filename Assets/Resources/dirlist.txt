@@ -3,6 +3,8 @@
 ./GameAssets
 ./GameAssets/Materials
 ./GameAssets/Materials/$Sky.mat
+./GameAssets/Materials/Asphalt
+./GameAssets/Materials/Asphalt/CityStreetAsphaltGenericClean001.mat
 ./GameAssets/Materials/Bricks+Blocks
 ./GameAssets/Materials/Bricks+Blocks/blocksrough.mat
 ./GameAssets/Materials/Bricks+Blocks/Bricks01.mat
