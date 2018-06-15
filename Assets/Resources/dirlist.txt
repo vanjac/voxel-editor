@@ -45,6 +45,10 @@
 ./GameAssets/Materials/Ground/GroundSandDesertRippled001.mat
 ./GameAssets/Materials/Ground/sandydrysoil.mat
 ./GameAssets/Materials/Ground/sandyground1.mat
+./GameAssets/Materials/Marble
+./GameAssets/Materials/Marble/Marble054.mat
+./GameAssets/Materials/Marble/Marble066.mat
+./GameAssets/Materials/Marble/QuartzPolishedWhite001.mat
 ./GameAssets/Materials/Metal
 ./GameAssets/Materials/Metal/Aluminum-Scuffed.mat
 ./GameAssets/Materials/Metal/greasy-metal-pan1.mat
