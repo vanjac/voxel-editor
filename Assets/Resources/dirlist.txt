@@ -63,7 +63,10 @@
 ./GameAssets/Materials/Other
 ./GameAssets/Materials/Other/corkboard3b.mat
 ./GameAssets/Materials/Plaster
+./GameAssets/Materials/Plaster/Plaster31.mat
+./GameAssets/Materials/Plaster/Plaster35.mat
 ./GameAssets/Materials/Plaster/rough-plaster.mat
+./GameAssets/Materials/Plaster/Stucco05.mat
 ./GameAssets/Materials/Rock
 ./GameAssets/Materials/Rock/blackrock.mat
 ./GameAssets/Materials/Rock/CliffGreyChunky008.mat
@@ -505,6 +508,10 @@
 ./GameAssets/Overlays/text symbols/c124.mat
 ./GameAssets/Overlays/text symbols/c125.mat
 ./GameAssets/Overlays/water
+./GameAssets/Overlays/water/NewUnlitShader 1.shader
+./GameAssets/Overlays/water/NewUnlitShader.shader
+./GameAssets/Overlays/water/NewWater.mat
+./GameAssets/Overlays/water/TestMat1.mat
 ./GameAssets/Overlays/water/WaterBasicDaytime.mat
 ./GameAssets/Overlays/water/WaterBasicDaytime_preview.mat
 ./GameAssets/Overlays/water/WaterBasicNighttime.mat
