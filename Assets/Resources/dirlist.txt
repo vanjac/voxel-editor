@@ -33,11 +33,6 @@
 ./GameAssets/Materials/Fabric/FabricLeatherBlack001.mat
 ./GameAssets/Materials/Fabric/FabricModeledNylon001.mat
 ./GameAssets/Materials/Fabric/FabricWeaveRug001.mat
-./GameAssets/Materials/Fabric/InteriorDesignRugArrows001.mat
-./GameAssets/Materials/Fabric/InteriorDesignRugDiamonds001.mat
-./GameAssets/Materials/Fabric/InteriorDesignRugGeometricStepping001.mat
-./GameAssets/Materials/Fabric/InteriorDesignRugMoroccanTrellis001.mat
-./GameAssets/Materials/Fabric/InteriorDesignRugSquarePatches001.mat
 ./GameAssets/Materials/Ground
 ./GameAssets/Materials/Ground/dry-dirt2.mat
 ./GameAssets/Materials/Ground/grass1.mat
@@ -79,6 +74,13 @@
 ./GameAssets/Materials/Metal/streakedmetal.mat
 ./GameAssets/Materials/Other
 ./GameAssets/Materials/Other/corkboard3b.mat
+./GameAssets/Materials/Patterns
+./GameAssets/Materials/Patterns/InteriorDesignPatternArrows004.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternBeanstalk001.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternDiamonds005.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternGeometricStepping002.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternMoroccanTrellis001.mat
+./GameAssets/Materials/Patterns/InteriorDesignRugSquarePatches001.mat
 ./GameAssets/Materials/Plaster
 ./GameAssets/Materials/Plaster/Plaster31.mat
 ./GameAssets/Materials/Plaster/Plaster35.mat
