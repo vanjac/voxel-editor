@@ -31,6 +31,7 @@
 			{
 				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
+				fixed4 new_color : COLOR0;
 			};
 
 			fixed4 _Color;
@@ -40,17 +41,20 @@
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				UNITY_TRANSFER_FOG(o,o.vertex);
-				return o;
-			}
-			
-			fixed4 frag (v2f i) : SV_Target
-			{
+
 				fixed factor = 1 - _Color.a;
-				fixed4 col = fixed4(
+				o.new_color = fixed4(
 					_Color.r + (1 - _Color.r) * factor,
 					_Color.g + (1 - _Color.g) * factor,
 					_Color.b + (1 - _Color.b) * factor,
 					1);
+
+				return o;
+			}
+
+			fixed4 frag (v2f i) : SV_Target
+			{
+				fixed4 col = i.new_color;
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
