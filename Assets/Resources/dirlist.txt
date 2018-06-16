@@ -125,7 +125,6 @@
 ./GameAssets/Materials/Tile/TilesSquareGraphiteSlate001.mat
 ./GameAssets/Materials/Tile/TilesSquareGray001.mat
 ./GameAssets/Materials/Tile/TilesSquarePoolMixed001.mat
-./GameAssets/Materials/Vantablack.mat
 ./GameAssets/Materials/Vegetation
 ./GameAssets/Materials/Vegetation/bark1.mat
 ./GameAssets/Materials/Vegetation/BarkBirch002.mat
@@ -138,7 +137,6 @@
 ./GameAssets/Materials/Vegetation/mossy-ground1.mat
 ./GameAssets/Materials/Vegetation/RockMossyFull001.mat
 ./GameAssets/Materials/Vegetation/RockMossyFull004.mat
-./GameAssets/Materials/White Light.mat
 ./GameAssets/Materials/Wood
 ./GameAssets/Materials/Wood/agedplanks1.mat
 ./GameAssets/Materials/Wood/bamboo-wood-semigloss.mat
