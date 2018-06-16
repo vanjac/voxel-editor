@@ -34,7 +34,8 @@ public class MapFileReader
     {
         if (missingMaterial == null)
         {
-            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT);
+            // allowTransparency is true in case the material is used for an overlay, so the alpha value can be adjusted
+            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
             missingMaterial.color = Color.magenta;
         }
         string jsonString;
