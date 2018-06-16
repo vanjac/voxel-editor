@@ -199,7 +199,10 @@ public class MapFileReader
             }
         }
         else
+        {
+            warnings.Add("Couldn't read material");
             return missingMaterial;
+        }
     }
 
     private void ReadObjectEntity(JSONObject entityObject, ObjectEntity objectEntity)
