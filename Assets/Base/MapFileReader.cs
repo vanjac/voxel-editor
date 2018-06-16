@@ -34,7 +34,7 @@ public class MapFileReader
     {
         if (missingMaterial == null)
         {
-            missingMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"));
+            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT);
             missingMaterial.color = Color.magenta;
         }
         string jsonString;
@@ -182,19 +182,19 @@ public class MapFileReader
             warnings.Add("Material not found: " + name);
             return missingMaterial;
         }
-        else if (matObject["shader"] != null)
+        else if (matObject["mode"] != null)
         {
-            Shader shader = Shader.Find(matObject["shader"]);
+            ColorMode mode = (ColorMode)System.Enum.Parse(typeof(ColorMode), matObject["mode"]);
             if (matObject["color"] != null)
             {
                 Color color = ReadColor(matObject["color"].AsArray);
-                Material mat = ResourcesDirectory.MakeCustomMaterial(shader, color.a != 1);
+                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, color.a != 1);
                 mat.color = color;
                 return mat;
             }
             else
             {
-                return ResourcesDirectory.MakeCustomMaterial(shader);
+                return ResourcesDirectory.MakeCustomMaterial(mode);
             }
         }
         else

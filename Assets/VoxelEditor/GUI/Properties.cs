@@ -220,7 +220,7 @@ public class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory, string colorShader=null)
+    public static PropertyGUI Material(string materialDirectory, bool onlyUnlit=false)
     {
         return (Property property) =>
         {
@@ -231,8 +231,7 @@ public class PropertyGUIs
                 materialSelector.title = "Change " + property.name;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
-                if (colorShader != null)
-                    materialSelector.colorShader = colorShader;
+                materialSelector.onlyUnlit = onlyUnlit;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.setter(mat); // skip equality check, it could be the same material with a different color

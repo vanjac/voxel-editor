@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+public enum ColorMode
+{
+    MATTE, GLOSSY, METAL, UNLIT, GLASS, ADD, MULTIPLY
+}
+
 public class MaterialSelectorGUI : GUIPanel
 {
     private static Texture2D whiteTexture;
@@ -12,12 +17,20 @@ public class MaterialSelectorGUI : GUIPanel
     private const string BACK_BUTTON = "Back";
     private const string PREVIEW_SUFFIX = "_preview";
     private const string PREVIEW_SUFFIX_EXT = PREVIEW_SUFFIX + ".mat";
+    private static readonly ColorMode[] OPAQUE_COLOR_MODES = new ColorMode[]
+    {
+        ColorMode.MATTE, ColorMode.GLOSSY, ColorMode.METAL, ColorMode.UNLIT
+    };
+    private static readonly ColorMode[] TRANSPARENT_COLOR_MODES = new ColorMode[]
+    {
+        ColorMode.MATTE, ColorMode.GLASS, ColorMode.UNLIT, ColorMode.ADD, ColorMode.MULTIPLY
+    };
 
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
     public string rootDirectory = "GameAssets/Materials";
-    public string colorShader = "Standard";
+    public bool onlyUnlit = false;
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
     public bool closeOnSelect = true;
@@ -28,6 +41,7 @@ public class MaterialSelectorGUI : GUIPanel
     private List<Material> materials;
     private List<string> materialSubDirectories;
     private ColorPickerGUI colorPicker;
+    private ColorMode colorMode;
 
     private static readonly Lazy<GUIStyle> directoryButtonStyle = new Lazy<GUIStyle>(() =>
     {
@@ -39,12 +53,18 @@ public class MaterialSelectorGUI : GUIPanel
 
     public void Start()
     {
+        if (onlyUnlit)
+            colorMode = ColorMode.UNLIT;
+        else
+            colorMode = ColorMode.MATTE;
+
         materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
         if (highlightMaterial != null && ResourcesDirectory.IsCustomMaterial(highlightMaterial))
         {
             highlightMaterial = Instantiate(highlightMaterial);
             tab = 0;
+            colorMode = ResourcesDirectory.GetCustomMaterialColorMode(highlightMaterial);
         }
         else
             tab = 1;
@@ -88,11 +108,41 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (highlightMaterial == null || !ResourcesDirectory.IsCustomMaterial(highlightMaterial))
         {
-            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find(colorShader), allowAlpha);
+            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(colorMode, allowAlpha);
             if (allowAlpha)
                 highlightMaterial.color = new Color(0, 0, 1, 0.25f);
             else
                 highlightMaterial.color = Color.red;
+            if (handler != null)
+                handler(highlightMaterial);
+        }
+        ColorMode newMode;
+        if (onlyUnlit)
+        {
+            newMode = ColorMode.UNLIT;
+        }
+        else if (allowAlpha)
+        {
+            int m = System.Array.IndexOf(TRANSPARENT_COLOR_MODES, colorMode);
+            m = GUILayout.SelectionGrid(m,
+                new string[] { "Matte", "Glass", "Unlit", "Add", "Multiply" },
+                5, GUI.skin.GetStyle("button_tab"));
+            newMode = TRANSPARENT_COLOR_MODES[m];
+        }
+        else
+        {
+            int m = System.Array.IndexOf(OPAQUE_COLOR_MODES, colorMode);
+            m = GUILayout.SelectionGrid(m,
+                new string[] { "Matte", "Glossy", "Metal", "Unlit" },
+                4, GUI.skin.GetStyle("button_tab"));
+            newMode = OPAQUE_COLOR_MODES[m];
+        }
+        if (newMode != colorMode)
+        {
+            Material newMat = ResourcesDirectory.MakeCustomMaterial(newMode, allowAlpha);
+            newMat.color = highlightMaterial.color;
+            highlightMaterial = newMat;
+            colorMode = newMode;
             if (handler != null)
                 handler(highlightMaterial);
         }
@@ -247,7 +297,7 @@ public class MaterialSelectorGUI : GUIPanel
         }
         Rect texCoords = new Rect(Vector2.zero, Vector2.one);
         Texture texture = whiteTexture;
-        if (mat.mainTexture != null)
+        if (mat.HasProperty("_MainTex") && mat.mainTexture != null)
         {
             texture = mat.mainTexture;
             texCoords = new Rect(Vector2.zero, mat.mainTextureScale);

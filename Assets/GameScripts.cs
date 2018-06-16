@@ -46,7 +46,7 @@ public class GameScripts
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"), true);
+                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(ColorMode.MATTE, true);
                 substance.defaultPaint.overlay.color = new Color(0, 0, 1, 0.25f);
                 return substance;
             }),
@@ -74,7 +74,7 @@ public class GameScripts
                 substance.behaviors.Add(visible);
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"), true);
+                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
                 substance.defaultPaint.overlay.color = new Color(.09f, .38f, .87f, .8f);
                 return substance;
             })
