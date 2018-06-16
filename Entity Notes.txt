@@ -44,7 +44,7 @@ Motion (Sensor)
 OBJECTS:
 
 Ball (Object)
-    Color with alpha
+    Material : color only with alpha, allow all modes except Add/Multiply
     Size
 
 Selection of meshes with skin choices
