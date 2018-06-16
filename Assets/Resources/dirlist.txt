@@ -131,7 +131,9 @@
 ./GameAssets/Materials/Vegetation/BarkBirch002.mat
 ./GameAssets/Materials/Vegetation/BarkMossySpotty004.mat
 ./GameAssets/Materials/Vegetation/branches_twisted.mat
+./GameAssets/Materials/Vegetation/Bumpy Textured Leaves.mat
 ./GameAssets/Materials/Vegetation/leaf-fall1.mat
+./GameAssets/Materials/Vegetation/Lush Leafy Bush.mat
 ./GameAssets/Materials/Vegetation/mixedmoss.mat
 ./GameAssets/Materials/Vegetation/mossy-ground1.mat
 ./GameAssets/Materials/Vegetation/RockMossyFull001.mat
