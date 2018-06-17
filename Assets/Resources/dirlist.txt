@@ -12,18 +12,15 @@
 ./GameAssets/Materials/Bricks+Blocks/BricksOld01.mat
 ./GameAssets/Materials/Bricks+Blocks/CityStreetSidewalk013.mat
 ./GameAssets/Materials/Bricks+Blocks/Cobblestone19.mat
-./GameAssets/Materials/Bricks+Blocks/Cobblestone20.mat
 ./GameAssets/Materials/Bricks+Blocks/dungeon-stone1.mat
 ./GameAssets/Materials/Bricks+Blocks/harshbricks.mat
 ./GameAssets/Materials/Bricks+Blocks/mybricks1.mat
 ./GameAssets/Materials/Bricks+Blocks/octostone.mat
 ./GameAssets/Materials/Bricks+Blocks/redbricks2b.mat
-./GameAssets/Materials/Bricks+Blocks/sewerbrick10.mat
 ./GameAssets/Materials/Bricks+Blocks/tiledstone1.mat
 ./GameAssets/Materials/Concrete
 ./GameAssets/Materials/Concrete/Concrete07.mat
 ./GameAssets/Materials/Concrete/Concrete18.mat
-./GameAssets/Materials/Concrete/ConcretePlates07.mat
 ./GameAssets/Materials/Concrete/ConcretePlatesStudded002.mat
 ./GameAssets/Materials/Concrete/patchy_cement1.mat
 ./GameAssets/Materials/Concrete/pockedconcrete1.mat
@@ -40,8 +37,6 @@
 ./GameAssets/Materials/Ground/GroundClay008.mat
 ./GameAssets/Materials/Ground/GroundForest002.mat
 ./GameAssets/Materials/Ground/GroundForest003.mat
-./GameAssets/Materials/Ground/GroundGrassFieldBrownPatchy001.mat
-./GameAssets/Materials/Ground/GroundGrassFieldGreen001.mat
 ./GameAssets/Materials/Ground/GroundGrassFieldGreenPatchy001.mat
 ./GameAssets/Materials/Ground/GroundGravel009.mat
 ./GameAssets/Materials/Ground/GroundMulch001.mat
@@ -57,8 +52,6 @@
 ./GameAssets/Materials/Marble/QuartzPolishedWhite001.mat
 ./GameAssets/Materials/Metal
 ./GameAssets/Materials/Metal/Aluminum-Scuffed.mat
-./GameAssets/Materials/Metal/greasy-metal-pan1.mat
-./GameAssets/Materials/Metal/MetalBronze001.mat
 ./GameAssets/Materials/Metal/MetalBumpsRusted001.mat
 ./GameAssets/Materials/Metal/MetalCorrugatedGarageDoor001.mat
 ./GameAssets/Materials/Metal/MetalGrime010.mat
@@ -69,11 +62,8 @@
 ./GameAssets/Materials/Metal/PanelGeneric004.mat
 ./GameAssets/Materials/Metal/rust-coated.mat
 ./GameAssets/Materials/Metal/rust-panel.mat
-./GameAssets/Materials/Metal/RustPlain001.mat
 ./GameAssets/Materials/Metal/SteelFloorDiamond001.mat
 ./GameAssets/Materials/Metal/streakedmetal.mat
-./GameAssets/Materials/Other
-./GameAssets/Materials/Other/corkboard3b.mat
 ./GameAssets/Materials/Patterns
 ./GameAssets/Materials/Patterns/InteriorDesignPatternArrows004.mat
 ./GameAssets/Materials/Patterns/InteriorDesignPatternBeanstalk001.mat
@@ -84,7 +74,6 @@
 ./GameAssets/Materials/Plaster
 ./GameAssets/Materials/Plaster/Plaster31.mat
 ./GameAssets/Materials/Plaster/Plaster35.mat
-./GameAssets/Materials/Plaster/rough-plaster.mat
 ./GameAssets/Materials/Plaster/Stucco05.mat
 ./GameAssets/Materials/Rock
 ./GameAssets/Materials/Rock/blackrock.mat
@@ -92,14 +81,11 @@
 ./GameAssets/Materials/Rock/graniterockface1.mat
 ./GameAssets/Materials/Rock/limestone-rock.mat
 ./GameAssets/Materials/Rock/RockDark004.mat
-./GameAssets/Materials/Rock/RockGrey004.mat
 ./GameAssets/Materials/Rock/RockGrey009.mat
 ./GameAssets/Materials/Rock/rock_sliced.mat
 ./GameAssets/Materials/Rock/sandstonecliff.mat
 ./GameAssets/Materials/Rock/slipperystonework.mat
-./GameAssets/Materials/Rock/stonewall.mat
 ./GameAssets/Materials/Rock/waterwornstone1.mat
-./GameAssets/Materials/Rock/wornstonework1.mat
 ./GameAssets/Materials/Roof
 ./GameAssets/Materials/Roof/RoofShingles001.mat
 ./GameAssets/Materials/Roof/RoofShinglesOld001.mat
@@ -112,21 +98,17 @@
 ./GameAssets/Materials/Snow+Ice/SnowFine003.mat
 ./GameAssets/Materials/Snow+Ice/SnowIceDirty002.mat
 ./GameAssets/Materials/Tile
-./GameAssets/Materials/Tile/bathroomtile1.mat
 ./GameAssets/Materials/Tile/bathroomtile2.mat
 ./GameAssets/Materials/Tile/darktiles1.mat
 ./GameAssets/Materials/Tile/Marble065.mat
 ./GameAssets/Materials/Tile/tile4b.mat
 ./GameAssets/Materials/Tile/Tiles043.mat
-./GameAssets/Materials/Tile/Tiles18.mat
-./GameAssets/Materials/Tile/Tiles22.mat
 ./GameAssets/Materials/Tile/Tiles27.mat
 ./GameAssets/Materials/Tile/Tiles30.mat
 ./GameAssets/Materials/Tile/Tiles40.mat
 ./GameAssets/Materials/Tile/TilesRectangularMirrorColoredGrunge001.mat
 ./GameAssets/Materials/Tile/TilesRectangularSubway001.mat
 ./GameAssets/Materials/Tile/TilesSquareGraphiteSlate001.mat
-./GameAssets/Materials/Tile/TilesSquareGray001.mat
 ./GameAssets/Materials/Tile/TilesSquarePoolMixed001.mat
 ./GameAssets/Materials/Vegetation
 ./GameAssets/Materials/Vegetation/bark1.mat
@@ -136,7 +118,6 @@
 ./GameAssets/Materials/Vegetation/Bumpy Textured Leaves.mat
 ./GameAssets/Materials/Vegetation/leaf-fall1.mat
 ./GameAssets/Materials/Vegetation/Lush Leafy Bush.mat
-./GameAssets/Materials/Vegetation/mixedmoss.mat
 ./GameAssets/Materials/Vegetation/mossy-ground1.mat
 ./GameAssets/Materials/Vegetation/RockMossyFull001.mat
 ./GameAssets/Materials/Vegetation/RockMossyFull004.mat
@@ -147,14 +128,11 @@
 ./GameAssets/Materials/Wood/plywood.mat
 ./GameAssets/Materials/Wood/sculptedfloorboards1.mat
 ./GameAssets/Materials/Wood/WoodFlooring044.mat
-./GameAssets/Materials/Wood/WoodFlooring062.mat
 ./GameAssets/Materials/Wood/WoodFlooring064.mat
 ./GameAssets/Materials/Wood/WoodFlooring066.mat
-./GameAssets/Materials/Wood/woodframe1.mat
 ./GameAssets/Materials/Wood/WoodLogSidingRough001.mat
 ./GameAssets/Materials/Wood/WoodPlanks26.mat
 ./GameAssets/Materials/Wood/WoodPlanksWorn01.mat
-./GameAssets/Materials/Wood/WoodPlywoodFlooring001.mat
 ./GameAssets/Materials/Wood/WoodWallCabin002.mat
 ./GameAssets/Materials/Wood/wornpaintedwoodsiding.mat
 ./GameAssets/old
