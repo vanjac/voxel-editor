@@ -115,9 +115,12 @@
 ./GameAssets/Materials/Tile/bathroomtile1.mat
 ./GameAssets/Materials/Tile/bathroomtile2.mat
 ./GameAssets/Materials/Tile/darktiles1.mat
+./GameAssets/Materials/Tile/Marble065.mat
 ./GameAssets/Materials/Tile/tile4b.mat
 ./GameAssets/Materials/Tile/Tiles043.mat
 ./GameAssets/Materials/Tile/Tiles18.mat
+./GameAssets/Materials/Tile/Tiles22.mat
+./GameAssets/Materials/Tile/Tiles27.mat
 ./GameAssets/Materials/Tile/Tiles30.mat
 ./GameAssets/Materials/Tile/Tiles40.mat
 ./GameAssets/Materials/Tile/TilesRectangularMirrorColoredGrunge001.mat
