@@ -59,7 +59,8 @@ public class GameScripts
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("GameAssets/Overlays/glass/TranslucentGlassSaftey");
+                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
+                substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
                 return substance;
             }),
         new PropertiesObjectType("Neuron",
