@@ -47,7 +47,7 @@ public class ResourcesDirectory
                 break;
             case ColorMode.METAL:
                 material = new Material(Shader.Find("Standard"));
-                material.SetFloat("_Glossiness", 1.0f);
+                material.SetFloat("_Glossiness", 0.95f);
                 material.SetFloat("_Metallic", 1.0f);
                 break;
             case ColorMode.UNLIT:
