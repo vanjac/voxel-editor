@@ -14,7 +14,6 @@
 ./GameAssets/Materials/Bricks+Blocks/Cobblestone19.mat
 ./GameAssets/Materials/Bricks+Blocks/dungeon-stone1.mat
 ./GameAssets/Materials/Bricks+Blocks/harshbricks.mat
-./GameAssets/Materials/Bricks+Blocks/mybricks1.mat
 ./GameAssets/Materials/Bricks+Blocks/octostone.mat
 ./GameAssets/Materials/Bricks+Blocks/redbricks2b.mat
 ./GameAssets/Materials/Bricks+Blocks/tiledstone1.mat
@@ -27,8 +26,6 @@
 ./GameAssets/Materials/Fabric
 ./GameAssets/Materials/Fabric/FabricCanvas001.mat
 ./GameAssets/Materials/Fabric/FabricCarpet001.mat
-./GameAssets/Materials/Fabric/FabricLeatherBlack001.mat
-./GameAssets/Materials/Fabric/FabricModeledNylon001.mat
 ./GameAssets/Materials/Fabric/FabricWeaveRug001.mat
 ./GameAssets/Materials/Fabric/InteriorDesignRugSquarePatches001.mat
 ./GameAssets/Materials/Ground
@@ -47,10 +44,6 @@
 ./GameAssets/Materials/Ground/GroundSandDesertRippled001.mat
 ./GameAssets/Materials/Ground/sandydrysoil.mat
 ./GameAssets/Materials/Ground/sandyground1.mat
-./GameAssets/Materials/Marble
-./GameAssets/Materials/Marble/Marble054.mat
-./GameAssets/Materials/Marble/Marble066.mat
-./GameAssets/Materials/Marble/QuartzPolishedWhite001.mat
 ./GameAssets/Materials/Metal
 ./GameAssets/Materials/Metal/Aluminum-Scuffed.mat
 ./GameAssets/Materials/Metal/MetalBumpsRusted001.mat
@@ -81,6 +74,7 @@
 ./GameAssets/Materials/Rock/CliffGreyChunky008.mat
 ./GameAssets/Materials/Rock/graniterockface1.mat
 ./GameAssets/Materials/Rock/limestone-rock.mat
+./GameAssets/Materials/Rock/QuartzPolishedWhite001.mat
 ./GameAssets/Materials/Rock/RockDark004.mat
 ./GameAssets/Materials/Rock/RockGrey009.mat
 ./GameAssets/Materials/Rock/rock_sliced.mat
