@@ -30,6 +30,7 @@
 ./GameAssets/Materials/Fabric/FabricLeatherBlack001.mat
 ./GameAssets/Materials/Fabric/FabricModeledNylon001.mat
 ./GameAssets/Materials/Fabric/FabricWeaveRug001.mat
+./GameAssets/Materials/Fabric/InteriorDesignRugSquarePatches001.mat
 ./GameAssets/Materials/Ground
 ./GameAssets/Materials/Ground/dry-dirt2.mat
 ./GameAssets/Materials/Ground/grass1.mat
@@ -70,7 +71,6 @@
 ./GameAssets/Materials/Patterns/InteriorDesignPatternDiamonds005.mat
 ./GameAssets/Materials/Patterns/InteriorDesignPatternGeometricStepping002.mat
 ./GameAssets/Materials/Patterns/InteriorDesignPatternMoroccanTrellis001.mat
-./GameAssets/Materials/Patterns/InteriorDesignRugSquarePatches001.mat
 ./GameAssets/Materials/Patterns/TilePattern.mat
 ./GameAssets/Materials/Plaster
 ./GameAssets/Materials/Plaster/Plaster31.mat
