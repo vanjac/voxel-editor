@@ -29,6 +29,7 @@ public class TouchListener : MonoBehaviour
     {
         pivot = transform.parent;
         cam = GetComponent<Camera>();
+        cam.depthTextureMode = DepthTextureMode.Depth;
     }
 
     void Update ()

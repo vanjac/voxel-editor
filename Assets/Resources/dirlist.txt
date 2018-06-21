@@ -237,7 +237,9 @@
 ./GameAssets/Overlays/text symbols/c124.mat
 ./GameAssets/Overlays/text symbols/c125.mat
 ./GameAssets/Overlays/water
+./GameAssets/Overlays/water/NewSurfaceShader.shader
 ./GameAssets/Overlays/water/NewUnlitShader 1.shader
+./GameAssets/Overlays/water/NewUnlitShader 2.shader
 ./GameAssets/Overlays/water/NewUnlitShader.shader
 ./GameAssets/Overlays/water/NewWater.mat
 ./GameAssets/Overlays/water/TestMat1.mat
