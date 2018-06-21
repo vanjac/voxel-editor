@@ -102,8 +102,7 @@ public class MapFileWriter
         JSONObject materialObject = new JSONObject();
         if (ResourcesDirectory.IsCustomMaterial(material))
         {
-            // TODO: allow more properties in the future
-            materialObject["shader"] = material.shader.name;
+            materialObject["mode"] = ResourcesDirectory.GetCustomMaterialColorMode(material).ToString();
             materialObject["color"] = WriteColor(material.color);
         }
         else

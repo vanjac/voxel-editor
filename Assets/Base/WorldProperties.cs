@@ -23,7 +23,7 @@ public class WorldProperties : PropertiesObject
                     DynamicGI.UpdateEnvironment(); // update ambient lighting
                     GameObject.Find("ReflectionProbe").GetComponent<ReflectionProbe>().RenderProbe();
                 },
-                PropertyGUIs.Material("GameAssets/Skies", "Unlit/Color")),
+                PropertyGUIs.Material("GameAssets/Skies", true)),
             new Property("Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,
