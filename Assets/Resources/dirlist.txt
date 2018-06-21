@@ -6,7 +6,6 @@
 ./GameAssets/Materials/Asphalt
 ./GameAssets/Materials/Asphalt/CityStreetAsphaltGenericClean001.mat
 ./GameAssets/Materials/Bricks+Blocks
-./GameAssets/Materials/Bricks+Blocks/blocksrough.mat
 ./GameAssets/Materials/Bricks+Blocks/Bricks01.mat
 ./GameAssets/Materials/Bricks+Blocks/Bricks03.mat
 ./GameAssets/Materials/Bricks+Blocks/BricksOld01.mat
@@ -75,9 +74,7 @@
 ./GameAssets/Materials/Rock/graniterockface1.mat
 ./GameAssets/Materials/Rock/limestone-rock.mat
 ./GameAssets/Materials/Rock/QuartzPolishedWhite001.mat
-./GameAssets/Materials/Rock/RockDark004.mat
 ./GameAssets/Materials/Rock/RockGrey009.mat
-./GameAssets/Materials/Rock/rock_sliced.mat
 ./GameAssets/Materials/Rock/sandstonecliff.mat
 ./GameAssets/Materials/Rock/slipperystonework.mat
 ./GameAssets/Materials/Rock/waterwornstone1.mat
@@ -99,7 +96,6 @@
 ./GameAssets/Materials/Tile/tile4b.mat
 ./GameAssets/Materials/Tile/Tiles043.mat
 ./GameAssets/Materials/Tile/Tiles27.mat
-./GameAssets/Materials/Tile/Tiles30.mat
 ./GameAssets/Materials/Tile/Tiles40.mat
 ./GameAssets/Materials/Tile/TilesRectangularMirrorColoredGrunge001.mat
 ./GameAssets/Materials/Tile/TilesRectangularSubway001.mat
@@ -108,7 +104,6 @@
 ./GameAssets/Materials/Vegetation
 ./GameAssets/Materials/Vegetation/bark1.mat
 ./GameAssets/Materials/Vegetation/BarkBirch002.mat
-./GameAssets/Materials/Vegetation/BarkMossySpotty004.mat
 ./GameAssets/Materials/Vegetation/branches_twisted.mat
 ./GameAssets/Materials/Vegetation/Bumpy Textured Leaves.mat
 ./GameAssets/Materials/Vegetation/leaf-fall1.mat
@@ -134,7 +129,6 @@
 ./GameAssets/Overlays/fencing
 ./GameAssets/Overlays/fencing/FenceChainLink001.mat
 ./GameAssets/Overlays/grates
-./GameAssets/Overlays/grates/CityStreetManholeCover005.mat
 ./GameAssets/Overlays/grates/GrateInterwovenFloor001.mat
 ./GameAssets/Overlays/grates/GrateMetal001.mat
 ./GameAssets/Overlays/symbols
