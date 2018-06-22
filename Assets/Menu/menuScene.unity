@@ -222,7 +222,7 @@ MonoBehaviour:
   guiSkin: {fileID: 0}
   title: 
   scroll: {x: 0, y: 0}
-  creditsText: {fileID: 0}
+  creditsText: {fileID: 4900000, guid: e682aff256c26294b9005b4e62ff561d, type: 3}
 --- !u!1 &2101752314
 GameObject:
   m_ObjectHideFlags: 0
