@@ -14,7 +14,7 @@ The Editor has built-in documentation and tutorials, which you can access throug
 
 The app has been tested with Unity 2017.4.2 on Android. There's not much Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
-This repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), and others. You can purchase/download them yourself - look in the `Assets/GameAssets/Poliigon` and `Assets/GameAssets/FreePBR` for a list of `.meta` files which correspond to the missing textures. It is also possible to test the app without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
+This repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), and others. You can purchase/download them yourself - look in the `Assets/GameAssets/Poliigon` and `Assets/GameAssets/FreePBR` folders for a list of `.meta` files which correspond to the missing textures. It is also possible to test the app without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
 
 The app has four scenes:
 
