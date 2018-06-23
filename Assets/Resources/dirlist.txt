@@ -44,7 +44,6 @@
 ./GameAssets/Materials/Ground/sandydrysoil.mat
 ./GameAssets/Materials/Ground/sandyground1.mat
 ./GameAssets/Materials/Metal
-./GameAssets/Materials/Metal/Aluminum-Scuffed.mat
 ./GameAssets/Materials/Metal/MetalBumpsRusted001.mat
 ./GameAssets/Materials/Metal/MetalCorrugatedGarageDoor001.mat
 ./GameAssets/Materials/Metal/MetalGrime010.mat
@@ -112,12 +111,10 @@
 ./GameAssets/Materials/Vegetation/RockMossyFull001.mat
 ./GameAssets/Materials/Vegetation/RockMossyFull004.mat
 ./GameAssets/Materials/Wood
-./GameAssets/Materials/Wood/agedplanks1.mat
 ./GameAssets/Materials/Wood/bamboo-wood-semigloss.mat
 ./GameAssets/Materials/Wood/oakfloor.mat
 ./GameAssets/Materials/Wood/plywood.mat
 ./GameAssets/Materials/Wood/sculptedfloorboards1.mat
-./GameAssets/Materials/Wood/WoodFlooring044.mat
 ./GameAssets/Materials/Wood/WoodFlooring064.mat
 ./GameAssets/Materials/Wood/WoodFlooring066.mat
 ./GameAssets/Materials/Wood/WoodLogSidingRough001.mat
