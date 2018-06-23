@@ -1,6 +1,6 @@
-Thank you for testing this beta release. This is an incomplete version of the app. I will continue to add functionality moving towards the first finished release.
-Code is availible at https://github.com/vanjac/voxel-editor. It can't be built on its own, since it's missing textures that I can't redistribute.
-Please leave a review! Let me know what you think of the app, and what you would like me to change or add. Report any issues or bugs on the GitHub page above.
+Thank you for testing this beta release. This is an incomplete version of the app. I will continue make improvements and add features moving toward the first finished release.
+Code is availible at https://github.com/vanjac/voxel-editor. It's missing most of the textures, which I'm not permitted to redistribute.
+Please leave a review! Let me know what you think of the app, and what you would like me to change or add. Report any bugs/issues on the GitHub page above.
 
 Made with Unity 2017.4.2
 
