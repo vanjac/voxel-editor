@@ -123,122 +123,122 @@
 ./GameAssets/Materials/Wood/WoodWallCabin002.mat
 ./GameAssets/Materials/Wood/wornpaintedwoodsiding.mat
 ./GameAssets/Overlays
-./GameAssets/Overlays/fencing
-./GameAssets/Overlays/fencing/FenceChainLink001.mat
-./GameAssets/Overlays/grates
-./GameAssets/Overlays/grates/GrateInterwovenFloor001.mat
-./GameAssets/Overlays/grates/GrateMetal001.mat
-./GameAssets/Overlays/symbols
-./GameAssets/Overlays/symbols/alert-outline.mat
-./GameAssets/Overlays/symbols/arrow-up-thick.mat
-./GameAssets/Overlays/symbols/biohazard.mat
-./GameAssets/Overlays/symbols/cancel.mat
-./GameAssets/Overlays/symbols/check.mat
-./GameAssets/Overlays/symbols/close.mat
-./GameAssets/Overlays/symbols/radioactive.mat
-./GameAssets/Overlays/text caps
-./GameAssets/Overlays/text caps/c065.mat
-./GameAssets/Overlays/text caps/c066.mat
-./GameAssets/Overlays/text caps/c067.mat
-./GameAssets/Overlays/text caps/c068.mat
-./GameAssets/Overlays/text caps/c069.mat
-./GameAssets/Overlays/text caps/c070.mat
-./GameAssets/Overlays/text caps/c071.mat
-./GameAssets/Overlays/text caps/c072.mat
-./GameAssets/Overlays/text caps/c073.mat
-./GameAssets/Overlays/text caps/c074.mat
-./GameAssets/Overlays/text caps/c075.mat
-./GameAssets/Overlays/text caps/c076.mat
-./GameAssets/Overlays/text caps/c077.mat
-./GameAssets/Overlays/text caps/c078.mat
-./GameAssets/Overlays/text caps/c079.mat
-./GameAssets/Overlays/text caps/c080.mat
-./GameAssets/Overlays/text caps/c081.mat
-./GameAssets/Overlays/text caps/c082.mat
-./GameAssets/Overlays/text caps/c083.mat
-./GameAssets/Overlays/text caps/c084.mat
-./GameAssets/Overlays/text caps/c085.mat
-./GameAssets/Overlays/text caps/c086.mat
-./GameAssets/Overlays/text caps/c087.mat
-./GameAssets/Overlays/text caps/c088.mat
-./GameAssets/Overlays/text caps/c089.mat
-./GameAssets/Overlays/text caps/c090.mat
-./GameAssets/Overlays/text lower
-./GameAssets/Overlays/text lower/c097.mat
-./GameAssets/Overlays/text lower/c098.mat
-./GameAssets/Overlays/text lower/c099.mat
-./GameAssets/Overlays/text lower/c100.mat
-./GameAssets/Overlays/text lower/c101.mat
-./GameAssets/Overlays/text lower/c102.mat
-./GameAssets/Overlays/text lower/c103.mat
-./GameAssets/Overlays/text lower/c104.mat
-./GameAssets/Overlays/text lower/c105.mat
-./GameAssets/Overlays/text lower/c106.mat
-./GameAssets/Overlays/text lower/c107.mat
-./GameAssets/Overlays/text lower/c108.mat
-./GameAssets/Overlays/text lower/c109.mat
-./GameAssets/Overlays/text lower/c110.mat
-./GameAssets/Overlays/text lower/c111.mat
-./GameAssets/Overlays/text lower/c112.mat
-./GameAssets/Overlays/text lower/c113.mat
-./GameAssets/Overlays/text lower/c114.mat
-./GameAssets/Overlays/text lower/c115.mat
-./GameAssets/Overlays/text lower/c116.mat
-./GameAssets/Overlays/text lower/c117.mat
-./GameAssets/Overlays/text lower/c118.mat
-./GameAssets/Overlays/text lower/c119.mat
-./GameAssets/Overlays/text lower/c120.mat
-./GameAssets/Overlays/text lower/c121.mat
-./GameAssets/Overlays/text lower/c122.mat
-./GameAssets/Overlays/text numbers
-./GameAssets/Overlays/text numbers/c048.mat
-./GameAssets/Overlays/text numbers/c049.mat
-./GameAssets/Overlays/text numbers/c050.mat
-./GameAssets/Overlays/text numbers/c051.mat
-./GameAssets/Overlays/text numbers/c052.mat
-./GameAssets/Overlays/text numbers/c053.mat
-./GameAssets/Overlays/text numbers/c054.mat
-./GameAssets/Overlays/text numbers/c055.mat
-./GameAssets/Overlays/text numbers/c056.mat
-./GameAssets/Overlays/text numbers/c057.mat
-./GameAssets/Overlays/text symbols
-./GameAssets/Overlays/text symbols/c033.mat
-./GameAssets/Overlays/text symbols/c034.mat
-./GameAssets/Overlays/text symbols/c035.mat
-./GameAssets/Overlays/text symbols/c036.mat
-./GameAssets/Overlays/text symbols/c037.mat
-./GameAssets/Overlays/text symbols/c038.mat
-./GameAssets/Overlays/text symbols/c039.mat
-./GameAssets/Overlays/text symbols/c040.mat
-./GameAssets/Overlays/text symbols/c041.mat
-./GameAssets/Overlays/text symbols/c042.mat
-./GameAssets/Overlays/text symbols/c043.mat
-./GameAssets/Overlays/text symbols/c044.mat
-./GameAssets/Overlays/text symbols/c045.mat
-./GameAssets/Overlays/text symbols/c046.mat
-./GameAssets/Overlays/text symbols/c047.mat
-./GameAssets/Overlays/text symbols/c058.mat
-./GameAssets/Overlays/text symbols/c059.mat
-./GameAssets/Overlays/text symbols/c060.mat
-./GameAssets/Overlays/text symbols/c061.mat
-./GameAssets/Overlays/text symbols/c062.mat
-./GameAssets/Overlays/text symbols/c063.mat
-./GameAssets/Overlays/text symbols/c064.mat
-./GameAssets/Overlays/text symbols/c091.mat
-./GameAssets/Overlays/text symbols/c092.mat
-./GameAssets/Overlays/text symbols/c093.mat
-./GameAssets/Overlays/text symbols/c094.mat
-./GameAssets/Overlays/text symbols/c095.mat
-./GameAssets/Overlays/text symbols/c096.mat
-./GameAssets/Overlays/text symbols/c123.mat
-./GameAssets/Overlays/text symbols/c124.mat
-./GameAssets/Overlays/text symbols/c125.mat
-./GameAssets/Overlays/water
-./GameAssets/Overlays/water/WaterBasicDaytime.mat
-./GameAssets/Overlays/water/WaterBasicDaytime_preview.mat
-./GameAssets/Overlays/water/WaterBasicNighttime.mat
-./GameAssets/Overlays/water/WaterBasicNighttime_preview.mat
-./GameAssets/Overlays/water/WaterDropletsLargeComplex003.mat
+./GameAssets/Overlays/Fencing
+./GameAssets/Overlays/Fencing/FenceChainLink001.mat
+./GameAssets/Overlays/Grates
+./GameAssets/Overlays/Grates/GrateInterwovenFloor001.mat
+./GameAssets/Overlays/Grates/GrateMetal001.mat
+./GameAssets/Overlays/Symbols
+./GameAssets/Overlays/Symbols/alert-outline.mat
+./GameAssets/Overlays/Symbols/arrow-up-thick.mat
+./GameAssets/Overlays/Symbols/biohazard.mat
+./GameAssets/Overlays/Symbols/cancel.mat
+./GameAssets/Overlays/Symbols/check.mat
+./GameAssets/Overlays/Symbols/close.mat
+./GameAssets/Overlays/Symbols/radioactive.mat
+./GameAssets/Overlays/Text Caps
+./GameAssets/Overlays/Text Caps/c065.mat
+./GameAssets/Overlays/Text Caps/c066.mat
+./GameAssets/Overlays/Text Caps/c067.mat
+./GameAssets/Overlays/Text Caps/c068.mat
+./GameAssets/Overlays/Text Caps/c069.mat
+./GameAssets/Overlays/Text Caps/c070.mat
+./GameAssets/Overlays/Text Caps/c071.mat
+./GameAssets/Overlays/Text Caps/c072.mat
+./GameAssets/Overlays/Text Caps/c073.mat
+./GameAssets/Overlays/Text Caps/c074.mat
+./GameAssets/Overlays/Text Caps/c075.mat
+./GameAssets/Overlays/Text Caps/c076.mat
+./GameAssets/Overlays/Text Caps/c077.mat
+./GameAssets/Overlays/Text Caps/c078.mat
+./GameAssets/Overlays/Text Caps/c079.mat
+./GameAssets/Overlays/Text Caps/c080.mat
+./GameAssets/Overlays/Text Caps/c081.mat
+./GameAssets/Overlays/Text Caps/c082.mat
+./GameAssets/Overlays/Text Caps/c083.mat
+./GameAssets/Overlays/Text Caps/c084.mat
+./GameAssets/Overlays/Text Caps/c085.mat
+./GameAssets/Overlays/Text Caps/c086.mat
+./GameAssets/Overlays/Text Caps/c087.mat
+./GameAssets/Overlays/Text Caps/c088.mat
+./GameAssets/Overlays/Text Caps/c089.mat
+./GameAssets/Overlays/Text Caps/c090.mat
+./GameAssets/Overlays/Text Lower
+./GameAssets/Overlays/Text Lower/c097.mat
+./GameAssets/Overlays/Text Lower/c098.mat
+./GameAssets/Overlays/Text Lower/c099.mat
+./GameAssets/Overlays/Text Lower/c100.mat
+./GameAssets/Overlays/Text Lower/c101.mat
+./GameAssets/Overlays/Text Lower/c102.mat
+./GameAssets/Overlays/Text Lower/c103.mat
+./GameAssets/Overlays/Text Lower/c104.mat
+./GameAssets/Overlays/Text Lower/c105.mat
+./GameAssets/Overlays/Text Lower/c106.mat
+./GameAssets/Overlays/Text Lower/c107.mat
+./GameAssets/Overlays/Text Lower/c108.mat
+./GameAssets/Overlays/Text Lower/c109.mat
+./GameAssets/Overlays/Text Lower/c110.mat
+./GameAssets/Overlays/Text Lower/c111.mat
+./GameAssets/Overlays/Text Lower/c112.mat
+./GameAssets/Overlays/Text Lower/c113.mat
+./GameAssets/Overlays/Text Lower/c114.mat
+./GameAssets/Overlays/Text Lower/c115.mat
+./GameAssets/Overlays/Text Lower/c116.mat
+./GameAssets/Overlays/Text Lower/c117.mat
+./GameAssets/Overlays/Text Lower/c118.mat
+./GameAssets/Overlays/Text Lower/c119.mat
+./GameAssets/Overlays/Text Lower/c120.mat
+./GameAssets/Overlays/Text Lower/c121.mat
+./GameAssets/Overlays/Text Lower/c122.mat
+./GameAssets/Overlays/Text Numbers
+./GameAssets/Overlays/Text Numbers/c048.mat
+./GameAssets/Overlays/Text Numbers/c049.mat
+./GameAssets/Overlays/Text Numbers/c050.mat
+./GameAssets/Overlays/Text Numbers/c051.mat
+./GameAssets/Overlays/Text Numbers/c052.mat
+./GameAssets/Overlays/Text Numbers/c053.mat
+./GameAssets/Overlays/Text Numbers/c054.mat
+./GameAssets/Overlays/Text Numbers/c055.mat
+./GameAssets/Overlays/Text Numbers/c056.mat
+./GameAssets/Overlays/Text Numbers/c057.mat
+./GameAssets/Overlays/Text Symbols
+./GameAssets/Overlays/Text Symbols/c033.mat
+./GameAssets/Overlays/Text Symbols/c034.mat
+./GameAssets/Overlays/Text Symbols/c035.mat
+./GameAssets/Overlays/Text Symbols/c036.mat
+./GameAssets/Overlays/Text Symbols/c037.mat
+./GameAssets/Overlays/Text Symbols/c038.mat
+./GameAssets/Overlays/Text Symbols/c039.mat
+./GameAssets/Overlays/Text Symbols/c040.mat
+./GameAssets/Overlays/Text Symbols/c041.mat
+./GameAssets/Overlays/Text Symbols/c042.mat
+./GameAssets/Overlays/Text Symbols/c043.mat
+./GameAssets/Overlays/Text Symbols/c044.mat
+./GameAssets/Overlays/Text Symbols/c045.mat
+./GameAssets/Overlays/Text Symbols/c046.mat
+./GameAssets/Overlays/Text Symbols/c047.mat
+./GameAssets/Overlays/Text Symbols/c058.mat
+./GameAssets/Overlays/Text Symbols/c059.mat
+./GameAssets/Overlays/Text Symbols/c060.mat
+./GameAssets/Overlays/Text Symbols/c061.mat
+./GameAssets/Overlays/Text Symbols/c062.mat
+./GameAssets/Overlays/Text Symbols/c063.mat
+./GameAssets/Overlays/Text Symbols/c064.mat
+./GameAssets/Overlays/Text Symbols/c091.mat
+./GameAssets/Overlays/Text Symbols/c092.mat
+./GameAssets/Overlays/Text Symbols/c093.mat
+./GameAssets/Overlays/Text Symbols/c094.mat
+./GameAssets/Overlays/Text Symbols/c095.mat
+./GameAssets/Overlays/Text Symbols/c096.mat
+./GameAssets/Overlays/Text Symbols/c123.mat
+./GameAssets/Overlays/Text Symbols/c124.mat
+./GameAssets/Overlays/Text Symbols/c125.mat
+./GameAssets/Overlays/Water
+./GameAssets/Overlays/Water/WaterBasicDaytime.mat
+./GameAssets/Overlays/Water/WaterBasicDaytime_preview.mat
+./GameAssets/Overlays/Water/WaterBasicNighttime.mat
+./GameAssets/Overlays/Water/WaterBasicNighttime_preview.mat
+./GameAssets/Overlays/Water/WaterDropletsLargeComplex003.mat
 ./GameAssets/Skies
 ./GameAssets/Skies/sky5X1.mat
 ./GameAssets/Skies/sky5X2.mat
