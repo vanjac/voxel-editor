@@ -6,7 +6,7 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 ## Using the app
 
-The app will be availible on the Google Play Store soon. Until then, you can download an older version from the [Releases](https://github.com/vanjac/voxel-editor/releases) page.
+You can download the app for Android on [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel).
 
 The app starts on a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world's name to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as JSON files. You can open these files in N-Space from another app, like your Downloads.
 
