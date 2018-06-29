@@ -1,12 +1,14 @@
-# voxel-editor
+# N-Space
 
-A mobile app for building 3D interactive worlds. This is a work in progress. It doesn't have a name yet (Voxel Editor is a placeholder), but I'm working on that.
+![Icon](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/icon.png)
+
+A mobile app for building 3D interactive worlds. This is a work in progress.
 
 ## Using the app
 
 The app will be availible on the Google Play Store soon. Until then, you can download an older version from the [Releases](https://github.com/vanjac/voxel-editor/releases) page.
 
-The app starts on a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world's name to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as JSON files. You can open these files in Voxel Editor from another app, like your Downloads.
+The app starts on a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world's name to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as JSON files. You can open these files in N-Space from another app, like your Downloads.
 
 The Editor has built-in documentation and tutorials, which you can access through the overflow (!["..."](https://github.com/vanjac/voxel-editor/blob/master/Assets/VoxelEditor/GUI/dots-vertical.png)) menu, by tapping Help.
 
@@ -21,7 +23,7 @@ The app has four scenes:
 - `Menu/menuScene`: The file selection menu
 - `VoxelEditor/editScene`: The Editor interface. If you open this scene directly without first choosing a file, it will look for a file called `mapsave`.
 - `Game/playScene`: The gameplay interface. Again, without choosing a file it will look for `mapsave`.
-- `Menu/fileReceiveScene`: This scene will launch if you try to open a JSON file from another app using Voxel Editor. This only works on Android.
+- `Menu/fileReceiveScene`: This scene will launch if you try to open a JSON file from another app using N-Space. This only works on Android.
 
 ## More info
 
