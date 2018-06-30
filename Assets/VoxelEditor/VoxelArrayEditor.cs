@@ -91,7 +91,8 @@ public class VoxelArrayEditor : VoxelArray
         NONE, // nothing selected
         ADJUSTED, // selection has moved since it was set
         BOX, // select inside a 3D box
-        FACE // fill-select adjacent faces
+        FACE, // fill-select adjacent faces
+        SURFACE // fill-select all connected faces
     }
 
     public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
@@ -198,12 +199,21 @@ public class VoxelArrayEditor : VoxelArray
     // called by TouchListener
     public void TripleTouch(Voxel voxel, int faceI)
     {
-        if (voxel == null || voxel.substance == null)
+        if (voxel == null)
             return;
         ClearSelection();
-        SubstanceSelect(voxel.substance);
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        if (voxel.substance == null)
+        {
+            SurfaceSelectFloodFill(voxel, faceI, voxel.substance);
+            if (SomethingIsSelected())
+                SetMoveAxesEnabled(true);
+        }
+        else
+        {
+            SubstanceSelect(voxel.substance);
+            if (SomethingIsSelected())
+                SetMoveAxesEnabled(true);
+        }
     }
 
     private void SetMoveAxes(Vector3 position)
@@ -443,6 +453,38 @@ public class VoxelArrayEditor : VoxelArray
         SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
     }
 
+    public void SurfaceSelectFloodFill(Voxel voxel, int faceI, Substance substance)
+    {
+        if (voxel == null)
+            return;
+        if (voxel.substance != substance)
+            return;
+        VoxelFace face = voxel.faces[faceI];
+        if (face.IsEmpty())
+            return;
+        if (face.addSelected || face.storedSelected) // stop at boundaries of stored selection
+            return;
+        SelectFace(voxel, faceI);
+
+        Vector3 position = voxel.transform.position;
+        for (int sideNum = 0; sideNum < 4; sideNum++)
+        {
+            int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
+            SurfaceSelectFloodFill(voxel, sideFaceI, substance);
+            Vector3 newPos = position + Voxel.DirectionForFaceI(sideFaceI);
+            SurfaceSelectFloodFill(VoxelAt(newPos, false), faceI, substance);
+            newPos += Voxel.DirectionForFaceI(faceI);
+            SurfaceSelectFloodFill(VoxelAt(newPos, false), Voxel.OppositeFaceI(sideFaceI), substance);
+        }
+
+        if (selectMode != SelectMode.SURFACE)
+            selectionBounds = voxel.GetFaceBounds(faceI);
+        else
+            selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
+        selectMode = SelectMode.SURFACE;
+        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
+    }
+
     public void SubstanceSelect(Substance substance)
     {
         foreach (Voxel v in substance.voxels)
@@ -450,11 +492,11 @@ public class VoxelArrayEditor : VoxelArray
                 if (!v.faces[i].IsEmpty())
                 {
                     SelectFace(v, i);
-                    if (selectMode != SelectMode.FACE)
+                    if (selectMode != SelectMode.SURFACE)
                         selectionBounds = v.GetFaceBounds(i);
                     else
                         selectionBounds.Encapsulate(v.GetFaceBounds(i));
-                    selectMode = SelectMode.FACE;
+                    selectMode = SelectMode.SURFACE;
                 }
     }
 
