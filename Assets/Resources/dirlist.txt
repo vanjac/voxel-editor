@@ -123,11 +123,13 @@
 ./GameAssets/Materials/Wood/WoodWallCabin002.mat
 ./GameAssets/Materials/Wood/wornpaintedwoodsiding.mat
 ./GameAssets/Overlays
+./GameAssets/Overlays/$Invisible.mat
 ./GameAssets/Overlays/Fencing
 ./GameAssets/Overlays/Fencing/FenceChainLink001.mat
 ./GameAssets/Overlays/Grates
 ./GameAssets/Overlays/Grates/GrateInterwovenFloor001.mat
 ./GameAssets/Overlays/Grates/GrateMetal001.mat
+./GameAssets/Overlays/Invisible.mat
 ./GameAssets/Overlays/Symbols
 ./GameAssets/Overlays/Symbols/alert-outline.mat
 ./GameAssets/Overlays/Symbols/arrow-up-thick.mat
