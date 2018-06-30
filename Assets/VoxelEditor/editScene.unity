@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 416192711}
   - component: {fileID: 416192710}
   - component: {fileID: 416192709}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: YAxis
   m_TagString: MoveAxis
   m_Icon: {fileID: 0}
@@ -654,7 +654,7 @@ GameObject:
   - component: {fileID: 1061257464}
   - component: {fileID: 1061257465}
   - component: {fileID: 1061257466}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ZAxis
   m_TagString: MoveAxis
   m_Icon: {fileID: 0}
@@ -897,7 +897,7 @@ GameObject:
   - component: {fileID: 1185221140}
   - component: {fileID: 1185221139}
   - component: {fileID: 1185221138}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: XAxis
   m_TagString: MoveAxis
   m_Icon: {fileID: 0}

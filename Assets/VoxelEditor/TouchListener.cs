@@ -62,9 +62,24 @@ public class TouchListener : MonoBehaviour
                 {
                     hitVoxel = hitObject.GetComponent<Voxel>();
                     hitFaceI = Voxel.FaceIForDirection(hit.normal);
-
                     if (hitFaceI == -1)
                         hitVoxel = null;
+
+                    if (hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
+                    {
+                        // allow moving axes through xray substances
+                        RaycastHit newHit;
+                        if (Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
+                            out newHit, Mathf.Infinity, NO_XRAY_MASK))
+                        {
+                            if (newHit.transform.tag == "MoveAxis")
+                            {
+                                hitVoxel = null;
+                                hitFaceI = -1;
+                                hitMoveAxis = newHit.transform.GetComponent<MoveAxis>();
+                            }
+                        }
+                    }
                 }
                 else if (hitObject.tag == "ObjectMarker")
                 {
