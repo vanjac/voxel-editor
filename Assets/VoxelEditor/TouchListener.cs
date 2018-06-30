@@ -8,7 +8,7 @@ public class TouchListener : MonoBehaviour
 {
     private const float MAX_ZOOM = 20.0f;
     private const float MIN_ZOOM = .05f;
-    private const int ZOOM_RAY_LAYER_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
+    private const int NO_XRAY_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
 
     public enum TouchOperation
     {
@@ -24,6 +24,7 @@ public class TouchListener : MonoBehaviour
 
     private Voxel lastHitVoxel;
     private int lastHitFaceI;
+    private bool selectingXRay = true;
 
     void Start()
     {
@@ -46,7 +47,10 @@ public class TouchListener : MonoBehaviour
             Touch touch = Input.GetTouch(0);
 
             RaycastHit hit;
-            bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position), out hit);
+            if (currentTouchOperation != TouchOperation.SELECT)
+                selectingXRay = true;
+            bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
+                out hit, Mathf.Infinity, selectingXRay ? Physics.DefaultRaycastLayers : NO_XRAY_MASK);
             Voxel hitVoxel = null;
             int hitFaceI = -1;
             MoveAxis hitMoveAxis = null;
@@ -103,6 +107,7 @@ public class TouchListener : MonoBehaviour
                     {
                         currentTouchOperation = TouchOperation.SELECT;
                         voxelArray.TouchDown(hitVoxel, hitFaceI);
+                        selectingXRay = hitVoxel.substance != null && hitVoxel.substance.xRay;
                     }
                     else if (touch.tapCount == 2)
                     {
@@ -234,7 +239,7 @@ public class TouchListener : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(avg);
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, ZOOM_RAY_LAYER_MASK))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, NO_XRAY_MASK))
         {
             float currentDistanceToCamera = (pivot.position - transform.position).magnitude;
             float newDistanceToCamera = (hit.point - transform.position).magnitude;
