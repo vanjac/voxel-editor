@@ -32,4 +32,9 @@ public class GamePause : MonoBehaviour
             else
                 PauseGame();
     }
+
+    void OnDestroy()
+    {
+        Time.timeScale = 1;
+    }
 }
