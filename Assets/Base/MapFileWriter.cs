@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 1;
+    public const int VERSION = 2;
     private const int FILE_MIN_READER_VERSION = 1;
 
     private string fileName;
