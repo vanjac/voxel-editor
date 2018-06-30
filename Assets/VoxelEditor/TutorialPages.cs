@@ -73,6 +73,7 @@ public class Tutorials
 
     public const string TIPS_AND_SHORTCUTS_TUTORIAL =
 @"•  Double tap to select an entire wall. The selection will be bounded by already-selected faces.
+•  Triple tap a face to select <i>all</i> faces connected to it. The selection will be bounded by already-selected faces.
 •  Triple tap a substance to select the entire substance.
 •  Check the “X-ray” box of a substance to make it transparent in the editor only. This lets you see behind it and zoom through it.
 •  The paint panel keeps shortcuts for the four most recent paints. To “copy” a paint to another face, select the origin face, open and close the paint panel, then select the destination faces and use the recent paint shortcut.
