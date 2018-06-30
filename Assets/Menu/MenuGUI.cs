@@ -72,7 +72,6 @@ public class MenuGUI : GUIPanel
     {
         SelectedMap selectedMap = SelectedMap.Instance();
         selectedMap.mapName = name;
-        selectedMap.returnFromPlayScene = (scene == "playScene") ? "menuScene" : "editScene";
         SceneManager.LoadScene(scene);
     }
 

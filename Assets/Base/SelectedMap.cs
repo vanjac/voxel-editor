@@ -5,7 +5,6 @@ using UnityEngine;
 public class SelectedMap : MonoBehaviour
 {
     public string mapName = "mapsave";
-    public string returnFromPlayScene = "editScene";
 
     void Start ()
     {
