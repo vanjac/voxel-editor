@@ -138,15 +138,11 @@ public class MapFileReader
         if (world["global"] != null)
             ReadPropertiesObject(world["global"].AsObject, voxelArray.world);
         if (world["sky"] != null)
-            {
-                Material skybox = materials[world["sky"].AsInt];
-                if (skybox != missingMaterial) // default skybox is null
-                {
-                    RenderSettings.skybox = skybox;
-                }
-            }
-        DynamicGI.UpdateEnvironment(); // update ambient lighting
-        GameObject.Find("ReflectionProbe").GetComponent<ReflectionProbe>().RenderProbe();
+        {
+            Material sky = materials[world["sky"].AsInt];
+            if (sky != missingMaterial) // default skybox is null
+                voxelArray.world.SetSky(sky);
+        }
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
         voxelArray.playerObject = new PlayerObject(voxelArray);
