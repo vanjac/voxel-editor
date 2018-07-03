@@ -389,6 +389,8 @@ public class VoxelArrayEditor : VoxelArray
         if (boxSelectSubstance == selectObjectSubstance
                 && ThingInBoxSelection(playerObject.marker, selectionBounds))
             SelectThing(playerObject.marker);
+        else
+            DeselectThing(playerObject.marker);
     }
 
     private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)
