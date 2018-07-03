@@ -34,6 +34,7 @@ public class GameLoad : MonoBehaviour
 
     private IEnumerator CloseCoroutine(string scene)
     {
+        Time.timeScale = 1; // unpause; also necessary to prevent freezing
         yield return null;
         foreach (var substance in GetComponent<VoxelArray>().GetComponentsInChildren<SubstanceComponent>())
         {
