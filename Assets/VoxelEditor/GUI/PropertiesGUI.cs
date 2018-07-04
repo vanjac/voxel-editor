@@ -142,7 +142,7 @@ public class PropertiesGUI : GUIPanel
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.title = "Change Sensor";
-            sensorMenu.items = GameScripts.sensors;
+            sensorMenu.categories = new PropertiesObjectType[][] { GameScripts.sensors };
             sensorMenu.handler = (PropertiesObjectType type) =>
             {
                 entity.sensor = (Sensor)type.Create();
@@ -291,7 +291,7 @@ public class NewBehaviorGUI : GUIPanel
     {
         if (targetEntityIsActivator)
         {
-            typePicker.items = GameScripts.behaviors;
+            typePicker.categories = new PropertiesObjectType[][] { GameScripts.behaviors };
             return;
         }
         var filteredTypes = new List<BehaviorType>();
@@ -307,7 +307,7 @@ public class NewBehaviorGUI : GUIPanel
                     filteredTypes.Add(type);
             }
         }
-        typePicker.items = filteredTypes.ToArray();
+        typePicker.categories = new PropertiesObjectType[][] { filteredTypes.ToArray() };
     }
 
     void OnDestroy()

@@ -7,7 +7,10 @@ public class TypePickerGUI : GUIPanel
     public delegate void TypeHandler(PropertiesObjectType type);
 
     public TypeHandler handler;
-    public PropertiesObjectType[] items;
+    public PropertiesObjectType[][] categories;
+    public string[] categoryNames = new string[0];
+
+    private int selectedCategory;
 
     private static readonly Lazy<GUIStyle> descriptionStyle = new Lazy<GUIStyle>(() =>
     {
@@ -33,10 +36,15 @@ public class TypePickerGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        if (categoryNames.Length > 1)
+            selectedCategory = GUILayout.SelectionGrid(selectedCategory, categoryNames,
+                categoryNames.Length, GUI.skin.GetStyle("button_tab"));
+
+        var categoryItems = categories[selectedCategory];
         scroll = GUILayout.BeginScrollView(scroll);
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < categoryItems.Length; i++)
         {
-            PropertiesObjectType item = items[i];
+            PropertiesObjectType item = categoryItems[i];
             GUIUtils.BeginButtonHorizontal(item.fullName);
             GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();

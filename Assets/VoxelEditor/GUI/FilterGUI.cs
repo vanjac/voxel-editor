@@ -37,7 +37,7 @@ public class FilterGUI : GUIPanel
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Filter by object type";
-            picker.items = GameScripts.entityFilterTypes;
+            picker.categories = new PropertiesObjectType[][] { GameScripts.entityFilterTypes };
             picker.handler = (PropertiesObjectType type) =>
             {
                 handler(new ActivatedSensor.EntityTypeFilter(type));
@@ -48,7 +48,7 @@ public class FilterGUI : GUIPanel
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Filter by behavior type";
-            picker.items = GameScripts.behaviors;
+            picker.categories = new PropertiesObjectType[][] { GameScripts.behaviors };
             picker.handler = (PropertiesObjectType type) =>
             {
                 handler(new ActivatedSensor.EntityTypeFilter(type));
