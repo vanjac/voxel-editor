@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GamePause : MonoBehaviour
 {
+    public UnityEngine.UI.Text titleText;
+    public GameObject resumeButton; // hidden after death
+    private bool alive = false;
+    private bool dead = false;
+
     public void PauseGame()
     {
         var canvasGroup = GetComponent<CanvasGroup>();
@@ -26,6 +31,23 @@ public class GamePause : MonoBehaviour
 
     void Update()
     {
+        Camera cam = Camera.current;
+        if (!alive)
+        {
+            if (cam != null && cam.tag == "MainCamera")
+                alive = true;
+        }
+        if (alive && !dead)
+        {
+            if (cam != null && cam.tag == "DeathCamera")
+            {
+                PauseGame();
+                dead = true;
+                titleText.text = "you died :(";
+                resumeButton.SetActive(false);
+            }
+        }
+
         if (Input.GetButtonDown("Cancel"))
             if (GetComponent<CanvasGroup>().blocksRaycasts)
                 ResumeGame();
