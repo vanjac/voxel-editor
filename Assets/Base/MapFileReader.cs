@@ -129,7 +129,7 @@ public class MapFileReader
         {
             foreach (JSONNode subNode in world["substances"].AsArray)
             {
-                Substance s = new Substance(voxelArray);
+                Substance s = new Substance();
                 ReadEntity(subNode.AsObject, s);
                 substances.Add(s);
             }
@@ -145,7 +145,7 @@ public class MapFileReader
         }
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
-        voxelArray.playerObject = new PlayerObject(voxelArray);
+        voxelArray.playerObject = new PlayerObject();
         if (world["player"] != null)
             ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
 
@@ -153,11 +153,11 @@ public class MapFileReader
         {
             // start the game
             foreach (Substance s in substances)
-                s.InitEntityGameObject();
-            voxelArray.playerObject.InitEntityGameObject();
+                s.InitEntityGameObject(voxelArray);
+            voxelArray.playerObject.InitEntityGameObject(voxelArray);
         }
         if (editor)
-            voxelArray.playerObject.InitObjectMarker();
+            voxelArray.playerObject.InitObjectMarker((VoxelArrayEditor)voxelArray);
     }
 
     private Material ReadMaterial(JSONObject matObject, bool editor)

@@ -234,7 +234,7 @@ public abstract class Entity : PropertiesObject
         };
     }
 
-    public abstract void InitEntityGameObject();
+    public abstract void InitEntityGameObject(VoxelArray voxelArray);
 
     public abstract bool AliveInEditor();
 
@@ -583,7 +583,7 @@ public abstract class DynamicEntity : Entity
         {
             new Property("X-Ray?",
                 () => xRay,
-                v => {xRay = (bool)v; UpdateEntity();},
+                v => {xRay = (bool)v; UpdateEntityEditor();},
                 PropertyGUIs.Toggle),
             new Property("Health",
                 () => health,
@@ -592,7 +592,8 @@ public abstract class DynamicEntity : Entity
         });
     }
 
-    public virtual void UpdateEntity() { }
+    // update the DynamicEntity's appearance in the Editor
+    public virtual void UpdateEntityEditor() { }
 }
 
 public abstract class DynamicEntityComponent : EntityComponent

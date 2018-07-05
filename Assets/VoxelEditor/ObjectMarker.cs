@@ -34,7 +34,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         {
             storedMaterials = (Material[])renderer.materials.Clone();
         }
-        objectEntity.UpdateEntity();
+        UpdateMarker();
     }
 
     public void SelectionStateUpdated()
@@ -42,7 +42,13 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         UpdateMaterials();
     }
 
-    public void UpdateMaterials()
+    public void UpdateMarker()
+    {
+        transform.position = objectEntity.position + new Vector3(0.5f, 0.0f, 0.5f); // TODO
+        UpdateMaterials();
+    }
+
+    private void UpdateMaterials()
     {
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)

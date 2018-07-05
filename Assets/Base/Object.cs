@@ -15,13 +15,10 @@ public abstract class ObjectEntity : DynamicEntity
         return objectType;
     }
 
-    public override void UpdateEntity()
+    public override void UpdateEntityEditor()
     {
         if (marker != null)
-        {
-            marker.transform.position = position + new Vector3(0.5f, 0.0f, 0.5f); // TODO
-            marker.UpdateMaterials();
-        }
+            marker.UpdateMarker();
     }
 
     public override bool AliveInEditor()
@@ -29,5 +26,24 @@ public abstract class ObjectEntity : DynamicEntity
         return marker != null;
     }
 
-    public abstract void InitObjectMarker();
+    public void InitObjectMarker(VoxelArrayEditor voxelArray)
+    {
+        marker = CreateObjectMarker(voxelArray);
+        marker.transform.parent = voxelArray.transform;
+        marker.objectEntity = this;
+    }
+
+    public override void InitEntityGameObject(VoxelArray voxelArray)
+    {
+        var c = CreateEntityComponent(voxelArray);
+        c.transform.parent = voxelArray.transform;
+        c.transform.position = position + new Vector3(0.5f, 0.0f, 0.5f); // TODO
+        c.entity = this;
+        c.health = health;
+        component = c;
+
+    }
+
+    protected abstract ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray);
+    protected abstract DynamicEntityComponent CreateEntityComponent(VoxelArray voxelArray);
 }

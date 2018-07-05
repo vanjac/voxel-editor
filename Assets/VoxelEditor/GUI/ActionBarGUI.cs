@@ -106,14 +106,25 @@ public class ActionBarGUI : GUIPanel
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Create";
             picker.categories = new PropertiesObjectType[][] {
-                GameScripts.entityTemplates, new PropertiesObjectType[0] };
+                GameScripts.entityTemplates, GameScripts.objects };
             picker.categoryNames = new string[] {"Substance", "Object"};
             picker.handler = (PropertiesObjectType type) =>
             {
-                Substance substance = (Substance)type.Create();
-                voxelArray.substanceToCreate = substance;
-                var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
-                createGUI.voxelArray = voxelArray;
+                if (typeof(Substance).IsAssignableFrom(type.type))
+                {
+                    Substance substance = (Substance)type.Create();
+                    voxelArray.substanceToCreate = substance;
+                    var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
+                    createGUI.voxelArray = voxelArray;
+                }
+                else if (typeof(ObjectEntity).IsAssignableFrom(type.type))
+                {
+                    ObjectEntity obj = (ObjectEntity)type.Create();
+                    obj.position = VoxelArray.Vector3ToInt(
+                        voxelArray.selectionBounds.center - new Vector3(0.5f, 0.0f, 0.5f)); // TODO
+                    obj.InitObjectMarker(voxelArray);
+                    voxelArray.unsavedChanges = true;
+                }
             };
         }
         TutorialGUI.ClearHighlight();

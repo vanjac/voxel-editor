@@ -43,6 +43,7 @@ public class VoxelArray : MonoBehaviour
     public ObjectEntity playerObject;
     public WorldProperties world = new WorldProperties();
     protected OctreeNode rootNode;
+    protected List<ObjectEntity> objects = new List<ObjectEntity>();
 
     private bool unloadUnusedAssets = false;
 
@@ -60,7 +61,7 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
-    protected static Vector3Int Vector3ToInt(Vector3 v)
+    public static Vector3Int Vector3ToInt(Vector3 v)
     {
         return new Vector3Int(
             Mathf.RoundToInt(v.x),

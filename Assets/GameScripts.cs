@@ -20,7 +20,7 @@ public class GameScripts
             "cube",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 return substance;
@@ -30,7 +30,7 @@ public class GameScripts
             "water",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new WaterBehavior());
                 substance.defaultPaint = new VoxelFace();
@@ -42,7 +42,7 @@ public class GameScripts
             "vector-combine",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
                 substance.defaultPaint = new VoxelFace();
@@ -55,7 +55,7 @@ public class GameScripts
             "cube",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
@@ -68,7 +68,7 @@ public class GameScripts
             "thought-bubble",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.sensor = new InputThresholdSensor();
                 EntityBehavior visible = new VisibleBehavior();
                 visible.condition = EntityBehavior.Condition.ON;
@@ -104,10 +104,16 @@ public class GameScripts
         WaterBehavior.objectType
     };
 
+    public static PropertiesObjectType[] objects = new PropertiesObjectType[]
+    {
+        BallObject.objectType
+    };
+
     public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]
     {
         Entity.objectType,
-        Substance.objectType
+        Substance.objectType,
+        BallObject.objectType
     };
 
 }

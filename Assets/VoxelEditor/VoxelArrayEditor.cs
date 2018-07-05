@@ -103,7 +103,7 @@ public class VoxelArrayEditor : VoxelArray
     public Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
     private Substance boxSelectSubstance = null;
     // dummy Substance to use for boxSelectSubstance when selecting objects
-    private Substance selectObjectSubstance;
+    private readonly Substance selectObjectSubstance = new Substance();
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     public Substance substanceToCreate = null;
@@ -125,7 +125,6 @@ public class VoxelArrayEditor : VoxelArray
             instance = this;
         Voxel.selectedMaterial = selectedMaterial;
         Voxel.xRayMaterial = xRayMaterial;
-        selectObjectSubstance = new Substance(this);
 
         ClearSelection();
         selectionChanged = false;
@@ -536,7 +535,7 @@ public class VoxelArrayEditor : VoxelArray
         if (playerObject.marker.addSelected)
         {
             playerObject.position += Vector3ToInt(adjustDirection);
-            playerObject.UpdateEntity();
+            playerObject.UpdateEntityEditor();
             unsavedChanges = true;
         }
 

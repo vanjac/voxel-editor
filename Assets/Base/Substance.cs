@@ -5,20 +5,16 @@ using UnityEngine;
 public class Substance : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Substance", "An entity made of blocks", "cube-outline", typeof(Substance),
-        () => new Substance(VoxelArrayEditor.instance));
+        "Substance", "An entity made of blocks", "cube-outline", typeof(Substance));
 
     public HashSet<Voxel> voxels;
 
     public Color highlight = Color.clear;
     public VoxelFace defaultPaint;
 
-    private VoxelArray voxelArray;
-
-    public Substance(VoxelArray array)
+    public Substance()
     {
         voxels = new HashSet<Voxel>();
-        voxelArray = array;
     }
 
     public override PropertiesObjectType ObjectType()
@@ -26,7 +22,7 @@ public class Substance : DynamicEntity
         return objectType;
     }
 
-    public override void InitEntityGameObject()
+    public override void InitEntityGameObject(VoxelArray voxelArray)
     {
         GameObject substanceObject = new GameObject();
         substanceObject.transform.parent = voxelArray.transform;
@@ -53,9 +49,9 @@ public class Substance : DynamicEntity
         voxels.Remove(v);
     }
 
-    public override void UpdateEntity()
+    public override void UpdateEntityEditor()
     {
-        base.UpdateEntity();
+        base.UpdateEntityEditor();
         foreach (Voxel v in voxels)
             v.UpdateVoxel();
     }
