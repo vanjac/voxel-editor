@@ -120,8 +120,14 @@ public class ActionBarGUI : GUIPanel
                 else if (typeof(ObjectEntity).IsAssignableFrom(type.type))
                 {
                     ObjectEntity obj = (ObjectEntity)type.Create();
-                    obj.position = VoxelArray.Vector3ToInt(
-                        voxelArray.selectionBounds.center - new Vector3(0.5f, 0.0f, 0.5f)); // TODO
+
+                    Vector3 createPosition = voxelArray.selectionBounds.center;
+                    int faceNormal = voxelArray.GetSelectedFaceNormal();
+                    if (faceNormal != -1)
+                        createPosition += Voxel.DirectionForFaceI(faceNormal) / 2;
+                    createPosition -= new Vector3(0.5f, 0.5f, 0.5f);
+                    obj.position = VoxelArray.Vector3ToInt(createPosition);
+
                     obj.InitObjectMarker(voxelArray);
                     voxelArray.objects.Add(obj);
                     voxelArray.unsavedChanges = true;
