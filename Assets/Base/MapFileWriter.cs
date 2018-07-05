@@ -8,8 +8,8 @@ using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 2;
-    private const int FILE_MIN_READER_VERSION = 2;
+    public const int VERSION = 3;
+    private const int FILE_MIN_READER_VERSION = 3;
 
     private string fileName;
 
@@ -82,6 +82,12 @@ public class MapFileWriter
         world["sky"].AsInt = foundMaterials.IndexOf(RenderSettings.skybox.name);
         world["map"] = WriteMap(voxelArray, foundMaterials, foundSubstances);
         world["player"] = WriteObjectEntity(voxelArray.playerObject, false);
+
+        JSONArray objectsArray = new JSONArray();
+        foreach (ObjectEntity obj in voxelArray.objects)
+            if (obj != voxelArray.playerObject)
+                objectsArray[-1] = WriteObjectEntity(obj, true);
+        world["objects"] = objectsArray;
 
         return world;
     }
