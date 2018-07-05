@@ -50,6 +50,9 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     private void UpdateMaterials()
     {
+        if (storedMaterials == null)
+            // storedMaterials hasn't been initialized yet, so we wouldn't be able to return to normal state
+            return;
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {

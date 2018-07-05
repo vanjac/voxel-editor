@@ -125,6 +125,8 @@ public class ActionBarGUI : GUIPanel
                     obj.InitObjectMarker(voxelArray);
                     voxelArray.objects.Add(obj);
                     voxelArray.unsavedChanges = true;
+                    // select the object. Wait one frame so the position is correct
+                    StartCoroutine(SelectNewObjectCoroutine(obj));
                 }
             };
         }
@@ -138,6 +140,14 @@ public class ActionBarGUI : GUIPanel
             ActionBarLabel(moveCount.ToString());
         else
             ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
+    }
+
+    private IEnumerator SelectNewObjectCoroutine(ObjectEntity obj)
+    {
+        yield return null;
+        voxelArray.ClearStoredSelection();
+        voxelArray.TouchDown(obj.marker);
+        voxelArray.TouchUp();
     }
 
     public static bool ActionBarButton(Texture icon)
