@@ -149,16 +149,37 @@ public class MapFileReader
         voxelArray.objects.Add(voxelArray.playerObject);
         if (world["player"] != null)
             ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
+        if (world["objects"] != null)
+        {
+            foreach (JSONNode objNode in world["objects"].AsArray)
+            {
+                JSONObject objObject = objNode.AsObject;
+                string typeName = objObject["name"];
+                var objType = GameScripts.FindTypeWithName(GameScripts.objects, typeName);
+                if (objType == null)
+                {
+                    warnings.Add("Couldn't find object type: " + typeName);
+                    continue;
+                }
+                ObjectEntity obj = (ObjectEntity)objType.Create();
+                ReadObjectEntity(objObject, obj);
+                voxelArray.objects.Add(obj);
+            }
+        }
 
         if (!editor)
         {
             // start the game
             foreach (Substance s in substances)
                 s.InitEntityGameObject(voxelArray);
-            voxelArray.playerObject.InitEntityGameObject(voxelArray);
+            foreach (ObjectEntity obj in voxelArray.objects)
+                obj.InitEntityGameObject(voxelArray);
         }
-        if (editor)
-            voxelArray.playerObject.InitObjectMarker((VoxelArrayEditor)voxelArray);
+        else // editor
+        {
+            foreach (ObjectEntity obj in voxelArray.objects)
+                obj.InitObjectMarker((VoxelArrayEditor)voxelArray);
+        }
     }
 
     private Material ReadMaterial(JSONObject matObject, bool editor)
