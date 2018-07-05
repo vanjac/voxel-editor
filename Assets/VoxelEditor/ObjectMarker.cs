@@ -20,8 +20,8 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
     {
         get
         {
-            // TODO
-            return new Bounds(transform.position, Vector3.zero);
+            return new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
+                Vector3.zero);
         }
     }
 
@@ -44,7 +44,8 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     public void UpdateMarker()
     {
-        transform.position = objectEntity.position + new Vector3(0.5f, 0.0f, 0.5f); // TODO
+        transform.position = objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f)
+            + objectEntity.PositionOffset();
         UpdateMaterials();
     }
 

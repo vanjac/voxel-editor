@@ -12,6 +12,11 @@ public class PlayerObject : ObjectEntity
         return objectType;
     }
 
+    public override Vector3 PositionOffset()
+    {
+        return new Vector3(0, -0.5f, 0);
+    }
+
     protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray)
     {
         GameObject markerObject = Resources.Load<GameObject>("ObjectMarkers/Player");

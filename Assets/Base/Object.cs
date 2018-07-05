@@ -15,6 +15,11 @@ public abstract class ObjectEntity : DynamicEntity
         return objectType;
     }
 
+    public virtual Vector3 PositionOffset()
+    {
+        return Vector3.zero;
+    }
+
     public override void UpdateEntityEditor()
     {
         if (marker != null)
@@ -38,11 +43,10 @@ public abstract class ObjectEntity : DynamicEntity
     {
         var c = CreateEntityComponent(voxelArray);
         c.transform.parent = voxelArray.transform;
-        c.transform.position = position + new Vector3(0.5f, 0.0f, 0.5f); // TODO
+        c.transform.position = position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
         c.entity = this;
         c.health = health;
         component = c;
-
     }
 
     protected abstract ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray);
