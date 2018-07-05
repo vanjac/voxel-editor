@@ -146,6 +146,7 @@ public class MapFileReader
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
         voxelArray.playerObject = new PlayerObject();
+        voxelArray.objects.Add(voxelArray.playerObject);
         if (world["player"] != null)
             ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
 

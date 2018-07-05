@@ -319,8 +319,9 @@ public class VoxelArrayEditor : VoxelArray
         foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
             if (faceRef.voxel.substance != null)
                 selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
-        if (playerObject.marker.selected)
-            selectedEntities.Add(playerObject);
+        foreach (ObjectEntity obj in objects)
+            if (obj.marker.selected)
+                selectedEntities.Add(obj);
         return selectedEntities;
     }
 
@@ -385,11 +386,14 @@ public class VoxelArrayEditor : VoxelArray
                 DeselectThing(thing);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
-        if (boxSelectSubstance == selectObjectSubstance
-                && ThingInBoxSelection(playerObject.marker, selectionBounds))
-            SelectThing(playerObject.marker);
-        else
-            DeselectThing(playerObject.marker);
+        foreach (ObjectEntity obj in objects)
+        {
+            if (boxSelectSubstance == selectObjectSubstance
+                    && ThingInBoxSelection(obj.marker, selectionBounds))
+                SelectThing(obj.marker);
+            else
+                DeselectThing(obj.marker);
+        }
     }
 
     private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)

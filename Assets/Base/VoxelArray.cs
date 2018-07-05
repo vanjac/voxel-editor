@@ -43,7 +43,7 @@ public class VoxelArray : MonoBehaviour
     public ObjectEntity playerObject;
     public WorldProperties world = new WorldProperties();
     protected OctreeNode rootNode;
-    protected List<ObjectEntity> objects = new List<ObjectEntity>();
+    public List<ObjectEntity> objects = new List<ObjectEntity>();
 
     private bool unloadUnusedAssets = false;
 

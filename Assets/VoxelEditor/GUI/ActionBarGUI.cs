@@ -123,6 +123,7 @@ public class ActionBarGUI : GUIPanel
                     obj.position = VoxelArray.Vector3ToInt(
                         voxelArray.selectionBounds.center - new Vector3(0.5f, 0.0f, 0.5f)); // TODO
                     obj.InitObjectMarker(voxelArray);
+                    voxelArray.objects.Add(obj);
                     voxelArray.unsavedChanges = true;
                 }
             };

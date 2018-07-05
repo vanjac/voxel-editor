@@ -31,6 +31,7 @@ public abstract class ObjectEntity : DynamicEntity
         marker = CreateObjectMarker(voxelArray);
         marker.transform.parent = voxelArray.transform;
         marker.objectEntity = this;
+        marker.tag = "ObjectMarker";
     }
 
     public override void InitEntityGameObject(VoxelArray voxelArray)
