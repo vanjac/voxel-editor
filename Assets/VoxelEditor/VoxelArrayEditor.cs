@@ -536,11 +536,14 @@ public class VoxelArrayEditor : VoxelArray
         // now we can safely look only the addSelected property and the selectedThings list
         // and ignore the storedSelected property and the storedSelectedThings list
 
-        if (playerObject.marker.addSelected)
+        foreach (ObjectEntity obj in objects)
         {
-            playerObject.position += Vector3ToInt(adjustDirection);
-            playerObject.UpdateEntityEditor();
-            unsavedChanges = true;
+            if (obj.marker.addSelected)
+            {
+                obj.position += Vector3ToInt(adjustDirection);
+                obj.UpdateEntityEditor();
+                unsavedChanges = true;
+            }
         }
 
         int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
