@@ -106,7 +106,7 @@ public class ActionBarGUI : GUIPanel
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Create";
             picker.categories = new PropertiesObjectType[][] {
-                GameScripts.entityTemplates, GameScripts.objects };
+                GameScripts.entityTemplates, GameScripts.objectTemplates };
             picker.categoryNames = new string[] {"Substance", "Object"};
             picker.handler = (PropertiesObjectType type) =>
             {

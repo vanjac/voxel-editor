@@ -143,6 +143,16 @@ public class PropertiesObjectType
         this.constructor = constructor;
     }
 
+    public PropertiesObjectType(PropertiesObjectType baseType, PropertiesObjectConstructor newConstructor)
+    {
+        this.fullName = baseType.fullName;
+        this.description = baseType.description;
+        this.longDescription = baseType.longDescription;
+        this.iconName = baseType.iconName;
+        this.type = baseType.type;
+        constructor = newConstructor;
+    }
+
     private PropertiesObject DefaultConstructor()
     {
         if (type == null)

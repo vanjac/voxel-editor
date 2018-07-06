@@ -109,6 +109,17 @@ public class GameScripts
         BallObject.objectType
     };
 
+    public static PropertiesObjectType[] objectTemplates = new PropertiesObjectType[]
+    {
+        new PropertiesObjectType(BallObject.objectType, () =>
+        {
+            BallObject ball = new BallObject();
+            ball.behaviors.Add(new VisibleBehavior());
+            ball.behaviors.Add(new SolidBehavior());
+            return ball;
+        })
+    };
+
     public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]
     {
         Entity.objectType,
