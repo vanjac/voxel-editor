@@ -87,7 +87,8 @@ public class MapFileWriter
         foreach (ObjectEntity obj in voxelArray.objects)
             if (obj != voxelArray.playerObject)
                 objectsArray[-1] = WriteObjectEntity(obj, true);
-        world["objects"] = objectsArray;
+        if (objectsArray.Count != 0)
+            world["objects"] = objectsArray;
 
         return world;
     }
