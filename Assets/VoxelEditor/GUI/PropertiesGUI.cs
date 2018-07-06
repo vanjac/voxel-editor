@@ -123,18 +123,39 @@ public class PropertiesGUI : GUIPanel
         PropertiesObjectGUI(entity);
         GUILayout.EndVertical();
 
-        if (entity is Substance)
+        if (!(entity is PlayerObject))
         {
+            GUILayout.BeginHorizontal();
             if (GUIUtils.HighlightedButton("Clone"))
             {
-                Substance clone = (Substance)(entity.Clone());
-                clone.defaultPaint = voxelArray.GetSelectedPaint();
-                clone.defaultPaint.addSelected = false;
-                clone.defaultPaint.storedSelected = false;
-                voxelArray.substanceToCreate = clone;
-                var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
-                createGUI.voxelArray = voxelArray;
+                if (entity is Substance)
+                {
+                    Substance clone = (Substance)(entity.Clone());
+                    clone.defaultPaint = voxelArray.GetSelectedPaint();
+                    clone.defaultPaint.addSelected = false;
+                    clone.defaultPaint.storedSelected = false;
+                    voxelArray.substanceToCreate = clone;
+                    var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
+                    createGUI.voxelArray = voxelArray;
+                }
+                // TODO: objects
             }
+            if (GUIUtils.HighlightedButton("Delete"))
+            {
+                // TODO: only deselect deleted objects
+                voxelArray.ClearSelection();
+                voxelArray.ClearStoredSelection();
+                if (entity is ObjectEntity)
+                {
+                    var obj = (ObjectEntity)entity;
+                    Destroy(obj.marker.gameObject);
+                    obj.marker = null;
+                    voxelArray.objects.Remove(obj);
+                    voxelArray.unsavedChanges = true;
+                }
+                // TODO: substances
+            }
+            GUILayout.EndHorizontal();
         }
 
         TutorialGUI.TutorialHighlight("change sensor");
