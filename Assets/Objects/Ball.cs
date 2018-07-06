@@ -42,5 +42,14 @@ public class BallObject : ObjectEntity
 
 public class BallComponent : DynamicEntityComponent
 {
-
+    public override void Start()
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<SphereCollider>().isTrigger = true;
+        // a rigidBody is required for collision detection
+        Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>();
+        // no physics by default (could be disabled by a Physics behavior)
+        rigidBody.isKinematic = true;
+        base.Start();
+    }
 }
