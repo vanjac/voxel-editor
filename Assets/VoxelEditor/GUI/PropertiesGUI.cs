@@ -128,7 +128,14 @@ public class PropertiesGUI : GUIPanel
             GUILayout.BeginHorizontal();
             if (GUIUtils.HighlightedButton("Clone"))
             {
-                if (entity is Substance)
+                if (entity is ObjectEntity)
+                {
+                    ObjectEntity clone = (ObjectEntity)(entity.Clone());
+                    var cloneGUI = gameObject.AddComponent<CloneObjectGUI>();
+                    cloneGUI.clone = clone;
+                    cloneGUI.voxelArray = voxelArray;
+                }
+                else if (entity is Substance)
                 {
                     Substance clone = (Substance)(entity.Clone());
                     clone.defaultPaint = voxelArray.GetSelectedPaint();
@@ -389,5 +396,58 @@ public class NewBehaviorGUI : GUIPanel
 
         // prevent panel from closing when entity picker closes
         holdOpen = entityPicker != null;
+    }
+}
+
+
+public class CloneObjectGUI : ActionBarGUI
+{
+    public ObjectEntity clone;
+
+    public override void OnEnable()
+    {
+        // copied from CreateSubstanceGUI
+        base.OnEnable();
+        stealFocus = true;
+        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
+        if (actionBar != null)
+            actionBar.enabled = false;
+        propertiesGUI.normallyOpen = false; // hide properties panel
+    }
+
+    public override void OnDisable()
+    {
+        // copied from CreateSubstanceGUI
+        base.OnDisable();
+        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
+        if (actionBar != null)
+            actionBar.enabled = true;
+        propertiesGUI.normallyOpen = true; // show properties panel
+    }
+
+    public override void WindowGUI()
+    {
+        GUILayout.BeginHorizontal();
+        if (ActionBarButton(GUIIconSet.instance.close))
+            Destroy(this);
+        GUILayout.FlexibleSpace();
+        ActionBarLabel("Tap to place clone");
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+    }
+
+    void Start()
+    {
+        voxelArray.ClearSelection();
+        voxelArray.ClearStoredSelection();
+    }
+
+    void Update()
+    {
+        if (voxelArray.SomethingIsSelected())
+        {
+            voxelArray.PlaceObject(clone);
+            Destroy(this);
+        }
     }
 }

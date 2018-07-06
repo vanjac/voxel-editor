@@ -848,4 +848,28 @@ public class VoxelArrayEditor : VoxelArray
         }
         return faceI;
     }
+
+    public void PlaceObject(ObjectEntity obj)
+    {
+        Vector3 createPosition = selectionBounds.center;
+        int faceNormal = GetSelectedFaceNormal();
+        if (faceNormal != -1)
+            createPosition += Voxel.DirectionForFaceI(faceNormal) / 2;
+        createPosition -= new Vector3(0.5f, 0.5f, 0.5f);
+        obj.position = VoxelArray.Vector3ToInt(createPosition);
+
+        obj.InitObjectMarker(this);
+        objects.Add(obj);
+        unsavedChanges = true;
+        // select the object. Wait one frame so the position is correct
+        StartCoroutine(SelectNewObjectCoroutine(obj));
+    }
+
+    private IEnumerator SelectNewObjectCoroutine(ObjectEntity obj)
+    {
+        yield return null;
+        ClearStoredSelection();
+        TouchDown(obj.marker);
+        TouchUp();
+    }
 }
