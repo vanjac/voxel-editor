@@ -872,4 +872,13 @@ public class VoxelArrayEditor : VoxelArray
         TouchDown(obj.marker);
         TouchUp();
     }
+
+    public void DeleteSubstance(Substance substance)
+    {
+        foreach (var voxel in new HashSet<Voxel>(substance.voxels))
+        {
+            voxel.Clear();
+            VoxelModified(voxel);
+        }
+    }
 }

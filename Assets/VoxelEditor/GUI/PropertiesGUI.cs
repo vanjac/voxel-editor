@@ -145,7 +145,6 @@ public class PropertiesGUI : GUIPanel
                     var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
                     createGUI.voxelArray = voxelArray;
                 }
-                // TODO: objects
             }
             if (GUIUtils.HighlightedButton("Delete"))
             {
@@ -160,7 +159,10 @@ public class PropertiesGUI : GUIPanel
                     voxelArray.objects.Remove(obj);
                     voxelArray.unsavedChanges = true;
                 }
-                // TODO: substances
+                else if (entity is Substance)
+                {
+                    voxelArray.DeleteSubstance((Substance)entity);
+                }
             }
             GUILayout.EndHorizontal();
         }
