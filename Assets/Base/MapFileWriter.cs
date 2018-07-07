@@ -167,6 +167,11 @@ public class MapFileWriter
             // https://stackoverflow.com/a/2434558
             // https://stackoverflow.com/a/5414665
             object value = prop.value;
+            if (value == null)
+            {
+                Debug.Log(prop.name + " is null!");
+                continue;
+            }
 
             XmlSerializer xmlSerializer;
             try

@@ -7,23 +7,44 @@ public class BallObject : ObjectEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Ball", "A sphere with a custom material", "circle-outline", typeof(BallObject));
 
+    private Material material;
+
     // make sure CreatePrimitive works: https://docs.unity3d.com/ScriptReference/GameObject.CreatePrimitive.html
     private MeshFilter fixEverything1;
     private MeshRenderer fixEverything2;
     private SphereCollider fixEverything3;
+
+    public BallObject()
+    {
+        material = ResourcesDirectory.MakeCustomMaterial(ColorMode.MATTE);
+        material.color = Color.red;
+    }
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
+    public override ICollection<Property> Properties()
+    {
+        return Property.JoinProperties(base.Properties(), new Property[]
+        {
+            new Property("Material",
+                () => material,
+                v =>
+                {
+                    material = (Material)v;
+                    marker.storedMaterials[0] = material;
+                    marker.UpdateMarker();
+                },
+                PropertyGUIs.Material("GameAssets/Materials"))
+        });
+    }
+
     private GameObject ObjectTemplate(VoxelArray voxelArray)
     {
         GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        obj.GetComponent<MeshRenderer>().materials = new Material[]
-        {
-            ResourcesDirectory.MakeCustomMaterial(ColorMode.MATTE)
-        };
+        obj.GetComponent<MeshRenderer>().materials = new Material[] { material };
         return obj;
     }
 

@@ -25,7 +25,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         }
     }
 
-    private Material[] storedMaterials;
+    public Material[] storedMaterials;
 
     public void Start()
     {
