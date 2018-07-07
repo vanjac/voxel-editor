@@ -164,38 +164,47 @@ public class MapFileWriter
         JSONArray propertiesArray = new JSONArray();
         foreach (Property prop in obj.Properties())
         {
-            // https://stackoverflow.com/a/2434558
-            // https://stackoverflow.com/a/5414665
             object value = prop.value;
             if (value == null)
             {
                 Debug.Log(prop.name + " is null!");
                 continue;
             }
-
-            XmlSerializer xmlSerializer;
-            try
-            {
-                xmlSerializer = new XmlSerializer(value.GetType());
-            }
-            catch (System.InvalidOperationException)
-            {
-                Debug.Log(prop.name + " can't be serialized!");
-                continue;
-            }
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", ""); // skip xsi/xsd namespaces: https://stackoverflow.com/a/935749
-            string valueString;
-            using (var textWriter = new StringWriter())
-            using (var xmlWriter = XmlWriter.Create(textWriter,
-                new XmlWriterSettings { Indent = false, OmitXmlDeclaration = true }))
-            {
-                xmlSerializer.Serialize(xmlWriter, value, ns);
-                valueString = textWriter.ToString();
-            }
             JSONArray propArray = new JSONArray();
             propArray[0] = prop.name;
-            propArray[1] = valueString;
+            var valueType = value.GetType();
+
+            if (valueType == typeof(Material))
+            {
+                propArray[1] = WriteMaterial((Material)value);
+            }
+            else // not a Material
+            {
+                XmlSerializer xmlSerializer;
+                try
+                {
+                    xmlSerializer = new XmlSerializer(valueType);
+                }
+                catch (System.InvalidOperationException)
+                {
+                    Debug.Log(prop.name + " can't be serialized!");
+                    continue;
+                }
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", ""); // skip xsi/xsd namespaces: https://stackoverflow.com/a/935749
+                string valueString;
+                // https://stackoverflow.com/a/2434558
+                // https://stackoverflow.com/a/5414665
+                using (var textWriter = new StringWriter())
+                using (var xmlWriter = XmlWriter.Create(textWriter,
+                    new XmlWriterSettings { Indent = false, OmitXmlDeclaration = true }))
+                {
+                    xmlSerializer.Serialize(xmlWriter, value, ns);
+                    valueString = textWriter.ToString();
+                }
+                propArray[1] = valueString;
+            }
+
             if (prop.explicitType)
                 propArray[2] = value.GetType().FullName;
             propertiesArray[-1] = propArray;

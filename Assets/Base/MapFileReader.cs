@@ -23,6 +23,7 @@ public class MapFileReader
     private Material missingMaterial; // material to be used when material can't be created
 
     private List<string> warnings = new List<string>();
+    private bool editor;
 
     public MapFileReader(string fileName)
     {
@@ -32,6 +33,7 @@ public class MapFileReader
     // return warnings
     public List<string> Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
+        this.editor = editor;
         if (missingMaterial == null)
         {
             // allowTransparency is true in case the material is used for an overlay, so the alpha value can be adjusted
@@ -85,7 +87,7 @@ public class MapFileReader
             if (editor && cameraPivot != null && root["camera"] != null)
                 ReadCamera(root["camera"].AsObject, cameraPivot);
             if (root["world"] != null)
-                ReadWorld(root["world"].AsObject, voxelArray, editor);
+                ReadWorld(root["world"].AsObject, voxelArray);
         }
         catch (MapReadException e)
         {
@@ -112,7 +114,7 @@ public class MapFileReader
         }
     }
 
-    private void ReadWorld(JSONObject world, VoxelArray voxelArray, bool editor)
+    private void ReadWorld(JSONObject world, VoxelArray voxelArray)
     {
         var materials = new List<Material>();
         if (world["materials"] != null)
@@ -120,7 +122,7 @@ public class MapFileReader
             foreach (JSONNode matNode in world["materials"].AsArray)
             {
                 JSONObject matObject = matNode.AsObject;
-                materials.Add(ReadMaterial(matObject, editor));
+                materials.Add(ReadMaterial(matObject));
             }
         }
 
@@ -144,7 +146,7 @@ public class MapFileReader
                 voxelArray.world.SetSky(sky);
         }
         if (world["map"] != null)
-            ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
+            ReadMap(world["map"].AsObject, voxelArray, materials, substances);
         voxelArray.playerObject = new PlayerObject();
         voxelArray.objects.Add(voxelArray.playerObject);
         if (world["player"] != null)
@@ -182,7 +184,7 @@ public class MapFileReader
         }
     }
 
-    private Material ReadMaterial(JSONObject matObject, bool editor)
+    private Material ReadMaterial(JSONObject matObject)
     {
         if (matObject["name"] != null)
         {
@@ -314,30 +316,37 @@ public class MapFileReader
                 else
                     propType = prop.value.GetType();
 
-                XmlSerializer xmlSerializer = new XmlSerializer(propType);
-                using (var textReader = new StringReader(valueString))
+                if (propType == typeof(Material))
                 {
-                    prop.value = xmlSerializer.Deserialize(textReader);
+                    prop.value = ReadMaterial(propArray[1].AsObject);
+                }
+                else
+                {
+                    XmlSerializer xmlSerializer = new XmlSerializer(propType);
+                    using (var textReader = new StringReader(valueString))
+                    {
+                        prop.value = xmlSerializer.Deserialize(textReader);
+                    }
                 }
             }
         }
     }
 
     private void ReadMap(JSONObject map, VoxelArray voxelArray,
-        List<Material> materials, List<Substance> substances, bool editor)
+        List<Material> materials, List<Substance> substances)
     {
         if (map["voxels"] != null)
         {
             foreach (JSONNode voxelNode in map["voxels"].AsArray)
             {
                 JSONObject voxelObject = voxelNode.AsObject;
-                ReadVoxel(voxelObject, voxelArray, materials, substances, editor);
+                ReadVoxel(voxelObject, voxelArray, materials, substances);
             }
         }
     }
 
     private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray,
-        List<Material> materials, List<Substance> substances, bool editor)
+        List<Material> materials, List<Substance> substances)
     {
         if (voxelObject["at"] == null)
             return;

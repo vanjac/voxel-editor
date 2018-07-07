@@ -34,8 +34,11 @@ public class BallObject : ObjectEntity
                 v =>
                 {
                     material = (Material)v;
-                    marker.storedMaterials[0] = material;
-                    marker.UpdateMarker();
+                    if (marker != null)
+                    {
+                        marker.storedMaterials[0] = material;
+                        marker.UpdateMarker();
+                    }
                 },
                 PropertyGUIs.Material("GameAssets/Materials"))
         });
