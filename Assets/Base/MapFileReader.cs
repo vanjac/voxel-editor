@@ -139,7 +139,7 @@ public class MapFileReader
 
         if (world["global"] != null)
             ReadPropertiesObject(world["global"].AsObject, voxelArray.world);
-        if (world["sky"] != null)
+        if (fileWriterVersion <= 2 && world["sky"] != null)
         {
             Material sky = materials[world["sky"].AsInt];
             if (sky != missingMaterial) // default skybox is null

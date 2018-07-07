@@ -59,7 +59,6 @@ public class MapFileWriter
         JSONArray substancesArray = new JSONArray();
         var foundSubstances = new List<Substance>();
 
-        AddMaterial(RenderSettings.skybox, foundMaterials, materialsArray);
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
             foreach (VoxelFace face in voxel.faces)
@@ -78,8 +77,6 @@ public class MapFileWriter
         if (foundSubstances.Count != 0)
             world["substances"] = substancesArray;
         world["global"] = WritePropertiesObject(voxelArray.world, false);
-        // the selected sky can't be serialized so it's stored separately
-        world["sky"].AsInt = foundMaterials.IndexOf(RenderSettings.skybox.name);
         world["map"] = WriteMap(voxelArray, foundMaterials, foundSubstances);
         world["player"] = WriteObjectEntity(voxelArray.playerObject, false);
 
