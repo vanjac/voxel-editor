@@ -220,7 +220,7 @@ public class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory,
+    public static PropertyGUI Material(string materialDirectory, bool allowAlpha = false,
         MaterialSelectorGUI.ColorModeSet colorModeSet = MaterialSelectorGUI.ColorModeSet.DEFAULT)
     {
         return (Property property) =>
@@ -232,6 +232,7 @@ public class PropertyGUIs
                 materialSelector.title = "Change " + property.name;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
+                materialSelector.allowAlpha = allowAlpha;
                 materialSelector.colorModeSet = colorModeSet;
                 materialSelector.handler = (Material mat) =>
                 {

@@ -16,7 +16,7 @@ public class BallObject : ObjectEntity
 
     public BallObject()
     {
-        material = ResourcesDirectory.MakeCustomMaterial(ColorMode.MATTE);
+        material = ResourcesDirectory.MakeCustomMaterial(ColorMode.MATTE, true);
         material.color = Color.red;
     }
 
@@ -40,7 +40,7 @@ public class BallObject : ObjectEntity
                         marker.UpdateMarker();
                     }
                 },
-                PropertyGUIs.Material("GameAssets/Materials", MaterialSelectorGUI.ColorModeSet.OBJECT))
+                PropertyGUIs.Material("GameAssets/Materials", true, MaterialSelectorGUI.ColorModeSet.OBJECT))
         });
     }
 
