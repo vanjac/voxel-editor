@@ -40,7 +40,7 @@ public class BallObject : ObjectEntity
                         marker.UpdateMarker();
                     }
                 },
-                PropertyGUIs.Material("GameAssets/Materials"))
+                PropertyGUIs.Material("GameAssets/Materials", MaterialSelectorGUI.ColorModeSet.OBJECT))
         });
     }
 

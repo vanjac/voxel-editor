@@ -10,6 +10,11 @@ public enum ColorMode
 
 public class MaterialSelectorGUI : GUIPanel
 {
+    public enum ColorModeSet
+    {
+        DEFAULT, UNLIT_ONLY, OBJECT
+    }
+
     private static Texture2D whiteTexture;
     private const int NUM_COLUMNS = 4;
     private const int TEXTURE_MARGIN = 20;
@@ -17,20 +22,28 @@ public class MaterialSelectorGUI : GUIPanel
     private const string BACK_BUTTON = "Back";
     private const string PREVIEW_SUFFIX = "_preview";
     private const string PREVIEW_SUFFIX_EXT = PREVIEW_SUFFIX + ".mat";
-    private static readonly ColorMode[] OPAQUE_COLOR_MODES = new ColorMode[]
+    private static readonly string[] COLOR_MODE_NAMES = new string[]
     {
-        ColorMode.MATTE, ColorMode.GLOSSY, ColorMode.METAL, ColorMode.UNLIT
+        "Matte", "Glossy", "Metal", "Unlit", "Glass", "Add", "Multiply"
     };
-    private static readonly ColorMode[] TRANSPARENT_COLOR_MODES = new ColorMode[]
+    private static readonly string[] OPAQUE_COLOR_MODES = new string[]
     {
-        ColorMode.MATTE, ColorMode.GLASS, ColorMode.UNLIT, ColorMode.ADD, ColorMode.MULTIPLY
+        "Matte", "Glossy", "Metal", "Unlit"
+    };
+    private static readonly string[] TRANSPARENT_COLOR_MODES = new string[]
+    {
+        "Matte", "Glass", "Unlit", "Add", "Multiply"
+    };
+    private static readonly string[] OBJECT_COLOR_MODES = new string[]
+    {
+        "Matte", "Glossy", "Metal", "Glass", "Unlit"
     };
 
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
     public string rootDirectory = "GameAssets/Materials";
-    public bool onlyUnlit = false;
+    public ColorModeSet colorModeSet = ColorModeSet.DEFAULT;
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
     public bool closeOnSelect = true;
@@ -53,7 +66,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     public void Start()
     {
-        if (onlyUnlit)
+        if (colorModeSet == ColorModeSet.UNLIT_ONLY)
             colorMode = ColorMode.UNLIT;
         else
             colorMode = ColorMode.MATTE;
@@ -117,25 +130,24 @@ public class MaterialSelectorGUI : GUIPanel
                 handler(highlightMaterial);
         }
         ColorMode newMode;
-        if (onlyUnlit)
+        if (colorModeSet == ColorModeSet.UNLIT_ONLY)
         {
             newMode = ColorMode.UNLIT;
         }
-        else if (allowAlpha)
-        {
-            int m = System.Array.IndexOf(TRANSPARENT_COLOR_MODES, colorMode);
-            m = GUILayout.SelectionGrid(m,
-                new string[] { "Matte", "Glass", "Unlit", "Add", "Multiply" },
-                5, GUI.skin.GetStyle("button_tab"));
-            newMode = TRANSPARENT_COLOR_MODES[m];
-        }
         else
         {
-            int m = System.Array.IndexOf(OPAQUE_COLOR_MODES, colorMode);
-            m = GUILayout.SelectionGrid(m,
-                new string[] { "Matte", "Glossy", "Metal", "Unlit" },
-                4, GUI.skin.GetStyle("button_tab"));
-            newMode = OPAQUE_COLOR_MODES[m];
+            string[] colorModes;
+            if (colorModeSet == ColorModeSet.OBJECT)
+                colorModes = OBJECT_COLOR_MODES;
+            else if (allowAlpha)
+                colorModes = TRANSPARENT_COLOR_MODES;
+            else
+                colorModes = OPAQUE_COLOR_MODES;
+            // TODO: this is ugly
+            int m = System.Array.IndexOf(colorModes, COLOR_MODE_NAMES[(int)colorMode]);
+            m = GUILayout.SelectionGrid(m, colorModes,
+                colorModes.Length, GUI.skin.GetStyle("button_tab"));
+            newMode = (ColorMode)System.Array.IndexOf(COLOR_MODE_NAMES, colorModes[m]);
         }
         if (newMode != colorMode)
         {

@@ -54,7 +54,7 @@ public class WorldProperties : PropertiesObject
                 v => {
                     SetSky((Material)v);
                 },
-                PropertyGUIs.Material("GameAssets/Skies", true)),
+                PropertyGUIs.Material("GameAssets/Skies", MaterialSelectorGUI.ColorModeSet.UNLIT_ONLY)),
             new Property("Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,
