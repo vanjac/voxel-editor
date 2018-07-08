@@ -46,6 +46,7 @@ public class MaterialSelectorGUI : GUIPanel
     public ColorModeSet colorModeSet = ColorModeSet.DEFAULT;
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
+    public bool colorOnly = false;
     public bool closeOnSelect = true;
     public Material highlightMaterial = null; // the current selected material
 
@@ -91,7 +92,9 @@ public class MaterialSelectorGUI : GUIPanel
     public override void WindowGUI()
     {
         TutorialGUI.TutorialHighlight("material type");
-        if (allowNullMaterial)
+        if (colorOnly)
+            tab = 0;
+        else if (allowNullMaterial)
             tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture", "None" }, 3);
         else
             tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture" }, 2);
