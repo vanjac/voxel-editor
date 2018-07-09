@@ -316,12 +316,19 @@ public class VoxelArrayEditor : VoxelArray
     public ICollection<Entity> GetSelectedEntities()
     {
         var selectedEntities = new HashSet<Entity>();
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
-            if (faceRef.voxel.substance != null)
-                selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
-        foreach (ObjectEntity obj in objects)
-            if (obj.marker.selected)
-                selectedEntities.Add(obj);
+        foreach (Selectable thing in IterateSelected())
+        {
+            if (thing is VoxelFaceReference)
+            {
+                var faceRef = (VoxelFaceReference)thing;
+                if (faceRef.voxel.substance != null)
+                    selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
+            }
+            else if (thing is ObjectMarker)
+            {
+                selectedEntities.Add(((ObjectMarker)thing).objectEntity);
+            }
+        }
         return selectedEntities;
     }
 
