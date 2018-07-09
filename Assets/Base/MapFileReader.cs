@@ -148,7 +148,7 @@ public class MapFileReader
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances);
         voxelArray.playerObject = new PlayerObject();
-        voxelArray.objects.Add(voxelArray.playerObject);
+        voxelArray.AddObject(voxelArray.playerObject);
         if (world["player"] != null)
             ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
         if (world["objects"] != null)
@@ -165,7 +165,7 @@ public class MapFileReader
                 }
                 ObjectEntity obj = (ObjectEntity)objType.Create();
                 ReadObjectEntity(objObject, obj);
-                voxelArray.objects.Add(obj);
+                voxelArray.AddObject(obj);
             }
         }
 
@@ -174,12 +174,12 @@ public class MapFileReader
             // start the game
             foreach (Substance s in substances)
                 s.InitEntityGameObject(voxelArray);
-            foreach (ObjectEntity obj in voxelArray.objects)
+            foreach (ObjectEntity obj in voxelArray.IterateObjects())
                 obj.InitEntityGameObject(voxelArray);
         }
         else // editor
         {
-            foreach (ObjectEntity obj in voxelArray.objects)
+            foreach (ObjectEntity obj in voxelArray.IterateObjects())
                 obj.InitObjectMarker((VoxelArrayEditor)voxelArray);
         }
     }

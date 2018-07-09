@@ -136,6 +136,13 @@ public class VoxelArrayEditor : VoxelArray
         base.VoxelModified(voxel);
     }
 
+    public override void ObjectModified(ObjectEntity obj)
+    {
+        unsavedChanges = true;
+        base.ObjectModified(obj);
+        obj.UpdateEntityEditor();
+    }
+
     // called by TouchListener
     public void TouchDown(Voxel voxel, int faceI)
     {
@@ -393,7 +400,7 @@ public class VoxelArrayEditor : VoxelArray
                 DeselectThing(thing);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
-        foreach (ObjectEntity obj in objects)
+        foreach (ObjectEntity obj in IterateObjects())
         {
             if (boxSelectSubstance == selectObjectSubstance
                     && ThingInBoxSelection(obj.marker, selectionBounds))
@@ -599,8 +606,7 @@ public class VoxelArrayEditor : VoxelArray
             {
                 var obj = ((ObjectMarker)thing).objectEntity;
                 obj.position += Vector3ToInt(adjustDirection);
-                obj.UpdateEntityEditor();
-                unsavedChanges = true;
+                ObjectModified(obj);
                 continue;
             }
             else if (!(thing is VoxelFaceReference))
@@ -864,7 +870,7 @@ public class VoxelArrayEditor : VoxelArray
         obj.position = VoxelArray.Vector3ToInt(createPosition);
 
         obj.InitObjectMarker(this);
-        objects.Add(obj);
+        AddObject(obj);
         unsavedChanges = true;
         // select the object. Wait one frame so the position is correct
         StartCoroutine(SelectNewObjectCoroutine(obj));
@@ -876,14 +882,5 @@ public class VoxelArrayEditor : VoxelArray
         ClearStoredSelection();
         TouchDown(obj.marker);
         TouchUp();
-    }
-
-    public void DeleteSubstance(Substance substance)
-    {
-        foreach (var voxel in new HashSet<Voxel>(substance.voxels))
-        {
-            voxel.Clear();
-            VoxelModified(voxel);
-        }
     }
 }

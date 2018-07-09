@@ -81,7 +81,7 @@ public class MapFileWriter
         world["player"] = WriteObjectEntity(voxelArray.playerObject, false);
 
         JSONArray objectsArray = new JSONArray();
-        foreach (ObjectEntity obj in voxelArray.objects)
+        foreach (ObjectEntity obj in voxelArray.IterateObjects())
             if (obj != voxelArray.playerObject)
                 objectsArray[-1] = WriteObjectEntity(obj, true);
         if (objectsArray.Count != 0)

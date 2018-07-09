@@ -153,10 +153,7 @@ public class PropertiesGUI : GUIPanel
                 voxelArray.ClearStoredSelection();
                 if (entity is ObjectEntity)
                 {
-                    var obj = (ObjectEntity)entity;
-                    Destroy(obj.marker.gameObject);
-                    obj.marker = null;
-                    voxelArray.objects.Remove(obj);
+                    voxelArray.DeleteObject((ObjectEntity)entity);
                     voxelArray.unsavedChanges = true;
                 }
                 else if (entity is Substance)

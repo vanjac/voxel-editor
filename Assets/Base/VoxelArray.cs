@@ -43,7 +43,7 @@ public class VoxelArray : MonoBehaviour
     public ObjectEntity playerObject;
     public WorldProperties world = new WorldProperties();
     protected OctreeNode rootNode;
-    public List<ObjectEntity> objects = new List<ObjectEntity>();
+    private List<ObjectEntity> objects = new List<ObjectEntity>();
 
     private bool unloadUnusedAssets = false;
 
@@ -187,6 +187,11 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
+    public virtual void ObjectModified(ObjectEntity obj)
+    {
+
+    }
+
     public bool IsEmpty()
     {
         foreach (Voxel v in IterateVoxels())
@@ -194,13 +199,13 @@ public class VoxelArray : MonoBehaviour
         return true;
     }
 
-    public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()
+    public IEnumerable<Voxel> IterateVoxels()
     {
         foreach (Voxel v in IterateOctree(rootNode))
             yield return v;
     }
 
-    private System.Collections.Generic.IEnumerable<Voxel> IterateOctree(OctreeNode node)
+    private IEnumerable<Voxel> IterateOctree(OctreeNode node)
     {
         if (node == null)
         { }
@@ -219,4 +224,33 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
+    public void AddObject(ObjectEntity obj)
+    {
+        objects.Add(obj);
+    }
+
+    public void DeleteObject(ObjectEntity obj)
+    {
+        objects.Remove(obj);
+        if (obj.marker != null)
+        {
+            Destroy(obj.marker.gameObject);
+            obj.marker = null;
+        }
+    }
+
+    public IEnumerable<ObjectEntity> IterateObjects()
+    {
+        foreach (ObjectEntity obj in objects)
+            yield return obj;
+    }
+
+    public void DeleteSubstance(Substance substance)
+    {
+        foreach (var voxel in new HashSet<Voxel>(substance.voxels))
+        {
+            voxel.Clear();
+            VoxelModified(voxel);
+        }
+    }
 }
