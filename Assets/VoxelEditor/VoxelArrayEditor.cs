@@ -536,16 +536,6 @@ public class VoxelArrayEditor : VoxelArray
         // now we can safely look only the addSelected property and the selectedThings list
         // and ignore the storedSelected property and the storedSelectedThings list
 
-        foreach (ObjectEntity obj in objects)
-        {
-            if (obj.marker.addSelected)
-            {
-                obj.position += Vector3ToInt(adjustDirection);
-                obj.UpdateEntityEditor();
-                unsavedChanges = true;
-            }
-        }
-
         int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
         int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
         int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
@@ -598,7 +588,15 @@ public class VoxelArrayEditor : VoxelArray
         for (int i = 0; i < selectedThings.Count; i++)
         {
             Selectable thing = selectedThings[i];
-            if (!(thing is VoxelFaceReference))
+            if (thing is ObjectMarker)
+            {
+                var obj = ((ObjectMarker)thing).objectEntity;
+                obj.position += Vector3ToInt(adjustDirection);
+                obj.UpdateEntityEditor();
+                unsavedChanges = true;
+                continue;
+            }
+            else if (!(thing is VoxelFaceReference))
                 continue;
             VoxelFaceReference faceRef = (VoxelFaceReference)thing;
 
