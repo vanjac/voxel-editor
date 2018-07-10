@@ -148,9 +148,9 @@ public class MapFileReader
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances);
         voxelArray.playerObject = new PlayerObject();
-        voxelArray.AddObject(voxelArray.playerObject);
         if (world["player"] != null)
             ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
+        voxelArray.AddObject(voxelArray.playerObject);
         if (world["objects"] != null)
         {
             foreach (JSONNode objNode in world["objects"].AsArray)

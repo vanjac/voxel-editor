@@ -217,7 +217,7 @@ public class MapFileWriter
         JSONArray voxels = new JSONArray();
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
-            if (voxel.IsEmpty())
+            if (voxel.CanBeDeleted())
             {
                 Debug.Log("Empty voxel found!");
                 voxelArray.VoxelModified(voxel);

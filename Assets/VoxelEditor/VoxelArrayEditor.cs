@@ -605,8 +605,7 @@ public class VoxelArrayEditor : VoxelArray
             if (thing is ObjectMarker)
             {
                 var obj = ((ObjectMarker)thing).objectEntity;
-                obj.position += Vector3ToInt(adjustDirection);
-                ObjectModified(obj);
+                MoveObject(obj, obj.position + Vector3ToInt(adjustDirection));
                 continue;
             }
             else if (!(thing is VoxelFaceReference))

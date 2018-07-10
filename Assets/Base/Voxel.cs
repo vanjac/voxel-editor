@@ -160,6 +160,7 @@ public class Voxel : MonoBehaviour
                 _substance.AddVoxel(this);
         }
     }
+    public ObjectEntity objectEntity;
 
     void Start ()
     {
@@ -214,6 +215,11 @@ public class Voxel : MonoBehaviour
         return true;
     }
 
+    public bool CanBeDeleted()
+    {
+        return IsEmpty() && objectEntity == null;
+    }
+
     public void Clear()
     {
         for (int faceI = 0; faceI < faces.Length; faceI++)
@@ -221,6 +227,7 @@ public class Voxel : MonoBehaviour
             faces[faceI].Clear();
         }
         substance = null;
+        // does NOT clear objectEntity!
     }
 
     public void UpdateVoxel()
@@ -399,7 +406,7 @@ public class Voxel : MonoBehaviour
         else
         {
             boxCollider.enabled = true;
-            if (substance == null)
+            if (substance == null && !IsEmpty())
             {
                 renderer.enabled = true;
                 boxCollider.isTrigger = false;

@@ -175,7 +175,7 @@ public class VoxelArray : MonoBehaviour
 
     public virtual void VoxelModified(Voxel voxel)
     {
-        if (voxel.IsEmpty())
+        if (voxel.CanBeDeleted())
         {
             Destroy(voxel.gameObject);
             RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
@@ -227,6 +227,11 @@ public class VoxelArray : MonoBehaviour
     public void AddObject(ObjectEntity obj)
     {
         objects.Add(obj);
+        Voxel objVoxel = VoxelAt(obj.position, true);
+        if (objVoxel.objectEntity != null)
+            Debug.Log("Object already at position!!");
+        objVoxel.objectEntity = obj;
+        // not necessary to call VoxelModified
     }
 
     public void DeleteObject(ObjectEntity obj)
@@ -237,6 +242,39 @@ public class VoxelArray : MonoBehaviour
             Destroy(obj.marker.gameObject);
             obj.marker = null;
         }
+        Voxel objVoxel = VoxelAt(obj.position, false);
+        if (objVoxel != null)
+        {
+            objVoxel.objectEntity = null;
+            VoxelModified(objVoxel);
+        }
+        else
+            Debug.Log("This object wasn't in the voxel array!");
+    }
+
+    // return success
+    public bool MoveObject(ObjectEntity obj, Vector3Int newPosition)
+    {
+        if (newPosition == obj.position)
+            return true;
+
+        Voxel newObjVoxel = VoxelAt(newPosition, true);
+        if (newObjVoxel.objectEntity != null)
+            return false;
+        newObjVoxel.objectEntity = obj;
+        // not necessary to call VoxelModified
+
+        Voxel oldObjVoxel = VoxelAt(obj.position, false);
+        if (oldObjVoxel != null)
+        {
+            oldObjVoxel.objectEntity = null;
+            VoxelModified(oldObjVoxel);
+        }
+        else
+            Debug.Log("This object wasn't in the voxel array!");
+        obj.position = newPosition;
+        ObjectModified(obj);
+        return true;
     }
 
     public IEnumerable<ObjectEntity> IterateObjects()
