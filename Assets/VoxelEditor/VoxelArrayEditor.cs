@@ -867,20 +867,14 @@ public class VoxelArrayEditor : VoxelArray
             createPosition += Voxel.DirectionForFaceI(faceNormal) / 2;
         createPosition -= new Vector3(0.5f, 0.5f, 0.5f);
 
-        // don't create the object at the same location of an existing object...
-        bool conflict = true;
-        while (conflict)
+        // don't create the object at the same location of an existing object
+        // keep moving up until an empty space is found
+        while (true)
         {
-            conflict = false;
-            foreach (ObjectEntity otherObj in IterateObjects())
-            {
-                if (otherObj.position == createPosition)
-                {
-                    createPosition += new Vector3(0, 1, 0);
-                    conflict = true;
-                    break; // back to beginning
-                }
-            }
+            Voxel voxel = VoxelAt(createPosition, false);
+            if (voxel == null || voxel.objectEntity == null)
+                break;
+            createPosition += new Vector3(0, 1, 0);
         }
         obj.position = VoxelArray.Vector3ToInt(createPosition);
 
