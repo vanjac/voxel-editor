@@ -396,18 +396,15 @@ public class VoxelArrayEditor : VoxelArray
         for (int i = selectedThings.Count - 1; i >= 0; i--)
         {
             Selectable thing = selectedThings[i];
-            if (!ThingInBoxSelection(thing, selectionBounds))
+            Substance thingSubstance = null;
+            if (thing is VoxelFaceReference)
+                thingSubstance = ((VoxelFaceReference)thing).voxel.substance;
+            else if (thing is ObjectEntity)
+                thingSubstance = selectObjectSubstance;
+            if (thingSubstance != boxSelectSubstance || !ThingInBoxSelection(thing, selectionBounds))
                 DeselectThing(thing);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
-        foreach (ObjectEntity obj in IterateObjects())
-        {
-            if (boxSelectSubstance == selectObjectSubstance
-                    && ThingInBoxSelection(obj.marker, selectionBounds))
-                SelectThing(obj.marker);
-            else
-                DeselectThing(obj.marker);
-        }
     }
 
     private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)
@@ -419,6 +416,13 @@ public class VoxelArrayEditor : VoxelArray
         if (node.size == 1)
         {
             Voxel voxel = node.voxel;
+            if (substance == selectObjectSubstance
+                && voxel.objectEntity != null
+                && ThingInBoxSelection(voxel.objectEntity.marker, bounds))
+            {
+                SelectThing(voxel.objectEntity.marker);
+                return;
+            }
             if (voxel.substance != substance)
                 return;
             for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
