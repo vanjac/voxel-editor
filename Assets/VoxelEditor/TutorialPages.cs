@@ -654,7 +654,7 @@ public class Tutorials
                         if (behavior is MoveBehavior)
                             foreach (Property prop in behavior.Properties())
                                 if (prop.name == "Toward"
-                                    && ((Target)(prop.value)).entityRef.entity == voxelArray.playerObject)
+                                    && ((Target)(prop.value)).entityRef.entity is PlayerObject)
                                     return TutorialAction.NEXT;
             return TutorialAction.NONE;
         }
@@ -703,7 +703,7 @@ public class Tutorials
                 if (e is Substance && e.sensor is TouchSensor)
                     foreach(Property prop in e.sensor.Properties())
                         if(prop.name == "Filter" && prop.value is ActivatedSensor.EntityFilter
-                            && ((ActivatedSensor.EntityFilter)(prop.value)).entityRef.entity == voxelArray.playerObject)
+                            && ((ActivatedSensor.EntityFilter)(prop.value)).entityRef.entity is PlayerObject)
                             return TutorialAction.NEXT;
             return TutorialAction.NONE;
         }
