@@ -19,7 +19,6 @@ public class PlayerObject : ObjectEntity
 
     protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray)
     {
-        Debug.Log("Create marker!");
         GameObject markerObject = Resources.Load<GameObject>("ObjectMarkers/Player");
         markerObject = GameObject.Instantiate(markerObject);
         return markerObject.AddComponent<ObjectMarker>();
@@ -27,7 +26,6 @@ public class PlayerObject : ObjectEntity
 
     protected override DynamicEntityComponent CreateEntityComponent(VoxelArray voxelArray)
     {
-        Debug.Log("Create component!");
         GameObject playerObject = Resources.Load<GameObject>("ObjectPrefabs/Player");
         playerObject = GameObject.Instantiate(playerObject);
         return playerObject.AddComponent<PlayerComponent>();
