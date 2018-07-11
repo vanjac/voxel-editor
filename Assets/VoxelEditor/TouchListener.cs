@@ -64,22 +64,6 @@ public class TouchListener : MonoBehaviour
                     hitFaceI = Voxel.FaceIForDirection(hit.normal);
                     if (hitFaceI == -1)
                         hitVoxel = null;
-
-                    if (hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
-                    {
-                        // allow moving axes through xray substances
-                        RaycastHit newHit;
-                        if (Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
-                            out newHit, Mathf.Infinity, NO_XRAY_MASK))
-                        {
-                            if (newHit.transform.tag == "MoveAxis")
-                            {
-                                hitVoxel = null;
-                                hitFaceI = -1;
-                                hitMoveAxis = newHit.transform.GetComponent<MoveAxis>();
-                            }
-                        }
-                    }
                 }
                 else if (hitObject.tag == "ObjectMarker")
                 {
@@ -88,6 +72,24 @@ public class TouchListener : MonoBehaviour
                 else if (hitObject.tag == "MoveAxis")
                 {
                     hitMoveAxis = hitObject.GetComponent<MoveAxis>();
+                }
+
+                if ((hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
+                    || (hitMarker != null && hitMarker.gameObject.layer == 8)) // xray layer, could also be selected
+                {
+                    // allow moving axes through xray substances
+                    RaycastHit newHit;
+                    if (Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
+                        out newHit, Mathf.Infinity, NO_XRAY_MASK))
+                    {
+                        if (newHit.transform.tag == "MoveAxis")
+                        {
+                            hitVoxel = null;
+                            hitFaceI = -1;
+                            hitMarker = null;
+                            hitMoveAxis = newHit.transform.GetComponent<MoveAxis>();
+                        }
+                    }
                 }
             }
             if (hitVoxel != null)
@@ -138,6 +140,7 @@ public class TouchListener : MonoBehaviour
                 {
                     currentTouchOperation = TouchOperation.SELECT;
                     voxelArray.TouchDown(hitMarker);
+                    selectingXRay = hitMarker.objectEntity.xRay;
                     UpdateZoomDepth();
                 }
                 else if (hitMoveAxis != null)

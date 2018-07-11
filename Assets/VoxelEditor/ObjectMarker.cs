@@ -58,11 +58,20 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         if (renderer != null)
         {
             if (selected)
+            {
                 SetAllMaterials(renderer, Voxel.selectedMaterial);
+                gameObject.layer = 8; // XRay layer, because selected material makes it transparent
+            }
             else if (objectEntity != null && objectEntity.xRay)
+            {
                 SetAllMaterials(renderer, Voxel.xRayMaterial);
+                gameObject.layer = 8; // XRay layer
+            }
             else
+            {
                 renderer.materials = storedMaterials;
+                gameObject.layer = 0; // default
+            }
         }
     }
 
