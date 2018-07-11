@@ -147,10 +147,12 @@ public class MapFileReader
         }
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances);
-        voxelArray.playerObject = new PlayerObject();
-        if (world["player"] != null)
-            ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
-        voxelArray.AddObject(voxelArray.playerObject);
+        if (fileWriterVersion <= 2 && world["player"] != null)
+        {
+            PlayerObject player = new PlayerObject();
+            ReadObjectEntity(world["player"].AsObject, player);
+            voxelArray.AddObject(player);
+        }
         if (world["objects"] != null)
         {
             foreach (JSONNode objNode in world["objects"].AsArray)

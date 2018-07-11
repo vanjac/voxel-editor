@@ -106,6 +106,7 @@ public class GameScripts
 
     public static PropertiesObjectType[] objects = new PropertiesObjectType[]
     {
+        PlayerObject.objectType,
         BallObject.objectType
     };
 
