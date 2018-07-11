@@ -335,8 +335,8 @@ public class MaterialSelectorGUI : GUIPanel
         else if (texture == whiteTexture)
         {
             // no color or texture
-            texture = GUIIconSet.instance.missingTexture;
-            alpha = true;
+            GUI.color = baseColor;
+            return;
         }
         GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
         GUI.color = baseColor;

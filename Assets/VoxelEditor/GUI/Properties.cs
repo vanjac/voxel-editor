@@ -226,7 +226,16 @@ public class PropertyGUIs
     {
         return (Property property) =>
         {
-            if (GUILayout.Button("Change " + property.name))
+            GUILayout.BeginHorizontal();
+            AlignedLabel(property);
+            GUILayout.FlexibleSpace();
+            // TODO: magic numbers
+            RectOffset tagFieldStyleMargin = tagFieldStyle.Value.margin;
+            Rect buttonRect = GUILayoutUtility.GetRect(150, 150);
+            Rect textureRect = new Rect(
+                buttonRect.xMin + 20, buttonRect.yMin + 20,
+                buttonRect.width - 20 * 2, buttonRect.height - 20 * 2);
+            if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
             {
                 MaterialSelectorGUI materialSelector
                     = GUIPanel.guiGameObject.AddComponent<MaterialSelectorGUI>();
@@ -241,6 +250,9 @@ public class PropertyGUIs
                     property.setter(mat); // skip equality check, it could be the same material with a different color
                 };
             }
+            MaterialSelectorGUI.DrawMaterialTexture((Material)property.value,
+                textureRect, allowAlpha);
+            GUILayout.EndHorizontal();
         };
     }
 
