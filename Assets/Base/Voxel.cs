@@ -449,4 +449,16 @@ public class Voxel : MonoBehaviour
             }
         }
     }
+
+    void OnBecameVisible()
+    {
+        if (substance != null && substance.component != null)
+            substance.component.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+    }
+
+    void OnBecameInvisible()
+    {
+        if (substance != null && substance.component != null)
+            substance.component.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+    }
 }

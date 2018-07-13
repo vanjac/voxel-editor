@@ -40,11 +40,12 @@ public class InCameraSensor : Sensor
 public class InCameraComponent : SensorComponent
 {
     public float maxDistance;
-    private bool visible, inRange;
+    private int visible = 0;
+    private bool inRange;
 
     public override bool IsOn()
     {
-        return visible && inRange;
+        return visible > 0 && inRange;
     }
 
     public override EntityComponent GetActivator()
@@ -60,11 +61,14 @@ public class InCameraComponent : SensorComponent
 
     void OnBecameVisible()
     {
-        visible = true;
+        visible++;
     }
 
     void OnBecameInvisible()
     {
-        visible = false;
+        if (visible > 0)
+            visible--;
+        else
+            Debug.Log("Visible count less than zero!");
     }
 }
