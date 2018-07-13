@@ -36,12 +36,14 @@ public class TapComponent : SensorComponent
         return activator;
     }
 
+    // called by GameTouchControl
     public void TapStart(EntityComponent player)
     {
         value = true;
         activator = player;
     }
 
+    // called by GameTouchControl
     public void TapEnd()
     {
         value = false;

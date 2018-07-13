@@ -406,15 +406,20 @@ public class Voxel : MonoBehaviour
         else
         {
             boxCollider.enabled = true;
-            if (substance == null && !IsEmpty())
+            if (substance == null && !IsEmpty()) // a wall
             {
                 renderer.enabled = true;
                 boxCollider.isTrigger = false;
             }
-            else
+            else if (substance != null)
             {
                 renderer.enabled = false;
                 boxCollider.isTrigger = true;
+            }
+            else // probably an object
+            {
+                renderer.enabled = false;
+                boxCollider.enabled = false;
             }
             meshCollider.sharedMesh = null;
             meshCollider.enabled = false;
