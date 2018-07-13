@@ -6,19 +6,35 @@ public class TouchSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Touch", "Active when touching or intersecting another object",
-        "Activator: colliding object\n\n"
+        "Properties:\n•  \"Filter\": The specific object or category of object which will activate the sensor.\n"
+        + "•  \"Min velocity\": The threshold for the relative velocity of the object when it enters the sensor.\n\n"
+        + "Activator: colliding object\n\n"
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));
+
+    private float minVelocity = 0;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
+    public override ICollection<Property> Properties()
+    {
+        return Property.JoinProperties(base.Properties(), new Property[]
+        {
+            new Property("Min velocity",
+                () => minVelocity,
+                v => minVelocity = (float)v,
+                PropertyGUIs.Float)
+        });
+    }
+
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
         TouchComponent component = gameObject.AddComponent<TouchComponent>();
         component.filter = filter;
+        component.minVelocity = minVelocity;
         return component;
     }
 }
@@ -26,12 +42,15 @@ public class TouchSensor : ActivatedSensor
 public class TouchComponent : SensorComponent
 {
     public ActivatedSensor.Filter filter;
-    private int touchCount = 0;
+    public float minVelocity;
+    // could have multiple instances of the same collider if it's touching multiple voxels
+    private List<Collider> touchingColliders = new List<Collider>();
+    private List<Collider> rejectedColliders = new List<Collider>();
     private EntityComponent activator;
 
     public override bool IsOn()
     {
-        return touchCount > 0;
+        return touchingColliders.Count > 0;
     }
 
     public override EntityComponent GetActivator()
@@ -39,29 +58,52 @@ public class TouchComponent : SensorComponent
         return activator;
     }
 
-    public void OnTriggerEnter(Collider c)
+    private void CollisionStart(Collider c, float relativeVelocity = -1)
     {
-        EntityComponent entity = EntityComponent.FindEntityComponent(c);
-        if (filter.EntityMatches(entity))
+        if (relativeVelocity == -1)
         {
-            touchCount++;
+            relativeVelocity = 0;
+            Rigidbody thisRigidbody = GetComponent<Rigidbody>();
+            if (c.attachedRigidbody != null && thisRigidbody != null)
+                // TODO: should directions be compared? maybe project vectors?
+                relativeVelocity = (c.attachedRigidbody.velocity - thisRigidbody.velocity).magnitude;
+        }
+
+        EntityComponent entity = EntityComponent.FindEntityComponent(c);
+        if (filter.EntityMatches(entity) && relativeVelocity >= minVelocity
+            && !rejectedColliders.Contains(c))
+        {
+            touchingColliders.Add(c);
             activator = entity;
         }
+        else
+            // could contain multiple instances if touching multiple voxels
+            rejectedColliders.Add(c);
+    }
+
+    private void CollisionEnd(Collider c)
+    {
+        if (!rejectedColliders.Remove(c))
+            touchingColliders.Remove(c);
+    }
+
+    public void OnTriggerEnter(Collider c)
+    {
+        CollisionStart(c);
     }
 
     public void OnTriggerExit(Collider c)
     {
-        if (filter.EntityMatches(EntityComponent.FindEntityComponent(c)))
-            touchCount--;
+        CollisionEnd(c);
     }
 
     public void OnCollisionEnter(Collision c)
     {
-        OnTriggerEnter(c.collider);
+        CollisionStart(c.collider, c.relativeVelocity.magnitude);
     }
 
     public void OnCollisionExit(Collision c)
     {
-        OnTriggerExit(c.collider);
+        CollisionEnd(c.collider);
     }
 }
