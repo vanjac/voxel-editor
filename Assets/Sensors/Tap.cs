@@ -10,19 +10,35 @@ public class TapSensor : Sensor
         + "Activator: player",
         "gesture-tap", typeof(TapSensor));
 
+    private float maxDistance = 3;
+
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
+    public override ICollection<Property> Properties()
+    {
+        return Property.JoinProperties(new Property[]
+        {
+            new Property("Max distance",
+                () => maxDistance,
+                v => maxDistance = (float)v,
+                PropertyGUIs.Float)
+        }, base.Properties());
+    }
+
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
-        return gameObject.AddComponent<TapComponent>();
+        var tap = gameObject.AddComponent<TapComponent>();
+        tap.maxDistance = maxDistance;
+        return tap;
     }
 }
 
 public class TapComponent : SensorComponent
 {
+    public float maxDistance;
     private bool value = false;
     private EntityComponent activator;
 
@@ -39,8 +55,11 @@ public class TapComponent : SensorComponent
     // called by GameTouchControl
     public void TapStart(EntityComponent player)
     {
-        value = true;
-        activator = player;
+        if ((player.transform.position - transform.position).magnitude <= maxDistance)
+        {
+            value = true;
+            activator = player;
+        }
     }
 
     // called by GameTouchControl
