@@ -69,12 +69,13 @@ public class GameScripts
     {
         PropertiesObjectType.NONE,
         TouchSensor.objectType,
-        TapSensor.objectType,
-        MotionSensor.objectType,
         InputThresholdSensor.objectType,
         ToggleSensor.objectType,
         PulseSensor.objectType,
-        DelaySensor.objectType
+        DelaySensor.objectType,
+        MotionSensor.objectType,
+        TapSensor.objectType,
+        InCameraSensor.objectType
     };
 
     public static BehaviorType[] behaviors = new BehaviorType[]
