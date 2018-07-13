@@ -70,6 +70,7 @@ public class GameScripts
         PropertiesObjectType.NONE,
         TouchSensor.objectType,
         TapSensor.objectType,
+        MotionSensor.objectType,
         InputThresholdSensor.objectType,
         ToggleSensor.objectType,
         PulseSensor.objectType,
