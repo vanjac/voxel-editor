@@ -53,7 +53,7 @@ public class GameTouchControl : MonoBehaviour
                     if (hitTapComponent != null)
                     {
                         touchedTapComponent = hitTapComponent;
-                        touchedTapComponent.TapStart(PlayerComponent.instance);
+                        touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
                     }
                 }
             }

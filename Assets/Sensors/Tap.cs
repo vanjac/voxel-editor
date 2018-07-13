@@ -53,9 +53,9 @@ public class TapComponent : SensorComponent
     }
 
     // called by GameTouchControl
-    public void TapStart(EntityComponent player)
+    public void TapStart(EntityComponent player, float distance)
     {
-        if ((player.transform.position - transform.position).magnitude <= maxDistance)
+        if (distance <= maxDistance)
         {
             value = true;
             activator = player;
