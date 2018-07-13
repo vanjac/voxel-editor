@@ -16,13 +16,7 @@ public class HealthText : MonoBehaviour
 
     void Update()
     {
-        Camera cam = Camera.current;
-        if (cam == null)
-            return;
-        Transform parent = cam.transform.parent;
-        if (parent == null)
-            return;
-        PlayerComponent player = parent.GetComponent<PlayerComponent>();
+        PlayerComponent player = PlayerComponent.instance;
         if (player == null)
             return;
         text.text = "Health: " + (int)(player.health);

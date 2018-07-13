@@ -34,5 +34,15 @@ public class PlayerObject : ObjectEntity
 
 public class PlayerComponent : DynamicEntityComponent
 {
+    public static PlayerComponent instance;
 
+    void Awake()
+    {
+        instance = this;
+    }
+
+    void OnDestroy()
+    {
+        instance = null;
+    }
 }

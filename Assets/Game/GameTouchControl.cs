@@ -53,10 +53,7 @@ public class GameTouchControl : MonoBehaviour
                     if (hitTapComponent != null)
                     {
                         touchedTapComponent = hitTapComponent;
-                        PlayerComponent player = null;
-                        if (cam.transform.parent != null)
-                            player = cam.transform.parent.GetComponent<PlayerComponent>();
-                        touchedTapComponent.TapStart(player);
+                        touchedTapComponent.TapStart(PlayerComponent.instance);
                     }
                 }
             }
