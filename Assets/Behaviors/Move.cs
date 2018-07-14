@@ -91,6 +91,6 @@ public class MoveComponent : BehaviorComponent
 
     public Vector3 GetMoveFixed()
     {
-        return target.directionFrom(transform.position) * speed * Time.fixedDeltaTime;
+        return target.DirectionFrom(transform.position) * speed * Time.fixedDeltaTime;
     }
 }

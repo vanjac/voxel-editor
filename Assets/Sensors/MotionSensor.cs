@@ -6,12 +6,13 @@ public class MotionSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Motion", "Detect when moving above a minimum velocity",
-        "Turns on when the object is both moving faster than the minimum velocity, "
+        "Turns on when the object is both moving faster than the minimum velocity in the given direction, "
         + "and rotating about any axis faster than the minimum angular velocity (degrees per second).",
         "speedometer", typeof(MotionSensor));
 
     private float minVelocity = 1;
     private float minAngularVelocity = 0;
+    private Target direction = new Target(null);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -29,7 +30,11 @@ public class MotionSensor : Sensor
             new Property("Min angular vel.",
                 () => minAngularVelocity,
                 v => minAngularVelocity = (float)v,
-                PropertyGUIs.Float)
+                PropertyGUIs.Float),
+            new Property("Direction",
+                () => direction,
+                v => direction = (Target)v,
+                PropertyGUIs.TargetDirectionFilter)
         }, base.Properties());
     }
 
@@ -38,6 +43,7 @@ public class MotionSensor : Sensor
         var motion = gameObject.AddComponent<MotionSensorComponent>();
         motion.minVelocity = minVelocity;
         motion.minAngularVelocity = minAngularVelocity;
+        motion.direction = direction;
         return motion;
     }
 }
@@ -45,6 +51,7 @@ public class MotionSensor : Sensor
 public class MotionSensorComponent : SensorComponent
 {
     public float minVelocity, minAngularVelocity;
+    public Target direction;
     private bool value = false;
 
     public override bool IsOn()
@@ -59,7 +66,8 @@ public class MotionSensorComponent : SensorComponent
         {
             bool aboveVel = rigidbody.velocity.magnitude >= minVelocity;
             bool aboveAngVel = Mathf.Rad2Deg * rigidbody.angularVelocity.magnitude >= minAngularVelocity;
-            value = aboveVel && aboveAngVel;
+            bool matchesDirection = direction.MatchesDirection(transform.position, rigidbody.velocity);
+            value = aboveVel && aboveAngVel && matchesDirection;
         }
         else
         {

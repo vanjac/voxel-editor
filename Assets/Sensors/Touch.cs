@@ -77,8 +77,9 @@ public class TouchComponent : SensorComponent
         }
 
         EntityComponent entity = EntityComponent.FindEntityComponent(c);
-        if (filter.EntityMatches(entity) && relativeVelocity.magnitude >= minVelocity
-            && MatchesDirection(relativeVelocity) && !rejectedColliders.Contains(c))
+        if (entity != null && filter.EntityMatches(entity) && relativeVelocity.magnitude >= minVelocity
+            && direction.MatchesDirection(entity.transform.position, relativeVelocity)
+            && !rejectedColliders.Contains(c))
         {
             touchingColliders.Add(c);
             activator = entity;
@@ -86,13 +87,6 @@ public class TouchComponent : SensorComponent
         else
             // could contain multiple instances if touching multiple voxels
             rejectedColliders.Add(c);
-    }
-
-    private bool MatchesDirection(Vector3 d)
-    {
-        if (direction.direction == -1)
-            return true;
-        return Vector3.Angle(direction.directionFrom(Vector3.zero), d) < 45;
     }
 
     private void CollisionEnd(Collider c)
