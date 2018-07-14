@@ -7,12 +7,14 @@ public class TouchSensor : ActivatedSensor
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Touch", "Active when touching or intersecting another object",
         "Properties:\n•  \"Filter\": The specific object or category of object which will activate the sensor.\n"
-        + "•  \"Min velocity\": The threshold for the relative velocity of the object when it enters the sensor.\n\n"
+        + "•  \"Min velocity\": The threshold for the relative velocity of the object when it enters the sensor.\n"
+        + "•  \"Direction\": The incoming direction of the object to activate the sensor.\n\n"
         + "Activator: colliding object\n\n"
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));
 
     private float minVelocity = 0;
+    private Target direction = new Target(null);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -26,7 +28,11 @@ public class TouchSensor : ActivatedSensor
             new Property("Min velocity",
                 () => minVelocity,
                 v => minVelocity = (float)v,
-                PropertyGUIs.Float)
+                PropertyGUIs.Float),
+            new Property("Direction",
+                () => direction,
+                v => direction = (Target)v,
+                PropertyGUIs.TargetDirectionFilter)
         });
     }
 
@@ -35,6 +41,7 @@ public class TouchSensor : ActivatedSensor
         TouchComponent component = gameObject.AddComponent<TouchComponent>();
         component.filter = filter;
         component.minVelocity = minVelocity;
+        component.direction = direction;
         return component;
     }
 }
@@ -43,6 +50,7 @@ public class TouchComponent : SensorComponent
 {
     public ActivatedSensor.Filter filter;
     public float minVelocity;
+    public Target direction;
     // could have multiple instances of the same collider if it's touching multiple voxels
     private List<Collider> touchingColliders = new List<Collider>();
     private List<Collider> rejectedColliders = new List<Collider>();
@@ -58,20 +66,19 @@ public class TouchComponent : SensorComponent
         return activator;
     }
 
-    private void CollisionStart(Collider c, float relativeVelocity = -1)
+    private void CollisionStart(Collider c, Vector3 relativeVelocity)
     {
-        if (relativeVelocity == -1)
+        if (relativeVelocity == Vector3.zero)
         {
-            relativeVelocity = 0;
             Rigidbody thisRigidbody = GetComponent<Rigidbody>();
             if (c.attachedRigidbody != null && thisRigidbody != null)
                 // TODO: should directions be compared? maybe project vectors?
-                relativeVelocity = (c.attachedRigidbody.velocity - thisRigidbody.velocity).magnitude;
+                relativeVelocity = c.attachedRigidbody.velocity - thisRigidbody.velocity;
         }
 
         EntityComponent entity = EntityComponent.FindEntityComponent(c);
-        if (filter.EntityMatches(entity) && relativeVelocity >= minVelocity
-            && !rejectedColliders.Contains(c))
+        if (filter.EntityMatches(entity) && relativeVelocity.magnitude >= minVelocity
+            && MatchesDirection(relativeVelocity) && !rejectedColliders.Contains(c))
         {
             touchingColliders.Add(c);
             activator = entity;
@@ -79,6 +86,13 @@ public class TouchComponent : SensorComponent
         else
             // could contain multiple instances if touching multiple voxels
             rejectedColliders.Add(c);
+    }
+
+    private bool MatchesDirection(Vector3 d)
+    {
+        if (direction.direction == -1)
+            return true;
+        return Vector3.Angle(direction.directionFrom(Vector3.zero), d) < 45;
     }
 
     private void CollisionEnd(Collider c)
@@ -89,7 +103,7 @@ public class TouchComponent : SensorComponent
 
     public void OnTriggerEnter(Collider c)
     {
-        CollisionStart(c);
+        CollisionStart(c, Vector3.zero);
     }
 
     public void OnTriggerExit(Collider c)
@@ -99,7 +113,7 @@ public class TouchComponent : SensorComponent
 
     public void OnCollisionEnter(Collision c)
     {
-        CollisionStart(c.collider, c.relativeVelocity.magnitude);
+        CollisionStart(c.collider, c.relativeVelocity);
     }
 
     public void OnCollisionExit(Collision c)

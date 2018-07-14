@@ -146,7 +146,7 @@ public struct Target
                 case 5:
                     return "North";
                 default:
-                    return "";
+                    return "None";
             }
     }
 }

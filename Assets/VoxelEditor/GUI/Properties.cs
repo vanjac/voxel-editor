@@ -313,4 +313,29 @@ public class PropertyGUIs
 
         GUI.color = baseColor;
     }
+
+    public static void TargetDirectionFilter(Property property)
+    {
+        var target = (Target)property.value;
+        string targetString = target.ToString();
+
+        if (target.entityRef.entity == null && target.direction == -1)
+            targetString = "Any";
+
+        GUILayout.BeginHorizontal();
+        AlignedLabel(property);
+        if (GUILayout.Button(targetString, GUI.skin.textField))
+        {
+            TargetGUI targetGUI = GUIPanel.guiGameObject.AddComponent<TargetGUI>();
+            targetGUI.title = property.name;
+            targetGUI.voxelArray = VoxelArrayEditor.instance;
+            targetGUI.allowNullTarget = true;
+            targetGUI.allowObjectTarget = false;
+            targetGUI.handler = (Target newTarget) =>
+            {
+                property.value = newTarget;
+            };
+        }
+        GUILayout.EndHorizontal();
+    }
 }

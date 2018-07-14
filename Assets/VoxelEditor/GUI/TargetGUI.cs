@@ -8,6 +8,7 @@ public class TargetGUI : GUIPanel
 
     public TargetHandler handler;
     public VoxelArrayEditor voxelArray;
+    public bool allowObjectTarget = true, allowNullTarget = false;
 
     public override Rect GetRect(float width, float height)
     {
@@ -19,7 +20,8 @@ public class TargetGUI : GUIPanel
         GUILayout.BeginHorizontal();
         GUILayout.BeginVertical();
         DirectionButtons();
-        if (GUILayout.Button("Pick object"))
+        GUILayout.BeginHorizontal();
+        if (allowObjectTarget && GUILayout.Button("Pick object"))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = voxelArray;
@@ -36,6 +38,12 @@ public class TargetGUI : GUIPanel
             };
             Destroy(this);
         }
+        if (allowNullTarget && GUILayout.Button("Any"))
+        {
+            handler(new Target(null));
+            Destroy(this);
+        }
+        GUILayout.EndHorizontal();
         GUILayout.EndVertical();
 
         GUILayout.BeginVertical();
