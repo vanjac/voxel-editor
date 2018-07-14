@@ -75,6 +75,7 @@ public class GameScripts
         DelaySensor.objectType,
         MotionSensor.objectType,
         TapSensor.objectType,
+        InRangeSensor.objectType,
         InCameraSensor.objectType
     };
 
