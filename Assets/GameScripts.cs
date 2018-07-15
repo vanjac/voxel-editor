@@ -88,7 +88,8 @@ public class GameScripts
         SpinBehavior.objectType,
         TeleportBehavior.objectType,
         HurtHealBehavior.objectType,
-        WaterBehavior.objectType
+        WaterBehavior.objectType,
+        LightBehavior.objectType
     };
 
     public static PropertiesObjectType[] objects = new PropertiesObjectType[]
