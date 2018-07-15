@@ -167,6 +167,7 @@ public class FileDropdownGUI : GUIPanel
         {
             string path = WorldFiles.GetFilePath(fileName);
             ShareMap.ShareAndroid(path);
+            Destroy(this);
         }
 #endif
     }
