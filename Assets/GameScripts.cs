@@ -107,6 +107,26 @@ public class GameScripts
             ball.behaviors.Add(new SolidBehavior());
             return ball;
         }),
+        new PropertiesObjectType("Light",
+            "",
+            "lightbulb-on",
+            typeof(BallObject),
+            () => {
+                var ball = new BallObject();
+                foreach (Property prop in ball.Properties())
+                {
+                    if (prop.name == "Material")
+                    {
+                        Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
+                        lightMat.color = new Color(1, 1, 1, 0.25f);
+                        prop.setter(lightMat);
+                        break;
+                    }
+                }
+                ball.xRay = true;
+                ball.behaviors.Add(new LightBehavior());
+                return ball;
+            }),
         new PropertiesObjectType("Neuron",
             "Logic component, glows when on.",
             "thought-bubble",
