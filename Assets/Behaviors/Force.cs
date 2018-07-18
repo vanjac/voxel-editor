@@ -80,22 +80,32 @@ public class ForceComponent : BehaviorComponent
     public Target target;
 
     private Rigidbody rigidBody;
+    private NewRigidbodyController player;
 
     public override void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
+        player = GetComponent<NewRigidbodyController>();
         base.Start();
     }
 
     public override void BehaviorEnabled()
     {
         if ((forceMode == ForceMode.Impulse || forceMode == ForceMode.VelocityChange) && rigidBody != null)
+        {
             rigidBody.AddForce(target.DirectionFrom(transform.position) * strength, forceMode);
+            if (player != null)
+                player.disableGroundCheck = true;
+        }
     }
 
     void FixedUpdate()
     {
         if ((forceMode == ForceMode.Force || forceMode == ForceMode.Acceleration) && rigidBody != null)
+        {
             rigidBody.AddForce(target.DirectionFrom(transform.position) * strength, forceMode);
+            if (player != null)
+                player.disableGroundCheck = true;
+        }
     }
 }
