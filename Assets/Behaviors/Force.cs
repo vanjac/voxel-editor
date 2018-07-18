@@ -14,11 +14,13 @@ public class ForceBehavior : EntityBehavior
         "Only works for objects with the Physics behavior.\n"
         + "\"Impulse\" mode will cause the force to applied once the instant the behavior is enabled.\n"
         + "\"Continuous\" mode will cause the force to be continuously applied while the behavior is enabled.\n"
-        + "If \"Ignore mass\" is enabled, the force will be scaled to compensate for the mass of the object.",
+        + "If \"Ignore mass\" is enabled, the force will be scaled to compensate for the mass of the object.\n"
+        + "If \"Stop object first\" is enabled, any existing motion will be stopped before applying the force.",
         "rocket", typeof(ForceBehavior));
 
     private ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;
     private bool ignoreMass = false;
+    private bool stopObjectFirst = false;
     private float strength = 10;
     private Target target = new Target(3); // up
 
@@ -38,6 +40,10 @@ public class ForceBehavior : EntityBehavior
             new Property("Ignore mass?",
                 () => ignoreMass,
                 v => ignoreMass = (bool)v,
+                PropertyGUIs.Toggle),
+            new Property("Stop object first?",
+                () => stopObjectFirst,
+                v => stopObjectFirst = (bool)v,
                 PropertyGUIs.Toggle),
             new Property("Strength",
                 () => strength,
@@ -67,6 +73,7 @@ public class ForceBehavior : EntityBehavior
             else
                 force.forceMode = ForceMode.Force;
         }
+        force.stopObjectFirst = stopObjectFirst;
         force.strength = strength;
         force.target = target;
         return force;
@@ -78,6 +85,7 @@ public class ForceComponent : BehaviorComponent
     public ForceMode forceMode;
     public float strength;
     public Target target;
+    public bool stopObjectFirst;
 
     private Rigidbody rigidBody;
     private NewRigidbodyController player;
@@ -91,6 +99,8 @@ public class ForceComponent : BehaviorComponent
 
     public override void BehaviorEnabled()
     {
+        if (stopObjectFirst && rigidBody != null)
+            rigidBody.velocity = Vector3.zero;
         if ((forceMode == ForceMode.Impulse || forceMode == ForceMode.VelocityChange) && rigidBody != null)
         {
             rigidBody.AddForce(target.DirectionFrom(transform.position) * strength, forceMode);
