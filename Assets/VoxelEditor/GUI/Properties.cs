@@ -47,6 +47,24 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
+    public static void Enum(Property property)
+    {
+        System.Enum e = (System.Enum)property.value;
+        var buttonStyle = GUI.skin.GetStyle("button_tab");
+        GUILayout.BeginHorizontal();
+        foreach (var enumValue in System.Enum.GetValues(e.GetType()))
+        {
+            string name = enumValue.ToString();
+            // sentence case
+            name = Char.ToUpper(name[0]) + name.Substring(1).ToLower();
+            if (enumValue.Equals(e))
+                GUIUtils.HighlightedButton(name, buttonStyle);
+            else if (GUILayout.Button(name, buttonStyle))
+                property.value = enumValue;
+        }
+        GUILayout.EndHorizontal();
+    }
+
     public static void Float(Property property)
     {
         float fValue = (float)property.value;

@@ -89,6 +89,7 @@ public class GameScripts
         TeleportBehavior.objectType,
         HurtHealBehavior.objectType,
         WaterBehavior.objectType,
+        ForceBehavior.objectType,
         LightBehavior.objectType
     };
 
