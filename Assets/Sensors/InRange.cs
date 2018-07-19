@@ -6,6 +6,7 @@ public class InRangeSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "In Range", "Detect objects within a certain distance",
+        "Activator: object in range",
         "radar", typeof(InRangeSensor));
 
     private float distance = 5;
@@ -70,5 +71,12 @@ public class InRangeComponent : SensorComponent
         if (sphereTouchComponent == null)
             return false;
         return sphereTouchComponent.IsOn();
+    }
+
+    public override EntityComponent GetActivator()
+    {
+        if (sphereTouchComponent == null)
+            return null;
+        return sphereTouchComponent.GetActivator();
     }
 }
