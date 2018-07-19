@@ -48,10 +48,9 @@ public class InRangeComponent : SensorComponent
         // set up sphere
         // sphereObject is NOT a child of the entity component
         // if it was, the entity object and components like TouchComponent would receive trigger events
-        sphereObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphereObject = new GameObject();
         sphereObject.transform.position = transform.position;
-        Destroy(sphereObject.GetComponent<MeshRenderer>());
-        var sphereCollider = sphereObject.GetComponent<SphereCollider>();
+        var sphereCollider = sphereObject.AddComponent<SphereCollider>();
         sphereCollider.isTrigger = true;
         sphereCollider.radius = distance;
 
