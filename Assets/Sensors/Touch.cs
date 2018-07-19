@@ -50,7 +50,7 @@ public class TouchComponent : SensorComponent
 {
     public ActivatedSensor.Filter filter;
     public float minVelocity;
-    public Target direction;
+    public Target direction = new Target(null);
     // could have multiple instances of the same collider if it's touching multiple voxels
     private List<Collider> touchingColliders = new List<Collider>();
     private List<Collider> rejectedColliders = new List<Collider>();
