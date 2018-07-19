@@ -211,7 +211,10 @@ public class MapFileReader
             if (matObject["color"] != null)
             {
                 Color color = ReadColor(matObject["color"].AsArray);
-                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, color.a != 1);
+                bool alpha = color.a != 1;
+                if (matObject["alpha"] != null)
+                    alpha = matObject["alpha"].AsBool; // new with version 4
+                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
                 mat.color = color;
                 return mat;
             }

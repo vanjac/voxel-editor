@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 3;
+    public const int VERSION = 4;
     private const int FILE_MIN_READER_VERSION = 3;
 
     private string fileName;
@@ -106,6 +106,7 @@ public class MapFileWriter
         {
             materialObject["mode"] = ResourcesDirectory.GetCustomMaterialColorMode(material).ToString();
             materialObject["color"] = WriteColor(material.color);
+            materialObject["alpha"] = ResourcesDirectory.GetCustomMaterialIsTransparent(material);
         }
         else
         {

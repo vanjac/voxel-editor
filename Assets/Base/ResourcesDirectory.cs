@@ -97,4 +97,9 @@ public class ResourcesDirectory
         string name = material.name.Split(':')[1];
         return (ColorMode)System.Enum.Parse(typeof(ColorMode), name);
     }
+
+    public static bool GetCustomMaterialIsTransparent(Material material)
+    {
+        return material.renderQueue > 2000;
+    }
 }
