@@ -9,6 +9,7 @@ public class TouchListener : MonoBehaviour
     private const float MAX_ZOOM = 20.0f;
     private const float MIN_ZOOM = .05f;
     private const int NO_XRAY_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
+    private const int NO_TRANSPARENT_MASK = NO_XRAY_MASK & ~(1 << 10); // everything but XRay and SelectedObject
 
     public enum TouchOperation
     {
@@ -74,13 +75,13 @@ public class TouchListener : MonoBehaviour
                     hitMoveAxis = hitObject.GetComponent<MoveAxis>();
                 }
 
-                if ((hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
-                    || (hitMarker != null && hitMarker.gameObject.layer == 8)) // xray layer, could also be selected
+                if ( (hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
+                    || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10)) ) // xray or SelectedObject layer
                 {
                     // allow moving axes through xray substances
                     RaycastHit newHit;
                     if (Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
-                        out newHit, Mathf.Infinity, NO_XRAY_MASK))
+                        out newHit, Mathf.Infinity, NO_TRANSPARENT_MASK))
                     {
                         if (newHit.transform.tag == "MoveAxis")
                         {
@@ -96,6 +97,11 @@ public class TouchListener : MonoBehaviour
             {
                 lastHitVoxel = hitVoxel;
                 lastHitFaceI = hitFaceI;
+            }
+            else if (hitMarker != null)
+            {
+                lastHitVoxel = null;
+                lastHitFaceI = -1;
             }
 
             if (touch.phase == TouchPhase.Began)
@@ -151,11 +157,11 @@ public class TouchListener : MonoBehaviour
                         movingAxis = hitMoveAxis;
                         movingAxis.TouchDown(touch);
                     }
-                    else if (touch.tapCount == 2)
+                    else if (touch.tapCount == 2 && lastHitVoxel != null)
                     {
                         voxelArray.DoubleTouch(lastHitVoxel, lastHitFaceI);
                     }
-                    else if (touch.tapCount == 3)
+                    else if (touch.tapCount == 3 && lastHitVoxel != null)
                     {
                         voxelArray.TripleTouch(lastHitVoxel, lastHitFaceI);
                     }

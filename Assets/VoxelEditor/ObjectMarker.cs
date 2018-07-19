@@ -60,7 +60,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
             if (selected)
             {
                 SetAllMaterials(renderer, Voxel.selectedMaterial);
-                gameObject.layer = 8; // XRay layer, because selected material makes it transparent
+                gameObject.layer = 10; // SelectedObject layer, because selected material makes it transparent
             }
             else if (objectEntity != null && objectEntity.xRay)
             {
