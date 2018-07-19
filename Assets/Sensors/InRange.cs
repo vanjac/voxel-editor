@@ -56,6 +56,8 @@ public class InRangeComponent : SensorComponent
 
         sphereTouchComponent = sphereObject.AddComponent<TouchComponent>();
         sphereTouchComponent.filter = filter;
+        // entity can't activate its own In Range sensor
+        sphereTouchComponent.ignoreEntity = GetComponent<EntityComponent>();
     }
 
     void LateUpdate()
