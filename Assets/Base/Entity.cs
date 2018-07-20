@@ -244,7 +244,9 @@ public abstract class Entity : PropertiesObject
         };
     }
 
-    public abstract void InitEntityGameObject(VoxelArray voxelArray);
+    // storeComponent: whether the "component" variable should be set
+    // this should usually be true, but false for clones
+    public abstract void InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true);
 
     public abstract bool AliveInEditor();
 

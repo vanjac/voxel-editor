@@ -39,14 +39,15 @@ public abstract class ObjectEntity : DynamicEntity
         marker.tag = "ObjectMarker";
     }
 
-    public override void InitEntityGameObject(VoxelArray voxelArray)
+    public override void InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
     {
         var c = CreateEntityComponent(voxelArray);
         c.transform.parent = voxelArray.transform;
         c.transform.position = position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
         c.entity = this;
         c.health = health;
-        component = c;
+        if (storeComponent)
+            component = c;
     }
 
     protected abstract ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray);
