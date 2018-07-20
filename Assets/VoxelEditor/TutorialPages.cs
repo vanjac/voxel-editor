@@ -616,7 +616,7 @@ public class Tutorials
     private class TutorialSubstanceAddBehavior : TutorialSubstancePage
     {
         public TutorialSubstanceAddBehavior()
-            : base("<i>Try adding a Move behavior to the Substance.</i>",
+            : base("<i>Try adding a Move behavior to the Substance.</i> Notice that behaviors are organized into multiple categories.",
             highlight: "add behavior") { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
