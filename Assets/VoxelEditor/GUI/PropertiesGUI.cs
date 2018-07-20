@@ -300,6 +300,7 @@ public class NewBehaviorGUI : GUIPanel
     void Start()
     {
         typePicker = gameObject.AddComponent<TypePickerGUI>();
+        typePicker.categoryNames = GameScripts.behaviorTabNames;
         UpdateBehaviorList();
         typePicker.handler = (PropertiesObjectType type) =>
         {
@@ -318,23 +319,29 @@ public class NewBehaviorGUI : GUIPanel
     {
         if (targetEntityIsActivator)
         {
-            typePicker.categories = new PropertiesObjectType[][] { GameScripts.behaviors };
+            // all behaviors
+            typePicker.categories = GameScripts.behaviorTabs;
             return;
         }
-        var filteredTypes = new List<BehaviorType>();
-        foreach(BehaviorType type in GameScripts.behaviors) {
-            if (targetEntity == null)
+        typePicker.categories = new PropertiesObjectType[GameScripts.behaviorTabs.Length][];
+        for (int tabI = 0; tabI < GameScripts.behaviorTabs.Length; tabI++)
+        {
+            var filteredTypes = new List<BehaviorType>();
+            foreach (BehaviorType type in GameScripts.behaviorTabs[tabI])
             {
-                if (type.rule(self))
-                    filteredTypes.Add(type);
+                if (targetEntity == null)
+                {
+                    if (type.rule(self))
+                        filteredTypes.Add(type);
+                }
+                else
+                {
+                    if (type.rule(targetEntity))
+                        filteredTypes.Add(type);
+                }
             }
-            else
-            {
-                if (type.rule(targetEntity))
-                    filteredTypes.Add(type);
-            }
+            typePicker.categories[tabI] = filteredTypes.ToArray();
         }
-        typePicker.categories = new PropertiesObjectType[][] { filteredTypes.ToArray() };
     }
 
     void OnDestroy()

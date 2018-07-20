@@ -92,6 +92,28 @@ public class GameScripts
         LightBehavior.objectType
     };
 
+    public static string[] behaviorTabNames = new string[] { "General", "Physics" };
+
+    public static BehaviorType[][] behaviorTabs = new BehaviorType[][]
+    {
+        new BehaviorType[]
+        {
+            VisibleBehavior.objectType,
+            MoveBehavior.objectType,
+            SpinBehavior.objectType,
+            TeleportBehavior.objectType,
+            HurtHealBehavior.objectType,
+            LightBehavior.objectType
+        },
+        new BehaviorType[]
+        {
+            SolidBehavior.objectType,
+            PhysicsBehavior.objectType,
+            WaterBehavior.objectType,
+            ForceBehavior.objectType
+        },
+    };
+
     public static PropertiesObjectType[] objects = new PropertiesObjectType[]
     {
         PlayerObject.objectType,

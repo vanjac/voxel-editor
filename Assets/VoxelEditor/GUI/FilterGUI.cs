@@ -48,7 +48,8 @@ public class FilterGUI : GUIPanel
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Filter by behavior type";
-            picker.categories = new PropertiesObjectType[][] { GameScripts.behaviors };
+            picker.categoryNames = GameScripts.behaviorTabNames;
+            picker.categories = GameScripts.behaviorTabs;
             picker.handler = (PropertiesObjectType type) =>
             {
                 handler(new ActivatedSensor.EntityTypeFilter(type));
