@@ -12,7 +12,7 @@ public class CloneBehavior : TeleportBehavior
         // based on TeleportBehavior:
         + "Properties:\n•  \"To\": Target location for clone\n"
         + "•  \"Relative to\": Optional origin location. "
-        + "If specified, the clone will move from the original object by the difference between the origin and target location.",
+        + "If specified, the clone will move from the original object by the difference between the target location and origin.",
         "content-copy", typeof(CloneBehavior));
 
     public override BehaviorType BehaviorObjectType()
