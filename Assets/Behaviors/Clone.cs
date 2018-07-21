@@ -6,11 +6,13 @@ public class CloneBehavior : TeleportBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Clone", "Create a copy of the object",
-        "A new clone is created immediately when the behavior is activated.\n\n"
+        "A new clone is created immediately when the behavior is activated. "
+        + "The clone will start with the original health of the object. "
+        + "Sensors which filter for a specific object will also activate for any of its clones.\n\n"
         // based on TeleportBehavior:
         + "Properties:\n•  \"To\": Target location for clone\n"
-        + "•  \"Relative to\": Optional origin location. If specified, instead of appearing directly at the \"To\" target,"
-        + " the clone will move from the original object by the difference between \"Relative to\" and \"To\" targets.",
+        + "•  \"Relative to\": Optional origin location. "
+        + "If specified, the clone will move from the original object by the difference between the origin and target location.",
         "content-copy", typeof(CloneBehavior));
 
     public override BehaviorType BehaviorObjectType()
