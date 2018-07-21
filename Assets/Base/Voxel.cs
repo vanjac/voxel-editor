@@ -230,6 +230,15 @@ public class Voxel : MonoBehaviour
         // does NOT clear objectEntity!
     }
 
+    public Voxel Clone()
+    {
+        Voxel vClone = Instantiate<Voxel>(this);
+        for (int i = 0; i < 6; i++)
+            vClone.faces[i] = faces[i];
+        // don't copy objectEntity or substance
+        return vClone;
+    }
+
     public void UpdateVoxel()
     {
         UpdateHighlight();
