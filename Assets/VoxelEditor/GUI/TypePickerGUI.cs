@@ -37,8 +37,16 @@ public class TypePickerGUI : GUIPanel
     public override void WindowGUI()
     {
         if (categoryNames.Length > 1)
-            selectedCategory = GUILayout.SelectionGrid(selectedCategory, categoryNames,
+        {
+            int tab = GUILayout.SelectionGrid(selectedCategory, categoryNames,
                 categoryNames.Length, GUI.skin.GetStyle("button_tab"));
+            if (tab != selectedCategory)
+            {
+                selectedCategory = tab;
+                scroll = Vector2.zero;
+                scrollVelocity = Vector2.zero;
+            }
+        }
 
         var categoryItems = categories[selectedCategory];
         scroll = GUILayout.BeginScrollView(scroll);
