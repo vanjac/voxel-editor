@@ -11,8 +11,8 @@ public class TeleportBehavior : EntityBehavior
         + " object will move the distance between \"Relative to\" and \"To\" targets.",
         "send", typeof(TeleportBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private EntityReference target = new EntityReference(null);
-    private EntityReference origin = new EntityReference(null);
+    protected EntityReference target = new EntityReference(null);
+    protected EntityReference origin = new EntityReference(null);
 
     public override BehaviorType BehaviorObjectType()
     {

@@ -22,7 +22,7 @@ public class Substance : DynamicEntity
         return objectType;
     }
 
-    public override void InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
+    public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
     {
         GameObject substanceObject = new GameObject();
         substanceObject.transform.parent = voxelArray.transform;
@@ -32,6 +32,7 @@ public class Substance : DynamicEntity
         component.health = health;
         if (storeComponent)
             this.component = component;
+        return component;
     }
 
     public override bool AliveInEditor()
