@@ -235,7 +235,9 @@ public class Voxel : MonoBehaviour
         Voxel vClone = Instantiate<Voxel>(this);
         for (int i = 0; i < 6; i++)
             vClone.faces[i] = faces[i];
-        // don't copy objectEntity or substance
+        // don't add to substance
+        vClone._substance = _substance;
+        // don't copy objectEntity
         return vClone;
     }
 
@@ -461,13 +463,14 @@ public class Voxel : MonoBehaviour
 
     void OnBecameVisible()
     {
-        if (substance != null && substance.component != null)
-            substance.component.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+        if (substance != null)
+            // don't use substance.component (doesn't work for clones)
+            transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 
     void OnBecameInvisible()
     {
-        if (substance != null && substance.component != null)
-            substance.component.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+        if (substance != null)
+            transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 }
