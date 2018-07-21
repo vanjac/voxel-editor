@@ -25,6 +25,7 @@ public class Substance : DynamicEntity
     public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
     {
         GameObject substanceObject = new GameObject();
+        substanceObject.name = "Substance";
         substanceObject.transform.parent = voxelArray.transform;
         substanceObject.transform.position = CalculateCenterPoint();
         foreach (Voxel voxel in voxels)

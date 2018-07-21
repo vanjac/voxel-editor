@@ -48,6 +48,7 @@ public class BallObject : ObjectEntity
     private GameObject ObjectTemplate(VoxelArray voxelArray)
     {
         GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        obj.name = "Ball";
         obj.GetComponent<MeshRenderer>().materials = new Material[] { material };
         return obj;
     }

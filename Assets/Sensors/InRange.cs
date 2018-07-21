@@ -49,6 +49,7 @@ public class InRangeComponent : SensorComponent
         // sphereObject is NOT a child of the entity component
         // if it was, the entity object and components like TouchComponent would receive trigger events
         sphereObject = new GameObject();
+        sphereObject.name = "InRange sensor for " + gameObject.name;
         sphereObject.transform.position = transform.position;
         var sphereCollider = sphereObject.AddComponent<SphereCollider>();
         sphereCollider.isTrigger = true;
