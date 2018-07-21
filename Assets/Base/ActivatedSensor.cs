@@ -25,7 +25,7 @@ public abstract class ActivatedSensor : Sensor
         {
             if (entityComponent == null)
                 return false;
-            return entityComponent.entity == entityRef.entity;
+            return entityComponent.entity == entityRef.entity; // also matches clones
         }
 
         public override string ToString()
