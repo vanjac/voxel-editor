@@ -13,7 +13,10 @@ public class CloneBehavior : TeleportBehavior
         + "Properties:\n•  \"To\": Target location for clone\n"
         + "•  \"Relative to\": Optional origin location. "
         + "If specified, the clone will move from the original object by the difference between the target location and origin.",
-        "content-copy", typeof(CloneBehavior));
+        "content-copy", typeof(CloneBehavior),
+        BehaviorType.AndRule(
+            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
     public override BehaviorType BehaviorObjectType()
     {
