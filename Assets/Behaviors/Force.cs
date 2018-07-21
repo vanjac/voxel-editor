@@ -16,7 +16,7 @@ public class ForceBehavior : EntityBehavior
         + "\"Continuous\" mode will cause the force to be continuously applied while the behavior is enabled.\n"
         + "If \"Ignore mass\" is enabled, the force will be scaled to compensate for the mass of the object.\n"
         + "If \"Stop object first\" is enabled, any existing motion will be stopped before applying the force.",
-        "rocket", typeof(ForceBehavior));
+        "rocket", typeof(ForceBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;
     private bool ignoreMass = false;
