@@ -5,9 +5,12 @@ using UnityEngine;
 public class CloneBehavior : TeleportBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Clone", "Create a copy of the object at its original position",
-        "A new clone is created immediately when the behavior is activated. "
-        + "The clone is created at the object's original position, with its original health.",
+        "Clone", "Create a copy of the object",
+        "A new clone is created immediately when the behavior is activated.\n\n"
+        // based on TeleportBehavior:
+        + "Properties:\n•  \"To\": Target location for clone\n"
+        + "•  \"Relative to\": Optional origin location. If specified, instead of appearing directly at the \"To\" target,"
+        + " the clone will move from the original object by the difference between \"Relative to\" and \"To\" targets.",
         "content-copy", typeof(CloneBehavior));
 
     public override BehaviorType BehaviorObjectType()
