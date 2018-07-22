@@ -10,19 +10,6 @@ public class EntityReferencePropertyManager : MonoBehaviour
         public Entity sourceEntity;
         public Entity targetEntity;
 
-        public static Vector3 EntityPosition(Entity entity)
-        {
-            if (entity is Substance)
-            {
-                return ((Substance)entity).CalculateCenterPoint();
-            }
-            else if (entity is ObjectEntity)
-            {
-                return ((ObjectEntity)entity).marker.transform.position;
-            }
-            return Vector3.zero;
-        }
-
         void Start()
         {
             if (sourceEntity == null || targetEntity == null)
@@ -32,8 +19,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
             line.startWidth = line.endWidth = 0.1f;
             line.material = _lineMaterial;
             line.startColor = line.endColor = color;
-            line.SetPosition(0, EntityPosition(sourceEntity));
-            line.SetPosition(1, EntityPosition(targetEntity));
+            line.SetPosition(0, sourceEntity.PositionInEditor());
+            line.SetPosition(1, targetEntity.PositionInEditor());
         }
     }
 
@@ -43,8 +30,6 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static List<Entity> targetEntities = new List<Entity>();
     private static Entity behaviorTarget;
     private static int currentTargetEntityI = -1;
-
-    private static List<GameObject> behaviorPreviewObjects = new List<GameObject>();
 
     private static Material _lineMaterial;
     public Material lineMaterial;
@@ -78,9 +63,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
                     foreach (Voxel v in ((Substance)currentEntity).voxels)
                         v.UpdateHighlight();
                 }
-                foreach (GameObject obj in behaviorPreviewObjects)
-                    Destroy(obj);
-                behaviorPreviewObjects.Clear();
+                EntityPreviewManager.EntityDeselected();
             }
             if (entity != null)
             {
@@ -91,19 +74,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
                     foreach (Voxel v in ((Substance)entity).voxels)
                         v.UpdateHighlight();
                 }
-                foreach (EntityBehavior behavior in entity.behaviors)
-                {
-                    if (System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null)
-                    {
-                        var previewObj = new GameObject();
-                        if (behavior.targetEntity.entity != null)
-                            previewObj.transform.position = EntityReferenceLine.EntityPosition(behavior.targetEntity.entity);
-                        else
-                            previewObj.transform.position = EntityReferenceLine.EntityPosition(entity);
-                        behavior.MakeComponent(previewObj);
-                        behaviorPreviewObjects.Add(previewObj);
-                    }
-                }
+                EntityPreviewManager.EntitySelected(entity);
             }
         }
         currentEntity = entity;

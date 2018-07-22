@@ -248,6 +248,7 @@ public abstract class Entity : PropertiesObject
     // this should usually be true, but false for clones
     public abstract EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true);
 
+    public abstract Vector3 PositionInEditor();
     public abstract bool AliveInEditor();
 
     public virtual Entity Clone()

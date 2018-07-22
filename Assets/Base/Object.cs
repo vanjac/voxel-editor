@@ -26,6 +26,11 @@ public abstract class ObjectEntity : DynamicEntity
             marker.UpdateMarker();
     }
 
+    public override Vector3 PositionInEditor()
+    {
+        return position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
+    }
+
     public override bool AliveInEditor()
     {
         return marker != null;
@@ -43,7 +48,7 @@ public abstract class ObjectEntity : DynamicEntity
     {
         var c = CreateEntityComponent(voxelArray);
         c.transform.parent = voxelArray.transform;
-        c.transform.position = position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
+        c.transform.position = PositionInEditor();
         c.entity = this;
         c.health = health;
         if (storeComponent)

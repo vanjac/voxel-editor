@@ -44,8 +44,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     public void UpdateMarker()
     {
-        transform.position = objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f)
-            + objectEntity.PositionOffset();
+        transform.position = objectEntity.PositionInEditor();
         UpdateMaterials();
     }
 

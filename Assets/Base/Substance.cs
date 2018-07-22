@@ -27,7 +27,7 @@ public class Substance : DynamicEntity
         GameObject substanceObject = new GameObject();
         substanceObject.name = "Substance";
         substanceObject.transform.parent = voxelArray.transform;
-        substanceObject.transform.position = CalculateCenterPoint();
+        substanceObject.transform.position = PositionInEditor();
         foreach (Voxel voxel in voxels)
         {
             if (storeComponent)
@@ -75,7 +75,7 @@ public class Substance : DynamicEntity
             v.UpdateVoxel();
     }
 
-    public Vector3 CalculateCenterPoint()
+    public override Vector3 PositionInEditor()
     {
         Bounds voxelBounds = new Bounds();
         foreach (Voxel voxel in voxels)
