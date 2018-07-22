@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[EditorPreviewBehavior]
 public class LightBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(

@@ -10,7 +10,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         public Entity sourceEntity;
         public Entity targetEntity;
 
-        private Vector3 EntityPosition(Entity entity)
+        public static Vector3 EntityPosition(Entity entity)
         {
             if (entity is Substance)
             {
@@ -44,6 +44,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static Entity behaviorTarget;
     private static int currentTargetEntityI = -1;
 
+    private static EditorPreviewEntity editorPreviewEntity;
+
     private static Material _lineMaterial;
     public Material lineMaterial;
 
@@ -67,17 +69,33 @@ public class EntityReferencePropertyManager : MonoBehaviour
         }
         if (currentEntity != entity)
         {
-            if (currentEntity != null && currentEntity is Substance)
+            if (currentEntity != null)
             {
-                ((Substance)currentEntity).highlight = Color.clear;
-                foreach (Voxel v in ((Substance)currentEntity).voxels)
-                    v.UpdateHighlight();
+                // entity deselected
+                if (currentEntity is Substance)
+                {
+                    ((Substance)currentEntity).highlight = Color.clear;
+                    foreach (Voxel v in ((Substance)currentEntity).voxels)
+                        v.UpdateHighlight();
+                }
+                Destroy(editorPreviewEntity.component.gameObject);
+                editorPreviewEntity = null;
             }
-            if (entity != null && entity is Substance)
+            if (entity != null)
             {
-                ((Substance)entity).highlight = Color.white;
-                foreach (Voxel v in ((Substance)entity).voxels)
-                    v.UpdateHighlight();
+                // entity selected
+                if (entity is Substance)
+                {
+                    ((Substance)entity).highlight = Color.white;
+                    foreach (Voxel v in ((Substance)entity).voxels)
+                        v.UpdateHighlight();
+                }
+                editorPreviewEntity = new EditorPreviewEntity();
+                foreach (EntityBehavior behavior in entity.behaviors)
+                    if (System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null)
+                        editorPreviewEntity.behaviors.Add(behavior);
+                editorPreviewEntity.position = EntityReferenceLine.EntityPosition(entity);
+                editorPreviewEntity.InitEntityGameObject(VoxelArrayEditor.instance, true);
             }
         }
         currentEntity = entity;
