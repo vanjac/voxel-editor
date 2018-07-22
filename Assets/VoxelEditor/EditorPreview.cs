@@ -40,8 +40,10 @@ public class EntityPreviewManager
         behaviorPreviewObjects.Clear();
     }
 
-    public static void EntityUpdated(Entity entity)
+    public static void BehaviorUpdated(Entity entity, EntityBehavior behavior)
     {
+        if (!IsEditorPreviewBehavior(behavior))
+            return;
         EntityDeselected();
         EntitySelected(entity);
     }

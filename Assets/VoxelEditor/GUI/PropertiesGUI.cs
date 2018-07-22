@@ -193,6 +193,7 @@ public class PropertiesGUI : GUIPanel
                 entity.behaviors.Add(newBehavior);
                 voxelArray.unsavedChanges = true;
                 scrollVelocity = new Vector2(0, 2000 * entity.behaviors.Count); // scroll to bottom
+                EntityPreviewManager.BehaviorUpdated(entity, newBehavior);
             };
         }
         TutorialGUI.ClearHighlight();
@@ -218,8 +219,8 @@ public class PropertiesGUI : GUIPanel
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            if (PropertiesObjectGUI(behavior, suffix) && EntityPreviewManager.IsEditorPreviewBehavior(behavior))
-                EntityPreviewManager.EntityUpdated(entity);
+            if (PropertiesObjectGUI(behavior, suffix))
+                EntityPreviewManager.BehaviorUpdated(entity, behavior);
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
@@ -231,6 +232,7 @@ public class PropertiesGUI : GUIPanel
         {
             entity.behaviors.Remove(behaviorToRemove);
             voxelArray.unsavedChanges = true;
+            EntityPreviewManager.BehaviorUpdated(entity, behaviorToRemove);
         }
     }
 
