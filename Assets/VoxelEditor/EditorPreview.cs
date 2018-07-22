@@ -11,11 +11,16 @@ public class EntityPreviewManager
 {
     private static List<GameObject> behaviorPreviewObjects = new List<GameObject>();
 
+    public static bool IsEditorPreviewBehavior(EntityBehavior behavior)
+    {
+        return System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null;
+    }
+
     public static void EntitySelected(Entity entity)
     {
         foreach (EntityBehavior behavior in entity.behaviors)
         {
-            if (System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null)
+            if (IsEditorPreviewBehavior(behavior))
             {
                 var previewObj = new GameObject();
                 if (behavior.targetEntity.entity != null)
@@ -33,5 +38,11 @@ public class EntityPreviewManager
         foreach (GameObject obj in behaviorPreviewObjects)
             GameObject.Destroy(obj);
         behaviorPreviewObjects.Clear();
+    }
+
+    public static void EntityUpdated(Entity entity)
+    {
+        EntityDeselected();
+        EntitySelected(entity);
     }
 }
