@@ -44,7 +44,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static Entity behaviorTarget;
     private static int currentTargetEntityI = -1;
 
-    private static GameObject behaviorPreviewObject;
+    private static List<GameObject> behaviorPreviewObjects = new List<GameObject>();
 
     private static Material _lineMaterial;
     public Material lineMaterial;
@@ -78,8 +78,9 @@ public class EntityReferencePropertyManager : MonoBehaviour
                     foreach (Voxel v in ((Substance)currentEntity).voxels)
                         v.UpdateHighlight();
                 }
-                if (behaviorPreviewObject != null)
-                    Destroy(behaviorPreviewObject);
+                foreach (GameObject obj in behaviorPreviewObjects)
+                    Destroy(obj);
+                behaviorPreviewObjects.Clear();
             }
             if (entity != null)
             {
@@ -90,11 +91,19 @@ public class EntityReferencePropertyManager : MonoBehaviour
                     foreach (Voxel v in ((Substance)entity).voxels)
                         v.UpdateHighlight();
                 }
-                behaviorPreviewObject = new GameObject();
-                behaviorPreviewObject.transform.position = EntityReferenceLine.EntityPosition(entity);
                 foreach (EntityBehavior behavior in entity.behaviors)
+                {
                     if (System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null)
-                        behavior.MakeComponent(behaviorPreviewObject);
+                    {
+                        var previewObj = new GameObject();
+                        if (behavior.targetEntity.entity != null)
+                            previewObj.transform.position = EntityReferenceLine.EntityPosition(behavior.targetEntity.entity);
+                        else
+                            previewObj.transform.position = EntityReferenceLine.EntityPosition(entity);
+                        behavior.MakeComponent(previewObj);
+                        behaviorPreviewObjects.Add(previewObj);
+                    }
+                }
             }
         }
         currentEntity = entity;
