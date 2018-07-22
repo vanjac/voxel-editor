@@ -44,7 +44,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static Entity behaviorTarget;
     private static int currentTargetEntityI = -1;
 
-    private static EditorPreviewEntity editorPreviewEntity;
+    private static GameObject behaviorPreviewObject;
 
     private static Material _lineMaterial;
     public Material lineMaterial;
@@ -78,8 +78,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
                     foreach (Voxel v in ((Substance)currentEntity).voxels)
                         v.UpdateHighlight();
                 }
-                Destroy(editorPreviewEntity.component.gameObject);
-                editorPreviewEntity = null;
+                if (behaviorPreviewObject != null)
+                    Destroy(behaviorPreviewObject);
             }
             if (entity != null)
             {
@@ -90,12 +90,11 @@ public class EntityReferencePropertyManager : MonoBehaviour
                     foreach (Voxel v in ((Substance)entity).voxels)
                         v.UpdateHighlight();
                 }
-                editorPreviewEntity = new EditorPreviewEntity();
+                behaviorPreviewObject = new GameObject();
+                behaviorPreviewObject.transform.position = EntityReferenceLine.EntityPosition(entity);
                 foreach (EntityBehavior behavior in entity.behaviors)
                     if (System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null)
-                        editorPreviewEntity.behaviors.Add(behavior);
-                editorPreviewEntity.position = EntityReferenceLine.EntityPosition(entity);
-                editorPreviewEntity.InitEntityGameObject(VoxelArrayEditor.instance, true);
+                        behavior.MakeComponent(behaviorPreviewObject);
             }
         }
         currentEntity = entity;
