@@ -9,7 +9,8 @@ public class EditorPreviewBehaviorAttribute : System.Attribute
 
 public class EntityPreviewManager
 {
-    private static List<GameObject> behaviorPreviewObjects = new List<GameObject>();
+    private static List<GameObject> selfPreviewObjects = new List<GameObject>();
+    private static List<GameObject> otherPreviewObjects = new List<GameObject>();
 
     public static bool IsEditorPreviewBehavior(EntityBehavior behavior)
     {
@@ -28,16 +29,22 @@ public class EntityPreviewManager
                 else
                     previewObj.transform.position = entity.PositionInEditor();
                 behavior.MakeComponent(previewObj);
-                behaviorPreviewObjects.Add(previewObj);
+                if (behavior.targetEntity.entity == null || behavior.targetEntity.entity == entity)
+                    selfPreviewObjects.Add(previewObj);
+                else
+                    otherPreviewObjects.Add(previewObj);
             }
         }
     }
 
     public static void EntityDeselected()
     {
-        foreach (GameObject obj in behaviorPreviewObjects)
+        foreach (GameObject obj in selfPreviewObjects)
             GameObject.Destroy(obj);
-        behaviorPreviewObjects.Clear();
+        selfPreviewObjects.Clear();
+        foreach (GameObject obj in otherPreviewObjects)
+            GameObject.Destroy(obj);
+        otherPreviewObjects.Clear();
     }
 
     public static void BehaviorUpdated(Entity entity, EntityBehavior behavior)
@@ -46,5 +53,16 @@ public class EntityPreviewManager
             return;
         EntityDeselected();
         EntitySelected(entity);
+    }
+
+    public static void UpdateEntityPosition(Entity entity)
+    {
+        if (selfPreviewObjects.Count == 0)
+            return;
+        Vector3 pos = entity.PositionInEditor();
+        foreach (GameObject obj in selfPreviewObjects)
+        {
+            obj.transform.position = pos;
+        }
     }
 }

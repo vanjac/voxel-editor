@@ -186,5 +186,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
             }
             return; // wait a frame to let the new/deleted objects update
         }
+
+        if (currentEntity != null)
+            EntityPreviewManager.UpdateEntityPosition(currentEntity);
     }
 }
