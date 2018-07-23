@@ -263,7 +263,6 @@ public class PropertiesGUI : GUIPanel
 
         if (obj == null)
             return;
-        bool changed = false;
         var props = obj.Properties();
         foreach (Property prop in props)
         {
