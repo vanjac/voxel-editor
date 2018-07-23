@@ -219,8 +219,7 @@ public class PropertiesGUI : GUIPanel
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            if (PropertiesObjectGUI(behavior, suffix))
-                EntityPreviewManager.BehaviorUpdated(entity, behavior);
+            PropertiesObjectGUI(behavior, suffix, () => EntityPreviewManager.BehaviorUpdated(entity, behavior));
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
@@ -236,8 +235,8 @@ public class PropertiesGUI : GUIPanel
         }
     }
 
-    // return if PropertiesObject was changed at all
-    private bool PropertiesObjectGUI(PropertiesObject obj, string suffix = "")
+    private void PropertiesObjectGUI(PropertiesObject obj, string suffix = "",
+        System.Action changedAction = null)
     {
         string title;
         if (obj == null)
@@ -263,7 +262,7 @@ public class PropertiesGUI : GUIPanel
         GUILayout.EndHorizontal();
 
         if (obj == null)
-            return false;
+            return;
         bool changed = false;
         var props = obj.Properties();
         foreach (Property prop in props)
@@ -274,11 +273,11 @@ public class PropertiesGUI : GUIPanel
                 prop.setter(v);
                 voxelArray.unsavedChanges = true;
                 adjustingSlider = true;
-                changed = true;
+                if (changedAction != null)
+                    changedAction();
             };
             prop.gui(wrappedProp);
         }
-        return changed;
     }
 }
 
