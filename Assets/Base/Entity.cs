@@ -612,6 +612,8 @@ public abstract class DynamicEntity : Entity
 public abstract class DynamicEntityComponent : EntityComponent
 {
     public float health;
+    private Vector3 lastRigidbodyPosition;
+    private Vector3 cumulativeRigidbodyTranslate;
 
     public void Hurt(float amount)
     {
@@ -639,5 +641,31 @@ public abstract class DynamicEntityComponent : EntityComponent
     {
         yield return null;
         Destroy(gameObject);
+    }
+
+    // allows composing multiple translations within a single FixedUpdate cycle
+    // Rigidbody normally doesn't update its position until the end of the cycle
+    public void RigidbodyTranslate(Rigidbody rb, Vector3 amount, bool applyConstraints=false)
+    {
+        if (rb.position != lastRigidbodyPosition)
+        {
+            // new FixedUpdate cycle
+            lastRigidbodyPosition = rb.position;
+            cumulativeRigidbodyTranslate = Vector3.zero;
+        }
+
+        cumulativeRigidbodyTranslate += amount;
+        if (applyConstraints)
+        {
+            var constraints = RigidbodyConstraints.FreezeRotation;
+            if (cumulativeRigidbodyTranslate.x == 0)
+                constraints |= RigidbodyConstraints.FreezePositionX;
+            if (cumulativeRigidbodyTranslate.y == 0)
+                constraints |= RigidbodyConstraints.FreezePositionY;
+            if (cumulativeRigidbodyTranslate.z == 0)
+                constraints |= RigidbodyConstraints.FreezePositionZ;
+            rb.constraints = constraints;
+        }
+        rb.MovePosition(rb.position + cumulativeRigidbodyTranslate);
     }
 }

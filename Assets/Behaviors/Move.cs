@@ -73,20 +73,9 @@ public class MoveComponent : BehaviorComponent
             rigidBody.velocity = Vector3.zero;
         Vector3 move = GetMoveFixed();
         if (rigidBody != null)
-        {
-            var constraints = RigidbodyConstraints.FreezeRotation;
-            if (move.x == 0)
-                constraints |= RigidbodyConstraints.FreezePositionX;
-            if (move.y == 0)
-                constraints |= RigidbodyConstraints.FreezePositionY;
-            if (move.z == 0)
-                constraints |= RigidbodyConstraints.FreezePositionZ;
-            rigidBody.constraints = constraints;
-            rigidBody.MovePosition(rigidBody.position + move);
-        }
+            GetComponent<DynamicEntityComponent>().RigidbodyTranslate(rigidBody, move, true);
         else
             transform.Translate(move);
-
     }
 
     public Vector3 GetMoveFixed()
