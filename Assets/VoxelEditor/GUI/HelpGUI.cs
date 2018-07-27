@@ -9,9 +9,11 @@ public class HelpGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
+    private int tab = 0;
+
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .35f, height * .2f, width * .3f, 0);
+        return new Rect(width * .35f, height * .15f, width * .3f, 0);
     }
 
     public void Start()
@@ -20,6 +22,16 @@ public class HelpGUI : GUIPanel
     }
 
     public override void WindowGUI()
+    {
+        tab = GUILayout.SelectionGrid(tab,
+            new string[] { "Tutorials", "Demo Worlds" }, 2, GUI.skin.GetStyle("button_tab"));
+        if (tab == 0)
+            TutorialsTab();
+        if (tab == 1)
+            DemoWorldsTab();
+    }
+
+    private void TutorialsTab()
     {
         if (GUILayout.Button("Introduction"))
             StartTutorial(Tutorials.INTRO_TUTORIAL);
@@ -33,10 +45,18 @@ public class HelpGUI : GUIPanel
             Destroy(this);
         }
         if (GUILayout.Button("Advanced game logic 1"))
-            StartTutorialWithTemplate(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1,
-                "Advanced game logic 1", "Tutorials/advanced_game_logic_1");
+        {
+            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1);
+            OpenDemoWorld("Advanced game logic 1", "Tutorials/advanced_game_logic_1");
+        }
         if (GUILayout.Button("Advanced game logic 2"))
             StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2);
+    }
+
+    private void DemoWorldsTab()
+    {
+        if (GUILayout.Button("Ball Pit"))
+            OpenDemoWorld("Demo - Ball pit", "Demos/ball_pit");
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial)
@@ -50,9 +70,8 @@ public class HelpGUI : GUIPanel
         Destroy(this);
     }
 
-    private void StartTutorialWithTemplate(TutorialPageFactory[] tutorial, string mapName, string templateName)
+    private void OpenDemoWorld(string mapName, string templateName)
     {
-        StartTutorial(tutorial);
         if (SelectedMap.Instance().mapName != mapName)
         {
             // create and load the file
