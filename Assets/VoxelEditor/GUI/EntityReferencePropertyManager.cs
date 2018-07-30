@@ -9,16 +9,22 @@ public class EntityReferencePropertyManager : MonoBehaviour
         public int i;
         public Entity sourceEntity;
         public Entity targetEntity;
+        private LineRenderer line;
 
         void Start()
         {
             if (sourceEntity == null || targetEntity == null)
                 return;
             Color color = ColorI(i);
-            LineRenderer line = gameObject.AddComponent<LineRenderer>();
+            line = gameObject.AddComponent<LineRenderer>();
             line.startWidth = line.endWidth = 0.1f;
             line.material = _lineMaterial;
             line.startColor = line.endColor = color;
+            UpdatePositions();
+        }
+
+        public void UpdatePositions()
+        {
             line.SetPosition(0, sourceEntity.PositionInEditor());
             line.SetPosition(1, targetEntity.PositionInEditor());
         }
@@ -185,6 +191,11 @@ public class EntityReferencePropertyManager : MonoBehaviour
                 line.targetEntity = targetEntities[i];
             }
             return; // wait a frame to let the new/deleted objects update
+        }
+        else
+        {
+            foreach (Transform child in transform)
+                child.GetComponent<EntityReferenceLine>().UpdatePositions();
         }
 
         if (currentEntity != null)
