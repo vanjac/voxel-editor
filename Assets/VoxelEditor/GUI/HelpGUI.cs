@@ -57,6 +57,8 @@ public class HelpGUI : GUIPanel
     {
         if (GUILayout.Button("Ball Pit"))
             OpenDemoWorld("Demo - Ball pit", "Demos/ball_pit");
+        if (GUILayout.Button("Logic"))
+            OpenDemoWorld("Demo - Logic", "Demos/logic");
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial)
