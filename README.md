@@ -1,6 +1,6 @@
 # N-Space
 
-![Icon](https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/icon.png)
+<img src="https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/icon.png" alt="Icon" width="128">
 
 A mobile app for building 3D interactive worlds. This is a work in progress.
 
