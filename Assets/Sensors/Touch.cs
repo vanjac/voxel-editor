@@ -9,7 +9,7 @@ public class TouchSensor : ActivatedSensor
         "Properties:\n•  \"Filter\": The specific object or category of object which will activate the sensor.\n"
         + "•  \"Min velocity\": The threshold for the relative velocity of the object when it enters the sensor.\n"
         + "•  \"Direction\": The incoming direction of the object to activate the sensor.\n\n"
-        + "Activator: colliding object\n\n"
+        + "Activator: all colliding objects matching the filter\n\n"
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));
 
@@ -55,17 +55,6 @@ public class TouchComponent : SensorComponent
     // could have multiple instances of the same collider if it's touching multiple voxels
     private List<Collider> touchingColliders = new List<Collider>();
     private List<Collider> rejectedColliders = new List<Collider>();
-    private EntityComponent activator;
-
-    public override bool IsOn()
-    {
-        return touchingColliders.Count > 0;
-    }
-
-    public override EntityComponent GetActivator()
-    {
-        return activator;
-    }
 
     private void CollisionStart(Collider c, Vector3 relativeVelocity)
     {
@@ -84,7 +73,7 @@ public class TouchComponent : SensorComponent
             && !rejectedColliders.Contains(c))
         {
             touchingColliders.Add(c);
-            activator = entity;
+            AddActivator(entity);
         }
         else
             // could contain multiple instances if touching multiple voxels
@@ -94,7 +83,11 @@ public class TouchComponent : SensorComponent
     private void CollisionEnd(Collider c)
     {
         if (!rejectedColliders.Remove(c))
+        {
             touchingColliders.Remove(c);
+            if (!touchingColliders.Contains(c)) // could have multiple instances
+                RemoveActivator(EntityComponent.FindEntityComponent(c));
+        }
     }
 
     public void OnTriggerEnter(Collider c)

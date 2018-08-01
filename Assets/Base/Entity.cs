@@ -283,7 +283,9 @@ public abstract class EntityComponent : MonoBehaviour
     private List<Behaviour> onComponents = new List<Behaviour>();
     private List<Behaviour> targetedComponents = new List<Behaviour>();
     private List<EntityBehavior> activatorBehaviors = new List<EntityBehavior>();
-    private List<Behaviour> activatorComponents = new List<Behaviour>();
+
+    private Dictionary<EntityComponent, List<Behaviour>> activatorComponents
+        = new Dictionary<EntityComponent, List<Behaviour>>();
 
     private SensorComponent sensorComponent;
     private bool sensorWasOn;
@@ -359,18 +361,6 @@ public abstract class EntityComponent : MonoBehaviour
             foreach (Behaviour onComponent in onComponents)
                 if (onComponent != null)
                     onComponent.enabled = true;
-            EntityComponent activator = sensorComponent.GetActivator();
-            if (activator != null)
-            {
-                foreach (EntityBehavior behavior in activatorBehaviors)
-                {
-                    if (!behavior.BehaviorObjectType().rule(activator.entity))
-                        continue;
-                    Behaviour c = behavior.MakeComponent(activator.gameObject);
-                    activatorComponents.Add(c);
-                    c.enabled = true;
-                }
-            }
         }
         else if (!sensorIsOn && sensorWasOn)
         {
@@ -380,12 +370,35 @@ public abstract class EntityComponent : MonoBehaviour
             foreach (Behaviour offComponent in offComponents)
                 if (offComponent != null)
                     offComponent.enabled = true;
-            foreach (Behaviour activatorComponent in activatorComponents)
-                if (activatorComponent != null)
-                    Destroy(activatorComponent);
-            activatorComponents.Clear();
         }
         sensorWasOn = sensorIsOn;
+
+
+        foreach (EntityComponent newActivator in GetNewActivators())
+        {
+            var behaviorComponents = new List<Behaviour>();
+            foreach (EntityBehavior behavior in activatorBehaviors)
+            {
+                if (!behavior.BehaviorObjectType().rule(newActivator.entity))
+                    continue;
+                Behaviour c = behavior.MakeComponent(newActivator.gameObject);
+                behaviorComponents.Add(c);
+                c.enabled = true;
+            }
+            activatorComponents[newActivator] = behaviorComponents;
+        }
+        foreach (EntityComponent removedActivator in GetRemovedActivators())
+        {
+            try
+            {
+                var behaviorComponents = activatorComponents[removedActivator];
+                foreach (Behaviour b in behaviorComponents)
+                    if (b != null)
+                        Destroy(b);
+            }
+            catch (KeyNotFoundException) { }
+            activatorComponents.Remove(removedActivator);
+        }
     }
 
     void OnDestroy()
@@ -393,9 +406,10 @@ public abstract class EntityComponent : MonoBehaviour
         foreach (Behaviour c in targetedComponents)
             if (c != null)
                 Destroy(c);
-        foreach (Behaviour c in activatorComponents)
-            if (c != null)
-                Destroy(c);
+        foreach (List<Behaviour> behaviorComponents in activatorComponents.Values)
+            foreach (Behaviour c in behaviorComponents)
+                if (c != null)
+                    Destroy(c);
     }
 
     public bool IsOn()
@@ -405,11 +419,25 @@ public abstract class EntityComponent : MonoBehaviour
         return sensorComponent.IsOn();
     }
 
-    public EntityComponent GetActivator()
+    public ICollection<EntityComponent> GetActivators()
     {
         if (sensorComponent == null)
-            return null;
-        return sensorComponent.GetActivator();
+            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+        return sensorComponent.GetActivators();
+    }
+
+    public ICollection<EntityComponent> GetNewActivators()
+    {
+        if (sensorComponent == null)
+            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+        return sensorComponent.GetNewActivators();
+    }
+
+    public ICollection<EntityComponent> GetRemovedActivators()
+    {
+        if (sensorComponent == null)
+            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+        return sensorComponent.GetRemovedActivators();
     }
 }
 
@@ -574,12 +602,93 @@ public abstract class Sensor : PropertiesObject
 
 public abstract class SensorComponent : MonoBehaviour
 {
-    public abstract bool IsOn();
+    public static readonly EntityComponent[] EMPTY_COMPONENT_COLLECTION = new EntityComponent[0];
 
-    // will only be called when sensor turns on
-    public virtual EntityComponent GetActivator()
+    private HashSet<EntityComponent> activators = new HashSet<EntityComponent>();
+
+    private HashSet<EntityComponent> newActivators = new HashSet<EntityComponent>();
+    protected HashSet<EntityComponent> newActivators_next = new HashSet<EntityComponent>();
+    private HashSet<EntityComponent> removedActivators = new HashSet<EntityComponent>();
+    protected HashSet<EntityComponent> removedActivators_next = new HashSet<EntityComponent>();
+
+    public bool IsOn()
     {
-        return null;
+        return GetActivators().Count > 0;
+    }
+
+    public virtual void LateUpdate()
+    {
+        NewFrame();
+    }
+
+    // all current activators
+    // if the number is greater than zero, the sensor is on
+    public virtual ICollection<EntityComponent> GetActivators()
+    {
+        return activators;
+    }
+
+    // activators that have been added this frame
+    public virtual ICollection<EntityComponent> GetNewActivators()
+    {
+        return newActivators;
+    }
+
+    // activators that have been removed this frame
+    public virtual ICollection<EntityComponent> GetRemovedActivators()
+    {
+        return removedActivators;
+    }
+
+    private void NewFrame()
+    {
+        activators.UnionWith(newActivators_next);
+        activators.ExceptWith(removedActivators_next);
+
+        // swap and clear
+        var temp = newActivators;
+        newActivators = newActivators_next;
+        newActivators_next = temp;
+        newActivators_next.Clear();
+
+        temp = removedActivators;
+        removedActivators = removedActivators_next;
+        removedActivators_next = temp;
+        removedActivators_next.Clear();
+    }
+
+    protected void AddActivator(EntityComponent activator)
+    {
+        // not short circuit
+        if (!activators.Contains(activator) & !removedActivators_next.Remove(activator))
+            newActivators_next.Add(activator);
+    }
+
+    protected void AddActivators(ICollection<EntityComponent> activators)
+    {
+        // TODO: use boolean operations
+        foreach (var activator in activators)
+            AddActivator(activator);
+    }
+
+    protected void RemoveActivator(EntityComponent activator)
+    {
+        if (activators.Contains(activator) & !newActivators_next.Remove(activator))
+            removedActivators_next.Add(activator);
+    }
+
+    protected void RemoveActivators(ICollection<EntityComponent> activators)
+    {
+        // TODO: use boolean operations
+        foreach (var activator in activators)
+            RemoveActivator(activator);
+    }
+
+    protected void ClearActivators()
+    {
+        removedActivators_next.UnionWith(activators);
+        removedActivators_next.ExceptWith(newActivators_next);
+        newActivators_next.Clear();
     }
 }
 

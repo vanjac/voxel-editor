@@ -11,7 +11,7 @@ public class InputThresholdSensor : Sensor
         + "If an Input is on and set to \"Positive\", the total is incremented by one. "
         + "If an Input is on and set to \"Negative\", the total is decremented by one. "
         + "The sensor turns on if the total is greater than or equal to the threshold.\n\n"
-        + "Activator: the activator of the first Positive input with an activator",
+        + "Activator: the combined activators of all inputs",
         "altimeter", typeof(InputThresholdSensor));
 
     // public so it can be serialized
@@ -131,14 +131,16 @@ public class InputThresholdComponent : SensorComponent
 {
     public InputThresholdSensor.Input[] inputs;
     public float threshold;
+    private EntityComponent selfComponent;
 
-    private bool value = false;
-    private EntityComponent activator;
+    void Start()
+    {
+        selfComponent = GetComponent<EntityComponent>();
+    }
 
     void Update()
     {
         int energy = 0;
-        activator = null;
         for (int i = 0; i < inputs.Length; i++)
         {
             EntityComponent e = inputs[i].entityRef.component;
@@ -147,23 +149,14 @@ public class InputThresholdComponent : SensorComponent
                 if (inputs[i].negative)
                     energy--;
                 else
-                {
                     energy++;
-                    if (activator == null)
-                        activator = e.GetActivator();
-                }
+                AddActivators(e.GetNewActivators());
+                RemoveActivators(e.GetRemovedActivators());
             }
         }
-        value = energy >= threshold;
-    }
-
-    public override bool IsOn()
-    {
-        return value;
-    }
-
-    public override EntityComponent GetActivator()
-    {
-        return activator;
+        if (energy < threshold)
+            ClearActivators();
+        else if (GetActivators().Count == 0)
+            AddActivator(selfComponent);
     }
 }

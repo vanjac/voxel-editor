@@ -7,7 +7,7 @@ public class ToggleSensor : Sensor
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Toggle", "One input switches it on, one input switches it off",
         "If both inputs turn on simultaneously, the sensor toggles between on/off.\n\n"
-        + "Activator: the activator of the On input",
+        + "Activator: the activator of the On input, frozen when it is first turned on",
         "toggle-switch", typeof(ToggleSensor));
 
     private EntityReference offInput = new EntityReference(null);
@@ -54,7 +54,6 @@ public class ToggleComponent : SensorComponent
     public EntityReference onInput;
     public bool value;
     private bool bothOn = false;
-    private EntityComponent activator;
 
     void Update()
     {
@@ -75,29 +74,24 @@ public class ToggleComponent : SensorComponent
                 bothOn = true;
                 value = !value;
                 if (value)
-                    activator = onEntity.GetActivator();
+                    AddActivators(onEntity.GetActivators());
+                else
+                    ClearActivators();
             }
         }
         else
         {
             bothOn = false;
             if (offInputOn)
+            {
                 value = false;
+                ClearActivators();
+            }
             else if (onInputOn)
             {
                 value = true;
-                activator = onEntity.GetActivator();
+                AddActivators(onEntity.GetActivators());
             }
         }
-    }
-
-    public override bool IsOn()
-    {
-        return value;
-    }
-
-    public override EntityComponent GetActivator()
-    {
-        return activator;
     }
 }

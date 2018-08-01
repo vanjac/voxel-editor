@@ -50,13 +50,23 @@ public class PulseComponent : SensorComponent
     public bool startOn;
     public float offTime, onTime;
     private float startTime;
+    private EntityComponent selfComponent;
 
     void Start()
     {
         startTime = Time.time;
+        selfComponent = GetComponent<EntityComponent>();
     }
 
-    public override bool IsOn()
+    public void Update()
+    {
+        if (CheckState())
+            AddActivator(selfComponent);
+        else
+            RemoveActivator(selfComponent);
+    }
+
+    private bool CheckState()
     {
         float cycleTime = (Time.time - startTime) % (offTime + onTime);
         if (startOn)

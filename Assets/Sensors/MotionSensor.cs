@@ -52,11 +52,11 @@ public class MotionSensorComponent : SensorComponent
 {
     public float minVelocity, minAngularVelocity;
     public Target direction;
-    private bool value = false;
+    private EntityComponent selfComponent;
 
-    public override bool IsOn()
+    void Start()
     {
-        return value;
+        selfComponent = GetComponent<EntityComponent>();
     }
 
     void Update()
@@ -67,11 +67,14 @@ public class MotionSensorComponent : SensorComponent
             bool aboveVel = rigidbody.velocity.magnitude >= minVelocity;
             bool aboveAngVel = Mathf.Rad2Deg * rigidbody.angularVelocity.magnitude >= minAngularVelocity;
             bool matchesDirection = direction.MatchesDirection(transform.position, rigidbody.velocity);
-            value = aboveVel && aboveAngVel && matchesDirection;
+            if (aboveVel && aboveAngVel && matchesDirection)
+                AddActivator(selfComponent);
+            else
+                RemoveActivator(selfComponent);
         }
         else
         {
-            value = false;
+            RemoveActivator(selfComponent);
         }
     }
 }
