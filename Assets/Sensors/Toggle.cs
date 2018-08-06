@@ -55,6 +55,13 @@ public class ToggleComponent : SensorComponent
     public bool value;
     private bool bothOn = false;
 
+    void Start()
+    {
+        if (value)
+            // start on
+            AddActivator(GetComponent<EntityComponent>());
+    }
+
     void Update()
     {
         bool offInputOn = false;
