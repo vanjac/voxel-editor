@@ -67,6 +67,13 @@ public class DelayComponent : SensorComponent
     private float changeTime;
     private EntityComponent activator;
 
+    void Start()
+    {
+        // start on
+        if (state == DelayState.ON || state == DelayState.TURNING_OFF)
+            AddActivator(GetComponent<EntityComponent>());
+    }
+
     void Update()
     {
         bool inputOn = false;
