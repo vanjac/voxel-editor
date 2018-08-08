@@ -71,7 +71,7 @@ public class DelayComponent : SensorComponent
     {
         // start on
         if (state == DelayState.ON || state == DelayState.TURNING_OFF)
-            AddActivator(GetComponent<EntityComponent>());
+            AddActivator(null);
     }
 
     void Update()

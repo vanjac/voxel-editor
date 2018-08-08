@@ -376,6 +376,8 @@ public abstract class EntityComponent : MonoBehaviour
 
         foreach (EntityComponent newActivator in GetNewActivators())
         {
+            if (newActivator == null)
+                continue;
             var behaviorComponents = new List<Behaviour>();
             foreach (EntityBehavior behavior in activatorBehaviors)
             {
@@ -389,6 +391,8 @@ public abstract class EntityComponent : MonoBehaviour
         }
         foreach (EntityComponent removedActivator in GetRemovedActivators())
         {
+            if (removedActivator == null)
+                continue;
             try
             {
                 var behaviorComponents = activatorComponents[removedActivator];
@@ -623,6 +627,7 @@ public abstract class SensorComponent : MonoBehaviour
 
     // all current activators
     // if the number is greater than zero, the sensor is on
+    // a null activator is possible - this allows the sensor to be on without having any activators
     public virtual ICollection<EntityComponent> GetActivators()
     {
         return activators;

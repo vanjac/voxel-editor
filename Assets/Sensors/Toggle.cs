@@ -59,7 +59,7 @@ public class ToggleComponent : SensorComponent
     {
         if (value)
             // start on
-            AddActivator(GetComponent<EntityComponent>());
+            AddActivator(null);
     }
 
     void Update()

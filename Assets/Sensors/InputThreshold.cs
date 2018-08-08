@@ -131,12 +131,6 @@ public class InputThresholdComponent : SensorComponent
 {
     public InputThresholdSensor.Input[] inputs;
     public float threshold;
-    private EntityComponent selfComponent;
-
-    void Start()
-    {
-        selfComponent = GetComponent<EntityComponent>();
-    }
 
     void Update()
     {
@@ -157,6 +151,6 @@ public class InputThresholdComponent : SensorComponent
         if (energy < threshold)
             ClearActivators();
         else if (GetActivators().Count == 0)
-            AddActivator(selfComponent);
+            AddActivator(null);
     }
 }
