@@ -32,14 +32,12 @@ public class MenuOverflowGUI : GUIPanel
             var overflow = gameObject.AddComponent<OverflowMenuGUI>();
             overflow.items = new OverflowMenuGUI.MenuItem[]
             {
+                new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
+                    var help = gameObject.AddComponent<HelpGUI>();
+                }),
                 new OverflowMenuGUI.MenuItem("About", GUIIconSet.instance.about, () =>
                 {
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, creditsText.text);
-                }),
-                new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
-                    var help = gameObject.AddComponent<HelpGUI>();
-                    //help.voxelArray = voxelArray;
-                    //help.touchListener = touchListener;
                 })
             };
         }
