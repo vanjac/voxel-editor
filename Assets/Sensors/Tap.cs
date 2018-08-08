@@ -7,7 +7,7 @@ public class TapSensor : Sensor
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Tap", "Detect user tapping the object",
         "Object doesn't have to be visible or solid to detect a tap.\n\n"
-        + "Activator: player",
+        + "Activator: the player",
         "gesture-tap", typeof(TapSensor));
 
     private float maxDistance = 3;
@@ -39,32 +39,21 @@ public class TapSensor : Sensor
 public class TapComponent : SensorComponent
 {
     public float maxDistance;
-    private bool value = false;
-    private EntityComponent activator;
-
-    public override bool IsOn()
-    {
-        return value;
-    }
-
-    public override EntityComponent GetActivator()
-    {
-        return activator;
-    }
+    private EntityComponent player;
 
     // called by GameTouchControl
     public void TapStart(EntityComponent player, float distance)
     {
         if (distance <= maxDistance)
         {
-            value = true;
-            activator = player;
+            this.player = player;
+            AddActivator(player);
         }
     }
 
     // called by GameTouchControl
     public void TapEnd()
     {
-        value = false;
+        RemoveActivator(player);
     }
 }

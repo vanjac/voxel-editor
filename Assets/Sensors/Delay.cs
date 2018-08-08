@@ -9,7 +9,7 @@ public class DelaySensor : Sensor
         "If the input has been on for longer than the \"On time\", sensor will turn on. "
         + "If the input has been off for longer than the \"Off time\", sensor will turn off. "
         + "If the input cycles on/off faster than the on/off time, nothing happens.\n\n"
-        + "Activator: the activator of the input when it turned on",
+        + "Activators: the activators of the input, continuously updating",
         "timer", typeof(DelaySensor));
 
     private EntityReference input = new EntityReference(null);
@@ -67,31 +67,52 @@ public class DelayComponent : SensorComponent
     private float changeTime;
     private EntityComponent activator;
 
+    void Start()
+    {
+        // start on
+        if (state == DelayState.ON || state == DelayState.TURNING_OFF)
+            AddActivator(null);
+    }
+
     void Update()
     {
         bool inputOn = false;
         EntityComponent inputEntity = input.component;
         if (inputEntity != null)
+        {
             inputOn = inputEntity.IsOn();
+            if (state == DelayState.ON || state == DelayState.TURNING_OFF)
+            {
+                AddActivators(inputEntity.GetNewActivators());
+                RemoveActivators(inputEntity.GetRemovedActivators());
+            }
+        }
         switch (state)
         {
             case DelayState.OFF:
                 if (inputOn)
                 {
                     if (onTime == 0)
+                    {
                         state = DelayState.ON;
+                        AddActivator(null);
+                        AddActivators(inputEntity.GetActivators());
+                    }
                     else
                     {
                         state = DelayState.TURNING_ON;
                         changeTime = Time.time;
                     }
-                    activator = inputEntity.GetActivator();
                 }
                 break;
             case DelayState.ON:
                 if (!inputOn)
                     if (offTime == 0)
+                    {
                         state = DelayState.OFF;
+                        RemoveActivator(null);
+                        ClearActivators();
+                    }
                     else
                     {
                         state = DelayState.TURNING_OFF;
@@ -102,24 +123,22 @@ public class DelayComponent : SensorComponent
                 if (!inputOn)
                     state = DelayState.OFF;
                 else if (Time.time - changeTime >= onTime)
+                {
                     state = DelayState.ON;
+                    AddActivator(null);
+                    AddActivators(inputEntity.GetActivators());
+                }
                 break;
             case DelayState.TURNING_OFF:
                 if (inputOn)
                     state = DelayState.ON;
                 else if (Time.time - changeTime >= offTime)
+                {
                     state = DelayState.OFF;
+                    RemoveActivator(null);
+                    ClearActivators();
+                }
                 break;
         }
-    }
-
-    public override bool IsOn()
-    {
-        return state == DelayState.ON || state == DelayState.TURNING_OFF;
-    }
-
-    public override EntityComponent GetActivator()
-    {
-        return activator;
     }
 }

@@ -6,7 +6,7 @@ public class InRangeSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "In Range", "Detect objects within a certain distance",
-        "Activator: object in range",
+        "Activators: all objects in range",
         "radar", typeof(InRangeSensor));
 
     private float distance = 5;
@@ -61,22 +61,30 @@ public class InRangeComponent : SensorComponent
         sphereTouchComponent.ignoreEntity = GetComponent<EntityComponent>();
     }
 
-    void LateUpdate()
+    public override void LateUpdate()
     {
+        base.LateUpdate();
         sphereObject.transform.position = transform.position;
     }
 
-    public override bool IsOn()
+    public override ICollection<EntityComponent> GetActivators()
     {
         if (sphereTouchComponent == null)
-            return false;
-        return sphereTouchComponent.IsOn();
+            return EMPTY_COMPONENT_COLLECTION;
+        return sphereTouchComponent.GetActivators();
     }
 
-    public override EntityComponent GetActivator()
+    public override ICollection<EntityComponent> GetNewActivators()
     {
         if (sphereTouchComponent == null)
-            return null;
-        return sphereTouchComponent.GetActivator();
+            return EMPTY_COMPONENT_COLLECTION;
+        return sphereTouchComponent.GetNewActivators();
+    }
+
+    public override ICollection<EntityComponent> GetRemovedActivators()
+    {
+        if (sphereTouchComponent == null)
+            return EMPTY_COMPONENT_COLLECTION;
+        return sphereTouchComponent.GetRemovedActivators();
     }
 }

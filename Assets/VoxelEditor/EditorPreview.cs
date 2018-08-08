@@ -62,6 +62,8 @@ public class EntityPreviewManager
         Vector3 pos = entity.PositionInEditor();
         foreach (GameObject obj in selfPreviewObjects)
         {
+            if (obj == null)
+                continue; // map may have been closed with an object still selected
             obj.transform.position = pos;
         }
     }
