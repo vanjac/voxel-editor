@@ -96,8 +96,9 @@ public class ToggleComponent : SensorComponent
             }
             else if (onInputOn)
             {
+                if (!value)
+                    AddActivators(onEntity.GetActivators());
                 value = true;
-                AddActivators(onEntity.GetActivators());
             }
         }
     }
