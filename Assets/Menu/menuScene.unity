@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 1450445159}
   - component: {fileID: 1450445163}
   - component: {fileID: 1450445160}
+  - component: {fileID: 1450445164}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -147,7 +148,6 @@ MonoBehaviour:
   title: 
   scroll: {x: 0, y: 0}
   defaultMap: {fileID: 4900000, guid: def87d4fc2d1e4c469422477861bcc22, type: 3}
-  menuIcon: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
 --- !u!114 &1450445160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +223,35 @@ MonoBehaviour:
   title: 
   scroll: {x: 0, y: 0}
   creditsText: {fileID: 4900000, guid: e682aff256c26294b9005b4e62ff561d, type: 3}
+--- !u!114 &1450445164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1450445158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f0502d5ffcf65c47918ac612478a3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  close: {fileID: 0}
+  x: {fileID: 0}
+  next: {fileID: 0}
+  create: {fileID: 0}
+  applySelection: {fileID: 0}
+  clearSelection: {fileID: 0}
+  paint: {fileID: 0}
+  play: {fileID: 0}
+  overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
+  world: {fileID: 0}
+  help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
+  helpCircle: {fileID: 0}
+  done: {fileID: 0}
+  rotateLeft: {fileID: 0}
+  rotateRight: {fileID: 0}
+  flipHorizontal: {fileID: 0}
+  flipVertical: {fileID: 0}
+  compass: {fileID: 0}
 --- !u!1 &2101752314
 GameObject:
   m_ObjectHideFlags: 0

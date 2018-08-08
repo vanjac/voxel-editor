@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreditsGUI : GUIPanel
+public class MenuOverflowGUI : GUIPanel
 {
     public TextAsset creditsText;
 
@@ -27,9 +27,17 @@ public class CreditsGUI : GUIPanel
     {
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if(GUILayout.Button("About", GUI.skin.GetStyle("button_large"),
-                GUILayout.ExpandWidth(false)))
-            LargeMessageGUI.ShowLargeMessageDialog(gameObject, creditsText.text);
+        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.overflow))
+        {
+            var overflow = gameObject.AddComponent<OverflowMenuGUI>();
+            overflow.items = new OverflowMenuGUI.MenuItem[]
+            {
+                new OverflowMenuGUI.MenuItem("About", GUIIconSet.instance.help, () =>
+                {
+                    LargeMessageGUI.ShowLargeMessageDialog(gameObject, creditsText.text);
+                })
+            };
+        }
         GUILayout.EndHorizontal();
     }
 }

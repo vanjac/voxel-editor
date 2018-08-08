@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class MenuGUI : GUIPanel
 {
     public TextAsset defaultMap;
-    public Texture menuIcon;
 
     private List<string> mapFiles = new List<string>();
 
@@ -47,7 +46,7 @@ public class MenuGUI : GUIPanel
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(fileName, GUI.skin.GetStyle("button_large")))
                 OpenMap(fileName, "editScene");
-            if (GUILayout.Button(menuIcon, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(GUIIconSet.instance.overflow, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false)))
             {
                 FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
                 dropdown.fileName = fileName;
