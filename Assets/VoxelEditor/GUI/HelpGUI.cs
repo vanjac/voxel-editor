@@ -76,7 +76,7 @@ public class HelpGUI : GUIPanel
 
     private void OpenDemoWorld(string mapName, string templateName)
     {
-        if (SelectedMap.Instance().mapName != mapName)
+        if (voxelArray == null || SelectedMap.Instance().mapName != mapName)
         {
             // create and load the file
             string filePath = WorldFiles.GetFilePath(mapName);
@@ -92,9 +92,11 @@ public class HelpGUI : GUIPanel
                     }
                 }
             }
-            voxelArray.GetComponent<EditorFile>().Save();
+            if (voxelArray != null)
+                voxelArray.GetComponent<EditorFile>().Save();
             SelectedMap.Instance().mapName = mapName;
             SceneManager.LoadScene("editScene");
         }
+        Destroy(this);
     }
 }
