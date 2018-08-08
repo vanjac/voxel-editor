@@ -95,6 +95,7 @@ public class DelayComponent : SensorComponent
                     if (onTime == 0)
                     {
                         state = DelayState.ON;
+                        AddActivator(null);
                         AddActivators(inputEntity.GetActivators());
                     }
                     else
@@ -109,6 +110,7 @@ public class DelayComponent : SensorComponent
                     if (offTime == 0)
                     {
                         state = DelayState.OFF;
+                        RemoveActivator(null);
                         ClearActivators();
                     }
                     else
@@ -123,6 +125,7 @@ public class DelayComponent : SensorComponent
                 else if (Time.time - changeTime >= onTime)
                 {
                     state = DelayState.ON;
+                    AddActivator(null);
                     AddActivators(inputEntity.GetActivators());
                 }
                 break;
@@ -132,6 +135,7 @@ public class DelayComponent : SensorComponent
                 else if (Time.time - changeTime >= offTime)
                 {
                     state = DelayState.OFF;
+                    RemoveActivator(null);
                     ClearActivators();
                 }
                 break;
