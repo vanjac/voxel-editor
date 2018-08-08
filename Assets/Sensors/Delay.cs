@@ -9,7 +9,7 @@ public class DelaySensor : Sensor
         "If the input has been on for longer than the \"On time\", sensor will turn on. "
         + "If the input has been off for longer than the \"Off time\", sensor will turn off. "
         + "If the input cycles on/off faster than the on/off time, nothing happens.\n\n"
-        + "Activator: the activators of the input. When the input turns off the activators are frozen.",
+        + "Activators: the activators of the input, continuously updating",
         "timer", typeof(DelaySensor));
 
     private EntityReference input = new EntityReference(null);

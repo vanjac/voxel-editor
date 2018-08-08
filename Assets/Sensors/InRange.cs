@@ -6,7 +6,7 @@ public class InRangeSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "In Range", "Detect objects within a certain distance",
-        "Activator: all objects in range",
+        "Activators: all objects in range",
         "radar", typeof(InRangeSensor));
 
     private float distance = 5;

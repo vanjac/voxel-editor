@@ -9,7 +9,7 @@ public class TouchSensor : ActivatedSensor
         "Properties:\n•  \"Filter\": The specific object or category of object which will activate the sensor.\n"
         + "•  \"Min velocity\": The threshold for the relative velocity of the object when it enters the sensor.\n"
         + "•  \"Direction\": The incoming direction of the object to activate the sensor.\n\n"
-        + "Activator: all colliding objects matching the filter\n\n"
+        + "Activators: all colliding objects matching the filter\n\n"
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));
 
