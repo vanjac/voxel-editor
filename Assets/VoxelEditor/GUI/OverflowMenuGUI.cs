@@ -4,8 +4,21 @@ using UnityEngine;
 
 public class OverflowMenuGUI : GUIPanel
 {
-    public VoxelArrayEditor voxelArray;
-    public TouchListener touchListener;
+    public struct MenuItem
+    {
+        public string text;
+        public Texture icon;
+        public System.Action action;
+
+        public MenuItem(string text, Texture icon, System.Action action)
+        {
+            this.text = text;
+            this.icon = icon;
+            this.action = action;
+        }
+    }
+
+    public MenuItem[] items;
 
     public override Rect GetRect(float width, float height)
     {
@@ -25,20 +38,10 @@ public class OverflowMenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (MenuButton("World", GUIIconSet.instance.world))
+        foreach (MenuItem item in items)
         {
-            PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
-            if (propsGUI != null)
-            {
-                propsGUI.worldSelected = true;
-                propsGUI.normallyOpen = true;
-            }
-        }
-        if (MenuButton("Help", GUIIconSet.instance.help))
-        {
-            var help = gameObject.AddComponent<HelpGUI>();
-            help.voxelArray = voxelArray;
-            help.touchListener = touchListener;
+            if (MenuButton(item.text, item.icon))
+                item.action();
         }
     }
 

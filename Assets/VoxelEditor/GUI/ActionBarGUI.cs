@@ -57,8 +57,22 @@ public class ActionBarGUI : GUIPanel
         if (ActionBarButton(GUIIconSet.instance.overflow))
         {
             var overflow = gameObject.AddComponent<OverflowMenuGUI>();
-            overflow.voxelArray = voxelArray;
-            overflow.touchListener = touchListener;
+            overflow.items = new OverflowMenuGUI.MenuItem[]
+            {
+                new OverflowMenuGUI.MenuItem("World", GUIIconSet.instance.world, () => {
+                    PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
+                    if (propsGUI != null)
+                    {
+                        propsGUI.worldSelected = true;
+                        propsGUI.normallyOpen = true;
+                    }
+                }),
+                new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
+                    var help = gameObject.AddComponent<HelpGUI>();
+                    help.voxelArray = voxelArray;
+                    help.touchListener = touchListener;
+                })
+            };
         }
 
         GUILayout.EndHorizontal();
