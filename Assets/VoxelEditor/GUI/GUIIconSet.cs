@@ -24,6 +24,7 @@ public class GUIIconSet : MonoBehaviour
     public Texture flipHorizontal;
     public Texture flipVertical;
     public Texture compass;
+    public Texture about;
 
     public void Start()
     {

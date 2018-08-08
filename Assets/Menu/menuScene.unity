@@ -252,6 +252,7 @@ MonoBehaviour:
   flipHorizontal: {fileID: 0}
   flipVertical: {fileID: 0}
   compass: {fileID: 0}
+  about: {fileID: 2800000, guid: c51491f24aa308c478dce23ffe9b3f15, type: 3}
 --- !u!1 &2101752314
 GameObject:
   m_ObjectHideFlags: 0
