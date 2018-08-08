@@ -46,7 +46,7 @@ public class HelpGUI : GUIPanel
         }
         if (GUILayout.Button("Advanced game logic 1"))
         {
-            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1);
+            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1, false);
             OpenDemoWorld("Advanced game logic 1", "Tutorials/advanced_game_logic_1");
         }
         if (GUILayout.Button("Advanced game logic 2"))
@@ -63,7 +63,7 @@ public class HelpGUI : GUIPanel
             OpenDemoWorld("Demo - Platform Game", "Demos/platforms");
     }
 
-    private void StartTutorial(TutorialPageFactory[] tutorial)
+    private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankMap=true)
     {
         var tutorialGUI = GetComponent<TutorialGUI>();
         if (tutorialGUI == null)
@@ -71,6 +71,8 @@ public class HelpGUI : GUIPanel
         tutorialGUI.voxelArray = voxelArray;
         tutorialGUI.touchListener = touchListener;
         tutorialGUI.StartTutorial(tutorial);
+        if (openBlankMap && voxelArray == null)
+            OpenDemoWorld("Tutorial", "default");
         Destroy(this);
     }
 
