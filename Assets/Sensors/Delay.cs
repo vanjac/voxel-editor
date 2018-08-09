@@ -102,14 +102,31 @@ public class DelayComponent : SensorComponent
 
     void Update()
     {
+        float time = Time.time;
+
         EntityComponent inputEntity = input.component;
         if (inputEntity == null)
         {
-            // TODO
-            ClearActivators();
-            return;
+            foreach (DelayedActivator delayedA in delayedActivators.Values)
+            {
+                if (delayedA.activatorCount != 0)
+                {
+                    delayedA.activatorCount = 0;
+                    if (!delayedA.turnedOn || offTime == 0)
+                    {
+                        delayedActivatorsToRemove.Add(delayedA.activator);
+                        RemoveActivator(delayedA.activator);
+                    }
+                    else
+                    {
+                        delayedA.changeTime = time;
+                    }
+                }
+            }
+            foreach (EntityComponent e in delayedActivatorsToRemove)
+                delayedActivators.Remove(e);
+            delayedActivatorsToRemove.Clear();
         }
-        float time = Time.time;
 
         foreach (DelayedActivator delayedA in delayedActivators.Values)
         {
@@ -133,6 +150,9 @@ public class DelayComponent : SensorComponent
         foreach (EntityComponent e in delayedActivatorsToRemove)
             delayedActivators.Remove(e);
         delayedActivatorsToRemove.Clear();
+
+        if (inputEntity == null)
+            return;
 
         foreach (EntityComponent _newActivator in inputEntity.GetNewActivators())
         {
@@ -170,12 +190,7 @@ public class DelayComponent : SensorComponent
                 var delayedA = delayedActivators[removedActivator];
                 if (delayedA.activatorCount == 1)
                 {
-                    if (!delayedA.turnedOn)
-                    {
-                        delayedActivatorsToRemove.Add(removedActivator);
-                        RemoveActivator(removedActivator);
-                    }
-                    else if (offTime == 0)
+                    if (!delayedA.turnedOn || offTime == 0)
                     {
                         delayedActivatorsToRemove.Add(removedActivator);
                         RemoveActivator(removedActivator);
