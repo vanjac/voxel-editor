@@ -33,7 +33,7 @@ public class MenuOverflowGUI : GUIPanel
             overflow.items = new OverflowMenuGUI.MenuItem[]
             {
                 new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
-                    var help = gameObject.AddComponent<HelpGUI>();
+                    gameObject.AddComponent<HelpGUI>();
                 }),
                 new OverflowMenuGUI.MenuItem("About", GUIIconSet.instance.about, () =>
                 {
