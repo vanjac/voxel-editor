@@ -75,8 +75,8 @@ public class Tutorials
 @"•  Double tap to select an entire wall. The selection will be bounded by already-selected faces.
 •  Triple tap a face to select <i>all</i> faces connected to it. The selection will be bounded by already-selected faces.
 •  Triple tap a substance to select the entire substance.
-•  Check the “X-ray” box of a substance to make it transparent in the editor only. This lets you see behind it and zoom through it.
-•  The paint panel keeps shortcuts for the four most recent paints. To “copy” a paint to another face, select the origin face, open and close the paint panel, then select the destination faces and use the recent paint shortcut.
+•  Check the ""X-ray"" box of a substance to make it transparent in the editor only. This lets you see behind it and zoom through it.
+•  The paint panel keeps shortcuts for the four most recent paints. To ""copy"" a paint to another face, select the origin face, open and close the paint panel, then select the destination faces and use the recent paint shortcut.
 •  Sliding faces sideways along a wall moves their paints, leaving a trail behind them.
 ";
 
@@ -157,7 +157,7 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>Tap Add Behavior. Tap the Target button, then tap Activators. Then choose the Hurt/Heal behavior.</i>"),
         () => new SimpleTutorialPage(
-            "This behavior targets its \"Activators\", which are the objects that “cause” the sensor to turn on -- "
+            "This behavior targets its \"Activators\", which are the objects that \"cause\" the sensor to turn on -- "
             + "in this case, any objects that touch the trigger."),
         () => new SimpleTutorialPage(
             "<i>Make the trigger hurt the Activator by -100 points.</i>"),
@@ -514,7 +514,7 @@ public class Tutorials
     private class TutorialPaintSky : TutorialPaintPage
     {
         public TutorialPaintSky()
-            : base("The “Sky” material is special: in the game it is an unobstructed window to the sky. "
+            : base("The \"Sky\" material is special: in the game it is an unobstructed window to the sky. "
                 + "Since the world can't have holes, this is the only way to see the sky.") { }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
