@@ -138,12 +138,15 @@ public class InputThresholdComponent : SensorComponent
         for (int i = 0; i < inputs.Length; i++)
         {
             EntityComponent e = inputs[i].entityRef.component;
-            if (e != null && e.IsOn())
+            if (e != null)
             {
-                if (inputs[i].negative)
-                    energy--;
-                else
-                    energy++;
+                if (e.IsOn())
+                {
+                    if (inputs[i].negative)
+                        energy--;
+                    else
+                        energy++;
+                }
                 AddActivators(e.GetNewActivators());
                 RemoveActivators(e.GetRemovedActivators());
             }
