@@ -95,7 +95,7 @@ public class DelayComponent : SensorComponent
             nullDelayedA.turnedOn = true;
             nullDelayedA.activatorCount = 0;
             nullDelayedA.changeTime = Time.time;
-            AddActivator(nullDelayedA.activator);
+            AddActivator(null);
             delayedActivators[nullDelayedA.activator] = nullDelayedA;
         }
     }
@@ -112,7 +112,10 @@ public class DelayComponent : SensorComponent
                 if (time - delayedA.changeTime >= onTime)
                 {
                     delayedA.turnedOn = true;
-                    AddActivator(delayedA.activator);
+                    if (delayedA.activator == nullDummyComponent)
+                        AddActivator(null);
+                    else
+                        AddActivator(delayedA.activator);
                 }
             }
             else if (delayedA.activatorCount == 0)
@@ -120,7 +123,10 @@ public class DelayComponent : SensorComponent
                 if (time - delayedA.changeTime >= offTime)
                 {
                     delayedActivatorsToRemove.Add(delayedA.activator);
-                    RemoveActivator(delayedA.activator);
+                    if (delayedA.activator == nullDummyComponent)
+                        RemoveActivator(null);
+                    else
+                        RemoveActivator(delayedA.activator);
                 }
             }
         }
@@ -146,7 +152,7 @@ public class DelayComponent : SensorComponent
                 if (onTime == 0)
                 {
                     delayedA.turnedOn = true;
-                    AddActivator(newActivator);
+                    AddActivator(_newActivator); // NOT newActivator. need null, not dummy object
                 }
                 else
                 {
@@ -170,7 +176,7 @@ public class DelayComponent : SensorComponent
                     if (!delayedA.turnedOn || offTime == 0)
                     {
                         delayedActivatorsToRemove.Add(removedActivator);
-                        RemoveActivator(removedActivator);
+                        RemoveActivator(_removedActivator); // NOT removedActivator. need null, not dummy object
                     }
                     else
                     {
