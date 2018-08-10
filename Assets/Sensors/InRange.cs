@@ -40,24 +40,46 @@ public class InRangeSensor : ActivatedSensor
         sphereCollider.isTrigger = true;
         sphereCollider.radius = distance;
 
-        var lateUpdateParent = sphereObject.AddComponent<LateUpdateParent>();
-        lateUpdateParent.parent = gameObject;
-
         var sphereTouchComponent = sphereObject.AddComponent<TouchComponent>();
         sphereTouchComponent.filter = filter;
         // entity can't activate its own In Range sensor
         sphereTouchComponent.ignoreEntity = gameObject.GetComponent<EntityComponent>();
 
+        var updateComponent = sphereObject.AddComponent<InRangeUpdate>();
+        updateComponent.parent = gameObject;
+        updateComponent.sensor = sphereTouchComponent;
+
         return sphereTouchComponent;
     }
 }
 
-public class LateUpdateParent : MonoBehaviour
+public class InRangeUpdate : MonoBehaviour
 {
     public GameObject parent;
+    public SensorComponent sensor;
 
     void LateUpdate()
     {
-        transform.position = parent.transform.position;
+        if (parent == null)
+            Destroy(gameObject);
+        else
+        {
+            transform.position = parent.transform.position;
+            // TODO: this is very ugly
+            // entity is about to die, so remove all activators
+            // see DynamicEntityComponent.Die()
+            if (transform.position == DynamicEntityComponent.KILL_LOCATION)
+            {
+                StartCoroutine(ClearSensorCoroutine());
+            }
+        }
+    }
+
+    private IEnumerator ClearSensorCoroutine()
+    {
+        // make sure sensor.LateUpdate() won't be called again after this
+        yield return new WaitForEndOfFrame();
+        sensor.ClearActivators();
+        sensor.LateUpdate();
     }
 }

@@ -725,6 +725,8 @@ public abstract class DynamicEntity : Entity
 
 public abstract class DynamicEntityComponent : EntityComponent
 {
+    public static readonly Vector3 KILL_LOCATION = new Vector3(9999, 9999, 9999);
+
     public float health;
     private Vector3 lastRigidbodyPosition;
     private Vector3 cumulativeRigidbodyTranslate;
@@ -747,7 +749,7 @@ public abstract class DynamicEntityComponent : EntityComponent
     public void Die()
     {
         // move entity out of any touch sensors so they will have a chance to turn off before it's destroyed
-        transform.position = new Vector3(9999, 9999, 9999);
+        transform.position = KILL_LOCATION;
         SensorComponent sensor = GetComponent<SensorComponent>();
         if (sensor != null)
             // make sure activators are removed from any outputs
