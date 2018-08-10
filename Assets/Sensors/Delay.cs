@@ -103,30 +103,7 @@ public class DelayComponent : SensorComponent
     void Update()
     {
         float time = Time.time;
-
         EntityComponent inputEntity = input.component;
-        if (inputEntity == null)
-        {
-            foreach (DelayedActivator delayedA in delayedActivators.Values)
-            {
-                if (delayedA.activatorCount != 0)
-                {
-                    delayedA.activatorCount = 0;
-                    if (!delayedA.turnedOn || offTime == 0)
-                    {
-                        delayedActivatorsToRemove.Add(delayedA.activator);
-                        RemoveActivator(delayedA.activator);
-                    }
-                    else
-                    {
-                        delayedA.changeTime = time;
-                    }
-                }
-            }
-            foreach (EntityComponent e in delayedActivatorsToRemove)
-                delayedActivators.Remove(e);
-            delayedActivatorsToRemove.Clear();
-        }
 
         foreach (DelayedActivator delayedA in delayedActivators.Values)
         {
