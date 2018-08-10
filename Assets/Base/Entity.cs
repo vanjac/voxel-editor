@@ -689,7 +689,7 @@ public abstract class SensorComponent : MonoBehaviour
             RemoveActivator(activator);
     }
 
-    protected void ClearActivators()
+    public void ClearActivators()
     {
         removedActivators_next.UnionWith(activators);
         removedActivators_next.ExceptWith(newActivators_next);
@@ -748,6 +748,10 @@ public abstract class DynamicEntityComponent : EntityComponent
     {
         // move entity out of any touch sensors so they will have a chance to turn off before it's destroyed
         transform.position = new Vector3(9999, 9999, 9999);
+        SensorComponent sensor = GetComponent<SensorComponent>();
+        if (sensor != null)
+            // make sure activators are removed from any outputs
+            sensor.ClearActivators();
         StartCoroutine(DestroyCoroutine());
     }
 
