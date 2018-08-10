@@ -207,7 +207,7 @@ public class PropertiesGUI : GUIPanel
             string suffix = " Behavior";
             if (behavior.targetEntityIsActivator)
             {
-                suffix += "\n▶  Activator";
+                suffix += "\n▶  Activators";
             }
             else if (behaviorTarget != null)
             {
@@ -359,7 +359,7 @@ public class NewBehaviorGUI : GUIPanel
     {
         string targetButtonText = "Target:  Self";
         if (targetEntityIsActivator)
-            targetButtonText = "Target:  Activator";
+            targetButtonText = "Target:  Activators";
         else if (targetEntity != null)
             targetButtonText = "Target:  " + targetEntity.ToString();
         if (GUIUtils.HighlightedButton(targetButtonText))
@@ -369,7 +369,7 @@ public class NewBehaviorGUI : GUIPanel
             entityPicker.allowNone = true;
             entityPicker.allowMultiple = false;
             entityPicker.allowNull = true;
-            entityPicker.nullName = "Activator";
+            entityPicker.nullName = "Activators";
             entityPicker.handler = (ICollection<Entity> entities) =>
             {
                 entityPicker = null;

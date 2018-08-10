@@ -155,10 +155,10 @@ public class Tutorials
             "The trigger should already have a Touch sensor with the filter set to Anything. "
             + "This is good because nothing escapes the Pit of Death."),
         () => new SimpleTutorialPage(
-            "<i>Tap Add Behavior. Tap the Target button, then tap Activator. Then choose the Hurt/Heal behavior.</i>"),
+            "<i>Tap Add Behavior. Tap the Target button, then tap Activators. Then choose the Hurt/Heal behavior.</i>"),
         () => new SimpleTutorialPage(
-            "This behavior targets its \"Activator\", which is the object that “caused” the sensor to turn on -- "
-            + "in this case, the object that touched the trigger."),
+            "This behavior targets its \"Activators\", which are the objects that “cause” the sensor to turn on -- "
+            + "in this case, any objects that touch the trigger."),
         () => new SimpleTutorialPage(
             "<i>Make the trigger hurt the Activator by -100 points.</i>"),
         () => new SimpleTutorialPage(
