@@ -22,7 +22,7 @@ public class MapFileWriter
     {
         if (voxelArray.IsEmpty())
         {
-            Debug.Log("Map is empty! File will not be written.");
+            Debug.Log("World is empty! File will not be written.");
             return;
         }
 

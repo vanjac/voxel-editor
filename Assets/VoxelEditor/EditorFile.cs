@@ -54,7 +54,7 @@ public class EditorFile : MonoBehaviour
             b.enabled = true;
         if (warnings.Count > 0)
         {
-            string message = "There were some issues with reading the map:\n\n  •  " +
+            string message = "There were some issues with reading the world:\n\n  •  " +
                 string.Join("\n  •  ", warnings.ToArray());
             LargeMessageGUI.ShowLargeMessageDialog(loadingGUI.gameObject, message);
         }

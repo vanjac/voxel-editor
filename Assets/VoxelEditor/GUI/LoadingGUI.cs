@@ -19,7 +19,7 @@ public class LoadingGUI : GUIPanel
     public override void WindowGUI()
     {
         GUILayout.FlexibleSpace();
-        GUILayout.Label("Loading map...", GUIUtils.LABEL_HORIZ_CENTERED.Value);
+        GUILayout.Label("Loading world...", GUIUtils.LABEL_HORIZ_CENTERED.Value);
         GUILayout.FlexibleSpace();
     }
 }

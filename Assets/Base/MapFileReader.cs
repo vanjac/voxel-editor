@@ -65,18 +65,18 @@ public class MapFileReader
         }
         catch (Exception e)
         {
-            throw new MapReadException("Invalid map file", e);
+            throw new MapReadException("Invalid world file", e);
         }
         if (rootNode == null)
-            throw new MapReadException("Invalid map file");
+            throw new MapReadException("Invalid world file");
         JSONObject root = rootNode.AsObject;
         if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
         {
-            throw new MapReadException("Invalid map file");
+            throw new MapReadException("Invalid world file");
         }
         if (root["minReaderVersion"].AsInt > VERSION)
         {
-            throw new MapReadException("This map requires a newer version of the app");
+            throw new MapReadException("This world file requires a newer version of the app");
         }
         fileWriterVersion = root["writerVersion"].AsInt;
 
@@ -95,7 +95,7 @@ public class MapFileReader
         }
         catch (Exception e)
         {
-            throw new MapReadException("Error reading map file", e);
+            throw new MapReadException("Error reading world file", e);
         }
 
         return warnings;

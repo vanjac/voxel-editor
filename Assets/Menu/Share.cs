@@ -45,7 +45,7 @@ public class ShareMap
                 { }
             }
 
-            AndroidJavaObject jChooser = intentClass.CallStatic<AndroidJavaObject>("createChooser", intentObject, "Share map...");
+            AndroidJavaObject jChooser = intentClass.CallStatic<AndroidJavaObject>("createChooser", intentObject, "Share world...");
             currentActivity.Call("startActivity", jChooser);
         }
     }
