@@ -55,10 +55,12 @@ public class HelpGUI : GUIPanel
 
     private void DemoWorldsTab()
     {
-        if (GUILayout.Button("Ball Pit"))
-            OpenDemoWorld("Demo - Ball pit", "Demos/ball_pit");
         if (GUILayout.Button("Logic"))
             OpenDemoWorld("Demo - Logic", "Demos/logic");
+        if (GUILayout.Button("Conveyor"))
+            OpenDemoWorld("Demo - Conveyor", "Demos/conveyor");
+        if (GUILayout.Button("Ball Pit"))
+            OpenDemoWorld("Demo - Ball pit", "Demos/ball_pit");
         if (GUILayout.Button("Platform Game"))
             OpenDemoWorld("Demo - Platform Game", "Demos/platforms");
     }
