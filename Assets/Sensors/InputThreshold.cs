@@ -131,29 +131,80 @@ public class InputThresholdComponent : SensorComponent
 {
     public InputThresholdSensor.Input[] inputs;
     public float threshold;
+    private Dictionary<EntityComponent, int> activatorCounts = new Dictionary<EntityComponent, int>();
+    private bool wasOn = false;
 
     void Update()
     {
-        int energy = 0;
-        for (int i = 0; i < inputs.Length; i++)
+        int energy = CalculateEnergy();
+        bool isOn = energy >= threshold;
+
+        if (isOn && !wasOn)
         {
-            EntityComponent e = inputs[i].entityRef.component;
-            if (e != null)
+            AddActivator(null); // make sure sensor is on
+            foreach (EntityComponent activator in activatorCounts.Keys)
+                AddActivator(activator);
+        }
+        else if (wasOn && !isOn)
+        {
+            ClearActivators();
+        }
+        wasOn = isOn;
+
+        foreach (var input in inputs)
+        {
+            EntityComponent e = input.entityRef.component;
+            if (e == null)
+                continue;
+            foreach (var newActivator in e.GetNewActivators())
             {
-                if (e.IsOn())
+                if (newActivator == null)
+                    continue; // always has null activator
+                if (activatorCounts.ContainsKey(newActivator))
+                    activatorCounts[newActivator]++;
+                else
                 {
-                    if (inputs[i].negative)
-                        energy--;
-                    else
-                        energy++;
+                    activatorCounts[newActivator] = 1;
+                    if (isOn)
+                        AddActivator(newActivator);
                 }
-                AddActivators(e.GetNewActivators());
-                RemoveActivators(e.GetRemovedActivators());
+            }
+            foreach (var removedActivator in e.GetRemovedActivators())
+            {
+                if (removedActivator == null)
+                    continue; // always has null activator
+                if (activatorCounts.ContainsKey(removedActivator))
+                {
+                    var count = activatorCounts[removedActivator] - 1;
+                    if (count <= 0)
+                    {
+                        activatorCounts.Remove(removedActivator);
+                        if (isOn)
+                            RemoveActivator(removedActivator);
+                    }
+                    else
+                    {
+                        activatorCounts[removedActivator] = count;
+                    }
+                }
+            }
+        } // end foreach input
+    }
+
+    private int CalculateEnergy()
+    {
+        int energy = 0;
+        foreach (var input in inputs)
+        {
+            EntityComponent e = input.entityRef.component;
+            if (e != null && e.IsOn())
+            {
+                if (input.negative)
+                    energy--;
+                else
+                    energy++;
             }
         }
-        if (energy < threshold)
-            ClearActivators();
-        else if (GetActivators().Count == 0)
-            AddActivator(null);
+        return energy;
     }
 }
