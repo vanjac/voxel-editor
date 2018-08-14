@@ -142,8 +142,9 @@ public class ActionBarGUI : GUIPanel
 
         GUILayout.FlexibleSpace();
         int moveCount = 0;
-        if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE)
-            moveCount = Mathf.Abs(touchListener.movingAxis.moveCount);
+        if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
+            && touchListener.movingAxis is MoveAxis)
+            moveCount = Mathf.Abs(((MoveAxis)touchListener.movingAxis).moveCount);
         if (moveCount != 0)
             ActionBarLabel(moveCount.ToString());
         else

@@ -2,42 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveAxis : MonoBehaviour
+public class MoveAxis : TransformAxis
 {
     public Vector3 forwardDirection;
-    public Camera mainCamera;
-    public VoxelArrayEditor voxelArray;
-    private LineRenderer lineRenderer;
     public int moveCount = 0;
     private bool moving;
 
-    void Start()
+    public override void Update()
     {
-        lineRenderer = GetComponent<LineRenderer>();
-        UpdateSize();
-    }
-
-    void OnEnable()
-    {
-        if (lineRenderer != null)
-            UpdateSize();
-    }
-
-    void Update()
-    {
-        UpdateSize();
+        base.Update();
         if (!moving)
         {
             float move = (GetOriginPosition() - GetAxisPosition()) / 4.0f;
             transform.position += forwardDirection * move;
         }
-    }
-
-    private void UpdateSize()
-    {
-        float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
-        transform.localScale = Vector3.one * distanceToCam / 4;
-        lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
     }
 
     private float GetAxisPosition()
@@ -52,18 +30,18 @@ public class MoveAxis : MonoBehaviour
 
     // below Touch functions are called by Touch Listener
 
-    public void TouchDown(Touch touch)
+    public override void TouchDown(Touch touch)
     {
         moveCount = 0;
         moving = true;
     }
 
-    public void TouchUp()
+    public override void TouchUp()
     {
         moving = false;
     }
 
-    public void TouchDrag(Touch touch)
+    public override void TouchDrag(Touch touch)
     {
         float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
 
