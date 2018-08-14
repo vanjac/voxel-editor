@@ -45,6 +45,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
     public void UpdateMarker()
     {
         transform.position = objectEntity.PositionInEditor();
+        transform.rotation = Quaternion.Euler(new Vector3(0, objectEntity.rotation, 0));
         UpdateMaterials();
     }
 
