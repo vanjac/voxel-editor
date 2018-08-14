@@ -628,19 +628,19 @@ public abstract class SensorComponent : MonoBehaviour
     // all current activators
     // if the number is greater than zero, the sensor is on
     // a null activator is possible - this allows the sensor to be on without having any activators
-    public virtual ICollection<EntityComponent> GetActivators()
+    public ICollection<EntityComponent> GetActivators()
     {
         return activators;
     }
 
     // activators that have been added this frame
-    public virtual ICollection<EntityComponent> GetNewActivators()
+    public ICollection<EntityComponent> GetNewActivators()
     {
         return newActivators;
     }
 
     // activators that have been removed this frame
-    public virtual ICollection<EntityComponent> GetRemovedActivators()
+    public ICollection<EntityComponent> GetRemovedActivators()
     {
         return removedActivators;
     }
