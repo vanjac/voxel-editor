@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class RotateAxis : TransformAxis
 {
+    private const float SNAP = 45;
+
     private float startTouchAngle;
     private float startAxisAngle;
     private bool moving;
+    private float value;
 
     public override void Update()
     {
         base.Update();
         if (!moving)
         {
-            float diff = 0 - GetAxisAngle(); // TODO
+            float diff = value - GetAxisAngle();
             while (diff > 180)
                 diff -= 360;
             while (diff < -180)
@@ -39,6 +42,24 @@ public class RotateAxis : TransformAxis
         float newTouchAngle = GetTouchAngle(touch.position);
         float newAxisAngle = startAxisAngle + newTouchAngle - startTouchAngle;
         SetAxisAngle(newAxisAngle);
+
+        float diff = newAxisAngle - value;
+        while (diff > 180)
+            diff -= 360;
+        while (diff < -180)
+            diff += 360;
+        while (diff > SNAP)
+        {
+            voxelArray.RotateObjects(SNAP);
+            diff -= SNAP;
+            value += SNAP;
+        }
+        while (diff < -SNAP)
+        {
+            voxelArray.RotateObjects(-SNAP);
+            diff += SNAP;
+            value -= SNAP;
+        }
     }
 
     private float GetTouchAngle(Vector2 pos)

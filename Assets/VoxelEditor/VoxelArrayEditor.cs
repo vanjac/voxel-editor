@@ -297,6 +297,13 @@ public class VoxelArrayEditor : VoxelArray
                 yield return (VoxelFaceReference)thing;
     }
 
+    private System.Collections.Generic.IEnumerable<ObjectMarker> IterateSelectedObjects()
+    {
+        foreach (Selectable thing in IterateSelected())
+            if (thing is ObjectMarker)
+                yield return (ObjectMarker)thing;
+    }
+
     // including stored selection
     public bool SomethingIsSelected()
     {
@@ -824,6 +831,15 @@ public class VoxelArrayEditor : VoxelArray
             }
         }
         return voxel;
+    }
+
+    public void RotateObjects(float amount)
+    {
+        foreach (ObjectMarker obj in IterateSelectedObjects())
+        {
+            obj.objectEntity.rotation += amount;
+            ObjectModified(obj.objectEntity);
+        }
     }
 
     public VoxelFace GetSelectedPaint()
