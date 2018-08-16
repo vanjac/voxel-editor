@@ -39,3 +39,5 @@ sysinfo.txt
 /Assets/GameAssets/FreePBR/*.png
 /Assets/GameAssets/FreePBR/*.psd
 /Assets/GameAssets/Genetica/*.png
+
+*.keystore

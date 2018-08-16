@@ -126,7 +126,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.1.3
+  bundleVersion: 1.1.3b
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -243,8 +243,8 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: C:/Users/jacob/Documents/VoxelEditor/upload.keystore
+  AndroidKeyaliasName: upload
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
