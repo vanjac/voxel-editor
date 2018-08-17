@@ -47,8 +47,7 @@ public class WaterComponent : BehaviorComponent
         {
             foreach (Voxel voxel in substanceComponent.substance.voxels)
             {
-                Bounds bounds = voxel.GetBounds();
-                float top = bounds.max.y - transform.position.y;
+                float top = voxel.GetBounds().max.y - transform.position.y;
                 if (top > waterLevel)
                     waterLevel = top;
             }
