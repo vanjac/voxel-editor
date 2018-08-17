@@ -375,6 +375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
   mainCamera: {fileID: 1179125980}
+  scaleFactor: 1
   forwardDirection: {x: 0, y: 1, z: 0}
   moveCount: 0
 --- !u!1 &609989222
@@ -676,6 +677,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
   mainCamera: {fileID: 1179125980}
+  scaleFactor: 1
   forwardDirection: {x: 0, y: 0, z: 1}
   moveCount: 0
 --- !u!120 &1061257465
@@ -817,7 +819,7 @@ Transform:
   m_GameObject: {fileID: 1097770320}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_Children: []
   m_Father: {fileID: 609989223}
   m_RootOrder: 0
@@ -937,6 +939,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
   mainCamera: {fileID: 1179125980}
+  scaleFactor: 1.2
 --- !u!64 &1097770324
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1192,5 +1195,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
   mainCamera: {fileID: 1179125980}
+  scaleFactor: 1
   forwardDirection: {x: 1, y: 0, z: 0}
   moveCount: 0

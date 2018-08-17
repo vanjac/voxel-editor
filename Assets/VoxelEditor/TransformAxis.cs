@@ -6,6 +6,7 @@ public abstract class TransformAxis : MonoBehaviour
 {
     public VoxelArrayEditor voxelArray;
     public Camera mainCamera;
+    public float scaleFactor = 1;
     private LineRenderer lineRenderer;
 
     void Start()
@@ -28,7 +29,7 @@ public abstract class TransformAxis : MonoBehaviour
     private void UpdateSize()
     {
         float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
-        transform.localScale = Vector3.one * distanceToCam / 4;
+        transform.localScale = Vector3.one * scaleFactor * distanceToCam / 4;
         lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
     }
 
