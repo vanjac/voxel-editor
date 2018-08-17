@@ -9,6 +9,7 @@ public abstract class ObjectEntity : DynamicEntity
 
     public ObjectMarker marker;
     public Vector3Int position;
+    public float rotation;
 
     public override PropertiesObjectType ObjectType()
     {
@@ -49,6 +50,7 @@ public abstract class ObjectEntity : DynamicEntity
         var c = CreateEntityComponent(voxelArray);
         c.transform.parent = voxelArray.transform;
         c.transform.position = PositionInEditor();
+        c.transform.rotation = Quaternion.Euler(new Vector3(0, rotation, 0));
         c.entity = this;
         c.health = health;
         if (storeComponent)

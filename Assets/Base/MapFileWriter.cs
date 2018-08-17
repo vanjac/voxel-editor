@@ -8,8 +8,8 @@ using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 4;
-    private const int FILE_MIN_READER_VERSION = 3;
+    public const int VERSION = 5;
+    private const int FILE_MIN_READER_VERSION = 5;
 
     private string fileName;
 
@@ -119,6 +119,7 @@ public class MapFileWriter
     {
         JSONObject entityObject = WriteEntity(objectEntity, includeName);
         entityObject["at"] = WriteIntVector3(objectEntity.position);
+        entityObject["rotate"] = objectEntity.rotation;
 
         return entityObject;
     }

@@ -274,8 +274,11 @@ public class Tutorials
             }
         }
 
-        public static bool AxisMatchesFace(MoveAxis moveAxis, int faceNormal)
+        public static bool AxisMatchesFace(TransformAxis transformAxis, int faceNormal)
         {
+            var moveAxis = transformAxis as MoveAxis;
+            if (moveAxis == null)
+                return false;
             if (faceNormal == -1)
                 return false;
             return moveAxis.forwardDirection == Voxel.DirectionForFaceI(
@@ -290,7 +293,7 @@ public class Tutorials
             if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
                 && AxisMatchesFace(touchListener.movingAxis, faceNormal))
             {
-                int moveCount = touchListener.movingAxis.moveCount;
+                int moveCount = ((MoveAxis)touchListener.movingAxis).moveCount;
                 if (faceNormal % 2 == 0)
                 {
                     if (moveCount <= -1)
@@ -335,7 +338,7 @@ public class Tutorials
             if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
                 && TutorialIntroPull.AxisMatchesFace(touchListener.movingAxis, faceNormal))
             {
-                int moveCount = touchListener.movingAxis.moveCount;
+                int moveCount = ((MoveAxis)touchListener.movingAxis).moveCount;
                 if (faceNormal % 2 == 0)
                 {
                     if (moveCount >= 1)

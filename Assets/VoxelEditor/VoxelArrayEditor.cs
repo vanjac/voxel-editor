@@ -79,6 +79,7 @@ public class VoxelArrayEditor : VoxelArray
     public static VoxelArrayEditor instance = null;
 
     public Transform axes;
+    public RotateAxis rotateAxis;
 
     public Material selectedMaterial;
     public Material xRayMaterial;
@@ -151,7 +152,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void TouchDown(Selectable thing)
     {
-        SetMoveAxesEnabled(false);
+        DisableMoveAxes();
         if (thing == null)
         {
             ClearSelection();
@@ -189,8 +190,7 @@ public class VoxelArrayEditor : VoxelArray
     // called by TouchListener
     public void TouchUp()
     {
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        AutoSetMoveAxesEnabled();
     }
 
     // called by TouchListener
@@ -198,8 +198,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         ClearSelection();
         FaceSelectFloodFill(voxel, faceI, voxel.substance);
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        AutoSetMoveAxesEnabled();
     }
 
     // called by TouchListener
@@ -211,15 +210,12 @@ public class VoxelArrayEditor : VoxelArray
         if (voxel.substance == null)
         {
             SurfaceSelectFloodFill(voxel, faceI, voxel.substance);
-            if (SomethingIsSelected())
-                SetMoveAxesEnabled(true);
         }
         else
         {
             SubstanceSelect(voxel.substance);
-            if (SomethingIsSelected())
-                SetMoveAxesEnabled(true);
         }
+        AutoSetMoveAxesEnabled();
     }
 
     private void SetMoveAxes(Vector3 position)
@@ -229,11 +225,19 @@ public class VoxelArrayEditor : VoxelArray
         axes.position = position;
     }
 
-    private void SetMoveAxesEnabled(bool enabled)
+    private void DisableMoveAxes()
     {
         if (axes == null)
             return;
-        axes.gameObject.SetActive(enabled);
+        axes.gameObject.SetActive(false);
+    }
+
+    private void AutoSetMoveAxesEnabled()
+    {
+        if (axes == null)
+            return;
+        axes.gameObject.SetActive(SomethingIsSelected());
+        rotateAxis.gameObject.SetActive(ObjectsAreSelected());
     }
 
     public void ClearSelection()
@@ -244,8 +248,7 @@ public class VoxelArrayEditor : VoxelArray
             thing.SelectionStateUpdated();
         }
         selectedThings.Clear();
-        if (!SomethingIsSelected())
-            SetMoveAxesEnabled(false);
+        AutoSetMoveAxesEnabled();
         selectMode = SelectMode.NONE;
         selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
         selectionChanged = true;
@@ -297,6 +300,13 @@ public class VoxelArrayEditor : VoxelArray
                 yield return (VoxelFaceReference)thing;
     }
 
+    private System.Collections.Generic.IEnumerable<ObjectMarker> IterateSelectedObjects()
+    {
+        foreach (Selectable thing in IterateSelected())
+            if (thing is ObjectMarker)
+                yield return (ObjectMarker)thing;
+    }
+
     // including stored selection
     public bool SomethingIsSelected()
     {
@@ -315,7 +325,14 @@ public class VoxelArrayEditor : VoxelArray
 
     public bool FacesAreSelected()
     {
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        foreach (var faceRef in IterateSelectedFaces())
+            return true;
+        return false;
+    }
+
+    public bool ObjectsAreSelected()
+    {
+        foreach (var marker in IterateSelectedObjects())
             return true;
         return false;
     }
@@ -381,8 +398,7 @@ public class VoxelArrayEditor : VoxelArray
             thing.SelectionStateUpdated();
         }
         storedSelectedThings.Clear();
-        if (!SomethingIsSelected())
-            SetMoveAxesEnabled(false);
+        AutoSetMoveAxesEnabled();
         selectionChanged = true;
     }
 
@@ -544,8 +560,7 @@ public class VoxelArrayEditor : VoxelArray
             SelectThing(thing);
         selectMode = state.selectMode;
         axes.position = state.axes;
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        AutoSetMoveAxesEnabled();
     }
 
     public void Adjust(Vector3 adjustDirection)
@@ -793,7 +808,7 @@ public class VoxelArrayEditor : VoxelArray
         if (substanceToCreate != null && createdSubstance)
             substanceToCreate = null;
 
-        SetMoveAxesEnabled(SomethingIsSelected());
+        AutoSetMoveAxesEnabled();
     } // end Adjust()
 
     private Voxel CreateSubstanceBlock(Vector3 position, Substance substance, VoxelFace faceTemplate)
@@ -824,6 +839,15 @@ public class VoxelArrayEditor : VoxelArray
             }
         }
         return voxel;
+    }
+
+    public void RotateObjects(float amount)
+    {
+        foreach (ObjectMarker obj in IterateSelectedObjects())
+        {
+            obj.objectEntity.rotation += amount;
+            ObjectModified(obj.objectEntity);
+        }
     }
 
     public VoxelFace GetSelectedPaint()

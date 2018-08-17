@@ -19,7 +19,7 @@ public class TouchListener : MonoBehaviour
     public VoxelArrayEditor voxelArray;
 
     public TouchOperation currentTouchOperation = TouchOperation.NONE;
-    public MoveAxis movingAxis;
+    public TransformAxis movingAxis;
     public Transform pivot;
     private Camera cam;
 
@@ -54,7 +54,7 @@ public class TouchListener : MonoBehaviour
                 out hit, Mathf.Infinity, selectingXRay ? Physics.DefaultRaycastLayers : NO_XRAY_MASK);
             Voxel hitVoxel = null;
             int hitFaceI = -1;
-            MoveAxis hitMoveAxis = null;
+            TransformAxis hitTransformAxis = null;
             ObjectMarker hitMarker = null;
             if (rayHitSomething)
             {
@@ -72,7 +72,7 @@ public class TouchListener : MonoBehaviour
                 }
                 else if (hitObject.tag == "MoveAxis")
                 {
-                    hitMoveAxis = hitObject.GetComponent<MoveAxis>();
+                    hitTransformAxis = hitObject.GetComponent<TransformAxis>();
                 }
 
                 if ( (hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
@@ -88,7 +88,7 @@ public class TouchListener : MonoBehaviour
                             hitVoxel = null;
                             hitFaceI = -1;
                             hitMarker = null;
-                            hitMoveAxis = newHit.transform.GetComponent<MoveAxis>();
+                            hitTransformAxis = newHit.transform.GetComponent<TransformAxis>();
                         }
                     }
                 }
@@ -149,12 +149,12 @@ public class TouchListener : MonoBehaviour
                     selectingXRay = hitMarker.objectEntity.xRay;
                     UpdateZoomDepth();
                 }
-                else if (hitMoveAxis != null)
+                else if (hitTransformAxis != null)
                 {
                     if (touch.tapCount == 1)
                     {
                         currentTouchOperation = TouchOperation.MOVE;
-                        movingAxis = hitMoveAxis;
+                        movingAxis = hitTransformAxis;
                         movingAxis.TouchDown(touch);
                     }
                     else if (touch.tapCount == 2 && lastHitVoxel != null)

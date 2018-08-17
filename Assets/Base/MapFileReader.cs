@@ -235,6 +235,8 @@ public class MapFileReader
         ReadEntity(entityObject, objectEntity);
         if (entityObject["at"] != null)
             objectEntity.position = ReadVector3Int(entityObject["at"].AsArray);
+        if (entityObject["rotate"] != null)
+            objectEntity.rotation = entityObject["rotate"].AsFloat;
     }
 
     private void ReadEntity(JSONObject entityObject, Entity entity)
