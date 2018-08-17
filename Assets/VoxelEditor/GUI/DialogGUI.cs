@@ -12,6 +12,8 @@ public class DialogGUI : GUIPanel
     public ButtonHandler yesButtonHandler;
     public ButtonHandler noButtonHandler;
 
+    private bool calledHandler = false;
+
     public static DialogGUI ShowMessageDialog(GameObject gameObject, string message)
     {
         DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
@@ -34,15 +36,34 @@ public class DialogGUI : GUIPanel
         {
             if (yesButtonHandler != null)
                 yesButtonHandler();
+            calledHandler = true;
             Destroy(this);
         }
         if (noButtonText != null && GUILayout.Button(noButtonText))
         {
             if (noButtonHandler != null)
                 noButtonHandler();
+            calledHandler = true;
             Destroy(this);
         }
         GUILayout.EndHorizontal();
+    }
+
+    public void OnDestroy()
+    {
+        if (!calledHandler)
+        {
+            if (noButtonText != null)
+            {
+                if (noButtonHandler != null)
+                    noButtonHandler();
+            }
+            else if (yesButtonText != null)
+            {
+                if (yesButtonHandler != null)
+                    yesButtonHandler();
+            }
+        }
     }
 }
 
