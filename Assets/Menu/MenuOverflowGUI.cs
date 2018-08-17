@@ -37,7 +37,10 @@ public class MenuOverflowGUI : GUIPanel
                 }),
                 new OverflowMenuGUI.MenuItem("About", GUIIconSet.instance.about, () =>
                 {
-                    LargeMessageGUI.ShowLargeMessageDialog(gameObject, creditsText.text);
+                    string text = "Version " + Application.version
+                        + "\nMade with Unity " + Application.unityVersion
+                        + "\n\n" + creditsText.text;
+                    LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 })
             };
         }
