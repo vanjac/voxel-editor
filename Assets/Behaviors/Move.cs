@@ -61,7 +61,7 @@ public class MoveComponent : BehaviorComponent
             rigidBody.velocity = Vector3.zero;
     }
 
-    public override void BehaviorDisabled()
+    public override void LastBehaviorDisabled()
     {
         if (rigidBody != null)
             rigidBody.constraints = RigidbodyConstraints.None;

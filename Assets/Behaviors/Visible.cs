@@ -40,7 +40,7 @@ public class VisibleComponent : BehaviorComponent
             r.enabled = true;
     }
 
-    public override void BehaviorDisabled()
+    public override void LastBehaviorDisabled()
     {
         foreach (Renderer r in IterateRenderers())
             r.enabled = false;

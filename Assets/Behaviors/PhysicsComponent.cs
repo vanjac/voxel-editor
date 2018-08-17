@@ -100,7 +100,7 @@ public class PhysicsComponent : BehaviorComponent
         }
     }
 
-    public override void BehaviorDisabled()
+    public override void LastBehaviorDisabled()
     {
         Rigidbody rigidBody = GetComponent<Rigidbody>();
         if (rigidBody != null)

@@ -509,11 +509,26 @@ public abstract class BehaviorComponent : MonoBehaviour
     public virtual void OnDisable()
     {
         if (started)
+        {
             BehaviorDisabled();
+            bool anyMatchingBehaviorsRemaining = false;
+            foreach (Behaviour behavior in GetComponents(GetType()))
+            {
+                if (behavior.enabled)
+                {
+                    anyMatchingBehaviorsRemaining = true;
+                    break;
+                }
+            }
+            if (!anyMatchingBehaviorsRemaining)
+                LastBehaviorDisabled();
+        }
     }
 
     public virtual void BehaviorEnabled() { }
     public virtual void BehaviorDisabled() { }
+    // called after BehaviorDisabled(), if there are no more instances of this behavior still enabled
+    public virtual void LastBehaviorDisabled() { }
 }
 
 

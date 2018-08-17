@@ -39,7 +39,7 @@ public class SolidComponent : BehaviorComponent
             c.isTrigger = false;
     }
 
-    public override void BehaviorDisabled()
+    public override void LastBehaviorDisabled()
     {
         foreach (Collider c in IterateColliders())
             c.isTrigger = true;
