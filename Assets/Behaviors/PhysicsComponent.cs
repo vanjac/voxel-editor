@@ -146,7 +146,7 @@ public class PhysicsComponent : BehaviorComponent
     private float GetWaterLevel(float x, float z)
     {
         if (water != null && water.enabled)
-            return water.waterLevel;
+            return water.GetWaterLevel(x, z);
         return float.MinValue;
     }
 
