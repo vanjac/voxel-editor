@@ -75,7 +75,7 @@ class StoredPropertiesObject : PropertiesObject
             };
 
             properties.Add(new Property(
-                firstProperty.name, getter, setter, gui, firstProperty.explicitType))
+                firstProperty.name, getter, setter, gui, firstProperty.explicitType));
         }
     }
 
@@ -220,7 +220,12 @@ public class PropertiesGUI : GUIPanel
     private void UpdateEditEntity()
     {
         editBehaviors.Clear();
-        if (selectedEntities.Count == 1)
+        if (selectedEntities.Count == 0)
+        {
+            editEntity = null;
+            editSensor = null;
+        }
+        else if (selectedEntities.Count == 1)
         {
             Entity e = selectedEntities[0];
             editEntity = new StoredPropertiesObject(e);
@@ -233,8 +238,11 @@ public class PropertiesGUI : GUIPanel
         }
         else
         {
-            // TODO
-            editEntity = null;
+            // types don't match so we need to make a new array
+            PropertiesObject[] selectedPropertiesObjects = new PropertiesObject[selectedEntities.Count];
+            for (int i = 0; i < selectedEntities.Count; i++)
+                selectedPropertiesObjects[i] = selectedEntities[i];
+            editEntity = new StoredPropertiesObject(selectedPropertiesObjects);
             editSensor = null;
         }
     }
