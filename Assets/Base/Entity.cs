@@ -71,6 +71,8 @@ public class PropertiesObjectType
     [XmlIgnore]
     public readonly string description;
     [XmlIgnore]
+    public readonly string longDescription;
+    [XmlIgnore]
     public readonly string iconName;
     [XmlIgnore]
     public readonly Type type;
@@ -93,6 +95,7 @@ public class PropertiesObjectType
     public PropertiesObjectType(string fullName, Type type) {
         this.fullName = fullName;
         description = "";
+        longDescription = "";
         iconName = "";
         this.type = type;
         constructor = DefaultConstructor;
@@ -102,6 +105,17 @@ public class PropertiesObjectType
     {
         this.fullName = fullName;
         this.description = description;
+        longDescription = "";
+        this.iconName = iconName;
+        this.type = type;
+        constructor = DefaultConstructor;
+    }
+
+    public PropertiesObjectType(string fullName, string description, string longDescription, string iconName, Type type)
+    {
+        this.fullName = fullName;
+        this.description = description;
+        this.longDescription = longDescription;
         this.iconName = iconName;
         this.type = type;
         constructor = DefaultConstructor;
@@ -112,9 +126,31 @@ public class PropertiesObjectType
     {
         this.fullName = fullName;
         this.description = description;
+        longDescription = "";
         this.iconName = iconName;
         this.type = type;
         this.constructor = constructor;
+    }
+
+    public PropertiesObjectType(string fullName, string description, string iconName, string longDescription,
+        Type type, PropertiesObjectConstructor constructor)
+    {
+        this.fullName = fullName;
+        this.description = description;
+        this.longDescription = longDescription;
+        this.iconName = iconName;
+        this.type = type;
+        this.constructor = constructor;
+    }
+
+    public PropertiesObjectType(PropertiesObjectType baseType, PropertiesObjectConstructor newConstructor)
+    {
+        this.fullName = baseType.fullName;
+        this.description = baseType.description;
+        this.longDescription = baseType.longDescription;
+        this.iconName = baseType.iconName;
+        this.type = baseType.type;
+        constructor = newConstructor;
     }
 
     private PropertiesObject DefaultConstructor()
@@ -170,7 +206,7 @@ public interface PropertiesObject
 public abstract class Entity : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Entity", "Any object in the game", "circle-outline", typeof(Entity));
+        "Anything", "", "circle-outline", typeof(Entity));
 
     public EntityComponent component;
     public Sensor sensor;
@@ -208,8 +244,11 @@ public abstract class Entity : PropertiesObject
         };
     }
 
-    public abstract void InitEntityGameObject();
+    // storeComponent: whether the "component" variable should be set
+    // this should usually be true, but false for clones
+    public abstract EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true);
 
+    public abstract Vector3 PositionInEditor();
     public abstract bool AliveInEditor();
 
     public virtual Entity Clone()
@@ -229,6 +268,7 @@ public abstract class Entity : PropertiesObject
             var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
             PropertiesObjectType.CopyProperties(behavior, newBehavior, this, newEntity);
             newBehavior.targetEntity = behavior.targetEntity;
+            newBehavior.targetEntityIsActivator = behavior.targetEntityIsActivator;
             newEntity.behaviors.Add(newBehavior);
         }
         return newEntity;
@@ -243,7 +283,9 @@ public abstract class EntityComponent : MonoBehaviour
     private List<Behaviour> onComponents = new List<Behaviour>();
     private List<Behaviour> targetedComponents = new List<Behaviour>();
     private List<EntityBehavior> activatorBehaviors = new List<EntityBehavior>();
-    private List<Behaviour> activatorComponents = new List<Behaviour>();
+
+    private Dictionary<EntityComponent, List<Behaviour>> activatorComponents
+        = new Dictionary<EntityComponent, List<Behaviour>>();
 
     private SensorComponent sensorComponent;
     private bool sensorWasOn;
@@ -319,18 +361,6 @@ public abstract class EntityComponent : MonoBehaviour
             foreach (Behaviour onComponent in onComponents)
                 if (onComponent != null)
                     onComponent.enabled = true;
-            EntityComponent activator = sensorComponent.GetActivator();
-            if (activator != null)
-            {
-                foreach (EntityBehavior behavior in activatorBehaviors)
-                {
-                    if (!behavior.BehaviorObjectType().rule(activator.entity))
-                        continue;
-                    Behaviour c = behavior.MakeComponent(activator.gameObject);
-                    activatorComponents.Add(c);
-                    c.enabled = true;
-                }
-            }
         }
         else if (!sensorIsOn && sensorWasOn)
         {
@@ -340,12 +370,39 @@ public abstract class EntityComponent : MonoBehaviour
             foreach (Behaviour offComponent in offComponents)
                 if (offComponent != null)
                     offComponent.enabled = true;
-            foreach (Behaviour activatorComponent in activatorComponents)
-                if (activatorComponent != null)
-                    Destroy(activatorComponent);
-            activatorComponents.Clear();
         }
         sensorWasOn = sensorIsOn;
+
+
+        foreach (EntityComponent newActivator in GetNewActivators())
+        {
+            if (newActivator == null)
+                continue;
+            var behaviorComponents = new List<Behaviour>();
+            foreach (EntityBehavior behavior in activatorBehaviors)
+            {
+                if (!behavior.BehaviorObjectType().rule(newActivator.entity))
+                    continue;
+                Behaviour c = behavior.MakeComponent(newActivator.gameObject);
+                behaviorComponents.Add(c);
+                c.enabled = true;
+            }
+            activatorComponents[newActivator] = behaviorComponents;
+        }
+        foreach (EntityComponent removedActivator in GetRemovedActivators())
+        {
+            if (removedActivator == null)
+                continue;
+            try
+            {
+                var behaviorComponents = activatorComponents[removedActivator];
+                foreach (Behaviour b in behaviorComponents)
+                    if (b != null)
+                        Destroy(b);
+            }
+            catch (KeyNotFoundException) { }
+            activatorComponents.Remove(removedActivator);
+        }
     }
 
     void OnDestroy()
@@ -353,9 +410,10 @@ public abstract class EntityComponent : MonoBehaviour
         foreach (Behaviour c in targetedComponents)
             if (c != null)
                 Destroy(c);
-        foreach (Behaviour c in activatorComponents)
-            if (c != null)
-                Destroy(c);
+        foreach (List<Behaviour> behaviorComponents in activatorComponents.Values)
+            foreach (Behaviour c in behaviorComponents)
+                if (c != null)
+                    Destroy(c);
     }
 
     public bool IsOn()
@@ -365,11 +423,25 @@ public abstract class EntityComponent : MonoBehaviour
         return sensorComponent.IsOn();
     }
 
-    public EntityComponent GetActivator()
+    public ICollection<EntityComponent> GetActivators()
     {
         if (sensorComponent == null)
-            return null;
-        return sensorComponent.GetActivator();
+            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+        return sensorComponent.GetActivators();
+    }
+
+    public ICollection<EntityComponent> GetNewActivators()
+    {
+        if (sensorComponent == null)
+            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+        return sensorComponent.GetNewActivators();
+    }
+
+    public ICollection<EntityComponent> GetRemovedActivators()
+    {
+        if (sensorComponent == null)
+            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+        return sensorComponent.GetRemovedActivators();
     }
 }
 
@@ -437,11 +509,26 @@ public abstract class BehaviorComponent : MonoBehaviour
     public virtual void OnDisable()
     {
         if (started)
+        {
             BehaviorDisabled();
+            bool anyMatchingBehaviorsRemaining = false;
+            foreach (Behaviour behavior in GetComponents(GetType()))
+            {
+                if (behavior.enabled)
+                {
+                    anyMatchingBehaviorsRemaining = true;
+                    break;
+                }
+            }
+            if (!anyMatchingBehaviorsRemaining)
+                LastBehaviorDisabled();
+        }
     }
 
     public virtual void BehaviorEnabled() { }
     public virtual void BehaviorDisabled() { }
+    // called after BehaviorDisabled(), if there are no more instances of this behavior still enabled
+    public virtual void LastBehaviorDisabled() { }
 }
 
 
@@ -463,9 +550,22 @@ public class BehaviorType : PropertiesObjectType
         this.rule = DefaultRule;
     }
 
+    public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type)
+        : base(fullName, description, longDescription, iconName, type)
+    {
+        this.rule = DefaultRule;
+    }
+
     public BehaviorType(string fullName, string description, string iconName, Type type,
         BehaviorRule rule)
         : base(fullName, description, iconName, type)
+    {
+        this.rule = rule;
+    }
+
+    public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type,
+        BehaviorRule rule)
+        : base(fullName, description, longDescription, iconName, type)
     {
         this.rule = rule;
     }
@@ -521,12 +621,94 @@ public abstract class Sensor : PropertiesObject
 
 public abstract class SensorComponent : MonoBehaviour
 {
-    public abstract bool IsOn();
+    public static readonly EntityComponent[] EMPTY_COMPONENT_COLLECTION = new EntityComponent[0];
 
-    // will only be called when sensor turns on
-    public virtual EntityComponent GetActivator()
+    private HashSet<EntityComponent> activators = new HashSet<EntityComponent>();
+
+    private HashSet<EntityComponent> newActivators = new HashSet<EntityComponent>();
+    protected HashSet<EntityComponent> newActivators_next = new HashSet<EntityComponent>();
+    private HashSet<EntityComponent> removedActivators = new HashSet<EntityComponent>();
+    protected HashSet<EntityComponent> removedActivators_next = new HashSet<EntityComponent>();
+
+    public bool IsOn()
     {
-        return null;
+        return GetActivators().Count > 0;
+    }
+
+    public virtual void LateUpdate()
+    {
+        NewFrame();
+    }
+
+    // all current activators
+    // if the number is greater than zero, the sensor is on
+    // a null activator is possible - this allows the sensor to be on without having any activators
+    public ICollection<EntityComponent> GetActivators()
+    {
+        return activators;
+    }
+
+    // activators that have been added this frame
+    public ICollection<EntityComponent> GetNewActivators()
+    {
+        return newActivators;
+    }
+
+    // activators that have been removed this frame
+    public ICollection<EntityComponent> GetRemovedActivators()
+    {
+        return removedActivators;
+    }
+
+    private void NewFrame()
+    {
+        activators.UnionWith(newActivators_next);
+        activators.ExceptWith(removedActivators_next);
+
+        // swap and clear
+        var temp = newActivators;
+        newActivators = newActivators_next;
+        newActivators_next = temp;
+        newActivators_next.Clear();
+
+        temp = removedActivators;
+        removedActivators = removedActivators_next;
+        removedActivators_next = temp;
+        removedActivators_next.Clear();
+    }
+
+    protected void AddActivator(EntityComponent activator)
+    {
+        // not short circuit
+        if (!activators.Contains(activator) & !removedActivators_next.Remove(activator))
+            newActivators_next.Add(activator);
+    }
+
+    protected void AddActivators(ICollection<EntityComponent> activators)
+    {
+        // TODO: use boolean operations
+        foreach (var activator in activators)
+            AddActivator(activator);
+    }
+
+    protected void RemoveActivator(EntityComponent activator)
+    {
+        if (activators.Contains(activator) & !newActivators_next.Remove(activator))
+            removedActivators_next.Add(activator);
+    }
+
+    protected void RemoveActivators(ICollection<EntityComponent> activators)
+    {
+        // TODO: use boolean operations
+        foreach (var activator in activators)
+            RemoveActivator(activator);
+    }
+
+    public void ClearActivators()
+    {
+        removedActivators_next.UnionWith(activators);
+        removedActivators_next.ExceptWith(newActivators_next);
+        newActivators_next.Clear();
     }
 }
 
@@ -543,7 +725,7 @@ public abstract class DynamicEntity : Entity
         {
             new Property("X-Ray?",
                 () => xRay,
-                v => {xRay = (bool)v; UpdateEntity();},
+                v => {xRay = (bool)v; UpdateEntityEditor();},
                 PropertyGUIs.Toggle),
             new Property("Health",
                 () => health,
@@ -552,12 +734,17 @@ public abstract class DynamicEntity : Entity
         });
     }
 
-    public virtual void UpdateEntity() { }
+    // update the DynamicEntity's appearance in the Editor
+    public virtual void UpdateEntityEditor() { }
 }
 
 public abstract class DynamicEntityComponent : EntityComponent
 {
+    public static readonly Vector3 KILL_LOCATION = new Vector3(9999, 9999, 9999);
+
     public float health;
+    private Vector3 lastRigidbodyPosition;
+    private Vector3 cumulativeRigidbodyTranslate;
 
     public void Hurt(float amount)
     {
@@ -577,7 +764,11 @@ public abstract class DynamicEntityComponent : EntityComponent
     public void Die()
     {
         // move entity out of any touch sensors so they will have a chance to turn off before it's destroyed
-        transform.position = new Vector3(9999, 9999, 9999);
+        transform.position = KILL_LOCATION;
+        SensorComponent sensor = GetComponent<SensorComponent>();
+        if (sensor != null)
+            // make sure activators are removed from any outputs
+            sensor.ClearActivators();
         StartCoroutine(DestroyCoroutine());
     }
 
@@ -585,5 +776,31 @@ public abstract class DynamicEntityComponent : EntityComponent
     {
         yield return null;
         Destroy(gameObject);
+    }
+
+    // allows composing multiple translations within a single FixedUpdate cycle
+    // Rigidbody normally doesn't update its position until the end of the cycle
+    public void RigidbodyTranslate(Rigidbody rb, Vector3 amount, bool applyConstraints=false)
+    {
+        if (rb.position != lastRigidbodyPosition)
+        {
+            // new FixedUpdate cycle
+            lastRigidbodyPosition = rb.position;
+            cumulativeRigidbodyTranslate = Vector3.zero;
+        }
+
+        cumulativeRigidbodyTranslate += amount;
+        if (applyConstraints)
+        {
+            var constraints = RigidbodyConstraints.FreezeRotation;
+            if (cumulativeRigidbodyTranslate.x == 0)
+                constraints |= RigidbodyConstraints.FreezePositionX;
+            if (cumulativeRigidbodyTranslate.y == 0)
+                constraints |= RigidbodyConstraints.FreezePositionY;
+            if (cumulativeRigidbodyTranslate.z == 0)
+                constraints |= RigidbodyConstraints.FreezePositionZ;
+            rb.constraints = constraints;
+        }
+        rb.MovePosition(rb.position + cumulativeRigidbodyTranslate);
     }
 }

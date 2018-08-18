@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class OverflowMenuGUI : GUIPanel
 {
-    private float buttonHeight;
+    public struct MenuItem
+    {
+        public string text;
+        public Texture icon;
+        public System.Action action;
+
+        public MenuItem(string text, Texture icon, System.Action action)
+        {
+            this.text = text;
+            this.icon = icon;
+            this.action = action;
+        }
+    }
+
+    public MenuItem[] items;
 
     public override Rect GetRect(float width, float height)
     {
-        buttonHeight = height * .12f;
         return new Rect(width - height * .4f, height * .13f, height * .4f, 0);
     }
 
@@ -25,25 +38,19 @@ public class OverflowMenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (MenuButton("World", GUIIconSet.instance.world))
+        foreach (MenuItem item in items)
         {
-            PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
-            if (propsGUI != null)
-            {
-                propsGUI.worldSelected = true;
-                propsGUI.normallyOpen = true;
-            }
+            if (MenuButton(item.text, item.icon))
+                item.action();
         }
     }
 
     private bool MenuButton(string name, Texture icon)
     {
-        bool pressed = GUILayout.Button(name, GUILayout.Height(buttonHeight));
+        bool pressed = GUILayout.Button(name, GUI.skin.GetStyle("button_large"));
         Rect iconRect = GUILayoutUtility.GetLastRect();
         iconRect.width = iconRect.height;
-        GUIStyle iconAlign = new GUIStyle(GUI.skin.label);
-        iconAlign.alignment = TextAnchor.MiddleCenter;
-        GUI.Label(iconRect, icon, iconAlign);
+        GUI.Label(iconRect, icon, GUIUtils.LABEL_CENTERED.Value);
         if (pressed)
             Destroy(this);
         return pressed;

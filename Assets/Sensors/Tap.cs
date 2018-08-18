@@ -5,43 +5,55 @@ using UnityEngine;
 public class TapSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Tap", "Detect user tapping the object", "gesture-tap",
-        typeof(TapSensor));
+        "Tap", "Detect user tapping the object",
+        "Object doesn't have to be visible or solid to detect a tap.\n\n"
+        + "Activator: the player",
+        "gesture-tap", typeof(TapSensor));
+
+    private float maxDistance = 3;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
+    public override ICollection<Property> Properties()
+    {
+        return Property.JoinProperties(new Property[]
+        {
+            new Property("Max distance",
+                () => maxDistance,
+                v => maxDistance = (float)v,
+                PropertyGUIs.Float)
+        }, base.Properties());
+    }
+
     public override SensorComponent MakeComponent(GameObject gameObject)
     {
-        return gameObject.AddComponent<TapComponent>();
+        var tap = gameObject.AddComponent<TapComponent>();
+        tap.maxDistance = maxDistance;
+        return tap;
     }
 }
 
 public class TapComponent : SensorComponent
 {
-    private bool value = false;
-    private EntityComponent activator;
+    public float maxDistance;
+    private EntityComponent player;
 
-    public override bool IsOn()
+    // called by GameTouchControl
+    public void TapStart(EntityComponent player, float distance)
     {
-        return value;
+        if (distance <= maxDistance)
+        {
+            this.player = player;
+            AddActivator(player);
+        }
     }
 
-    public override EntityComponent GetActivator()
-    {
-        return activator;
-    }
-
-    public void TapStart(EntityComponent player)
-    {
-        value = true;
-        activator = player;
-    }
-
+    // called by GameTouchControl
     public void TapEnd()
     {
-        value = false;
+        RemoveActivator(player);
     }
 }

@@ -9,19 +9,27 @@ public abstract class ObjectEntity : DynamicEntity
 
     public ObjectMarker marker;
     public Vector3Int position;
+    public float rotation;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
-    public override void UpdateEntity()
+    public virtual Vector3 PositionOffset()
+    {
+        return Vector3.zero;
+    }
+
+    public override void UpdateEntityEditor()
     {
         if (marker != null)
-        {
-            marker.transform.position = position + new Vector3(0.5f, 0.0f, 0.5f); // TODO
-            marker.UpdateMaterials();
-        }
+            marker.UpdateMarker();
+    }
+
+    public override Vector3 PositionInEditor()
+    {
+        return position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
     }
 
     public override bool AliveInEditor()
@@ -29,5 +37,27 @@ public abstract class ObjectEntity : DynamicEntity
         return marker != null;
     }
 
-    public abstract void InitObjectMarker();
+    public void InitObjectMarker(VoxelArrayEditor voxelArray)
+    {
+        marker = CreateObjectMarker(voxelArray);
+        marker.transform.parent = voxelArray.transform;
+        marker.objectEntity = this;
+        marker.tag = "ObjectMarker";
+    }
+
+    public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
+    {
+        var c = CreateEntityComponent(voxelArray);
+        c.transform.parent = voxelArray.transform;
+        c.transform.position = PositionInEditor();
+        c.transform.rotation = Quaternion.Euler(new Vector3(0, rotation, 0));
+        c.entity = this;
+        c.health = health;
+        if (storeComponent)
+            component = c;
+        return c;
+    }
+
+    protected abstract ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray);
+    protected abstract DynamicEntityComponent CreateEntityComponent(VoxelArray voxelArray);
 }

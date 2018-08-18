@@ -25,7 +25,7 @@ public abstract class ActivatedSensor : Sensor
         {
             if (entityComponent == null)
                 return false;
-            return entityComponent.entity == entityRef.entity;
+            return entityComponent.entity == entityRef.entity; // also matches clones
         }
 
         public override string ToString()
@@ -61,7 +61,8 @@ public abstract class ActivatedSensor : Sensor
                             GameScripts.behaviors, _entityType.fullName);
                     if (instance != null)
                     {
-                        _entityType = instance;
+                        // BehaviorType can't be serialized
+                        _entityType = new PropertiesObjectType(instance, null);
                         return _entityType;
                     }
                     Debug.Log("Couldn't find matching filter type for " + _entityType.fullName + "!");
@@ -71,7 +72,11 @@ public abstract class ActivatedSensor : Sensor
             }
             set
             {
-                _entityType = value;
+                if (value is BehaviorType)
+                    // BehaviorType can't be serialized
+                    _entityType = new PropertiesObjectType(value, null);
+                else
+                    _entityType = value;
             }
         }
 

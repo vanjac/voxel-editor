@@ -5,8 +5,10 @@ using UnityEngine;
 public class ToggleSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Toggle", "One input switches it on, one input switches it off", "toggle-switch",
-        typeof(ToggleSensor));
+        "Toggle", "One input switches it on, one input switches it off",
+        "If both inputs turn on simultaneously, the sensor toggles between on/off.\n\n"
+        + "Activators: the activators of the On input, frozen when it is first turned on",
+        "toggle-switch", typeof(ToggleSensor));
 
     private EntityReference offInput = new EntityReference(null);
     private EntityReference onInput = new EntityReference(null);
@@ -28,11 +30,11 @@ public class ToggleSensor : Sensor
             new Property("Off input",
                 () => offInput,
                 v => offInput = (EntityReference)v,
-                PropertyGUIs.EntityReference),
+                PropertyGUIs.EntityReferenceWithNull),
             new Property("On input",
                 () => onInput,
                 v => onInput = (EntityReference)v,
-                PropertyGUIs.EntityReference)
+                PropertyGUIs.EntityReferenceWithNull)
         }, base.Properties());
     }
 
@@ -52,7 +54,13 @@ public class ToggleComponent : SensorComponent
     public EntityReference onInput;
     public bool value;
     private bool bothOn = false;
-    private EntityComponent activator;
+
+    void Start()
+    {
+        if (value)
+            // start on
+            AddActivator(null);
+    }
 
     void Update()
     {
@@ -73,29 +81,25 @@ public class ToggleComponent : SensorComponent
                 bothOn = true;
                 value = !value;
                 if (value)
-                    activator = onEntity.GetActivator();
+                    AddActivators(onEntity.GetActivators());
+                else
+                    ClearActivators();
             }
         }
         else
         {
             bothOn = false;
             if (offInputOn)
+            {
                 value = false;
+                ClearActivators();
+            }
             else if (onInputOn)
             {
+                if (!value)
+                    AddActivators(onEntity.GetActivators());
                 value = true;
-                activator = onEntity.GetActivator();
             }
         }
-    }
-
-    public override bool IsOn()
-    {
-        return value;
-    }
-
-    public override EntityComponent GetActivator()
-    {
-        return activator;
     }
 }

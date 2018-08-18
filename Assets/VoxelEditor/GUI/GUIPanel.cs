@@ -148,9 +148,7 @@ public abstract class GUIPanel : MonoBehaviour
 
         if (title != "")
         {
-            GUIStyle centered = new GUIStyle(GUI.skin.label);
-            centered.alignment = TextAnchor.UpperCenter;
-            GUILayout.Label(title, centered);
+            GUILayout.Label(title, GUIUtils.LABEL_HORIZ_CENTERED.Value);
         }
 
         WindowGUI();
@@ -183,32 +181,11 @@ public abstract class GUIPanel : MonoBehaviour
         return null;
     }
 
-    public static void BeginButtonHorizontal(string name)
+    public void BringToFront()
     {
-        GUILayout.BeginHorizontal(GUI.skin.button);
-    }
-
-    public static bool EndButtonHorizontal(string name)
-    {
-        GUILayout.EndHorizontal();
-        return EndButtonGroup(name);
-    }
-
-    public static void BeginButtonVertical(string name)
-    {
-        GUILayout.BeginVertical(GUI.skin.button);
-    }
-
-    public static bool EndButtonVertical(string name)
-    {
-        GUILayout.EndVertical();
-        return EndButtonGroup(name);
-    }
-
-    private static bool EndButtonGroup(string name)
-    {
-        Rect buttonRect = GUILayoutUtility.GetLastRect();
-        return GUI.Button(buttonRect, "", GUIStyle.none);
+        GUI.BringWindowToFront(GetHashCode());
+        openPanels.Remove(this);
+        openPanels.Add(this);
     }
 
     protected void RotateAboutPoint(Vector2 point, float rotation, Vector2 scaleFactor)

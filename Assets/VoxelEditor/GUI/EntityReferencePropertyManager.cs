@@ -9,31 +9,24 @@ public class EntityReferencePropertyManager : MonoBehaviour
         public int i;
         public Entity sourceEntity;
         public Entity targetEntity;
-
-        private Vector3 EntityPosition(Entity entity)
-        {
-            if (entity is Substance)
-            {
-                return ((Substance)entity).CalculateCenterPoint();
-            }
-            else if (entity is ObjectEntity)
-            {
-                return ((ObjectEntity)entity).marker.transform.position;
-            }
-            return Vector3.zero;
-        }
+        private LineRenderer line;
 
         void Start()
         {
             if (sourceEntity == null || targetEntity == null)
                 return;
             Color color = ColorI(i);
-            LineRenderer line = gameObject.AddComponent<LineRenderer>();
+            line = gameObject.AddComponent<LineRenderer>();
             line.startWidth = line.endWidth = 0.1f;
             line.material = _lineMaterial;
             line.startColor = line.endColor = color;
-            line.SetPosition(0, EntityPosition(sourceEntity));
-            line.SetPosition(1, EntityPosition(targetEntity));
+            UpdatePositions();
+        }
+
+        public void UpdatePositions()
+        {
+            line.SetPosition(0, sourceEntity.PositionInEditor());
+            line.SetPosition(1, targetEntity.PositionInEditor());
         }
     }
 
@@ -47,6 +40,14 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static Material _lineMaterial;
     public Material lineMaterial;
 
+    private void Clear()
+    {
+        targetEntities.Clear();
+        currentEntity = null;
+        behaviorTarget = null;
+        currentTargetEntityI = -1;
+    }
+
     public static void Reset(Entity entity)
     {
         foreach (Entity target in targetEntities)
@@ -59,17 +60,27 @@ public class EntityReferencePropertyManager : MonoBehaviour
         }
         if (currentEntity != entity)
         {
-            if (currentEntity != null && currentEntity is Substance)
+            if (currentEntity != null)
             {
-                ((Substance)currentEntity).highlight = Color.clear;
-                foreach (Voxel v in ((Substance)currentEntity).voxels)
-                    v.UpdateHighlight();
+                // entity deselected
+                if (currentEntity is Substance)
+                {
+                    ((Substance)currentEntity).highlight = Color.clear;
+                    foreach (Voxel v in ((Substance)currentEntity).voxels)
+                        v.UpdateHighlight();
+                }
+                EntityPreviewManager.EntityDeselected();
             }
-            if (entity != null && entity is Substance)
+            if (entity != null)
             {
-                ((Substance)entity).highlight = Color.white;
-                foreach (Voxel v in ((Substance)entity).voxels)
-                    v.UpdateHighlight();
+                // entity selected
+                if (entity is Substance)
+                {
+                    ((Substance)entity).highlight = Color.white;
+                    foreach (Voxel v in ((Substance)entity).voxels)
+                        v.UpdateHighlight();
+                }
+                EntityPreviewManager.EntitySelected(entity);
             }
         }
         currentEntity = entity;
@@ -136,6 +147,12 @@ public class EntityReferencePropertyManager : MonoBehaviour
     void Awake()
     {
         _lineMaterial = lineMaterial;
+        Clear();
+    }
+
+    void OnDestroy()
+    {
+        Clear();
     }
 
     void Update()
@@ -175,5 +192,13 @@ public class EntityReferencePropertyManager : MonoBehaviour
             }
             return; // wait a frame to let the new/deleted objects update
         }
+        else
+        {
+            foreach (Transform child in transform)
+                child.GetComponent<EntityReferenceLine>().UpdatePositions();
+        }
+
+        if (currentEntity != null)
+            EntityPreviewManager.UpdateEntityPosition(currentEntity);
     }
 }

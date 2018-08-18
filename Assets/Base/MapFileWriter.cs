@@ -8,8 +8,8 @@ using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 1;
-    private const int FILE_MIN_READER_VERSION = 1;
+    public const int VERSION = 5;
+    private const int FILE_MIN_READER_VERSION = 5;
 
     private string fileName;
 
@@ -22,7 +22,7 @@ public class MapFileWriter
     {
         if (voxelArray.IsEmpty())
         {
-            Debug.Log("Map is empty! File will not be written.");
+            Debug.Log("World is empty! File will not be written.");
             return;
         }
 
@@ -39,7 +39,7 @@ public class MapFileWriter
 
         root["world"] = WriteWorld(voxelArray);
 
-        string filePath = Application.persistentDataPath + "/" + fileName + ".json";
+        string filePath = WorldFiles.GetFilePath(fileName);
         using (FileStream fileStream = File.Create(filePath))
         {
             using (var sw = new StreamWriter(fileStream))
@@ -59,7 +59,6 @@ public class MapFileWriter
         JSONArray substancesArray = new JSONArray();
         var foundSubstances = new List<Substance>();
 
-        AddMaterial(RenderSettings.skybox, foundMaterials, materialsArray);
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
             foreach (VoxelFace face in voxel.faces)
@@ -78,10 +77,13 @@ public class MapFileWriter
         if (foundSubstances.Count != 0)
             world["substances"] = substancesArray;
         world["global"] = WritePropertiesObject(voxelArray.world, false);
-        // the selected sky can't be serialized so it's stored separately
-        world["sky"].AsInt = foundMaterials.IndexOf(RenderSettings.skybox.name);
         world["map"] = WriteMap(voxelArray, foundMaterials, foundSubstances);
-        world["player"] = WriteObjectEntity(voxelArray.playerObject, false);
+
+        JSONArray objectsArray = new JSONArray();
+        foreach (ObjectEntity obj in voxelArray.IterateObjects())
+            objectsArray[-1] = WriteObjectEntity(obj, true);
+        if (objectsArray.Count != 0)
+            world["objects"] = objectsArray;
 
         return world;
     }
@@ -102,9 +104,9 @@ public class MapFileWriter
         JSONObject materialObject = new JSONObject();
         if (ResourcesDirectory.IsCustomMaterial(material))
         {
-            // TODO: allow more properties in the future
-            materialObject["shader"] = material.shader.name;
+            materialObject["mode"] = ResourcesDirectory.GetCustomMaterialColorMode(material).ToString();
             materialObject["color"] = WriteColor(material.color);
+            materialObject["alpha"] = ResourcesDirectory.GetCustomMaterialIsTransparent(material);
         }
         else
         {
@@ -117,6 +119,7 @@ public class MapFileWriter
     {
         JSONObject entityObject = WriteEntity(objectEntity, includeName);
         entityObject["at"] = WriteIntVector3(objectEntity.position);
+        entityObject["rotate"] = objectEntity.rotation;
 
         return entityObject;
     }
@@ -158,33 +161,47 @@ public class MapFileWriter
         JSONArray propertiesArray = new JSONArray();
         foreach (Property prop in obj.Properties())
         {
-            // https://stackoverflow.com/a/2434558
-            // https://stackoverflow.com/a/5414665
             object value = prop.value;
-
-            XmlSerializer xmlSerializer;
-            try
+            if (value == null)
             {
-                xmlSerializer = new XmlSerializer(value.GetType());
-            }
-            catch (System.InvalidOperationException)
-            {
-                Debug.Log(prop.name + " can't be serialized!");
+                Debug.Log(prop.name + " is null!");
                 continue;
-            }
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", ""); // skip xsi/xsd namespaces: https://stackoverflow.com/a/935749
-            string valueString;
-            using (var textWriter = new StringWriter())
-            using (var xmlWriter = XmlWriter.Create(textWriter,
-                new XmlWriterSettings { Indent = false, OmitXmlDeclaration = true }))
-            {
-                xmlSerializer.Serialize(xmlWriter, value, ns);
-                valueString = textWriter.ToString();
             }
             JSONArray propArray = new JSONArray();
             propArray[0] = prop.name;
-            propArray[1] = valueString;
+            var valueType = value.GetType();
+
+            if (valueType == typeof(Material))
+            {
+                propArray[1] = WriteMaterial((Material)value);
+            }
+            else // not a Material
+            {
+                XmlSerializer xmlSerializer;
+                try
+                {
+                    xmlSerializer = new XmlSerializer(valueType);
+                }
+                catch (System.InvalidOperationException)
+                {
+                    Debug.Log(prop.name + " can't be serialized!");
+                    continue;
+                }
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", ""); // skip xsi/xsd namespaces: https://stackoverflow.com/a/935749
+                string valueString;
+                // https://stackoverflow.com/a/2434558
+                // https://stackoverflow.com/a/5414665
+                using (var textWriter = new StringWriter())
+                using (var xmlWriter = XmlWriter.Create(textWriter,
+                    new XmlWriterSettings { Indent = false, OmitXmlDeclaration = true }))
+                {
+                    xmlSerializer.Serialize(xmlWriter, value, ns);
+                    valueString = textWriter.ToString();
+                }
+                propArray[1] = valueString;
+            }
+
             if (prop.explicitType)
                 propArray[2] = value.GetType().FullName;
             propertiesArray[-1] = propArray;
@@ -200,7 +217,7 @@ public class MapFileWriter
         JSONArray voxels = new JSONArray();
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
-            if (voxel.IsEmpty())
+            if (voxel.CanBeDeleted())
             {
                 Debug.Log("Empty voxel found!");
                 voxelArray.VoxelModified(voxel);

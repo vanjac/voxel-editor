@@ -5,20 +5,16 @@ using UnityEngine;
 public class Substance : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Substance", "An entity made of blocks", "cube-outline", typeof(Substance),
-        () => new Substance(VoxelArrayEditor.instance));
+        "Substance", "An entity made of blocks", "cube-outline", typeof(Substance));
 
     public HashSet<Voxel> voxels;
 
     public Color highlight = Color.clear;
     public VoxelFace defaultPaint;
 
-    private VoxelArray voxelArray;
-
-    public Substance(VoxelArray array)
+    public Substance()
     {
         voxels = new HashSet<Voxel>();
-        voxelArray = array;
     }
 
     public override PropertiesObjectType ObjectType()
@@ -26,15 +22,34 @@ public class Substance : DynamicEntity
         return objectType;
     }
 
-    public override void InitEntityGameObject()
+    public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
     {
         GameObject substanceObject = new GameObject();
+        substanceObject.name = "Substance";
         substanceObject.transform.parent = voxelArray.transform;
+        substanceObject.transform.position = PositionInEditor();
+        foreach (Voxel voxel in voxels)
+        {
+            if (storeComponent)
+            {
+                voxel.transform.parent = substanceObject.transform;
+            }
+            else
+            {
+                // clone
+                Voxel vClone = voxel.Clone();
+                vClone.transform.parent = substanceObject.transform;
+                vClone.transform.position = voxel.transform.position;
+                vClone.transform.rotation = voxel.transform.rotation;
+            }
+        }
         SubstanceComponent component = substanceObject.AddComponent<SubstanceComponent>();
         component.entity = this;
         component.substance = this;
         component.health = health;
-        this.component = component;
+        if (storeComponent)
+            this.component = component;
+        return component;
     }
 
     public override bool AliveInEditor()
@@ -53,14 +68,14 @@ public class Substance : DynamicEntity
         voxels.Remove(v);
     }
 
-    public override void UpdateEntity()
+    public override void UpdateEntityEditor()
     {
-        base.UpdateEntity();
+        base.UpdateEntityEditor();
         foreach (Voxel v in voxels)
             v.UpdateVoxel();
     }
 
-    public Vector3 CalculateCenterPoint()
+    public override Vector3 PositionInEditor()
     {
         Bounds voxelBounds = new Bounds();
         foreach (Voxel voxel in voxels)
@@ -80,13 +95,6 @@ public class SubstanceComponent : DynamicEntityComponent
 
     public override void Start()
     {
-        foreach (Voxel voxel in substance.voxels)
-            voxel.transform.parent = transform;
-        Vector3 centerPoint = substance.CalculateCenterPoint();
-        transform.position = centerPoint;
-        foreach (Voxel voxel in substance.voxels)
-            voxel.transform.position -= centerPoint;
-
         // a rigidBody is required for collision detection
         Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>();
         // no physics by default (could be disabled by a Physics behavior)

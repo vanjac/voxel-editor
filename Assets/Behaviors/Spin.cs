@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpinBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Spin", "Rotate continuously",
+        "Spin", "Rotate continuously", "Speed is in degrees per second.",
         "format-rotate-90", typeof(SpinBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),

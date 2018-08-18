@@ -9,12 +9,23 @@ public class PropertyGUIs
     private delegate void KeyboardHandler(string text);
     private static KeyboardHandler keyboardHandler;
 
-    private static void AlignedLabel(Property property)
+    private static readonly Lazy<GUIStyle> alignedLabelStyle = new Lazy<GUIStyle>(() =>
     {
-        GUIStyle style = new GUIStyle(GUI.skin.label);
+        var style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.MiddleLeft;
         style.padding.right = 0;
-        GUILayout.Label(property.name, style, GUILayout.ExpandWidth(false));
+        return style;
+    });
+    private static readonly Lazy<GUIStyle> tagFieldStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.textField);
+        style.fontSize = GUI.skin.font.fontSize * 2;
+        return style;
+    });
+
+    private static void AlignedLabel(Property property)
+    {
+        GUILayout.Label(property.name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
     }
 
     public static void Empty(Property property) { }
@@ -33,6 +44,24 @@ public class PropertyGUIs
         AlignedLabel(property);
         GUILayout.FlexibleSpace();
         property.value = GUILayout.Toggle((bool)property.value, "");
+        GUILayout.EndHorizontal();
+    }
+
+    public static void Enum(Property property)
+    {
+        System.Enum e = (System.Enum)property.value;
+        var buttonStyle = GUI.skin.GetStyle("button_tab");
+        GUILayout.BeginHorizontal();
+        foreach (var enumValue in System.Enum.GetValues(e.GetType()))
+        {
+            string name = enumValue.ToString();
+            // sentence case
+            name = Char.ToUpper(name[0]) + name.Substring(1).ToLower();
+            if (enumValue.Equals(e))
+                GUIUtils.HighlightedButton(name, buttonStyle);
+            else if (GUILayout.Button(name, buttonStyle))
+                property.value = enumValue;
+        }
         GUILayout.EndHorizontal();
     }
 
@@ -98,9 +127,7 @@ public class PropertyGUIs
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
         GUILayout.FlexibleSpace();
-        GUIStyle tagFieldStyle = new GUIStyle(GUI.skin.textField);
-        tagFieldStyle.fontSize = GUI.skin.font.fontSize * 2;
-        if (GUILayout.Button(" " + tagString + " ", tagFieldStyle, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(" " + tagString + " ", tagFieldStyle.Value, GUILayout.ExpandWidth(false)))
         {
             TagPickerGUI picker = GUIPanel.guiGameObject.AddComponent<TagPickerGUI>();
             picker.title = "Change " + property.name;
@@ -114,13 +141,12 @@ public class PropertyGUIs
 
     public static void BehaviorCondition(Property property)
     {
-        var gridStyle = new GUIStyle(GUI.skin.button);
-        gridStyle.padding.left = 0;
-        gridStyle.padding.right = 0;
         var condition = (EntityBehavior.Condition)property.value;
         GUILayout.Label("When sensor is:");
+        TutorialGUI.TutorialHighlight("behavior condition");
         property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
-            (int)condition, new string[] { "On", "Off", "Both" }, 3, gridStyle);
+            (int)condition, new string[] { "On", "Off", "Both" }, 3, GUI.skin.GetStyle("button_tab"));
+        TutorialGUI.ClearHighlight();
     }
 
     public static void ActivatorBehaviorCondition(Property property)
@@ -131,13 +157,18 @@ public class PropertyGUIs
 
     public static void EntityReference(Property property)
     {
-        _EntityReferenceCustom(property, false);
+        _EntityReferenceCustom(property, false, "None");
     }
 
-    public static void _EntityReferenceCustom(Property property, bool activatorIsNull)
+    public static void EntityReferenceWithNull(Property property)
+    {
+        _EntityReferenceCustom(property, true, "None");
+    }
+
+    public static void _EntityReferenceCustom(Property property, bool allowNull, string nullName)
     {
         var reference = (EntityReference)property.value;
-        string valueString = activatorIsNull ? "Activator" : "None";
+        string valueString = nullName;
 
         Color baseColor = GUI.color;
         if (reference.entity != null)
@@ -155,15 +186,13 @@ public class PropertyGUIs
             picker.voxelArray = VoxelArrayEditor.instance;
             picker.allowNone = false;
             picker.allowMultiple = false;
-            picker.activatorOption = activatorIsNull;
+            picker.allowNull = allowNull;
+            picker.nullName = nullName;
             picker.handler = (ICollection<Entity> entities) =>
             {
                 foreach (Entity entity in entities)
                 {
-                    if (entity == EntityPickerGUI.ACTIVATOR)
-                        property.value = new EntityReference(null);
-                    else
-                        property.value = new EntityReference(entity);
+                    property.value = new EntityReference(entity);
                     return;
                 }
                 property.value = null;
@@ -209,24 +238,39 @@ public class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory, string colorShader=null)
+    public static PropertyGUI Material(string materialDirectory, bool allowAlpha = false,
+        MaterialSelectorGUI.ColorModeSet colorModeSet = MaterialSelectorGUI.ColorModeSet.DEFAULT,
+        bool colorOnly = false)
     {
         return (Property property) =>
         {
-            if (GUILayout.Button("Change " + property.name))
+            GUILayout.BeginHorizontal();
+            AlignedLabel(property);
+            GUILayout.FlexibleSpace();
+            // TODO: magic numbers
+            RectOffset tagFieldStyleMargin = tagFieldStyle.Value.margin;
+            Rect buttonRect = GUILayoutUtility.GetRect(150, 150);
+            Rect textureRect = new Rect(
+                buttonRect.xMin + 20, buttonRect.yMin + 20,
+                buttonRect.width - 20 * 2, buttonRect.height - 20 * 2);
+            if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
             {
                 MaterialSelectorGUI materialSelector
                     = GUIPanel.guiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = "Change " + property.name;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
-                if (colorShader != null)
-                    materialSelector.colorShader = colorShader;
+                materialSelector.allowAlpha = allowAlpha;
+                materialSelector.colorModeSet = colorModeSet;
+                materialSelector.colorOnly = colorOnly;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.setter(mat); // skip equality check, it could be the same material with a different color
                 };
             }
+            MaterialSelectorGUI.DrawMaterialTexture((Material)property.value,
+                textureRect, allowAlpha);
+            GUILayout.EndHorizontal();
         };
     }
 
@@ -286,5 +330,30 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
 
         GUI.color = baseColor;
+    }
+
+    public static void TargetDirectionFilter(Property property)
+    {
+        var target = (Target)property.value;
+        string targetString = target.ToString();
+
+        if (target.entityRef.entity == null && target.direction == -1)
+            targetString = "Any";
+
+        GUILayout.BeginHorizontal();
+        AlignedLabel(property);
+        if (GUILayout.Button(targetString, GUI.skin.textField))
+        {
+            TargetGUI targetGUI = GUIPanel.guiGameObject.AddComponent<TargetGUI>();
+            targetGUI.title = property.name;
+            targetGUI.voxelArray = VoxelArrayEditor.instance;
+            targetGUI.allowNullTarget = true;
+            targetGUI.allowObjectTarget = false;
+            targetGUI.handler = (Target newTarget) =>
+            {
+                property.value = newTarget;
+            };
+        }
+        GUILayout.EndHorizontal();
     }
 }

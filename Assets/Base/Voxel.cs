@@ -46,16 +46,34 @@ public struct VoxelFace
 public class Voxel : MonoBehaviour
 {
     public static VoxelFace EMPTY_FACE = new VoxelFace();
-    public static Vector2[] SQUARE_LOOP = new Vector2[]
-    {
-        Vector2.zero,
-        Vector2.right,
-        Vector2.one,
-        Vector2.up
-    };
 
     public static Material selectedMaterial; // set by VoxelArray instance
     public static Material xRayMaterial;
+
+    // constants for generating mesh
+    private readonly static Vector2[] SQUARE_LOOP = new Vector2[]
+    {
+        Vector2.zero, Vector2.right, Vector2.one, Vector2.up
+    };
+
+    private static readonly Vector3[] POSITIVE_S_XYZ = new Vector3[]
+    {
+        new Vector3(0, 0, -1), new Vector3(0, 0, 1),
+        new Vector3(-1, 0, 0), new Vector3(1, 0, 0),
+        new Vector3(1, 0, 0), new Vector3(-1, 0, 0)
+    };
+
+    private static readonly Vector3[] POSITIVE_T_XYZ = new Vector3[]
+    {
+        Vector3.up, Vector3.up,
+        Vector3.forward, Vector3.forward,
+        Vector3.up, Vector3.up
+    };
+
+    private static readonly Vector2[] POSITIVE_U_ST = new Vector2[]
+    {
+        Vector2.right, Vector2.down, Vector2.left, Vector2.up
+    };
 
     public static Vector3 DirectionForFaceI(int faceI)
     {
@@ -142,6 +160,7 @@ public class Voxel : MonoBehaviour
                 _substance.AddVoxel(this);
         }
     }
+    public ObjectEntity objectEntity;
 
     void Start ()
     {
@@ -196,6 +215,11 @@ public class Voxel : MonoBehaviour
         return true;
     }
 
+    public bool CanBeDeleted()
+    {
+        return IsEmpty() && objectEntity == null;
+    }
+
     public void Clear()
     {
         for (int faceI = 0; faceI < faces.Length; faceI++)
@@ -203,16 +227,18 @@ public class Voxel : MonoBehaviour
             faces[faceI].Clear();
         }
         substance = null;
+        // does NOT clear objectEntity!
     }
 
-    void OnDestroy()
+    public Voxel Clone()
     {
-        if (!InEditor())
-            return; // this makes it faster, I checked with Profiler
-        substance = null; // remove from substance
-        VoxelArray array = transform.parent.GetComponent<VoxelArray>();
-        if (array != null)
-            array.VoxelDestroyed(this);
+        Voxel vClone = Instantiate<Voxel>(this);
+        for (int i = 0; i < 6; i++)
+            vClone.faces[i] = faces[i];
+        // don't add to substance
+        vClone._substance = _substance;
+        // don't copy objectEntity
+        return vClone;
     }
 
     public void UpdateVoxel()
@@ -226,12 +252,11 @@ public class Voxel : MonoBehaviour
                 numFilledFaces++;
 
         var vertices = new Vector3[numFilledFaces * 4];
-        var uv = new Vector2[numFilledFaces * 4];
+        var uvs = new Vector2[numFilledFaces * 4];
+        var normals = new Vector3[numFilledFaces * 4];
+        var tangents = new Vector4[numFilledFaces * 4];
 
-        float[] transformPos = new float[]
-        {
-            transform.position.x, transform.position.y, transform.position.z
-        };
+        float[] vertexPos = new float[3]; // reusable
         numFilledFaces = 0;
         int numMaterials = 0;
         for (int faceNum = 0; faceNum < 6; faceNum++)
@@ -240,6 +265,32 @@ public class Voxel : MonoBehaviour
             if (face.IsEmpty())
                 continue;
             int axis = FaceIAxis(faceNum);
+            Vector3 normal = DirectionForFaceI(faceNum);
+            int rotation = VoxelFace.GetOrientationRotation(face.orientation);
+            bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
+
+            // ST space is always upright
+            Vector3 positiveS_xyz = POSITIVE_S_XYZ[faceNum]; // positive S in XYZ space
+            Vector3 positiveT_xyz = POSITIVE_T_XYZ[faceNum];
+
+            int uRot = rotation;
+            if (mirrored)
+                uRot += 3;
+            int vRot;
+            if (!mirrored)
+                vRot = uRot + 3;
+            else
+                vRot = uRot + 1;
+            Vector2 positiveU_st = POSITIVE_U_ST[uRot % 4];
+            Vector2 positiveV_st = POSITIVE_U_ST[vRot % 4];
+
+            Vector3 positiveU_xyz = positiveS_xyz * positiveU_st.x
+                + positiveT_xyz * positiveU_st.y;
+            Vector3 positiveV_xyz = positiveS_xyz * positiveV_st.x
+                + positiveT_xyz * positiveV_st.y;
+
+            Vector4 tangent = new Vector4(positiveU_xyz.x, positiveU_xyz.y, positiveU_xyz.z,
+                mirrored ? 1 : -1);
 
             // example for faceNum = 5 (z min)
             // 0 bottom left
@@ -249,45 +300,20 @@ public class Voxel : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 int vertexI = numFilledFaces * 4 + i;
-                float[] vertexPos = new float[3];
                 vertexPos[axis] = faceNum % 2;
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
-                vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                Vector3 vertex = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                vertices[vertexI] = vertex;
 
-                int uvNum = VoxelFace.GetOrientationRotation(face.orientation);
-                bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
-                if (faceNum % 2 == 0)
-                {
-                    if (mirrored)
-                        uvNum += -i + 5;
-                    else
-                        uvNum += i + 1;
-                }
-                else
-                {
-                    if (mirrored)
-                        uvNum += i + 2;
-                    else
-                        uvNum += -i + 4;
-                }
-                if (faceNum == 4 || faceNum == 5)
-                {
-                    if (mirrored ^ faceNum == 4)
-                        uvNum -= 1;
-                    else
-                        uvNum += 1;
-                }
-                uvNum %= 4;
+                normals[vertexI] = normal;
+                tangents[vertexI] = tangent;
 
-                Vector2 uvOrigin; // materials can span multiple voxels
-                if (VoxelFace.GetOrientationRotation(face.orientation) % 2 == 1
-                        ^ (faceNum != 4 && faceNum != 5)
-                        ^ VoxelFace.GetOrientationMirror(face.orientation))
-                    uvOrigin = new Vector2(transformPos[(axis + 2) % 3], transformPos[(axis + 1) % 3]);
-                else
-                    uvOrigin = new Vector2(transformPos[(axis + 1) % 3], transformPos[(axis + 2) % 3]);
-                uv[vertexI] =  uvOrigin + SQUARE_LOOP[uvNum];
+                vertex += transform.position;
+                Vector2 uv = new Vector2(
+                    vertex.x * positiveU_xyz.x + vertex.y * positiveU_xyz.y + vertex.z * positiveU_xyz.z,
+                    vertex.x * positiveV_xyz.x + vertex.y * positiveV_xyz.y + vertex.z * positiveV_xyz.z);
+                uvs[vertexI] = uv;
             }
 
             numFilledFaces++;
@@ -303,7 +329,9 @@ public class Voxel : MonoBehaviour
         mesh.name = "Voxel Mesh";
         mesh.Clear();
         mesh.vertices = vertices;
-        mesh.uv = uv;
+        mesh.uv = uvs;
+        mesh.normals = normals;
+        mesh.tangents = tangents;
         mesh.subMeshCount = numMaterials;
 
         Material[] materials = new Material[numMaterials];
@@ -357,8 +385,6 @@ public class Voxel : MonoBehaviour
 
             numFilledFaces++;
         }
-        
-        mesh.RecalculateNormals();
 
         bool xRay = false;
         if (substance != null && inEditor)
@@ -391,15 +417,20 @@ public class Voxel : MonoBehaviour
         else
         {
             boxCollider.enabled = true;
-            if (substance == null)
+            if (substance == null && !IsEmpty()) // a wall
             {
                 renderer.enabled = true;
                 boxCollider.isTrigger = false;
             }
-            else
+            else if (substance != null)
             {
                 renderer.enabled = false;
                 boxCollider.isTrigger = true;
+            }
+            else // probably an object
+            {
+                renderer.enabled = false;
+                boxCollider.enabled = false;
             }
             meshCollider.sharedMesh = null;
             meshCollider.enabled = false;
@@ -428,5 +459,18 @@ public class Voxel : MonoBehaviour
                 outline.startColor = outline.endColor = substance.highlight;
             }
         }
+    }
+
+    void OnBecameVisible()
+    {
+        if (substance != null)
+            // don't use substance.component (doesn't work for clones)
+            transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+    }
+
+    void OnBecameInvisible()
+    {
+        if (substance != null)
+            transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 }

@@ -32,3 +32,12 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+
+/Assets/GameAssets/Poliigon/*.jpg
+/Assets/GameAssets/Poliigon/*.png
+/Assets/GameAssets/FreePBR/*.png
+/Assets/GameAssets/FreePBR/*.psd
+/Assets/GameAssets/Genetica/*.png
+
+*.keystore

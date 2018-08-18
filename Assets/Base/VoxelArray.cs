@@ -40,9 +40,9 @@ public class VoxelArray : MonoBehaviour
 
     public GameObject voxelPrefab;
 
-    public ObjectEntity playerObject;
     public WorldProperties world = new WorldProperties();
     protected OctreeNode rootNode;
+    private List<ObjectEntity> objects = new List<ObjectEntity>();
 
     private bool unloadUnusedAssets = false;
 
@@ -60,7 +60,7 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
-    protected static Vector3Int Vector3ToInt(Vector3 v)
+    public static Vector3Int Vector3ToInt(Vector3 v)
     {
         return new Vector3Int(
             Mathf.RoundToInt(v.x),
@@ -174,9 +174,10 @@ public class VoxelArray : MonoBehaviour
 
     public virtual void VoxelModified(Voxel voxel)
     {
-        if (voxel.IsEmpty())
+        if (voxel.CanBeDeleted())
         {
             Destroy(voxel.gameObject);
+            RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
             unloadUnusedAssets = true;
         }
         else
@@ -185,10 +186,9 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
-    // called by voxels that are being destroyed
-    public void VoxelDestroyed(Voxel voxel)
+    public virtual void ObjectModified(ObjectEntity obj)
     {
-        RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
+
     }
 
     public bool IsEmpty()
@@ -198,13 +198,13 @@ public class VoxelArray : MonoBehaviour
         return true;
     }
 
-    public System.Collections.Generic.IEnumerable<Voxel> IterateVoxels()
+    public IEnumerable<Voxel> IterateVoxels()
     {
         foreach (Voxel v in IterateOctree(rootNode))
             yield return v;
     }
 
-    private System.Collections.Generic.IEnumerable<Voxel> IterateOctree(OctreeNode node)
+    private IEnumerable<Voxel> IterateOctree(OctreeNode node)
     {
         if (node == null)
         { }
@@ -223,4 +223,71 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
+    public void AddObject(ObjectEntity obj)
+    {
+        objects.Add(obj);
+        Voxel objVoxel = VoxelAt(obj.position, true);
+        if (objVoxel.objectEntity != null)
+            Debug.Log("Object already at position!!");
+        objVoxel.objectEntity = obj;
+        // not necessary to call VoxelModified
+    }
+
+    public void DeleteObject(ObjectEntity obj)
+    {
+        objects.Remove(obj);
+        if (obj.marker != null)
+        {
+            Destroy(obj.marker.gameObject);
+            obj.marker = null;
+        }
+        Voxel objVoxel = VoxelAt(obj.position, false);
+        if (objVoxel != null)
+        {
+            objVoxel.objectEntity = null;
+            VoxelModified(objVoxel);
+        }
+        else
+            Debug.Log("This object wasn't in the voxel array!");
+    }
+
+    // return success
+    public bool MoveObject(ObjectEntity obj, Vector3Int newPosition)
+    {
+        if (newPosition == obj.position)
+            return true;
+
+        Voxel newObjVoxel = VoxelAt(newPosition, true);
+        if (newObjVoxel.objectEntity != null)
+            return false;
+        newObjVoxel.objectEntity = obj;
+        // not necessary to call VoxelModified
+
+        Voxel oldObjVoxel = VoxelAt(obj.position, false);
+        if (oldObjVoxel != null)
+        {
+            oldObjVoxel.objectEntity = null;
+            VoxelModified(oldObjVoxel);
+        }
+        else
+            Debug.Log("This object wasn't in the voxel array!");
+        obj.position = newPosition;
+        ObjectModified(obj);
+        return true;
+    }
+
+    public IEnumerable<ObjectEntity> IterateObjects()
+    {
+        foreach (ObjectEntity obj in objects)
+            yield return obj;
+    }
+
+    public void DeleteSubstance(Substance substance)
+    {
+        foreach (var voxel in new HashSet<Voxel>(substance.voxels))
+        {
+            voxel.Clear();
+            VoxelModified(voxel);
+        }
+    }
 }

@@ -12,7 +12,12 @@ public class MenuGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .25f, height * .2f, width * .5f, height * .6f);
+        return new Rect(width * .2f, 0, width * .6f, height);
+    }
+
+    public override GUIStyle GetStyle()
+    {
+        return GUIStyle.none;
     }
 
     public override void OnEnable()
@@ -29,19 +34,19 @@ public class MenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button("New..."))
+        if (GUIUtils.HighlightedButton("New", GUI.skin.GetStyle("button_large")))
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-            inputDialog.prompt = "Enter new map name...";
+            inputDialog.prompt = "Enter new world name...";
             inputDialog.handler = NewMap;
         }
         scroll = GUILayout.BeginScrollView(scroll);
         foreach (string fileName in mapFiles)
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(fileName))
+            if (GUILayout.Button(fileName, GUI.skin.GetStyle("button_large")))
                 OpenMap(fileName, "editScene");
-            if (GUILayout.Button("...", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(GUIIconSet.instance.overflow, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false)))
             {
                 FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
                 dropdown.fileName = fileName;
@@ -64,15 +69,8 @@ public class MenuGUI : GUIPanel
 
     public static void OpenMap(string name, string scene)
     {
-        GameObject selectedMapObject = GameObject.Find("SelectedMap");
-        if (selectedMapObject == null)
-        {
-            selectedMapObject = new GameObject("SelectedMap");
-            selectedMapObject.AddComponent<SelectedMap>();
-        }
-        SelectedMap selectedMap = selectedMapObject.GetComponent<SelectedMap>();
+        SelectedMap selectedMap = SelectedMap.Instance();
         selectedMap.mapName = name;
-        selectedMap.returnFromPlayScene = (scene == "playScene") ? "menuScene" : "editScene";
         SceneManager.LoadScene(scene);
     }
 
@@ -80,10 +78,10 @@ public class MenuGUI : GUIPanel
     {
         if (name.Length == 0)
             return;
-        string filePath = GetMapPath(name);
+        string filePath = WorldFiles.GetFilePath(name);
         if (File.Exists(filePath))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
         using (FileStream fileStream = File.Create(filePath))
@@ -97,17 +95,13 @@ public class MenuGUI : GUIPanel
         UpdateMapList();
     }
 
-    public static string GetMapPath(string name)
-    {
-        return Application.persistentDataPath + "/" + name + ".json";
-    }
-
     private void UpdateMapList()
     {
-        string[] files = Directory.GetFiles(Application.persistentDataPath);
+        string[] files = Directory.GetFiles(WorldFiles.GetDirectoryPath());
         mapFiles.Clear();
         foreach (string name in files)
             mapFiles.Add(Path.GetFileNameWithoutExtension(name));
+        mapFiles.Sort();
     }
 }
 
@@ -121,7 +115,10 @@ public class FileDropdownGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(location.x, location.y, width * .2f, 0);
+        float y = location.y;
+        if (y + panelRect.height > height)
+            y = height - panelRect.height;
+        return new Rect(location.x, y, width * .2f, 0);
     }
 
     public override GUIStyle GetStyle()
@@ -144,7 +141,7 @@ public class FileDropdownGUI : GUIPanel
         if (GUILayout.Button("Copy"))
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-            inputDialog.prompt = "Enter new map name...";
+            inputDialog.prompt = "Enter new world name...";
             inputDialog.handler = CopyMap;
         }
         if (GUILayout.Button("Delete"))
@@ -155,7 +152,7 @@ public class FileDropdownGUI : GUIPanel
             dialog.noButtonText = "No";
             dialog.yesButtonHandler = () =>
             {
-                File.Delete(MenuGUI.GetMapPath(fileName));
+                File.Delete(WorldFiles.GetFilePath(fileName));
                 handler();
                 Destroy(this);
             };
@@ -164,19 +161,27 @@ public class FileDropdownGUI : GUIPanel
                 Destroy(this);
             };
         }
+#if UNITY_ANDROID
+        if (GUILayout.Button("Share"))
+        {
+            string path = WorldFiles.GetFilePath(fileName);
+            ShareMap.ShareAndroid(path);
+            Destroy(this);
+        }
+#endif
     }
 
     private void RenameMap(string newName)
     {
         if (newName.Length == 0)
             return;
-        string newPath = MenuGUI.GetMapPath(newName);
+        string newPath = WorldFiles.GetFilePath(newName);
         if (File.Exists(newPath))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Move(MenuGUI.GetMapPath(fileName), newPath);
+        File.Move(WorldFiles.GetFilePath(fileName), newPath);
         handler();
         Destroy(this);
     }
@@ -185,13 +190,13 @@ public class FileDropdownGUI : GUIPanel
     {
         if (newName.Length == 0)
             return;
-        string newPath = MenuGUI.GetMapPath(newName);
+        string newPath = WorldFiles.GetFilePath(newName);
         if (File.Exists(newPath))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A map with that name already exists.");
+            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Copy(MenuGUI.GetMapPath(fileName), newPath);
+        File.Copy(WorldFiles.GetFilePath(fileName), newPath);
         handler();
         Destroy(this);
     }

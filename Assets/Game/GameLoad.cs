@@ -15,7 +15,7 @@ public class GameLoad : MonoBehaviour
     private IEnumerator LoadCoroutine()
     {
         yield return null;
-        MapFileReader reader = new MapFileReader(SelectedMap.GetSelectedMapName());
+        MapFileReader reader = new MapFileReader(SelectedMap.Instance().mapName);
         try
         {
             reader.Read(null, GetComponent<VoxelArray>(), false);
@@ -27,13 +27,14 @@ public class GameLoad : MonoBehaviour
         loadingText.enabled = false;
     }
 
-    public void Close()
+    public void Close(string scene)
     {
-        StartCoroutine(CloseCoroutine());
+        StartCoroutine(CloseCoroutine(scene));
     }
 
-    private IEnumerator CloseCoroutine()
+    private IEnumerator CloseCoroutine(string scene)
     {
+        Time.timeScale = 1; // unpause; also necessary to prevent freezing
         yield return null;
         foreach (var substance in GetComponent<VoxelArray>().GetComponentsInChildren<SubstanceComponent>())
         {
@@ -45,12 +46,14 @@ public class GameLoad : MonoBehaviour
                 Destroy(rigidBody);
         }
         yield return null;
-        SceneManager.LoadScene(SelectedMap.GetReturnFromPlayScene());
+        SceneManager.LoadScene(scene);
     }
 
-    void Update()
+    void OnApplicationPause(bool paused)
     {
-        if (Input.GetButtonDown("Cancel"))
-            Close();
+        if (!paused && ShareMap.CatchSharedFile())
+        {
+            Close("fileReceiveScene");
+        }
     }
 }

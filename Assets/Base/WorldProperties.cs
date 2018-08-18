@@ -4,12 +4,45 @@ using UnityEngine;
 
 public class WorldProperties : PropertiesObject
 {
+    private static readonly Dictionary<string, float> skyRotations = new Dictionary<string,float>
+    {
+        {"sky5X1", 102},
+        {"sky5X2", 143},
+        {"sky5X3", 7},
+        {"sky5X4", 177},
+        {"sky5X5", 196}
+    };
+
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "World", "Properties that affect the entire world", "earth", typeof(WorldProperties));
 
     public PropertiesObjectType ObjectType()
     {
         return objectType;
+    }
+
+    public void SetSky(Material sky)
+    {
+        // instantiating material allows modifying the Rotation property without modifying asset
+        var skyInstance = Material.Instantiate<Material>(sky);
+        skyInstance.name = sky.name; // sky will be saved correctly
+        RenderSettings.skybox = skyInstance;
+        UpdateSky();
+    }
+
+    private void UpdateSky()
+    {
+        var sky = RenderSettings.skybox;
+        float baseRotation;
+        if (sky != null && skyRotations.TryGetValue(sky.name, out baseRotation))
+        {
+            // rotate sky to match sun direction
+            float yaw = RenderSettings.sun.transform.rotation.eulerAngles.y;
+            sky.SetFloat(Shader.PropertyToID("_Rotation"), baseRotation - yaw + 180);
+        }
+
+        DynamicGI.UpdateEnvironment(); // update ambient lighting
+        GameObject.Find("ReflectionProbe").GetComponent<ReflectionProbe>().RenderProbe();
     }
 
     public ICollection<Property> Properties()
@@ -19,10 +52,9 @@ public class WorldProperties : PropertiesObject
             new Property("Sky",
                 () => RenderSettings.skybox,
                 v => {
-                    RenderSettings.skybox = (Material)v;
-                    DynamicGI.UpdateEnvironment(); // update ambient lighting
+                    SetSky((Material)v);
                 },
-                PropertyGUIs.Material("GameAssets/Skies", "Unlit/Color")),
+                PropertyGUIs.Material("GameAssets/Skies", false, MaterialSelectorGUI.ColorModeSet.UNLIT_ONLY)),
             new Property("Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,
@@ -54,6 +86,8 @@ public class WorldProperties : PropertiesObject
                     Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
                     eulerAngles.y = (float)v;
                     RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
+
+                    UpdateSky();
                 },
                 PropertyGUIs.Slider(0, 360)),
             new Property("Fog density",

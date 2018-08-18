@@ -3,8 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+public enum ColorMode
+{
+    MATTE, GLOSSY, METAL, UNLIT, GLASS, ADD, MULTIPLY
+}
+
 public class MaterialSelectorGUI : GUIPanel
 {
+    public enum ColorModeSet
+    {
+        DEFAULT, UNLIT_ONLY, OBJECT
+    }
+
     private static Texture2D whiteTexture;
     private const int NUM_COLUMNS = 4;
     private const int TEXTURE_MARGIN = 20;
@@ -12,14 +22,31 @@ public class MaterialSelectorGUI : GUIPanel
     private const string BACK_BUTTON = "Back";
     private const string PREVIEW_SUFFIX = "_preview";
     private const string PREVIEW_SUFFIX_EXT = PREVIEW_SUFFIX + ".mat";
+    private static readonly string[] COLOR_MODE_NAMES = new string[]
+    {
+        "Matte", "Glossy", "Metal", "Unlit", "Glass", "Add", "Multiply"
+    };
+    private static readonly string[] OPAQUE_COLOR_MODES = new string[]
+    {
+        "Matte", "Glossy", "Metal", "Unlit"
+    };
+    private static readonly string[] TRANSPARENT_COLOR_MODES = new string[]
+    {
+        "Matte", "Glass", "Unlit", "Add", "Multiply"
+    };
+    private static readonly string[] OBJECT_COLOR_MODES = new string[]
+    {
+        "Matte", "Glossy", "Metal", "Glass", "Unlit"
+    };
 
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
     public string rootDirectory = "GameAssets/Materials";
-    public string colorShader = "Standard";
+    public ColorModeSet colorModeSet = ColorModeSet.DEFAULT;
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
+    public bool colorOnly = false;
     public bool closeOnSelect = true;
     public Material highlightMaterial = null; // the current selected material
 
@@ -28,17 +55,30 @@ public class MaterialSelectorGUI : GUIPanel
     private List<Material> materials;
     private List<string> materialSubDirectories;
     private ColorPickerGUI colorPicker;
+    private ColorMode colorMode;
 
-    private GUIStyle condensedButtonStyle = null;
+    private static readonly Lazy<GUIStyle> directoryButtonStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.button);
+        style.padding.left = 16;
+        style.padding.right = 16;
+        return style;
+    });
 
     public void Start()
     {
+        if (colorModeSet == ColorModeSet.UNLIT_ONLY)
+            colorMode = ColorMode.UNLIT;
+        else
+            colorMode = ColorMode.MATTE;
+
         materialDirectory = rootDirectory;
         UpdateMaterialDirectory();
         if (highlightMaterial != null && ResourcesDirectory.IsCustomMaterial(highlightMaterial))
         {
             highlightMaterial = Instantiate(highlightMaterial);
             tab = 0;
+            colorMode = ResourcesDirectory.GetCustomMaterialColorMode(highlightMaterial);
         }
         else
             tab = 1;
@@ -51,17 +91,14 @@ public class MaterialSelectorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (condensedButtonStyle == null)
-        {
-            condensedButtonStyle = new GUIStyle(GUI.skin.button);
-            condensedButtonStyle.padding.left = 16;
-            condensedButtonStyle.padding.right = 16;
-        }
-
-        if (allowNullMaterial)
+        TutorialGUI.TutorialHighlight("material type");
+        if (colorOnly)
+            tab = 0;
+        else if (allowNullMaterial)
             tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture", "None" }, 3);
         else
             tab = GUILayout.SelectionGrid(tab, new string[] { "Color", "Texture" }, 2);
+        TutorialGUI.ClearHighlight();
 
         if (tab == 0)
             ColorTab();
@@ -87,11 +124,40 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (highlightMaterial == null || !ResourcesDirectory.IsCustomMaterial(highlightMaterial))
         {
-            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find(colorShader), allowAlpha);
+            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(colorMode, allowAlpha);
             if (allowAlpha)
                 highlightMaterial.color = new Color(0, 0, 1, 0.25f);
             else
                 highlightMaterial.color = Color.red;
+            if (handler != null)
+                handler(highlightMaterial);
+        }
+        ColorMode newMode;
+        if (colorModeSet == ColorModeSet.UNLIT_ONLY)
+        {
+            newMode = ColorMode.UNLIT;
+        }
+        else
+        {
+            string[] colorModes;
+            if (colorModeSet == ColorModeSet.OBJECT)
+                colorModes = OBJECT_COLOR_MODES;
+            else if (allowAlpha)
+                colorModes = TRANSPARENT_COLOR_MODES;
+            else
+                colorModes = OPAQUE_COLOR_MODES;
+            // TODO: this is ugly
+            int m = System.Array.IndexOf(colorModes, COLOR_MODE_NAMES[(int)colorMode]);
+            m = GUILayout.SelectionGrid(m, colorModes,
+                colorModes.Length, GUI.skin.GetStyle("button_tab"));
+            newMode = (ColorMode)System.Array.IndexOf(COLOR_MODE_NAMES, colorModes[m]);
+        }
+        if (newMode != colorMode)
+        {
+            Material newMat = ResourcesDirectory.MakeCustomMaterial(newMode, allowAlpha);
+            newMat.color = highlightMaterial.color;
+            highlightMaterial = newMat;
+            colorMode = newMode;
             if (handler != null)
                 handler(highlightMaterial);
         }
@@ -128,9 +194,9 @@ public class MaterialSelectorGUI : GUIPanel
             bool selected;
             if (subDir == BACK_BUTTON)
                 // highlight the button
-                selected = !GUI.Toggle(buttonRect, true, subDir, condensedButtonStyle);
+                selected = !GUI.Toggle(buttonRect, true, subDir, directoryButtonStyle.Value);
             else
-                selected = GUI.Button(buttonRect, subDir, condensedButtonStyle);
+                selected = GUI.Button(buttonRect, subDir, directoryButtonStyle.Value);
             if (selected)
             {
                 scroll = new Vector2(0, 0);
@@ -246,7 +312,7 @@ public class MaterialSelectorGUI : GUIPanel
         }
         Rect texCoords = new Rect(Vector2.zero, Vector2.one);
         Texture texture = whiteTexture;
-        if (mat.mainTexture != null)
+        if (mat.HasProperty("_MainTex") && mat.mainTexture != null)
         {
             texture = mat.mainTexture;
             texCoords = new Rect(Vector2.zero, mat.mainTextureScale);
@@ -269,8 +335,8 @@ public class MaterialSelectorGUI : GUIPanel
         else if (texture == whiteTexture)
         {
             // no color or texture
-            texture = GUIIconSet.instance.missingTexture;
-            alpha = true;
+            GUI.color = baseColor;
+            return;
         }
         GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
         GUI.color = baseColor;

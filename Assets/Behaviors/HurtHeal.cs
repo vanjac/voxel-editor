@@ -5,7 +5,10 @@ using UnityEngine;
 public class HurtHealBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Hurt/Heal", "",
+        "Hurt/Heal", "Lose or gain health; below zero health, object will die",
+        "Properties:\n•  \"Amount\": Change in health. Positive heals, negative hurts.\n"
+        + "•  \"Rate\": Seconds between successive hurt/heals. 0 means health will only change once when behavior is enabled.\n"
+        + "•  \"Min health\"/\"Max health\": Health will only change if it's within this range, and will never go outside this range.",
         "heart", typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private float amount = -30;

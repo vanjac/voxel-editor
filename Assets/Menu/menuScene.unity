@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19052166, g: 0.1754852, b: 0.3594451, a: 1}
+  m_IndirectSpecularColor: {r: 0.31331286, g: 0.20789284, b: 0.39743063, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -123,6 +123,9 @@ GameObject:
   - component: {fileID: 1450445162}
   - component: {fileID: 1450445161}
   - component: {fileID: 1450445159}
+  - component: {fileID: 1450445163}
+  - component: {fileID: 1450445160}
+  - component: {fileID: 1450445164}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -145,6 +148,17 @@ MonoBehaviour:
   title: 
   scroll: {x: 0, y: 0}
   defaultMap: {fileID: 4900000, guid: def87d4fc2d1e4c469422477861bcc22, type: 3}
+--- !u!114 &1450445160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1450445158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a64b86e107dbf40ae1b765e7fd1dca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &1450445161
 Camera:
   m_ObjectHideFlags: 0
@@ -174,8 +188,8 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
+  m_HDR: 0
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -194,6 +208,51 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1450445163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1450445158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6bcaecd9742beb45b85c3ee868fc017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiSkin: {fileID: 0}
+  title: 
+  scroll: {x: 0, y: 0}
+  creditsText: {fileID: 4900000, guid: e682aff256c26294b9005b4e62ff561d, type: 3}
+--- !u!114 &1450445164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1450445158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f0502d5ffcf65c47918ac612478a3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  close: {fileID: 0}
+  x: {fileID: 0}
+  next: {fileID: 0}
+  create: {fileID: 0}
+  applySelection: {fileID: 0}
+  clearSelection: {fileID: 0}
+  paint: {fileID: 0}
+  play: {fileID: 0}
+  overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
+  world: {fileID: 0}
+  help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
+  helpCircle: {fileID: 0}
+  done: {fileID: 0}
+  rotateLeft: {fileID: 0}
+  rotateRight: {fileID: 0}
+  flipHorizontal: {fileID: 0}
+  flipVertical: {fileID: 0}
+  compass: {fileID: 0}
+  about: {fileID: 2800000, guid: c51491f24aa308c478dce23ffe9b3f15, type: 3}
 --- !u!1 &2101752314
 GameObject:
   m_ObjectHideFlags: 0

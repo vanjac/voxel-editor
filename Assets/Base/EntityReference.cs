@@ -110,7 +110,7 @@ public struct Target
         this.direction = direction;
     }
 
-    public Vector3 directionFrom(Vector3 point)
+    public Vector3 DirectionFrom(Vector3 point)
     {
         if (entityRef.entity != null)
         {
@@ -124,6 +124,14 @@ public struct Target
             return Vector3.zero;
         else
             return Voxel.DirectionForFaceI(direction);
+    }
+
+    public bool MatchesDirection(Vector3 point, Vector3 direction)
+    {
+        Vector3 targetDirection = DirectionFrom(point);
+        if (targetDirection == Vector3.zero)
+            return true;
+        return Vector3.Angle(targetDirection, direction) < 45;
     }
 
     public override string ToString()
@@ -146,7 +154,7 @@ public struct Target
                 case 5:
                     return "North";
                 default:
-                    return "";
+                    return "None";
             }
     }
 }

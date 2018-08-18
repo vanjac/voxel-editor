@@ -2,41 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveAxis : MonoBehaviour
+public class MoveAxis : TransformAxis
 {
     public Vector3 forwardDirection;
-    public Camera mainCamera;
-    public VoxelArrayEditor voxelArray;
-    private float lastUpdatePosition;
-    private LineRenderer lineRenderer;
     public int moveCount = 0;
+    private bool moving;
 
-    void Start ()
+    public override void Update()
     {
-        lineRenderer = GetComponent<LineRenderer>();
+        base.Update();
+        if (!moving)
+        {
+            float move = (GetOriginPosition() - GetAxisPosition()) / 4.0f;
+            transform.position += forwardDirection * move;
+        }
     }
 
-    void Update()
+    private float GetAxisPosition()
     {
-        float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
-        transform.localScale = Vector3.one * distanceToCam / 4;
-        lineRenderer.startWidth = lineRenderer.endWidth = distanceToCam / 40;
+        return Vector3.Dot(transform.position, forwardDirection);
     }
 
-    float GetPosition()
+    private float GetOriginPosition()
     {
         return Vector3.Dot(transform.parent.position, forwardDirection);
     }
 
     // below Touch functions are called by Touch Listener
 
-    public void TouchDown(Touch touch)
+    public override void TouchDown(Touch touch)
     {
-        lastUpdatePosition = GetPosition();
         moveCount = 0;
+        moving = true;
     }
 
-    public void TouchDrag(Touch touch)
+    public override void TouchUp()
+    {
+        moving = false;
+    }
+
+    public override void TouchDrag(Touch touch)
     {
         float distanceToCam = (transform.position - mainCamera.transform.position).magnitude;
 
@@ -45,19 +50,24 @@ public class MoveAxis : MonoBehaviour
         Vector3 screenMoveVector = offsetScreenPos - originScreenPos;
 
         float moveAmount = Vector3.Dot(touch.deltaPosition * 1.5f / mainCamera.pixelHeight, screenMoveVector.normalized);
-        transform.parent.position += forwardDirection * moveAmount * distanceToCam;
+        transform.position += forwardDirection * moveAmount * distanceToCam;
 
-        float position = GetPosition();
-        while (position - lastUpdatePosition > 1)
+        float currentPosition = GetAxisPosition();
+        float prevPosition = GetOriginPosition();
+        while (currentPosition - prevPosition > 1)
         {
-            lastUpdatePosition++;
+            transform.parent.position += forwardDirection;
+            transform.position -= forwardDirection;
             moveCount++;
+            currentPosition -= 1;
             voxelArray.Adjust(forwardDirection);
         }
-        while(position - lastUpdatePosition < -1)
+        while (currentPosition - prevPosition < -1)
         {
-            lastUpdatePosition--;
+            transform.parent.position -= forwardDirection;
+            transform.position += forwardDirection;
             moveCount--;
+            currentPosition += 1;
             voxelArray.Adjust(-forwardDirection);
         }
     }

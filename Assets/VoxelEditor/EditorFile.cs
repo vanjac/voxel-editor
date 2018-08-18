@@ -10,6 +10,7 @@ public class EditorFile : MonoBehaviour
 
     public VoxelArrayEditor voxelArray;
     public Transform cameraPivot;
+    public TouchListener touchListener;
 
     public void Load()
     {
@@ -19,7 +20,7 @@ public class EditorFile : MonoBehaviour
     private IEnumerator LoadCoroutine()
     {
         yield return null;
-        string mapName = SelectedMap.GetSelectedMapName();
+        string mapName = SelectedMap.Instance().mapName;
         Debug.unityLogger.Log("EditorFile", "Loading " + mapName);
         MapFileReader reader = new MapFileReader(mapName);
         List<string> warnings;
@@ -53,10 +54,26 @@ public class EditorFile : MonoBehaviour
             b.enabled = true;
         if (warnings.Count > 0)
         {
-            string message = "There were some issues with reading the map:\n\n  •  " +
+            string message = "There were some issues with reading the world:\n\n  •  " +
                 string.Join("\n  •  ", warnings.ToArray());
             LargeMessageGUI.ShowLargeMessageDialog(loadingGUI.gameObject, message);
         }
+
+        if (!PlayerPrefs.HasKey("last_editScene_version"))
+        {
+            var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
+            dialog.message = "This is your first time using the app. Would you like a tutorial?";
+            dialog.yesButtonText = "Yes";
+            dialog.noButtonText = "No";
+            dialog.yesButtonHandler = () =>
+            {
+                var tutorialGUI = dialog.gameObject.AddComponent<TutorialGUI>();
+                tutorialGUI.voxelArray = voxelArray;
+                tutorialGUI.touchListener = touchListener;
+                tutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL);
+            };
+        }
+        PlayerPrefs.SetString("last_editScene_version", Application.version);
     }
 
     public void Save()
@@ -67,7 +84,7 @@ public class EditorFile : MonoBehaviour
             return;
         }
         Debug.unityLogger.Log("EditorFile", "Saving...");
-        MapFileWriter writer = new MapFileWriter(SelectedMap.GetSelectedMapName());
+        MapFileWriter writer = new MapFileWriter(SelectedMap.Instance().mapName);
         writer.Write(cameraPivot, voxelArray);
         voxelArray.unsavedChanges = false;
     }
@@ -103,5 +120,10 @@ public class EditorFile : MonoBehaviour
         Debug.unityLogger.Log("EditorFile", "OnApplicationPause(" + pauseStatus + ")");
         if (pauseStatus)
             Save();
+        else if (ShareMap.CatchSharedFile())
+        {
+            Save();
+            SceneManager.LoadScene("fileReceiveScene");
+        }
     }
 }

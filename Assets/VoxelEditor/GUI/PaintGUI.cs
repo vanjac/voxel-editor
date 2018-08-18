@@ -19,8 +19,13 @@ public class PaintGUI : GUIPanel
     private int selectedLayer = 0;
     private MaterialSelectorGUI materialSelector;
 
-    private GUIStyle condensedButtonStyle = null;
-    private GUIStyle previewBoxStyle = null;
+    private static readonly Lazy<GUIStyle> previewBoxStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.GetStyle("button_small"));
+        style.normal.background = null;
+        style.active.background = null;
+        return style;
+    });
 
     public override Rect GetRect(float width, float height)
     {
@@ -50,30 +55,22 @@ public class PaintGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (condensedButtonStyle == null)
-        {
-            condensedButtonStyle = new GUIStyle(GUI.skin.button);
-            condensedButtonStyle.padding.left = 16;
-            condensedButtonStyle.padding.right = 16;
-            previewBoxStyle = new GUIStyle(condensedButtonStyle);
-            previewBoxStyle.normal.background = null;
-            previewBoxStyle.active.background = null;
-        }
-
         GUILayout.BeginHorizontal();
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(PREVIEW_SIZE), GUILayout.Height(PREVIEW_SIZE));
         DrawPaint(paint, GUILayoutUtility.GetLastRect());
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button(GUIIconSet.instance.rotateLeft, condensedButtonStyle, GUILayout.ExpandWidth(false)))
+        TutorialGUI.TutorialHighlight("paint transform");
+        if (GUILayout.Button(GUIIconSet.instance.rotateLeft, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
             Orient(3);
-        if (GUILayout.Button(GUIIconSet.instance.rotateRight, condensedButtonStyle, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(GUIIconSet.instance.rotateRight, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
             Orient(1);
+        TutorialGUI.ClearHighlight();
         GUILayout.FlexibleSpace();
 
         foreach (VoxelFace recentPaint in recentPaints)
         {
-            GUILayout.Box("", previewBoxStyle,
+            GUILayout.Box("", previewBoxStyle.Value,
                 GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE));
             Rect buttonRect = GUILayoutUtility.GetLastRect();
             Rect paintRect = new Rect(
@@ -93,13 +90,17 @@ public class PaintGUI : GUIPanel
             Destroy(this);
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, condensedButtonStyle, GUILayout.ExpandWidth(false)))
+        TutorialGUI.TutorialHighlight("paint transform");
+        if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
             Orient(5);
-        if (GUILayout.Button(GUIIconSet.instance.flipVertical, condensedButtonStyle, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(GUIIconSet.instance.flipVertical, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
             Orient(7);
+        TutorialGUI.ClearHighlight();
         int oldSelectedLayer = selectedLayer;
+        TutorialGUI.TutorialHighlight("paint layer");
         selectedLayer = GUILayout.SelectionGrid(
-            selectedLayer, new string[] { "Material", "Overlay" }, 2, condensedButtonStyle);
+            selectedLayer, new string[] { "Material", "Overlay" }, 2);
+        TutorialGUI.ClearHighlight();
         if (oldSelectedLayer != selectedLayer)
             UpdateMaterialSelector();
         GUILayout.EndHorizontal();
@@ -178,5 +179,14 @@ public class PaintGUI : GUIPanel
         MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false);
         MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true);
         GUI.matrix = baseMatrix;
+    }
+
+    public void TutorialShowSky()
+    {
+        scrollVelocity = new Vector2(0, 3000);
+        selectedLayer = 0;
+        paint.material = ResourcesDirectory.GetMaterial("GameAssets/Materials/Sky");
+        handler(paint);
+        UpdateMaterialSelector();
     }
 }

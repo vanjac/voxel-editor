@@ -100,7 +100,7 @@ public class PhysicsComponent : BehaviorComponent
         }
     }
 
-    public override void BehaviorDisabled()
+    public override void LastBehaviorDisabled()
     {
         Rigidbody rigidBody = GetComponent<Rigidbody>();
         if (rigidBody != null)
@@ -146,7 +146,7 @@ public class PhysicsComponent : BehaviorComponent
     private float GetWaterLevel(float x, float z)
     {
         if (water != null && water.enabled)
-            return water.waterLevel;
+            return water.GetWaterLevel(x, z);
         return float.MinValue;
     }
 

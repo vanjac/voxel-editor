@@ -8,7 +8,8 @@ public class TouchListener : MonoBehaviour
 {
     private const float MAX_ZOOM = 20.0f;
     private const float MIN_ZOOM = .05f;
-    private const int ZOOM_RAY_LAYER_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
+    private const int NO_XRAY_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
+    private const int NO_TRANSPARENT_MASK = NO_XRAY_MASK & ~(1 << 10); // everything but XRay and SelectedObject
 
     public enum TouchOperation
     {
@@ -18,12 +19,13 @@ public class TouchListener : MonoBehaviour
     public VoxelArrayEditor voxelArray;
 
     public TouchOperation currentTouchOperation = TouchOperation.NONE;
-    public MoveAxis movingAxis;
-    private Transform pivot;
+    public TransformAxis movingAxis;
+    public Transform pivot;
     private Camera cam;
 
     private Voxel lastHitVoxel;
     private int lastHitFaceI;
+    private bool selectingXRay = true;
 
     void Start()
     {
@@ -37,6 +39,8 @@ public class TouchListener : MonoBehaviour
         {
             if (currentTouchOperation == TouchOperation.SELECT)
                 voxelArray.TouchUp();
+            if (currentTouchOperation == TouchOperation.MOVE)
+                movingAxis.TouchUp();
             currentTouchOperation = TouchOperation.NONE;
         }
         else if (Input.touchCount == 1)
@@ -44,10 +48,13 @@ public class TouchListener : MonoBehaviour
             Touch touch = Input.GetTouch(0);
 
             RaycastHit hit;
-            bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position), out hit);
+            if (currentTouchOperation != TouchOperation.SELECT)
+                selectingXRay = true;
+            bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
+                out hit, Mathf.Infinity, selectingXRay ? Physics.DefaultRaycastLayers : NO_XRAY_MASK);
             Voxel hitVoxel = null;
             int hitFaceI = -1;
-            MoveAxis hitMoveAxis = null;
+            TransformAxis hitTransformAxis = null;
             ObjectMarker hitMarker = null;
             if (rayHitSomething)
             {
@@ -56,7 +63,6 @@ public class TouchListener : MonoBehaviour
                 {
                     hitVoxel = hitObject.GetComponent<Voxel>();
                     hitFaceI = Voxel.FaceIForDirection(hit.normal);
-
                     if (hitFaceI == -1)
                         hitVoxel = null;
                 }
@@ -66,13 +72,36 @@ public class TouchListener : MonoBehaviour
                 }
                 else if (hitObject.tag == "MoveAxis")
                 {
-                    hitMoveAxis = hitObject.GetComponent<MoveAxis>();
+                    hitTransformAxis = hitObject.GetComponent<TransformAxis>();
+                }
+
+                if ( (hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
+                    || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10)) ) // xray or SelectedObject layer
+                {
+                    // allow moving axes through xray substances
+                    RaycastHit newHit;
+                    if (Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
+                        out newHit, Mathf.Infinity, NO_TRANSPARENT_MASK))
+                    {
+                        if (newHit.transform.tag == "MoveAxis")
+                        {
+                            hitVoxel = null;
+                            hitFaceI = -1;
+                            hitMarker = null;
+                            hitTransformAxis = newHit.transform.GetComponent<TransformAxis>();
+                        }
+                    }
                 }
             }
             if (hitVoxel != null)
             {
                 lastHitVoxel = hitVoxel;
                 lastHitFaceI = hitFaceI;
+            }
+            else if (hitMarker != null)
+            {
+                lastHitVoxel = null;
+                lastHitFaceI = -1;
             }
 
             if (touch.phase == TouchPhase.Began)
@@ -101,6 +130,7 @@ public class TouchListener : MonoBehaviour
                     {
                         currentTouchOperation = TouchOperation.SELECT;
                         voxelArray.TouchDown(hitVoxel, hitFaceI);
+                        selectingXRay = hitVoxel.substance != null && hitVoxel.substance.xRay;
                     }
                     else if (touch.tapCount == 2)
                     {
@@ -116,21 +146,22 @@ public class TouchListener : MonoBehaviour
                 {
                     currentTouchOperation = TouchOperation.SELECT;
                     voxelArray.TouchDown(hitMarker);
+                    selectingXRay = hitMarker.objectEntity.xRay;
                     UpdateZoomDepth();
                 }
-                else if (hitMoveAxis != null)
+                else if (hitTransformAxis != null)
                 {
                     if (touch.tapCount == 1)
                     {
                         currentTouchOperation = TouchOperation.MOVE;
-                        movingAxis = hitMoveAxis;
+                        movingAxis = hitTransformAxis;
                         movingAxis.TouchDown(touch);
                     }
-                    else if (touch.tapCount == 2)
+                    else if (touch.tapCount == 2 && lastHitVoxel != null)
                     {
                         voxelArray.DoubleTouch(lastHitVoxel, lastHitFaceI);
                     }
-                    else if (touch.tapCount == 3)
+                    else if (touch.tapCount == 3 && lastHitVoxel != null)
                     {
                         voxelArray.TripleTouch(lastHitVoxel, lastHitFaceI);
                     }
@@ -232,7 +263,7 @@ public class TouchListener : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(avg);
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, ZOOM_RAY_LAYER_MASK))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, NO_XRAY_MASK))
         {
             float currentDistanceToCamera = (pivot.position - transform.position).magnitude;
             float newDistanceToCamera = (hit.point - transform.position).magnitude;

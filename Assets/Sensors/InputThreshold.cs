@@ -6,7 +6,13 @@ using UnityEngine;
 public class InputThresholdSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Threshold", "Active when a certain threshold of other objects are active", "altimeter", typeof(InputThresholdSensor));
+        "Threshold", "Active when a certain threshold of other objects are active",
+        "The values of all of the inputs are continuously added up. "
+        + "If an Input is on and set to \"Positive\", the total is incremented by one. "
+        + "If an Input is on and set to \"Negative\", the total is decremented by one. "
+        + "The sensor turns on if the total is greater than or equal to the threshold.\n\n"
+        + "Activators: the combined activators of all inputs",
+        "altimeter", typeof(InputThresholdSensor));
 
     // public so it can be serialized
     // this is serialized so don't change it!
@@ -94,13 +100,9 @@ public class InputThresholdSensor : Sensor
                 inputToDelete = i;
             GUILayout.EndHorizontal();
 
-            GUIStyle changeGridStyle = new GUIStyle(GUI.skin.button);
-            changeGridStyle.padding = new RectOffset(0, 0, 16, 16);
-            changeGridStyle.margin = new RectOffset(0, 0, 0, 0);
-
             int negativeNum = inputs[i].negative ? 1 : 0;
             int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
-                new string[] { "Positive", "Negative" }, 2, changeGridStyle);
+                new string[] { "Positive", "Negative" }, 2, GUI.skin.GetStyle("button_tab"));
             if (negativeNum != newNegativeNum)
             {
                 inputs[i].negative = newNegativeNum == 1;
@@ -129,39 +131,80 @@ public class InputThresholdComponent : SensorComponent
 {
     public InputThresholdSensor.Input[] inputs;
     public float threshold;
-
-    private bool value = false;
-    private EntityComponent activator;
+    private Dictionary<EntityComponent, int> activatorCounts = new Dictionary<EntityComponent, int>();
+    private bool wasOn = false;
 
     void Update()
     {
-        int energy = 0;
-        activator = null;
-        for (int i = 0; i < inputs.Length; i++)
+        int energy = CalculateEnergy();
+        bool isOn = energy >= threshold;
+
+        if (isOn && !wasOn)
         {
-            EntityComponent e = inputs[i].entityRef.component;
-            if (e != null && e.IsOn())
+            AddActivator(null); // make sure sensor is on
+            foreach (EntityComponent activator in activatorCounts.Keys)
+                AddActivator(activator);
+        }
+        else if (wasOn && !isOn)
+        {
+            ClearActivators();
+        }
+        wasOn = isOn;
+
+        foreach (var input in inputs)
+        {
+            EntityComponent e = input.entityRef.component;
+            if (e == null)
+                continue;
+            foreach (var newActivator in e.GetNewActivators())
             {
-                if (inputs[i].negative)
-                    energy--;
+                if (newActivator == null)
+                    continue; // always has null activator
+                if (activatorCounts.ContainsKey(newActivator))
+                    activatorCounts[newActivator]++;
                 else
                 {
-                    energy++;
-                    if (activator == null)
-                        activator = e.GetActivator();
+                    activatorCounts[newActivator] = 1;
+                    if (isOn)
+                        AddActivator(newActivator);
                 }
             }
+            foreach (var removedActivator in e.GetRemovedActivators())
+            {
+                if (removedActivator == null)
+                    continue; // always has null activator
+                if (activatorCounts.ContainsKey(removedActivator))
+                {
+                    var count = activatorCounts[removedActivator] - 1;
+                    if (count <= 0)
+                    {
+                        activatorCounts.Remove(removedActivator);
+                        if (isOn)
+                            RemoveActivator(removedActivator);
+                    }
+                    else
+                    {
+                        activatorCounts[removedActivator] = count;
+                    }
+                }
+            }
+        } // end foreach input
+    }
+
+    private int CalculateEnergy()
+    {
+        int energy = 0;
+        foreach (var input in inputs)
+        {
+            EntityComponent e = input.entityRef.component;
+            if (e != null && e.IsOn())
+            {
+                if (input.negative)
+                    energy--;
+                else
+                    energy++;
+            }
         }
-        value = energy >= threshold;
-    }
-
-    public override bool IsOn()
-    {
-        return value;
-    }
-
-    public override EntityComponent GetActivator()
-    {
-        return activator;
+        return energy;
     }
 }

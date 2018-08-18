@@ -27,7 +27,7 @@ class StoredPropertiesObject : PropertiesObject
 
 public class PropertiesGUI : GUIPanel
 {
-    const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
+    public const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
 
     public float slide = SLIDE_HIDDEN;
     public VoxelArrayEditor voxelArray;
@@ -41,6 +41,14 @@ public class PropertiesGUI : GUIPanel
     PropertiesObject editEntity;
     PropertiesObject editSensor;
     List<PropertiesObject> editBehaviors = new List<PropertiesObject>();
+
+    private static readonly Lazy<GUIStyle> iconStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.padding = new RectOffset(0, 0, 0, 0);
+        style.margin = new RectOffset(0, 0, 0, 0);
+        return style;
+    });
 
     public override void OnEnable()
     {
@@ -170,25 +178,53 @@ public class PropertiesGUI : GUIPanel
         PropertiesObjectGUI(editEntity);
         GUILayout.EndVertical();
 
-        if (singleSelectedEntity != null && singleSelectedEntity is Substance)
+        if (singleSelectedEntity != null && !(singleSelectedEntity is PlayerObject))
         {
-            if (!GUILayout.Toggle(true, "Clone", GUI.skin.button))
+            GUILayout.BeginHorizontal();
+            if (GUIUtils.HighlightedButton("Clone"))
             {
-                Substance clone = (Substance)(singleSelectedEntity.Clone());
-                clone.defaultPaint = voxelArray.GetSelectedPaint();
-                clone.defaultPaint.addSelected = false;
-                clone.defaultPaint.storedSelected = false;
-                voxelArray.substanceToCreate = clone;
-                var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
-                createGUI.voxelArray = voxelArray;
+                if (singleSelectedEntity is ObjectEntity)
+                {
+                    ObjectEntity clone = (ObjectEntity)(singleSelectedEntity.Clone());
+                    var cloneGUI = gameObject.AddComponent<CloneObjectGUI>();
+                    cloneGUI.clone = clone;
+                    cloneGUI.voxelArray = voxelArray;
+                }
+                else if (singleSelectedEntity is Substance)
+                {
+                    Substance clone = (Substance)(singleSelectedEntity.Clone());
+                    clone.defaultPaint = voxelArray.GetSelectedPaint();
+                    clone.defaultPaint.addSelected = false;
+                    clone.defaultPaint.storedSelected = false;
+                    voxelArray.substanceToCreate = clone;
+                    var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
+                    createGUI.voxelArray = voxelArray;
+                }
             }
+            if (GUIUtils.HighlightedButton("Delete"))
+            {
+                // TODO: only deselect deleted objects
+                voxelArray.ClearSelection();
+                voxelArray.ClearStoredSelection();
+                if (singleSelectedEntity is ObjectEntity)
+                {
+                    voxelArray.DeleteObject((ObjectEntity)singleSelectedEntity);
+                    voxelArray.unsavedChanges = true;
+                }
+                else if (singleSelectedEntity is Substance)
+                {
+                    voxelArray.DeleteSubstance((Substance)singleSelectedEntity);
+                }
+            }
+            GUILayout.EndHorizontal();
         }
 
+        TutorialGUI.TutorialHighlight("change sensor");
         if (GUILayout.Button("Change Sensor"))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.title = "Change Sensor";
-            sensorMenu.items = GameScripts.sensors;
+            sensorMenu.categories = new PropertiesObjectType[][] { GameScripts.sensors };
             sensorMenu.handler = (PropertiesObjectType type) =>
             {
                 Sensor newSensor = (Sensor)type.Create();
@@ -198,10 +234,12 @@ public class PropertiesGUI : GUIPanel
                 UpdateEditEntity();
             };
         }
+        TutorialGUI.ClearHighlight();
         GUILayout.BeginVertical(GUI.skin.box);
         PropertiesObjectGUI(editSensor, " Sensor");
         GUILayout.EndVertical();
 
+        TutorialGUI.TutorialHighlight("add behavior");
         if (GUILayout.Button("Add Behavior"))
         {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
@@ -219,18 +257,21 @@ public class PropertiesGUI : GUIPanel
                 voxelArray.unsavedChanges = true;
                 UpdateEditEntity();
                 scrollVelocity = new Vector2(0, 2000 * editBehaviors.Count); // scroll to bottom
+                // EntityPreviewManager.BehaviorUpdated(entity, newBehavior); // TODO: need to add this back in
             };
         }
+        TutorialGUI.ClearHighlight();
 
         Color guiBaseColor = GUI.backgroundColor;
         EntityBehavior behaviorToRemove = null;
         foreach (EntityBehavior behavior in editBehaviors) // TODO: editBehaviors doesn't contain EntityBehaviors
         {
+            TutorialGUI.TutorialHighlight("behaviors");
             Entity behaviorTarget = behavior.targetEntity.entity;
             string suffix = " Behavior";
             if (behavior.targetEntityIsActivator)
             {
-                suffix += "\n▶  Activator";
+                suffix += "\n▶  Activators";
             }
             else if (behaviorTarget != null)
             {
@@ -242,7 +283,7 @@ public class PropertiesGUI : GUIPanel
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            PropertiesObjectGUI(behavior, suffix);
+            PropertiesObjectGUI(behavior, suffix, () => EntityPreviewManager.BehaviorUpdated(entity, behavior));
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
@@ -254,10 +295,12 @@ public class PropertiesGUI : GUIPanel
         {
             entity.behaviors.Remove(behaviorToRemove);
             voxelArray.unsavedChanges = true;
+            EntityPreviewManager.BehaviorUpdated(entity, behaviorToRemove);
         }
     }
 
-    private void PropertiesObjectGUI(PropertiesObject obj, string suffix = "")
+    private void PropertiesObjectGUI(PropertiesObject obj, string suffix = "",
+        System.Action changedAction = null)
     {
         string title;
         if (obj == null)
@@ -274,11 +317,12 @@ public class PropertiesGUI : GUIPanel
                 title += ":";
         }
         GUILayout.BeginHorizontal();
-        if (obj != null)
+        if (obj != null && GUILayout.Button(obj.ObjectType().icon, iconStyle.Value))
         {
-            GUILayout.Label(obj.ObjectType().icon, GUI.skin.customStyles[2]);
+            var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
+            typeInfo.type = obj.ObjectType();
         }
-        GUILayout.Label(title, GUI.skin.customStyles[0]);
+        GUILayout.Label(title, GUI.skin.GetStyle("label_title"));
         GUILayout.EndHorizontal();
 
         if (obj == null)
@@ -292,6 +336,8 @@ public class PropertiesGUI : GUIPanel
                 prop.setter(v);
                 voxelArray.unsavedChanges = true;
                 adjustingSlider = true;
+                if (changedAction != null)
+                    changedAction();
             };
             prop.gui(wrappedProp);
         }
@@ -323,6 +369,7 @@ public class NewBehaviorGUI : GUIPanel
     void Start()
     {
         typePicker = gameObject.AddComponent<TypePickerGUI>();
+        typePicker.categoryNames = GameScripts.behaviorTabNames;
         UpdateBehaviorList();
         typePicker.handler = (PropertiesObjectType type) =>
         {
@@ -341,23 +388,29 @@ public class NewBehaviorGUI : GUIPanel
     {
         if (targetEntityIsActivator)
         {
-            typePicker.items = GameScripts.behaviors;
+            // all behaviors
+            typePicker.categories = GameScripts.behaviorTabs;
             return;
         }
-        var filteredTypes = new List<BehaviorType>();
-        foreach(BehaviorType type in GameScripts.behaviors) {
-            if (targetEntity == null)
+        typePicker.categories = new PropertiesObjectType[GameScripts.behaviorTabs.Length][];
+        for (int tabI = 0; tabI < GameScripts.behaviorTabs.Length; tabI++)
+        {
+            var filteredTypes = new List<BehaviorType>();
+            foreach (BehaviorType type in GameScripts.behaviorTabs[tabI])
             {
-                if (self == null || type.rule(self))
-                    filteredTypes.Add(type);
+                if (targetEntity == null)
+                {
+                    if (self == null || type.rule(self))
+                        filteredTypes.Add(type);
+                }
+                else
+                {
+                    if (type.rule(targetEntity))
+                        filteredTypes.Add(type);
+                }
             }
-            else
-            {
-                if (type.rule(targetEntity))
-                    filteredTypes.Add(type);
-            }
+            typePicker.categories[tabI] = filteredTypes.ToArray();
         }
-        typePicker.items = filteredTypes.ToArray();
     }
 
     void OnDestroy()
@@ -370,30 +423,31 @@ public class NewBehaviorGUI : GUIPanel
     {
         string targetButtonText = "Target:  Self";
         if (targetEntityIsActivator)
-            targetButtonText = "Target:  Activator";
+            targetButtonText = "Target:  Activators";
         else if (targetEntity != null)
             targetButtonText = "Target:  " + targetEntity.ToString();
-        if (!GUILayout.Toggle(true, targetButtonText, GUI.skin.button))
+        if (GUIUtils.HighlightedButton(targetButtonText))
         {
             entityPicker = gameObject.AddComponent<EntityPickerGUI>();
             entityPicker.voxelArray = voxelArray;
             entityPicker.allowNone = true;
             entityPicker.allowMultiple = false;
-            entityPicker.activatorOption = true;
+            entityPicker.allowNull = true;
+            entityPicker.nullName = "Activators";
             entityPicker.handler = (ICollection<Entity> entities) =>
             {
                 entityPicker = null;
                 foreach (Entity entity in entities)
                 {
-                    if (entity == self)
-                    {
-                        targetEntity = null;
-                        targetEntityIsActivator = false;
-                    }
-                    else if (entity == EntityPickerGUI.ACTIVATOR)
+                    if (entity == null) // activator
                     {
                         targetEntity = null;
                         targetEntityIsActivator = true;
+                    }
+                    else if (entity == self)
+                    {
+                        targetEntity = null;
+                        targetEntityIsActivator = false;
                     }
                     else
                     {
@@ -417,5 +471,58 @@ public class NewBehaviorGUI : GUIPanel
 
         // prevent panel from closing when entity picker closes
         holdOpen = entityPicker != null;
+    }
+}
+
+
+public class CloneObjectGUI : ActionBarGUI
+{
+    public ObjectEntity clone;
+
+    public override void OnEnable()
+    {
+        // copied from CreateSubstanceGUI
+        base.OnEnable();
+        stealFocus = true;
+        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
+        if (actionBar != null)
+            actionBar.enabled = false;
+        propertiesGUI.normallyOpen = false; // hide properties panel
+    }
+
+    public override void OnDisable()
+    {
+        // copied from CreateSubstanceGUI
+        base.OnDisable();
+        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
+        if (actionBar != null)
+            actionBar.enabled = true;
+        propertiesGUI.normallyOpen = true; // show properties panel
+    }
+
+    public override void WindowGUI()
+    {
+        GUILayout.BeginHorizontal();
+        if (ActionBarButton(GUIIconSet.instance.close))
+            Destroy(this);
+        GUILayout.FlexibleSpace();
+        ActionBarLabel("Tap to place clone");
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+    }
+
+    void Start()
+    {
+        voxelArray.ClearSelection();
+        voxelArray.ClearStoredSelection();
+    }
+
+    void Update()
+    {
+        if (voxelArray.SomethingIsSelected())
+        {
+            voxelArray.PlaceObject(clone);
+            Destroy(this);
+        }
     }
 }

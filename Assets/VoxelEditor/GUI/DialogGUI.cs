@@ -12,7 +12,7 @@ public class DialogGUI : GUIPanel
     public ButtonHandler yesButtonHandler;
     public ButtonHandler noButtonHandler;
 
-    private GUIStyle messageLabelStyle;
+    private bool calledHandler = false;
 
     public static DialogGUI ShowMessageDialog(GameObject gameObject, string message)
     {
@@ -29,28 +29,41 @@ public class DialogGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (messageLabelStyle == null)
-        {
-            messageLabelStyle = new GUIStyle(GUI.skin.label);
-            messageLabelStyle.wordWrap = true;
-        }
-
-        GUILayout.Label(message, messageLabelStyle);
+        GUILayout.Label(message, GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
         if (yesButtonText != null && GUILayout.Button(yesButtonText))
         {
             if (yesButtonHandler != null)
                 yesButtonHandler();
+            calledHandler = true;
             Destroy(this);
         }
         if (noButtonText != null && GUILayout.Button(noButtonText))
         {
             if (noButtonHandler != null)
                 noButtonHandler();
+            calledHandler = true;
             Destroy(this);
         }
         GUILayout.EndHorizontal();
+    }
+
+    public void OnDestroy()
+    {
+        if (!calledHandler)
+        {
+            if (noButtonText != null)
+            {
+                if (noButtonHandler != null)
+                    noButtonHandler();
+            }
+            else if (yesButtonText != null)
+            {
+                if (yesButtonHandler != null)
+                    yesButtonHandler();
+            }
+        }
     }
 }
 
@@ -58,8 +71,10 @@ public class DialogGUI : GUIPanel
 public class TextInputDialogGUI : GUIPanel
 {
     public delegate void TextHandler(string text);
+    public delegate void CancelHandler();
 
     public TextHandler handler;
+    public CancelHandler cancelHandler;
     public string prompt;
 
     private TouchScreenKeyboard keyboard;
@@ -110,7 +125,11 @@ public class TextInputDialogGUI : GUIPanel
                 Destroy(this);
             }
             else if (keyboard.status != TouchScreenKeyboard.Status.Visible)
+            {
+                if (cancelHandler != null)
+                    cancelHandler();
                 Destroy(this);
+            }
         }
         else
         {
@@ -133,8 +152,6 @@ public class LargeMessageGUI : GUIPanel
     public string message;
     public ButtonHandler closeButtonHandler;
 
-    private GUIStyle messageLabelStyle;
-
     public static LargeMessageGUI ShowLargeMessageDialog(GameObject gameObject, string message)
     {
         var dialog = gameObject.AddComponent<LargeMessageGUI>();
@@ -149,14 +166,8 @@ public class LargeMessageGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (messageLabelStyle == null)
-        {
-            messageLabelStyle = new GUIStyle(GUI.skin.label);
-            messageLabelStyle.wordWrap = true;
-        }
-
         scroll = GUILayout.BeginScrollView(scroll);
-        GUILayout.Label(message, messageLabelStyle);
+        GUILayout.Label(message, GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.FlexibleSpace();
         GUILayout.EndScrollView();
         if (GUILayout.Button("OK"))

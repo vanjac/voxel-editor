@@ -20,7 +20,7 @@ public class GameScripts
             "cube",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 return substance;
@@ -30,7 +30,7 @@ public class GameScripts
             "water",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new WaterBehavior());
                 substance.defaultPaint = new VoxelFace();
@@ -42,12 +42,11 @@ public class GameScripts
             "vector-combine",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"), true);
-                substance.defaultPaint.overlay.color = new Color(0, 0, 1, 0.25f);
+                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("GameAssets/Overlays/Invisible");
                 return substance;
             }),
         new PropertiesObjectType("Glass",
@@ -55,27 +54,12 @@ public class GameScripts
             "cube",
             typeof(Substance),
             () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
+                Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("GameAssets/Overlays/glass/TranslucentGlassSaftey");
-                return substance;
-            }),
-        new PropertiesObjectType("Neuron",
-            "Logic component",
-            "thought-bubble",
-            typeof(Substance),
-            () => {
-                Substance substance = new Substance(VoxelArrayEditor.instance);
-                substance.sensor = new InputThresholdSensor();
-                EntityBehavior visible = new VisibleBehavior();
-                visible.condition = EntityBehavior.Condition.ON;
-                substance.behaviors.Add(visible);
-                substance.behaviors.Add(new SolidBehavior());
-                substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"), true);
-                substance.defaultPaint.overlay.color = new Color(.09f, .38f, .87f, .8f);
+                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
+                substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
                 return substance;
             })
     };
@@ -83,30 +67,133 @@ public class GameScripts
     public static PropertiesObjectType[] sensors = new PropertiesObjectType[]
     {
         PropertiesObjectType.NONE,
+        //TestSensor.objectType,
         TouchSensor.objectType,
-        TapSensor.objectType,
         InputThresholdSensor.objectType,
         ToggleSensor.objectType,
         PulseSensor.objectType,
-        DelaySensor.objectType
+        DelaySensor.objectType,
+        MotionSensor.objectType,
+        TapSensor.objectType,
+        InRangeSensor.objectType,
+        InCameraSensor.objectType
     };
 
     public static BehaviorType[] behaviors = new BehaviorType[]
     {
         VisibleBehavior.objectType,
-        SolidBehavior.objectType,
-        PhysicsBehavior.objectType,
         MoveBehavior.objectType,
         SpinBehavior.objectType,
         TeleportBehavior.objectType,
         HurtHealBehavior.objectType,
-        WaterBehavior.objectType
+        CloneBehavior.objectType,
+        LightBehavior.objectType,
+
+        SolidBehavior.objectType,
+        PhysicsBehavior.objectType,
+        WaterBehavior.objectType,
+        ForceBehavior.objectType
+    };
+
+    public static string[] behaviorTabNames = new string[] { "General", "Physics" };
+
+    public static BehaviorType[][] behaviorTabs = new BehaviorType[][]
+    {
+        new BehaviorType[]
+        {
+            VisibleBehavior.objectType,
+            MoveBehavior.objectType,
+            SpinBehavior.objectType,
+            TeleportBehavior.objectType,
+            HurtHealBehavior.objectType,
+            CloneBehavior.objectType,
+            LightBehavior.objectType
+        },
+        new BehaviorType[]
+        {
+            SolidBehavior.objectType,
+            PhysicsBehavior.objectType,
+            WaterBehavior.objectType,
+            ForceBehavior.objectType
+        },
+    };
+
+    public static PropertiesObjectType[] objects = new PropertiesObjectType[]
+    {
+        PlayerObject.objectType,
+        BallObject.objectType
+    };
+
+    public static PropertiesObjectType[] objectTemplates = new PropertiesObjectType[]
+    {
+        new PropertiesObjectType(BallObject.objectType, () =>
+        {
+            BallObject ball = new BallObject();
+            ball.behaviors.Add(new VisibleBehavior());
+            ball.behaviors.Add(new SolidBehavior());
+            return ball;
+        }),
+        new PropertiesObjectType("Light",
+            "",
+            "lightbulb-on",
+            typeof(BallObject),
+            () => {
+                var ball = new BallObject();
+                foreach (Property prop in ball.Properties())
+                {
+                    if (prop.name == "Material")
+                    {
+                        Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
+                        lightMat.color = new Color(1, 1, 1, 0.25f);
+                        prop.setter(lightMat);
+                        break;
+                    }
+                }
+                ball.xRay = true;
+                ball.behaviors.Add(new LightBehavior());
+                return ball;
+            }),
+        new PropertiesObjectType("Neuron",
+            "Logic component, glows when on.",
+            "thought-bubble",
+            typeof(BallObject),
+            () => {
+                var ball = new BallObject();
+                // TODO: there should be a better way to set properties
+                foreach (Property prop in ball.Properties())
+                {
+                    if (prop.name == "Material")
+                    {
+                        Material neuronMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
+                        neuronMat.color = new Color(.09f, .38f, .87f, .25f);
+                        prop.setter(neuronMat);
+                        break;
+                    }
+                }
+                ball.sensor = new InputThresholdSensor();
+                ball.behaviors.Add(new VisibleBehavior());
+                ball.behaviors.Add(new SolidBehavior());
+                var light = new LightBehavior();
+                light.condition = EntityBehavior.Condition.ON;
+                foreach (Property prop in light.Properties())
+                {
+                    if (prop.name == "Color")
+                        prop.setter(new Color(.09f, .38f, .87f));
+                    else if (prop.name == "Size")
+                        prop.setter(2.0f);
+                    else if (prop.name == "Intensity")
+                        prop.setter(3.0f);
+                }
+                ball.behaviors.Add(light);
+                return ball;
+            })
     };
 
     public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]
     {
         Entity.objectType,
-        Substance.objectType
+        Substance.objectType,
+        BallObject.objectType
     };
 
 }

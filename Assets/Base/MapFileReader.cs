@@ -23,6 +23,7 @@ public class MapFileReader
     private Material missingMaterial; // material to be used when material can't be created
 
     private List<string> warnings = new List<string>();
+    private bool editor;
 
     public MapFileReader(string fileName)
     {
@@ -32,16 +33,18 @@ public class MapFileReader
     // return warnings
     public List<string> Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
+        this.editor = editor;
         if (missingMaterial == null)
         {
-            missingMaterial = ResourcesDirectory.MakeCustomMaterial(Shader.Find("Standard"));
+            // allowTransparency is true in case the material is used for an overlay, so the alpha value can be adjusted
+            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
             missingMaterial.color = Color.magenta;
         }
         string jsonString;
 
         try
         {
-            string filePath = Application.persistentDataPath + "/" + fileName + ".json";
+            string filePath = WorldFiles.GetFilePath(fileName);
             using (FileStream fileStream = File.Open(filePath, FileMode.Open))
             {
                 using (var sr = new StreamReader(fileStream))
@@ -62,18 +65,18 @@ public class MapFileReader
         }
         catch (Exception e)
         {
-            throw new MapReadException("Invalid map file", e);
+            throw new MapReadException("Invalid world file", e);
         }
         if (rootNode == null)
-            throw new MapReadException("Invalid map file");
+            throw new MapReadException("Invalid world file");
         JSONObject root = rootNode.AsObject;
         if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
         {
-            throw new MapReadException("Invalid map file");
+            throw new MapReadException("Invalid world file");
         }
         if (root["minReaderVersion"].AsInt > VERSION)
         {
-            throw new MapReadException("This map requires a newer version of the app");
+            throw new MapReadException("This world file requires a newer version of the app");
         }
         fileWriterVersion = root["writerVersion"].AsInt;
 
@@ -84,7 +87,7 @@ public class MapFileReader
             if (editor && cameraPivot != null && root["camera"] != null)
                 ReadCamera(root["camera"].AsObject, cameraPivot);
             if (root["world"] != null)
-                ReadWorld(root["world"].AsObject, voxelArray, editor);
+                ReadWorld(root["world"].AsObject, voxelArray);
         }
         catch (MapReadException e)
         {
@@ -92,7 +95,7 @@ public class MapFileReader
         }
         catch (Exception e)
         {
-            throw new MapReadException("Error reading map file", e);
+            throw new MapReadException("Error reading world file", e);
         }
 
         return warnings;
@@ -111,7 +114,7 @@ public class MapFileReader
         }
     }
 
-    private void ReadWorld(JSONObject world, VoxelArray voxelArray, bool editor)
+    private void ReadWorld(JSONObject world, VoxelArray voxelArray)
     {
         var materials = new List<Material>();
         if (world["materials"] != null)
@@ -119,7 +122,7 @@ public class MapFileReader
             foreach (JSONNode matNode in world["materials"].AsArray)
             {
                 JSONObject matObject = matNode.AsObject;
-                materials.Add(ReadMaterial(matObject, editor));
+                materials.Add(ReadMaterial(matObject));
             }
         }
 
@@ -128,7 +131,7 @@ public class MapFileReader
         {
             foreach (JSONNode subNode in world["substances"].AsArray)
             {
-                Substance s = new Substance(voxelArray);
+                Substance s = new Substance();
                 ReadEntity(subNode.AsObject, s);
                 substances.Add(s);
             }
@@ -136,33 +139,54 @@ public class MapFileReader
 
         if (world["global"] != null)
             ReadPropertiesObject(world["global"].AsObject, voxelArray.world);
-        if (world["sky"] != null)
-            {
-                Material skybox = materials[world["sky"].AsInt];
-                if (skybox != missingMaterial) // default skybox is null
-                {
-                    RenderSettings.skybox = skybox;
-                }
-            }
-        DynamicGI.UpdateEnvironment(); // update ambient lighting
+        if (fileWriterVersion <= 2 && world["sky"] != null)
+        {
+            Material sky = materials[world["sky"].AsInt];
+            if (sky != missingMaterial) // default skybox is null
+                voxelArray.world.SetSky(sky);
+        }
         if (world["map"] != null)
-            ReadMap(world["map"].AsObject, voxelArray, materials, substances, editor);
-        voxelArray.playerObject = new PlayerObject(voxelArray);
-        if (world["player"] != null)
-            ReadObjectEntity(world["player"].AsObject, voxelArray.playerObject);
+            ReadMap(world["map"].AsObject, voxelArray, materials, substances);
+        if (fileWriterVersion <= 2 && world["player"] != null)
+        {
+            PlayerObject player = new PlayerObject();
+            ReadObjectEntity(world["player"].AsObject, player);
+            voxelArray.AddObject(player);
+        }
+        if (world["objects"] != null)
+        {
+            foreach (JSONNode objNode in world["objects"].AsArray)
+            {
+                JSONObject objObject = objNode.AsObject;
+                string typeName = objObject["name"];
+                var objType = GameScripts.FindTypeWithName(GameScripts.objects, typeName);
+                if (objType == null)
+                {
+                    warnings.Add("Couldn't find object type: " + typeName);
+                    continue;
+                }
+                ObjectEntity obj = (ObjectEntity)objType.Create();
+                ReadObjectEntity(objObject, obj);
+                voxelArray.AddObject(obj);
+            }
+        }
 
         if (!editor)
         {
             // start the game
             foreach (Substance s in substances)
-                s.InitEntityGameObject();
-            voxelArray.playerObject.InitEntityGameObject();
+                s.InitEntityGameObject(voxelArray);
+            foreach (ObjectEntity obj in voxelArray.IterateObjects())
+                obj.InitEntityGameObject(voxelArray);
         }
-        if (editor)
-            voxelArray.playerObject.InitObjectMarker();
+        else // editor
+        {
+            foreach (ObjectEntity obj in voxelArray.IterateObjects())
+                obj.InitObjectMarker((VoxelArrayEditor)voxelArray);
+        }
     }
 
-    private Material ReadMaterial(JSONObject matObject, bool editor)
+    private Material ReadMaterial(JSONObject matObject)
     {
         if (matObject["name"] != null)
         {
@@ -181,23 +205,29 @@ public class MapFileReader
             warnings.Add("Material not found: " + name);
             return missingMaterial;
         }
-        else if (matObject["shader"] != null)
+        else if (matObject["mode"] != null)
         {
-            Shader shader = Shader.Find(matObject["shader"]);
+            ColorMode mode = (ColorMode)System.Enum.Parse(typeof(ColorMode), matObject["mode"]);
             if (matObject["color"] != null)
             {
                 Color color = ReadColor(matObject["color"].AsArray);
-                Material mat = ResourcesDirectory.MakeCustomMaterial(shader, color.a != 1);
+                bool alpha = color.a != 1;
+                if (matObject["alpha"] != null)
+                    alpha = matObject["alpha"].AsBool; // new with version 4
+                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
                 mat.color = color;
                 return mat;
             }
             else
             {
-                return ResourcesDirectory.MakeCustomMaterial(shader);
+                return ResourcesDirectory.MakeCustomMaterial(mode);
             }
         }
         else
+        {
+            warnings.Add("Couldn't read material");
             return missingMaterial;
+        }
     }
 
     private void ReadObjectEntity(JSONObject entityObject, ObjectEntity objectEntity)
@@ -205,6 +235,8 @@ public class MapFileReader
         ReadEntity(entityObject, objectEntity);
         if (entityObject["at"] != null)
             objectEntity.position = ReadVector3Int(entityObject["at"].AsArray);
+        if (entityObject["rotate"] != null)
+            objectEntity.rotation = entityObject["rotate"].AsFloat;
     }
 
     private void ReadEntity(JSONObject entityObject, Entity entity)
@@ -291,30 +323,37 @@ public class MapFileReader
                 else
                     propType = prop.value.GetType();
 
-                XmlSerializer xmlSerializer = new XmlSerializer(propType);
-                using (var textReader = new StringReader(valueString))
+                if (propType == typeof(Material))
                 {
-                    prop.value = xmlSerializer.Deserialize(textReader);
+                    prop.value = ReadMaterial(propArray[1].AsObject);
+                }
+                else
+                {
+                    XmlSerializer xmlSerializer = new XmlSerializer(propType);
+                    using (var textReader = new StringReader(valueString))
+                    {
+                        prop.value = xmlSerializer.Deserialize(textReader);
+                    }
                 }
             }
         }
     }
 
     private void ReadMap(JSONObject map, VoxelArray voxelArray,
-        List<Material> materials, List<Substance> substances, bool editor)
+        List<Material> materials, List<Substance> substances)
     {
         if (map["voxels"] != null)
         {
             foreach (JSONNode voxelNode in map["voxels"].AsArray)
             {
                 JSONObject voxelObject = voxelNode.AsObject;
-                ReadVoxel(voxelObject, voxelArray, materials, substances, editor);
+                ReadVoxel(voxelObject, voxelArray, materials, substances);
             }
         }
     }
 
     private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray,
-        List<Material> materials, List<Substance> substances, bool editor)
+        List<Material> materials, List<Substance> substances)
     {
         if (voxelObject["at"] == null)
             return;

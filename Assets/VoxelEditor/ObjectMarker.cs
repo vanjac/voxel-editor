@@ -20,12 +20,12 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
     {
         get
         {
-            // TODO
-            return new Bounds(transform.position, Vector3.zero);
+            return new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
+                Vector3.zero);
         }
     }
 
-    private Material[] storedMaterials;
+    public Material[] storedMaterials;
 
     public void Start()
     {
@@ -34,7 +34,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         {
             storedMaterials = (Material[])renderer.materials.Clone();
         }
-        objectEntity.UpdateEntity();
+        UpdateMarker();
     }
 
     public void SelectionStateUpdated()
@@ -42,17 +42,36 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         UpdateMaterials();
     }
 
-    public void UpdateMaterials()
+    public void UpdateMarker()
     {
+        transform.position = objectEntity.PositionInEditor();
+        transform.rotation = Quaternion.Euler(new Vector3(0, objectEntity.rotation, 0));
+        UpdateMaterials();
+    }
+
+    private void UpdateMaterials()
+    {
+        if (storedMaterials == null)
+            // storedMaterials hasn't been initialized yet, so we wouldn't be able to return to normal state
+            return;
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
             if (selected)
+            {
                 SetAllMaterials(renderer, Voxel.selectedMaterial);
+                gameObject.layer = 10; // SelectedObject layer, because selected material makes it transparent
+            }
             else if (objectEntity != null && objectEntity.xRay)
+            {
                 SetAllMaterials(renderer, Voxel.xRayMaterial);
+                gameObject.layer = 8; // XRay layer
+            }
             else
+            {
                 renderer.materials = storedMaterials;
+                gameObject.layer = 0; // default
+            }
         }
     }
 

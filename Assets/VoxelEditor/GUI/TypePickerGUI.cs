@@ -7,7 +7,27 @@ public class TypePickerGUI : GUIPanel
     public delegate void TypeHandler(PropertiesObjectType type);
 
     public TypeHandler handler;
-    public PropertiesObjectType[] items;
+    public PropertiesObjectType[][] categories;
+    public string[] categoryNames = new string[0];
+
+    private int selectedCategory;
+
+    private static readonly Lazy<GUIStyle> descriptionStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.wordWrap = true;
+        style.padding = new RectOffset(0, 0, 0, 0);
+        style.margin = new RectOffset(0, 0, 0, 0);
+        return style;
+    });
+
+    private static readonly Lazy<GUIStyle> helpIconStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.padding = new RectOffset(0, 0, 0, 0);
+        //style.margin = new RectOffset(0, 0, 0, 0);
+        return style;
+    });
 
     public override Rect GetRect(float width, float height)
     {
@@ -16,17 +36,38 @@ public class TypePickerGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        scroll = GUILayout.BeginScrollView(scroll);
-        for (int i = 0; i < items.Length; i++)
+        if (categoryNames.Length > 1)
         {
-            PropertiesObjectType item = items[i];
-            GUIPanel.BeginButtonHorizontal(item.fullName);
+            int tab = GUILayout.SelectionGrid(selectedCategory, categoryNames,
+                categoryNames.Length, GUI.skin.GetStyle("button_tab"));
+            if (tab != selectedCategory)
+            {
+                selectedCategory = tab;
+                scroll = Vector2.zero;
+                scrollVelocity = Vector2.zero;
+            }
+        }
+
+        var categoryItems = categories[selectedCategory];
+        scroll = GUILayout.BeginScrollView(scroll);
+        for (int i = 0; i < categoryItems.Length; i++)
+        {
+            PropertiesObjectType item = categoryItems[i];
+            GUIUtils.BeginButtonHorizontal(item.fullName);
             GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();
-            GUILayout.Label(item.fullName, GUI.skin.customStyles[0]);
-            GUILayout.Label(item.description, GUI.skin.customStyles[1]);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(item.fullName, GUI.skin.GetStyle("label_title"));
+            if (item.longDescription != ""
+                && GUILayout.Button(GUIIconSet.instance.helpCircle, helpIconStyle.Value, GUILayout.ExpandWidth(false)))
+            {
+                var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
+                typeInfo.type = item;
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.Label("<i>" + item.description + "</i>", descriptionStyle.Value);
             GUILayout.EndVertical();
-            if (GUIPanel.EndButtonHorizontal(item.fullName))
+            if (GUIUtils.EndButtonHorizontal(item.fullName))
             {
                 handler(item);
                 Destroy(this);

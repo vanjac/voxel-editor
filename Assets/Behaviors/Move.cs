@@ -6,6 +6,8 @@ public class MoveBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Move", "Move in a direction or toward an object",
+        "If both Solid and Physics behaviors are active, object will not be able to pass through other objects. "
+        + "Increase the Density property of the Physics behavior to increase the object's pushing strength. Gravity has no effect while Move is active.",
         "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private Target target = new Target(0);
@@ -59,7 +61,7 @@ public class MoveComponent : BehaviorComponent
             rigidBody.velocity = Vector3.zero;
     }
 
-    public override void BehaviorDisabled()
+    public override void LastBehaviorDisabled()
     {
         if (rigidBody != null)
             rigidBody.constraints = RigidbodyConstraints.None;
@@ -71,24 +73,13 @@ public class MoveComponent : BehaviorComponent
             rigidBody.velocity = Vector3.zero;
         Vector3 move = GetMoveFixed();
         if (rigidBody != null)
-        {
-            var constraints = RigidbodyConstraints.FreezeRotation;
-            if (move.x == 0)
-                constraints |= RigidbodyConstraints.FreezePositionX;
-            if (move.y == 0)
-                constraints |= RigidbodyConstraints.FreezePositionY;
-            if (move.z == 0)
-                constraints |= RigidbodyConstraints.FreezePositionZ;
-            rigidBody.constraints = constraints;
-            rigidBody.MovePosition(rigidBody.position + move);
-        }
+            GetComponent<DynamicEntityComponent>().RigidbodyTranslate(rigidBody, move, true);
         else
             transform.Translate(move);
-
     }
 
     public Vector3 GetMoveFixed()
     {
-        return target.directionFrom(transform.position) * speed * Time.fixedDeltaTime;
+        return target.DirectionFrom(transform.position) * speed * Time.fixedDeltaTime;
     }
 }

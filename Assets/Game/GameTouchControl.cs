@@ -10,6 +10,7 @@ public class GameTouchControl : MonoBehaviour
     private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
     private TapComponent touchedTapComponent;
+    public Joystick joystick;
 
     void OnEnable ()
     {
@@ -52,11 +53,18 @@ public class GameTouchControl : MonoBehaviour
                     if (hitTapComponent != null)
                     {
                         touchedTapComponent = hitTapComponent;
-                        PlayerComponent player = null;
-                        if (cam.transform.parent != null)
-                            player = cam.transform.parent.GetComponent<PlayerComponent>();
-                        touchedTapComponent.TapStart(player);
+                        touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
                     }
+                }
+            }
+            // don't move joystick and camera with same touch
+            if (lookTouchId == joystick.dragTouchId)
+            {
+                lookTouchId = -1;
+                if (touchedTapComponent != null)
+                {
+                    touchedTapComponent.TapEnd();
+                    touchedTapComponent = null;
                 }
             }
             if (touch.fingerId == lookTouchId)

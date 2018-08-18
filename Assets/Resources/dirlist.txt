@@ -1,282 +1,254 @@
 .
+./default.json
+./Demos
+./Demos/ball_pit.json
+./Demos/conveyor.json
+./Demos/logic.json
+./Demos/platforms.json
 ./dirlist.txt
 ./GameAssets
 ./GameAssets/Materials
 ./GameAssets/Materials/$Sky.mat
-./GameAssets/Materials/asphalt
-./GameAssets/Materials/asphalt/AsphaltNew.mat
-./GameAssets/Materials/asphalt/BlacktopNew.mat
-./GameAssets/Materials/asphalt/BlacktopOld01.mat
-./GameAssets/Materials/asphalt/BlacktopOld02.mat
-./GameAssets/Materials/blinds
-./GameAssets/Materials/blinds/BlindsCellularWhite.mat
-./GameAssets/Materials/blinds/BlindsClothHorizontal.mat
-./GameAssets/Materials/blinds/BlindsRomanHobbledBlue.mat
-./GameAssets/Materials/blinds/BlindsVerticalPattern.mat
-./GameAssets/Materials/blinds/BlindsVerticalStripeGray.mat
-./GameAssets/Materials/blinds/BlindsWeave.mat
-./GameAssets/Materials/blinds/BlindsWoodBamboo.mat
-./GameAssets/Materials/blinds/BlindsWoodLight.mat
-./GameAssets/Materials/blinds/BlindsWoodNatural.mat
-./GameAssets/Materials/blinds/BlindsWoodWhite.mat
-./GameAssets/Materials/blinds/WindowCovering01.mat
-./GameAssets/Materials/blinds/WindowCovering02.mat
-./GameAssets/Materials/blocks
-./GameAssets/Materials/blocks/AntiqueBrickTexture01.mat
-./GameAssets/Materials/blocks/AntiqueBrickTexture02.mat
-./GameAssets/Materials/blocks/AsphaltStampedBrick.mat
-./GameAssets/Materials/blocks/BrickAntique.mat
-./GameAssets/Materials/blocks/BrickBasketTwo.mat
-./GameAssets/Materials/blocks/BrickColoredBlue.mat
-./GameAssets/Materials/blocks/BrickPaversHerringbone.mat
-./GameAssets/Materials/blocks/BrickPaversModular.mat
-./GameAssets/Materials/blocks/BrickRoughDark.mat
-./GameAssets/Materials/blocks/BrickRoughTan.mat
-./GameAssets/Materials/blocks/BrickTumbled.mat
-./GameAssets/Materials/blocks/CinderBlock.mat
-./GameAssets/Materials/blocks/ConcreteBlock8x8Gray.mat
-./GameAssets/Materials/blocks/ConcreteBlockLayers.mat
-./GameAssets/Materials/blocks/ConcreteBlockRetainingGray.mat
-./GameAssets/Materials/blocks/ConcreteStampedAshlar.mat
-./GameAssets/Materials/blocks/DrivewayBrickPaver.mat
-./GameAssets/Materials/blocks/GreenPaverBrick.mat
-./GameAssets/Materials/blocks/GreenPaverHerringbone.mat
-./GameAssets/Materials/blocks/RoughSquareConcreteBlock.mat
-./GameAssets/Materials/blocks/StoneCoursedRough.mat
-./GameAssets/Materials/blocks/StoneFlagstoneAshlar.mat
-./GameAssets/Materials/blocks/StoneMasonryMulti.mat
-./GameAssets/Materials/blocks/StonePaversFlagstoneGray.mat
-./GameAssets/Materials/blocks/StonePaversWalk.mat
-./GameAssets/Materials/blocks/StoneSandstoneAshlarLight.mat
-./GameAssets/Materials/concrete
-./GameAssets/Materials/concrete/ConcreteAggregateSmoke.mat
-./GameAssets/Materials/concrete/ConcreteForm4x8.mat
-./GameAssets/Materials/concrete/ConcreteScoredJointless.mat
-./GameAssets/Materials/concrete/PolishedConcreteNew.mat
-./GameAssets/Materials/concrete/PolishedConcreteOld.mat
-./GameAssets/Materials/groundcover
-./GameAssets/Materials/groundcover/GroundcoverBarkChips.mat
-./GameAssets/Materials/groundcover/GroundcoverBrickCrushed.mat
-./GameAssets/Materials/groundcover/GroundcoverGravelinch1.mat
-./GameAssets/Materials/groundcover/GroundcoverGravelIndian.mat
-./GameAssets/Materials/groundcover/GroundcoverRiverRock4inch.mat
-./GameAssets/Materials/groundcover/GroundcoverRockCrushed2inch.mat
-./GameAssets/Materials/groundcover/GroundcoverRockCrushedMulti.mat
-./GameAssets/Materials/groundcover/GroundcoverSandRaked.mat
-./GameAssets/Materials/groundcover/GroundcoverSandSmooth.mat
-./GameAssets/Materials/groundcover/GroundcoverWoodMix.mat
-./GameAssets/Materials/groundcover/MudRocky.mat
-./GameAssets/Materials/groundcover/PeaGravel.mat
-./GameAssets/Materials/groundcover/Sand.mat
-./GameAssets/Materials/groundcover/SmallAggregate.mat
-./GameAssets/Materials/metal
-./GameAssets/Materials/metal/Aluminum.mat
-./GameAssets/Materials/metal/MetalAluminumAnodized.mat
-./GameAssets/Materials/metal/MetalCorrogatedShiny.mat
-./GameAssets/Materials/metal/MetalEmbossed.mat
-./GameAssets/Materials/metal/MetalRough.mat
-./GameAssets/Materials/metal/MetalRusted.mat
-./GameAssets/Materials/metal/MetalSeamed.mat
-./GameAssets/Materials/metal/MetalSilver.mat
-./GameAssets/Materials/metal/MetalSteelTextured.mat
-./GameAssets/Materials/metal/MetalSteelTexturedWhite.mat
-./GameAssets/Materials/metal/SteelBrushedStainless.mat
-./GameAssets/Materials/paper
-./GameAssets/Materials/paper/Cardboard.mat
-./GameAssets/Materials/paper/Chipboard.mat
-./GameAssets/Materials/patterns
-./GameAssets/Materials/patterns/DiamondBox.mat
-./GameAssets/Materials/patterns/DiamondStripes.mat
-./GameAssets/Materials/patterns/GeometricTile.mat
-./GameAssets/Materials/patterns/Mirror01.mat
-./GameAssets/Materials/patterns/Mirror02.mat
-./GameAssets/Materials/patterns/Sketchy01.mat
-./GameAssets/Materials/patterns/SketchyBrickMulti.mat
-./GameAssets/Materials/patterns/SketchyCrosshatchWavy.mat
-./GameAssets/Materials/patterns/SketchyLinesWavy45A.mat
-./GameAssets/Materials/patterns/SketchyLinesWavyVertical.mat
-./GameAssets/Materials/patterns/SketchyScales.mat
-./GameAssets/Materials/patterns/SketchyShinglesRustic.mat
-./GameAssets/Materials/patterns/SketchyShinglesShakes.mat
-./GameAssets/Materials/patterns/SketchySidingScale.mat
-./GameAssets/Materials/patterns/SketchySidingStraight.mat
-./GameAssets/Materials/patterns/SketchyStoneAshlar.mat
-./GameAssets/Materials/roofing
-./GameAssets/Materials/roofing/RoofingMetalStandingSeamRed.mat
-./GameAssets/Materials/roofing/RoofingScalloped.mat
-./GameAssets/Materials/roofing/RoofingScallopedOrnate.mat
-./GameAssets/Materials/roofing/RoofingShinglesAsphalt.mat
-./GameAssets/Materials/roofing/RoofingShinglesGAFEstates.mat
-./GameAssets/Materials/roofing/RoofingShinglesMulti.mat
-./GameAssets/Materials/roofing/RoofingShinglesVariable.mat
-./GameAssets/Materials/roofing/RoofingShinglesWood.mat
-./GameAssets/Materials/roofing/RoofingSlateDark.mat
-./GameAssets/Materials/roofing/RoofingTileSpanish.mat
-./GameAssets/Materials/siding
-./GameAssets/Materials/siding/Beadboard.mat
-./GameAssets/Materials/siding/CladdingSidingTan.mat
-./GameAssets/Materials/siding/CladdingSidingWhite.mat
-./GameAssets/Materials/siding/CladdingStuccoWhite.mat
-./GameAssets/Materials/siding/ModernSiding.mat
-./GameAssets/Materials/siding/SidingRustyMetal.mat
+./GameAssets/Materials/Asphalt
+./GameAssets/Materials/Asphalt/CityStreetAsphaltGenericClean001.mat
+./GameAssets/Materials/Bricks+Blocks
+./GameAssets/Materials/Bricks+Blocks/Bricks01.mat
+./GameAssets/Materials/Bricks+Blocks/Bricks03.mat
+./GameAssets/Materials/Bricks+Blocks/BricksOld01.mat
+./GameAssets/Materials/Bricks+Blocks/CityStreetSidewalk013.mat
+./GameAssets/Materials/Bricks+Blocks/Cobblestone19.mat
+./GameAssets/Materials/Bricks+Blocks/dungeon-stone1.mat
+./GameAssets/Materials/Bricks+Blocks/harshbricks.mat
+./GameAssets/Materials/Bricks+Blocks/octostone.mat
+./GameAssets/Materials/Bricks+Blocks/redbricks2b.mat
+./GameAssets/Materials/Bricks+Blocks/tiledstone1.mat
+./GameAssets/Materials/Concrete
+./GameAssets/Materials/Concrete/Concrete07.mat
+./GameAssets/Materials/Concrete/Concrete18.mat
+./GameAssets/Materials/Concrete/ConcretePlatesStudded002.mat
+./GameAssets/Materials/Concrete/patchy_cement1.mat
+./GameAssets/Materials/Concrete/pockedconcrete1.mat
+./GameAssets/Materials/Fabric
+./GameAssets/Materials/Fabric/FabricCanvas001.mat
+./GameAssets/Materials/Fabric/FabricCarpet001.mat
+./GameAssets/Materials/Fabric/FabricWeaveRug001.mat
+./GameAssets/Materials/Fabric/InteriorDesignRugSquarePatches001.mat
+./GameAssets/Materials/Ground
+./GameAssets/Materials/Ground/dry-dirt2.mat
+./GameAssets/Materials/Ground/grass1.mat
+./GameAssets/Materials/Ground/GrassShort001.mat
+./GameAssets/Materials/Ground/GroundClay008.mat
+./GameAssets/Materials/Ground/GroundForest002.mat
+./GameAssets/Materials/Ground/GroundForest003.mat
+./GameAssets/Materials/Ground/GroundGrassFieldGreenPatchy001.mat
+./GameAssets/Materials/Ground/GroundGravel009.mat
+./GameAssets/Materials/Ground/GroundMulch001.mat
+./GameAssets/Materials/Ground/GroundPebbles001.mat
+./GameAssets/Materials/Ground/GroundPebbles004.mat
+./GameAssets/Materials/Ground/GroundSandDesertFlat001.mat
+./GameAssets/Materials/Ground/GroundSandDesertRippled001.mat
+./GameAssets/Materials/Ground/sandydrysoil.mat
+./GameAssets/Materials/Ground/sandyground1.mat
+./GameAssets/Materials/Metal
+./GameAssets/Materials/Metal/MetalBumpsRusted001.mat
+./GameAssets/Materials/Metal/MetalCorrugatedGarageDoor001.mat
+./GameAssets/Materials/Metal/MetalGrime010.mat
+./GameAssets/Materials/Metal/MetalGrime011.mat
+./GameAssets/Materials/Metal/MetalPanelSquareRivets001.mat
+./GameAssets/Materials/Metal/MetalSiding001.mat
+./GameAssets/Materials/Metal/MetalSiding002.mat
+./GameAssets/Materials/Metal/PanelGeneric004.mat
+./GameAssets/Materials/Metal/rust-coated.mat
+./GameAssets/Materials/Metal/rust-panel.mat
+./GameAssets/Materials/Metal/SteelFloorDiamond001.mat
+./GameAssets/Materials/Metal/streakedmetal.mat
+./GameAssets/Materials/Patterns
+./GameAssets/Materials/Patterns/InteriorDesignPatternArrows004.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternBeanstalk001.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternDiamonds005.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternGeometricStepping002.mat
+./GameAssets/Materials/Patterns/InteriorDesignPatternMoroccanTrellis001.mat
+./GameAssets/Materials/Patterns/TilePattern.mat
+./GameAssets/Materials/Plaster
+./GameAssets/Materials/Plaster/Plaster31.mat
+./GameAssets/Materials/Plaster/Plaster35.mat
+./GameAssets/Materials/Plaster/Stucco05.mat
+./GameAssets/Materials/Rock
+./GameAssets/Materials/Rock/blackrock.mat
+./GameAssets/Materials/Rock/CliffGreyChunky008.mat
+./GameAssets/Materials/Rock/graniterockface1.mat
+./GameAssets/Materials/Rock/limestone-rock.mat
+./GameAssets/Materials/Rock/QuartzPolishedWhite001.mat
+./GameAssets/Materials/Rock/RockGrey009.mat
+./GameAssets/Materials/Rock/sandstonecliff.mat
+./GameAssets/Materials/Rock/slipperystonework.mat
+./GameAssets/Materials/Rock/waterwornstone1.mat
+./GameAssets/Materials/Roof
+./GameAssets/Materials/Roof/RoofShingles001.mat
+./GameAssets/Materials/Roof/RoofShinglesOld001.mat
+./GameAssets/Materials/Roof/RoofThatched001.mat
+./GameAssets/Materials/Roof/RoofTilesClay002.mat
+./GameAssets/Materials/Roof/RoofTilesClay003.mat
 ./GameAssets/Materials/Sky.mat
-./GameAssets/Materials/stone
-./GameAssets/Materials/stone/CarreraMarble.mat
-./GameAssets/Materials/stone/Cliff.mat
-./GameAssets/Materials/stone/EarthyGranite.mat
-./GameAssets/Materials/stone/Granite01.mat
-./GameAssets/Materials/stone/Granite02.mat
-./GameAssets/Materials/stone/Sandstone.mat
-./GameAssets/Materials/stone/StoneBrushedKhaki.mat
-./GameAssets/Materials/stone/StoneMarble.mat
-./GameAssets/Materials/stone/StoneVeinGray.mat
-./GameAssets/Materials/synthetic
-./GameAssets/Materials/synthetic/FormicaBeige.mat
-./GameAssets/Materials/synthetic/FormicaBlue.mat
-./GameAssets/Materials/synthetic/FormicaGreystone.mat
-./GameAssets/Materials/synthetic/FormicaLaminateDark.mat
-./GameAssets/Materials/synthetic/FormicaLaminateLight.mat
-./GameAssets/Materials/synthetic/FormicaSpeckledGrey.mat
-./GameAssets/Materials/synthetic/PlasticRed.mat
-./GameAssets/Materials/synthetic/QuartzLightBrown.mat
-./GameAssets/Materials/synthetic/QuartzLightGrey.mat
-./GameAssets/Materials/synthetic/ResinBlue.mat
-./GameAssets/Materials/synthetic/ResinTurquoise.mat
-./GameAssets/Materials/synthetic/TerrazoLightBlue.mat
-./GameAssets/Materials/synthetic/TerrazoTileLight.mat
-./GameAssets/Materials/synthetic/Wax01.mat
-./GameAssets/Materials/synthetic/Wax02.mat
-./GameAssets/Materials/textiles
-./GameAssets/Materials/textiles/Carpet.mat
-./GameAssets/Materials/textiles/CarpetBerberMulti.mat
-./GameAssets/Materials/textiles/CarpetBerberPatternGray.mat
-./GameAssets/Materials/textiles/CarpetDiamondOlive.mat
-./GameAssets/Materials/textiles/CarpetLoopPattern.mat
-./GameAssets/Materials/textiles/CarpetPatternLeafSquaresTan.mat
-./GameAssets/Materials/textiles/CarpetPatternSquaresMulti.mat
-./GameAssets/Materials/textiles/CarpetPlushCharcoal.mat
-./GameAssets/Materials/textiles/CarpetPlushForest.mat
-./GameAssets/Materials/textiles/FabricLinen.mat
-./GameAssets/Materials/textiles/LeatherBlue.mat
-./GameAssets/Materials/textiles/LeatherDarkbrown.mat
-./GameAssets/Materials/textiles/LeatherRedbrown.mat
-./GameAssets/Materials/textiles/LeatherSuede.mat
-./GameAssets/Materials/textiles/SuedeBlue.mat
-./GameAssets/Materials/textiles/SuedeBrown.mat
-./GameAssets/Materials/textiles/SuedeGreen.mat
-./GameAssets/Materials/textiles/TextileLeavesGreen.mat
-./GameAssets/Materials/textiles/TextileRugStripes.mat
-./GameAssets/Materials/textiles/UpholsteryStrippedMulti-Colored.mat
-./GameAssets/Materials/tile
-./GameAssets/Materials/tile/BasicTile.mat
-./GameAssets/Materials/tile/ConcretePaversBlockMulti.mat
-./GameAssets/Materials/tile/ConcreteTile.mat
-./GameAssets/Materials/tile/EncausticTileCircular01.mat
-./GameAssets/Materials/tile/EncausticTileCircular02.mat
-./GameAssets/Materials/tile/FieldRectangleTile.mat
-./GameAssets/Materials/tile/FieldSquareTile.mat
-./GameAssets/Materials/tile/GraniteTile.mat
-./GameAssets/Materials/tile/Herringbone.mat
-./GameAssets/Materials/tile/MarbleCarreraFloorTile.mat
-./GameAssets/Materials/tile/MarbleCarreragoldFloorTile.mat
-./GameAssets/Materials/tile/MetalPanel.mat
-./GameAssets/Materials/tile/MosaicHexagonalTile.mat
-./GameAssets/Materials/tile/OrnateTile01.mat
-./GameAssets/Materials/tile/OrnateTile02.mat
-./GameAssets/Materials/tile/RoofingSlateTan.mat
-./GameAssets/Materials/tile/Slate.mat
-./GameAssets/Materials/tile/SlateLightTile.mat
-./GameAssets/Materials/tile/SquareGlassTile01.mat
-./GameAssets/Materials/tile/SquareGlassTile02.mat
-./GameAssets/Materials/tile/TerrazzoTileAccent.mat
-./GameAssets/Materials/tile/TileBorderTravertine.mat
-./GameAssets/Materials/tile/TileCanvas.mat
-./GameAssets/Materials/tile/TileCeramicMulti.mat
-./GameAssets/Materials/tile/TileCeramicNatural.mat
-./GameAssets/Materials/tile/TileCheckerBW.mat
-./GameAssets/Materials/tile/TileGrey.mat
-./GameAssets/Materials/tile/TileHexagonWhite.mat
-./GameAssets/Materials/tile/TileLargeBrown.mat
-./GameAssets/Materials/tile/TileLimestoneLarge.mat
-./GameAssets/Materials/tile/TileLimestoneMulti.mat
-./GameAssets/Materials/tile/TileLinen.mat
-./GameAssets/Materials/tile/TileMosaicMulti.mat
-./GameAssets/Materials/tile/TileNavy.mat
-./GameAssets/Materials/tile/TileTravertine2inch.mat
-./GameAssets/Materials/tile/TileVariousTan.mat
-./GameAssets/Materials/tile/TileVerigatedStone.mat
-./GameAssets/Materials/tile/TravertineSmallTile.mat
-./GameAssets/Materials/tile/WhiteSquareTile.mat
-./GameAssets/Materials/tile/WhiteSubwayTile.mat
-./GameAssets/Materials/tile/WoodSquareTile01.mat
-./GameAssets/Materials/tile/WoodSquareTile02.mat
-./GameAssets/Materials/Vantablack.mat
-./GameAssets/Materials/vegetation
-./GameAssets/Materials/vegetation/GrassDarkGreen.mat
-./GameAssets/Materials/vegetation/GrassHill.mat
-./GameAssets/Materials/vegetation/GrassLightGreen.mat
-./GameAssets/Materials/vegetation/GrassRocky.mat
-./GameAssets/Materials/vegetation/VegetationBarkMaple.mat
-./GameAssets/Materials/vegetation/VegetationBarkPonderosa.mat
-./GameAssets/Materials/vegetation/VegetationBlur3.mat
-./GameAssets/Materials/vegetation/VegetationBlur5.mat
-./GameAssets/Materials/vegetation/VegetationBlur7.mat
-./GameAssets/Materials/vegetation/VegetationGrass1.mat
-./GameAssets/Materials/vegetation/VegetationGrassArtificial.mat
-./GameAssets/Materials/vegetation/VegetationHoneyLocust.mat
-./GameAssets/Materials/vegetation/VegetationIvyHedera.mat
-./GameAssets/Materials/vegetation/VegetationJuniper2.mat
-./GameAssets/Materials/wallpaper
-./GameAssets/Materials/wallpaper/WallpaperDogBone.mat
-./GameAssets/Materials/wallpaper/WallpaperStripe.mat
-./GameAssets/Materials/wallpaper/WallpaperThinBrownStripes.mat
-./GameAssets/Materials/water
-./GameAssets/Materials/water/WaterDarkBlue.mat
-./GameAssets/Materials/water/WaterDeep.mat
-./GameAssets/Materials/water/WaterLightBlue.mat
-./GameAssets/Materials/water/WaterPool.mat
-./GameAssets/Materials/water/WaterSparkling.mat
-./GameAssets/Materials/water/WaterStream.mat
-./GameAssets/Materials/water/WaterStreamShallow.mat
-./GameAssets/Materials/White Light.mat
-./GameAssets/Materials/wood
-./GameAssets/Materials/wood/FencingWeathered.mat
-./GameAssets/Materials/wood/FencingWoodOld.mat
-./GameAssets/Materials/wood/Wood01.mat
-./GameAssets/Materials/wood/Wood02.mat
-./GameAssets/Materials/wood/WoodBambooMedium.mat
-./GameAssets/Materials/wood/WoodBoardCork.mat
-./GameAssets/Materials/wood/WoodCherryOriginal.mat
-./GameAssets/Materials/wood/WoodFence.mat
-./GameAssets/Materials/wood/WoodFloor.mat
-./GameAssets/Materials/wood/WoodFloorDark.mat
-./GameAssets/Materials/wood/WoodFloorLight.mat
-./GameAssets/Materials/wood/WoodFloorParquet.mat
-./GameAssets/Materials/wood/WoodLumberButtJoined.mat
-./GameAssets/Materials/wood/WoodOSB.mat
-./GameAssets/Materials/wood/WoodPlywoodKnots.mat
+./GameAssets/Materials/Snow+Ice
+./GameAssets/Materials/Snow+Ice/IceFine001.mat
+./GameAssets/Materials/Snow+Ice/SnowFine003.mat
+./GameAssets/Materials/Snow+Ice/SnowIceDirty002.mat
+./GameAssets/Materials/Tile
+./GameAssets/Materials/Tile/bathroomtile2.mat
+./GameAssets/Materials/Tile/darktiles1.mat
+./GameAssets/Materials/Tile/Marble065.mat
+./GameAssets/Materials/Tile/tile4b.mat
+./GameAssets/Materials/Tile/Tiles043.mat
+./GameAssets/Materials/Tile/Tiles27.mat
+./GameAssets/Materials/Tile/Tiles40.mat
+./GameAssets/Materials/Tile/TilesRectangularMirrorColoredGrunge001.mat
+./GameAssets/Materials/Tile/TilesRectangularSubway001.mat
+./GameAssets/Materials/Tile/TilesSquareGraphiteSlate001.mat
+./GameAssets/Materials/Tile/TilesSquarePoolMixed001.mat
+./GameAssets/Materials/Vegetation
+./GameAssets/Materials/Vegetation/bark1.mat
+./GameAssets/Materials/Vegetation/BarkBirch002.mat
+./GameAssets/Materials/Vegetation/branches_twisted.mat
+./GameAssets/Materials/Vegetation/Bumpy Textured Leaves.mat
+./GameAssets/Materials/Vegetation/leaf-fall1.mat
+./GameAssets/Materials/Vegetation/Lush Leafy Bush.mat
+./GameAssets/Materials/Vegetation/mossy-ground1.mat
+./GameAssets/Materials/Vegetation/RockMossyFull001.mat
+./GameAssets/Materials/Vegetation/RockMossyFull004.mat
+./GameAssets/Materials/Wood
+./GameAssets/Materials/Wood/bamboo-wood-semigloss.mat
+./GameAssets/Materials/Wood/oakfloor.mat
+./GameAssets/Materials/Wood/plywood.mat
+./GameAssets/Materials/Wood/sculptedfloorboards1.mat
+./GameAssets/Materials/Wood/WoodFlooring064.mat
+./GameAssets/Materials/Wood/WoodFlooring066.mat
+./GameAssets/Materials/Wood/WoodLogSidingRough001.mat
+./GameAssets/Materials/Wood/WoodPlanks26.mat
+./GameAssets/Materials/Wood/WoodPlanksWorn01.mat
+./GameAssets/Materials/Wood/WoodWallCabin002.mat
+./GameAssets/Materials/Wood/wornpaintedwoodsiding.mat
 ./GameAssets/Overlays
-./GameAssets/Overlays/fencing
-./GameAssets/Overlays/fencing/Fencing.mat
-./GameAssets/Overlays/fencing/FencingChainLink.mat
-./GameAssets/Overlays/fencing/FencingConstruction.mat
-./GameAssets/Overlays/fencing/FencingLatticeNatural.mat
-./GameAssets/Overlays/fencing/FencingMetalStraight.mat
-./GameAssets/Overlays/fencing/FencingPicketConcave.mat
-./GameAssets/Overlays/fencing/FencingRailingMetal2.mat
-./GameAssets/Overlays/fencing/WoodFencewithLattice.mat
-./GameAssets/Overlays/glass
-./GameAssets/Overlays/glass/TranslucentGlassBlockDark.mat
-./GameAssets/Overlays/glass/TranslucentGlassCorrugated.mat
-./GameAssets/Overlays/glass/TranslucentGlassSaftey.mat
-./GameAssets/Overlays/glass/TranslucentGlassSkyReflection.mat
-./GameAssets/Overlays/glass/TranslucentGlassTinted.mat
-./GameAssets/Overlays/glass/TranslucentResinCrushGray.mat
-./GameAssets/Overlays/water
-./GameAssets/Overlays/water/WaterBasicDaytime.mat
-./GameAssets/Overlays/water/WaterBasicDaytime_preview.mat
-./GameAssets/Overlays/water/WaterBasicNighttime.mat
-./GameAssets/Overlays/water/WaterBasicNighttime_preview.mat
+./GameAssets/Overlays/$Invisible.mat
+./GameAssets/Overlays/Fencing
+./GameAssets/Overlays/Fencing/FenceChainLink001.mat
+./GameAssets/Overlays/Grates
+./GameAssets/Overlays/Grates/GrateInterwovenFloor001.mat
+./GameAssets/Overlays/Grates/GrateMetal001.mat
+./GameAssets/Overlays/Invisible.mat
+./GameAssets/Overlays/Symbols
+./GameAssets/Overlays/Symbols/alert-outline.mat
+./GameAssets/Overlays/Symbols/arrow-up-thick.mat
+./GameAssets/Overlays/Symbols/biohazard.mat
+./GameAssets/Overlays/Symbols/bullseye.mat
+./GameAssets/Overlays/Symbols/cancel.mat
+./GameAssets/Overlays/Symbols/check.mat
+./GameAssets/Overlays/Symbols/close.mat
+./GameAssets/Overlays/Symbols/radioactive.mat
+./GameAssets/Overlays/Symbols/target.mat
+./GameAssets/Overlays/Text Caps
+./GameAssets/Overlays/Text Caps/c065.mat
+./GameAssets/Overlays/Text Caps/c066.mat
+./GameAssets/Overlays/Text Caps/c067.mat
+./GameAssets/Overlays/Text Caps/c068.mat
+./GameAssets/Overlays/Text Caps/c069.mat
+./GameAssets/Overlays/Text Caps/c070.mat
+./GameAssets/Overlays/Text Caps/c071.mat
+./GameAssets/Overlays/Text Caps/c072.mat
+./GameAssets/Overlays/Text Caps/c073.mat
+./GameAssets/Overlays/Text Caps/c074.mat
+./GameAssets/Overlays/Text Caps/c075.mat
+./GameAssets/Overlays/Text Caps/c076.mat
+./GameAssets/Overlays/Text Caps/c077.mat
+./GameAssets/Overlays/Text Caps/c078.mat
+./GameAssets/Overlays/Text Caps/c079.mat
+./GameAssets/Overlays/Text Caps/c080.mat
+./GameAssets/Overlays/Text Caps/c081.mat
+./GameAssets/Overlays/Text Caps/c082.mat
+./GameAssets/Overlays/Text Caps/c083.mat
+./GameAssets/Overlays/Text Caps/c084.mat
+./GameAssets/Overlays/Text Caps/c085.mat
+./GameAssets/Overlays/Text Caps/c086.mat
+./GameAssets/Overlays/Text Caps/c087.mat
+./GameAssets/Overlays/Text Caps/c088.mat
+./GameAssets/Overlays/Text Caps/c089.mat
+./GameAssets/Overlays/Text Caps/c090.mat
+./GameAssets/Overlays/Text Lower
+./GameAssets/Overlays/Text Lower/c097.mat
+./GameAssets/Overlays/Text Lower/c098.mat
+./GameAssets/Overlays/Text Lower/c099.mat
+./GameAssets/Overlays/Text Lower/c100.mat
+./GameAssets/Overlays/Text Lower/c101.mat
+./GameAssets/Overlays/Text Lower/c102.mat
+./GameAssets/Overlays/Text Lower/c103.mat
+./GameAssets/Overlays/Text Lower/c104.mat
+./GameAssets/Overlays/Text Lower/c105.mat
+./GameAssets/Overlays/Text Lower/c106.mat
+./GameAssets/Overlays/Text Lower/c107.mat
+./GameAssets/Overlays/Text Lower/c108.mat
+./GameAssets/Overlays/Text Lower/c109.mat
+./GameAssets/Overlays/Text Lower/c110.mat
+./GameAssets/Overlays/Text Lower/c111.mat
+./GameAssets/Overlays/Text Lower/c112.mat
+./GameAssets/Overlays/Text Lower/c113.mat
+./GameAssets/Overlays/Text Lower/c114.mat
+./GameAssets/Overlays/Text Lower/c115.mat
+./GameAssets/Overlays/Text Lower/c116.mat
+./GameAssets/Overlays/Text Lower/c117.mat
+./GameAssets/Overlays/Text Lower/c118.mat
+./GameAssets/Overlays/Text Lower/c119.mat
+./GameAssets/Overlays/Text Lower/c120.mat
+./GameAssets/Overlays/Text Lower/c121.mat
+./GameAssets/Overlays/Text Lower/c122.mat
+./GameAssets/Overlays/Text Numbers
+./GameAssets/Overlays/Text Numbers/c048.mat
+./GameAssets/Overlays/Text Numbers/c049.mat
+./GameAssets/Overlays/Text Numbers/c050.mat
+./GameAssets/Overlays/Text Numbers/c051.mat
+./GameAssets/Overlays/Text Numbers/c052.mat
+./GameAssets/Overlays/Text Numbers/c053.mat
+./GameAssets/Overlays/Text Numbers/c054.mat
+./GameAssets/Overlays/Text Numbers/c055.mat
+./GameAssets/Overlays/Text Numbers/c056.mat
+./GameAssets/Overlays/Text Numbers/c057.mat
+./GameAssets/Overlays/Text Symbols
+./GameAssets/Overlays/Text Symbols/c033.mat
+./GameAssets/Overlays/Text Symbols/c034.mat
+./GameAssets/Overlays/Text Symbols/c035.mat
+./GameAssets/Overlays/Text Symbols/c036.mat
+./GameAssets/Overlays/Text Symbols/c037.mat
+./GameAssets/Overlays/Text Symbols/c038.mat
+./GameAssets/Overlays/Text Symbols/c039.mat
+./GameAssets/Overlays/Text Symbols/c040.mat
+./GameAssets/Overlays/Text Symbols/c041.mat
+./GameAssets/Overlays/Text Symbols/c042.mat
+./GameAssets/Overlays/Text Symbols/c043.mat
+./GameAssets/Overlays/Text Symbols/c044.mat
+./GameAssets/Overlays/Text Symbols/c045.mat
+./GameAssets/Overlays/Text Symbols/c046.mat
+./GameAssets/Overlays/Text Symbols/c047.mat
+./GameAssets/Overlays/Text Symbols/c058.mat
+./GameAssets/Overlays/Text Symbols/c059.mat
+./GameAssets/Overlays/Text Symbols/c060.mat
+./GameAssets/Overlays/Text Symbols/c061.mat
+./GameAssets/Overlays/Text Symbols/c062.mat
+./GameAssets/Overlays/Text Symbols/c063.mat
+./GameAssets/Overlays/Text Symbols/c064.mat
+./GameAssets/Overlays/Text Symbols/c091.mat
+./GameAssets/Overlays/Text Symbols/c092.mat
+./GameAssets/Overlays/Text Symbols/c093.mat
+./GameAssets/Overlays/Text Symbols/c094.mat
+./GameAssets/Overlays/Text Symbols/c095.mat
+./GameAssets/Overlays/Text Symbols/c096.mat
+./GameAssets/Overlays/Text Symbols/c123.mat
+./GameAssets/Overlays/Text Symbols/c124.mat
+./GameAssets/Overlays/Text Symbols/c125.mat
+./GameAssets/Overlays/Water
+./GameAssets/Overlays/Water/WaterBasicDaytime.mat
+./GameAssets/Overlays/Water/WaterBasicDaytime_preview.mat
+./GameAssets/Overlays/Water/WaterBasicNighttime.mat
+./GameAssets/Overlays/Water/WaterBasicNighttime_preview.mat
+./GameAssets/Overlays/Water/WaterDropletsLargeComplex003.mat
 ./GameAssets/Skies
 ./GameAssets/Skies/sky5X1.mat
 ./GameAssets/Skies/sky5X2.mat
@@ -290,6 +262,7 @@
 ./Icons/arrow-right-bold-box-outline.png
 ./Icons/circle-outline.png
 ./Icons/circle.png
+./Icons/content-copy.png
 ./Icons/cube-outline.png
 ./Icons/cube.png
 ./Icons/earth.png
@@ -298,15 +271,23 @@
 ./Icons/gesture-tap.png
 ./Icons/heart.png
 ./Icons/human-greeting.png
+./Icons/lightbulb-on.png
 ./Icons/pulse.png
+./Icons/radar.png
+./Icons/rocket.png
 ./Icons/send.png
 ./Icons/soccer.png
+./Icons/speedometer.png
 ./Icons/thought-bubble.png
 ./Icons/timer.png
 ./Icons/toggle-switch.png
 ./Icons/vector-combine.png
 ./Icons/water.png
+./LightHaloPrefab.prefab
 ./ObjectMarkers
 ./ObjectMarkers/Player.prefab
 ./ObjectPrefabs
 ./ObjectPrefabs/Player.prefab
+./Tutorials
+./Tutorials/advanced_game_logic_1.json
+./Tutorials/toolbar_buttons.png

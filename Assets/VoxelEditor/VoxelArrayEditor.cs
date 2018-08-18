@@ -79,6 +79,7 @@ public class VoxelArrayEditor : VoxelArray
     public static VoxelArrayEditor instance = null;
 
     public Transform axes;
+    public RotateAxis rotateAxis;
 
     public Material selectedMaterial;
     public Material xRayMaterial;
@@ -91,18 +92,19 @@ public class VoxelArrayEditor : VoxelArray
         NONE, // nothing selected
         ADJUSTED, // selection has moved since it was set
         BOX, // select inside a 3D box
-        FACE // fill-select adjacent faces
+        FACE, // fill-select adjacent faces
+        SURFACE // fill-select all connected faces
     }
 
-    private SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
+    public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
     // all faces where face.addSelected == true
     private List<Selectable> selectedThings = new List<Selectable>();
     // all faces where face.storedSelected == true
     private List<Selectable> storedSelectedThings = new List<Selectable>();
-    private Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
+    public Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
     private Substance boxSelectSubstance = null;
     // dummy Substance to use for boxSelectSubstance when selecting objects
-    private Substance selectObjectSubstance;
+    private readonly Substance selectObjectSubstance = new Substance();
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     public Substance substanceToCreate = null;
@@ -124,7 +126,6 @@ public class VoxelArrayEditor : VoxelArray
             instance = this;
         Voxel.selectedMaterial = selectedMaterial;
         Voxel.xRayMaterial = xRayMaterial;
-        selectObjectSubstance = new Substance(this);
 
         ClearSelection();
         selectionChanged = false;
@@ -136,6 +137,13 @@ public class VoxelArrayEditor : VoxelArray
         base.VoxelModified(voxel);
     }
 
+    public override void ObjectModified(ObjectEntity obj)
+    {
+        unsavedChanges = true;
+        base.ObjectModified(obj);
+        obj.UpdateEntityEditor();
+    }
+
     // called by TouchListener
     public void TouchDown(Voxel voxel, int faceI)
     {
@@ -144,7 +152,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void TouchDown(Selectable thing)
     {
-        SetMoveAxesEnabled(false);
+        DisableMoveAxes();
         if (thing == null)
         {
             ClearSelection();
@@ -182,8 +190,7 @@ public class VoxelArrayEditor : VoxelArray
     // called by TouchListener
     public void TouchUp()
     {
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        AutoSetMoveAxesEnabled();
     }
 
     // called by TouchListener
@@ -191,19 +198,24 @@ public class VoxelArrayEditor : VoxelArray
     {
         ClearSelection();
         FaceSelectFloodFill(voxel, faceI, voxel.substance);
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        AutoSetMoveAxesEnabled();
     }
 
     // called by TouchListener
     public void TripleTouch(Voxel voxel, int faceI)
     {
-        if (voxel == null || voxel.substance == null)
+        if (voxel == null)
             return;
         ClearSelection();
-        SubstanceSelect(voxel.substance);
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        if (voxel.substance == null)
+        {
+            SurfaceSelectFloodFill(voxel, faceI, voxel.substance);
+        }
+        else
+        {
+            SubstanceSelect(voxel.substance);
+        }
+        AutoSetMoveAxesEnabled();
     }
 
     private void SetMoveAxes(Vector3 position)
@@ -213,11 +225,19 @@ public class VoxelArrayEditor : VoxelArray
         axes.position = position;
     }
 
-    private void SetMoveAxesEnabled(bool enabled)
+    private void DisableMoveAxes()
     {
         if (axes == null)
             return;
-        axes.gameObject.SetActive(enabled);
+        axes.gameObject.SetActive(false);
+    }
+
+    private void AutoSetMoveAxesEnabled()
+    {
+        if (axes == null)
+            return;
+        axes.gameObject.SetActive(SomethingIsSelected());
+        rotateAxis.gameObject.SetActive(ObjectsAreSelected());
     }
 
     public void ClearSelection()
@@ -228,8 +248,7 @@ public class VoxelArrayEditor : VoxelArray
             thing.SelectionStateUpdated();
         }
         selectedThings.Clear();
-        if (!SomethingIsSelected())
-            SetMoveAxesEnabled(false);
+        AutoSetMoveAxesEnabled();
         selectMode = SelectMode.NONE;
         selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
         selectionChanged = true;
@@ -281,6 +300,13 @@ public class VoxelArrayEditor : VoxelArray
                 yield return (VoxelFaceReference)thing;
     }
 
+    private System.Collections.Generic.IEnumerable<ObjectMarker> IterateSelectedObjects()
+    {
+        foreach (Selectable thing in IterateSelected())
+            if (thing is ObjectMarker)
+                yield return (ObjectMarker)thing;
+    }
+
     // including stored selection
     public bool SomethingIsSelected()
     {
@@ -299,7 +325,14 @@ public class VoxelArrayEditor : VoxelArray
 
     public bool FacesAreSelected()
     {
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        foreach (var faceRef in IterateSelectedFaces())
+            return true;
+        return false;
+    }
+
+    public bool ObjectsAreSelected()
+    {
+        foreach (var marker in IterateSelectedObjects())
             return true;
         return false;
     }
@@ -307,11 +340,19 @@ public class VoxelArrayEditor : VoxelArray
     public ICollection<Entity> GetSelectedEntities()
     {
         var selectedEntities = new HashSet<Entity>();
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
-            if (faceRef.voxel.substance != null)
-                selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
-        if (playerObject.marker.selected)
-            selectedEntities.Add(playerObject);
+        foreach (Selectable thing in IterateSelected())
+        {
+            if (thing is VoxelFaceReference)
+            {
+                var faceRef = (VoxelFaceReference)thing;
+                if (faceRef.voxel.substance != null)
+                    selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
+            }
+            else if (thing is ObjectMarker)
+            {
+                selectedEntities.Add(((ObjectMarker)thing).objectEntity);
+            }
+        }
         return selectedEntities;
     }
 
@@ -357,8 +398,7 @@ public class VoxelArrayEditor : VoxelArray
             thing.SelectionStateUpdated();
         }
         storedSelectedThings.Clear();
-        if (!SomethingIsSelected())
-            SetMoveAxesEnabled(false);
+        AutoSetMoveAxesEnabled();
         selectionChanged = true;
     }
 
@@ -372,13 +412,15 @@ public class VoxelArrayEditor : VoxelArray
         for (int i = selectedThings.Count - 1; i >= 0; i--)
         {
             Selectable thing = selectedThings[i];
-            if (!ThingInBoxSelection(thing, selectionBounds))
+            Substance thingSubstance = null;
+            if (thing is VoxelFaceReference)
+                thingSubstance = ((VoxelFaceReference)thing).voxel.substance;
+            else if (thing is ObjectEntity)
+                thingSubstance = selectObjectSubstance;
+            if (thingSubstance != boxSelectSubstance || !ThingInBoxSelection(thing, selectionBounds))
                 DeselectThing(thing);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
-        if (boxSelectSubstance == selectObjectSubstance
-                && ThingInBoxSelection(playerObject.marker, selectionBounds))
-            SelectThing(playerObject.marker);
     }
 
     private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)
@@ -390,6 +432,13 @@ public class VoxelArrayEditor : VoxelArray
         if (node.size == 1)
         {
             Voxel voxel = node.voxel;
+            if (substance == selectObjectSubstance
+                && voxel.objectEntity != null
+                && ThingInBoxSelection(voxel.objectEntity.marker, bounds))
+            {
+                SelectThing(voxel.objectEntity.marker);
+                return;
+            }
             if (voxel.substance != substance)
                 return;
             for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
@@ -443,6 +492,38 @@ public class VoxelArrayEditor : VoxelArray
         SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
     }
 
+    public void SurfaceSelectFloodFill(Voxel voxel, int faceI, Substance substance)
+    {
+        if (voxel == null)
+            return;
+        if (voxel.substance != substance)
+            return;
+        VoxelFace face = voxel.faces[faceI];
+        if (face.IsEmpty())
+            return;
+        if (face.addSelected || face.storedSelected) // stop at boundaries of stored selection
+            return;
+        SelectFace(voxel, faceI);
+
+        Vector3 position = voxel.transform.position;
+        for (int sideNum = 0; sideNum < 4; sideNum++)
+        {
+            int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
+            SurfaceSelectFloodFill(voxel, sideFaceI, substance);
+            Vector3 newPos = position + Voxel.DirectionForFaceI(sideFaceI);
+            SurfaceSelectFloodFill(VoxelAt(newPos, false), faceI, substance);
+            newPos += Voxel.DirectionForFaceI(faceI);
+            SurfaceSelectFloodFill(VoxelAt(newPos, false), Voxel.OppositeFaceI(sideFaceI), substance);
+        }
+
+        if (selectMode != SelectMode.SURFACE)
+            selectionBounds = voxel.GetFaceBounds(faceI);
+        else
+            selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
+        selectMode = SelectMode.SURFACE;
+        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
+    }
+
     public void SubstanceSelect(Substance substance)
     {
         foreach (Voxel v in substance.voxels)
@@ -450,11 +531,11 @@ public class VoxelArrayEditor : VoxelArray
                 if (!v.faces[i].IsEmpty())
                 {
                     SelectFace(v, i);
-                    if (selectMode != SelectMode.FACE)
+                    if (selectMode != SelectMode.SURFACE)
                         selectionBounds = v.GetFaceBounds(i);
                     else
                         selectionBounds.Encapsulate(v.GetFaceBounds(i));
-                    selectMode = SelectMode.FACE;
+                    selectMode = SelectMode.SURFACE;
                 }
     }
 
@@ -479,8 +560,7 @@ public class VoxelArrayEditor : VoxelArray
             SelectThing(thing);
         selectMode = state.selectMode;
         axes.position = state.axes;
-        if (SomethingIsSelected())
-            SetMoveAxesEnabled(true);
+        AutoSetMoveAxesEnabled();
     }
 
     public void Adjust(Vector3 adjustDirection)
@@ -488,13 +568,6 @@ public class VoxelArrayEditor : VoxelArray
         MergeStoredSelected();
         // now we can safely look only the addSelected property and the selectedThings list
         // and ignore the storedSelected property and the storedSelectedThings list
-
-        if (playerObject.marker.addSelected)
-        {
-            playerObject.position += Vector3ToInt(adjustDirection);
-            playerObject.UpdateEntity();
-            unsavedChanges = true;
-        }
 
         int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
         int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
@@ -548,7 +621,13 @@ public class VoxelArrayEditor : VoxelArray
         for (int i = 0; i < selectedThings.Count; i++)
         {
             Selectable thing = selectedThings[i];
-            if (!(thing is VoxelFaceReference))
+            if (thing is ObjectMarker)
+            {
+                var obj = ((ObjectMarker)thing).objectEntity;
+                MoveObject(obj, obj.position + Vector3ToInt(adjustDirection));
+                continue;
+            }
+            else if (!(thing is VoxelFaceReference))
                 continue;
             VoxelFaceReference faceRef = (VoxelFaceReference)thing;
 
@@ -729,7 +808,7 @@ public class VoxelArrayEditor : VoxelArray
         if (substanceToCreate != null && createdSubstance)
             substanceToCreate = null;
 
-        SetMoveAxesEnabled(SomethingIsSelected());
+        AutoSetMoveAxesEnabled();
     } // end Adjust()
 
     private Voxel CreateSubstanceBlock(Vector3 position, Substance substance, VoxelFace faceTemplate)
@@ -762,6 +841,15 @@ public class VoxelArrayEditor : VoxelArray
         return voxel;
     }
 
+    public void RotateObjects(float amount)
+    {
+        foreach (ObjectMarker obj in IterateSelectedObjects())
+        {
+            obj.objectEntity.rotation += amount;
+            ObjectModified(obj.objectEntity);
+        }
+    }
+
     public VoxelFace GetSelectedPaint()
     {
         foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
@@ -786,4 +874,50 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
+    public int GetSelectedFaceNormal()
+    {
+        int faceI = -1;
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        {
+            if (faceI == -1)
+                faceI = faceRef.faceI;
+            else if (faceRef.faceI != faceI)
+                return -1;
+        }
+        return faceI;
+    }
+
+    public void PlaceObject(ObjectEntity obj)
+    {
+        Vector3 createPosition = selectionBounds.center;
+        int faceNormal = GetSelectedFaceNormal();
+        if (faceNormal != -1)
+            createPosition += Voxel.DirectionForFaceI(faceNormal) / 2;
+        createPosition -= new Vector3(0.5f, 0.5f, 0.5f);
+
+        // don't create the object at the same location of an existing object
+        // keep moving up until an empty space is found
+        while (true)
+        {
+            Voxel voxel = VoxelAt(createPosition, false);
+            if (voxel == null || voxel.objectEntity == null)
+                break;
+            createPosition += new Vector3(0, 1, 0);
+        }
+        obj.position = VoxelArray.Vector3ToInt(createPosition);
+
+        obj.InitObjectMarker(this);
+        AddObject(obj);
+        unsavedChanges = true;
+        // select the object. Wait one frame so the position is correct
+        StartCoroutine(SelectNewObjectCoroutine(obj));
+    }
+
+    private IEnumerator SelectNewObjectCoroutine(ObjectEntity obj)
+    {
+        yield return null;
+        ClearStoredSelection();
+        TouchDown(obj.marker);
+        TouchUp();
+    }
 }

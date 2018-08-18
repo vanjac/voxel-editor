@@ -25,6 +25,7 @@ public class NewRigidbodyController : MonoBehaviour
     private float yRotation;
     private Vector3 groundContactNormal;
     private bool jump, previouslyGrounded, jumping, grounded;
+    public bool disableGroundCheck;
 
     void Start()
     {
@@ -141,6 +142,13 @@ public class NewRigidbodyController : MonoBehaviour
     private void GroundCheck()
     {
         previouslyGrounded = grounded;
+        if (disableGroundCheck)
+        {
+            disableGroundCheck = false;
+            grounded = false;
+            jumping = true;
+        }
+
         RaycastHit hitInfo;
         if (Physics.SphereCast(transform.position, capsule.radius * (1.0f - shellOffset), Vector3.down, out hitInfo,
                                 ((capsule.height / 2f) - capsule.radius) + groundCheckDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))

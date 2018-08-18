@@ -8,7 +8,12 @@ public class TagPickerGUI : GUIPanel
     public TagHandler handler;
 
     private string[] tags;
-    private static GUIStyle buttonStyle = null;
+    private static readonly Lazy<GUIStyle> buttonStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.button);
+        style.fontSize = GUI.skin.font.fontSize * 2;
+        return style;
+    });
 
     void Start()
     {
@@ -24,12 +29,7 @@ public class TagPickerGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (buttonStyle == null)
-        {
-            buttonStyle = new GUIStyle(GUI.skin.button);
-            buttonStyle.fontSize = GUI.skin.font.fontSize * 2;
-        }
-        int selection = GUILayout.SelectionGrid(-1, tags, 4, buttonStyle, GUILayout.ExpandHeight(true));
+        int selection = GUILayout.SelectionGrid(-1, tags, 4, buttonStyle.Value, GUILayout.ExpandHeight(true));
         if (selection != -1)
         {
             handler((byte)selection);

@@ -6,6 +6,7 @@ public class WaterBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Water", "Simulates buoyancy for player and physics objects",
+        "Water should not be Solid and should not have Physics. This behavior controls only the physics of water, not appearance.",
         "water", typeof(WaterBehavior), BehaviorType.BaseTypeRule(typeof(Substance)));
 
     private float density = 1.0f;
@@ -37,7 +38,7 @@ public class WaterBehavior : EntityBehavior
 public class WaterComponent : BehaviorComponent
 {
     public float density;
-    public float waterLevel = float.MinValue;
+    private float waterLevel = float.MinValue;
 
     public override void Start()
     {
@@ -46,12 +47,16 @@ public class WaterComponent : BehaviorComponent
         {
             foreach (Voxel voxel in substanceComponent.substance.voxels)
             {
-                Bounds bounds = voxel.GetBounds();
-                float top = bounds.max.y;
+                float top = voxel.GetBounds().max.y - transform.position.y;
                 if (top > waterLevel)
                     waterLevel = top;
             }
         }
         base.Start();
+    }
+
+    public float GetWaterLevel(float x, float z)
+    {
+        return waterLevel + transform.position.y;
     }
 }
