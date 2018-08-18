@@ -22,6 +22,7 @@ public class OverflowMenuGUI : GUIPanel
 
     public MenuItem[] items;
     public int depth = 0;
+    private int selected = -1;
 
     public override Rect GetRect(float width, float height)
     {
@@ -41,9 +42,10 @@ public class OverflowMenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        int i = 0;
         foreach (MenuItem item in items)
         {
-            if (MenuButton(item.text, item.icon))
+            if (MenuButton(item.text, item.icon, i == selected))
             {
                 item.action();
                 if (!item.stayOpen)
@@ -52,13 +54,22 @@ public class OverflowMenuGUI : GUIPanel
                     foreach(OverflowMenuGUI parentMenu in gameObject.GetComponents<OverflowMenuGUI>())
                         Destroy(parentMenu);
                 }
+                else
+                {
+                    selected = i;
+                }
             }
+            i++;
         }
     }
 
-    private bool MenuButton(string name, Texture icon)
+    private bool MenuButton(string name, Texture icon, bool highlight)
     {
-        bool pressed = GUILayout.Button(name, GUI.skin.GetStyle("button_large"));
+        bool pressed;
+        if (highlight)
+            pressed = GUIUtils.HighlightedButton(name, GUI.skin.GetStyle("button_large"));
+        else
+            pressed = GUILayout.Button(name, GUI.skin.GetStyle("button_large"));
         Rect iconRect = GUILayoutUtility.GetLastRect();
         iconRect.width = iconRect.height;
         GUI.Label(iconRect, icon, GUIUtils.LABEL_CENTERED.Value);
