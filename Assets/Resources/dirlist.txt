@@ -1,4 +1,10 @@
 .
+./default.json
+./Demos
+./Demos/ball_pit.json
+./Demos/conveyor.json
+./Demos/logic.json
+./Demos/platforms.json
 ./dirlist.txt
 ./GameAssets
 ./GameAssets/Materials
@@ -134,10 +140,12 @@
 ./GameAssets/Overlays/Symbols/alert-outline.mat
 ./GameAssets/Overlays/Symbols/arrow-up-thick.mat
 ./GameAssets/Overlays/Symbols/biohazard.mat
+./GameAssets/Overlays/Symbols/bullseye.mat
 ./GameAssets/Overlays/Symbols/cancel.mat
 ./GameAssets/Overlays/Symbols/check.mat
 ./GameAssets/Overlays/Symbols/close.mat
 ./GameAssets/Overlays/Symbols/radioactive.mat
+./GameAssets/Overlays/Symbols/target.mat
 ./GameAssets/Overlays/Text Caps
 ./GameAssets/Overlays/Text Caps/c065.mat
 ./GameAssets/Overlays/Text Caps/c066.mat
@@ -254,6 +262,7 @@
 ./Icons/arrow-right-bold-box-outline.png
 ./Icons/circle-outline.png
 ./Icons/circle.png
+./Icons/content-copy.png
 ./Icons/cube-outline.png
 ./Icons/cube.png
 ./Icons/earth.png
@@ -262,14 +271,19 @@
 ./Icons/gesture-tap.png
 ./Icons/heart.png
 ./Icons/human-greeting.png
+./Icons/lightbulb-on.png
 ./Icons/pulse.png
+./Icons/radar.png
+./Icons/rocket.png
 ./Icons/send.png
 ./Icons/soccer.png
+./Icons/speedometer.png
 ./Icons/thought-bubble.png
 ./Icons/timer.png
 ./Icons/toggle-switch.png
 ./Icons/vector-combine.png
 ./Icons/water.png
+./LightHaloPrefab.prefab
 ./ObjectMarkers
 ./ObjectMarkers/Player.prefab
 ./ObjectPrefabs
