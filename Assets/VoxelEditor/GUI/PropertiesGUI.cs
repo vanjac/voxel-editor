@@ -5,8 +5,8 @@ using UnityEngine;
 
 class StoredPropertiesObject : PropertiesObject
 {
-    private PropertiesObjectType type;
-    private ICollection<Property> properties;
+    private readonly PropertiesObjectType type;
+    private readonly ICollection<Property> properties;
 
     public StoredPropertiesObject(PropertiesObject store)
     {
@@ -25,6 +25,16 @@ class StoredPropertiesObject : PropertiesObject
     }
 }
 
+class StoredEntityBehavior : StoredPropertiesObject
+{
+    public readonly EntityBehavior exampleBehavior;
+
+    public StoredEntityBehavior(EntityBehavior store) : base(store)
+    {
+        exampleBehavior = store;
+    }
+}
+
 public class PropertiesGUI : GUIPanel
 {
     public const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
@@ -40,7 +50,7 @@ public class PropertiesGUI : GUIPanel
     List<Entity> selectedEntities = new List<Entity>();
     PropertiesObject editEntity;
     PropertiesObject editSensor;
-    List<PropertiesObject> editBehaviors = new List<PropertiesObject>();
+    List<StoredEntityBehavior> editBehaviors = new List<StoredEntityBehavior>();
 
     private static readonly Lazy<GUIStyle> iconStyle = new Lazy<GUIStyle>(() =>
     {
@@ -153,7 +163,7 @@ public class PropertiesGUI : GUIPanel
             else
                 editSensor = null;
             foreach (EntityBehavior behavior in e.behaviors)
-                editBehaviors.Add(new StoredPropertiesObject(behavior));
+                editBehaviors.Add(new StoredEntityBehavior(behavior));
         }
         else
         {
@@ -260,13 +270,13 @@ public class PropertiesGUI : GUIPanel
         TutorialGUI.ClearHighlight();
 
         Color guiBaseColor = GUI.backgroundColor;
-        EntityBehavior behaviorToRemove = null;
-        foreach (EntityBehavior behavior in editBehaviors) // TODO: this doesn't work at all, editBehaviors doesn't contain EntityBehaviors
+        StoredEntityBehavior behaviorToRemove = null;
+        foreach (StoredEntityBehavior storedBehavior in editBehaviors)
         {
             TutorialGUI.TutorialHighlight("behaviors");
-            Entity behaviorTarget = behavior.targetEntity.entity;
+            Entity behaviorTarget = storedBehavior.exampleBehavior.targetEntity.entity;
             string suffix = " Behavior";
-            if (behavior.targetEntityIsActivator)
+            if (storedBehavior.exampleBehavior.targetEntityIsActivator)
             {
                 suffix += "\n▶  Activators";
             }
@@ -280,9 +290,10 @@ public class PropertiesGUI : GUIPanel
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            PropertiesObjectGUI(behavior, suffix, () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behavior));
+            PropertiesObjectGUI(storedBehavior, suffix,
+                () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, storedBehavior.exampleBehavior));
             if (GUILayout.Button("Remove"))
-                behaviorToRemove = behavior;
+                behaviorToRemove = storedBehavior;
             GUILayout.EndVertical();
             // clear this every time, in case the next target is the same
             EntityReferencePropertyManager.SetBehaviorTarget(null);
@@ -292,10 +303,10 @@ public class PropertiesGUI : GUIPanel
         {
             foreach (Entity entity in selectedEntities)
             {
-                entity.behaviors.Remove(behaviorToRemove); // TODO: this doesn't work at all, entities don't share a behavior
+                entity.behaviors.Remove(behaviorToRemove.exampleBehavior); // TODO: this doesn't work at all, entities don't share a behavior
             }
             voxelArray.unsavedChanges = true;
-            EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove);
+            EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove.exampleBehavior);
         }
     }
 
