@@ -168,6 +168,7 @@ public class PropertiesGUI : GUIPanel
         }
         else
         {
+            // TODO
             editEntity = null;
             editSensor = null;
         }
