@@ -164,13 +164,11 @@ public class PropertiesGUI : GUIPanel
 
     private void EntityPropertiesGUI()
     {
-        Entity singleSelectedEntity;
+        Entity singleSelectedEntity = null;
         if (selectedEntities.Count == 1)
             singleSelectedEntity = selectedEntities[0];
-        if (singleSelectedEntity != null)
-            EntityReferencePropertyManager.Reset(singleSelectedEntity);
-        else
-            ; // TODO: what to do?
+
+        EntityReferencePropertyManager.Reset(singleSelectedEntity); // could be null and that's fine (?)
 
         GUILayout.BeginVertical(GUI.skin.box);
         PropertiesObjectGUI(editEntity);
@@ -201,6 +199,7 @@ public class PropertiesGUI : GUIPanel
             }
             if (GUIUtils.HighlightedButton("Delete"))
             {
+                // TODO: allow deleting multiple objects
                 // TODO: only deselect deleted objects
                 voxelArray.ClearSelection();
                 voxelArray.ClearStoredSelection();
@@ -255,14 +254,14 @@ public class PropertiesGUI : GUIPanel
                 voxelArray.unsavedChanges = true;
                 UpdateEditEntity();
                 scrollVelocity = new Vector2(0, 2000 * editBehaviors.Count); // scroll to bottom
-                // EntityPreviewManager.BehaviorUpdated(entity, newBehavior); // TODO: need to add this back in
+                EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, newBehavior);
             };
         }
         TutorialGUI.ClearHighlight();
 
         Color guiBaseColor = GUI.backgroundColor;
         EntityBehavior behaviorToRemove = null;
-        foreach (EntityBehavior behavior in editBehaviors) // TODO: editBehaviors doesn't contain EntityBehaviors
+        foreach (EntityBehavior behavior in editBehaviors) // TODO: this doesn't work at all, editBehaviors doesn't contain EntityBehaviors
         {
             TutorialGUI.TutorialHighlight("behaviors");
             Entity behaviorTarget = behavior.targetEntity.entity;
@@ -281,7 +280,7 @@ public class PropertiesGUI : GUIPanel
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            PropertiesObjectGUI(behavior, suffix, () => EntityPreviewManager.BehaviorUpdated(entity, behavior));
+            PropertiesObjectGUI(behavior, suffix, () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behavior));
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = behavior;
             GUILayout.EndVertical();
@@ -291,9 +290,12 @@ public class PropertiesGUI : GUIPanel
 
         if (behaviorToRemove != null)
         {
-            entity.behaviors.Remove(behaviorToRemove);
+            foreach (Entity entity in selectedEntities)
+            {
+                entity.behaviors.Remove(behaviorToRemove); // TODO: this doesn't work at all, entities don't share a behavior
+            }
             voxelArray.unsavedChanges = true;
-            EntityPreviewManager.BehaviorUpdated(entity, behaviorToRemove);
+            EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove);
         }
     }
 

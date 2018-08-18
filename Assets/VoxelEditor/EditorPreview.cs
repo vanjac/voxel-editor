@@ -52,7 +52,8 @@ public class EntityPreviewManager
         if (!IsEditorPreviewBehavior(behavior))
             return;
         EntityDeselected();
-        EntitySelected(entity);
+        if (entity != null)
+            EntitySelected(entity);
     }
 
     public static void UpdateEntityPosition(Entity entity)
