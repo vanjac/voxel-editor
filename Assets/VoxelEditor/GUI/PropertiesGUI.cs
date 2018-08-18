@@ -138,6 +138,7 @@ public class PropertiesGUI : GUIPanel
     PropertiesObject editEntity;
     PropertiesObject editSensor;
     List<StoredEntityBehavior> editBehaviors = new List<StoredEntityBehavior>();
+    bool mismatchedSelectedBehaviorCounts; // selected entities have different numbers of behaviors
 
     private static readonly Lazy<GUIStyle> iconStyle = new Lazy<GUIStyle>(() =>
     {
@@ -241,6 +242,7 @@ public class PropertiesGUI : GUIPanel
     private void UpdateEditEntity()
     {
         editBehaviors.Clear();
+        mismatchedSelectedBehaviorCounts = false;
         if (selectedEntities.Count == 0)
         {
             editEntity = null;
@@ -271,21 +273,21 @@ public class PropertiesGUI : GUIPanel
             if (editSensor.ObjectType() == null)
                 editSensor = null;
 
-            // TODO: improve matching behaviors
-            for (int behaviorI = 0; behaviorI < selectedEntities[0].behaviors.Count; behaviorI++)
+            int numBehaviors = selectedEntities[0].behaviors.Count; // minimum number of behaviors
+            foreach (Entity entity in selectedEntities)
+            {
+                int entityBehaviorCount = entity.behaviors.Count;
+                if (entityBehaviorCount != numBehaviors)
+                    mismatchedSelectedBehaviorCounts = true;
+                if (entityBehaviorCount < numBehaviors)
+                    numBehaviors = entityBehaviorCount;
+            }
+
+            for (int behaviorI = 0; behaviorI < numBehaviors; behaviorI++)
             {
                 EntityBehavior[] selectedBehaviors = new EntityBehavior[selectedEntities.Count];
                 for (int entityI = 0; entityI < selectedEntities.Count; entityI++)
-                {
-                    if (behaviorI >= selectedEntities[entityI].behaviors.Count)
-                    {
-                        behaviorI = -1;
-                        break;
-                    }
                     selectedBehaviors[entityI] = selectedEntities[entityI].behaviors[behaviorI];
-                }
-                if (behaviorI == -1)
-                    break;
                 StoredEntityBehavior editBehavior = new StoredEntityBehavior(selectedBehaviors);
                 editBehaviors.Add(editBehavior);
             }
@@ -433,6 +435,13 @@ public class PropertiesGUI : GUIPanel
             voxelArray.unsavedChanges = true;
             UpdateEditEntity();
             EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove.allBehaviors[0]);
+        }
+
+        if (mismatchedSelectedBehaviorCounts)
+        {
+            GUILayout.BeginVertical(GUI.skin.box);
+            GUILayout.Label("(other behaviors...)", GUI.skin.GetStyle("label_title"));
+            GUILayout.EndVertical();
         }
     }
 
