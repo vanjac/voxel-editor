@@ -58,7 +58,7 @@ class StoredPropertiesObject : PropertiesObject
 
             PropertyGUI gui = property =>
             {
-                if (property.getter() == NOT_EQUAL_VALUE)
+                if (property.getter() == (object)NOT_EQUAL_VALUE)
                 {
                     GUILayout.BeginHorizontal();
                     PropertyGUIs.AlignedLabel(property);
