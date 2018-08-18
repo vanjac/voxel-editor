@@ -23,7 +23,7 @@ public class PropertyGUIs
         return style;
     });
 
-    private static void AlignedLabel(Property property)
+    public static void AlignedLabel(Property property)
     {
         GUILayout.Label(property.name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
     }

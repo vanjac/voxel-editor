@@ -7,11 +7,76 @@ class StoredPropertiesObject : PropertiesObject
 {
     private readonly PropertiesObjectType type;
     private readonly ICollection<Property> properties;
+    private const string NOT_EQUAL_VALUE = "not equal!!";
 
     public StoredPropertiesObject(PropertiesObject store)
     {
         type = store.ObjectType();
         properties = store.Properties();
+    }
+
+    // merge properties of objects
+    public StoredPropertiesObject(PropertiesObject[] objects)
+    {
+        properties = new List<Property>();
+        if (objects.Length == 0)
+            return;
+        type = objects[0].ObjectType();
+        // check that all objects have the same type. if they don't, fail
+        foreach (PropertiesObject obj in objects)
+            if (obj.ObjectType() != type)
+                return;
+        // first index: object
+        // second index: property
+        List<List<Property>> objectPropertiesSets = new List<List<Property>>();
+        foreach (PropertiesObject obj in objects)
+            objectPropertiesSets.Add(new List<Property>(obj.Properties()));
+
+        int numObjects = objectPropertiesSets.Count;
+        int numProperties = objectPropertiesSets[0].Count;
+        for (int propertyI = 0; propertyI < numProperties; propertyI++)
+        {
+            Property firstProperty = objectPropertiesSets[0][propertyI];
+
+            GetProperty getter = () =>
+            {
+                object value = objectPropertiesSets[0][propertyI].getter();
+                for (int objectI = 0; objectI < numObjects; objectI++)
+                {
+                    if (objectPropertiesSets[objectI][propertyI].getter() != value)
+                        return NOT_EQUAL_VALUE;
+                }
+                return value;
+            };
+
+            SetProperty setter = value =>
+            {
+                for (int objectI = 0; objectI < numObjects; objectI++)
+                    objectPropertiesSets[objectI][propertyI].setter(value);
+            };
+
+            PropertyGUI gui = property =>
+            {
+                if (property.getter() == NOT_EQUAL_VALUE)
+                {
+                    GUILayout.BeginHorizontal();
+                    PropertyGUIs.AlignedLabel(property);
+                    if (GUILayout.Button("(DIFFERENT)"))
+                    {
+                        // set all properties to one value
+                        property.setter(firstProperty.getter());
+                    }
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    firstProperty.gui(property);
+                }
+            };
+
+            properties.Add(new Property(
+                firstProperty.name, getter, setter, gui, firstProperty.explicitType))
+        }
     }
 
     public PropertiesObjectType ObjectType()
