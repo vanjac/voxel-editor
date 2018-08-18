@@ -244,7 +244,12 @@ public class PropertiesGUI : GUIPanel
             for (int i = 0; i < selectedEntities.Count; i++)
                 selectedPropertiesObjects[i] = selectedEntities[i];
             editEntity = new StoredPropertiesObject(selectedPropertiesObjects);
-            editSensor = null;
+            PropertiesObject[] selectedSensors = new PropertiesObject[selectedEntities.Count];
+            for (int i = 0; i < selectedEntities.Count; i++)
+                selectedSensors[i] = selectedEntities[i].sensor;
+            editSensor = new StoredPropertiesObject(selectedSensors);
+
+            // TODO: behaviors
         }
     }
 
