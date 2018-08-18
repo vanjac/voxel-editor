@@ -27,11 +27,12 @@ class StoredPropertiesObject : PropertiesObject
 
 class StoredEntityBehavior : StoredPropertiesObject
 {
-    public readonly EntityBehavior exampleBehavior;
+    public readonly EntityBehavior[] allBehaviors;
 
-    public StoredEntityBehavior(EntityBehavior store) : base(store)
+    public StoredEntityBehavior(PropertiesObject store, EntityBehavior[] allBehaviors)
+        : base(store)
     {
-        exampleBehavior = store;
+        this.allBehaviors = allBehaviors;
     }
 }
 
@@ -163,7 +164,7 @@ public class PropertiesGUI : GUIPanel
             else
                 editSensor = null;
             foreach (EntityBehavior behavior in e.behaviors)
-                editBehaviors.Add(new StoredEntityBehavior(behavior));
+                editBehaviors.Add(new StoredEntityBehavior(behavior, new EntityBehavior[] { behavior }));
         }
         else
         {
@@ -273,10 +274,11 @@ public class PropertiesGUI : GUIPanel
         StoredEntityBehavior behaviorToRemove = null;
         foreach (StoredEntityBehavior storedBehavior in editBehaviors)
         {
+            EntityBehavior firstBehavior = storedBehavior.allBehaviors[0];
             TutorialGUI.TutorialHighlight("behaviors");
-            Entity behaviorTarget = storedBehavior.exampleBehavior.targetEntity.entity;
+            Entity behaviorTarget = firstBehavior.targetEntity.entity;
             string suffix = " Behavior";
-            if (storedBehavior.exampleBehavior.targetEntityIsActivator)
+            if (firstBehavior.targetEntityIsActivator)
             {
                 suffix += "\n▶  Activators";
             }
@@ -291,7 +293,7 @@ public class PropertiesGUI : GUIPanel
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
             PropertiesObjectGUI(storedBehavior, suffix,
-                () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, storedBehavior.exampleBehavior));
+                () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, firstBehavior));
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = storedBehavior;
             GUILayout.EndVertical();
@@ -301,29 +303,17 @@ public class PropertiesGUI : GUIPanel
 
         if (behaviorToRemove != null)
         {
-            EntityBehavior exampleBehaviorToRemove = behaviorToRemove.exampleBehavior;
             foreach (Entity entity in selectedEntities)
             {
-                EntityBehavior entityBehaviorToRemove = null;
-                foreach (EntityBehavior entityBehavior in entity.behaviors)
+                foreach (EntityBehavior remove in behaviorToRemove.allBehaviors)
                 {
-                    if (entityBehavior == exampleBehaviorToRemove
-                        || (entityBehavior.BehaviorObjectType() == exampleBehaviorToRemove.BehaviorObjectType()
-                            && entityBehavior.condition == exampleBehaviorToRemove.condition
-                            && entityBehavior.targetEntity == exampleBehaviorToRemove.targetEntity
-                            && entityBehavior.targetEntityIsActivator == exampleBehaviorToRemove.targetEntityIsActivator)
-                        ) // TODO: this will fail if there are multiple behaviors that match all of these conditions
-                    {
-                        entityBehaviorToRemove = entityBehavior;
+                    if (entity.behaviors.Remove(remove))
                         break;
-                    }
                 }
-                if(entityBehaviorToRemove != null)
-                    entity.behaviors.Remove(entityBehaviorToRemove);
             }
             voxelArray.unsavedChanges = true;
             UpdateEditEntity();
-            EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove.exampleBehavior);
+            EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove.allBehaviors[0]);
         }
     }
 
