@@ -301,11 +301,28 @@ public class PropertiesGUI : GUIPanel
 
         if (behaviorToRemove != null)
         {
+            EntityBehavior exampleBehaviorToRemove = behaviorToRemove.exampleBehavior;
             foreach (Entity entity in selectedEntities)
             {
-                entity.behaviors.Remove(behaviorToRemove.exampleBehavior); // TODO: this doesn't work at all, entities don't share a behavior
+                EntityBehavior entityBehaviorToRemove = null;
+                foreach (EntityBehavior entityBehavior in entity.behaviors)
+                {
+                    if (entityBehavior == exampleBehaviorToRemove
+                        || (entityBehavior.BehaviorObjectType() == exampleBehaviorToRemove.BehaviorObjectType()
+                            && entityBehavior.condition == exampleBehaviorToRemove.condition
+                            && entityBehavior.targetEntity == exampleBehaviorToRemove.targetEntity
+                            && entityBehavior.targetEntityIsActivator == exampleBehaviorToRemove.targetEntityIsActivator)
+                        ) // TODO: this will fail if there are multiple behaviors that match all of these conditions
+                    {
+                        entityBehaviorToRemove = entityBehavior;
+                        break;
+                    }
+                }
+                if(entityBehaviorToRemove != null)
+                    entity.behaviors.Remove(entityBehaviorToRemove);
             }
             voxelArray.unsavedChanges = true;
+            UpdateEditEntity();
             EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove.exampleBehavior);
         }
     }
