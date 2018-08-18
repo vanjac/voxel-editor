@@ -5,9 +5,12 @@ using UnityEngine;
 
 class StoredPropertiesObject : PropertiesObject
 {
+    private const string NOT_EQUAL_VALUE = "not equal!!";
+    private static readonly PropertiesObjectType DIFFERENT_OBJECT_TYPE
+        = new PropertiesObjectType("(different)", null);
+
     private readonly PropertiesObjectType type;
     private readonly ICollection<Property> properties;
-    private const string NOT_EQUAL_VALUE = "not equal!!";
 
     public StoredPropertiesObject(PropertiesObject store)
     {
@@ -24,8 +27,13 @@ class StoredPropertiesObject : PropertiesObject
         type = objects[0].ObjectType();
         // check that all objects have the same type. if they don't, fail
         foreach (PropertiesObject obj in objects)
+        {
             if (obj.ObjectType() != type)
+            {
+                type = DIFFERENT_OBJECT_TYPE;
                 return;
+            }
+        }
         // first index: object
         // second index: property
         List<List<Property>> objectPropertiesSets = new List<List<Property>>();
