@@ -24,16 +24,22 @@ class StoredPropertiesObject : PropertiesObject
         properties = new List<Property>();
         if (objects.Length == 0)
             return;
-        type = objects[0].ObjectType();
+        if (objects[0] != null)
+            type = objects[0].ObjectType();
         // check that all objects have the same type. if they don't, fail
         foreach (PropertiesObject obj in objects)
         {
-            if (obj.ObjectType() != type)
+            PropertiesObjectType objType = null;
+            if (obj != null)
+                objType = obj.ObjectType();
+            if (objType != type)
             {
                 type = DIFFERENT_OBJECT_TYPE;
                 return;
             }
         }
+        if (type == null)
+            return; // null objects, no properties
         // first index: object
         // second index: property
         List<List<Property>> objectPropertiesSets = new List<List<Property>>();
@@ -103,10 +109,16 @@ class StoredEntityBehavior : StoredPropertiesObject
 {
     public readonly EntityBehavior[] allBehaviors;
 
-    public StoredEntityBehavior(PropertiesObject store, EntityBehavior[] allBehaviors)
+    public StoredEntityBehavior(EntityBehavior store)
         : base(store)
     {
-        this.allBehaviors = allBehaviors;
+        allBehaviors = new EntityBehavior[] { store };
+    }
+
+    public StoredEntityBehavior(EntityBehavior[] behaviors)
+        : base(behaviors)
+    {
+        allBehaviors = behaviors;
     }
 }
 
@@ -243,7 +255,7 @@ public class PropertiesGUI : GUIPanel
             else
                 editSensor = null;
             foreach (EntityBehavior behavior in e.behaviors)
-                editBehaviors.Add(new StoredEntityBehavior(behavior, new EntityBehavior[] { behavior }));
+                editBehaviors.Add(new StoredEntityBehavior(behavior));
         }
         else
         {
@@ -256,8 +268,27 @@ public class PropertiesGUI : GUIPanel
             for (int i = 0; i < selectedEntities.Count; i++)
                 selectedSensors[i] = selectedEntities[i].sensor;
             editSensor = new StoredPropertiesObject(selectedSensors);
+            if (editSensor.ObjectType() == null)
+                editSensor = null;
 
-            // TODO: behaviors
+            // TODO: improve matching behaviors
+            for (int behaviorI = 0; behaviorI < selectedEntities[0].behaviors.Count; behaviorI++)
+            {
+                EntityBehavior[] selectedBehaviors = new EntityBehavior[selectedEntities.Count];
+                for (int entityI = 0; entityI < selectedEntities.Count; entityI++)
+                {
+                    if (behaviorI >= selectedEntities[entityI].behaviors.Count)
+                    {
+                        behaviorI = -1;
+                        break;
+                    }
+                    selectedBehaviors[entityI] = selectedEntities[entityI].behaviors[behaviorI];
+                }
+                if (behaviorI == -1)
+                    break;
+                StoredEntityBehavior editBehavior = new StoredEntityBehavior(selectedBehaviors);
+                editBehaviors.Add(editBehavior);
+            }
         }
     }
 
