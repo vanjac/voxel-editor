@@ -146,9 +146,7 @@ public class PropertiesGUI : GUIPanel
         editBehaviors.Clear();
         if (selectedEntities.Count == 1)
         {
-            Entity e = null;
-            foreach (Entity e1 in selectedEntities)
-                e = e1;
+            Entity e = selectedEntities[0];
             editEntity = new StoredPropertiesObject(e);
             if (e.sensor != null)
                 editSensor = new StoredPropertiesObject(e.sensor);
