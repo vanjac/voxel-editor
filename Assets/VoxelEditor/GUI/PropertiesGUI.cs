@@ -36,14 +36,15 @@ class StoredPropertiesObject : PropertiesObject
         int numProperties = objectPropertiesSets[0].Count;
         for (int propertyI = 0; propertyI < numProperties; propertyI++)
         {
+            int _propertyI = propertyI; // for use in lambda functions -- won't change
             Property firstProperty = objectPropertiesSets[0][propertyI];
 
             GetProperty getter = () =>
             {
-                object value = objectPropertiesSets[0][propertyI].getter();
+                object value = objectPropertiesSets[0][_propertyI].getter();
                 for (int objectI = 0; objectI < numObjects; objectI++)
                 {
-                    if (objectPropertiesSets[objectI][propertyI].getter() != value)
+                    if (!(objectPropertiesSets[objectI][_propertyI].getter().Equals(value)))
                         return NOT_EQUAL_VALUE;
                 }
                 return value;
@@ -52,7 +53,7 @@ class StoredPropertiesObject : PropertiesObject
             SetProperty setter = value =>
             {
                 for (int objectI = 0; objectI < numObjects; objectI++)
-                    objectPropertiesSets[objectI][propertyI].setter(value);
+                    objectPropertiesSets[objectI][_propertyI].setter(value);
             };
 
             PropertyGUI gui = property =>
@@ -61,7 +62,7 @@ class StoredPropertiesObject : PropertiesObject
                 {
                     GUILayout.BeginHorizontal();
                     PropertyGUIs.AlignedLabel(property);
-                    if (GUILayout.Button("(DIFFERENT)"))
+                    if (GUILayout.Button("different"))
                     {
                         // set all properties to one value
                         property.setter(firstProperty.getter());
