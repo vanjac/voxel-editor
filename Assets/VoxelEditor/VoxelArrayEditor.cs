@@ -539,6 +539,24 @@ public class VoxelArrayEditor : VoxelArray
                 }
     }
 
+    public void SelectAllWithTag(byte tag)
+    {
+        foreach (ObjectEntity entity in IterateObjects())
+        {
+            if (entity.tag == tag)
+                SelectThing(entity.marker);
+        }
+        foreach (Voxel voxel in IterateVoxels())
+        {
+            if (voxel.substance != null && voxel.substance.tag == tag)
+            {
+                for (int faceI = 0; faceI < 6; faceI++)
+                    if (!voxel.faces[faceI].IsEmpty())
+                        SelectFace(voxel, faceI);
+            }
+        }
+    }
+
     public SelectionState GetSelectionState()
     {
         SelectionState state;

@@ -67,6 +67,16 @@ public class ActionBarGUI : GUIPanel
                         propsGUI.normallyOpen = true;
                     }
                 }),
+                new OverflowMenuGUI.MenuItem("Select...", GUIIconSet.instance.select, () => {
+                    var selectMenu = gameObject.AddComponent<OverflowMenuGUI>();
+                    selectMenu.depth = 1;
+                    selectMenu.items = new OverflowMenuGUI.MenuItem[]
+                    {
+                        new OverflowMenuGUI.MenuItem("By Tag", GUIIconSet.instance.entityTag, () => {
+                            SelectByTagInterface();
+                        }),
+                    };
+                }, stayOpen: true),
                 new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
                     var help = gameObject.AddComponent<HelpGUI>();
                     help.voxelArray = voxelArray;
@@ -189,5 +199,17 @@ public class ActionBarGUI : GUIPanel
         else return Mathf.RoundToInt(selectionSize.x)
                 + "x" + Mathf.RoundToInt(selectionSize.y)
                 + "x" + Mathf.RoundToInt(selectionSize.z);
+    }
+
+
+    private void SelectByTagInterface()
+    {
+        TagPickerGUI tagPicker = gameObject.AddComponent<TagPickerGUI>();
+        tagPicker.title = "Select by tag";
+        tagPicker.handler = (byte tag) =>
+        {
+            voxelArray.ClearSelection();
+            voxelArray.SelectAllWithTag(tag);
+        };
     }
 }
