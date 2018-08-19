@@ -67,6 +67,19 @@ public class ActionBarGUI : GUIPanel
                         propsGUI.normallyOpen = true;
                     }
                 }),
+                new OverflowMenuGUI.MenuItem("Select...", GUIIconSet.instance.select, () => {
+                    var selectMenu = gameObject.AddComponent<OverflowMenuGUI>();
+                    selectMenu.depth = 1;
+                    selectMenu.items = new OverflowMenuGUI.MenuItem[]
+                    {
+                        new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
+                            SelectByPaintInterface();
+                        }),
+                        new OverflowMenuGUI.MenuItem("With Tag", GUIIconSet.instance.entityTag, () => {
+                            SelectByTagInterface();
+                        })
+                    };
+                }, stayOpen: true),
                 new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
                     var help = gameObject.AddComponent<HelpGUI>();
                     help.voxelArray = voxelArray;
@@ -189,5 +202,34 @@ public class ActionBarGUI : GUIPanel
         else return Mathf.RoundToInt(selectionSize.x)
                 + "x" + Mathf.RoundToInt(selectionSize.y)
                 + "x" + Mathf.RoundToInt(selectionSize.z);
+    }
+
+
+    private void SelectByTagInterface()
+    {
+        TagPickerGUI tagPicker = gameObject.AddComponent<TagPickerGUI>();
+        tagPicker.title = "Select by tag";
+        tagPicker.handler = (byte tag) =>
+        {
+            voxelArray.ClearSelection();
+            voxelArray.SelectAllWithTag(tag);
+        };
+    }
+
+    private void SelectByPaintInterface()
+    {
+        FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
+        facePicker.voxelArray = voxelArray;
+        facePicker.message = "Tap to pick paint...";
+        facePicker.onlyFaces = true;
+        facePicker.clearStoredSelection = false;
+        facePicker.pickAction = () =>
+        {
+            VoxelFace paint = voxelArray.GetSelectedPaint();
+            voxelArray.ClearSelection();
+            if (paint.IsEmpty())
+                return;
+            voxelArray.SelectAllWithPaint(paint);
+        };
     }
 }

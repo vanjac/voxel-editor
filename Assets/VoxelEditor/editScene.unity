@@ -630,6 +630,8 @@ MonoBehaviour:
   flipVertical: {fileID: 2800000, guid: 7aedd43693e19f248b02170e9ff4fb29, type: 3}
   compass: {fileID: 2800000, guid: 9df09c8922504d646866e3fcf3089863, type: 3}
   about: {fileID: 0}
+  select: {fileID: 2800000, guid: a81e8a94ba6da284ca1a45f2694326e5, type: 3}
+  entityTag: {fileID: 2800000, guid: 1c7271f3875d8ce4d98afe91ddc3eb6e, type: 3}
 --- !u!114 &878046154
 MonoBehaviour:
   m_ObjectHideFlags: 0
