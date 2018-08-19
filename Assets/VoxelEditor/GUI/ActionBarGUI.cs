@@ -218,15 +218,17 @@ public class ActionBarGUI : GUIPanel
 
     private void SelectByPaintInterface()
     {
-        // TODO: this will reset the stored selection
         FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
         facePicker.voxelArray = voxelArray;
         facePicker.message = "Tap to pick paint...";
         facePicker.onlyFaces = true;
+        facePicker.clearStoredSelection = false;
         facePicker.pickAction = () =>
         {
             VoxelFace paint = voxelArray.GetSelectedPaint();
             voxelArray.ClearSelection();
+            if (paint.IsEmpty())
+                return;
             voxelArray.SelectAllWithPaint(paint);
         };
     }

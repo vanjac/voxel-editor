@@ -284,6 +284,8 @@ public class VoxelArrayEditor : VoxelArray
         DeselectThing(new VoxelFaceReference(voxel, faceI));
     }
 
+    // add selected things come before stored selection
+    // this is important for functions like GetSelectedPaint
     private System.Collections.Generic.IEnumerable<Selectable> IterateSelected()
     {
         foreach (Selectable thing in selectedThings)
@@ -883,6 +885,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public VoxelFace GetSelectedPaint()
     {
+        // because of the order of IterateSelected, add selected faces will be preferred
         foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
         {
             VoxelFace face = faceRef.face;

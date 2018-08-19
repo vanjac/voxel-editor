@@ -7,6 +7,9 @@ public class FacePickerGUI : ActionBarGUI
     public string message;
     public System.Action pickAction;
     public bool onlyFaces = false;
+    public bool clearStoredSelection = true;
+
+    private int selectedEntitiesCount; // only if onlyFaces is true
 
     public override void OnEnable()
     {
@@ -43,17 +46,25 @@ public class FacePickerGUI : ActionBarGUI
     void Start()
     {
         voxelArray.ClearSelection();
-        voxelArray.ClearStoredSelection();
+        if(clearStoredSelection)
+            voxelArray.ClearStoredSelection();
+        if (onlyFaces)
+            selectedEntitiesCount = voxelArray.GetSelectedEntities().Count;
     }
 
     void Update()
     {
-        if (onlyFaces && voxelArray.ObjectsAreSelected())
-            voxelArray.ClearSelection();
-        else if (voxelArray.SomethingIsSelected())
+        if (voxelArray.SomethingIsAddSelected())
         {
-            pickAction();
-            Destroy(this);
+            if (onlyFaces && voxelArray.GetSelectedEntities().Count > selectedEntitiesCount)
+            {
+                voxelArray.ClearSelection();
+            }
+            else
+            {
+                pickAction();
+                Destroy(this);
+            }
         }
     }
 }
