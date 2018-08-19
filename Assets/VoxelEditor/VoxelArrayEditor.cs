@@ -541,6 +541,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void SelectAllWithTag(byte tag)
     {
+        // TODO: set position of move axes
         foreach (ObjectEntity entity in IterateObjects())
         {
             if (entity.tag == tag)
@@ -555,6 +556,18 @@ public class VoxelArrayEditor : VoxelArray
                         SelectFace(voxel, faceI);
             }
         }
+        AutoSetMoveAxesEnabled();
+    }
+
+    public void SelectAllWithPaint(VoxelFace paint)
+    {
+        foreach (Voxel voxel in IterateVoxels())
+        {
+            for (int faceI = 0; faceI < 6; faceI++)
+                if (voxel.faces[faceI].Equals(paint))
+                    SelectFace(voxel, faceI);
+        }
+        AutoSetMoveAxesEnabled();
     }
 
     public SelectionState GetSelectionState()

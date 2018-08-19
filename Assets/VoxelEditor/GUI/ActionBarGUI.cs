@@ -72,9 +72,12 @@ public class ActionBarGUI : GUIPanel
                     selectMenu.depth = 1;
                     selectMenu.items = new OverflowMenuGUI.MenuItem[]
                     {
-                        new OverflowMenuGUI.MenuItem("By Tag", GUIIconSet.instance.entityTag, () => {
-                            SelectByTagInterface();
+                        new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
+                            SelectByPaintInterface();
                         }),
+                        new OverflowMenuGUI.MenuItem("With Tag", GUIIconSet.instance.entityTag, () => {
+                            SelectByTagInterface();
+                        })
                     };
                 }, stayOpen: true),
                 new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
@@ -210,6 +213,21 @@ public class ActionBarGUI : GUIPanel
         {
             voxelArray.ClearSelection();
             voxelArray.SelectAllWithTag(tag);
+        };
+    }
+
+    private void SelectByPaintInterface()
+    {
+        // TODO: this will reset the stored selection
+        FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
+        facePicker.voxelArray = voxelArray;
+        facePicker.message = "Tap to pick paint...";
+        facePicker.onlyFaces = true;
+        facePicker.pickAction = () =>
+        {
+            VoxelFace paint = voxelArray.GetSelectedPaint();
+            voxelArray.ClearSelection();
+            voxelArray.SelectAllWithPaint(paint);
         };
     }
 }
