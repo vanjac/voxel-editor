@@ -169,7 +169,6 @@ public class PropertyGUIs
             // only temporarily, so the name won't be "Target":
             EntityReferencePropertyManager.SetBehaviorTarget(null);
             EntityReferencePropertyManager.Next(behaviorTarget);
-            // behavior target has not been set, so the actual name of the entity will be used
             text = "▶  " + EntityReferencePropertyManager.GetName();
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget); // put it back
         }
