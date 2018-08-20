@@ -41,3 +41,4 @@ sysinfo.txt
 /Assets/GameAssets/Genetica/*.png
 
 *.keystore
+upload_certificate.pem
