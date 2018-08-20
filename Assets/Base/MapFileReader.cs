@@ -272,7 +272,7 @@ public class MapFileReader
                 }
                 EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
                 ReadPropertiesObject(behaviorObject, newBehavior);
-                if (behaviorObject["target"] != null)
+                if (fileWriterVersion <= 5 && behaviorObject["target"] != null)
                 {
                     if (behaviorObject["target"] == "activator")
                         newBehavior.targetEntityIsActivator = true;

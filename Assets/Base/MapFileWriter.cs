@@ -8,8 +8,8 @@ using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 5;
-    private const int FILE_MIN_READER_VERSION = 5;
+    public const int VERSION = 6;
+    private const int FILE_MIN_READER_VERSION = 6;
 
     private string fileName;
 
@@ -136,10 +136,6 @@ public class MapFileWriter
             foreach (EntityBehavior behavior in entity.behaviors)
             {
                 JSONObject behaviorObject = WritePropertiesObject(behavior, true);
-                if (behavior.targetEntityIsActivator)
-                    behaviorObject["target"] = "activator";
-                else if (behavior.targetEntity.entity != null)
-                    behaviorObject["target"] = behavior.targetEntity.guid.ToString();
                 behaviorsArray[-1] = behaviorObject;
             }
             entityObject["behaviors"] = behaviorsArray;
