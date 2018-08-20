@@ -155,6 +155,31 @@ public class PropertyGUIs
         property.value = EntityBehavior.Condition.ON;
     }
 
+    public static void BehaviorTarget(Property property)
+    {
+        var value = (EntityBehavior.BehaviorTargetProperty)(property.value);
+        Entity behaviorTarget = value.targetEntity.entity;
+        string text;
+        if (value.targetEntityIsActivator)
+        {
+            text = "▶  Activators";
+        }
+        else if (behaviorTarget != null)
+        {
+            // only temporarily, so the name won't be "Target":
+            EntityReferencePropertyManager.SetBehaviorTarget(null);
+            EntityReferencePropertyManager.Next(behaviorTarget);
+            // behavior target has not been set, so the actual name of the entity will be used
+            text = "▶  " + EntityReferencePropertyManager.GetName();
+            EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget); // put it back
+        }
+        else
+        {
+            return;
+        }
+        GUILayout.Label(text, GUI.skin.GetStyle("label_title"));
+    }
+
     public static void EntityReference(Property property)
     {
         _EntityReferenceCustom(property, false, "None");

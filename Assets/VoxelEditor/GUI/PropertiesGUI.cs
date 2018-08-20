@@ -402,22 +402,15 @@ public class PropertiesGUI : GUIPanel
             EntityBehavior firstBehavior = storedBehavior.allBehaviors[0];
             TutorialGUI.TutorialHighlight("behaviors");
             Entity behaviorTarget = firstBehavior.targetEntity.entity;
-            string suffix = " Behavior";
-            if (firstBehavior.targetEntityIsActivator)
-            {
-                suffix += "\n▶  Activators";
-            }
-            else if (behaviorTarget != null)
+            if (behaviorTarget != null)
             {
                 EntityReferencePropertyManager.Next(behaviorTarget);
-                // behavior target has not been set, so the actual name of the entity will be used
-                suffix += "\n▶  " + EntityReferencePropertyManager.GetName();
                 GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
             }
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            PropertiesObjectGUI(storedBehavior, suffix,
+            PropertiesObjectGUI(storedBehavior, " Behavior",
                 () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, firstBehavior));
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = storedBehavior;

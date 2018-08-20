@@ -454,6 +454,16 @@ public abstract class EntityBehavior : PropertiesObject
     {
         ON=0, OFF=1, BOTH=2
     }
+    public struct BehaviorTargetProperty
+    {
+        public EntityReference targetEntity;
+        public bool targetEntityIsActivator;
+        public BehaviorTargetProperty(EntityReference targetEntity, bool targetEntityIsActivator)
+        {
+            this.targetEntity = targetEntity;
+            this.targetEntityIsActivator = targetEntityIsActivator;
+        }
+    }
 
     public Condition condition = Condition.BOTH;
     public EntityReference targetEntity = new EntityReference(null); // null for self
@@ -471,16 +481,24 @@ public abstract class EntityBehavior : PropertiesObject
 
     public virtual ICollection<Property> Properties()
     {
-        var gui = targetEntityIsActivator ?
+        var conditionGUI = targetEntityIsActivator ?
             (PropertyGUI)PropertyGUIs.ActivatorBehaviorCondition
             : (PropertyGUI)PropertyGUIs.BehaviorCondition;
 
         return new Property[]
         {
+            new Property("Target",
+                () => new BehaviorTargetProperty(targetEntity, targetEntityIsActivator),
+                v => {
+                    var prop = (BehaviorTargetProperty)v;
+                    targetEntity = prop.targetEntity;
+                    targetEntityIsActivator = prop.targetEntityIsActivator;
+                },
+                PropertyGUIs.BehaviorTarget),
             new Property("Condition",
                 () => condition,
                 v => condition = (Condition)v,
-                gui)
+                conditionGUI)
         };
     }
 
