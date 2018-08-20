@@ -108,17 +108,33 @@ class StoredPropertiesObject : PropertiesObject
 class StoredEntityBehavior : StoredPropertiesObject
 {
     public readonly EntityBehavior[] allBehaviors;
+    // behavior target entity
+    // only set if all behaviors share the same target entity
+    public readonly Entity target = null;
 
     public StoredEntityBehavior(EntityBehavior store)
         : base(store)
     {
         allBehaviors = new EntityBehavior[] { store };
+        target = store.targetEntity.entity;
     }
 
     public StoredEntityBehavior(EntityBehavior[] behaviors)
         : base(behaviors)
     {
         allBehaviors = behaviors;
+        if (behaviors.Length != 0)
+        {
+            target = behaviors[0].targetEntity.entity;
+            foreach (EntityBehavior behavior in behaviors)
+            {
+                if (behavior.targetEntity.entity != target)
+                {
+                    target = null;
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -399,19 +415,18 @@ public class PropertiesGUI : GUIPanel
         StoredEntityBehavior behaviorToRemove = null;
         foreach (StoredEntityBehavior storedBehavior in editBehaviors)
         {
-            EntityBehavior firstBehavior = storedBehavior.allBehaviors[0];
             TutorialGUI.TutorialHighlight("behaviors");
-            Entity behaviorTarget = firstBehavior.targetEntity.entity;
-            if (behaviorTarget != null)
+            if (storedBehavior.target != null)
             {
-                EntityReferencePropertyManager.Next(behaviorTarget);
+                EntityReferencePropertyManager.Next(storedBehavior.target);
                 GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
             }
-            EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
+            EntityReferencePropertyManager.SetBehaviorTarget(storedBehavior.target);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
             PropertiesObjectGUI(storedBehavior, " Behavior",
-                () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, firstBehavior));
+                () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity,
+                    storedBehavior.allBehaviors[0]));
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = storedBehavior;
             GUILayout.EndVertical();
