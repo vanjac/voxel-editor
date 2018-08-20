@@ -351,21 +351,16 @@ public class PropertiesGUI : GUIPanel
             }
             if (GUIUtils.HighlightedButton("Delete"))
             {
-                // TODO: allow deleting multiple objects
-                // TODO: only deselect deleted objects
-                voxelArray.ClearSelection();
-                voxelArray.ClearStoredSelection();
-                if (singleSelectedEntity is ObjectEntity)
-                {
-                    voxelArray.DeleteObject((ObjectEntity)singleSelectedEntity);
-                    voxelArray.unsavedChanges = true;
-                }
-                else if (singleSelectedEntity is Substance)
-                {
-                    voxelArray.DeleteSubstance((Substance)singleSelectedEntity);
-                }
+                DeleteButton();
             }
             GUILayout.EndHorizontal();
+        }
+        if (selectedEntities.Count > 1)
+        {
+            if (GUIUtils.HighlightedButton("Delete"))
+            {
+                DeleteButton();
+            }
         }
 
         TutorialGUI.TutorialHighlight("change sensor");
@@ -498,6 +493,26 @@ public class PropertiesGUI : GUIPanel
                     changedAction();
             };
             prop.gui(wrappedProp);
+        }
+    }
+
+
+    private void DeleteButton()
+    {
+        // TODO: only deselect deleted objects
+        voxelArray.ClearSelection();
+        voxelArray.ClearStoredSelection();
+        foreach (Entity entity in selectedEntities)
+        {
+            if (entity is PlayerObject)
+                continue;
+            else if (entity is ObjectEntity)
+            {
+                voxelArray.DeleteObject((ObjectEntity)entity);
+                voxelArray.unsavedChanges = true;
+            }
+            else if (entity is Substance)
+                voxelArray.DeleteSubstance((Substance)entity);
         }
     }
 }
