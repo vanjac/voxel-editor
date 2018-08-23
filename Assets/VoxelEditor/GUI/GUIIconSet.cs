@@ -27,6 +27,7 @@ public class GUIIconSet : MonoBehaviour
     public Texture about;
     public Texture select;
     public Texture entityTag;
+    public Texture target;
 
     public void Start()
     {

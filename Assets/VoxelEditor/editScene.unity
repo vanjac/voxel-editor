@@ -632,6 +632,7 @@ MonoBehaviour:
   about: {fileID: 0}
   select: {fileID: 2800000, guid: a81e8a94ba6da284ca1a45f2694326e5, type: 3}
   entityTag: {fileID: 2800000, guid: 1c7271f3875d8ce4d98afe91ddc3eb6e, type: 3}
+  target: {fileID: 2800000, guid: e32c2e24ffccfe246a44f3cef0fdec0a, type: 3}
 --- !u!114 &878046154
 MonoBehaviour:
   m_ObjectHideFlags: 0

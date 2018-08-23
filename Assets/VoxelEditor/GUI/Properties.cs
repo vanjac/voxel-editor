@@ -162,21 +162,26 @@ public class PropertyGUIs
         string text;
         if (value.targetEntityIsActivator)
         {
-            text = "▶  Activators";
+            text = "Activators";
         }
         else if (behaviorTarget != null)
         {
             // only temporarily, so the name won't be "Target":
             EntityReferencePropertyManager.SetBehaviorTarget(null);
             EntityReferencePropertyManager.Next(behaviorTarget);
-            text = "▶  " + EntityReferencePropertyManager.GetName();
+            text = EntityReferencePropertyManager.GetName();
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget); // put it back
         }
         else
         {
             return;
         }
-        GUILayout.Label(text, GUI.skin.GetStyle("label_title"));
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.Label(GUIIconSet.instance.target, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
+        GUILayout.Button("<i>" + text + "</i>", GUILayout.ExpandWidth(false));
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
     }
 
     public static void EntityReference(Property property)
