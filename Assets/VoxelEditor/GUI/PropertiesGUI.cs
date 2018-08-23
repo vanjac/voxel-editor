@@ -601,39 +601,12 @@ public class NewBehaviorGUI : GUIPanel
             targetButtonText = "Target:  " + targetEntity.ToString();
         if (GUIUtils.HighlightedButton(targetButtonText))
         {
-            entityPicker = gameObject.AddComponent<EntityPickerGUI>();
-            entityPicker.voxelArray = voxelArray;
-            entityPicker.allowNone = true;
-            entityPicker.allowMultiple = false;
-            entityPicker.allowNull = true;
-            entityPicker.nullName = "Activators";
-            entityPicker.handler = (ICollection<Entity> entities) =>
+            entityPicker = PropertyGUIs.BehaviorTargetPicker(gameObject, voxelArray, self, value =>
             {
-                entityPicker = null;
-                foreach (Entity entity in entities)
-                {
-                    if (entity == null) // activator
-                    {
-                        targetEntity = null;
-                        targetEntityIsActivator = true;
-                    }
-                    else if (entity == self)
-                    {
-                        targetEntity = null;
-                        targetEntityIsActivator = false;
-                    }
-                    else
-                    {
-                        targetEntity = entity;
-                        targetEntityIsActivator = false;
-                    }
-                    UpdateBehaviorList();
-                    return;
-                }
-                targetEntity = null;
-                targetEntityIsActivator = false;
+                targetEntity = value.targetEntity.entity;
+                targetEntityIsActivator = value.targetEntityIsActivator;
                 UpdateBehaviorList();
-            };
+            });
         }
         if (typePicker != null)
         {

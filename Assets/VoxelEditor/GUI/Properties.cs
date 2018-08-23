@@ -184,6 +184,33 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
+    public static EntityPickerGUI BehaviorTargetPicker(GameObject guiGameObject, VoxelArrayEditor voxelArray,
+        Entity self, Action<EntityBehavior.BehaviorTargetProperty> handler)
+    {
+        EntityPickerGUI entityPicker = guiGameObject.AddComponent<EntityPickerGUI>();
+        entityPicker.voxelArray = voxelArray;
+        entityPicker.allowNone = true;
+        entityPicker.allowMultiple = false;
+        entityPicker.allowNull = true;
+        entityPicker.nullName = "Activators";
+        entityPicker.handler = (ICollection<Entity> entities) =>
+        {
+            entityPicker = null;
+            foreach (Entity entity in entities)
+            {
+                if (entity == null) // activator
+                    handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), true));
+                else if (entity == self)
+                    handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), false));
+                else
+                    handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(entity), false));
+                return;
+            }
+            handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), false));
+        };
+        return entityPicker;
+    }
+
     public static void EntityReference(Property property)
     {
         _EntityReferenceCustom(property, false, "None");
