@@ -179,7 +179,14 @@ public class PropertyGUIs
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.Label(GUIIconSet.instance.target, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
-        GUILayout.Button("<i>" + text + "</i>", GUILayout.ExpandWidth(false));
+        if (GUILayout.Button("<i>" + text + "</i>", GUILayout.ExpandWidth(false)))
+        {
+            BehaviorTargetPicker(GUIPanel.guiGameObject, VoxelArrayEditor.instance,
+                EntityReferencePropertyManager.CurrentEntity(), newValue =>
+                {
+                    property.value = newValue;
+                });
+        }
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
     }
