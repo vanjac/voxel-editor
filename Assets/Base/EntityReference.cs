@@ -82,6 +82,13 @@ public class EntityReference
         return objReference != null && objReference.entity == entity;
     }
 
+    public override int GetHashCode()
+    {
+        if (entity == null)
+            return 0;
+        return entity.GetHashCode();
+    }
+
     public static void ResetEntityIds()
     {
         existingEntityIds.Clear();
