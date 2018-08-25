@@ -394,7 +394,10 @@ public class PropertiesGUI : GUIPanel
             {
                 foreach (Entity entity in selectedEntities)
                 {
-                    if (!newBehavior.BehaviorObjectType().rule(entity))
+                    // with multiple selected entities, NewBehaviorGUI doesn't check if behaviors
+                    // are valid for the selected entities
+                    if (newBehavior.targetEntity.entity == null && !newBehavior.targetEntityIsActivator
+                        && !newBehavior.BehaviorObjectType().rule(entity))
                         continue;
                     entity.behaviors.Add(newBehavior);
                 }
