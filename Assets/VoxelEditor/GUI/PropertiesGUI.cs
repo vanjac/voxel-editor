@@ -108,15 +108,14 @@ class StoredPropertiesObject : PropertiesObject
 class StoredEntityBehavior : StoredPropertiesObject
 {
     public readonly EntityBehavior[] allBehaviors;
-    // behavior target entity
-    // only set if all behaviors share the same target entity
-    public readonly Entity target = null;
+    // true if all behaviors share the same target entity
+    public readonly bool sharedTarget;
 
     public StoredEntityBehavior(EntityBehavior store)
         : base(store)
     {
         allBehaviors = new EntityBehavior[] { store };
-        target = store.targetEntity.entity;
+        sharedTarget = true;
     }
 
     public StoredEntityBehavior(EntityBehavior[] behaviors)
@@ -125,15 +124,21 @@ class StoredEntityBehavior : StoredPropertiesObject
         allBehaviors = behaviors;
         if (behaviors.Length != 0)
         {
-            target = behaviors[0].targetEntity.entity;
+            sharedTarget = true;
+            var target = behaviors[0].targetEntity.entity;
             foreach (EntityBehavior behavior in behaviors)
             {
                 if (behavior.targetEntity.entity != target)
                 {
-                    target = null;
+                    sharedTarget = false;
                     break;
                 }
             }
+        }
+        else
+        {
+            // don't try to read target of first behavior
+            sharedTarget = false;
         }
     }
 }
@@ -414,12 +419,15 @@ public class PropertiesGUI : GUIPanel
         foreach (StoredEntityBehavior storedBehavior in editBehaviors)
         {
             TutorialGUI.TutorialHighlight("behaviors");
-            if (storedBehavior.target != null)
+            Entity behaviorTarget = null;
+            if (storedBehavior.sharedTarget)
+                behaviorTarget = storedBehavior.allBehaviors[0].targetEntity.entity;
+            if (behaviorTarget != null)
             {
-                EntityReferencePropertyManager.Next(storedBehavior.target);
+                EntityReferencePropertyManager.Next(behaviorTarget);
                 GUI.backgroundColor = guiBaseColor * EntityReferencePropertyManager.GetColor();
             }
-            EntityReferencePropertyManager.SetBehaviorTarget(storedBehavior.target);
+            EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
             PropertiesObjectGUI(storedBehavior, " Behavior",
