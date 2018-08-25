@@ -459,7 +459,7 @@ public class PropertiesGUI : GUIPanel
         if (obj == null)
         {
             if (suffix.Length != 0)
-                title = "No " + suffix;
+                title = "No" + suffix;
             else
                 title = "None";
         }
