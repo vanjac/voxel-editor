@@ -14,6 +14,8 @@ public class EntityReference
     {
         get
         {
+            if (!EntitiesLoaded())
+                return null;
             if (guid == Guid.Empty)
                 return null;
             else if (entityWeakRef == null) // this happens when the reference is deserialized
@@ -51,6 +53,7 @@ public class EntityReference
     }
 
     private static Dictionary<Guid, WeakReference> existingEntityIds = new Dictionary<Guid, WeakReference>();
+    private static bool entitiesLoaded = false;
 
     EntityReference() { } // deserialization
 
@@ -92,6 +95,18 @@ public class EntityReference
     public static void ResetEntityIds()
     {
         existingEntityIds.Clear();
+        entitiesLoaded = false;
+    }
+
+    public static void DoneLoadingEntities()
+    {
+        entitiesLoaded = true;
+    }
+
+    // has the map file finished loading? are EntityReferences safe to be read?
+    public static bool EntitiesLoaded()
+    {
+        return entitiesLoaded;
     }
 
     public static void AddExistingEntityId(Entity entity, Guid guid)

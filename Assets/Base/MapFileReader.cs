@@ -98,6 +98,7 @@ public class MapFileReader
             throw new MapReadException("Error reading world file", e);
         }
 
+        EntityReference.DoneLoadingEntities();
         return warnings;
     }
 
