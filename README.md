@@ -4,6 +4,17 @@
 
 A mobile app for building 3D interactive worlds. This is a work in progress.
 
+## Features
+
+- Sculpt indoor/outdoor 3D environments. The interface is designed to allow rapid design and modification.
+- Paint surfaces with a selection of over 100 high quality materials, along with custom colors.
+- Use "substances" to create dynamic worlds with moving objects, water, and physics.
+- Wire components together to respond to game events with a powerful logic system.
+- Customize the sky, lighting, and fog.
+- Experience your creations from a first person perspective. Make a game or just an interesting environment to explore.
+- Interactive tutorials guide you through the interface and more advanced features of the app.
+- World files can be sent to/from other apps.
+
 ## Using the app
 
 You can download N-Space for Android on [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel).
