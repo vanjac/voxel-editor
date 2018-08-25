@@ -495,28 +495,23 @@ public abstract class EntityBehavior : PropertiesObject
 
                     // selfEntity will be null if multiple entities are selected
                     Entity selfEntity = EntityReferencePropertyManager.CurrentEntity();
-                    // it's important to check this now!
-                    // if we are loading the file, we don't want to read any EntityReferences!
-                    if (selfEntity != null)
-                    {
-                        var oldTargetEntity = targetEntity.entity;
-                        var newTargetEntity = prop.targetEntity.entity;
-                        if (oldTargetEntity == null && !targetEntityIsActivator)
-                            oldTargetEntity = selfEntity;
-                        if (newTargetEntity == null && !prop.targetEntityIsActivator)
-                            newTargetEntity = selfEntity;
 
-                        if (oldTargetEntity != null)
+                    var oldTargetEntity = targetEntity.entity;
+                    var newTargetEntity = prop.targetEntity.entity;
+                    if (oldTargetEntity == null && !targetEntityIsActivator)
+                        oldTargetEntity = selfEntity;
+                    if (newTargetEntity == null && !prop.targetEntityIsActivator)
+                        newTargetEntity = selfEntity;
+
+                    if (oldTargetEntity != null)
+                    {
+                        // replace all property values referencing the old target with the new target
+                        // the new target could be null
+                        foreach (Property _selfProp in this.Properties())
                         {
-                            Debug.Log("Replace " + oldTargetEntity + " with " + newTargetEntity);
-                            // replace all property values referencing the old target with the new target
-                            // the new target could be null
-                            foreach (Property _selfProp in this.Properties())
-                            {
-                                var selfProp = _selfProp;
-                                selfProp.value = PropertiesObjectType.PropertyValueReplaceEntity(
-                                    selfProp.value, oldTargetEntity, newTargetEntity);
-                            }
+                            var selfProp = _selfProp;
+                            selfProp.value = PropertiesObjectType.PropertyValueReplaceEntity(
+                                selfProp.value, oldTargetEntity, newTargetEntity);
                         }
                     }
 
