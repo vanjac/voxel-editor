@@ -318,21 +318,24 @@ public class MapFileReader
                 }
 
                 System.Type propType;
-                if(propArray.Count > 2)
+                if (propArray.Count > 2)
                     propType = System.Type.GetType(propArray[2]); // explicit type
                 else
                     propType = prop.value.GetType();
 
                 if (propType == typeof(Material))
                 {
-                    prop.value = ReadMaterial(propArray[1].AsObject);
+                    // skip equality check
+                    prop.setter(ReadMaterial(propArray[1].AsObject));
                 }
                 else
                 {
                     XmlSerializer xmlSerializer = new XmlSerializer(propType);
                     using (var textReader = new StringReader(valueString))
                     {
-                        prop.value = xmlSerializer.Deserialize(textReader);
+                        // skip equality check. important if this is an EntityReference,
+                        // since EntityReference.Equals gets the entity which may not exist yet
+                        prop.setter(xmlSerializer.Deserialize(textReader));
                     }
                 }
             }

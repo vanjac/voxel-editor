@@ -75,6 +75,13 @@ public class EntityReference
         this.guid = guid;
     }
 
+    // for comparing property values
+    public override bool Equals(object obj)
+    {
+        var objReference = obj as EntityReference;
+        return objReference != null && objReference.entity == entity;
+    }
+
     public static void ResetEntityIds()
     {
         existingEntityIds.Clear();
