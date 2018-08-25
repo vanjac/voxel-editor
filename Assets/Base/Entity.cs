@@ -175,25 +175,28 @@ public class PropertiesObjectType
         {
             destEnumerator.MoveNext();
             var value = sourceEnumerator.Current.value;
-
-            if (findEntity != null)
-            {
-                // change "Self" references...
-                if (value is EntityReference)
-                {
-                    if (((EntityReference)value).entity == findEntity)
-                        value = new EntityReference(replaceEntity);
-                }
-                else if (value is Target)
-                {
-                    if (((Target)value).entityRef.entity == findEntity)
-                        value = new Target(replaceEntity);
-                }
-
-            }
-
+            // change "Self" references...
+            value = PropertyValueReplaceEntity(value, findEntity, replaceEntity);
             destEnumerator.Current.setter(value);
         }
+    }
+
+    public static System.Object PropertyValueReplaceEntity(System.Object value,
+        Entity findEntity, Entity replaceEntity)
+    {
+        if (findEntity == null)
+            return value;
+        if (value is EntityReference)
+        {
+            if (((EntityReference)value).entity == findEntity)
+                return new EntityReference(replaceEntity);
+        }
+        else if (value is Target)
+        {
+            if (((Target)value).entityRef.entity == findEntity)
+                return new Target(replaceEntity);
+        }
+        return value;
     }
 }
 
@@ -489,6 +492,34 @@ public abstract class EntityBehavior : PropertiesObject
                 () => new BehaviorTargetProperty(targetEntity, targetEntityIsActivator),
                 v => {
                     var prop = (BehaviorTargetProperty)v;
+
+                    // selfEntity will be null if multiple entities are selected
+                    Entity selfEntity = EntityReferencePropertyManager.CurrentEntity();
+                    // it's important to check this now!
+                    // if we are loading the file, we don't want to read any EntityReferences!
+                    if (selfEntity != null)
+                    {
+                        var oldTargetEntity = targetEntity.entity;
+                        var newTargetEntity = prop.targetEntity.entity;
+                        if (oldTargetEntity == null && !targetEntityIsActivator)
+                            oldTargetEntity = selfEntity;
+                        if (newTargetEntity == null && !prop.targetEntityIsActivator)
+                            newTargetEntity = selfEntity;
+
+                        if (oldTargetEntity != null)
+                        {
+                            Debug.Log("Replace " + oldTargetEntity + " with " + newTargetEntity);
+                            // replace all property values referencing the old target with the new target
+                            // the new target could be null
+                            foreach (Property _selfProp in this.Properties())
+                            {
+                                var selfProp = _selfProp;
+                                selfProp.value = PropertiesObjectType.PropertyValueReplaceEntity(
+                                    selfProp.value, oldTargetEntity, newTargetEntity);
+                            }
+                        }
+                    }
+
                     targetEntity = prop.targetEntity;
                     targetEntityIsActivator = prop.targetEntityIsActivator;
                 },
