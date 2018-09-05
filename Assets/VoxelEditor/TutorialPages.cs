@@ -89,7 +89,7 @@ public class Tutorials
             "Substances are controlled by their <i>Behaviors</i>. "
             + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game."),
         () => new SimpleTutorialPage(
-            "<i>Try adding a Move behavior to the substance.</i> Notice that behaviors are organized into multiple categories."),
+            "<i>Try adding a Move behavior to the platform.</i> Notice that behaviors are organized into multiple categories."),
         () => new SimpleTutorialPage(
             "The Move behavior will make this substance West at a constant rate. "
             + "<i>Tap the direction to edit it.</i>"),
@@ -106,7 +106,7 @@ public class Tutorials
             "<i>Now make one behavior active only in the Off state, and one in the On state.</i> (the substance will start Off)."),
         () => new SimpleTutorialPage(
             "A substance's On/Off state is controlled by a Sensor. "
-            + "<i>Add a Pulse sensor to the platform.</i> Read its description in the list to learn its function."),
+            + "<i>Give the platform a Pulse sensor.</i> This will make it cycle on/off repeatedly."),
         () => new SimpleTutorialPage(
             "<i>Now adjust the time the sensor spends in the on and off state "
             + "to make the platform move the full distance of the pit.</i>"),
@@ -139,21 +139,23 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>Now configure the touch sensor so it only turns on when touching the player.</i>"),
         () => new SimpleTutorialPage(
-            "To make the ball hurt the player, we'll use a \"Hurt/Heal\" behavior. "
-            + "Normally this would hurt the ball, but we can specify a Target object to act upon instead."),
-        () => new SimpleTutorialPage(
             "<i>Tap Add Behavior. "
             + "In the behavior menu, tap the \"Target\" button and select the player as the target. "
             + "Then select the Hurt/Heal behavior.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Set the Hurt/Heal behavior to activate when the Sensor is On. "
-            + "Also set the rate to 1 to make it hurt continuously as long as you're touching the ball.</i>"),
+            "By default, Hurt/Heal will hurt the object it's attached to (the ball). "
+            + "By setting a Target, we made it act upon a different object (the player)."),
+        () => new SimpleTutorialPage(
+            "<i>Set Hurt/Heal to activate when the Sensor is On.</i> "
+            + "Even though it targets the Player, it will use the Ball's sensor to turn on/off."),
+        () => new SimpleTutorialPage(
+            "<i>Set the Hurt/Heal rate to 1 to hurt repeatedly (every 1 second) as long as you're touching the ball.</i>"),
         () => new SimpleTutorialPage(
             "<i>Play your game, and try to avoid dying!</i> "
             + "You can change the speed of the ball and the hurt amount to adjust the difficulty."),
         () => new SimpleTutorialPage(
-            "If you add obstacles to your game, you'll notice that the ball can move through walls. "
-            + "<i>Give it a Physics behavior to fix this.</i> (it's in a different tab in the list)"),
+            "If you build some obstacles, you'll notice that the ball can move through walls. "
+            + "<i>Add a Physics behavior to fix this.</i> (it's in a different tab)"),
         () => new SimpleTutorialPage(
             "Read the <i>Advanced Game Logic</i> tutorial to learn how to add more complex interactivity to games.")
     };
