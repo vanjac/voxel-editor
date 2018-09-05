@@ -114,7 +114,48 @@ public class Tutorials
             "<i>Play your game now.</i> "
             + "If you built everything correctly, the platform should move across the pit and back repeatedly."),
         () => new SimpleTutorialPage(
-            "Next try the <i>Objects</i> tutorial to learn about another type of interactive element."),
+            "Next try the <i>Objects</i> tutorial to learn about another type of interactive element.")
+    };
+
+    public static TutorialPageFactory[] OBJECT_TUTORIAL = new TutorialPageFactory[]
+    {
+        () => new SimpleTutorialPage(
+            "<i>Select a face and tap the cube button.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Choose the Object tab, then choose Ball.</i>"),
+        () => new SimpleTutorialPage(
+            "You have just created a ball Object. "
+            + "Like substances, you can give Objects behaviors and sensors to add interactivity."),
+        () => new SimpleTutorialPage(
+            "<i>Try changing the color of the ball.</i> (you will need to deselect it to see the effects)"),
+        () => new SimpleTutorialPage(
+            "<i>Add a Move behavior to the ball.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Edit the Move behavior to make the ball follow the player.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Try playing your game.</i> Next we are going to make the ball hurt you when you touch it."),
+        () => new SimpleTutorialPage(
+            "<i>Give the ball a Touch sensor.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now configure the touch sensor so it only turns on when touching the player.</i>"),
+        () => new SimpleTutorialPage(
+            "To make the ball hurt the player, we'll use a \"Hurt/Heal\" behavior. "
+            + "Normally this would hurt the ball, but we can specify a Target object to act upon instead."),
+        () => new SimpleTutorialPage(
+            "<i>Tap Add Behavior. "
+            + "In the behavior menu, tap the \"Target\" button and select the player as the target. "
+            + "Then select the Hurt/Heal behavior.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Set the Hurt/Heal behavior to activate when the Sensor is On. "
+            + "Also set the rate to 1 to make it hurt continuously as long as you're touching the ball.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Play your game, and try to avoid dying!</i> "
+            + "You can change the speed of the ball and the hurt amount to adjust the difficulty."),
+        () => new SimpleTutorialPage(
+            "If you add obstacles to your game, you'll notice that the ball can move through walls. "
+            + "<i>Give it a Physics behavior to fix this.</i> (it's in a different tab in the list)"),
+        () => new SimpleTutorialPage(
+            "Read the <i>Advanced Game Logic</i> tutorial to learn how to add more complex interactivity to games.")
     };
 
     public const string TIPS_AND_SHORTCUTS_TUTORIAL =
@@ -172,7 +213,7 @@ public class Tutorials
             + "going up, going down, and stopped. But sensors can only be On/Off..."),
         () => new SimpleTutorialPage(
             "To solve this, we use Targeted Behaviors. "
-            + "These are behaviors which use their host object to turn on/off, but act upon a Target object."),
+            + "Remember that these are behaviors which use their host object to turn on/off, but act upon a Target object."),
         () => new SimpleTutorialPage(
             "<i>First, connect the hidden Down arrow cube to the two Down buttons, just like the Up arrow cube.</i>"),
         () => new SimpleTutorialPage(
