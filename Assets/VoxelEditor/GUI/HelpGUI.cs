@@ -37,6 +37,8 @@ public class HelpGUI : GUIPanel
             StartTutorial(Tutorials.INTRO_TUTORIAL);
         if (GUILayout.Button("Painting"))
             StartTutorial(Tutorials.PAINT_TUTORIAL);
+        if (GUILayout.Button("Substances (old)"))
+            StartTutorial(Tutorials.OLD_SUBSTANCE_TUTORIAL);
         if (GUILayout.Button("Substances"))
             StartTutorial(Tutorials.SUBSTANCE_TUTORIAL);
         if (GUILayout.Button("Tips and Shortcuts"))

@@ -46,7 +46,7 @@ public class Tutorials
         () => new TutorialPaintSky()
     };
 
-    public static TutorialPageFactory[] SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
+    public static TutorialPageFactory[] OLD_SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
     {
         () => new TutorialSubstanceStart(),
         () => new TutorialSubstanceCreate(),
@@ -69,6 +69,52 @@ public class Tutorials
             "<i>Try your game. What happens when you touch the substance?</i>"),
         () => new SimpleTutorialPage(
             "Read <i>Advanced Game Logic</i> in the Help menu to learn how to add more complex interactivity to games.")
+    };
+
+    public static TutorialPageFactory[] SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
+    {
+        () => new SimpleTutorialPage(
+            "In this tutorial you will build a moving platform using a <i>Substance.</i> "
+            + "Substances are independent objects that can move and respond to interaction."),
+        () => new SimpleTutorialPage(
+            "First build a pit that is too wide and deep to cross by jumping."),
+        () => new SimpleTutorialPage(
+            "Now we'll add a substance which will become a moving platform. "
+            + "<i>Select a row of faces on one side of the pit and tap the cube button.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Choose \"Solid Substance\".</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Pull outwards to build a platform.</i>"),
+        () => new SimpleTutorialPage(
+            "Substances are controlled by their <i>Behaviors</i>. "
+            + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game."),
+        () => new SimpleTutorialPage(
+            "<i>Try adding a Move behavior to the substance.</i> Notice that behaviors are organized into multiple categories."),
+        () => new SimpleTutorialPage(
+            "The Move behavior will make this substance West at a constant rate. "
+            + "<i>Tap the direction to edit it.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Make it move toward the other side of the pit (look at the compass arrow for guidance)</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Try playing your game.</i> The platform should move continuously in one direction. "
+            + "We need to make it change directions at the ends of the pit."),
+        () => new SimpleTutorialPage(
+            "Substances have two states, On and Off. Behaviors can be configured to only be active in the On or Off state."),
+        () => new SimpleTutorialPage(
+            "<i>Add a second Move behavior, which moves the platform in the opposite direction.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Now make one behavior active only in the Off state, and one in the On state.</i> (the substance will start Off)."),
+        () => new SimpleTutorialPage(
+            "A substance's On/Off state is controlled by a Sensor. "
+            + "<i>Add a Pulse sensor to the platform.</i> Read its description in the list to learn its function."),
+        () => new SimpleTutorialPage(
+            "<i>Now adjust the time the sensor spends in the on and off state "
+            + "to make the platform move the full distance of the pit.</i>"),
+        () => new SimpleTutorialPage(
+            "<i>Play your game now.</i> "
+            + "If you built everything correctly, the platform should move across the pit and back repeatedly."),
+        () => new SimpleTutorialPage(
+            "Next try the <i>Objects</i> tutorial to learn about another type of interactive element."),
     };
 
     public const string TIPS_AND_SHORTCUTS_TUTORIAL =
