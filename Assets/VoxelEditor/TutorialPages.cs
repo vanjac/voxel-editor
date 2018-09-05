@@ -46,31 +46,6 @@ public class Tutorials
         () => new TutorialPaintSky()
     };
 
-    public static TutorialPageFactory[] OLD_SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
-    {
-        () => new TutorialSubstanceStart(),
-        () => new TutorialSubstanceCreate(),
-        () => new TutorialSubstancePage(
-            "This is a <i>Substance</i>. Unlike the static blocks forming the world, "
-            + "substances are independent objects that move and respond to interaction."),
-        () => new TutorialSubstancePage(
-            "Substances are controlled by their <i>Behaviors</i>. "
-            + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game.",
-            highlight: "behaviors"),
-        () => new TutorialSubstanceAddBehavior(),
-        () => new TutorialSubstanceFollowPlayer(),
-        () => new TutorialSubstanceAddSensor(),
-        () => new TutorialSubstanceTouchPlayer(),
-        () => new TutorialSubstancePage(
-            "To make the sensor have an effect, behaviors can be set to be active only when the sensor is On or Off. ",
-            highlight: "behavior condition"),
-        () => new TutorialSubstanceHurt(),
-        () => new SimpleTutorialPage(
-            "<i>Try your game. What happens when you touch the substance?</i>"),
-        () => new SimpleTutorialPage(
-            "Read <i>Advanced Game Logic</i> in the Help menu to learn how to add more complex interactivity to games.")
-    };
-
     public static TutorialPageFactory[] SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
     {
         () => new SimpleTutorialPage(
@@ -78,38 +53,26 @@ public class Tutorials
             + "Substances are independent objects that can move and respond to interaction."),
         () => new SimpleTutorialPage(
             "First build a pit that is too wide and deep to cross by jumping."),
-        () => new SimpleTutorialPage(
+        () => new TutorialSubstanceObjectCreatePanel(
             "Now we'll add a substance which will become a moving platform. "
             + "<i>Select a row of faces on one side of the pit and tap the cube button.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Choose \"Solid Substance\".</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Pull outwards to build a platform.</i>"),
-        () => new SimpleTutorialPage(
+        () => new TutorialSubstanceCreate1(),
+        () => new TutorialSubstanceCreate2(),
+        () => new TutorialSubstancePage(
             "Substances are controlled by their <i>Behaviors</i>. "
             + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game."),
-        () => new SimpleTutorialPage(
-            "<i>Try adding a Move behavior to the platform.</i> Notice that behaviors are organized into multiple categories."),
-        () => new SimpleTutorialPage(
-            "The Move behavior will make this substance West at a constant rate. "
-            + "<i>Tap the direction to edit it.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Make it move toward the other side of the pit (look at the compass arrow for guidance)</i>"),
+        () => new TutorialSubstanceAddBehavior(),
+        () => new TutorialSubstanceEditDirection(),
+        () => new TutorialSubstanceSetDirection(),
         () => new SimpleTutorialPage(
             "<i>Try playing your game.</i> The platform should move continuously in one direction. "
             + "We need to make it change directions at the ends of the pit."),
-        () => new SimpleTutorialPage(
+        () => new TutorialSubstancePage(
             "Substances have two states, On and Off. Behaviors can be configured to only be active in the On or Off state."),
-        () => new SimpleTutorialPage(
-            "<i>Add a second Move behavior, which moves the platform in the opposite direction.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Now make one behavior active only in the Off state, and one in the On state.</i> (the substance will start Off)."),
-        () => new SimpleTutorialPage(
-            "A substance's On/Off state is controlled by a Sensor. "
-            + "<i>Give the platform a Pulse sensor.</i> This will make it cycle on/off repeatedly."),
-        () => new SimpleTutorialPage(
-            "<i>Now adjust the time the sensor spends in the on and off state "
-            + "to make the platform move the full distance of the pit.</i>"),
+        () => new TutorialSubstanceAddOppositeBehavior(),
+        () => new TutorialSubstanceBehaviorConditions(),
+        () => new TutorialSubstanceAddSensor(),
+        () => new TutorialSubstancePulseTime(),
         () => new SimpleTutorialPage(
             "<i>Play your game now.</i> "
             + "If you built everything correctly, the platform should move across the pit and back repeatedly."),
@@ -617,11 +580,18 @@ public class Tutorials
     }
 
 
-    private class TutorialSubstanceStart : TutorialPage
+    private class TutorialSubstanceObjectCreatePanel : TutorialPage
     {
+        private string text;
+
+        public TutorialSubstanceObjectCreatePanel(string text)
+        {
+            this.text = text;
+        }
+
         public override string GetText()
         {
-            return "<i>Select a face and tap the cube button.</i>";
+            return text;
         }
 
         public override string GetHighlightID()
@@ -639,11 +609,30 @@ public class Tutorials
     }
 
 
-    private class TutorialSubstanceCreate : TutorialPage
+    private class TutorialSubstanceCreate1 : TutorialPage
     {
         public override string GetText()
         {
-            return "<i>Choose \"Solid Substance\" and follow the instructions.</i>";
+            return "<i>Choose \"Solid Substance\".</i>";
+        }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            if (guiGameObject.GetComponent<CreateSubstanceGUI>() != null)
+                return TutorialAction.NEXT;
+            else if (guiGameObject.GetComponent<TypePickerGUI>() == null)
+                return TutorialAction.BACK;
+            else
+                return TutorialAction.NONE;
+        }
+    }
+
+
+    private class TutorialSubstanceCreate2 : TutorialPage
+    {
+        public override string GetText()
+        {
+            return "<i>Pull outwards to build a platform.</i>";
         }
 
         public static bool SubstanceSelected(VoxelArrayEditor voxelArray)
@@ -667,8 +656,7 @@ public class Tutorials
         {
             if (SubstanceSelected(voxelArray))
                 return TutorialAction.NEXT;
-            else if (guiGameObject.GetComponent<TypePickerGUI>() == null
-                    && guiGameObject.GetComponent<CreateSubstanceGUI>() == null)
+            else if (guiGameObject.GetComponent<CreateSubstanceGUI>() == null)
                 return TutorialAction.BACK;
             else
                 return TutorialAction.NONE;
@@ -685,7 +673,7 @@ public class Tutorials
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
-            substanceSelected = TutorialSubstanceCreate.SubstanceSelected(voxelArray)
+            substanceSelected = TutorialSubstanceCreate2.SubstanceSelected(voxelArray)
                 || guiGameObject.GetComponent<EntityPickerGUI>() != null;
             return TutorialAction.NONE;
         }
@@ -708,7 +696,7 @@ public class Tutorials
     private class TutorialSubstanceAddBehavior : TutorialSubstancePage
     {
         public TutorialSubstanceAddBehavior()
-            : base("<i>Try adding a Move behavior to the Substance.</i> Notice that behaviors are organized into multiple categories.",
+            : base("<i>Try adding a Move behavior to the platform.</i> Notice that behaviors are organized into multiple categories.",
             highlight: "add behavior") { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
@@ -729,6 +717,205 @@ public class Tutorials
         }
     }
 
+
+    private class TutorialSubstanceEditDirection : TutorialSubstancePage
+    {
+        public TutorialSubstanceEditDirection()
+            : base("The Move behavior will make this substance West at a constant rate. "
+            + "<i>Tap the direction to edit it.</i>") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            if (guiGameObject.GetComponent<TargetGUI>() != null)
+                return TutorialAction.NEXT;
+            else
+                return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialSubstanceSetDirection : TutorialSubstancePage
+    {
+        private bool panelWasOpen;
+
+        public TutorialSubstanceSetDirection()
+            : base("<i>Make it move toward the other side of the pit (look at the compass arrow for guidance)</i>") { }
+
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Start(voxelArray, guiGameObject, touchListener);
+            panelWasOpen = guiGameObject.GetComponent<TargetGUI>() != null;
+        }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            if (!panelWasOpen)
+                return TutorialAction.BACK;
+            else if (guiGameObject.GetComponent<TargetGUI>() != null)
+                return TutorialAction.NONE;
+            else
+                return TutorialAction.NEXT;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialSubstanceAddOppositeBehavior : TutorialSubstancePage
+    {
+        public TutorialSubstanceAddOppositeBehavior()
+            : base("<i>Add a second Move behavior, which moves the platform in the opposite direction.</i>") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            // check if there are two move behaviors going the opposite direction
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+            {
+                if (e is Substance)
+                {
+                    int direction = -1;
+
+                    foreach (EntityBehavior behavior in e.behaviors)
+                    {
+                        if (behavior is MoveBehavior)
+                        {
+                            if (direction == -1)
+                            {
+                                direction = GetMoveBehaviorDirection(behavior);
+                                if (direction == -1)
+                                    return TutorialAction.NONE;
+                            }
+                            else
+                            {
+                                var behaviorDirection = GetMoveBehaviorDirection(behavior);
+                                if (behaviorDirection == Voxel.OppositeFaceI(direction))
+                                    return TutorialAction.NEXT;
+                                else
+                                    return TutorialAction.NONE;
+                            }
+                        }
+                    }
+                }
+            }
+            return TutorialAction.NONE;
+        }
+
+        private sbyte GetMoveBehaviorDirection(EntityBehavior behavior)
+        {
+            MoveBehavior moveBehavior = (MoveBehavior)behavior;
+            foreach (Property prop in behavior.Properties())
+                if (prop.name == "Toward")
+                    return ((Target)(prop.value)).direction;
+            return -1;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialSubstanceBehaviorConditions : TutorialSubstancePage
+    {
+        public TutorialSubstanceBehaviorConditions()
+            : base("<i>Now make one behavior active only in the Off state, and one in the On state.</i> (the substance will start Off).") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            bool foundOff = false, foundOn = false;
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is Substance)
+                    foreach (EntityBehavior behavior in e.behaviors)
+                        if (behavior is MoveBehavior)
+                        {
+                            if (behavior.condition == EntityBehavior.Condition.OFF)
+                                foundOff = true;
+                            if (behavior.condition == EntityBehavior.Condition.ON)
+                                foundOn = true;
+                        }
+            return foundOff && foundOn ? TutorialAction.NEXT : TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialSubstanceAddSensor : TutorialSubstancePage
+    {
+        public TutorialSubstanceAddSensor()
+            : base("A substance's On/Off state is controlled by a Sensor. "
+            + "<i>Give the platform a Pulse sensor.</i> This will make it cycle on/off repeatedly.",
+            highlight: "change sensor") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is Substance && e.sensor is PulseSensor)
+                    return TutorialAction.NEXT;
+            return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialSubstancePulseTime : TutorialSubstancePage
+    {
+        public TutorialSubstancePulseTime()
+            : base("<i>Now adjust the time the sensor spends in the on and off state "
+            + "to make the platform move the full distance of the pit.</i>") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            bool onTimeSet = false, offTimeSet = false;
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is Substance && e.sensor is PulseSensor)
+                    foreach (Property prop in e.sensor.Properties())
+                    {
+                        if (prop.name == "Off time" && (float)prop.value > 1)
+                            offTimeSet = true;
+                        else if (prop.name == "On time" && (float)prop.value > 1)
+                            onTimeSet = true;
+                    }
+            return onTimeSet && offTimeSet ? TutorialAction.NEXT : TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    // OLD!!
 
     private class TutorialSubstanceFollowPlayer : TutorialSubstancePage
     {
@@ -758,30 +945,6 @@ public class Tutorials
     }
 
 
-    private class TutorialSubstanceAddSensor : TutorialSubstancePage
-    {
-        public TutorialSubstanceAddSensor()
-            : base("Substances can have <i>Sensors</i> which turn On and Off in response to events in the game. "
-            + "<i>Add a touch sensor to the substance.</i>",
-            highlight: "change sensor") { }
-
-        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
-        {
-            base.Update(voxelArray, guiGameObject, touchListener);
-
-            foreach (Entity e in voxelArray.GetSelectedEntities())
-                if (e is Substance && e.sensor is TouchSensor)
-                    return TutorialAction.NEXT;
-            return TutorialAction.NONE;
-        }
-
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
-    }
-
-
     private class TutorialSubstanceTouchPlayer : TutorialSubstancePage
     {
         public TutorialSubstanceTouchPlayer()
@@ -793,36 +956,10 @@ public class Tutorials
 
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is Substance && e.sensor is TouchSensor)
-                    foreach(Property prop in e.sensor.Properties())
-                        if(prop.name == "Filter" && prop.value is ActivatedSensor.EntityFilter
+                    foreach (Property prop in e.sensor.Properties())
+                        if (prop.name == "Filter" && prop.value is ActivatedSensor.EntityFilter
                             && ((ActivatedSensor.EntityFilter)(prop.value)).entityRef.entity is PlayerObject)
                             return TutorialAction.NEXT;
-            return TutorialAction.NONE;
-        }
-
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
-    }
-
-
-    private class TutorialSubstanceHurt : TutorialSubstancePage
-    {
-        public TutorialSubstanceHurt()
-            : base("<i>Add a Hurt behavior which hurts the substance by -100 points when it touches the player.</i>") { }
-
-        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
-        {
-            base.Update(voxelArray, guiGameObject, touchListener);
-
-            foreach (Entity e in voxelArray.GetSelectedEntities())
-                if (e is Substance)
-                    foreach (EntityBehavior behavior in e.behaviors)
-                        if (behavior is HurtHealBehavior && behavior.condition == EntityBehavior.Condition.ON)
-                            foreach (Property prop in behavior.Properties())
-                                if (prop.name == "Amount" && (float)(prop.value) == -100.0f)
-                                    return TutorialAction.NEXT;
             return TutorialAction.NONE;
         }
 
