@@ -82,43 +82,29 @@ public class Tutorials
 
     public static TutorialPageFactory[] OBJECT_TUTORIAL = new TutorialPageFactory[]
     {
-        () => new SimpleTutorialPage(
+        () => new TutorialSubstanceObjectCreatePanel(
             "<i>Select a face and tap the cube button.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Choose the Object tab, then choose Ball.</i>"),
-        () => new SimpleTutorialPage(
+        () => new TutorialObjectCreate(),
+        () => new TutorialObjectPage(
             "You have just created a ball Object. "
             + "Like substances, you can give Objects behaviors and sensors to add interactivity."),
-        () => new SimpleTutorialPage(
-            "<i>Try changing the color of the ball.</i> (you will need to deselect it to see the effects)"),
-        () => new SimpleTutorialPage(
-            "<i>Add a Move behavior to the ball.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Edit the Move behavior to make the ball follow the player.</i>"),
+        () => new TutorialObjectColor(),
+        () => new TutorialObjectAddBehavior(),
+        () => new TutorialObjectFollowPlayer(),
         () => new SimpleTutorialPage(
             "<i>Try playing your game.</i> Next we are going to make the ball hurt you when you touch it."),
-        () => new SimpleTutorialPage(
-            "<i>Give the ball a Touch sensor.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Now configure the touch sensor so it only turns on when touching the player.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Tap Add Behavior. "
-            + "In the behavior menu, tap the \"Target\" button and select the player as the target. "
-            + "Then select the Hurt/Heal behavior.</i>"),
-        () => new SimpleTutorialPage(
+        () => new TutorialObjectAddSensor(),
+        () => new TutorialObjectTouchPlayer(),
+        () => new TutorialObjectAddTargetedBehavior(),
+        () => new TutorialObjectPage(
             "By default, Hurt/Heal will hurt the object it's attached to (the ball). "
             + "By setting a Target, we made it act upon a different object (the player)."),
-        () => new SimpleTutorialPage(
-            "<i>Set Hurt/Heal to activate when the Sensor is On.</i> "
-            + "Even though it targets the Player, it will use the Ball's sensor to turn on/off."),
-        () => new SimpleTutorialPage(
-            "<i>Set the Hurt/Heal rate to 1 to hurt repeatedly (every 1 second) as long as you're touching the ball.</i>"),
+        () => new TutorialObjectBehaviorCondition(),
+        () => new TutorialObjectHurtRate(),
         () => new SimpleTutorialPage(
             "<i>Play your game, and try to avoid dying!</i> "
             + "You can change the speed of the ball and the hurt amount to adjust the difficulty."),
-        () => new SimpleTutorialPage(
-            "If you build some obstacles, you'll notice that the ball can move through walls. "
-            + "<i>Add a Physics behavior to fix this.</i> (it's in a different tab)"),
+        () => new TutorialObjectAddPhysicsBehavior(),
         () => new SimpleTutorialPage(
             "Read the <i>Advanced Game Logic</i> tutorial to learn how to add more complex interactivity to games.")
     };
@@ -816,7 +802,6 @@ public class Tutorials
 
         private sbyte GetMoveBehaviorDirection(EntityBehavior behavior)
         {
-            MoveBehavior moveBehavior = (MoveBehavior)behavior;
             foreach (Property prop in behavior.Properties())
                 if (prop.name == "Toward")
                     return ((Target)(prop.value)).direction;
@@ -915,20 +900,137 @@ public class Tutorials
     }
 
 
-    // OLD!!
-
-    private class TutorialSubstanceFollowPlayer : TutorialSubstancePage
+    private class TutorialObjectCreate : TutorialPage
     {
-        public TutorialSubstanceFollowPlayer()
-            : base("When you play the game now, the substance will move West at a constant rate. "
-            + "<i>Now try making the substance follow the player.</i>") { }
+        public override string GetText()
+        {
+            return "<i>Choose the Object tab, then choose Ball.</i>";
+        }
+
+        public static bool ObjectSelected(VoxelArrayEditor voxelArray)
+        {
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject)
+                    return true;
+            return false;
+        }
+
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            if (ObjectSelected(voxelArray))
+            {
+                voxelArray.ClearSelection();
+                voxelArray.ClearStoredSelection();
+            }
+        }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            if (ObjectSelected(voxelArray))
+                return TutorialAction.NEXT;
+            else
+                return TutorialAction.NONE;
+        }
+    }
+
+
+    private class TutorialObjectPage : SimpleTutorialPage
+    {
+        private bool objectSelected;
+
+        public TutorialObjectPage(string text, string highlight = "")
+            : base(text, highlight) { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            objectSelected = TutorialObjectCreate.ObjectSelected(voxelArray)
+                || guiGameObject.GetComponent<EntityPickerGUI>() != null;
+            return TutorialAction.NONE;
+        }
+
+        public override string GetText()
+        {
+            if (!objectSelected)
+                return "<i>Tap the ball to select it again.</i>";
+            else
+                return base.GetText();
+        }
+
+        public override bool ShowNextButton()
+        {
+            return objectSelected;
+        }
+    }
+
+
+    private class TutorialObjectColor : TutorialObjectPage
+    {
+        private Color prevColor = Color.clear;
+
+        public TutorialObjectColor()
+            : base("<i>Try changing the color of the ball.</i> (you will need to deselect it to see the effects)") { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
             base.Update(voxelArray, guiGameObject, touchListener);
 
             foreach (Entity e in voxelArray.GetSelectedEntities())
-                if (e is Substance)
+                if (e is BallObject)
+                    foreach (Property prop in e.Properties())
+                        if (prop.name == "Material")
+                        {
+                            Color propColor = ((Material)prop.value).color;
+                            if (prevColor.Equals(Color.clear))
+                                prevColor = propColor;
+                            else if (!prevColor.Equals(propColor))
+                                return TutorialAction.NEXT;
+                        }
+            return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialObjectAddBehavior : TutorialObjectPage
+    {
+        public TutorialObjectAddBehavior()
+            : base("<i>Add a Move behavior to the ball.</i>",
+            highlight: "add behavior") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject)
+                    foreach (EntityBehavior behavior in e.behaviors)
+                        if (behavior is MoveBehavior)
+                            return TutorialAction.NEXT;
+            return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialObjectFollowPlayer : TutorialObjectPage
+    {
+        public TutorialObjectFollowPlayer()
+            : base("<i>Edit the Move behavior to make the ball follow the player.</i>") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject)
                     foreach (EntityBehavior behavior in e.behaviors)
                         if (behavior is MoveBehavior)
                             foreach (Property prop in behavior.Properties())
@@ -945,9 +1047,32 @@ public class Tutorials
     }
 
 
-    private class TutorialSubstanceTouchPlayer : TutorialSubstancePage
+    private class TutorialObjectAddSensor : TutorialObjectPage
     {
-        public TutorialSubstanceTouchPlayer()
+        public TutorialObjectAddSensor()
+            : base("<i>Give the ball a Touch sensor.</i>",
+            highlight: "change sensor") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject && e.sensor is TouchSensor)
+                    return TutorialAction.NEXT;
+            return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialObjectTouchPlayer : TutorialObjectPage
+    {
+        public TutorialObjectTouchPlayer()
             : base("<i>Now configure the touch sensor so it only turns on when touching the player.</i>") { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
@@ -955,10 +1080,132 @@ public class Tutorials
             base.Update(voxelArray, guiGameObject, touchListener);
 
             foreach (Entity e in voxelArray.GetSelectedEntities())
-                if (e is Substance && e.sensor is TouchSensor)
+                if (e is BallObject && e.sensor is TouchSensor)
                     foreach (Property prop in e.sensor.Properties())
                         if (prop.name == "Filter" && prop.value is ActivatedSensor.EntityFilter
                             && ((ActivatedSensor.EntityFilter)(prop.value)).entityRef.entity is PlayerObject)
+                            return TutorialAction.NEXT;
+            return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialObjectAddTargetedBehavior : TutorialObjectPage
+    {
+        public TutorialObjectAddTargetedBehavior()
+            : base("<i>Tap Add Behavior. "
+            + "In the behavior menu, tap the \"Target\" button and select the player as the target. "
+            + "Then select the Hurt/Heal behavior.</i>",
+            highlight: "behavior target") { }
+
+        private bool incorrectTarget = false;
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            bool hasHurtBehavior = false;
+            incorrectTarget = false;
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject)
+                    foreach (EntityBehavior behavior in e.behaviors)
+                        if (behavior is HurtHealBehavior)
+                        {
+                            hasHurtBehavior = true;
+                            if (!(behavior.targetEntity.entity is PlayerObject))
+                                incorrectTarget = true;
+                        }
+            if (hasHurtBehavior && !incorrectTarget)
+                return TutorialAction.NEXT;
+            else
+                return TutorialAction.NONE;
+        }
+
+        public override string GetText()
+        {
+            if (incorrectTarget)
+                return "You didn't set the target to the player. Remove the behavior and try again.";
+            else
+                return base.GetText();
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialObjectBehaviorCondition : TutorialObjectPage
+    {
+        public TutorialObjectBehaviorCondition()
+            : base("<i>Set Hurt/Heal to activate when the Sensor is On.</i> "
+            + "Even though it targets the Player, it will use the Ball's sensor to turn on/off.") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject)
+                    foreach (EntityBehavior behavior in e.behaviors)
+                        if (behavior is HurtHealBehavior && behavior.condition == EntityBehavior.Condition.ON)
+                            return TutorialAction.NEXT;
+            return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialObjectHurtRate : TutorialObjectPage
+    {
+        public TutorialObjectHurtRate()
+            : base("<i>Set the Hurt/Heal rate to 1 to hurt repeatedly (every 1 second) as long as you're touching the ball.</i>") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject)
+                    foreach (EntityBehavior behavior in e.behaviors)
+                        if (behavior is HurtHealBehavior)
+                            foreach(Property prop in behavior.Properties())
+                                if(prop.name == "Rate" && (float)prop.value != 0)
+                                    return TutorialAction.NEXT;
+            return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialObjectAddPhysicsBehavior : TutorialObjectPage
+    {
+        public TutorialObjectAddPhysicsBehavior()
+            : base("If you build some obstacles, you'll notice that the ball can move through walls. "
+            + "<i>Add a Physics behavior to fix this.</i> (it's in a different tab)") { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+
+            foreach (Entity e in voxelArray.GetSelectedEntities())
+                if (e is BallObject)
+                    foreach (EntityBehavior behavior in e.behaviors)
+                        if (behavior is PhysicsBehavior)
                             return TutorialAction.NEXT;
             return TutorialAction.NONE;
         }

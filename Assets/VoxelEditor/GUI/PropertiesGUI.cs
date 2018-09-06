@@ -610,6 +610,7 @@ public class NewBehaviorGUI : GUIPanel
             targetButtonText = "Target:  Activators";
         else if (targetEntity != null)
             targetButtonText = "Target:  " + targetEntity.ToString();
+        TutorialGUI.TutorialHighlight("behavior target");
         if (GUIUtils.HighlightedButton(targetButtonText))
         {
             entityPicker = PropertyGUIs.BehaviorTargetPicker(gameObject, voxelArray, self, value =>
@@ -619,6 +620,7 @@ public class NewBehaviorGUI : GUIPanel
                 UpdateBehaviorList();
             });
         }
+        TutorialGUI.ClearHighlight();
         if (typePicker != null)
         {
             typePicker.scroll = scroll;
