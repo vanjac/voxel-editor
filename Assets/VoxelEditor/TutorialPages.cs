@@ -498,7 +498,7 @@ public class Tutorials
     {
         public override string GetText()
         {
-            return "<i>Select a face and tap the paint roller icon to open the Paint panel.</i>";
+            return "<i>Select some faces and tap the paint roller icon to open the Paint panel.</i>";
         }
 
         public override string GetHighlightID()
@@ -532,7 +532,7 @@ public class Tutorials
         public override string GetText()
         {
             if (!panelOpen)
-                return "<i>Reopen the paint panel. (Select a face and tap the paint roller icon)</i>";
+                return "<i>Reopen the paint panel. (Select some faces and tap the paint roller icon)</i>";
             else
                 return base.GetText();
         }
