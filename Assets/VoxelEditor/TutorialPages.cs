@@ -216,7 +216,7 @@ public class Tutorials
         public override string GetText()
         {
             return "Navigation: Use two fingers to rotate and zoom, and three fingers to pan. "
-                + "<i>Try looking around the room.</i>";
+                + "<i>Try looking around the room.</i> (tutorial will advance when you have completed this)";
         }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
