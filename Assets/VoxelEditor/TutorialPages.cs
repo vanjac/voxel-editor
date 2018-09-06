@@ -202,7 +202,7 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>Play your game. Try jumping in the pit.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Now try making some solid substances with Physics behaviors. "
+            "<i>Now try making some balls with Physics behaviors. "
             + "Then play the game and push them all into the pit.</i> Enjoy."),
     };
 
