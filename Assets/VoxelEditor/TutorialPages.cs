@@ -707,7 +707,7 @@ public class Tutorials
     private class TutorialSubstanceEditDirection : TutorialSubstancePage
     {
         public TutorialSubstanceEditDirection()
-            : base("The Move behavior will make this substance West at a constant rate. "
+            : base("The Move behavior will make this substance move West at a constant speed. "
             + "<i>Tap the direction to edit it.</i>") { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
