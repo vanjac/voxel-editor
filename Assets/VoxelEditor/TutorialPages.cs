@@ -60,7 +60,8 @@ public class Tutorials
         () => new TutorialSubstanceCreate2(),
         () => new TutorialSubstancePage(
             "Substances are controlled by their <i>Behaviors</i>. "
-            + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game."),
+            + "This substance has <i>Visible</i> and <i>Solid</i> behaviors which make it visible and solid in the game.",
+            highlight: "behaviors"),
         () => new TutorialSubstanceAddBehavior(),
         () => new TutorialSubstanceEditDirection(),
         () => new TutorialSubstanceSetDirection(),
@@ -68,7 +69,8 @@ public class Tutorials
             "<i>Try playing your game.</i> The platform should move continuously in one direction. "
             + "We need to make it change directions at the ends of the pit."),
         () => new TutorialSubstancePage(
-            "Substances have two states, On and Off. Behaviors can be configured to only be active in the On or Off state."),
+            "Substances have two states, On and Off. Behaviors can be configured to only be active in the On or Off state.",
+            highlight: "behavior condition"),
         () => new TutorialSubstanceAddOppositeBehavior(),
         () => new TutorialSubstanceBehaviorConditions(),
         () => new TutorialSubstanceAddSensor(),
@@ -818,7 +820,8 @@ public class Tutorials
     private class TutorialSubstanceBehaviorConditions : TutorialSubstancePage
     {
         public TutorialSubstanceBehaviorConditions()
-            : base("<i>Now make one behavior active only in the Off state, and one in the On state.</i> (the substance will start Off).") { }
+            : base("<i>Now make one behavior active only in the Off state, and one in the On state.</i> (the substance will start Off).",
+            highlight: "behavior condition") { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
