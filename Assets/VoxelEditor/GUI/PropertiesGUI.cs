@@ -377,9 +377,8 @@ public class PropertiesGUI : GUIPanel
             sensorMenu.categories = new PropertiesObjectType[][] { GameScripts.sensors };
             sensorMenu.handler = (PropertiesObjectType type) =>
             {
-                Sensor newSensor = (Sensor)type.Create();
                 foreach (Entity entity in selectedEntities)
-                    entity.sensor = newSensor;
+                    entity.sensor = (Sensor)type.Create();
                 voxelArray.unsavedChanges = true;
                 UpdateEditEntity();
             };
