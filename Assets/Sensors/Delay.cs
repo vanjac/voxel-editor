@@ -79,6 +79,7 @@ public class DelayComponent : SensorComponent
 
     private Dictionary<EntityComponent, DelayedActivator> delayedActivators = new Dictionary<EntityComponent, DelayedActivator>();
     private List<EntityComponent> delayedActivatorsToRemove = new List<EntityComponent>();
+    private bool inputWasOn = false;
 
     public EntityReference input;
     public float onTime, offTime;
@@ -137,50 +138,65 @@ public class DelayComponent : SensorComponent
 
         foreach (EntityComponent newActivator in inputEntity.GetNewActivators())
         {
-            EntityComponent key = newActivator;
-            if (key == null)
-                key = nullKey;
-            if (delayedActivators.ContainsKey(key))
-            {
-                // must be in TURNING_OFF state
-                delayedActivators[key].state = ActivatorState.ON;
-            }
-            else
-            {
-                var delayedA = new DelayedActivator(newActivator);
-                if (onTime == 0)
-                {
-                    delayedA.state = ActivatorState.ON;
-                    AddActivator(newActivator);
-                }
-                else
-                {
-                    delayedA.state = ActivatorState.TURNING_ON;
-                    delayedA.changeTime = time;
-                }
-                delayedActivators[key] = delayedA;
-            }
-
+            if (newActivator == null) // null is reserved for the net cycle
+                continue;
+            AddActivatorDelay(newActivator, newActivator, time);
         }
 
         foreach (EntityComponent removedActivator in inputEntity.GetRemovedActivators())
         {
-            EntityComponent key = removedActivator;
-            if (key == null)
-                key = nullKey;
-            if (delayedActivators.ContainsKey(key))
+            if (removedActivator == null) // null is reserved for the net cycle
+                continue;
+            RemoveActivatorDelay(removedActivator, removedActivator, time);
+        }
+
+        // net cycle
+        bool inputIsOn = inputEntity.IsOn();
+        if (inputIsOn && !inputWasOn)
+            AddActivatorDelay(nullKey, null, time);
+        else if (inputWasOn && !inputIsOn)
+            RemoveActivatorDelay(nullKey, null, time);
+        inputWasOn = inputIsOn;
+    }
+
+    private void AddActivatorDelay(EntityComponent key, EntityComponent newActivator, float time)
+    {
+        if (delayedActivators.ContainsKey(key))
+        {
+            // must be in TURNING_OFF state
+            delayedActivators[key].state = ActivatorState.ON;
+        }
+        else
+        {
+            var delayedA = new DelayedActivator(newActivator);
+            if (onTime == 0)
             {
-                var delayedA = delayedActivators[key];
-                if (delayedA.state == ActivatorState.TURNING_ON || offTime == 0)
-                {
-                    delayedActivators.Remove(key);
-                    RemoveActivator(removedActivator);
-                }
-                else
-                {
-                    delayedA.state = ActivatorState.TURNING_OFF;
-                    delayedA.changeTime = time;
-                }
+                delayedA.state = ActivatorState.ON;
+                AddActivator(newActivator);
+            }
+            else
+            {
+                delayedA.state = ActivatorState.TURNING_ON;
+                delayedA.changeTime = time;
+            }
+            delayedActivators[key] = delayedA;
+        }
+    }
+
+    private void RemoveActivatorDelay(EntityComponent key, EntityComponent removedActivator, float time)
+    {
+        if (delayedActivators.ContainsKey(key))
+        {
+            var delayedA = delayedActivators[key];
+            if (delayedA.state == ActivatorState.TURNING_ON || offTime == 0)
+            {
+                delayedActivators.Remove(key);
+                RemoveActivator(removedActivator);
+            }
+            else
+            {
+                delayedA.state = ActivatorState.TURNING_OFF;
+                delayedA.changeTime = time;
             }
         }
     }
