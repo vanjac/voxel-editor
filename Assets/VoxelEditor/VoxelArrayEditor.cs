@@ -935,18 +935,21 @@ public class VoxelArrayEditor : VoxelArray
     {
         Vector3 createPosition = selectionBounds.center;
         int faceNormal = GetSelectedFaceNormal();
+        Vector3 createDirection = Voxel.DirectionForFaceI(faceNormal);
         if (faceNormal != -1)
-            createPosition += Voxel.DirectionForFaceI(faceNormal) / 2;
+            createPosition += createDirection / 2;
+        else
+            createDirection = Vector3.up;
         createPosition -= new Vector3(0.5f, 0.5f, 0.5f);
 
         // don't create the object at the same location of an existing object
-        // keep moving up until an empty space is found
+        // keep moving in the direction of the face normal until an empty space is found
         while (true)
         {
             Voxel voxel = VoxelAt(createPosition, false);
             if (voxel == null || voxel.objectEntity == null)
                 break;
-            createPosition += new Vector3(0, 1, 0);
+            createPosition += createDirection;
         }
         obj.position = VoxelArray.Vector3ToInt(createPosition);
 
