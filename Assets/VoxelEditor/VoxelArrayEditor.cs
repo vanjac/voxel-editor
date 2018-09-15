@@ -758,6 +758,15 @@ public class VoxelArrayEditor : VoxelArray
             }
             else if (pulling)
             {
+                if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
+                {
+                    // blocked by object
+                    oldVoxel.faces[faceI].addSelected = false;
+                    selectedThings[i] = new VoxelFaceReference(null, -1);
+                    voxelsToUpdate.Add(oldVoxel);
+                    continue;
+                }
+
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
