@@ -657,7 +657,18 @@ public class VoxelArrayEditor : VoxelArray
             if (thing is ObjectMarker)
             {
                 var obj = ((ObjectMarker)thing).objectEntity;
-                MoveObject(obj, obj.position + Vector3ToInt(adjustDirection));
+                Vector3Int objNewPos = obj.position + Vector3ToInt(adjustDirection);
+                MoveObject(obj, objNewPos);
+
+                Voxel objNewVoxel = VoxelAt(objNewPos, false);
+                if (objNewVoxel != null && objNewVoxel.substance == null
+                    && !objNewVoxel.faces[oppositeAdjustDirFaceI].IsEmpty()
+                    && !objNewVoxel.faces[oppositeAdjustDirFaceI].addSelected)
+                {
+                    // carve a hole for the object if it's being pushed into a wall
+                    objNewVoxel.faces[oppositeAdjustDirFaceI].addSelected = true;
+                    selectedThings.Insert(i + 1, new VoxelFaceReference(objNewVoxel, oppositeAdjustDirFaceI));
+                }
                 continue;
             }
             else if (!(thing is VoxelFaceReference))
@@ -822,8 +833,7 @@ public class VoxelArrayEditor : VoxelArray
             voxelsToUpdate.Add(newVoxel);
             voxelsToUpdate.Add(oldVoxel);
 
-            if (temporarilyBlockPushingANewSubstance)
-                temporarilyBlockPushingANewSubstance = false;
+            temporarilyBlockPushingANewSubstance = false;
         } // end for each selected face
 
         foreach (Voxel voxel in voxelsToUpdate)
