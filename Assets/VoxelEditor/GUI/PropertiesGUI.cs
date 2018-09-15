@@ -395,21 +395,22 @@ public class PropertiesGUI : GUIPanel
             behaviorMenu.title = "Add Behavior";
             behaviorMenu.self = singleSelectedEntity;
             behaviorMenu.voxelArray = voxelArray;
-            behaviorMenu.handler = (EntityBehavior newBehavior) =>
+            behaviorMenu.handler = (PropertiesObjectType behaviorType) =>
             {
                 foreach (Entity entity in selectedEntities)
                 {
+                    EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
                     // with multiple selected entities, NewBehaviorGUI doesn't check if behaviors
                     // are valid for the selected entities
                     if (newBehavior.targetEntity.entity == null && !newBehavior.targetEntityIsActivator
                         && !newBehavior.BehaviorObjectType().rule(entity))
                         continue;
                     entity.behaviors.Add(newBehavior);
+                    EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, newBehavior);
                 }
                 voxelArray.unsavedChanges = true;
                 UpdateEditEntity();
                 scrollVelocity = new Vector2(0, 2000 * editBehaviors.Count); // scroll to bottom
-                EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, newBehavior);
             };
         }
         TutorialGUI.ClearHighlight();
@@ -531,8 +532,8 @@ public class PropertiesGUI : GUIPanel
 
 public class NewBehaviorGUI : GUIPanel
 {
-    public delegate void BehaviorHandler(EntityBehavior behavior);
-    public BehaviorHandler handler;
+    public delegate void BehaviorTypeHandler(PropertiesObjectType behavior);
+    public BehaviorTypeHandler handler;
     public Entity self;
     public VoxelArrayEditor voxelArray;
 
@@ -557,12 +558,17 @@ public class NewBehaviorGUI : GUIPanel
         UpdateBehaviorList();
         typePicker.handler = (PropertiesObjectType type) =>
         {
-            EntityBehavior behavior = (EntityBehavior)type.Create();
-            if (targetEntityIsActivator)
-                behavior.targetEntityIsActivator = true;
-            else if (targetEntity != null)
-                behavior.targetEntity = new EntityReference(targetEntity);
-            handler(behavior);
+            PropertiesObjectType behaviorTypeWithTarget = new PropertiesObjectType(
+                type, () =>
+                {
+                    EntityBehavior behavior = (EntityBehavior)type.Create();
+                    if (targetEntityIsActivator)
+                        behavior.targetEntityIsActivator = true;
+                    else if (targetEntity != null)
+                        behavior.targetEntity = new EntityReference(targetEntity);
+                    return behavior;
+                });
+            handler(behaviorTypeWithTarget);
             Destroy(this);
         };
         typePicker.enabled = false;
