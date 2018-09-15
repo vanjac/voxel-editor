@@ -931,7 +931,8 @@ public class VoxelArrayEditor : VoxelArray
         return faceI;
     }
 
-    public void PlaceObject(ObjectEntity obj)
+    // return false if object could not be placed
+    public bool PlaceObject(ObjectEntity obj)
     {
         Vector3 createPosition = selectionBounds.center;
         int faceNormal = GetSelectedFaceNormal();
@@ -939,7 +940,10 @@ public class VoxelArrayEditor : VoxelArray
         if (faceNormal != -1)
             createPosition += createDirection / 2;
         else
+        {
+            faceNormal = 3;
             createDirection = Vector3.up;
+        }
         createPosition -= new Vector3(0.5f, 0.5f, 0.5f);
 
         // don't create the object at the same location of an existing object
@@ -947,6 +951,8 @@ public class VoxelArrayEditor : VoxelArray
         while (true)
         {
             Voxel voxel = VoxelAt(createPosition, false);
+            if (voxel != null && !voxel.faces[Voxel.OppositeFaceI(faceNormal)].IsEmpty())
+                return false; // blocked by wall. no room to create object
             if (voxel == null || voxel.objectEntity == null)
                 break;
             createPosition += createDirection;
@@ -958,6 +964,7 @@ public class VoxelArrayEditor : VoxelArray
         unsavedChanges = true;
         // select the object. Wait one frame so the position is correct
         StartCoroutine(SelectNewObjectCoroutine(obj));
+        return true;
     }
 
     private IEnumerator SelectNewObjectCoroutine(ObjectEntity obj)

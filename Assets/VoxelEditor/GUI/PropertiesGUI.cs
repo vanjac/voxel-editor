@@ -340,7 +340,8 @@ public class PropertiesGUI : GUIPanel
                     pickerGUI.message = "Tap to place clone";
                     pickerGUI.pickAction = () =>
                     {
-                        voxelArray.PlaceObject(clone);
+                        if (!voxelArray.PlaceObject(clone))
+                            DialogGUI.ShowMessageDialog(gameObject, ActionBarGUI.OBJECT_NO_ROOM_ERROR);
                     };
                 }
                 else if (singleSelectedEntity is Substance)
