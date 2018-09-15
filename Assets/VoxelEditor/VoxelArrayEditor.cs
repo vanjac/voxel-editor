@@ -951,7 +951,7 @@ public class VoxelArrayEditor : VoxelArray
         while (true)
         {
             Voxel voxel = VoxelAt(createPosition, false);
-            if (voxel != null && !voxel.faces[Voxel.OppositeFaceI(faceNormal)].IsEmpty())
+            if (voxel != null && voxel.substance == null && !voxel.faces[Voxel.OppositeFaceI(faceNormal)].IsEmpty())
                 return false; // blocked by wall. no room to create object
             if (voxel == null || voxel.objectEntity == null)
                 break;
