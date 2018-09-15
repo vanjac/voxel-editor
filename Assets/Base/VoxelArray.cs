@@ -75,9 +75,9 @@ public class VoxelArray : MonoBehaviour
         while (!rootNode.InBounds(intPosition))
         {
             // will it be the large end of the new node that will be created
-            bool xLarge = position.x < rootNode.position.x;
-            bool yLarge = position.y < rootNode.position.y;
-            bool zLarge = position.z < rootNode.position.z;
+            bool xLarge = intPosition.x < rootNode.position.x;
+            bool yLarge = intPosition.y < rootNode.position.y;
+            bool zLarge = intPosition.z < rootNode.position.z;
             int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
             Vector3Int newRootPos = new Vector3Int(
                 rootNode.position.x - (xLarge ? rootNode.size : 0),
