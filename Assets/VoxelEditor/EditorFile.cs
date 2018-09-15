@@ -67,10 +67,7 @@ public class EditorFile : MonoBehaviour
             dialog.noButtonText = "No";
             dialog.yesButtonHandler = () =>
             {
-                var tutorialGUI = dialog.gameObject.AddComponent<TutorialGUI>();
-                tutorialGUI.voxelArray = voxelArray;
-                tutorialGUI.touchListener = touchListener;
-                tutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL);
+                TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, dialog.gameObject, voxelArray, touchListener);
             };
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);

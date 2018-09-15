@@ -69,12 +69,7 @@ public class HelpGUI : GUIPanel
 
     private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankMap=true)
     {
-        var tutorialGUI = GetComponent<TutorialGUI>();
-        if (tutorialGUI == null)
-            tutorialGUI = gameObject.AddComponent<TutorialGUI>();
-        tutorialGUI.voxelArray = voxelArray;
-        tutorialGUI.touchListener = touchListener;
-        tutorialGUI.StartTutorial(tutorial);
+        TutorialGUI.StartTutorial(tutorial, gameObject, voxelArray, touchListener);
         if (openBlankMap && voxelArray == null)
             OpenDemoWorld("Tutorial", "default");
         Destroy(this);

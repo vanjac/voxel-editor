@@ -106,9 +106,33 @@ public class TutorialGUI : GUIPanel
 
     private static TutorialPageFactory[] currentTutorial;
     private static int pageI;
+    private static bool resetPageFlag = false;
     private TutorialPage currentPage = null;
     private static string highlightID;
     private float successTime; // for success animation
+
+    public static void StartTutorial(TutorialPageFactory[] tutorial,
+        GameObject guiGameObject, VoxelArrayEditor voxelArray, TouchListener touchListener)
+    {
+        currentTutorial = tutorial;
+
+        // voxelArray is null if opening a tutorial from menuScene
+        if (voxelArray != null)
+        {
+            var tutorialGUI = guiGameObject.GetComponent<TutorialGUI>();
+            if (tutorialGUI == null)
+                tutorialGUI = guiGameObject.AddComponent<TutorialGUI>();
+            tutorialGUI.voxelArray = voxelArray;
+            tutorialGUI.touchListener = touchListener;
+            tutorialGUI.SetPage(0);
+        }
+        else
+        {
+            pageI = 0;
+            // create the page when editScene is opened
+            resetPageFlag = true;
+        }
+    }
 
     public static void TutorialHighlight(string id)
     {
@@ -134,12 +158,6 @@ public class TutorialGUI : GUIPanel
         if (newPage != null)
             newPage.Start(voxelArray, gameObject, touchListener);
         currentPage = newPage;
-    }
-
-    public void StartTutorial(TutorialPageFactory[] tutorial)
-    {
-        currentTutorial = tutorial;
-        SetPage(0);
     }
 
     public override void OnEnable()
@@ -174,6 +192,11 @@ public class TutorialGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        if (resetPageFlag)
+        {
+            SetPage(pageI);
+            resetPageFlag = false;
+        }
         if (currentPage == null)
         {
             highlightID = "";
