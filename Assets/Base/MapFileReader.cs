@@ -163,7 +163,7 @@ public class MapFileReader
                 var objType = GameScripts.FindTypeWithName(GameScripts.objects, typeName);
                 if (objType == null)
                 {
-                    warnings.Add("Couldn't find object type: " + typeName);
+                    warnings.Add("Unrecognized object type: " + typeName);
                     continue;
                 }
                 ObjectEntity obj = (ObjectEntity)objType.Create();
@@ -203,7 +203,7 @@ public class MapFileReader
                 if (checkFileName == name)
                     return ResourcesDirectory.GetMaterial(newDirEntry);
             }
-            warnings.Add("Material not found: " + name);
+            warnings.Add("Unrecognized material: " + name);
             return missingMaterial;
         }
         else if (matObject["mode"] != null)
@@ -226,7 +226,7 @@ public class MapFileReader
         }
         else
         {
-            warnings.Add("Couldn't read material");
+            warnings.Add("Error reading material");
             return missingMaterial;
         }
     }
@@ -250,7 +250,7 @@ public class MapFileReader
             string sensorName = sensorObject["name"];
             var sensorType = GameScripts.FindTypeWithName(GameScripts.sensors, sensorName);
             if (sensorType == null)
-                warnings.Add("Couldn't find sensor type: " + sensorName);
+                warnings.Add("Unrecognized sensor: " + sensorName);
             else
             {
                 Sensor newSensor = (Sensor)sensorType.Create();
@@ -268,7 +268,7 @@ public class MapFileReader
                 var behaviorType = GameScripts.FindTypeWithName(GameScripts.behaviors, behaviorName);
                 if (behaviorType == null)
                 {
-                    warnings.Add("Couldn't find behavior type: " + behaviorName);
+                    warnings.Add("Unrecognized behavior: " + behaviorName);
                     continue;
                 }
                 EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
@@ -314,7 +314,7 @@ public class MapFileReader
                 }
                 if (!foundProp)
                 {
-                    warnings.Add("Couldn't find property: " + name);
+                    warnings.Add("Unrecognized property: " + name);
                     continue;
                 }
 
