@@ -248,11 +248,7 @@ public class Voxel : MonoBehaviour
 
         Material coloredHighlightMaterial = null;
         if (substance != null && substance.highlight != Color.clear)
-        {
-            // TODO: is instantiating the material for each voxel inefficient
-            coloredHighlightMaterial = Material.Instantiate(highlightMaterial);
-            coloredHighlightMaterial.color = substance.highlight;
-        }
+            coloredHighlightMaterial = substance.highlightMaterial;
 
         bool xRay = false;
         if (substance != null && inEditor)

@@ -9,7 +9,22 @@ public class Substance : DynamicEntity
 
     public HashSet<Voxel> voxels;
 
-    public Color highlight = Color.clear;
+    private Color _highlight = Color.clear;
+    public Material highlightMaterial;
+    public Color highlight
+    {
+        get
+        {
+            return _highlight;
+        }
+        set
+        {
+            _highlight = value;
+            if (highlightMaterial == null)
+                highlightMaterial = Material.Instantiate(Voxel.highlightMaterial);
+            highlightMaterial.color = _highlight;
+        }
+    }
     public VoxelFace defaultPaint;
 
     public Substance()
