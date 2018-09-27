@@ -11,7 +11,7 @@ public class InputThresholdSensor : Sensor
         + "If an Input is on and set to \"Positive\", the total is incremented by one. "
         + "If an Input is on and set to \"Negative\", the total is decremented by one. "
         + "The sensor turns on if the total is greater than or equal to the threshold.\n\n"
-        + "Activators: the combined activators of all inputs",
+        + "Activators: the combined activators of all positive inputs minus the activators of negative inputs",
         "altimeter", typeof(InputThresholdSensor));
 
     // public so it can be serialized
@@ -158,11 +158,17 @@ public class InputThresholdComponent : SensorComponent
                 continue;
             foreach (var newActivator in e.GetNewActivators())
             {
-                IncrInputActivator(newActivator);
+                if (input.negative)
+                    DecrInputActivator(newActivator);
+                else
+                    IncrInputActivator(newActivator);
             }
             foreach (var removedActivator in e.GetRemovedActivators())
             {
-                DecrInputActivator(removedActivator);
+                if (input.negative)
+                    IncrInputActivator(removedActivator);
+                else
+                    DecrInputActivator(removedActivator);
             }
         }
     }
@@ -180,7 +186,7 @@ public class InputThresholdComponent : SensorComponent
         if (activator == null)
             return; // always has null activator
         int newCount = GetInputActivatorCount(activator) + 1;
-        Debug.Log("Incr " + activator + " -> " + newCount);
+        //Debug.Log("Incr " + activator + " -> " + newCount);
         if (newCount == 0)
             activatorCounts.Remove(activator);
         else
@@ -196,7 +202,7 @@ public class InputThresholdComponent : SensorComponent
         if (activator == null)
             return; // always has null activator
         int newCount = GetInputActivatorCount(activator) - 1;
-        Debug.Log("Decr " + activator + " -> " + newCount);
+        //Debug.Log("Decr " + activator + " -> " + newCount);
         if (newCount == 0)
         {
             activatorCounts.Remove(activator);
