@@ -1,4 +1,6 @@
-Thank you for testing this beta release. This is an incomplete version of the app. I will continue to make improvements and add features moving toward the first finished release.
+Developed by Jacob van't Hoog.
+
+Thank you for trying N-Space! This is a work in progress -- I will continue to make improvements and add more features.
 Code is available at https://github.com/vanjac/voxel-editor. It's missing most of the textures, which I'm not permitted to redistribute.
 Please leave a review! Let me know what you think of the app, and what you would like me to change or add. Report any bugs/issues on the GitHub page above.
 
