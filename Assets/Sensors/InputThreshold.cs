@@ -158,37 +158,53 @@ public class InputThresholdComponent : SensorComponent
                 continue;
             foreach (var newActivator in e.GetNewActivators())
             {
-                if (newActivator == null)
-                    continue; // always has null activator
-                if (activatorCounts.ContainsKey(newActivator))
-                    activatorCounts[newActivator]++;
-                else
-                {
-                    activatorCounts[newActivator] = 1;
-                    if (isOn)
-                        AddActivator(newActivator);
-                }
+                IncrInputActivator(newActivator);
             }
             foreach (var removedActivator in e.GetRemovedActivators())
             {
-                if (removedActivator == null)
-                    continue; // always has null activator
-                if (activatorCounts.ContainsKey(removedActivator))
-                {
-                    var count = activatorCounts[removedActivator] - 1;
-                    if (count <= 0)
-                    {
-                        activatorCounts.Remove(removedActivator);
-                        if (isOn)
-                            RemoveActivator(removedActivator);
-                    }
-                    else
-                    {
-                        activatorCounts[removedActivator] = count;
-                    }
-                }
+                DecrInputActivator(removedActivator);
             }
-        } // end foreach input
+        }
+    }
+
+    private int GetInputActivatorCount(EntityComponent activator)
+    {
+        if (activatorCounts.ContainsKey(activator))
+            return activatorCounts[activator];
+        else
+            return 0;
+    }
+
+    private void IncrInputActivator(EntityComponent activator)
+    {
+        if (activator == null)
+            return; // always has null activator
+        int newCount = GetInputActivatorCount(activator) + 1;
+        Debug.Log("Incr " + activator + " -> " + newCount);
+        if (newCount == 0)
+            activatorCounts.Remove(activator);
+        else
+        {
+            activatorCounts[activator] = newCount;
+            if (newCount == 1 && wasOn)
+                AddActivator(activator);
+        }
+    }
+
+    private void DecrInputActivator(EntityComponent activator)
+    {
+        if (activator == null)
+            return; // always has null activator
+        int newCount = GetInputActivatorCount(activator) - 1;
+        Debug.Log("Decr " + activator + " -> " + newCount);
+        if (newCount == 0)
+        {
+            activatorCounts.Remove(activator);
+            if (wasOn)
+                RemoveActivator(activator);
+        }
+        else
+            activatorCounts[activator] = newCount;
     }
 
     private int CalculateEnergy()
