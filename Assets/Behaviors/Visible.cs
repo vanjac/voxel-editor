@@ -30,8 +30,7 @@ public class VisibleComponent : BehaviorComponent
         if (r != null)
             yield return r;
         foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
-            if (!(childRenderer is LineRenderer)) // LineRenderer used for drawing outline of voxels
-                yield return childRenderer;
+            yield return childRenderer;
     }
 
     public override void BehaviorEnabled()

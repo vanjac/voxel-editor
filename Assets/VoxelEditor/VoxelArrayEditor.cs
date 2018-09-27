@@ -83,6 +83,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public Material selectedMaterial;
     public Material xRayMaterial;
+    public Material highlightMaterial;
 
     public bool unsavedChanges = false; // set by VoxelArrayEditor, checked and cleared by EditorFile
     public bool selectionChanged = false; // set by VoxelArrayEditor, checked and cleared by PropertiesGUI
@@ -126,6 +127,7 @@ public class VoxelArrayEditor : VoxelArray
             instance = this;
         Voxel.selectedMaterial = selectedMaterial;
         Voxel.xRayMaterial = xRayMaterial;
+        Voxel.highlightMaterial = highlightMaterial;
 
         ClearSelection();
         selectionChanged = false;

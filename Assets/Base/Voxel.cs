@@ -49,6 +49,7 @@ public class Voxel : MonoBehaviour
 
     public static Material selectedMaterial; // set by VoxelArray instance
     public static Material xRayMaterial;
+    public static Material highlightMaterial;
 
     // constants for generating mesh
     private readonly static Vector2[] SQUARE_LOOP = new Vector2[]
@@ -243,8 +244,15 @@ public class Voxel : MonoBehaviour
 
     public void UpdateVoxel()
     {
-        UpdateHighlight();
         bool inEditor = InEditor();
+
+        Material coloredHighlightMaterial = null;
+        if (substance != null && substance.highlight != Color.clear)
+        {
+            // TODO: is instantiating the material for each voxel inefficient
+            coloredHighlightMaterial = Material.Instantiate(highlightMaterial);
+            coloredHighlightMaterial.color = substance.highlight;
+        }
 
         int numFilledFaces = 0;
         foreach (VoxelFace f in faces)
@@ -321,6 +329,8 @@ public class Voxel : MonoBehaviour
                 numMaterials++;
             if (face.overlay != null)
                 numMaterials++;
+            if (coloredHighlightMaterial != null)
+                numMaterials++;
             if (face.addSelected || face.storedSelected)
                 numMaterials++;
         }
@@ -376,6 +386,12 @@ public class Voxel : MonoBehaviour
                 mesh.SetTriangles(triangles, numMaterials);
                 numMaterials++;
             }
+            if (coloredHighlightMaterial != null)
+            {
+                materials[numMaterials] = coloredHighlightMaterial;
+                mesh.SetTriangles(triangles, numMaterials);
+                numMaterials++;
+            }
             if (face.addSelected || face.storedSelected)
             {
                 materials[numMaterials] = selectedMaterial;
@@ -393,8 +409,9 @@ public class Voxel : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         if (xRay)
         {
+            // TODO: not this please
             for (int i = 0; i < materials.Length; i++)
-                if (materials[i] != selectedMaterial)
+                if (materials[i] != selectedMaterial && materials[i] != highlightMaterial)
                     materials[i] = xRayMaterial;
             gameObject.layer = 8; // XRay layer
         }
@@ -439,26 +456,7 @@ public class Voxel : MonoBehaviour
 
     public void UpdateHighlight()
     {
-        LineRenderer outline = GetComponent<LineRenderer>();
-        if (outline != null)
-        {
-            bool facesEmpty = true;
-            foreach (VoxelFace face in faces)
-            {
-                if (!face.IsEmpty())
-                {
-                    facesEmpty = false;
-                    continue;
-                }
-            }
-            if (facesEmpty || substance == null || substance.highlight == Color.clear)
-                outline.enabled = false;
-            else
-            {
-                outline.enabled = true;
-                outline.startColor = outline.endColor = substance.highlight;
-            }
-        }
+        UpdateVoxel();
     }
 
     void OnBecameVisible()
