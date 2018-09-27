@@ -162,8 +162,6 @@ public class Voxel : MonoBehaviour
         }
     }
     public ObjectEntity objectEntity;
-    private Color currentHighlight;
-    private bool willUpdateHighlight = false;
 
     void Start ()
     {
@@ -250,12 +248,7 @@ public class Voxel : MonoBehaviour
 
         Material coloredHighlightMaterial = null;
         if (substance != null && substance.highlight != Color.clear)
-        {
             coloredHighlightMaterial = substance.highlightMaterial;
-            currentHighlight = substance.highlight;
-        }
-        else
-            currentHighlight = Color.clear;
 
         bool xRay = false;
         if (substance != null && inEditor)
@@ -465,26 +458,6 @@ public class Voxel : MonoBehaviour
             meshCollider.enabled = false;
         }
     } // end UpdateVoxel()
-
-    public void UpdateHighlight()
-    {
-        // EntityReferencePropertyManager has a pattern of calling UpdateHighlight twice per frame,
-        // once to set the color to Clear and once to set it back to the highlight.
-        // This is designed to prevent regenerating the mesh more often than necessary.
-        if (!willUpdateHighlight)
-        {
-            StartCoroutine(UpdateHighlightCoroutine());
-            willUpdateHighlight = true;
-        }
-    }
-
-    private IEnumerator UpdateHighlightCoroutine()
-    {
-        yield return null;
-        if (currentHighlight != substance.highlight)
-            UpdateVoxel();
-        willUpdateHighlight = false;
-    }
 
     void OnBecameVisible()
     {

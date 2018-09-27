@@ -25,6 +25,8 @@ public class Substance : DynamicEntity
             highlightMaterial.color = _highlight;
         }
     }
+    private Color oldHighlight = Color.black;
+    private bool willUpdateHighlight;
     public VoxelFace defaultPaint;
 
     public Substance()
@@ -101,6 +103,34 @@ public class Substance : DynamicEntity
                 voxelBounds.Encapsulate(voxel.GetBounds());
         }
         return voxelBounds.center;
+    }
+
+    public void UpdateHighlight()
+    {
+        // EntityReferencePropertyManager has a pattern of calling UpdateHighlight twice per frame,
+        // once to set the color to Clear and once to set it back to the highlight.
+        // This is designed to prevent regenerating the mesh more often than necessary.
+        if (!willUpdateHighlight)
+        {
+            foreach (Voxel v in voxels)
+            {
+                v.StartCoroutine(UpdateHighlightCoroutine());
+                break;
+            }
+            willUpdateHighlight = true;
+        }
+    }
+
+    private IEnumerator UpdateHighlightCoroutine()
+    {
+        yield return null;
+        if (oldHighlight != highlight)
+        {
+            foreach (Voxel v in voxels)
+                v.UpdateVoxel();
+            oldHighlight = highlight;
+        }
+        willUpdateHighlight = false;
     }
 }
 

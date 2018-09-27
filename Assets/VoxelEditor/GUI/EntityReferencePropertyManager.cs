@@ -55,8 +55,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
             if (!(target is Substance))
                 continue;
             ((Substance)target).highlight = Color.clear;
-            foreach (Voxel v in ((Substance)target).voxels)
-                v.UpdateHighlight();
+            ((Substance)target).UpdateHighlight();
         }
         if (currentEntity != entity)
         {
@@ -66,8 +65,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
                 if (currentEntity is Substance)
                 {
                     ((Substance)currentEntity).highlight = Color.clear;
-                    foreach (Voxel v in ((Substance)currentEntity).voxels)
-                        v.UpdateHighlight();
+                    ((Substance)currentEntity).UpdateHighlight();
                 }
                 EntityPreviewManager.EntityDeselected();
             }
@@ -77,8 +75,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
                 if (entity is Substance)
                 {
                     ((Substance)entity).highlight = Color.white;
-                    foreach (Voxel v in ((Substance)entity).voxels)
-                        v.UpdateHighlight();
+                    ((Substance)entity).UpdateHighlight();
                 }
                 EntityPreviewManager.EntitySelected(entity);
             }
@@ -108,8 +105,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         if (entity is Substance)
         {
             ((Substance)entity).highlight = GetColor();
-            foreach (Voxel v in ((Substance)entity).voxels)
-                v.UpdateHighlight();
+            ((Substance)entity).UpdateHighlight();
         }
     }
 
