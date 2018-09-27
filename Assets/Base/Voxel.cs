@@ -411,7 +411,7 @@ public class Voxel : MonoBehaviour
         {
             // TODO: not this please
             for (int i = 0; i < materials.Length; i++)
-                if (materials[i] != selectedMaterial && materials[i] != highlightMaterial)
+                if (materials[i] != selectedMaterial && materials[i] != coloredHighlightMaterial)
                     materials[i] = xRayMaterial;
             gameObject.layer = 8; // XRay layer
         }
