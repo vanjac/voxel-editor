@@ -254,6 +254,14 @@ public class Voxel : MonoBehaviour
             coloredHighlightMaterial.color = substance.highlight;
         }
 
+        bool xRay = false;
+        if (substance != null && inEditor)
+            xRay = substance.xRay;
+        if (xRay)
+            gameObject.layer = 8; // XRay layer
+        else
+            gameObject.layer = 0; // default
+
         int numFilledFaces = 0;
         foreach (VoxelFace f in faces)
             if (!f.IsEmpty())
@@ -325,10 +333,15 @@ public class Voxel : MonoBehaviour
             }
 
             numFilledFaces++;
-            if (face.material != null)
+            if (xRay)
                 numMaterials++;
-            if (face.overlay != null)
-                numMaterials++;
+            else
+            {
+                if (face.material != null)
+                    numMaterials++;
+                if (face.overlay != null)
+                    numMaterials++;
+            }
             if (coloredHighlightMaterial != null)
                 numMaterials++;
             if (face.addSelected || face.storedSelected)
@@ -375,16 +388,26 @@ public class Voxel : MonoBehaviour
                 triangles[5] = numFilledFaces * 4 + 2;
             }
 
-            if (face.material != null) {
-                materials[numMaterials] = face.material;
+            if (xRay)
+            {
+                materials[numMaterials] = xRayMaterial;
                 mesh.SetTriangles(triangles, numMaterials);
                 numMaterials++;
             }
-            if (face.overlay != null)
+            else
             {
-                materials[numMaterials] = face.overlay;
-                mesh.SetTriangles(triangles, numMaterials);
-                numMaterials++;
+                if (face.material != null)
+                {
+                    materials[numMaterials] = face.material;
+                    mesh.SetTriangles(triangles, numMaterials);
+                    numMaterials++;
+                }
+                if (face.overlay != null)
+                {
+                    materials[numMaterials] = face.overlay;
+                    mesh.SetTriangles(triangles, numMaterials);
+                    numMaterials++;
+                }
             }
             if (coloredHighlightMaterial != null)
             {
@@ -402,21 +425,7 @@ public class Voxel : MonoBehaviour
             numFilledFaces++;
         }
 
-        bool xRay = false;
-        if (substance != null && inEditor)
-            xRay = substance.xRay;
-
         Renderer renderer = GetComponent<Renderer>();
-        if (xRay)
-        {
-            // TODO: not this please
-            for (int i = 0; i < materials.Length; i++)
-                if (materials[i] != selectedMaterial && materials[i] != coloredHighlightMaterial)
-                    materials[i] = xRayMaterial;
-            gameObject.layer = 8; // XRay layer
-        }
-        else
-            gameObject.layer = 0; // default
         renderer.materials = materials;
         MeshCollider meshCollider = GetComponent<MeshCollider>();
         BoxCollider boxCollider = GetComponent<BoxCollider>();
