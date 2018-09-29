@@ -18,7 +18,7 @@ public class HelpGUI : GUIPanel
 
     public void Start()
     {
-        title = "Tutorials:";
+        title = "Help";
     }
 
     public override void WindowGUI()
