@@ -6,7 +6,7 @@ Please leave a review! Let me know what you think of the app, and what you would
 
 SOURCES:
 
-Materials from Poliigon.com and FreePBR.com
+Materials from Poliigon.com, FreePBR.com, spiralgraphics.biz (Genetica)
 Skies from Sky5X One (Unity Asset Store)
 Icons from materialdesignicons.com
 Roboto font, used for UI: https://fonts.google.com/specimen/Roboto
