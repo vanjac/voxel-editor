@@ -9,6 +9,8 @@ public class MenuGUI : GUIPanel
     public TextAsset defaultMap;
 
     private List<string> mapFiles = new List<string>();
+    private OverflowMenuGUI worldOverflowMenu;
+    private string selectedWorld;
 
     public override Rect GetRect(float width, float height)
     {
@@ -43,25 +45,13 @@ public class MenuGUI : GUIPanel
         scroll = GUILayout.BeginScrollView(scroll);
         foreach (string fileName in mapFiles)
         {
+            bool selected = worldOverflowMenu != null && fileName == selectedWorld;
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(fileName, GUI.skin.GetStyle("button_large")))
+            if (GUIUtils.HighlightedButton(fileName, GUI.skin.GetStyle("button_large"), selected))
                 OpenMap(fileName, "editScene");
-            if (GUILayout.Button(GUIIconSet.instance.overflow, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false)))
-            {
-                FileDropdownGUI dropdown = gameObject.AddComponent<FileDropdownGUI>();
-                dropdown.fileName = fileName;
-                if (Input.touchCount > 0)
-                {
-                    dropdown.location = Input.GetTouch(0).position;
-                    dropdown.location.y = Screen.height - dropdown.location.y;
-                    dropdown.location /= scaleFactor;
-                    dropdown.location -= new Vector2(30, 30);
-                }
-                dropdown.handler = () =>
-                {
-                    UpdateMapList();
-                };
-            }
+            if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUI.skin.GetStyle("button_large"),
+                    selected, GUILayout.ExpandWidth(false)))
+                CreateWorldOverflowMenu(fileName);
             GUILayout.EndHorizontal();
         }
         GUILayout.EndScrollView();
@@ -103,72 +93,44 @@ public class MenuGUI : GUIPanel
             mapFiles.Add(Path.GetFileNameWithoutExtension(name));
         mapFiles.Sort();
     }
-}
 
-public class FileDropdownGUI : GUIPanel
-{
-    public delegate void UpdateMapListHandler();
-
-    public Vector2 location = new Vector2(100, 100);
-    public string fileName;
-    public UpdateMapListHandler handler;
-
-    public override Rect GetRect(float width, float height)
+    private void CreateWorldOverflowMenu(string fileName)
     {
-        float y = location.y;
-        if (y + panelRect.height > height)
-            y = height - panelRect.height;
-        return new Rect(location.x, y, width * .2f, 0);
-    }
-
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
-
-    public override void WindowGUI()
-    {
-        if (GUILayout.Button("Play"))
+        worldOverflowMenu = gameObject.AddComponent<OverflowMenuGUI>();
+        selectedWorld = fileName;
+        worldOverflowMenu.items = new OverflowMenuGUI.MenuItem[]
         {
-            MenuGUI.OpenMap(fileName, "playScene");
-        }
-        if (GUILayout.Button("Rename"))
-        {
-            TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-            inputDialog.prompt = "Enter new name for " + fileName;
-            inputDialog.handler = RenameMap;
-        }
-        if (GUILayout.Button("Copy"))
-        {
-            TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-            inputDialog.prompt = "Enter new world name...";
-            inputDialog.handler = CopyMap;
-        }
-        if (GUILayout.Button("Delete"))
-        {
-            DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
-            dialog.message = "Are you sure you want to delete " + fileName + "?";
-            dialog.yesButtonText = "Yes";
-            dialog.noButtonText = "No";
-            dialog.yesButtonHandler = () =>
-            {
-                File.Delete(WorldFiles.GetFilePath(fileName));
-                handler();
-                Destroy(this);
-            };
-            dialog.noButtonHandler = () =>
-            {
-                Destroy(this);
-            };
-        }
+            new OverflowMenuGUI.MenuItem("Play", GUIIconSet.instance.play, () => {
+                MenuGUI.OpenMap(fileName, "playScene");
+            }),
+            new OverflowMenuGUI.MenuItem("Rename", GUIIconSet.instance.rename, () => {
+                TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
+                inputDialog.prompt = "Enter new name for " + fileName;
+                inputDialog.handler = RenameMap;
+            }),
+            new OverflowMenuGUI.MenuItem("Copy", GUIIconSet.instance.copy, () => {
+                TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
+                inputDialog.prompt = "Enter new world name...";
+                inputDialog.handler = CopyMap;
+            }),
+            new OverflowMenuGUI.MenuItem("Delete", GUIIconSet.instance.delete, () => {
+                DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
+                dialog.message = "Are you sure you want to delete " + fileName + "?";
+                dialog.yesButtonText = "Yes";
+                dialog.noButtonText = "No";
+                dialog.yesButtonHandler = () =>
+                {
+                    File.Delete(WorldFiles.GetFilePath(fileName));
+                    UpdateMapList();
+                };
+            }),
 #if UNITY_ANDROID
-        if (GUILayout.Button("Share"))
-        {
-            string path = WorldFiles.GetFilePath(fileName);
-            ShareMap.ShareAndroid(path);
-            Destroy(this);
-        }
+            new OverflowMenuGUI.MenuItem("Share", GUIIconSet.instance.share, () => {
+                string path = WorldFiles.GetFilePath(fileName);
+                ShareMap.ShareAndroid(path);
+            })
 #endif
+        };
     }
 
     private void RenameMap(string newName)
@@ -181,9 +143,8 @@ public class FileDropdownGUI : GUIPanel
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Move(WorldFiles.GetFilePath(fileName), newPath);
-        handler();
-        Destroy(this);
+        File.Move(WorldFiles.GetFilePath(selectedWorld), newPath);
+        UpdateMapList();
     }
 
     private void CopyMap(string newName)
@@ -196,8 +157,7 @@ public class FileDropdownGUI : GUIPanel
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Copy(WorldFiles.GetFilePath(fileName), newPath);
-        handler();
-        Destroy(this);
+        File.Copy(WorldFiles.GetFilePath(selectedWorld), newPath);
+        UpdateMapList();
     }
 }

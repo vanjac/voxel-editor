@@ -25,25 +25,34 @@ public class GUIUtils
         return style;
     });
 
-    public static bool HighlightedButton(string text, GUIStyle style=null, params GUILayoutOption[] options)
-    {
-        if(style == null)
-            style = GUI.skin.button;
-        return !GUILayout.Toggle(true, text, style, options);
-    }
-
-    public static bool HighlightedButton(Texture image, GUIStyle style = null, params GUILayoutOption[] options)
+    public static bool HighlightedButton(string text, GUIStyle style = null, bool highlight = true, params GUILayoutOption[] options)
     {
         if (style == null)
             style = GUI.skin.button;
-        return !GUILayout.Toggle(true, image, style, options);
+        if (highlight)
+            return !GUILayout.Toggle(true, text, style, options);
+        else
+            return GUILayout.Button(text, style, options);
     }
 
-    public static bool HighlightedButton(GUIContent content, GUIStyle style = null, params GUILayoutOption[] options)
+    public static bool HighlightedButton(Texture image, GUIStyle style = null, bool highlight = true, params GUILayoutOption[] options)
     {
         if (style == null)
             style = GUI.skin.button;
-        return !GUILayout.Toggle(true, content, style, options);
+        if (highlight)
+            return !GUILayout.Toggle(true, image, style, options);
+        else
+            return GUILayout.Button(image, style, options);
+    }
+
+    public static bool HighlightedButton(GUIContent content, GUIStyle style = null, bool highlight = true, params GUILayoutOption[] options)
+    {
+        if (style == null)
+            style = GUI.skin.button;
+        if (highlight)
+            return !GUILayout.Toggle(true, content, style, options);
+        else
+            return GUILayout.Button(content, style, options);
     }
 
     public static void BeginButtonHorizontal(string name, GUIStyle style = null)

@@ -179,7 +179,7 @@ public class ActionBarGUI : GUIPanel
 
     public static bool HighlightedActionBarButton(Texture icon)
     {
-        return GUIUtils.HighlightedButton(icon, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false));
+        return GUIUtils.HighlightedButton(icon, GUI.skin.GetStyle("button_large"), true, GUILayout.ExpandWidth(false));
     }
 
     public static void ActionBarLabel(string text)

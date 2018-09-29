@@ -241,7 +241,7 @@ MonoBehaviour:
   applySelection: {fileID: 0}
   clearSelection: {fileID: 0}
   paint: {fileID: 0}
-  play: {fileID: 0}
+  play: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
   overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
   world: {fileID: 0}
   help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
@@ -253,6 +253,13 @@ MonoBehaviour:
   flipVertical: {fileID: 0}
   compass: {fileID: 0}
   about: {fileID: 2800000, guid: c51491f24aa308c478dce23ffe9b3f15, type: 3}
+  select: {fileID: 0}
+  entityTag: {fileID: 0}
+  target: {fileID: 0}
+  rename: {fileID: 2800000, guid: 655f20fe0dcfa1546a197b2c5b019e78, type: 3}
+  copy: {fileID: 2800000, guid: ef8570bda8643ab4e84246dbd0191475, type: 3}
+  delete: {fileID: 2800000, guid: a91481f4c06fdb946817fd08f059dd99, type: 3}
+  share: {fileID: 2800000, guid: a85f6c8cea88810459e1e20c4380b2b6, type: 3}
 --- !u!1 &2101752314
 GameObject:
   m_ObjectHideFlags: 0

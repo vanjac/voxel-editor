@@ -28,6 +28,10 @@ public class GUIIconSet : MonoBehaviour
     public Texture select;
     public Texture entityTag;
     public Texture target;
+    public Texture rename;
+    public Texture copy;
+    public Texture delete;
+    public Texture share;
 
     public void Start()
     {
