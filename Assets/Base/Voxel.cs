@@ -97,6 +97,8 @@ public class Voxel : MonoBehaviour
         Vector2.zero, Vector2.right, Vector2.one, Vector2.up
     };
 
+    private readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
+
     private static readonly Vector3[] POSITIVE_S_XYZ = new Vector3[]
     {
         new Vector3(0, 0, -1), new Vector3(0, 0, 1),
@@ -349,14 +351,21 @@ public class Voxel : MonoBehaviour
             Vector4 tangent = new Vector4(positiveU_xyz.x, positiveU_xyz.y, positiveU_xyz.z,
                 mirrored ? 1 : -1);
 
-            // example for faceNum = 5 (z min)
+            // example for faceNum = 4 (z min)
             // 0 bottom left
-            // 1 bottom right
+            // 1 bottom right (+X)
             // 2 top right
-            // 3 top left
+            // 3 top left (+Y)
             for (int i = 0; i < 4; i++)
             {
                 int vertexI = numFilledFaces * 4 + i;
+
+                int edgeA = axis * 4 + i;
+                int edgeB = ((axis + 1) % 3) * 4
+                    + SQUARE_LOOP_COORD_INDEX[(i >= 2 ? 1 : 0) + (faceNum % 2) * 2];
+                int edgeC = ((axis + 2) % 3) * 4
+                    + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (i == 1 || i == 2 ? 2 : 0)];
+
                 vertexPos[axis] = faceNum % 2;
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
