@@ -82,6 +82,10 @@ public class ActionBarGUI : GUIPanel
                         })
                     };
                 }, stayOpen: true),
+                new OverflowMenuGUI.MenuItem("Bevel", GUIIconSet.instance.bevel, () => {
+                    var bevelGUI = gameObject.AddComponent<BevelGUI>();
+                    bevelGUI.voxelArray = voxelArray;
+                }),
                 new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
                     var help = gameObject.AddComponent<HelpGUI>();
                     help.voxelArray = voxelArray;

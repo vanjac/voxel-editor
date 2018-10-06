@@ -929,6 +929,29 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
+    public VoxelEdge TEMP_GetSelectedEdge(int n)
+    {
+        Debug.Log("Read edges");
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        {
+            VoxelEdge edge = faceRef.voxel.edges[n];
+            edge.addSelected = false;
+            edge.storedSelected = false;
+            return edge;
+        }
+        return new VoxelEdge();
+    }
+
+    public void TEMP_SetEdges(VoxelEdge edge, int n)
+    {
+        Debug.Log("Write edges");
+        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        {
+            faceRef.voxel.edges[n] = edge;
+            VoxelModified(faceRef.voxel);
+        }
+    }
+
     public int GetSelectedFaceNormal()
     {
         int faceI = -1;

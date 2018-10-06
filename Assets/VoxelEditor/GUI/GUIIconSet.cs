@@ -32,6 +32,7 @@ public class GUIIconSet : MonoBehaviour
     public Texture copy;
     public Texture delete;
     public Texture share;
+    public Texture bevel;
 
     public void Start()
     {
