@@ -80,6 +80,23 @@ public struct VoxelEdge
             bevel = (byte)((bevel & 0x0f) | ((byte)value << 4));
         }
     }
+
+    public float bevelSizeFloat
+    {
+        get
+        {
+            switch (bevelSize)
+            {
+                case BevelSize.FULL:
+                    return 1.0f;
+                case BevelSize.HALF:
+                    return 0.5f;
+                case BevelSize.QUARTER:
+                    return 0.25f;
+            }
+            return 0.0f;
+        }
+    }
 }
 
 
@@ -367,8 +384,8 @@ public class Voxel : MonoBehaviour
                     + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (i == 1 || i == 2 ? 2 : 0)];
 
                 vertexPos[axis] = faceNum % 2;
-                vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
-                vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
+                vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC]);
+                vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB]);
                 Vector3 vertex = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
                 vertices[vertexI] = vertex;
 
@@ -512,6 +529,14 @@ public class Voxel : MonoBehaviour
             meshCollider.enabled = false;
         }
     } // end UpdateVoxel()
+
+    private float ApplyBevel(float coord, VoxelEdge edge)
+    {
+        if (edge.bevelType == VoxelEdge.BevelType.NONE)
+            return coord;
+        else
+            return (coord - 0.5f) * (1 - edge.bevelSizeFloat * 2) + 0.5f;
+    }
 
     void OnBecameVisible()
     {
