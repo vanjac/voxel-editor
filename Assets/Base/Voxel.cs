@@ -43,6 +43,46 @@ public struct VoxelFace
     }
 }
 
+public struct VoxelEdge
+{
+    public enum BevelType : byte
+    {
+        NONE, FLAT, CURVE, STAIR_1_2, STAIR_1_4, STAIR_1_8
+    }
+    public enum BevelSize : byte
+    {
+        FULL, HALF, QUARTER
+    }
+
+    private byte bevel;
+    public bool addSelected, storedSelected;
+
+    public BevelType bevelType
+    {
+        get
+        {
+            return (BevelType)(bevel & 0x0F);
+        }
+        set
+        {
+            bevel = (byte)((bevel & 0xF0) | (byte)value);
+        }
+    }
+
+    public BevelSize bevelSize
+    {
+        get
+        {
+            return (BevelSize)(bevel >> 4);
+        }
+        set
+        {
+            bevel = (byte)((bevel & 0x0f) | ((byte)value << 4));
+        }
+    }
+}
+
+
 public class Voxel : MonoBehaviour
 {
     public static VoxelFace EMPTY_FACE = new VoxelFace();
@@ -145,6 +185,7 @@ public class Voxel : MonoBehaviour
     }
 
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
+    public VoxelEdge[] edges = new VoxelEdge[12];
     private Substance _substance = null;
     public Substance substance
     {
