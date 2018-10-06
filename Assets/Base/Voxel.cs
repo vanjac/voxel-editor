@@ -232,6 +232,19 @@ public class Voxel : MonoBehaviour
         UpdateVoxel();
     }
 
+    void OnBecameVisible()
+    {
+        if (substance != null)
+            // don't use substance.component (doesn't work for clones)
+            transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+    }
+
+    void OnBecameInvisible()
+    {
+        if (substance != null)
+            transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+    }
+
     public Bounds GetFaceBounds(int faceI)
     {
         Bounds bounds;
@@ -322,99 +335,29 @@ public class Voxel : MonoBehaviour
         else
             gameObject.layer = 0; // default
 
-        int numFilledFaces = 0;
-        foreach (VoxelFace f in faces)
-            if (!f.IsEmpty())
-                numFilledFaces++;
-
-        var vertices = new Vector3[numFilledFaces * 4];
-        var uvs = new Vector2[numFilledFaces * 4];
-        var normals = new Vector3[numFilledFaces * 4];
-        var tangents = new Vector4[numFilledFaces * 4];
-
-        float[] vertexPos = new float[3]; // reusable
-        numFilledFaces = 0;
+        int[] faceVertexCounts = new int[6];
+        int numVertices = 0;
         int numMaterials = 0;
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            VoxelFace face = faces[faceNum];
-            if (face.IsEmpty())
-                continue;
-            int axis = FaceIAxis(faceNum);
-            Vector3 normal = DirectionForFaceI(faceNum);
-            int rotation = VoxelFace.GetOrientationRotation(face.orientation);
-            bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
+            int vertexCount = FaceVertexCount(faceNum);
+            faceVertexCounts[faceNum] = vertexCount;
+            numVertices += vertexCount;
+            numMaterials += FaceMaterialCount(faces[faceNum], xRay, coloredHighlightMaterial);
+        }
 
-            // ST space is always upright
-            Vector3 positiveS_xyz = POSITIVE_S_XYZ[faceNum]; // positive S in XYZ space
-            Vector3 positiveT_xyz = POSITIVE_T_XYZ[faceNum];
-
-            int uRot = rotation;
-            if (mirrored)
-                uRot += 3;
-            int vRot;
-            if (!mirrored)
-                vRot = uRot + 3;
-            else
-                vRot = uRot + 1;
-            Vector2 positiveU_st = POSITIVE_U_ST[uRot % 4];
-            Vector2 positiveV_st = POSITIVE_U_ST[vRot % 4];
-
-            Vector3 positiveU_xyz = positiveS_xyz * positiveU_st.x
-                + positiveT_xyz * positiveU_st.y;
-            Vector3 positiveV_xyz = positiveS_xyz * positiveV_st.x
-                + positiveT_xyz * positiveV_st.y;
-
-            Vector4 tangent = new Vector4(positiveU_xyz.x, positiveU_xyz.y, positiveU_xyz.z,
-                mirrored ? 1 : -1);
-
-            // example for faceNum = 4 (z min)
-            // 0 bottom left
-            // 1 bottom right (+X)
-            // 2 top right
-            // 3 top left (+Y)
-            for (int i = 0; i < 4; i++)
-            {
-                int vertexI = numFilledFaces * 4 + i;
-
-                int edgeA = axis * 4 + i;
-                int edgeB = ((axis + 1) % 3) * 4
-                    + SQUARE_LOOP_COORD_INDEX[(i >= 2 ? 1 : 0) + (faceNum % 2) * 2];
-                int edgeC = ((axis + 2) % 3) * 4
-                    + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (i == 1 || i == 2 ? 2 : 0)];
-
-                vertexPos[axis] = faceNum % 2;
-                vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC]);
-                vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB]);
-                Vector3 vertex = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-                vertices[vertexI] = vertex;
-
-                normals[vertexI] = normal;
-                tangents[vertexI] = tangent;
-
-                vertex += transform.position;
-                Vector2 uv = new Vector2(
-                    vertex.x * positiveU_xyz.x + vertex.y * positiveU_xyz.y + vertex.z * positiveU_xyz.z,
-                    vertex.x * positiveV_xyz.x + vertex.y * positiveV_xyz.y + vertex.z * positiveV_xyz.z);
-                uvs[vertexI] = uv;
-            }
-
-            numFilledFaces++;
-            if (xRay)
-                numMaterials++;
-            else
-            {
-                if (face.material != null)
-                    numMaterials++;
-                if (face.overlay != null)
-                    numMaterials++;
-            }
-            if (coloredHighlightMaterial != null)
-                numMaterials++;
-            if (face.addSelected || face.storedSelected)
-                numMaterials++;
+        var vertices = new Vector3[numVertices];
+        var uvs = new Vector2[numVertices];
+        var normals = new Vector3[numVertices];
+        var tangents = new Vector4[numVertices];
+        numVertices = 0;
+        for (int faceNum = 0; faceNum < 6; faceNum++)
+        {
+            GenerateFaceVertices(faceNum, numVertices, vertices, uvs, normals, tangents);
+            numVertices += faceVertexCounts[faceNum];
         }
         
+        // according to Mesh documentation, vertices must be assigned before triangles
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         mesh.name = "Voxel Mesh";
         mesh.Clear();
@@ -425,71 +368,21 @@ public class Voxel : MonoBehaviour
         mesh.subMeshCount = numMaterials;
 
         Material[] materials = new Material[numMaterials];
-
-        numFilledFaces = 0;
+        numVertices = 0;
         numMaterials = 0;
-        for (int faceI = 0; faceI < 6; faceI++)
+        for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            VoxelFace face = faces[faceI];
-            if (face.IsEmpty())
+            var triangles = GenerateFaceTriangles(faceNum, numVertices);
+            if (triangles == null)
                 continue;
+            numVertices += faceVertexCounts[faceNum];
 
-            var triangles = new int[6];
-
-            if (faceI % 2 == 1)
+            foreach (Material faceMaterial in IterateFaceMaterials(faces[faceNum], xRay, coloredHighlightMaterial))
             {
-                triangles[0] = numFilledFaces * 4 + 0;
-                triangles[1] = numFilledFaces * 4 + 1;
-                triangles[2] = numFilledFaces * 4 + 2;
-                triangles[3] = numFilledFaces * 4 + 0;
-                triangles[4] = numFilledFaces * 4 + 2;
-                triangles[5] = numFilledFaces * 4 + 3;
-            }
-            else
-            {
-                triangles[0] = numFilledFaces * 4 + 0;
-                triangles[1] = numFilledFaces * 4 + 2;
-                triangles[2] = numFilledFaces * 4 + 1;
-                triangles[3] = numFilledFaces * 4 + 0;
-                triangles[4] = numFilledFaces * 4 + 3;
-                triangles[5] = numFilledFaces * 4 + 2;
-            }
-
-            if (xRay)
-            {
-                materials[numMaterials] = xRayMaterial;
+                materials[numMaterials] = faceMaterial;
                 mesh.SetTriangles(triangles, numMaterials);
                 numMaterials++;
             }
-            else
-            {
-                if (face.material != null)
-                {
-                    materials[numMaterials] = face.material;
-                    mesh.SetTriangles(triangles, numMaterials);
-                    numMaterials++;
-                }
-                if (face.overlay != null)
-                {
-                    materials[numMaterials] = face.overlay;
-                    mesh.SetTriangles(triangles, numMaterials);
-                    numMaterials++;
-                }
-            }
-            if (coloredHighlightMaterial != null)
-            {
-                materials[numMaterials] = coloredHighlightMaterial;
-                mesh.SetTriangles(triangles, numMaterials);
-                numMaterials++;
-            }
-            if (face.addSelected || face.storedSelected)
-            {
-                materials[numMaterials] = selectedMaterial;
-                mesh.SetTriangles(triangles, numMaterials);
-                numMaterials++;
-            }
-
-            numFilledFaces++;
         }
 
         Renderer renderer = GetComponent<Renderer>();
@@ -530,24 +423,158 @@ public class Voxel : MonoBehaviour
         }
     } // end UpdateVoxel()
 
+    // Utility functions for UpdateVoxel() ...
+
+    private int FaceVertexCount(int faceNum)
+    {
+        if (faces[faceNum].IsEmpty())
+            return 0;
+        return 4;
+    }
+
+
+    private static float[] vertexPos = new float[3]; // reusable
+    private void GenerateFaceVertices(int faceNum, int vertexI, Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
+    {
+        VoxelFace face = faces[faceNum];
+        if (face.IsEmpty())
+            return;
+
+        int axis = FaceIAxis(faceNum);
+        Vector3 normal = DirectionForFaceI(faceNum);
+        int rotation = VoxelFace.GetOrientationRotation(face.orientation);
+        bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
+
+        // ST space is always upright
+        Vector3 positiveS_xyz = POSITIVE_S_XYZ[faceNum]; // positive S in XYZ space
+        Vector3 positiveT_xyz = POSITIVE_T_XYZ[faceNum];
+
+        int uRot = rotation;
+        if (mirrored)
+            uRot += 3;
+        int vRot;
+        if (!mirrored)
+            vRot = uRot + 3;
+        else
+            vRot = uRot + 1;
+        Vector2 positiveU_st = POSITIVE_U_ST[uRot % 4];
+        Vector2 positiveV_st = POSITIVE_U_ST[vRot % 4];
+
+        Vector3 positiveU_xyz = positiveS_xyz * positiveU_st.x
+            + positiveT_xyz * positiveU_st.y;
+        Vector3 positiveV_xyz = positiveS_xyz * positiveV_st.x
+            + positiveT_xyz * positiveV_st.y;
+
+        Vector4 tangent = new Vector4(positiveU_xyz.x, positiveU_xyz.y, positiveU_xyz.z,
+            mirrored ? 1 : -1);
+
+        // example for faceNum = 4 (z min)
+        // 0 bottom left
+        // 1 bottom right (+X)
+        // 2 top right
+        // 3 top left (+Y)
+        for (int i = 0; i < 4; i++)
+        {
+            int edgeA = axis * 4 + i;
+            int edgeB = ((axis + 1) % 3) * 4
+                + SQUARE_LOOP_COORD_INDEX[(i >= 2 ? 1 : 0) + (faceNum % 2) * 2];
+            int edgeC = ((axis + 2) % 3) * 4
+                + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (i == 1 || i == 2 ? 2 : 0)];
+
+            vertexPos[axis] = faceNum % 2;
+            vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC]);
+            vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB]);
+            Vector3 vertex = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+            vertices[vertexI] = vertex;
+
+            normals[vertexI] = normal;
+            tangents[vertexI] = tangent;
+
+            vertex += transform.position;
+            Vector2 uv = new Vector2(
+                vertex.x * positiveU_xyz.x + vertex.y * positiveU_xyz.y + vertex.z * positiveU_xyz.z,
+                vertex.x * positiveV_xyz.x + vertex.y * positiveV_xyz.y + vertex.z * positiveV_xyz.z);
+            uvs[vertexI] = uv;
+
+            vertexI++;
+        }
+    }
+
+
+    private int[] GenerateFaceTriangles(int faceNum, int vertexI)
+    {
+        if (faces[faceNum].IsEmpty())
+            return null;
+        var triangles = new int[6];
+        if (faceNum % 2 == 1)
+        {
+            triangles[0] = vertexI + 0;
+            triangles[1] = vertexI + 1;
+            triangles[2] = vertexI + 2;
+            triangles[3] = vertexI + 0;
+            triangles[4] = vertexI + 2;
+            triangles[5] = vertexI + 3;
+        }
+        else
+        {
+            triangles[0] = vertexI + 0;
+            triangles[1] = vertexI + 2;
+            triangles[2] = vertexI + 1;
+            triangles[3] = vertexI + 0;
+            triangles[4] = vertexI + 3;
+            triangles[5] = vertexI + 2;
+        }
+        return triangles;
+    }
+
+
+    private int FaceMaterialCount(VoxelFace face, bool xRay, Material coloredHighlightMaterial)
+    {
+        if (face.IsEmpty())
+            return 0;
+        int count = 0;
+        if (xRay)
+            count++;
+        else
+        {
+            if (face.material != null)
+                count++;
+            if (face.overlay != null)
+                count++;
+        }
+        if (coloredHighlightMaterial != null)
+            count++;
+        if (face.addSelected || face.storedSelected)
+            count++;
+        return count;
+    }
+
+
+    private IEnumerable<Material> IterateFaceMaterials(VoxelFace face, bool xRay, Material coloredHighlightMaterial)
+    {
+        if (face.IsEmpty())
+            yield break;
+        if (xRay)
+            yield return xRayMaterial;
+        else
+        {
+            if (face.material != null)
+                yield return face.material;
+            if (face.overlay != null)
+                yield return face.overlay;
+        }
+        if (coloredHighlightMaterial != null)
+            yield return coloredHighlightMaterial;
+        if (face.addSelected || face.storedSelected)
+            yield return selectedMaterial;
+    }
+
+
     private float ApplyBevel(float coord, VoxelEdge edge)
     {
         if (edge.bevelType == VoxelEdge.BevelType.NONE)
             return coord;
         else
             return (coord - 0.5f) * (1 - edge.bevelSizeFloat * 2) + 0.5f;
-    }
-
-    void OnBecameVisible()
-    {
-        if (substance != null)
-            // don't use substance.component (doesn't work for clones)
-            transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
-    }
-
-    void OnBecameInvisible()
-    {
-        if (substance != null)
-            transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 }
