@@ -556,27 +556,14 @@ public class Voxel : MonoBehaviour
                 triangleCount += 6;
 
         var triangles = new int[triangleCount];
+        triangleCount = 0;
 
-        if (faceNum % 2 == 1)
-        {
-            triangles[0] = vertices[0].innerRect_i;
-            triangles[1] = vertices[1].innerRect_i;
-            triangles[2] = vertices[2].innerRect_i;
-            triangles[3] = vertices[0].innerRect_i;
-            triangles[4] = vertices[2].innerRect_i;
-            triangles[5] = vertices[3].innerRect_i;
-        }
-        else
-        {
-            triangles[0] = vertices[0].innerRect_i;
-            triangles[1] = vertices[2].innerRect_i;
-            triangles[2] = vertices[1].innerRect_i;
-            triangles[3] = vertices[0].innerRect_i;
-            triangles[4] = vertices[3].innerRect_i;
-            triangles[5] = vertices[2].innerRect_i;
-        }
-
-        triangleCount = 6;
+        QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
+            vertices[0].innerRect_i,
+            vertices[1].innerRect_i,
+            vertices[2].innerRect_i,
+            vertices[3].innerRect_i);
+        triangleCount += 6;
 
         // for each pair of edge vertices
         for (int i = 0; i < 4; i++)
@@ -584,30 +571,29 @@ public class Voxel : MonoBehaviour
             int j = (i + 1) % 4;
             if (!edges[surroundingEdges[i]].hasBevel)
                 continue;
-            if (faceNum % 2 == 1)
-            {
-                triangles[triangleCount + 0] = vertices[i].innerRect_i;
-                triangles[triangleCount + 1] = vertices[i].bevel_i;
-                triangles[triangleCount + 2] = vertices[j].innerRect_i;
-                triangles[triangleCount + 3] = vertices[i].bevel_i;
-                triangles[triangleCount + 4] = vertices[j].bevel_i;
-                triangles[triangleCount + 5] = vertices[j].innerRect_i;
-            }
-            else
-            {
-                triangles[triangleCount + 0] = vertices[i].innerRect_i;
-                triangles[triangleCount + 1] = vertices[j].innerRect_i;
-                triangles[triangleCount + 2] = vertices[i].bevel_i;
-                triangles[triangleCount + 3] = vertices[i].bevel_i;
-                triangles[triangleCount + 4] = vertices[j].innerRect_i;
-                triangles[triangleCount + 5] = vertices[j].bevel_i;
-            }
+            QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
+                vertices[i].innerRect_i,
+                vertices[i].bevel_i,
+                vertices[j].bevel_i,
+                vertices[j].innerRect_i);
             triangleCount += 6;
         }
 
         return triangles;
     }
 
+    // specify vertices 0-3 of a quad in counter-clockwise order
+    // ccw = counter-clockwise?
+    private void QuadTriangles(int[] triangleArray, int i, bool ccw,
+        int vertex0, int vertex1, int vertex2, int vertex3)
+    {
+        triangleArray[i + 0] = vertex0;
+        triangleArray[i + 1] = ccw ? vertex1 : vertex2;
+        triangleArray[i + 2] = ccw ? vertex2 : vertex1;
+        triangleArray[i + 3] = vertex0;
+        triangleArray[i + 4] = ccw ? vertex2 : vertex3;
+        triangleArray[i + 5] = ccw ? vertex3 : vertex2;
+    }
 
     private int FaceMaterialCount(VoxelFace face, bool xRay, Material coloredHighlightMaterial)
     {
