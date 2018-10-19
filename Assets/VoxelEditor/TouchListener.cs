@@ -62,7 +62,7 @@ public class TouchListener : MonoBehaviour
                 if (hitObject.tag == "Voxel")
                 {
                     hitVoxel = hitObject.GetComponent<Voxel>();
-                    hitFaceI = Voxel.FaceIForDirection(hit.normal);
+                    hitFaceI = Voxel.ClosestFaceI(hit.point - hitVoxel.transform.position);
                     if (hitFaceI == -1)
                         hitVoxel = null;
                 }

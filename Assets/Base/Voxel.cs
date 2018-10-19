@@ -239,6 +239,43 @@ public class Voxel : MonoBehaviour
         return faceI / 2;
     }
 
+    public static int ClosestFaceI(Vector3 point)
+    {
+        float dist = 2.0f;
+        int closestFaceI = -1;
+        if (Mathf.Abs(point.x) < dist)
+        {
+            dist = Mathf.Abs(point.x);
+            closestFaceI = 0;
+        }
+        if (Mathf.Abs(point.x - 1) < dist)
+        {
+            dist = Mathf.Abs(point.x - 1);
+            closestFaceI = 1;
+        }
+        if (Mathf.Abs(point.y) < dist)
+        {
+            dist = Mathf.Abs(point.y);
+            closestFaceI = 2;
+        }
+        if (Mathf.Abs(point.y - 1) < dist)
+        {
+            dist = Mathf.Abs(point.y - 1);
+            closestFaceI = 3;
+        }
+        if (Mathf.Abs(point.z) < dist)
+        {
+            dist = Mathf.Abs(point.z);
+            closestFaceI = 4;
+        }
+        if (Mathf.Abs(point.z - 1) < dist)
+        {
+            dist = Mathf.Abs(point.z - 1);
+            closestFaceI = 5;
+        }
+        return closestFaceI;
+    }
+
     public static bool InEditor()
     {
         // TODO: better way to check this?
