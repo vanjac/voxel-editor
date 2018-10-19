@@ -580,42 +580,54 @@ public class Voxel : MonoBehaviour
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
 
-            vertexPos[axis] = faceNum % 2;
+            vertexPos[axis] = faceNum % 2; // will stay until bevel
+
             vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x,
                 corner.edgeC_i != -1 ? edges[edgeA] : edges[edgeC]);
             vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y,
                 corner.edgeB_i != -1 ? edges[edgeA] : edges[edgeB]);
-            vertices[corner.innerRect_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+            vertices[corner.innerRect_i] = Vector3FromArray(vertexPos);
+            uvs[corner.innerRect_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+            normals[corner.innerRect_i] = normal;
+            tangents[corner.innerRect_i] = tangent;
 
             if (corner.edgeB_i != -1)
             {
-                vertexPos[axis] = faceNum % 2;
                 vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA]);
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y; // will never have both edgeB and a bevel
-                vertices[corner.edgeB_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                vertices[corner.edgeB_i] = Vector3FromArray(vertexPos);
+                uvs[corner.edgeB_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+                normals[corner.edgeB_i] = normal;
+                tangents[corner.edgeB_i] = tangent;
             }
             if (corner.edgeC_i != -1)
             {
-                vertexPos[axis] = faceNum % 2;
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                 vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA]);
-                vertices[corner.edgeC_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                vertices[corner.edgeC_i] = Vector3FromArray(vertexPos);
+                uvs[corner.edgeC_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+                normals[corner.edgeC_i] = normal;
+                tangents[corner.edgeC_i] = tangent;
             }
             if (corner.bevelProfile_i != -1)
             {
                 Vector2[] bevelArray = edges[edgeA].bevelTypeArray;
                 for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
                 {
-                    vertexPos[axis] = faceNum % 2;
                     vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelArray[bevelI].x);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelArray[bevelI].y);
-                    vertices[corner.bevelProfile_i + bevelI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-                    vertexPos[axis] = faceNum % 2;
+                    vertices[corner.bevelProfile_i + bevelI] = Vector3FromArray(vertexPos);
+                    uvs[corner.bevelProfile_i + bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+                    normals[corner.bevelProfile_i + bevelI] = normal;
+                    tangents[corner.bevelProfile_i + bevelI] = tangent;
+
                     vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelArray[bevelI].y); // x/y are swapped
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelArray[bevelI].x);
                     // last iteration vertices will overlap
-                    vertices[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI]
-                        = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                    vertices[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = Vector3FromArray(vertexPos);
+                    uvs[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+                    normals[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = normal;
+                    tangents[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = tangent;
                 }
             }
             if (corner.bevel_i != -1)
@@ -631,24 +643,33 @@ public class Voxel : MonoBehaviour
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
                         edges[edgeB].hasBevel ? bevelVector.y : bevelVector.x);
                     vertices[corner.bevel_i + bevelI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                    normals[corner.bevel_i + bevelI] = normal;
+                    tangents[corner.bevel_i + bevelI] = tangent;
+
+                    // calc uv
+                    float uvCoord = ((float)bevelI + 1) / (float)bevelArray.Length;
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
+                        edges[edgeC].hasBevel ? uvCoord : bevelVector.x);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
+                        edges[edgeB].hasBevel ? uvCoord : bevelVector.x);
+                    uvs[corner.bevel_i + bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
                 }
             }
         }
+    }
 
-        // add normals, tangents, uvs to all vertices
-        int minI = corners[0].innerRect_i;
-        int maxI = minI + corners[0].count + corners[1].count + corners[2].count + corners[3].count;
-        for (int v = minI; v < maxI; v++)
-        {
-            Vector3 vertex = vertices[v];
-            vertex += transform.position;
-            Vector2 uv = new Vector2(
-                vertex.x * positiveU_xyz.x + vertex.y * positiveU_xyz.y + vertex.z * positiveU_xyz.z,
-                vertex.x * positiveV_xyz.x + vertex.y * positiveV_xyz.y + vertex.z * positiveV_xyz.z);
-            uvs[v] = uv;
-            normals[v] = normal;
-            tangents[v] = tangent;
-        }
+
+    private Vector3 Vector3FromArray(float[] vector)
+    {
+        return new Vector3(vector[0], vector[1], vector[2]);
+    }
+
+    private Vector2 CalcUV(float[] vertex, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
+    {
+        Vector3 vector = Vector3FromArray(vertex) + transform.position;
+        return new Vector2(
+            vector.x * positiveU_xyz.x + vector.y * positiveU_xyz.y + vector.z * positiveU_xyz.z,
+            vector.x * positiveV_xyz.x + vector.y * positiveV_xyz.y + vector.z * positiveV_xyz.z);
     }
 
 
