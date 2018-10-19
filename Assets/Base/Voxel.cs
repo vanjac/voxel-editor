@@ -643,7 +643,6 @@ public class Voxel : MonoBehaviour
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
                         edges[edgeB].hasBevel ? bevelVector.y : bevelVector.x);
                     vertices[corner.bevel_i + bevelI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-                    normals[corner.bevel_i + bevelI] = normal;
                     tangents[corner.bevel_i + bevelI] = tangent;
 
                     // calc uv
@@ -653,6 +652,12 @@ public class Voxel : MonoBehaviour
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
                         edges[edgeB].hasBevel ? uvCoord : bevelVector.x);
                     uvs[corner.bevel_i + bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+
+                    // calc diagonal normal
+                    vertexPos[axis] = (faceNum % 2) * 2 - 1;
+                    vertexPos[(axis + 1) % 3] = edges[edgeC].hasBevel ? (SQUARE_LOOP[i].x * 2 - 1) : 0;
+                    vertexPos[(axis + 2) % 3] = edges[edgeB].hasBevel ? (SQUARE_LOOP[i].y * 2 - 1) : 0;
+                    normals[corner.bevel_i + bevelI] = Vector3FromArray(vertexPos).normalized;
                 }
             }
         }
