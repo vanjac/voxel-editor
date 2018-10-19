@@ -360,7 +360,7 @@ public class Voxel : MonoBehaviour
         var tangents = new Vector4[numVertices];
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            GenerateFaceVertices(faceNum, faceCorners[faceNum][0].innerRect_i, vertices, uvs, normals, tangents);
+            GenerateFaceVertices(faceNum, faceCorners[faceNum], vertices, uvs, normals, tangents);
         }
         
         // according to Mesh documentation, vertices must be assigned before triangles
@@ -457,13 +457,41 @@ public class Voxel : MonoBehaviour
                 corners[i].bevel_count = 1;
                 corners[i].count++;
             }
+            if (edges[edgeA].hasBevel && !edges[edgeB].hasBevel && !edges[edgeC].hasBevel)
+            { // cutout for bevel
+                if (corners[i].edgeB_i == -1)
+                {
+                    corners[i].edgeB_i = vertexI++;
+                    corners[i].count++;
+                }
+                if (corners[i].edgeC_i == -1)
+                {
+                    corners[i].edgeC_i = vertexI++;
+                    corners[i].count++;
+                }
+                int nextI = (i + 1) % 4;
+                int prevI = i == 0 ? 3 : i - 1;
+                int otherEdgeBI = i % 2 == 0 ? nextI : prevI;
+                int otherEdgeCI = i % 2 == 0 ? prevI : nextI;
+                if (corners[otherEdgeBI].edgeB_i == -1)
+                {
+                    corners[otherEdgeBI].edgeB_i = vertexI++;
+                    corners[otherEdgeBI].count++;
+                }
+                if (corners[otherEdgeCI].edgeC_i == -1)
+                {
+                    corners[otherEdgeCI].edgeC_i = vertexI++;
+                    corners[otherEdgeCI].count++;
+                }
+            }
         }
         return corners;
     }
 
 
     private static float[] vertexPos = new float[3]; // reusable
-    private void GenerateFaceVertices(int faceNum, int vertexI, Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
+    private void GenerateFaceVertices(int faceNum, FaceCornerVertices[] corners,
+        Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
     {
         VoxelFace face = faces[faceNum];
         if (face.IsEmpty())
@@ -508,29 +536,42 @@ public class Voxel : MonoBehaviour
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
 
             vertexPos[axis] = faceNum % 2;
-            vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC]);
-            vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB]);
+            vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x,
+                corners[i].edgeC_i != -1 ? edges[edgeA] : edges[edgeC]);
+            vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y,
+                corners[i].edgeB_i != -1 ? edges[edgeA] : edges[edgeB]);
             Vector3 vertex = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-            vertices[vertexI] = vertex;
+            vertices[corners[i].innerRect_i] = vertex;
 
-            normals[vertexI] = normal;
-            tangents[vertexI] = tangent;
+            normals[corners[i].innerRect_i] = normal;
+            tangents[corners[i].innerRect_i] = tangent;
 
             vertex += transform.position;
             Vector2 uv = new Vector2(
                 vertex.x * positiveU_xyz.x + vertex.y * positiveU_xyz.y + vertex.z * positiveU_xyz.z,
                 vertex.x * positiveV_xyz.x + vertex.y * positiveV_xyz.y + vertex.z * positiveV_xyz.z);
-            uvs[vertexI] = uv;
+            uvs[corners[i].innerRect_i] = uv;
 
-            vertexI++;
-
-            if (edges[edgeB].hasBevel || edges[edgeC].hasBevel)
+            if (corners[i].edgeB_i != -1)
+            {
+                vertexPos[axis] = faceNum % 2;
+                vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA]);
+                vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
+                vertices[corners[i].edgeB_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+            }
+            if (corners[i].edgeC_i != -1)
+            {
+                vertexPos[axis] = faceNum % 2;
+                vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
+                vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA]);
+                vertices[corners[i].edgeC_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+            }
+            if (corners[i].bevel_i != -1)
             {
                 vertexPos[axis] = ApplyBevel(faceNum % 2, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC]);
                 vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA]);
                 vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA]);
-                vertices[vertexI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-                vertexI++;
+                vertices[corners[i].bevel_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
             }
         }
     }
@@ -554,6 +595,19 @@ public class Voxel : MonoBehaviour
         foreach (int edgeI in surroundingEdges)
             if (edges[edgeI].hasBevel)
                 triangleCount += 6;
+        for (int i = 0; i < 4; i++)
+        {
+            if (i % 2 == 0)
+            {
+                if (vertices[i].edgeB_i != -1)
+                    triangleCount += 6;
+            }
+            else
+            {
+                if (vertices[i].edgeC_i != -1)
+                    triangleCount += 6;
+            }
+        }
 
         var triangles = new int[triangleCount];
         triangleCount = 0;
@@ -569,14 +623,33 @@ public class Voxel : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             int j = (i + 1) % 4;
-            if (!edges[surroundingEdges[i]].hasBevel)
-                continue;
-            QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
-                vertices[i].innerRect_i,
-                vertices[i].bevel_i,
-                vertices[j].bevel_i,
-                vertices[j].innerRect_i);
-            triangleCount += 6;
+            if (edges[surroundingEdges[i]].hasBevel)
+            {
+                QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
+                    vertices[i].innerRect_i,
+                    vertices[i].bevel_i,
+                    vertices[j].bevel_i,
+                    vertices[j].innerRect_i);
+                triangleCount += 6;
+            }
+            if (i % 2 == 0 && vertices[i].edgeB_i != -1)
+            {
+                QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
+                    vertices[i].innerRect_i,
+                    vertices[i].edgeB_i,
+                    vertices[j].edgeB_i,
+                    vertices[j].innerRect_i);
+                triangleCount += 6;
+            }
+            if (i % 2 == 1 && vertices[i].edgeC_i != -1)
+            {
+                QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
+                    vertices[i].innerRect_i,
+                    vertices[i].edgeC_i,
+                    vertices[j].edgeC_i,
+                    vertices[j].innerRect_i);
+                triangleCount += 6;
+            }
         }
 
         return triangles;
