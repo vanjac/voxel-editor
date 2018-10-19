@@ -47,12 +47,23 @@ public struct VoxelEdge
 {
     public enum BevelType : byte
     {
-        NONE, FLAT, CURVE, STAIR_1_2, STAIR_1_4, STAIR_1_8
+        NONE, SQUARE, FLAT, CURVE, STAIR_2, STAIR_4
     }
     public enum BevelSize : byte
     {
-        FULL, HALF, QUARTER
+        QUARTER, HALF, FULL
     }
+
+    public static readonly Vector2[] BEVEL_SQUARE = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.0f, 0.0f) };
+    public static readonly Vector2[] BEVEL_FLAT = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.5f) };
+    public static readonly Vector2[] BEVEL_CURVE = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
+    public static readonly Vector2[] BEVEL_STAIR_2 = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.5f) };
+    public static readonly Vector2[] BEVEL_STAIR_4 = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.75f, 0.0f), new Vector2(0.75f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f) };
 
     private byte bevel;
     public bool addSelected, storedSelected;
@@ -81,18 +92,39 @@ public struct VoxelEdge
         }
     }
 
+    public Vector2[] bevelTypeArray
+    {
+        get
+        {
+            switch (bevelType)
+            {
+                case BevelType.SQUARE:
+                    return BEVEL_SQUARE;
+                case BevelType.FLAT:
+                    return BEVEL_FLAT;
+                case BevelType.CURVE:
+                    return BEVEL_CURVE;
+                case BevelType.STAIR_2:
+                    return BEVEL_STAIR_2;
+                case BevelType.STAIR_4:
+                    return BEVEL_STAIR_4;
+            }
+            return null;
+        }
+    }
+
     public float bevelSizeFloat
     {
         get
         {
             switch (bevelSize)
             {
-                case BevelSize.FULL:
-                    return 1.0f;
-                case BevelSize.HALF:
-                    return 0.5f;
                 case BevelSize.QUARTER:
                     return 0.25f;
+                case BevelSize.HALF:
+                    return 0.5f;
+                case BevelSize.FULL:
+                    return 1.0f;
             }
             return 0.0f;
         }
@@ -453,9 +485,11 @@ public class Voxel : MonoBehaviour
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
             if (edges[edgeB].hasBevel || edges[edgeC].hasBevel)
             {
-                corners[i].bevel_i = vertexI++;
-                corners[i].bevel_count = 1;
-                corners[i].count++;
+                int bevelCount = (edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC]).bevelTypeArray.Length - 1;
+                corners[i].bevel_i = vertexI;
+                corners[i].bevel_count = bevelCount;
+                corners[i].count += bevelCount;
+                vertexI += bevelCount;
             }
             if (edges[edgeA].hasBevel && !edges[edgeB].hasBevel && !edges[edgeC].hasBevel)
             { // cutout for bevel
@@ -559,10 +593,16 @@ public class Voxel : MonoBehaviour
             }
             if (corner.bevel_i != -1)
             {
-                vertexPos[axis] = ApplyBevel(faceNum % 2, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC]);
-                vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA]);
-                vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA]);
-                vertices[corner.bevel_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                VoxelEdge beveledEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
+                Vector2[] bevelArray = beveledEdge.bevelTypeArray;
+                for (int bevelArrayI = 1; bevelArrayI < bevelArray.Length; bevelArrayI++)
+                {
+                    Vector2 bevelVector = bevelArray[bevelArrayI];
+                    vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, bevelVector.x);
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA], bevelVector.y);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA], bevelVector.y);
+                    vertices[corner.bevel_i + bevelArrayI - 1] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                }
             }
         }
 
@@ -600,7 +640,7 @@ public class Voxel : MonoBehaviour
         // for each pair of edge vertices
         foreach (int edgeI in surroundingEdges)
             if (edges[edgeI].hasBevel)
-                triangleCount += 6;
+                triangleCount += 6 * (edges[edgeI].bevelTypeArray.Length - 1);
         for (int i = 0; i < 4; i++)
         {
             if (i % 2 == 0)
@@ -637,6 +677,15 @@ public class Voxel : MonoBehaviour
                     vertices[j].bevel_i,
                     vertices[j].innerRect_i);
                 triangleCount += 6;
+                for (int bevelI = 0; bevelI < vertices[i].bevel_count - 1; bevelI++)
+                { // won't run if bevel_count is 1
+                    QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
+                        vertices[i].bevel_i + bevelI,
+                        vertices[i].bevel_i + bevelI + 1,
+                        vertices[j].bevel_i + bevelI + 1,
+                        vertices[j].bevel_i + bevelI);
+                    triangleCount += 6;
+                }
             }
             if (i % 2 == 0 && vertices[i].edgeB_i != -1)
             {
@@ -726,10 +775,10 @@ public class Voxel : MonoBehaviour
             + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (vertexI == 1 || vertexI == 2 ? 2 : 0)];
     }
 
-    private float ApplyBevel(float coord, VoxelEdge edge)
+    private float ApplyBevel(float coord, VoxelEdge edge, float bevelCoord = 0.0f)
     {
         if (edge.hasBevel)
-            return (coord - 0.5f) * (1 - edge.bevelSizeFloat * 2) + 0.5f;
+            return (coord - 0.5f) * (1 - edge.bevelSizeFloat * 2 * (1 - bevelCoord)) + 0.5f;
         else
             return coord;
     }
