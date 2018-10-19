@@ -54,18 +54,29 @@ public struct VoxelEdge
         QUARTER, HALF, FULL
     }
 
-    // each bevel shape has an implied starting coordinate at (1, 0)
-    // and goes to the y=x diagonal
-    public static readonly Vector2[] BEVEL_SQUARE = new Vector2[] {
-        new Vector2(0.0f, 0.0f) };
-    public static readonly Vector2[] BEVEL_FLAT = new Vector2[] {
-        new Vector2(0.5f, 0.5f) };
-    public static readonly Vector2[] BEVEL_CURVE = new Vector2[] {
-        new Vector2(0.96592f, 0.25881f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
-    public static readonly Vector2[] BEVEL_STAIR_2 = new Vector2[] {
-        new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.5f) };
-    public static readonly Vector2[] BEVEL_STAIR_4 = new Vector2[] {
-        new Vector2(0.75f, 0.0f), new Vector2(0.75f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f) };
+    // each bevel shape starts at (1, 0) and goes to the y=x diagonal
+    public static readonly Vector2[] SHAPE_SQUARE = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.0f, 0.0f) };
+    public static readonly Vector2[] SHAPE_FLAT = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.5f) };
+    public static readonly Vector2[] SHAPE_CURVE = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
+    public static readonly Vector2[] SHAPE_STAIR_2 = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.5f) };
+    public static readonly Vector2[] SHAPE_STAIR_4 = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.75f, 0.0f), new Vector2(0.75f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f) };
+
+    // for each consecutive pair of vertices
+    public static readonly Vector2[] NORMALS_SQUARE = new Vector2[] {
+        new Vector2(0.0f, 1.0f) };
+    public static readonly Vector2[] NORMALS_FLAT = new Vector2[] {
+        new Vector2(0.70710f, 0.70710f) };
+    public static readonly Vector2[] NORMALS_CURVE = new Vector2[] {
+        new Vector2(0.99144f, 0.13052f), new Vector2(0.92387f, 0.38268f), new Vector2(0.79335f, 0.60876f) };
+    public static readonly Vector2[] NORMALS_STAIR_2 = new Vector2[] {
+        new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f) };
+    public static readonly Vector2[] NORMALS_STAIR_4 = new Vector2[] {
+        new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f) };
 
     private byte bevel;
     public bool addSelected, storedSelected;
@@ -101,15 +112,36 @@ public struct VoxelEdge
             switch (bevelType)
             {
                 case BevelType.SQUARE:
-                    return BEVEL_SQUARE;
+                    return SHAPE_SQUARE;
                 case BevelType.FLAT:
-                    return BEVEL_FLAT;
+                    return SHAPE_FLAT;
                 case BevelType.CURVE:
-                    return BEVEL_CURVE;
+                    return SHAPE_CURVE;
                 case BevelType.STAIR_2:
-                    return BEVEL_STAIR_2;
+                    return SHAPE_STAIR_2;
                 case BevelType.STAIR_4:
-                    return BEVEL_STAIR_4;
+                    return SHAPE_STAIR_4;
+            }
+            return null;
+        }
+    }
+
+    public Vector2[] bevelTypeNormalArray
+    {
+        get
+        {
+            switch (bevelType)
+            {
+                case BevelType.SQUARE:
+                    return NORMALS_SQUARE;
+                case BevelType.FLAT:
+                    return NORMALS_FLAT;
+                case BevelType.CURVE:
+                    return NORMALS_CURVE;
+                case BevelType.STAIR_2:
+                    return NORMALS_STAIR_2;
+                case BevelType.STAIR_4:
+                    return NORMALS_STAIR_4;
             }
             return null;
         }
@@ -527,7 +559,8 @@ public class Voxel : MonoBehaviour
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
             if (edges[edgeB].hasBevel || edges[edgeC].hasBevel)
             {
-                int bevelCount = (edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC]).bevelTypeArray.Length;
+                int bevelCount = (edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC])
+                    .bevelTypeArray.Length * 2 - 2;
                 corners[i].bevel_i = vertexI;
                 corners[i].bevel_count = bevelCount;
                 corners[i].count += bevelCount;
@@ -536,7 +569,7 @@ public class Voxel : MonoBehaviour
             if (edges[edgeA].hasBevel && !edges[edgeB].hasBevel && !edges[edgeC].hasBevel)
             { // cutout/profile for bevel
                 corners[i].bevelProfile_i = vertexI;
-                corners[i].bevelProfile_count = edges[edgeA].bevelTypeArray.Length * 2 - 1;
+                corners[i].bevelProfile_count = edges[edgeA].bevelTypeArray.Length * 2 - 3;
                 corners[i].count += corners[i].bevelProfile_count;
                 vertexI += corners[i].bevelProfile_count;
 
@@ -649,17 +682,18 @@ public class Voxel : MonoBehaviour
             if (corner.bevelProfile_i != -1)
             {
                 Vector2[] bevelArray = edges[edgeA].bevelTypeArray;
-                for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
+                for (int bevelI = 0; bevelI < bevelArray.Length - 1; bevelI++)
                 {
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelArray[bevelI].x);
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelArray[bevelI].y);
+                    Vector2 bevelVector = bevelArray[bevelI + 1];
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelVector.x);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelVector.y);
                     vertices[corner.bevelProfile_i + bevelI] = Vector3FromArray(vertexPos);
                     uvs[corner.bevelProfile_i + bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
                     normals[corner.bevelProfile_i + bevelI] = normal;
                     tangents[corner.bevelProfile_i + bevelI] = tangent;
 
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelArray[bevelI].y); // x/y are swapped
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelArray[bevelI].x);
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelVector.y); // x/y are swapped
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelVector.x);
                     // last iteration vertices will overlap
                     vertices[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = Vector3FromArray(vertexPos);
                     uvs[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
@@ -671,6 +705,7 @@ public class Voxel : MonoBehaviour
             {
                 VoxelEdge beveledEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
                 Vector2[] bevelArray = beveledEdge.bevelTypeArray;
+                int bevelVertex = corner.bevel_i;
                 for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
                 {
                     Vector2 bevelVector = bevelArray[bevelI];
@@ -679,8 +714,8 @@ public class Voxel : MonoBehaviour
                         edges[edgeC].hasBevel ? bevelVector.y : bevelVector.x);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
                         edges[edgeB].hasBevel ? bevelVector.y : bevelVector.x);
-                    vertices[corner.bevel_i + bevelI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-                    tangents[corner.bevel_i + bevelI] = tangent;
+                    vertices[bevelVertex] = Vector3FromArray(vertexPos);
+                    tangents[bevelVertex] = tangent;
 
                     // calc uv
                     float uvCoord = ((float)bevelI + 1) / (float)bevelArray.Length;
@@ -688,13 +723,28 @@ public class Voxel : MonoBehaviour
                         edges[edgeC].hasBevel ? uvCoord : bevelVector.x);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
                         edges[edgeB].hasBevel ? uvCoord : bevelVector.x);
-                    uvs[corner.bevel_i + bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+                    uvs[bevelVertex] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
 
-                    // calc diagonal normal
-                    vertexPos[axis] = (faceNum % 2) * 2 - 1;
-                    vertexPos[(axis + 1) % 3] = edges[edgeC].hasBevel ? (SQUARE_LOOP[i].x * 2 - 1) : 0;
-                    vertexPos[(axis + 2) % 3] = edges[edgeB].hasBevel ? (SQUARE_LOOP[i].y * 2 - 1) : 0;
-                    normals[corner.bevel_i + bevelI] = Vector3FromArray(vertexPos).normalized;
+                    if (bevelI != 0 && bevelI != bevelArray.Length - 1)
+                    {
+                        vertices[bevelVertex + 1] = vertices[bevelVertex];
+                        tangents[bevelVertex + 1] = tangents[bevelVertex];
+                        uvs[bevelVertex + 1] = uvs[bevelVertex];
+                        bevelVertex++;
+                    }
+                    bevelVertex++;
+                }
+
+                // add normals for each pair of bevel vertices
+                Vector2[] bevelNormalArray = beveledEdge.bevelTypeNormalArray;
+                for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
+                {
+                    Vector2 normalVector = bevelNormalArray[bevelI];
+                    vertexPos[axis] = normalVector.x * ((faceNum % 2) * 2 - 1);
+                    vertexPos[(axis + 1) % 3] = edges[edgeC].hasBevel ? normalVector.y * (SQUARE_LOOP[i].x * 2 - 1) : 0;
+                    vertexPos[(axis + 2) % 3] = edges[edgeB].hasBevel ? normalVector.y * (SQUARE_LOOP[i].y * 2 - 1) : 0;
+                    normals[corner.bevel_i + bevelI * 2] = normals[corner.bevel_i + bevelI * 2 + 1]
+                        = Vector3FromArray(vertexPos);
                 }
             }
         }
@@ -732,7 +782,7 @@ public class Voxel : MonoBehaviour
         // for each pair of edge vertices
         foreach (int edgeI in surroundingEdges)
             if (edges[edgeI].hasBevel)
-                triangleCount += 6 * edges[edgeI].bevelTypeArray.Length;
+                triangleCount += 6 * edges[edgeI].bevelTypeNormalArray.Length;
         for (int i = 0; i < 4; i++)
         {
             if (vertices[i].bevelProfile_count != 0)
@@ -765,19 +815,13 @@ public class Voxel : MonoBehaviour
             int j = (i + 1) % 4;
             if (edges[surroundingEdges[i]].hasBevel)
             {
-                QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
-                    vertices[i].innerRect_i,
-                    vertices[i].bevel_i,
-                    vertices[j].bevel_i,
-                    vertices[j].innerRect_i);
-                triangleCount += 6;
-                for (int bevelI = 0; bevelI < vertices[i].bevel_count - 1; bevelI++)
-                { // won't run if bevel_count is 1
+                for (int bevelI = 0; bevelI < vertices[i].bevel_count / 2; bevelI++)
+                {
                     QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
-                        vertices[i].bevel_i + bevelI,
-                        vertices[i].bevel_i + bevelI + 1,
-                        vertices[j].bevel_i + bevelI + 1,
-                        vertices[j].bevel_i + bevelI);
+                        vertices[i].bevel_i + bevelI * 2,
+                        vertices[i].bevel_i + bevelI * 2 + 1,
+                        vertices[j].bevel_i + bevelI * 2 + 1,
+                        vertices[j].bevel_i + bevelI * 2);
                     triangleCount += 6;
                 }
             }
