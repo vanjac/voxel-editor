@@ -532,47 +532,53 @@ public class Voxel : MonoBehaviour
         // 3 top left (+Y)
         for (int i = 0; i < 4; i++)
         {
+            FaceCornerVertices corner = corners[i];
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
 
             vertexPos[axis] = faceNum % 2;
             vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x,
-                corners[i].edgeC_i != -1 ? edges[edgeA] : edges[edgeC]);
+                corner.edgeC_i != -1 ? edges[edgeA] : edges[edgeC]);
             vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y,
-                corners[i].edgeB_i != -1 ? edges[edgeA] : edges[edgeB]);
-            Vector3 vertex = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
-            vertices[corners[i].innerRect_i] = vertex;
+                corner.edgeB_i != -1 ? edges[edgeA] : edges[edgeB]);
+            vertices[corner.innerRect_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
 
-            normals[corners[i].innerRect_i] = normal;
-            tangents[corners[i].innerRect_i] = tangent;
-
-            vertex += transform.position;
-            Vector2 uv = new Vector2(
-                vertex.x * positiveU_xyz.x + vertex.y * positiveU_xyz.y + vertex.z * positiveU_xyz.z,
-                vertex.x * positiveV_xyz.x + vertex.y * positiveV_xyz.y + vertex.z * positiveV_xyz.z);
-            uvs[corners[i].innerRect_i] = uv;
-
-            if (corners[i].edgeB_i != -1)
+            if (corner.edgeB_i != -1)
             {
                 vertexPos[axis] = faceNum % 2;
                 vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA]);
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
-                vertices[corners[i].edgeB_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                vertices[corner.edgeB_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
             }
-            if (corners[i].edgeC_i != -1)
+            if (corner.edgeC_i != -1)
             {
                 vertexPos[axis] = faceNum % 2;
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                 vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA]);
-                vertices[corners[i].edgeC_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                vertices[corner.edgeC_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
             }
-            if (corners[i].bevel_i != -1)
+            if (corner.bevel_i != -1)
             {
                 vertexPos[axis] = ApplyBevel(faceNum % 2, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC]);
                 vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA]);
                 vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA]);
-                vertices[corners[i].bevel_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
+                vertices[corner.bevel_i] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
             }
+        }
+
+        // add normals, tangents, uvs to all vertices
+        int minI = corners[0].innerRect_i;
+        int maxI = minI + corners[0].count + corners[1].count + corners[2].count + corners[3].count;
+        for (int v = minI; v < maxI; v++)
+        {
+            Vector3 vertex = vertices[v];
+            vertex += transform.position;
+            Vector2 uv = new Vector2(
+                vertex.x * positiveU_xyz.x + vertex.y * positiveU_xyz.y + vertex.z * positiveU_xyz.z,
+                vertex.x * positiveV_xyz.x + vertex.y * positiveV_xyz.y + vertex.z * positiveV_xyz.z);
+            uvs[v] = uv;
+            normals[v] = normal;
+            tangents[v] = tangent;
         }
     }
 
