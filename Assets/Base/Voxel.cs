@@ -626,8 +626,10 @@ public class Voxel : MonoBehaviour
                 {
                     Vector2 bevelVector = bevelArray[bevelI];
                     vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, bevelVector.x);
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA], bevelVector.y);
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA], bevelVector.y);
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
+                        edges[edgeC].hasBevel ? bevelVector.y : bevelVector.x);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
+                        edges[edgeB].hasBevel ? bevelVector.y : bevelVector.x);
                     vertices[corner.bevel_i + bevelI] = new Vector3(vertexPos[0], vertexPos[1], vertexPos[2]);
                 }
             }
