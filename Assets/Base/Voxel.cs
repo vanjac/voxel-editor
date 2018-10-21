@@ -539,14 +539,25 @@ public class Voxel : MonoBehaviour
     // see "Voxel Diagram.skp" for a diagram of mesh vertices
     private struct FaceCornerVertices
     {
-        public int count;
-        // all part of the flat surface of the face:
-        public int innerRect_i, edgeB_i, edgeC_i, bevelProfile_i, bevelProfile_count;
+        public int count; // total number of vertices
+        // All faces have an inner quad; other structures build off of it.
+        // innerQuad_i of the zeroth corner is always the lowest-numbered vertex of the face.
+        public int innerQuad_i;
+        // "Tabs" on the edge of the quad to leave a rectangular cutout for the bevel profile
+        public int edgeB_i, edgeC_i;
+        // The profile of a bevel orthogonal to the face.
+        // edgeC and edgeB are the first and last vertices of the profile (in that order)
+        // So only the middle vertices are part of bevelProfile.
+        public int bevelProfile_i, bevelProfile_count;
+        // The only vertices that may extend below/above the plane of the face.
+        // The first bevel vertex will be identical to innerRect but with a different normal.
+        // The middle bevel vertices (not including first/last) are doubled up -- same position,
+        // (potentially) different normals.
         public int bevel_i, bevel_count;
         public FaceCornerVertices(int ignored)
         {
             count = bevelProfile_count = bevel_count = 0;
-            innerRect_i = edgeB_i = edgeC_i = bevelProfile_i = bevel_i = -1;
+            innerQuad_i = edgeB_i = edgeC_i = bevelProfile_i = bevel_i = -1;
         }
     }
 
@@ -558,7 +569,7 @@ public class Voxel : MonoBehaviour
             return corners;
         for (int i = 0; i < 4; i++)
         {
-            corners[i].innerRect_i = vertexI++;
+            corners[i].innerQuad_i = vertexI++;
             corners[i].count++;
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
@@ -572,7 +583,7 @@ public class Voxel : MonoBehaviour
                 vertexI += bevelCount;
             }
             if (edges[edgeA].hasBevel && !edges[edgeB].hasBevel && !edges[edgeC].hasBevel)
-            { // cutout/profile for bevel
+            {
                 corners[i].bevelProfile_i = vertexI;
                 corners[i].bevelProfile_count = edges[edgeA].bevelTypeArray.Length * 2 - 3;
                 corners[i].count += corners[i].bevelProfile_count;
@@ -661,10 +672,10 @@ public class Voxel : MonoBehaviour
                 corner.edgeC_i != -1 ? edges[edgeA] : edges[edgeC]);
             vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y,
                 corner.edgeB_i != -1 ? edges[edgeA] : edges[edgeB]);
-            vertices[corner.innerRect_i] = Vector3FromArray(vertexPos);
-            uvs[corner.innerRect_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
-            normals[corner.innerRect_i] = normal;
-            tangents[corner.innerRect_i] = tangent;
+            vertices[corner.innerQuad_i] = Vector3FromArray(vertexPos);
+            uvs[corner.innerQuad_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
+            normals[corner.innerQuad_i] = normal;
+            tangents[corner.innerQuad_i] = tangent;
 
             if (corner.edgeB_i != -1)
             {
@@ -807,10 +818,10 @@ public class Voxel : MonoBehaviour
         triangleCount = 0;
 
         QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
-            vertices[0].innerRect_i,
-            vertices[1].innerRect_i,
-            vertices[2].innerRect_i,
-            vertices[3].innerRect_i);
+            vertices[0].innerQuad_i,
+            vertices[1].innerQuad_i,
+            vertices[2].innerQuad_i,
+            vertices[3].innerQuad_i);
         triangleCount += 6;
 
         // for each pair of edge vertices
@@ -834,13 +845,13 @@ public class Voxel : MonoBehaviour
                 bool profileCCW = (faceNum % 2 == 1) ^ (i % 2 == 0);
                 // first
                 AddTriangle(triangles, triangleCount, profileCCW,
-                    vertices[i].innerRect_i,
+                    vertices[i].innerQuad_i,
                     vertices[i].bevelProfile_i,
                     vertices[i].edgeC_i);
                 triangleCount += 3;
                 // last
                 AddTriangle(triangles, triangleCount, profileCCW,
-                    vertices[i].innerRect_i,
+                    vertices[i].innerQuad_i,
                     vertices[i].edgeB_i,
                     vertices[i].bevelProfile_i + vertices[i].bevelProfile_count - 1);
                 triangleCount += 3;
@@ -848,7 +859,7 @@ public class Voxel : MonoBehaviour
                 for (int profileI = 0; profileI < vertices[i].bevelProfile_count - 1; profileI++)
                 {
                     AddTriangle(triangles, triangleCount, profileCCW,
-                        vertices[i].innerRect_i,
+                        vertices[i].innerQuad_i,
                         vertices[i].bevelProfile_i + profileI + 1,
                         vertices[i].bevelProfile_i + profileI);
                     triangleCount += 3;
@@ -857,19 +868,19 @@ public class Voxel : MonoBehaviour
             if (i % 2 == 0 && vertices[i].edgeB_i != -1)
             {
                 QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
-                    vertices[i].innerRect_i,
+                    vertices[i].innerQuad_i,
                     vertices[i].edgeB_i,
                     vertices[j].edgeB_i,
-                    vertices[j].innerRect_i);
+                    vertices[j].innerQuad_i);
                 triangleCount += 6;
             }
             if (i % 2 == 1 && vertices[i].edgeC_i != -1)
             {
                 QuadTriangles(triangles, triangleCount, faceNum % 2 == 1,
-                    vertices[i].innerRect_i,
+                    vertices[i].innerQuad_i,
                     vertices[i].edgeC_i,
                     vertices[j].edgeC_i,
-                    vertices[j].innerRect_i);
+                    vertices[j].innerQuad_i);
                 triangleCount += 6;
             }
         }
