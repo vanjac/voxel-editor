@@ -66,17 +66,19 @@ public struct VoxelEdge
     public static readonly Vector2[] SHAPE_STAIR_4 = new Vector2[] {
         new Vector2(1.0f, 0.0f), new Vector2(0.75f, 0.0f), new Vector2(0.75f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f) };
 
-    // for each consecutive pair of vertices
+    // a pair of normals for each line segment connecting 2 vertices
     public static readonly Vector2[] NORMALS_SQUARE = new Vector2[] {
-        new Vector2(0.0f, 1.0f) };
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f) };
     public static readonly Vector2[] NORMALS_FLAT = new Vector2[] {
-        new Vector2(0.70710f, 0.70710f) };
+        new Vector2(0.70710f, 0.70710f), new Vector2(0.70710f, 0.70710f) };
     public static readonly Vector2[] NORMALS_CURVE = new Vector2[] {
-        new Vector2(0.99144f, 0.13052f), new Vector2(0.92387f, 0.38268f), new Vector2(0.79335f, 0.60876f) };
+        new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.96592f, 0.25881f),
+        new Vector2(0.86602f, 0.5f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
     public static readonly Vector2[] NORMALS_STAIR_2 = new Vector2[] {
-        new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f) };
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
     public static readonly Vector2[] NORMALS_STAIR_4 = new Vector2[] {
-        new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f) };
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f),
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
 
     private byte bevel;
     public bool addSelected, storedSelected;
@@ -735,7 +737,7 @@ public class Voxel : MonoBehaviour
                     bevelVertex++;
                 }
 
-                // add normals for each pair of bevel vertices
+                // add normals for each bevel vertex
                 Vector2[] bevelNormalArray = beveledEdge.bevelTypeNormalArray;
                 for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
                 {
@@ -743,8 +745,7 @@ public class Voxel : MonoBehaviour
                     vertexPos[axis] = normalVector.x * ((faceNum % 2) * 2 - 1);
                     vertexPos[(axis + 1) % 3] = edges[edgeC].hasBevel ? normalVector.y * (SQUARE_LOOP[i].x * 2 - 1) : 0;
                     vertexPos[(axis + 2) % 3] = edges[edgeB].hasBevel ? normalVector.y * (SQUARE_LOOP[i].y * 2 - 1) : 0;
-                    normals[corner.bevel_i + bevelI * 2] = normals[corner.bevel_i + bevelI * 2 + 1]
-                        = Vector3FromArray(vertexPos);
+                    normals[corner.bevel_i + bevelI] = Vector3FromArray(vertexPos);
                 }
             }
         }
@@ -782,7 +783,7 @@ public class Voxel : MonoBehaviour
         // for each pair of edge vertices
         foreach (int edgeI in surroundingEdges)
             if (edges[edgeI].hasBevel)
-                triangleCount += 6 * edges[edgeI].bevelTypeNormalArray.Length;
+                triangleCount += 6 * (edges[edgeI].bevelTypeArray.Length - 1);
         for (int i = 0; i < 4; i++)
         {
             if (vertices[i].bevelProfile_count != 0)
