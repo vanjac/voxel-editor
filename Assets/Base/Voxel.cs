@@ -534,6 +534,9 @@ public class Voxel : MonoBehaviour
 
     // Utility functions for UpdateVoxel() ...
 
+    // stores indices of the mesh vertices of one corner of a face
+    // 4 corners per face, 6 faces per voxel
+    // see "Voxel Diagram.skp" for a diagram of mesh vertices
     private struct FaceCornerVertices
     {
         public int count;
