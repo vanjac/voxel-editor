@@ -36,10 +36,22 @@ public class BevelGUI : GUIPanel
         var newBevelSize = (VoxelEdge.BevelSize)GUILayout.SelectionGrid((int)voxelEdge.bevelSize,
             new string[] { "Quarter", "Half", "Full" },
             3, GUI.skin.GetStyle("button_tab"));
-        if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize)
+        GUILayout.BeginHorizontal();
+        var newAddSelected = GUILayout.Toggle(voxelEdge.addSelected, "+Select", GUI.skin.button);
+        var newStoredSelected = GUILayout.Toggle(voxelEdge.storedSelected, ".Select", GUI.skin.button);
+        var newCapMin = GUILayout.Toggle(voxelEdge.capMin, "Cap Min", GUI.skin.button);
+        var newCapMax = GUILayout.Toggle(voxelEdge.capMax, "Cap Max", GUI.skin.button);
+        GUILayout.EndHorizontal();
+        if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize
+            || newAddSelected != voxelEdge.addSelected || newStoredSelected != voxelEdge.storedSelected
+            || newCapMin != voxelEdge.capMin || newCapMax != voxelEdge.capMax)
         {
             voxelEdge.bevelType = newBevelType;
             voxelEdge.bevelSize = newBevelSize;
+            voxelEdge.addSelected = newAddSelected;
+            voxelEdge.storedSelected = newStoredSelected;
+            voxelEdge.capMin = newCapMin;
+            voxelEdge.capMax = newCapMax;
             voxelArray.TEMP_SetEdges(voxelEdge, edgeNum);
         }
     }
