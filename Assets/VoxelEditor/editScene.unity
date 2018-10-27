@@ -160,7 +160,23 @@ MonoBehaviour:
   rotateAxis: {fileID: 1097770323}
   selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
   xRayMaterial: {fileID: 2100000, guid: 8ffa1294a1f85dc43a81fbf0658632b4, type: 2}
-  highlightMaterial: {fileID: 2100000, guid: 5468337243144414d87a11487d2c9c6f, type: 2}
+  highlightMaterials:
+  - {fileID: 0}
+  - {fileID: 2100000, guid: d8d112ed1e0b5214687e38a2cfb06b8d, type: 2}
+  - {fileID: 2100000, guid: 7b1a302a534a596458afcfc2f821f4ef, type: 2}
+  - {fileID: 2100000, guid: cb8af3a4b679b7f4286c1f406e14e269, type: 2}
+  - {fileID: 2100000, guid: 8ec8c78b38ec521438b3f220cea249f9, type: 2}
+  - {fileID: 2100000, guid: 3beee59281450564694f69adc636d9bb, type: 2}
+  - {fileID: 2100000, guid: 364c35fa35feb4540958b23e81e11a10, type: 2}
+  - {fileID: 2100000, guid: 13558de352b6df74aa48d522ab22e4f4, type: 2}
+  - {fileID: 2100000, guid: cf468c8e42bf3df44ab29dca8c4b3100, type: 2}
+  - {fileID: 2100000, guid: ee7590db3f2debf4eb1facc3e5aca1b9, type: 2}
+  - {fileID: 2100000, guid: be6fb53118c2d9e41842664657f5304b, type: 2}
+  - {fileID: 2100000, guid: 9bd54a44277c4cd4ebaa82216a82c49c, type: 2}
+  - {fileID: 2100000, guid: c66e986febc04264a95d1e3d0e609113, type: 2}
+  - {fileID: 2100000, guid: c233d386f24645649800b3d7b9c90d8d, type: 2}
+  - {fileID: 2100000, guid: cb774f9701d258d45bef91d80e55aa54, type: 2}
+  - {fileID: 2100000, guid: 5468337243144414d87a11487d2c9c6f, type: 2}
   unsavedChanges: 0
   selectionChanged: 0
   selectMode: 0

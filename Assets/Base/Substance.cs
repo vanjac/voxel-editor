@@ -21,7 +21,7 @@ public class Substance : DynamicEntity
         {
             _highlight = value;
             if (highlightMaterial == null)
-                highlightMaterial = Material.Instantiate(Voxel.highlightMaterial);
+                highlightMaterial = Material.Instantiate(Voxel.highlightMaterials[15]);
             highlightMaterial.color = _highlight;
         }
     }

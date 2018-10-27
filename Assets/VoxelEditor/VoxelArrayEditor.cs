@@ -83,7 +83,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public Material selectedMaterial;
     public Material xRayMaterial;
-    public Material highlightMaterial;
+    public Material[] highlightMaterials;
 
     public bool unsavedChanges = false; // set by VoxelArrayEditor, checked and cleared by EditorFile
     public bool selectionChanged = false; // set by VoxelArrayEditor, checked and cleared by PropertiesGUI
@@ -127,7 +127,7 @@ public class VoxelArrayEditor : VoxelArray
             instance = this;
         Voxel.selectedMaterial = selectedMaterial;
         Voxel.xRayMaterial = xRayMaterial;
-        Voxel.highlightMaterial = highlightMaterial;
+        Voxel.highlightMaterials = highlightMaterials;
 
         ClearSelection();
         selectionChanged = false;
@@ -933,12 +933,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         Debug.Log("Read edges");
         foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
-        {
-            VoxelEdge edge = faceRef.voxel.edges[n];
-            edge.addSelected = false;
-            edge.storedSelected = false;
-            return edge;
-        }
+            return faceRef.voxel.edges[n];
         return new VoxelEdge();
     }
 

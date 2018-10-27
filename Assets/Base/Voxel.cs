@@ -204,9 +204,9 @@ public class Voxel : MonoBehaviour
 {
     public static VoxelFace EMPTY_FACE = new VoxelFace();
 
-    public static Material selectedMaterial; // set by VoxelArray instance
+    public static Material selectedMaterial; // set by VoxelArrayEditor instance
     public static Material xRayMaterial;
-    public static Material highlightMaterial;
+    public static Material[] highlightMaterials;
 
     // constants for generating mesh
     private readonly static Vector2[] SQUARE_LOOP = new Vector2[]
@@ -480,7 +480,7 @@ public class Voxel : MonoBehaviour
             var corners = GetFaceVertices(faceNum, numVertices);
             faceCorners[faceNum] = corners;
             numVertices += corners[0].count + corners[1].count + corners[2].count + corners[3].count;
-            numMaterials += FaceMaterialCount(faces[faceNum], xRay, coloredHighlightMaterial);
+            numMaterials += FaceMaterialCount(faceNum, xRay, coloredHighlightMaterial);
         }
 
         var vertices = new Vector3[numVertices];
@@ -510,7 +510,7 @@ public class Voxel : MonoBehaviour
             if (triangles == null)
                 continue;
 
-            foreach (Material faceMaterial in IterateFaceMaterials(faces[faceNum], xRay, coloredHighlightMaterial))
+            foreach (Material faceMaterial in IterateFaceMaterials(faceNum, xRay, coloredHighlightMaterial))
             {
                 materials[numMaterials] = faceMaterial;
                 mesh.SetTriangles(triangles, numMaterials);
@@ -859,13 +859,7 @@ public class Voxel : MonoBehaviour
         if (faces[faceNum].IsEmpty())
             return null;
 
-        int axis = FaceIAxis(faceNum);
-        int[] surroundingEdges = new int[] {
-            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2], // 0 - 1
-            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + 2], // 1 - 2
-            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2 + 1], // 2 - 3
-            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2)] // 3 - 0
-        };
+        int[] surroundingEdges = FaceSurroundingEdges(faceNum);
 
         int triangleCount = 6;
         // for each pair of edge vertices
@@ -1002,8 +996,9 @@ public class Voxel : MonoBehaviour
         triangleArray[i + 2] = ccw ? vertex2 : vertex1;
     }
 
-    private int FaceMaterialCount(VoxelFace face, bool xRay, Material coloredHighlightMaterial)
+    private int FaceMaterialCount(int faceNum, bool xRay, Material coloredHighlightMaterial)
     {
+        VoxelFace face = faces[faceNum];
         if (face.IsEmpty())
             return 0;
         int count = 0;
@@ -1020,12 +1015,24 @@ public class Voxel : MonoBehaviour
             count++;
         if (face.addSelected || face.storedSelected)
             count++;
+
+        int[] surroundingEdges = FaceSurroundingEdges(faceNum);
+        foreach (int edgeI in surroundingEdges)
+        {
+            if (edges[edgeI].addSelected || edges[edgeI].storedSelected)
+            {
+                count++;
+                break;
+            }
+        }
+
         return count;
     }
 
 
-    private IEnumerable<Material> IterateFaceMaterials(VoxelFace face, bool xRay, Material coloredHighlightMaterial)
+    private IEnumerable<Material> IterateFaceMaterials(int faceNum, bool xRay, Material coloredHighlightMaterial)
     {
+        VoxelFace face = faces[faceNum];
         if (face.IsEmpty())
             yield break;
         if (xRay)
@@ -1041,6 +1048,30 @@ public class Voxel : MonoBehaviour
             yield return coloredHighlightMaterial;
         if (face.addSelected || face.storedSelected)
             yield return selectedMaterial;
+
+        int highlightNum = 0;
+        int[] surroundingEdges = FaceSurroundingEdges(faceNum);
+        for (int surroundingEdgeI = 0; surroundingEdgeI < 4; surroundingEdgeI++)
+        {
+            var e = edges[surroundingEdges[surroundingEdgeI]];
+            if (e.addSelected || e.storedSelected)
+            {
+                int n = surroundingEdgeI + 1;
+                if (faceNum % 2 == 1)
+                    n = 4 - (n % 4);
+                int axis = FaceIAxis(faceNum);
+                if (faceNum == 4)
+                    n += 3;
+                if (faceNum == 5)
+                    n += 1;
+                n += VoxelFace.GetOrientationRotation(face.orientation);
+                if (VoxelFace.GetOrientationMirror(face.orientation))
+                    n = 3 - (n % 4);
+                highlightNum |= 1 << (n % 4);
+            }
+        }
+        if (highlightNum != 0)
+            yield return highlightMaterials[highlightNum];
     }
 
 
@@ -1052,6 +1083,17 @@ public class Voxel : MonoBehaviour
             + SQUARE_LOOP_COORD_INDEX[(vertexI >= 2 ? 1 : 0) + (faceNum % 2) * 2];
         edgeC = ((axis + 2) % 3) * 4
             + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (vertexI == 1 || vertexI == 2 ? 2 : 0)];
+    }
+
+    private int[] FaceSurroundingEdges(int faceNum)
+    {
+        int axis = FaceIAxis(faceNum);
+        return new int[] {
+            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2], // 0 - 1
+            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + 2], // 1 - 2
+            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2 + 1], // 2 - 3
+            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2)] // 3 - 0
+        };
     }
 
     private float ApplyBevel(float coord, VoxelEdge edge, float bevelCoord = 0.0f)
