@@ -762,6 +762,8 @@ public class Voxel : MonoBehaviour
 
             if (corner.bevel_i != -1)
             {
+                VoxelEdge beveledEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
+
                 Vector3 capNormal = Vector3.zero;
                 if (corner.cap_i != -1)
                 {
@@ -769,8 +771,11 @@ public class Voxel : MonoBehaviour
                     vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
                     vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y;
                     vertices[corner.cap_i] = Vector3FromArray(vertexPos);
-                    uvs[corner.cap_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz); // TODO
                     tangents[corner.cap_i] = tangent; // TODO
+                    // uv TODO
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, beveledEdge, 0.70711f);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, beveledEdge, 0.70711f);
+                    uvs[corner.cap_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
 
                     // normal (b and c are supposed to be swapped)
                     vertexPos[axis] = 0;
@@ -780,7 +785,6 @@ public class Voxel : MonoBehaviour
                     normals[corner.cap_i] = capNormal;
                 }
 
-                VoxelEdge beveledEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
                 Vector2[] bevelArray = beveledEdge.bevelTypeArray;
                 int bevelVertex = corner.bevel_i;
                 for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
