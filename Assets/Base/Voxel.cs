@@ -1059,7 +1059,6 @@ public class Voxel : MonoBehaviour
                 int n = surroundingEdgeI + 1;
                 if (faceNum % 2 == 1)
                     n = 4 - (n % 4);
-                int axis = FaceIAxis(faceNum);
                 if (faceNum == 4)
                     n += 3;
                 if (faceNum == 5)
