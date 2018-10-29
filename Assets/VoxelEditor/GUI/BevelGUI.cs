@@ -78,11 +78,22 @@ public class BevelGUI : LeftPanelGUI
             voxelEdge = voxelArray.TEMP_GetSelectedEdge(edgeNum);
         }
 
+        GUILayout.Label("Shape:");
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
-            new string[] { "None", "Square", "Flat", "Curve", "2 Stair", "4 Stair" },
+            new Texture[] {
+                GUIIconSet.instance.x,
+                GUIIconSet.instance.bevelIcons.square,
+                GUIIconSet.instance.bevelIcons.flat,
+                GUIIconSet.instance.bevelIcons.curve,
+                GUIIconSet.instance.bevelIcons.stair2,
+                GUIIconSet.instance.bevelIcons.stair4 },
             3, GUI.skin.GetStyle("button_tab"));
+        GUILayout.Label("Size:");
         var newBevelSize = (VoxelEdge.BevelSize)GUILayout.SelectionGrid((int)voxelEdge.bevelSize,
-            new string[] { "Quarter", "Half", "Full" },
+            new Texture[] {
+                GUIIconSet.instance.bevelIcons.quarter,
+                GUIIconSet.instance.bevelIcons.half,
+                GUIIconSet.instance.bevelIcons.full },
             3, GUI.skin.GetStyle("button_tab"));
         GUILayout.BeginHorizontal();
         var newAddSelected = GUILayout.Toggle(voxelEdge.addSelected, "+Select", GUI.skin.button);

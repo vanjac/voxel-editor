@@ -556,7 +556,12 @@ MonoBehaviour:
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   title: 
   scroll: {x: 0, y: 0}
-  slide: -486
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   voxelArray: {fileID: 213926859}
   normallyOpen: 1
   worldSelected: 0
@@ -588,6 +593,12 @@ MonoBehaviour:
   guiSkin: {fileID: 0}
   title: 
   scroll: {x: 0, y: 0}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   voxelArray: {fileID: 213926859}
   editorFile: {fileID: 213926860}
   touchListener: {fileID: 1179125982}
@@ -605,6 +616,12 @@ MonoBehaviour:
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   title: 
   scroll: {x: 0, y: 0}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!114 &878046152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -655,6 +672,15 @@ MonoBehaviour:
   delete: {fileID: 0}
   share: {fileID: 0}
   bevel: {fileID: 2800000, guid: a2196131ae0adc94db6a16177538d05f, type: 3}
+  bevelIcons:
+    quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
+    half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}
+    full: {fileID: 2800000, guid: 82908e4490a514243ba4932062757b07, type: 3}
+    square: {fileID: 2800000, guid: a70f93c573269aa439bb860584fcecb4, type: 3}
+    flat: {fileID: 2800000, guid: 25f1a4d2e901df44bbf70e4f15f807f4, type: 3}
+    curve: {fileID: 2800000, guid: 180c1c225960848459d004cc95a15e2f, type: 3}
+    stair2: {fileID: 2800000, guid: 70775c82176ed8b4a979d1a3b777ce50, type: 3}
+    stair4: {fileID: 2800000, guid: 2580dd68d1990d94cbc485272a032af4, type: 3}
 --- !u!114 &878046154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,6 +695,12 @@ MonoBehaviour:
   guiSkin: {fileID: 0}
   title: 
   scroll: {x: 0, y: 0}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   voxelArray: {fileID: 213926859}
   touchListener: {fileID: 1179125982}
 --- !u!1 &1061257463

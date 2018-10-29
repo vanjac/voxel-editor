@@ -34,6 +34,14 @@ public class GUIIconSet : MonoBehaviour
     public Texture share;
     public Texture bevel;
 
+    [System.Serializable]
+    public struct BevelIconSet
+    {
+        public Texture quarter, half, full;
+        public Texture square, flat, curve, stair2, stair4;
+    }
+    public BevelIconSet bevelIcons;
+
     public void Start()
     {
         instance = this;
