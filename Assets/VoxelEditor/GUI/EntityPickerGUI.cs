@@ -15,34 +15,30 @@ public class EntityPickerGUI : ActionBarGUI
     {
         base.OnEnable();
         stealFocus = true;
-        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
-        if (actionBar != null)
-            actionBar.enabled = false;
-        propertiesGUI.normallyOpen = false; // hide properties panel
+        GetComponent<PropertiesGUI>().normallyOpen = false; // hide properties panel
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
-        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
-        if (actionBar != null)
-            actionBar.enabled = true;
-        propertiesGUI.normallyOpen = true; // show properties panel
+        GetComponent<PropertiesGUI>().normallyOpen = true; // show properties panel
     }
 
-    void Start()
+    public override void Start()
     {
-        propertiesGUI.freezeUpdates = true; // prevent panel resetting scroll
+        base.Start();
+        GetComponent<PropertiesGUI>().freezeUpdates = true; // prevent panel resetting scroll
         selectionState = voxelArray.GetSelectionState();
         voxelArray.ClearSelection();
         voxelArray.ClearStoredSelection();
     }
 
-    void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         voxelArray.RecallSelectionState(selectionState);
         voxelArray.selectionChanged = false; // prevent panel resetting scroll
-        propertiesGUI.freezeUpdates = false;
+        GetComponent<PropertiesGUI>().freezeUpdates = false;
     }
 
     public override void WindowGUI()

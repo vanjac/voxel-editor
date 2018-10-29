@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionBarGUI : GUIPanel
+public class ActionBarGUI : TopPanelGUI
 {
     public const string OBJECT_NO_ROOM_ERROR = "There's no room to put an object there!";
 
@@ -19,21 +19,12 @@ public class ActionBarGUI : GUIPanel
         return style;
     });
 
-    protected PropertiesGUI propertiesGUI;
-
     public override void OnEnable()
     {
         holdOpen = true;
         stealFocus = false;
-        propertiesGUI = GetComponent<PropertiesGUI>();
 
         base.OnEnable();
-    }
-
-    public override Rect GetRect(float width, float height)
-    {
-        return new Rect(height/2 + propertiesGUI.slide, 0,
-            width - height/2 - propertiesGUI.slide, 0);
     }
 
     public override GUIStyle GetStyle()

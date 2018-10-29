@@ -8,19 +8,13 @@ public class CreateSubstanceGUI : ActionBarGUI
     {
         base.OnEnable();
         stealFocus = true;
-        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
-        if (actionBar != null)
-            actionBar.enabled = false;
-        propertiesGUI.normallyOpen = false; // hide properties panel
+        GetComponent<PropertiesGUI>().normallyOpen = false; // hide properties panel
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
-        ActionBarGUI actionBar = GetComponent<ActionBarGUI>();
-        if (actionBar != null)
-            actionBar.enabled = true;
-        propertiesGUI.normallyOpen = true; // show properties panel
+        GetComponent<PropertiesGUI>().normallyOpen = true; // show properties panel
     }
 
     public override void WindowGUI()

@@ -20,6 +20,8 @@ public abstract class GUIPanel : MonoBehaviour
         }
     }
 
+    public static GUIPanel leftPanel, topPanel;
+
     public string title = "";
 
     public Vector2 scroll = Vector2.zero;
@@ -32,7 +34,7 @@ public abstract class GUIPanel : MonoBehaviour
     protected bool stealFocus = true;
     protected float scaleFactor;
 
-    protected Rect panelRect;
+    public Rect panelRect;
 
     public virtual void OnEnable()
     {

@@ -164,20 +164,19 @@ public class TutorialGUI : GUIPanel
     {
         holdOpen = true;
         stealFocus = false;
-        propertiesGUI = GetComponent<PropertiesGUI>();
 
         base.OnEnable();
     }
 
-    private PropertiesGUI propertiesGUI;
     private float height;
 
     public override Rect GetRect(float width, float height)
     {
         float minHeight = GUI.skin.GetStyle("button_large").fixedHeight;
-        this.height = minHeight * (1.25f - propertiesGUI.slide / PropertiesGUI.SLIDE_HIDDEN * .25f);
-        return new Rect(height / 2 + propertiesGUI.slide, height - this.height,
-            width - height / 2 - propertiesGUI.slide, this.height);
+        Rect leftPanelRect = GUIPanel.leftPanel.panelRect;
+        this.height = minHeight * (1.25f - leftPanelRect.xMin / PropertiesGUI.SLIDE_HIDDEN * .25f);
+        return new Rect(leftPanelRect.xMax, height - this.height,
+            width - leftPanelRect.xMax, this.height);
     }
 
     public override GUIStyle GetStyle()

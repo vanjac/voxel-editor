@@ -143,11 +143,11 @@ class StoredEntityBehavior : StoredPropertiesObject
     }
 }
 
-public class PropertiesGUI : GUIPanel
+public class PropertiesGUI : LeftPanelGUI
 {
     public const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
 
-    public float slide = SLIDE_HIDDEN;
+    private float slide = SLIDE_HIDDEN;
     public VoxelArrayEditor voxelArray;
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
