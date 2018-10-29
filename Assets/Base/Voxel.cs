@@ -624,34 +624,39 @@ public class Voxel : MonoBehaviour
             }
             if (edges[edgeA].hasBevel && !edges[edgeB].hasBevel && !edges[edgeC].hasBevel)
             {
-                corners[i].bevelProfile_i = vertexI;
-                corners[i].bevelProfile_count = edges[edgeA].bevelTypeArray.Length * 2 - 3;
-                corners[i].count += corners[i].bevelProfile_count;
-                vertexI += corners[i].bevelProfile_count;
+                bool concaveB = faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
+                bool concaveC = faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
+                if (!concaveB && !concaveC)
+                {
+                    corners[i].bevelProfile_i = vertexI;
+                    corners[i].bevelProfile_count = edges[edgeA].bevelTypeArray.Length * 2 - 3;
+                    corners[i].count += corners[i].bevelProfile_count;
+                    vertexI += corners[i].bevelProfile_count;
 
-                if (corners[i].edgeB_i == -1)
-                {
-                    corners[i].edgeB_i = vertexI++;
-                    corners[i].count++;
-                }
-                if (corners[i].edgeC_i == -1)
-                {
-                    corners[i].edgeC_i = vertexI++;
-                    corners[i].count++;
-                }
-                int nextI = (i + 1) % 4;
-                int prevI = i == 0 ? 3 : i - 1;
-                int otherEdgeBI = i % 2 == 0 ? nextI : prevI;
-                int otherEdgeCI = i % 2 == 0 ? prevI : nextI;
-                if (corners[otherEdgeBI].edgeB_i == -1)
-                {
-                    corners[otherEdgeBI].edgeB_i = vertexI++;
-                    corners[otherEdgeBI].count++;
-                }
-                if (corners[otherEdgeCI].edgeC_i == -1)
-                {
-                    corners[otherEdgeCI].edgeC_i = vertexI++;
-                    corners[otherEdgeCI].count++;
+                    if (corners[i].edgeB_i == -1)
+                    {
+                        corners[i].edgeB_i = vertexI++;
+                        corners[i].count++;
+                    }
+                    if (corners[i].edgeC_i == -1)
+                    {
+                        corners[i].edgeC_i = vertexI++;
+                        corners[i].count++;
+                    }
+                    int nextI = (i + 1) % 4;
+                    int prevI = i == 0 ? 3 : i - 1;
+                    int otherEdgeBI = i % 2 == 0 ? nextI : prevI;
+                    int otherEdgeCI = i % 2 == 0 ? prevI : nextI;
+                    if (corners[otherEdgeBI].edgeB_i == -1)
+                    {
+                        corners[otherEdgeBI].edgeB_i = vertexI++;
+                        corners[otherEdgeBI].count++;
+                    }
+                    if (corners[otherEdgeCI].edgeC_i == -1)
+                    {
+                        corners[otherEdgeCI].edgeC_i = vertexI++;
+                        corners[otherEdgeCI].count++;
+                    }
                 }
             }
         } // end for each corner
@@ -763,6 +768,8 @@ public class Voxel : MonoBehaviour
             if (corner.bevel_i != -1)
             {
                 VoxelEdge beveledEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
+                int connectedFaceI = edges[edgeB].hasBevel ? EdgeBOtherFace(faceNum, i) : EdgeCOtherFace(faceNum, i);
+                bool concave = faces[connectedFaceI].IsEmpty();
 
                 Vector3 capNormal = Vector3.zero;
                 if (corner.cap_i != -1)
@@ -782,6 +789,8 @@ public class Voxel : MonoBehaviour
                     vertexPos[(axis + 1) % 3] = edges[edgeB].hasBevel ? (1 - SQUARE_LOOP[i].x * 2) : 0;
                     vertexPos[(axis + 2) % 3] = edges[edgeC].hasBevel ? (1 - SQUARE_LOOP[i].y * 2) : 0;
                     capNormal = Vector3FromArray(vertexPos);
+                    if (concave)
+                        capNormal = -capNormal;
                     normals[corner.cap_i] = capNormal;
                 }
 
@@ -790,11 +799,14 @@ public class Voxel : MonoBehaviour
                 for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
                 {
                     Vector2 bevelVector = bevelArray[bevelI];
-                    vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, bevelVector.x);
+                    float xCoord = bevelVector.x;
+                    if (concave)
+                        xCoord = 2 - xCoord;
+                    vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, xCoord);
                     vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
-                        edges[edgeC].hasBevel ? bevelVector.y : bevelVector.x);
+                        edges[edgeC].hasBevel ? bevelVector.y : xCoord);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
-                        edges[edgeB].hasBevel ? bevelVector.y : bevelVector.x);
+                        edges[edgeB].hasBevel ? bevelVector.y : xCoord);
                     vertices[bevelVertex] = Vector3FromArray(vertexPos);
                     tangents[bevelVertex] = tangent; // TODO
 
@@ -1082,6 +1094,26 @@ public class Voxel : MonoBehaviour
             + SQUARE_LOOP_COORD_INDEX[(vertexI >= 2 ? 1 : 0) + (faceNum % 2) * 2];
         edgeC = ((axis + 2) % 3) * 4
             + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (vertexI == 1 || vertexI == 2 ? 2 : 0)];
+    }
+
+    private int EdgeBOtherFace(int faceNum, int vertexI)
+    {
+        int axis = FaceIAxis(faceNum);
+        int other = ((axis + 2) % 3) * 2;
+        if (vertexI >= 2)
+            return other + 1;
+        else
+            return other;
+    }
+
+    private int EdgeCOtherFace(int faceNum, int vertexI)
+    {
+        int axis = FaceIAxis(faceNum);
+        int other = ((axis + 1) % 3 * 2);
+        if (vertexI == 1 || vertexI == 2)
+            return other + 1;
+        else
+            return other;
     }
 
     private int[] FaceSurroundingEdges(int faceNum)
