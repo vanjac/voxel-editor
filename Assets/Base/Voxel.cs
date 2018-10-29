@@ -80,7 +80,7 @@ public struct VoxelEdge
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f),
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
 
-    private byte bevel;
+    public byte bevel;
     public bool addSelected, storedSelected;
 
     public BevelType bevelType

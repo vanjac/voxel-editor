@@ -386,6 +386,10 @@ public class MapFileReader
                 ReadFace(faceObject, voxel, materials);
             }
         }
+
+        if (voxelObject["e"] != null)
+            foreach (JSONNode edgeNode in voxelObject["e"].AsArray)
+                ReadEdge(edgeNode.AsObject, voxel);
     }
 
     private void ReadFace(JSONObject faceObject, Voxel voxel, List<Material> materials)
@@ -409,6 +413,15 @@ public class MapFileReader
         {
             voxel.faces[faceI].orientation = (byte)(faceObject["orient"].AsInt);
         }
+    }
+
+    private void ReadEdge(JSONObject edgeObject, Voxel voxel)
+    {
+        if (edgeObject["i"] == null)
+            return;
+        int edgeI = edgeObject["i"].AsInt;
+        if (edgeObject["bevel"] != null)
+            voxel.edges[edgeI].bevel = (byte)(edgeObject["bevel"].AsInt);
     }
 
     private Vector3 ReadVector3(JSONArray a)

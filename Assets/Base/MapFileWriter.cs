@@ -8,8 +8,8 @@ using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 6;
-    private const int FILE_MIN_READER_VERSION = 6;
+    public const int VERSION = 7;
+    private const int FILE_MIN_READER_VERSION = 7;
 
     private string fileName;
 
@@ -229,6 +229,7 @@ public class MapFileWriter
     {
         JSONObject voxelObject = new JSONObject();
         voxelObject["at"] = WriteIntVector3(voxel.transform.position);
+
         JSONArray faces = new JSONArray();
         for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
         {
@@ -238,6 +239,17 @@ public class MapFileWriter
             faces[-1] = WriteFace(face, faceI, materials);
         }
         voxelObject["f"] = faces;
+
+        JSONArray edges = new JSONArray();
+        for (int edgeI = 0; edgeI < voxel.edges.Length; edgeI++)
+        {
+            VoxelEdge edge = voxel.edges[edgeI];
+            if (!edge.hasBevel)
+                continue;
+            edges[-1] = WriteEdge(edge, edgeI);
+        }
+        if (edges.Count != 0)
+            voxelObject["e"] = edges;
 
         if (voxel.substance != null)
             voxelObject["s"].AsInt = substances.IndexOf(voxel.substance);
@@ -262,6 +274,14 @@ public class MapFileWriter
             faceObject["orient"].AsInt = face.orientation;
         }
         return faceObject;
+    }
+
+    private JSONObject WriteEdge(VoxelEdge edge, int edgeI)
+    {
+        JSONObject edgeObject = new JSONObject();
+        edgeObject["i"].AsInt = edgeI;
+        edgeObject["bevel"].AsInt = edge.bevel;
+        return edgeObject;
     }
 
     private JSONArray WriteVector3(Vector3 v)
