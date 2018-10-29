@@ -710,13 +710,16 @@ public class Voxel : MonoBehaviour
             FaceCornerVertices corner = corners[i];
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
+            bool concaveB = faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
+            bool concaveC = faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
+            bool concaveA = concaveB || concaveC;
 
             vertexPos[axis] = faceNum % 2; // will stay for all planar vertices
 
             vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x,
-                corner.edgeC_i != -1 ? edges[edgeA] : edges[edgeC]);
+                corner.edgeC_i != -1 && !concaveA ? edges[edgeA] : edges[edgeC]);
             vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y,
-                corner.edgeB_i != -1 ? edges[edgeA] : edges[edgeB]);
+                corner.edgeB_i != -1 && !concaveA ? edges[edgeA] : edges[edgeB]);
             vertices[corner.innerQuad_i] = Vector3FromArray(vertexPos);
             uvs[corner.innerQuad_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
             normals[corner.innerQuad_i] = normal;
@@ -768,8 +771,7 @@ public class Voxel : MonoBehaviour
             if (corner.bevel_i != -1)
             {
                 VoxelEdge beveledEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
-                int connectedFaceI = edges[edgeB].hasBevel ? EdgeBOtherFace(faceNum, i) : EdgeCOtherFace(faceNum, i);
-                bool concave = faces[connectedFaceI].IsEmpty();
+                bool concave = edges[edgeB].hasBevel ? concaveB : concaveC;
 
                 Vector3 capNormal = Vector3.zero;
                 if (corner.cap_i != -1)
