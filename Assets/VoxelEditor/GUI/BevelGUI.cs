@@ -2,7 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BevelGUI : GUIPanel
+public class BevelActionBarGUI : ActionBarGUI
+{
+    private BevelGUI bevelGUI;
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        stealFocus = true;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+    }
+
+    public override void Start()
+    {
+        base.Start();
+        bevelGUI = gameObject.AddComponent<BevelGUI>();
+        bevelGUI.voxelArray = voxelArray;
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Destroy(bevelGUI);
+    }
+
+    public override void WindowGUI()
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        ActionBarLabel("Bevels");
+        GUILayout.FlexibleSpace();
+        if (HighlightedActionBarButton(GUIIconSet.instance.done))
+            Destroy(this);
+        GUILayout.EndHorizontal();
+    }
+}
+
+public class BevelGUI : LeftPanelGUI
 {
     public VoxelArrayEditor voxelArray;
 
@@ -11,11 +51,19 @@ public class BevelGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .2f, height * .1f, width * .6f, 0);
+        return new Rect(0, 0, height * .6f, height);
     }
 
-    public void Start()
+    public override void OnEnable()
     {
+        holdOpen = true;
+        stealFocus = false;
+        base.OnEnable();
+    }
+
+    public override void Start()
+    {
+        base.Start();
         voxelEdge = voxelArray.TEMP_GetSelectedEdge(edgeNum);
     }
 
@@ -32,13 +80,15 @@ public class BevelGUI : GUIPanel
 
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
             new string[] { "None", "Square", "Flat", "Curve", "2 Stair", "4 Stair" },
-            6, GUI.skin.GetStyle("button_tab"));
+            3, GUI.skin.GetStyle("button_tab"));
         var newBevelSize = (VoxelEdge.BevelSize)GUILayout.SelectionGrid((int)voxelEdge.bevelSize,
             new string[] { "Quarter", "Half", "Full" },
             3, GUI.skin.GetStyle("button_tab"));
         GUILayout.BeginHorizontal();
         var newAddSelected = GUILayout.Toggle(voxelEdge.addSelected, "+Select", GUI.skin.button);
         var newStoredSelected = GUILayout.Toggle(voxelEdge.storedSelected, ".Select", GUI.skin.button);
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
         var newCapMin = GUILayout.Toggle(voxelEdge.capMin, "Cap Min", GUI.skin.button);
         var newCapMax = GUILayout.Toggle(voxelEdge.capMax, "Cap Max", GUI.skin.button);
         GUILayout.EndHorizontal();
