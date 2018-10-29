@@ -805,6 +805,8 @@ public class Voxel : MonoBehaviour
                     if (concave)
                         xCoord = 2 - xCoord;
                     vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, xCoord);
+                    if (concave)
+                        xCoord = 1; // concave bevels aren't joined
                     vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
                         edges[edgeC].hasBevel ? bevelVector.y : xCoord);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
