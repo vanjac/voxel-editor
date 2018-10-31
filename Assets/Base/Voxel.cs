@@ -885,6 +885,11 @@ public class Voxel : MonoBehaviour
                     vertexPos[axis] = normalVector.x * ((faceNum % 2) * 2 - 1);
                     vertexPos[(axis + 1) % 3] = edges[edgeC].hasBevel ? normalVector.y * (SQUARE_LOOP[i].x * 2 - 1) : 0;
                     vertexPos[(axis + 2) % 3] = edges[edgeB].hasBevel ? normalVector.y * (SQUARE_LOOP[i].y * 2 - 1) : 0;
+                    if (concave)
+                    {
+                        vertexPos[(axis + 1) % 3] *= -1;
+                        vertexPos[(axis + 2) % 3] *= -1;
+                    }
                     normals[corner.bevel_i + bevelI] = Vector3FromArray(vertexPos);
                 }
             } // end if bevel
