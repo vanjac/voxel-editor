@@ -60,12 +60,7 @@ public class BevelGUI : LeftPanelGUI
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(0, 0, height / 2, height);
-    }
-
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
+        return new Rect(0, 0, height / 2, 0);
     }
 
     public override void OnEnable()
@@ -91,7 +86,6 @@ public class BevelGUI : LeftPanelGUI
 
     public override void WindowGUI()
     {
-        GUILayout.BeginVertical(GUI.skin.box);
         GUILayout.Label("Bevel:", GUI.skin.GetStyle("label_title"));
         if (GUILayout.Button("Refresh"))
             voxelEdge = voxelArray.GetSelectedBevel();
@@ -113,7 +107,6 @@ public class BevelGUI : LeftPanelGUI
                 GUIIconSet.instance.bevelIcons.half,
                 GUIIconSet.instance.bevelIcons.full },
             3, GUI.skin.GetStyle("button_tab"));
-        GUILayout.EndVertical();
 
         if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize)
         {
