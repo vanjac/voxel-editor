@@ -22,6 +22,7 @@ public class BevelActionBarGUI : ActionBarGUI
         base.Start();
         bevelGUI = gameObject.AddComponent<BevelGUI>();
         bevelGUI.voxelArray = voxelArray;
+        bevelGUI.touchListener = touchListener;
     }
 
     public override void OnDestroy()
@@ -42,9 +43,11 @@ public class BevelActionBarGUI : ActionBarGUI
     }
 }
 
+
 public class BevelGUI : LeftPanelGUI
 {
     public VoxelArrayEditor voxelArray;
+    public TouchListener touchListener;
 
     private int edgeNum = 0;
     private VoxelEdge voxelEdge;
@@ -59,12 +62,21 @@ public class BevelGUI : LeftPanelGUI
         holdOpen = true;
         stealFocus = false;
         base.OnEnable();
+        if (touchListener != null) // also in Start()
+            touchListener.selectType = VoxelElement.EDGES;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        touchListener.selectType = VoxelElement.FACES;
     }
 
     public override void Start()
     {
         base.Start();
         voxelEdge = voxelArray.TEMP_GetSelectedEdge(edgeNum);
+        touchListener.selectType = VoxelElement.EDGES; // also in OnEnable()
     }
 
     public override void WindowGUI()

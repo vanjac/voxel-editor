@@ -299,39 +299,50 @@ public class Voxel : MonoBehaviour
 
     public static int ClosestFaceI(Vector3 point)
     {
-        float dist = 2.0f;
+        float dist = 1.0f;
         int closestFaceI = -1;
-        if (Mathf.Abs(point.x) < dist)
-        {
-            dist = Mathf.Abs(point.x);
-            closestFaceI = 0;
-        }
-        if (Mathf.Abs(point.x - 1) < dist)
-        {
-            dist = Mathf.Abs(point.x - 1);
-            closestFaceI = 1;
-        }
-        if (Mathf.Abs(point.y) < dist)
-        {
-            dist = Mathf.Abs(point.y);
-            closestFaceI = 2;
-        }
-        if (Mathf.Abs(point.y - 1) < dist)
-        {
-            dist = Mathf.Abs(point.y - 1);
-            closestFaceI = 3;
-        }
-        if (Mathf.Abs(point.z) < dist)
-        {
-            dist = Mathf.Abs(point.z);
-            closestFaceI = 4;
-        }
-        if (Mathf.Abs(point.z - 1) < dist)
-        {
-            dist = Mathf.Abs(point.z - 1);
-            closestFaceI = 5;
-        }
+        MinDistance(ref dist, Mathf.Abs(point.x),     ref closestFaceI, 0);
+        MinDistance(ref dist, Mathf.Abs(point.x - 1), ref closestFaceI, 1);
+        MinDistance(ref dist, Mathf.Abs(point.y),     ref closestFaceI, 2);
+        MinDistance(ref dist, Mathf.Abs(point.y - 1), ref closestFaceI, 3);
+        MinDistance(ref dist, Mathf.Abs(point.z),     ref closestFaceI, 4);
+        MinDistance(ref dist, Mathf.Abs(point.z - 1), ref closestFaceI, 5);
         return closestFaceI;
+    }
+
+    public static int ClosestEdgeI(Vector3 point)
+    {
+        float distSq = 1.0f;
+        int closestEdgeI = -1;
+        MinDistance(ref distSq, MagSq2D(point.y,     point.z),     ref closestEdgeI, 0);
+        MinDistance(ref distSq, MagSq2D(point.y - 1, point.z),     ref closestEdgeI, 1);
+        MinDistance(ref distSq, MagSq2D(point.y - 1, point.z - 1), ref closestEdgeI, 2);
+        MinDistance(ref distSq, MagSq2D(point.y,     point.z - 1), ref closestEdgeI, 3);
+
+        MinDistance(ref distSq, MagSq2D(point.z,     point.x),     ref closestEdgeI, 4);
+        MinDistance(ref distSq, MagSq2D(point.z - 1, point.x),     ref closestEdgeI, 5);
+        MinDistance(ref distSq, MagSq2D(point.z - 1, point.x - 1), ref closestEdgeI, 6);
+        MinDistance(ref distSq, MagSq2D(point.z,     point.x - 1), ref closestEdgeI, 7);
+
+        MinDistance(ref distSq, MagSq2D(point.x,     point.y),     ref closestEdgeI, 8);
+        MinDistance(ref distSq, MagSq2D(point.x - 1, point.y),     ref closestEdgeI, 9);
+        MinDistance(ref distSq, MagSq2D(point.x - 1, point.y - 1), ref closestEdgeI, 10);
+        MinDistance(ref distSq, MagSq2D(point.x,     point.y - 1), ref closestEdgeI, 11);
+        return closestEdgeI;
+    }
+
+    private static float MagSq2D(float x, float y)
+    {
+        return x * x + y * y;
+    }
+
+    private static void MinDistance(ref float dist, float newDist, ref int value, int newValue)
+    {
+        if (newDist < dist)
+        {
+            dist = newDist;
+            value = newValue;
+        }
     }
 
     public static bool InEditor()
@@ -411,6 +422,31 @@ public class Voxel : MonoBehaviour
         }
         bounds.center += transform.position;
         return bounds;
+    }
+
+    public Bounds GetEdgeBounds(int edgeI)
+    {
+        Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
+        Vector3 size = new Vector3(0, 0, 0);
+        if (edgeI >= 0 && edgeI < 4)
+            size = new Vector3(1, 0, 0);
+        else if (edgeI >= 4 && edgeI < 8)
+            size = new Vector3(0, 1, 0);
+        else if (edgeI >= 8 && edgeI < 12)
+            size = new Vector3(0, 0, 1);
+        if (edgeI == 4 || edgeI == 5 || edgeI == 8 || edgeI == 11)
+            center.x = 0;
+        else if (edgeI == 6 || edgeI == 7 || edgeI == 9 || edgeI == 10)
+            center.x = 1;
+        if (edgeI == 0 || edgeI == 3 || edgeI == 8 || edgeI == 9)
+            center.y = 0;
+        else if (edgeI == 1 || edgeI == 2 || edgeI == 10 || edgeI == 11)
+            center.y = 1;
+        if (edgeI == 0 || edgeI == 1 || edgeI == 4 || edgeI == 7)
+            center.z = 0;
+        else if (edgeI == 2 || edgeI == 3 || edgeI == 5 || edgeI == 6)
+            center.z = 1;
+        return new Bounds(center + transform.position, size);
     }
 
     public Bounds GetBounds()

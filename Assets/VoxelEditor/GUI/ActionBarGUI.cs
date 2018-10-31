@@ -76,6 +76,7 @@ public class ActionBarGUI : TopPanelGUI
                 new OverflowMenuGUI.MenuItem("Bevel", GUIIconSet.instance.bevel, () => {
                     var bevelGUI = gameObject.AddComponent<BevelActionBarGUI>();
                     bevelGUI.voxelArray = voxelArray;
+                    bevelGUI.touchListener = touchListener;
                 }),
                 new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
                     var help = gameObject.AddComponent<HelpGUI>();

@@ -76,6 +76,69 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
+    public struct VoxelEdgeReference : VoxelArrayEditor.Selectable
+    {
+        public Voxel voxel;
+        public int edgeI;
+
+        public bool addSelected
+        {
+            get
+            {
+                return edge.addSelected;
+            }
+            set
+            {
+                voxel.edges[edgeI].addSelected = value;
+            }
+        }
+        public bool storedSelected
+        {
+            get
+            {
+                return edge.storedSelected;
+            }
+            set
+            {
+                voxel.edges[edgeI].storedSelected = value;
+            }
+        }
+        public bool selected
+        {
+            get
+            {
+                return edge.addSelected || edge.storedSelected;
+            }
+        }
+        public Bounds bounds
+        {
+            get
+            {
+                return voxel.GetEdgeBounds(edgeI);
+            }
+        }
+
+        public VoxelEdgeReference(Voxel voxel, int edgeI)
+        {
+            this.voxel = voxel;
+            this.edgeI = edgeI;
+        }
+
+        public VoxelEdge edge
+        {
+            get
+            {
+                return voxel.edges[edgeI];
+            }
+        }
+
+        public void SelectionStateUpdated()
+        {
+            voxel.UpdateVoxel();
+        }
+    }
+
+
     public static VoxelArrayEditor instance = null;
 
     public Transform axes;
@@ -147,9 +210,12 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     // called by TouchListener
-    public void TouchDown(Voxel voxel, int faceI)
+    public void TouchDown(Voxel voxel, int elementI, VoxelElement elementType)
     {
-        TouchDown(new VoxelFaceReference(voxel, faceI));
+        if (elementType == VoxelElement.FACES)
+            TouchDown(new VoxelFaceReference(voxel, elementI));
+        else if(elementType == VoxelElement.EDGES)
+            TouchDown(new VoxelEdgeReference(voxel, elementI));
     }
 
     public void TouchDown(Selectable thing)
@@ -165,6 +231,8 @@ public class VoxelArrayEditor : VoxelArray
         selectionBounds = boxSelectStartBounds;
         if (thing is VoxelFaceReference)
             boxSelectSubstance = ((VoxelFaceReference)thing).voxel.substance;
+        else if (thing is VoxelEdgeReference)
+            boxSelectSubstance = ((VoxelEdgeReference)thing).voxel.substance;
         else if (thing is ObjectMarker)
             boxSelectSubstance = selectObjectSubstance;
         else
@@ -173,9 +241,12 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     // called by TouchListener
-    public void TouchDrag(Voxel voxel, int faceI)
+    public void TouchDrag(Voxel voxel, int elementI, VoxelElement elementType)
     {
-        TouchDrag(new VoxelFaceReference(voxel, faceI));
+        if (elementType == VoxelElement.FACES)
+            TouchDrag(new VoxelFaceReference(voxel, elementI));
+        else if (elementType == VoxelElement.EDGES)
+            TouchDrag(new VoxelEdgeReference(voxel, elementI));
     }
 
     public void TouchDrag(Selectable thing)
@@ -196,22 +267,24 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     // called by TouchListener
-    public void DoubleTouch(Voxel voxel, int faceI)
+    public void DoubleTouch(Voxel voxel, int elementI, VoxelElement elementType)
     {
         ClearSelection();
-        FaceSelectFloodFill(voxel, faceI, voxel.substance);
+        if (elementType == VoxelElement.FACES)
+            FaceSelectFloodFill(voxel, elementI, voxel.substance);
         AutoSetMoveAxesEnabled();
     }
 
     // called by TouchListener
-    public void TripleTouch(Voxel voxel, int faceI)
+    public void TripleTouch(Voxel voxel, int elementI, VoxelElement elementType)
     {
         if (voxel == null)
             return;
         ClearSelection();
         if (voxel.substance == null)
         {
-            SurfaceSelectFloodFill(voxel, faceI, voxel.substance);
+            if (elementType == VoxelElement.FACES)
+                SurfaceSelectFloodFill(voxel, elementI, voxel.substance);
         }
         else
         {

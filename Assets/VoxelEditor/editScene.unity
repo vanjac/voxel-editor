@@ -1106,6 +1106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
   currentTouchOperation: 0
+  selectType: 0
   movingAxis: {fileID: 0}
   pivot: {fileID: 0}
 --- !u!1 &1185221136
