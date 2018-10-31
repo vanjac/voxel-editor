@@ -39,7 +39,7 @@ public class BevelActionBarGUI : ActionBarGUI
 
         Vector3 selectionSize = voxelArray.selectionBounds.size;
         if (selectionSize == Vector3.zero)
-            ActionBarLabel("Select edges to add bevels...");
+            ActionBarLabel("Select edges to bevel...");
         else
             ActionBarLabel(SelectionString(selectionSize));
 
@@ -60,7 +60,12 @@ public class BevelGUI : LeftPanelGUI
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(0, 0, height * .6f, height);
+        return new Rect(0, 0, height / 2, height);
+    }
+
+    public override GUIStyle GetStyle()
+    {
+        return GUIStyle.none;
     }
 
     public override void OnEnable()
@@ -86,8 +91,10 @@ public class BevelGUI : LeftPanelGUI
 
     public override void WindowGUI()
     {
+        GUILayout.BeginVertical(GUI.skin.box);
+        GUILayout.Label("Bevel:", GUI.skin.GetStyle("label_title"));
         if (GUILayout.Button("Refresh"))
-            voxelEdge = voxelArray.TEMP_GetSelectedEdge();
+            voxelEdge = voxelArray.GetSelectedBevel();
 
         GUILayout.Label("Shape:");
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
@@ -106,18 +113,13 @@ public class BevelGUI : LeftPanelGUI
                 GUIIconSet.instance.bevelIcons.half,
                 GUIIconSet.instance.bevelIcons.full },
             3, GUI.skin.GetStyle("button_tab"));
-        GUILayout.BeginHorizontal();
-        var newCapMin = GUILayout.Toggle(voxelEdge.capMin, "Cap Min", GUI.skin.button);
-        var newCapMax = GUILayout.Toggle(voxelEdge.capMax, "Cap Max", GUI.skin.button);
-        GUILayout.EndHorizontal();
-        if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize
-            || newCapMin != voxelEdge.capMin || newCapMax != voxelEdge.capMax)
+        GUILayout.EndVertical();
+
+        if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize)
         {
             voxelEdge.bevelType = newBevelType;
             voxelEdge.bevelSize = newBevelSize;
-            voxelEdge.capMin = newCapMin;
-            voxelEdge.capMax = newCapMax;
-            voxelArray.TEMP_SetEdges(voxelEdge);
+            voxelArray.BevelSelectedEdges(voxelEdge);
         }
     }
 }
