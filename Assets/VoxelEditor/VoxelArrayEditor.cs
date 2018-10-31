@@ -156,6 +156,7 @@ public class VoxelArrayEditor : VoxelArray
         NONE, // nothing selected
         ADJUSTED, // selection has moved since it was set
         BOX, // select inside a 3D box
+        BOX_EDGES,
         FACE, // fill-select adjacent faces
         SURFACE // fill-select all connected faces
     }
@@ -226,7 +227,7 @@ public class VoxelArrayEditor : VoxelArray
             ClearSelection();
             return;
         }
-        selectMode = SelectMode.BOX;
+        selectMode = thing is VoxelEdgeReference ? SelectMode.BOX_EDGES : SelectMode.BOX;
         boxSelectStartBounds = thing.bounds;
         selectionBounds = boxSelectStartBounds;
         if (thing is VoxelFaceReference)
@@ -251,7 +252,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void TouchDrag(Selectable thing)
     {
-        if (selectMode != SelectMode.BOX)
+        if (selectMode != SelectMode.BOX && selectMode != SelectMode.BOX_EDGES)
             return;
         Bounds oldSelectionBounds = selectionBounds;
         selectionBounds = boxSelectStartBounds;
@@ -311,7 +312,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         if (axes == null)
             return;
-        axes.gameObject.SetActive(SomethingIsSelected());
+        axes.gameObject.SetActive(SomethingIsSelected() && selectMode != SelectMode.BOX_EDGES);
         rotateAxis.gameObject.SetActive(ObjectsAreSelected());
     }
 
@@ -352,11 +353,6 @@ public class VoxelArrayEditor : VoxelArray
         selectedThings.Remove(thing);
         thing.SelectionStateUpdated();
         selectionChanged = true;
-    }
-
-    private void DeselectFace(Voxel voxel, int faceI)
-    {
-        DeselectThing(new VoxelFaceReference(voxel, faceI));
     }
 
     // add selected things come before stored selection
@@ -481,8 +477,6 @@ public class VoxelArrayEditor : VoxelArray
 
     private void UpdateBoxSelection()
     {
-        if (selectMode != SelectMode.BOX)
-            return;
         SetMoveAxes(selectionBounds.center);
 
         // update selection...
@@ -492,15 +486,17 @@ public class VoxelArrayEditor : VoxelArray
             Substance thingSubstance = null;
             if (thing is VoxelFaceReference)
                 thingSubstance = ((VoxelFaceReference)thing).voxel.substance;
+            else if (thing is VoxelEdgeReference)
+                thingSubstance = ((VoxelEdgeReference)thing).voxel.substance;
             else if (thing is ObjectEntity)
                 thingSubstance = selectObjectSubstance;
             if (thingSubstance != boxSelectSubstance || !ThingInBoxSelection(thing, selectionBounds))
                 DeselectThing(thing);
         }
-        UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance);
+        UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance, selectMode == SelectMode.BOX_EDGES);
     }
 
-    private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance)
+    private void UpdateBoxSelectionRecursive(OctreeNode node, Bounds bounds, Substance substance, bool edges)
     {
         if (node == null)
             return;
@@ -518,18 +514,29 @@ public class VoxelArrayEditor : VoxelArray
             }
             if (voxel.substance != substance)
                 return;
-            for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
+            if (!edges)
             {
-                if (voxel.faces[faceI].IsEmpty())
-                    continue;
-                if (ThingInBoxSelection(new VoxelFaceReference(voxel, faceI), bounds))
-                    SelectFace(voxel, faceI);
+                for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
+                {
+                    if (voxel.faces[faceI].IsEmpty())
+                        continue;
+                    if (ThingInBoxSelection(new VoxelFaceReference(voxel, faceI), bounds))
+                        SelectFace(voxel, faceI);
+                }
+            }
+            else // edges
+            {
+                for (int edgeI = 0; edgeI < voxel.edges.Length; edgeI++)
+                {
+                    if (ThingInBoxSelection(new VoxelEdgeReference(voxel, edgeI), bounds))
+                        SelectThing(new VoxelEdgeReference(voxel, edgeI));
+                }
             }
         }
         else
         {
             foreach (OctreeNode branch in node.branches)
-                UpdateBoxSelectionRecursive(branch, bounds, substance);
+                UpdateBoxSelectionRecursive(branch, bounds, substance, edges);
         }
     }
 
