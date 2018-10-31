@@ -33,6 +33,7 @@ public class GUIIconSet : MonoBehaviour
     public Texture delete;
     public Texture share;
     public Texture bevel;
+    public Texture no;
 
     [System.Serializable]
     public struct BevelIconSet

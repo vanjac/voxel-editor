@@ -99,7 +99,7 @@ public class BevelGUI : LeftPanelGUI
         GUILayout.Label("Shape:");
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
             new Texture[] {
-                GUIIconSet.instance.x,
+                GUIIconSet.instance.no,
                 GUIIconSet.instance.bevelIcons.square,
                 GUIIconSet.instance.bevelIcons.flat,
                 GUIIconSet.instance.bevelIcons.curve,

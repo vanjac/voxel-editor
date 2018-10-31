@@ -672,6 +672,7 @@ MonoBehaviour:
   delete: {fileID: 0}
   share: {fileID: 0}
   bevel: {fileID: 2800000, guid: a2196131ae0adc94db6a16177538d05f, type: 3}
+  no: {fileID: 2800000, guid: b7365fd42b2f6e1479b471b1498cca62, type: 3}
   bevelIcons:
     quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
     half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}
