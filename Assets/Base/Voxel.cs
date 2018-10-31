@@ -47,7 +47,7 @@ public struct VoxelEdge
 {
     public enum BevelType : byte
     {
-        NONE, SQUARE, FLAT, CURVE, STAIR_2, STAIR_4
+        NONE, FLAT, CURVE, SQUARE, STAIR_2, STAIR_4
     }
     public enum BevelSize : byte
     {

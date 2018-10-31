@@ -94,9 +94,9 @@ public class BevelGUI : LeftPanelGUI
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
             new Texture[] {
                 GUIIconSet.instance.no,
-                GUIIconSet.instance.bevelIcons.square,
                 GUIIconSet.instance.bevelIcons.flat,
                 GUIIconSet.instance.bevelIcons.curve,
+                GUIIconSet.instance.bevelIcons.square,
                 GUIIconSet.instance.bevelIcons.stair2,
                 GUIIconSet.instance.bevelIcons.stair4 },
             3, GUI.skin.GetStyle("button_tab"));
