@@ -185,22 +185,28 @@ public class ActionBarGUI : TopPanelGUI
         GUILayout.Label(text, labelStyle.Value, GUILayout.ExpandWidth(false));
     }
 
-    private string SelectionString(Vector3 selectionSize)
+    protected string SelectionString(Vector3 selectionSize)
     {
-        if (selectionSize == Vector3.zero)
-            return "";
-        else if (selectionSize.x == 0)
-            return Mathf.RoundToInt(selectionSize.y)
-                + "x" + Mathf.RoundToInt(selectionSize.z);
-        else if (selectionSize.y == 0)
-            return Mathf.RoundToInt(selectionSize.x)
-                + "x" + Mathf.RoundToInt(selectionSize.z);
-        else if (selectionSize.z == 0)
-            return Mathf.RoundToInt(selectionSize.x)
-                + "x" + Mathf.RoundToInt(selectionSize.y);
-        else return Mathf.RoundToInt(selectionSize.x)
-                + "x" + Mathf.RoundToInt(selectionSize.y)
-                + "x" + Mathf.RoundToInt(selectionSize.z);
+        string selectionString = "";
+        if (selectionSize.x != 0)
+        {
+            if (selectionString != "")
+                selectionString += "x";
+            selectionString += Mathf.RoundToInt(selectionSize.x);
+        }
+        if (selectionSize.y != 0)
+        {
+            if (selectionString != "")
+                selectionString += "x";
+            selectionString += Mathf.RoundToInt(selectionSize.y);
+        }
+        if (selectionSize.z != 0)
+        {
+            if (selectionString != "")
+                selectionString += "x";
+            selectionString += Mathf.RoundToInt(selectionSize.z);
+        }
+        return selectionString;
     }
 
 

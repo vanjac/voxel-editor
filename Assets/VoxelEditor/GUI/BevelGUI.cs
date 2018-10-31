@@ -34,8 +34,15 @@ public class BevelActionBarGUI : ActionBarGUI
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
+        SelectionGUI();
         GUILayout.FlexibleSpace();
-        ActionBarLabel("Bevels");
+
+        Vector3 selectionSize = voxelArray.selectionBounds.size;
+        if (selectionSize == Vector3.zero)
+            ActionBarLabel("Select edges to add bevels...");
+        else
+            ActionBarLabel(SelectionString(selectionSize));
+
         GUILayout.FlexibleSpace();
         if (HighlightedActionBarButton(GUIIconSet.instance.done))
             Destroy(this);
