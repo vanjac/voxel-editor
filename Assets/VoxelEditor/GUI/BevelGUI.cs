@@ -56,7 +56,6 @@ public class BevelGUI : LeftPanelGUI
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
-    private int edgeNum = 0;
     private VoxelEdge voxelEdge;
 
     public override Rect GetRect(float width, float height)
@@ -82,20 +81,13 @@ public class BevelGUI : LeftPanelGUI
     public override void Start()
     {
         base.Start();
-        voxelEdge = voxelArray.TEMP_GetSelectedEdge(edgeNum);
         touchListener.selectType = VoxelElement.EDGES; // also in OnEnable()
     }
 
     public override void WindowGUI()
     {
-        int newEdgeNum = GUILayout.SelectionGrid(edgeNum,
-            new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" },
-            4, GUI.skin.GetStyle("button_tab"));
-        if (newEdgeNum != edgeNum)
-        {
-            edgeNum = newEdgeNum;
-            voxelEdge = voxelArray.TEMP_GetSelectedEdge(edgeNum);
-        }
+        if (GUILayout.Button("Refresh"))
+            voxelEdge = voxelArray.TEMP_GetSelectedEdge();
 
         GUILayout.Label("Shape:");
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
@@ -115,24 +107,17 @@ public class BevelGUI : LeftPanelGUI
                 GUIIconSet.instance.bevelIcons.full },
             3, GUI.skin.GetStyle("button_tab"));
         GUILayout.BeginHorizontal();
-        var newAddSelected = GUILayout.Toggle(voxelEdge.addSelected, "+Select", GUI.skin.button);
-        var newStoredSelected = GUILayout.Toggle(voxelEdge.storedSelected, ".Select", GUI.skin.button);
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
         var newCapMin = GUILayout.Toggle(voxelEdge.capMin, "Cap Min", GUI.skin.button);
         var newCapMax = GUILayout.Toggle(voxelEdge.capMax, "Cap Max", GUI.skin.button);
         GUILayout.EndHorizontal();
         if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize
-            || newAddSelected != voxelEdge.addSelected || newStoredSelected != voxelEdge.storedSelected
             || newCapMin != voxelEdge.capMin || newCapMax != voxelEdge.capMax)
         {
             voxelEdge.bevelType = newBevelType;
             voxelEdge.bevelSize = newBevelSize;
-            voxelEdge.addSelected = newAddSelected;
-            voxelEdge.storedSelected = newStoredSelected;
             voxelEdge.capMin = newCapMin;
             voxelEdge.capMax = newCapMax;
-            voxelArray.TEMP_SetEdges(voxelEdge, edgeNum);
+            voxelArray.TEMP_SetEdges(voxelEdge);
         }
     }
 }

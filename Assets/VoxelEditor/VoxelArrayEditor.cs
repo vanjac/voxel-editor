@@ -1009,21 +1009,25 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
-    public VoxelEdge TEMP_GetSelectedEdge(int n)
+    public VoxelEdge TEMP_GetSelectedEdge()
     {
         Debug.Log("Read edges");
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
-            return faceRef.voxel.edges[n];
+        foreach (Selectable thing in IterateSelected())
+            if (thing is VoxelEdgeReference)
+                return ((VoxelEdgeReference)thing).edge;
         return new VoxelEdge();
     }
 
-    public void TEMP_SetEdges(VoxelEdge edge, int n)
+    public void TEMP_SetEdges(VoxelEdge edge)
     {
         Debug.Log("Write edges");
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        foreach (Selectable thing in IterateSelected())
         {
-            faceRef.voxel.edges[n] = edge;
-            VoxelModified(faceRef.voxel);
+            if (!(thing is VoxelEdgeReference))
+                continue;
+            var edgeRef = (VoxelEdgeReference)thing;
+            edgeRef.voxel.edges[edgeRef.edgeI].bevel = edge.bevel;
+            VoxelModified(edgeRef.voxel);
         }
     }
 
