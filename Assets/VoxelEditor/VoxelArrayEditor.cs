@@ -1042,7 +1042,8 @@ public class VoxelArrayEditor : VoxelArray
 
             bool convex = edgeRef.voxel.EdgeIsConvex(edgeRef.edgeI);
 
-            if (minVoxel != null && (convex ? minVoxel.EdgeIsConvex(edgeRef.edgeI)
+            if (minVoxel != null && minVoxel.substance == edgeRef.voxel.substance
+                && (convex ? minVoxel.EdgeIsConvex(edgeRef.edgeI)
                 : minVoxel.EdgeIsConcave(edgeRef.edgeI)))
             { // continuous edge in the (-) direction
                 if (BevelsMatch(minVoxel.edges[edgeRef.edgeI], applyBevel))
@@ -1062,7 +1063,8 @@ public class VoxelArrayEditor : VoxelArray
                 edgeRef.voxel.edges[edgeRef.edgeI].capMin = !convex ^ edgeRef.voxel.faces[minFaceI].IsEmpty();
             }
 
-            if (maxVoxel != null && (convex ? maxVoxel.EdgeIsConvex(edgeRef.edgeI)
+            if (maxVoxel != null && maxVoxel.substance == edgeRef.voxel.substance
+                && (convex ? maxVoxel.EdgeIsConvex(edgeRef.edgeI)
                 : maxVoxel.EdgeIsConcave(edgeRef.edgeI)))
             { // continuous edge in the (+) direction
                 if (BevelsMatch(maxVoxel.edges[edgeRef.edgeI], applyBevel))
