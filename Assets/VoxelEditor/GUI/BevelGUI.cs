@@ -101,9 +101,19 @@ public class BevelGUI : LeftPanelGUI
 
     public override void WindowGUI()
     {
-        GUILayout.Label("Bevel:", GUI.skin.GetStyle("label_title"));
-        if (GUILayout.Button("Refresh"))
+        if (voxelArray.selectionChanged)
+        {
+            voxelArray.selectionChanged = false;
             voxelEdge = voxelArray.GetSelectedBevel();
+        }
+
+        GUILayout.Label("Bevel:", GUI.skin.GetStyle("label_title"));
+
+        if (!voxelArray.SomethingIsSelected())
+        {
+            GUILayout.Label("(none selected)");
+            return;
+        }
 
         GUILayout.Label("Shape:");
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,

@@ -149,7 +149,7 @@ public class VoxelArrayEditor : VoxelArray
     public Material[] highlightMaterials;
 
     public bool unsavedChanges = false; // set by VoxelArrayEditor, checked and cleared by EditorFile
-    public bool selectionChanged = false; // set by VoxelArrayEditor, checked and cleared by PropertiesGUI
+    public bool selectionChanged = false; // set by VoxelArrayEditor, checked and cleared by PropertiesGUI/BevelGUI
 
     public enum SelectMode
     {
