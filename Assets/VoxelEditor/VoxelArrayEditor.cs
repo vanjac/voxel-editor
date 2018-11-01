@@ -215,8 +215,11 @@ public class VoxelArrayEditor : VoxelArray
     {
         if (elementType == VoxelElement.FACES)
             TouchDown(new VoxelFaceReference(voxel, elementI));
-        else if(elementType == VoxelElement.EDGES)
-            TouchDown(new VoxelEdgeReference(voxel, elementI));
+        else if (elementType == VoxelElement.EDGES)
+        {
+            if (EdgeIsSelectable(new VoxelEdgeReference(voxel, elementI)))
+                TouchDown(new VoxelEdgeReference(voxel, elementI));
+        }
     }
 
     public void TouchDown(Selectable thing)
@@ -247,7 +250,10 @@ public class VoxelArrayEditor : VoxelArray
         if (elementType == VoxelElement.FACES)
             TouchDrag(new VoxelFaceReference(voxel, elementI));
         else if (elementType == VoxelElement.EDGES)
-            TouchDrag(new VoxelEdgeReference(voxel, elementI));
+        {
+            if (EdgeIsSelectable(new VoxelEdgeReference(voxel, elementI)))
+                TouchDrag(new VoxelEdgeReference(voxel, elementI));
+        }
     }
 
     public void TouchDrag(Selectable thing)
@@ -353,6 +359,19 @@ public class VoxelArrayEditor : VoxelArray
         selectedThings.Remove(thing);
         thing.SelectionStateUpdated();
         selectionChanged = true;
+    }
+
+    private bool EdgeIsSelectable(VoxelEdgeReference edgeRef)
+    {
+        if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
+            return false;
+        if (edgeRef.voxel.EdgeIsConvex(edgeRef.edgeI))
+            return true;
+        // concave...
+        var oppEdgeRef = OpposingEdgeRef(edgeRef, false);
+        if (oppEdgeRef.voxel == null)
+            return false;
+        return !oppEdgeRef.voxel.EdgeIsEmpty(oppEdgeRef.edgeI);
     }
 
     // add selected things come before stored selection
@@ -528,8 +547,9 @@ public class VoxelArrayEditor : VoxelArray
             {
                 for (int edgeI = 0; edgeI < voxel.edges.Length; edgeI++)
                 {
-                    if (ThingInBoxSelection(new VoxelEdgeReference(voxel, edgeI), bounds))
-                        SelectThing(new VoxelEdgeReference(voxel, edgeI));
+                    var edgeRef = new VoxelEdgeReference(voxel, edgeI);
+                    if (EdgeIsSelectable(edgeRef) && ThingInBoxSelection(edgeRef, bounds))
+                        SelectThing(edgeRef);
                 }
             }
         }
