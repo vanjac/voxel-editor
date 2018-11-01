@@ -595,9 +595,23 @@ public class Voxel : MonoBehaviour
         MeshCollider meshCollider = GetComponent<MeshCollider>();
         BoxCollider boxCollider = GetComponent<BoxCollider>();
 
+        bool useMeshCollider; // if false, use box collider instead
         if (inEditor)
+            useMeshCollider = true;
+        else
         {
-            renderer.enabled = true;
+            useMeshCollider = false;
+            if (substance == null) // TODO
+            {
+                foreach (VoxelEdge edge in edges)
+                    if (edge.hasBevel)
+                        useMeshCollider = true;
+            }
+        }
+        Collider theCollider;
+        if (useMeshCollider)
+        {
+            theCollider = meshCollider;
             meshCollider.enabled = true;
             // force the collider to update. It otherwise might not since we're using the same mesh object
             // this fixes a bug where rays would pass through a voxel that used to be empty
@@ -607,24 +621,33 @@ public class Voxel : MonoBehaviour
         }
         else
         {
+            theCollider = boxCollider;
             boxCollider.enabled = true;
+            meshCollider.sharedMesh = null;
+            meshCollider.enabled = false;
+        }
+
+        if (inEditor)
+        {
+            renderer.enabled = true;
+        }
+        else
+        {
             if (substance == null && !IsEmpty()) // a wall
             {
                 renderer.enabled = true;
-                boxCollider.isTrigger = false;
+                theCollider.isTrigger = false;
             }
             else if (substance != null)
             {
                 renderer.enabled = false;
-                boxCollider.isTrigger = true;
+                theCollider.isTrigger = true;
             }
             else // probably an object
             {
                 renderer.enabled = false;
-                boxCollider.enabled = false;
+                theCollider.enabled = false;
             }
-            meshCollider.sharedMesh = null;
-            meshCollider.enabled = false;
         }
     } // end UpdateVoxel()
 
