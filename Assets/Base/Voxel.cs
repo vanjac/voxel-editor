@@ -304,6 +304,34 @@ public class Voxel : MonoBehaviour
             faceB += 1;
     }
 
+    public static int[] ConnectedEdges(int edgeI)
+    {
+        int axis = EdgeIAxis(edgeI);
+        edgeI %= 4;
+        int[] edges = new int[4];
+        if (edgeI >= 2)
+        {
+            edges[0] = ((axis + 1) % 3) * 4 + 1;
+            edges[1] = ((axis + 1) % 3) * 4 + 2;
+        }
+        else
+        {
+            edges[0] = ((axis + 1) % 3) * 4 + 0;
+            edges[1] = ((axis + 1) % 3) * 4 + 3;
+        }
+        if (edgeI == 1 || edgeI == 2)
+        {
+            edges[2] = ((axis + 2) % 3) * 4 + 2;
+            edges[3] = ((axis + 2) % 3) * 4 + 3;
+        }
+        else
+        {
+            edges[2] = ((axis + 2) % 3) * 4 + 0;
+            edges[3] = ((axis + 2) % 3) * 4 + 1;
+        }
+        return edges;
+    }
+
     public static int FaceIAxis(int faceI)
     {
         return faceI / 2;
@@ -561,7 +589,15 @@ public class Voxel : MonoBehaviour
         var tangents = new Vector4[numVertices];
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            GenerateFaceVertices(faceNum, faceCorners[faceNum], vertices, uvs, normals, tangents);
+            try
+            {
+                GenerateFaceVertices(faceNum, faceCorners[faceNum], vertices, uvs, normals, tangents);
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+                Debug.LogError("Vertex indices don't match!");
+                return;
+            }
         }
         
         // according to Mesh documentation, vertices must be assigned before triangles
@@ -578,7 +614,16 @@ public class Voxel : MonoBehaviour
         numMaterials = 0;
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            var triangles = GenerateFaceTriangles(faceNum, faceCorners[faceNum]);
+            int[] triangles;
+            try
+            {
+                triangles = GenerateFaceTriangles(faceNum, faceCorners[faceNum]);
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+                Debug.LogError("Vertex indices don't match!");
+                return;
+            }
             if (triangles == null)
                 continue;
 

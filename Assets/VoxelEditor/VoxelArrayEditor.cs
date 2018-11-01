@@ -548,7 +548,7 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     public void FaceSelectFloodFill(Voxel voxel, int faceI, Substance substance)
-    {
+    { // TODO: this could be rewritten to use VoxelFaceReferences
         if (voxel == null)
             return;
         if (voxel.substance != substance)
@@ -577,7 +577,7 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     public void SurfaceSelectFloodFill(Voxel voxel, int faceI, Substance substance)
-    {
+    { // TODO: this could be rewritten to use VoxelFaceReferences
         if (voxel == null)
             return;
         if (voxel.substance != substance)
@@ -1026,6 +1026,21 @@ public class VoxelArrayEditor : VoxelArray
 
     public void BevelSelectedEdges(VoxelEdge applyBevel)
     {
+        if (applyBevel.hasBevel)
+        {
+            // Make sure no edges with different bevels could intersect by corners
+            // by selecting all beveled edges connected to the selected edges by a corner.
+            // TODO: this is ugly and bad
+            // copy the selected edges so nothing breaks when more objects are selected while iterating
+            var selectedEdges = new List<VoxelEdgeReference>();
+            foreach (Selectable thing in IterateSelected())
+                if (thing is VoxelEdgeReference)
+                    selectedEdges.Add((VoxelEdgeReference)thing);
+            foreach (VoxelEdgeReference edgeRef in selectedEdges)
+                FloodSelectConnectedBeveledEdges(edgeRef, edgeRef.voxel.substance,
+                    edgeRef.voxel.EdgeIsConcave(edgeRef.edgeI), true);
+        }
+
         foreach (Selectable thing in IterateSelected())
         {
             if (!(thing is VoxelEdgeReference))
@@ -1083,9 +1098,13 @@ public class VoxelArrayEditor : VoxelArray
             {
                 edgeRef.voxel.edges[edgeRef.edgeI].capMax = !convex ^ edgeRef.voxel.faces[maxFaceI].IsEmpty();
             }
-
-            VoxelModified(edgeRef.voxel);
         } // end foreach selected
+
+        // don't update until all bevels have been set
+        // in case bevels temporarily didn't match
+        foreach (Selectable thing in IterateSelected())
+            if (thing is VoxelEdgeReference)
+                VoxelModified(((VoxelEdgeReference)thing).voxel);
     }
 
     private bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
@@ -1093,6 +1112,60 @@ public class VoxelArrayEditor : VoxelArray
         if (!e1.hasBevel && !e2.hasBevel)
             return true;
         return e1.bevelType == e2.bevelType && e1.bevelSize == e2.bevelSize;
+    }
+
+    private void FloodSelectConnectedBeveledEdges(VoxelEdgeReference edgeRef, Substance substance,
+        bool concave, bool firstEdge)
+    {
+        if (edgeRef.voxel == null || edgeRef.voxel.substance != substance
+            || edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
+            return;
+        if (concave ^ edgeRef.voxel.EdgeIsConcave(edgeRef.edgeI))
+        {
+            // bevel directions don't match!
+            // this won't work!
+            edgeRef.voxel.edges[edgeRef.edgeI].bevelType = VoxelEdge.BevelType.NONE;
+            DeselectThing(edgeRef);
+            VoxelModified(edgeRef.voxel);
+
+            if(!concave) // so edgeRef IS concave!
+            {
+                var oppEdgeRef = OpposingEdgeRef(edgeRef, false);
+                if (oppEdgeRef.voxel != null)
+                {
+                    oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevelType = VoxelEdge.BevelType.NONE;
+                    DeselectThing(oppEdgeRef);
+                    VoxelModified(oppEdgeRef.voxel);
+                }
+            }
+
+            return;
+        }
+        if (!firstEdge) {
+            if (!edgeRef.voxel.edges[edgeRef.edgeI].hasBevel || edgeRef.selected)
+                return;
+        }
+
+        SelectThing(edgeRef);
+
+        foreach (int connectedEdgeI in Voxel.ConnectedEdges(edgeRef.edgeI))
+            FloodSelectConnectedBeveledEdges(new VoxelEdgeReference(edgeRef.voxel, connectedEdgeI),
+                substance, concave, false);
+
+        if (edgeRef.voxel.EdgeIsConcave(edgeRef.edgeI))
+        {
+            FloodSelectConnectedBeveledEdges(OpposingEdgeRef(edgeRef, false), substance, concave, false);
+        }
+    }
+
+    private VoxelEdgeReference OpposingEdgeRef(VoxelEdgeReference edgeRef, bool createIfMissing)
+    {
+        int faceA, faceB;
+        Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
+        Vector3 opposingPos = edgeRef.voxel.transform.position
+            + Voxel.DirectionForFaceI(faceA) + Voxel.DirectionForFaceI(faceB);
+        int opposingEdgeI = Voxel.EdgeIAxis(edgeRef.edgeI) * 4 + ((edgeRef.edgeI + 2) % 4);
+        return new VoxelEdgeReference(VoxelAt(opposingPos, createIfMissing), opposingEdgeI);
     }
 
     public int GetSelectedFaceNormal()
