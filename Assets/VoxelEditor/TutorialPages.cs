@@ -488,7 +488,7 @@ public class Tutorials
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
-            if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.FACE)
+            if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.FACE_FLOOD_FILL)
                 return TutorialAction.NEXT;
             else
                 return TutorialAction.NONE;

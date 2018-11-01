@@ -157,8 +157,7 @@ public class VoxelArrayEditor : VoxelArray
         ADJUSTED, // selection has moved since it was set
         BOX, // select inside a 3D box
         BOX_EDGES,
-        FACE, // fill-select adjacent faces
-        SURFACE // fill-select all connected faces
+        FACE_FLOOD_FILL
     }
 
     public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
@@ -278,7 +277,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         ClearSelection();
         if (elementType == VoxelElement.FACES)
-            FaceSelectFloodFill(voxel, elementI, voxel.substance);
+            FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: true);
         AutoSetMoveAxesEnabled();
     }
 
@@ -291,7 +290,7 @@ public class VoxelArrayEditor : VoxelArray
         if (voxel.substance == null)
         {
             if (elementType == VoxelElement.FACES)
-                SurfaceSelectFloodFill(voxel, elementI, voxel.substance);
+                FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: false);
         }
         else
         {
@@ -558,79 +557,51 @@ public class VoxelArrayEditor : VoxelArray
         return bounds.Contains(thingBounds.min) && bounds.Contains(thingBounds.max);
     }
 
-    public void FaceSelectFloodFill(Voxel voxel, int faceI, Substance substance)
-    { // TODO: this could be rewritten to use VoxelFaceReferences
-        if (voxel == null)
+    private void FaceSelectFloodFill(VoxelFaceReference faceRef, Substance substance, bool stayOnPlane)
+    {
+        if (faceRef.voxel == null || faceRef.voxel.substance != substance
+            || faceRef.face.IsEmpty() || faceRef.selected) // stop at boundaries of stored selection
             return;
-        if (voxel.substance != substance)
-            return;
-        VoxelFace face = voxel.faces[faceI];
-        if (face.IsEmpty())
-            return;
-        if (face.addSelected || face.storedSelected) // stop at boundaries of stored selection
-            return;
-        SelectFace(voxel, faceI);
+        SelectThing(faceRef);
 
-        Vector3 position = voxel.transform.position;
+        Vector3 position = faceRef.voxel.transform.position;
         for (int sideNum = 0; sideNum < 4; sideNum++)
         {
-            int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
-            Vector3 newPos = position + Voxel.OppositeDirectionForFaceI(sideFaceI);
-            FaceSelectFloodFill(VoxelAt(newPos, false), faceI, substance);
-        }
-
-        if (selectMode != SelectMode.FACE)
-            selectionBounds = voxel.GetFaceBounds(faceI);
-        else
-            selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
-        selectMode = SelectMode.FACE;
-        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
-    }
-
-    public void SurfaceSelectFloodFill(Voxel voxel, int faceI, Substance substance)
-    { // TODO: this could be rewritten to use VoxelFaceReferences
-        if (voxel == null)
-            return;
-        if (voxel.substance != substance)
-            return;
-        VoxelFace face = voxel.faces[faceI];
-        if (face.IsEmpty())
-            return;
-        if (face.addSelected || face.storedSelected) // stop at boundaries of stored selection
-            return;
-        SelectFace(voxel, faceI);
-
-        Vector3 position = voxel.transform.position;
-        for (int sideNum = 0; sideNum < 4; sideNum++)
-        {
-            int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
-            SurfaceSelectFloodFill(voxel, sideFaceI, substance);
+            int sideFaceI = Voxel.SideFaceI(faceRef.faceI, sideNum);
             Vector3 newPos = position + Voxel.DirectionForFaceI(sideFaceI);
-            SurfaceSelectFloodFill(VoxelAt(newPos, false), faceI, substance);
-            newPos += Voxel.DirectionForFaceI(faceI);
-            SurfaceSelectFloodFill(VoxelAt(newPos, false), Voxel.OppositeFaceI(sideFaceI), substance);
+            FaceSelectFloodFill(new VoxelFaceReference(VoxelAt(newPos, false), faceRef.faceI), substance, stayOnPlane);
+
+            if (!stayOnPlane)
+            {
+                FaceSelectFloodFill(new VoxelFaceReference(faceRef.voxel, sideFaceI), substance, stayOnPlane);
+                newPos += Voxel.DirectionForFaceI(faceRef.faceI);
+                FaceSelectFloodFill(new VoxelFaceReference(VoxelAt(newPos, false), Voxel.OppositeFaceI(sideFaceI)),
+                    substance, stayOnPlane);
+            }
         }
 
-        if (selectMode != SelectMode.SURFACE)
-            selectionBounds = voxel.GetFaceBounds(faceI);
+        var faceBounds = faceRef.voxel.GetFaceBounds(faceRef.faceI);
+        if (selectMode != SelectMode.FACE_FLOOD_FILL)
+            selectionBounds = faceBounds;
         else
-            selectionBounds.Encapsulate(voxel.GetFaceBounds(faceI));
-        selectMode = SelectMode.SURFACE;
-        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceI) / 2);
+            selectionBounds.Encapsulate(faceBounds);
+        selectMode = SelectMode.FACE_FLOOD_FILL;
+        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceRef.faceI) / 2);
     }
 
-    public void SubstanceSelect(Substance substance)
+    private void SubstanceSelect(Substance substance)
     {
         foreach (Voxel v in substance.voxels)
             for (int i = 0; i < 6; i++)
                 if (!v.faces[i].IsEmpty())
                 {
                     SelectFace(v, i);
-                    if (selectMode != SelectMode.SURFACE)
-                        selectionBounds = v.GetFaceBounds(i);
+                    var faceBounds = v.GetFaceBounds(i);
+                    if (selectMode != SelectMode.FACE_FLOOD_FILL)
+                        selectionBounds = faceBounds;
                     else
-                        selectionBounds.Encapsulate(v.GetFaceBounds(i));
-                    selectMode = SelectMode.SURFACE;
+                        selectionBounds.Encapsulate(faceBounds);
+                    selectMode = SelectMode.FACE_FLOOD_FILL;
                 }
     }
 
