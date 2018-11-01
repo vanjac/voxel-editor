@@ -76,7 +76,7 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
-    public struct VoxelEdgeReference : VoxelArrayEditor.Selectable
+    private struct VoxelEdgeReference : VoxelArrayEditor.Selectable
     {
         public Voxel voxel;
         public int edgeI;
@@ -319,7 +319,7 @@ public class VoxelArrayEditor : VoxelArray
         if (axes == null)
             return;
         axes.gameObject.SetActive(SomethingIsSelected() && selectMode != SelectMode.BOX_EDGES);
-        rotateAxis.gameObject.SetActive(ObjectsAreSelected());
+        rotateAxis.gameObject.SetActive(TypeIsSelected<ObjectMarker>());
     }
 
     public void ClearSelection()
@@ -385,18 +385,11 @@ public class VoxelArrayEditor : VoxelArray
                 yield return thing;
     }
 
-    private System.Collections.Generic.IEnumerable<VoxelFaceReference> IterateSelectedFaces()
+    private System.Collections.Generic.IEnumerable<T> IterateSelected<T>() where T : Selectable
     {
         foreach (Selectable thing in IterateSelected())
-            if (thing is VoxelFaceReference)
-                yield return (VoxelFaceReference)thing;
-    }
-
-    private System.Collections.Generic.IEnumerable<ObjectMarker> IterateSelectedObjects()
-    {
-        foreach (Selectable thing in IterateSelected())
-            if (thing is ObjectMarker)
-                yield return (ObjectMarker)thing;
+            if (thing is T)
+                yield return (T)thing;
     }
 
     // including stored selection
@@ -415,18 +408,16 @@ public class VoxelArrayEditor : VoxelArray
         return storedSelectedThings.Count != 0;
     }
 
-    public bool FacesAreSelected()
+    private bool TypeIsSelected<T>() where T : Selectable
     {
-        foreach (var faceRef in IterateSelectedFaces())
+        foreach (var thing in IterateSelected<T>())
             return true;
         return false;
     }
 
-    public bool ObjectsAreSelected()
+    public bool FacesAreSelected()
     {
-        foreach (var marker in IterateSelectedObjects())
-            return true;
-        return false;
+        return TypeIsSelected<VoxelFaceReference>();
     }
 
     public ICollection<Entity> GetSelectedEntities()
@@ -997,7 +988,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void RotateObjects(float amount)
     {
-        foreach (ObjectMarker obj in IterateSelectedObjects())
+        foreach (var obj in IterateSelected<ObjectMarker>())
         {
             obj.objectEntity.rotation += amount;
             ObjectModified(obj.objectEntity);
@@ -1007,7 +998,7 @@ public class VoxelArrayEditor : VoxelArray
     public VoxelFace GetSelectedPaint()
     {
         // because of the order of IterateSelected, add selected faces will be preferred
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        foreach (var faceRef in IterateSelected<VoxelFaceReference>())
         {
             VoxelFace face = faceRef.face;
             face.addSelected = false;
@@ -1019,7 +1010,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void PaintSelectedFaces(VoxelFace paint)
     {
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        foreach (var faceRef in IterateSelected<VoxelFaceReference>())
         {
             if (paint.material != null || faceRef.voxel.substance != null)
                 faceRef.voxel.faces[faceRef.faceI].material = paint.material;
@@ -1031,11 +1022,9 @@ public class VoxelArrayEditor : VoxelArray
 
     public VoxelEdge GetSelectedBevel()
     {
-        foreach (Selectable thing in IterateSelected())
+        foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
         {
-            if (!(thing is VoxelEdgeReference))
-                continue;
-            VoxelEdge edge = ((VoxelEdgeReference)thing).edge;
+            var edge = edgeRef.edge;
             edge.addSelected = false;
             edge.storedSelected = false;
             edge.capMin = edge.capMax = false;
@@ -1053,19 +1042,15 @@ public class VoxelArrayEditor : VoxelArray
             // TODO: this is ugly and bad
             // copy the selected edges so nothing breaks when more objects are selected while iterating
             var selectedEdges = new List<VoxelEdgeReference>();
-            foreach (Selectable thing in IterateSelected())
-                if (thing is VoxelEdgeReference)
-                    selectedEdges.Add((VoxelEdgeReference)thing);
+            foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
+                selectedEdges.Add(edgeRef);
             foreach (VoxelEdgeReference edgeRef in selectedEdges)
                 FloodSelectConnectedBeveledEdges(edgeRef, edgeRef.voxel.substance,
                     edgeRef.voxel.EdgeIsConcave(edgeRef.edgeI), true);
         }
 
-        foreach (Selectable thing in IterateSelected())
+        foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
         {
-            if (!(thing is VoxelEdgeReference))
-                continue;
-            var edgeRef = (VoxelEdgeReference)thing;
             if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
                 continue;
             edgeRef.voxel.edges[edgeRef.edgeI].bevel = applyBevel.bevel;
@@ -1122,9 +1107,8 @@ public class VoxelArrayEditor : VoxelArray
 
         // don't update until all bevels have been set
         // in case bevels temporarily didn't match
-        foreach (Selectable thing in IterateSelected())
-            if (thing is VoxelEdgeReference)
-                VoxelModified(((VoxelEdgeReference)thing).voxel);
+        foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
+            VoxelModified(edgeRef.voxel);
     }
 
     private bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
@@ -1191,7 +1175,7 @@ public class VoxelArrayEditor : VoxelArray
     public int GetSelectedFaceNormal()
     {
         int faceI = -1;
-        foreach (VoxelFaceReference faceRef in IterateSelectedFaces())
+        foreach (var faceRef in IterateSelected<VoxelFaceReference>())
         {
             if (faceI == -1)
                 faceI = faceRef.faceI;
