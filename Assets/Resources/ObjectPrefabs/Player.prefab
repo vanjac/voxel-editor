@@ -250,6 +250,12 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
     - serializedVersion: 2
+      time: 63.896103
+      value: 0.86269474
+      inSlope: -0.0053077624
+      outSlope: -0.0053077624
+      tangentMode: 0
+    - serializedVersion: 2
       time: 90
       value: 0
       inSlope: 0
@@ -257,7 +263,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   groundCheckDistance: 0.1
   stickToGroundHelperDistance: 0.6
   slowDownRate: 20
@@ -272,6 +278,7 @@ MonoBehaviour:
     smoothTime: 5
     lockCursor: 0
   cam: {fileID: 2000000}
+  disableGroundCheck: 0
 --- !u!114 &114776810368877598
 MonoBehaviour:
   m_ObjectHideFlags: 1
