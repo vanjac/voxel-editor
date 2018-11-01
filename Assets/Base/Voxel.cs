@@ -292,9 +292,26 @@ public class Voxel : MonoBehaviour
         return faceI;
     }
 
+    public static void EdgeFaces(int edgeI, out int faceA, out int faceB)
+    {
+        int axis = EdgeIAxis(edgeI);
+        faceA = ((axis + 1) % 3) * 2;
+        faceB = ((axis + 2) % 3) * 2;
+        edgeI %= 4;
+        if (edgeI == 1 || edgeI == 2)
+            faceA += 1;
+        if (edgeI >= 2)
+            faceB += 1;
+    }
+
     public static int FaceIAxis(int faceI)
     {
         return faceI / 2;
+    }
+
+    public static int EdgeIAxis(int edgeI)
+    {
+        return edgeI / 4;
     }
 
     public static int ClosestFaceI(Vector3 point)
@@ -452,6 +469,13 @@ public class Voxel : MonoBehaviour
     public Bounds GetBounds()
     {
         return new Bounds(transform.position + new Vector3(0.5f,0.5f,0.5f), Vector3.one);
+    }
+
+    public bool EdgeIsConvex(int edgeI)
+    {
+        int faceA, faceB;
+        EdgeFaces(edgeI, out faceA, out faceB);
+        return !faces[faceA].IsEmpty() && !faces[faceB].IsEmpty();
     }
 
     public bool IsEmpty()

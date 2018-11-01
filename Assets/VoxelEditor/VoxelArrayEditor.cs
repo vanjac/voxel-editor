@@ -1024,16 +1024,67 @@ public class VoxelArrayEditor : VoxelArray
         return new VoxelEdge();
     }
 
-    public void BevelSelectedEdges(VoxelEdge edge)
+    public void BevelSelectedEdges(VoxelEdge applyBevel)
     {
         foreach (Selectable thing in IterateSelected())
         {
             if (!(thing is VoxelEdgeReference))
                 continue;
             var edgeRef = (VoxelEdgeReference)thing;
-            edgeRef.voxel.edges[edgeRef.edgeI].bevel = edge.bevel;
+            edgeRef.voxel.edges[edgeRef.edgeI].bevel = applyBevel.bevel;
+
+            int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
+            int maxFaceI = minFaceI + 1;
+            Voxel minVoxel = VoxelAt(edgeRef.voxel.transform.position + Voxel.DirectionForFaceI(minFaceI), false);
+            Voxel maxVoxel = VoxelAt(edgeRef.voxel.transform.position + Voxel.DirectionForFaceI(maxFaceI), false);
+
+            if (minVoxel != null && minVoxel.EdgeIsConvex(edgeRef.edgeI))
+            { // continuous edge in the (-) direction
+                if (BevelsMatch(minVoxel.edges[edgeRef.edgeI], applyBevel))
+                { // remove cap
+                    edgeRef.voxel.edges[edgeRef.edgeI].capMin = false;
+                    minVoxel.edges[edgeRef.edgeI].capMax = false;
+                }
+                else
+                { // add cap
+                    edgeRef.voxel.edges[edgeRef.edgeI].capMin = true;
+                    minVoxel.edges[edgeRef.edgeI].capMax = true;
+                }
+                VoxelModified(minVoxel);
+            }
+            else
+            {
+                edgeRef.voxel.edges[edgeRef.edgeI].capMin = edgeRef.voxel.faces[minFaceI].IsEmpty();
+            }
+
+            if (maxVoxel != null && maxVoxel.EdgeIsConvex(edgeRef.edgeI))
+            { // continuous edge in the (+) direction
+                if (BevelsMatch(maxVoxel.edges[edgeRef.edgeI], applyBevel))
+                { // remove cap
+                    edgeRef.voxel.edges[edgeRef.edgeI].capMax = false;
+                    maxVoxel.edges[edgeRef.edgeI].capMin = false;
+                }
+                else
+                { // add cap
+                    edgeRef.voxel.edges[edgeRef.edgeI].capMax = true;
+                    maxVoxel.edges[edgeRef.edgeI].capMin = true;
+                }
+                VoxelModified(maxVoxel);
+            }
+            else
+            {
+                edgeRef.voxel.edges[edgeRef.edgeI].capMax = edgeRef.voxel.faces[maxFaceI].IsEmpty();
+            }
+
             VoxelModified(edgeRef.voxel);
         }
+    }
+
+    private bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
+    {
+        if (!e1.hasBevel && !e2.hasBevel)
+            return true;
+        return e1.bevelType == e2.bevelType && e1.bevelSize == e2.bevelSize;
     }
 
     public int GetSelectedFaceNormal()
