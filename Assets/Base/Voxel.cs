@@ -955,12 +955,21 @@ public class Voxel : MonoBehaviour
         int[] surroundingEdges = FaceSurroundingEdges(faceNum);
 
         int triangleCount = 6;
+        bool noInnerQuad = false;
         // for each pair of edge vertices
         foreach (int edgeI in surroundingEdges)
             if (edges[edgeI].hasBevel)
                 triangleCount += 6 * (edges[edgeI].bevelTypeArray.Length - 1);
         for (int i = 0; i < 4; i++)
         {
+            int edgeA, edgeB, edgeC;
+            VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
+            if (edges[edgeA].hasBevel && edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL)
+            {
+                noInnerQuad = true; // quad would be convex which might cause problems
+                triangleCount -= 6;
+            }
+
             if (vertices[i].bevelProfile_count != 0)
                 triangleCount += 3 * (vertices[i].bevelProfile_count + 1);
             if (i % 2 == 0) // make sure each edge only counts once
@@ -981,12 +990,15 @@ public class Voxel : MonoBehaviour
         triangleCount = 0;
         bool faceCCW = faceNum % 2 == 1;
 
-        QuadTriangles(triangles, triangleCount, faceCCW,
-            vertices[0].innerQuad_i,
-            vertices[1].innerQuad_i,
-            vertices[2].innerQuad_i,
-            vertices[3].innerQuad_i);
-        triangleCount += 6;
+        if (!noInnerQuad)
+        {
+            QuadTriangles(triangles, triangleCount, faceCCW,
+                vertices[0].innerQuad_i,
+                vertices[1].innerQuad_i,
+                vertices[2].innerQuad_i,
+                vertices[3].innerQuad_i);
+            triangleCount += 6;
+        }
 
         // for each pair of edge vertices
         for (int i = 0; i < 4; i++)
