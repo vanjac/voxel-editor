@@ -471,11 +471,23 @@ public class Voxel : MonoBehaviour
         return new Bounds(transform.position + new Vector3(0.5f,0.5f,0.5f), Vector3.one);
     }
 
+    public bool EdgeIsEmpty(int edgeI)
+    {
+        int faceA, faceB;
+        EdgeFaces(edgeI, out faceA, out faceB);
+        return faces[faceA].IsEmpty() && faces[faceB].IsEmpty();
+    }
+
     public bool EdgeIsConvex(int edgeI)
     {
         int faceA, faceB;
         EdgeFaces(edgeI, out faceA, out faceB);
         return !faces[faceA].IsEmpty() && !faces[faceB].IsEmpty();
+    }
+
+    public bool EdgeIsConcave(int edgeI)
+    {
+        return !EdgeIsEmpty(edgeI) && !EdgeIsConvex(edgeI);
     }
 
     public bool IsEmpty()
