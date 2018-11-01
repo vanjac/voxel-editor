@@ -68,20 +68,32 @@ public class BevelGUI : LeftPanelGUI
         holdOpen = true;
         stealFocus = false;
         base.OnEnable();
-        if (touchListener != null) // also in Start()
-            touchListener.selectType = VoxelElement.EDGES;
+        EnableEdgeMode();
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
         touchListener.selectType = VoxelElement.FACES;
+        voxelArray.ClearStoredSelection();
+        voxelArray.ClearSelection();
     }
 
     public override void Start()
     {
         base.Start();
-        touchListener.selectType = VoxelElement.EDGES; // also in OnEnable()
+        EnableEdgeMode();
+    }
+
+    private void EnableEdgeMode()
+    {
+        if (touchListener != null)
+            touchListener.selectType = VoxelElement.EDGES;
+        if (voxelArray != null)
+        {
+            voxelArray.ClearStoredSelection();
+            voxelArray.ClearSelection();
+        }
     }
 
     public override void WindowGUI()
