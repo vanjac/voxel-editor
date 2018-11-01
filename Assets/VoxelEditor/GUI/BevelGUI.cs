@@ -33,6 +33,9 @@ public class BevelActionBarGUI : ActionBarGUI
 
     public override void WindowGUI()
     {
+        // clear substance highlight while properties panel is disabled
+        EntityReferencePropertyManager.Reset(null);
+
         GUILayout.BeginHorizontal();
         SelectionGUI();
         GUILayout.FlexibleSpace();
