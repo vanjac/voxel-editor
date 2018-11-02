@@ -1025,61 +1025,70 @@ public class VoxelArrayEditor : VoxelArray
             if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
                 continue;
             edgeRef.voxel.edges[edgeRef.edgeI].bevel = applyBevel.bevel;
-
-            int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
-            int maxFaceI = minFaceI + 1;
-            Voxel minVoxel = VoxelAt(edgeRef.voxel.transform.position + Voxel.DirectionForFaceI(minFaceI), false);
-            Voxel maxVoxel = VoxelAt(edgeRef.voxel.transform.position + Voxel.DirectionForFaceI(maxFaceI), false);
-
-            bool convex = edgeRef.voxel.EdgeIsConvex(edgeRef.edgeI);
-
-            if (minVoxel != null && minVoxel.substance == edgeRef.voxel.substance
-                && (convex ? minVoxel.EdgeIsConvex(edgeRef.edgeI)
-                : minVoxel.EdgeIsConcave(edgeRef.edgeI)))
-            { // continuous edge in the (-) direction
-                if (BevelsMatch(minVoxel.edges[edgeRef.edgeI], applyBevel))
-                { // remove cap
-                    edgeRef.voxel.edges[edgeRef.edgeI].capMin = false;
-                    minVoxel.edges[edgeRef.edgeI].capMax = false;
-                }
-                else
-                { // add cap
-                    edgeRef.voxel.edges[edgeRef.edgeI].capMin = true;
-                    minVoxel.edges[edgeRef.edgeI].capMax = true;
-                }
-                VoxelModified(minVoxel);
-            }
-            else
-            {
-                edgeRef.voxel.edges[edgeRef.edgeI].capMin = !convex ^ edgeRef.voxel.faces[minFaceI].IsEmpty();
-            }
-
-            if (maxVoxel != null && maxVoxel.substance == edgeRef.voxel.substance
-                && (convex ? maxVoxel.EdgeIsConvex(edgeRef.edgeI)
-                : maxVoxel.EdgeIsConcave(edgeRef.edgeI)))
-            { // continuous edge in the (+) direction
-                if (BevelsMatch(maxVoxel.edges[edgeRef.edgeI], applyBevel))
-                { // remove cap
-                    edgeRef.voxel.edges[edgeRef.edgeI].capMax = false;
-                    maxVoxel.edges[edgeRef.edgeI].capMin = false;
-                }
-                else
-                { // add cap
-                    edgeRef.voxel.edges[edgeRef.edgeI].capMax = true;
-                    maxVoxel.edges[edgeRef.edgeI].capMin = true;
-                }
-                VoxelModified(maxVoxel);
-            }
-            else
-            {
-                edgeRef.voxel.edges[edgeRef.edgeI].capMax = !convex ^ edgeRef.voxel.faces[maxFaceI].IsEmpty();
-            }
-        } // end foreach selected
+            BevelEdge(edgeRef, alsoBevelOppositeConcaveEdge: false);
+        }
 
         // don't update until all bevels have been set
         // in case bevels temporarily didn't match
         foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
             VoxelModified(edgeRef.voxel);
+    }
+
+    // will update caps and update the surrounding voxels
+    // but will NOT update the edge voxel (unless deselect is true)
+    private void BevelEdge(VoxelEdgeReference edgeRef, bool alsoBevelOppositeConcaveEdge, bool deselect=false)
+    {
+        if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
+            return;
+        int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
+        int maxFaceI = minFaceI + 1;
+        Voxel minVoxel = VoxelAt(edgeRef.voxel.transform.position + Voxel.DirectionForFaceI(minFaceI), false);
+        Voxel maxVoxel = VoxelAt(edgeRef.voxel.transform.position + Voxel.DirectionForFaceI(maxFaceI), false);
+
+        bool convex = edgeRef.voxel.EdgeIsConvex(edgeRef.edgeI);
+
+        if (minVoxel != null && minVoxel.substance == edgeRef.voxel.substance
+            && (convex ? minVoxel.EdgeIsConvex(edgeRef.edgeI)
+            : minVoxel.EdgeIsConcave(edgeRef.edgeI)))
+        { // continuous edge in the (-) direction
+            bool cap = !BevelsMatch(minVoxel.edges[edgeRef.edgeI], edgeRef.edge);
+            edgeRef.voxel.edges[edgeRef.edgeI].capMin = cap;
+            minVoxel.edges[edgeRef.edgeI].capMax = cap;
+            VoxelModified(minVoxel);
+        }
+        else
+        {
+            edgeRef.voxel.edges[edgeRef.edgeI].capMin = !convex ^ edgeRef.voxel.faces[minFaceI].IsEmpty();
+        }
+
+        if (maxVoxel != null && maxVoxel.substance == edgeRef.voxel.substance
+            && (convex ? maxVoxel.EdgeIsConvex(edgeRef.edgeI)
+            : maxVoxel.EdgeIsConcave(edgeRef.edgeI)))
+        { // continuous edge in the (+) direction
+            bool cap = !BevelsMatch(maxVoxel.edges[edgeRef.edgeI], edgeRef.edge);
+            edgeRef.voxel.edges[edgeRef.edgeI].capMax = cap;
+            maxVoxel.edges[edgeRef.edgeI].capMin = cap;
+            VoxelModified(maxVoxel);
+        }
+        else
+        {
+            edgeRef.voxel.edges[edgeRef.edgeI].capMax = !convex ^ edgeRef.voxel.faces[maxFaceI].IsEmpty();
+        }
+
+        if (deselect)
+        {
+            DeselectThing(edgeRef);
+            VoxelModified(edgeRef.voxel);
+        }
+        if (alsoBevelOppositeConcaveEdge && !convex)
+        {
+            var oppEdgeRef = OpposingEdgeRef(edgeRef, false);
+            if (oppEdgeRef.voxel != null)
+            {
+                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.edge.bevel;
+                BevelEdge(oppEdgeRef, alsoBevelOppositeConcaveEdge: false, deselect: deselect);
+            }
+        }
     }
 
     private bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
@@ -1095,29 +1104,19 @@ public class VoxelArrayEditor : VoxelArray
         if (edgeRef.voxel == null || edgeRef.voxel.substance != substance
             || edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
             return;
-        if (concave ^ edgeRef.voxel.EdgeIsConcave(edgeRef.edgeI))
+        if (!firstEdge)
         {
-            // bevel directions don't match!
-            // this won't work!
-            edgeRef.voxel.edges[edgeRef.edgeI].bevelType = VoxelEdge.BevelType.NONE;
-            DeselectThing(edgeRef);
-            VoxelModified(edgeRef.voxel);
-
-            if(!concave) // so edgeRef IS concave!
+            if (!edgeRef.voxel.edges[edgeRef.edgeI].hasBevel)
+                return;
+            if (concave ^ edgeRef.voxel.EdgeIsConcave(edgeRef.edgeI))
             {
-                var oppEdgeRef = OpposingEdgeRef(edgeRef, false);
-                if (oppEdgeRef.voxel != null)
-                {
-                    oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevelType = VoxelEdge.BevelType.NONE;
-                    DeselectThing(oppEdgeRef);
-                    VoxelModified(oppEdgeRef.voxel);
-                }
+                // bevel directions don't match!
+                // this won't work!
+                edgeRef.voxel.edges[edgeRef.edgeI].bevelType = VoxelEdge.BevelType.NONE;
+                BevelEdge(edgeRef, alsoBevelOppositeConcaveEdge: true, deselect: true);
+                return;
             }
-
-            return;
-        }
-        if (!firstEdge) {
-            if (!edgeRef.voxel.edges[edgeRef.edgeI].hasBevel || edgeRef.selected)
+            if (edgeRef.selected)
                 return;
         }
 
