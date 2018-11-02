@@ -1078,6 +1078,27 @@ public class VoxelArrayEditor : VoxelArray
                     UpdateBevel(connectedEdgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
                 }
             }
+
+            if (convex)
+            {
+                // don't allow full bevels to overlap with other bevels
+                foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
+                {
+                    if (edgeRef.voxel.EdgeIsEmpty(unconnectedEdgeI))
+                        continue;
+                    var unconnectedEdgeRef = new VoxelEdgeReference(edgeRef.voxel, unconnectedEdgeI);
+                    if (unconnectedEdgeRef.edge.hasBevel && edgeRef.voxel.EdgeIsConvex(unconnectedEdgeI))
+                    {
+                        if (edgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL
+                            || unconnectedEdgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL)
+                        {
+                            // bevels overlap! this won't work!
+                            edgeRef.voxel.edges[unconnectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
+                            UpdateBevel(unconnectedEdgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                        }
+                    }
+                }
+            }
         }
 
         if (alsoBevelOppositeConcaveEdge && !convex)

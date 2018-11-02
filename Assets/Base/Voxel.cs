@@ -304,32 +304,58 @@ public class Voxel : MonoBehaviour
             faceB += 1;
     }
 
-    public static int[] ConnectedEdges(int edgeI)
+    public static System.Collections.Generic.IEnumerable<int> ConnectedEdges(int edgeI)
     {
         int axis = EdgeIAxis(edgeI);
         edgeI %= 4;
-        int[] edges = new int[4];
         if (edgeI >= 2)
         {
-            edges[0] = ((axis + 1) % 3) * 4 + 1;
-            edges[1] = ((axis + 1) % 3) * 4 + 2;
+            yield return ((axis + 1) % 3) * 4 + 1;
+            yield return ((axis + 1) % 3) * 4 + 2;
         }
         else
         {
-            edges[0] = ((axis + 1) % 3) * 4 + 0;
-            edges[1] = ((axis + 1) % 3) * 4 + 3;
+            yield return ((axis + 1) % 3) * 4 + 0;
+            yield return ((axis + 1) % 3) * 4 + 3;
         }
         if (edgeI == 1 || edgeI == 2)
         {
-            edges[2] = ((axis + 2) % 3) * 4 + 2;
-            edges[3] = ((axis + 2) % 3) * 4 + 3;
+            yield return ((axis + 2) % 3) * 4 + 2;
+            yield return ((axis + 2) % 3) * 4 + 3;
         }
         else
         {
-            edges[2] = ((axis + 2) % 3) * 4 + 0;
-            edges[3] = ((axis + 2) % 3) * 4 + 1;
+            yield return ((axis + 2) % 3) * 4 + 0;
+            yield return ((axis + 2) % 3) * 4 + 1;
         }
-        return edges;
+    }
+
+    public static System.Collections.Generic.IEnumerable<int> UnconnectedEdges(int edgeI)
+    {
+        int axis = EdgeIAxis(edgeI);
+        for (int i = 1; i < 4; i++)
+            yield return axis * 4 + ((edgeI + i) % 4);
+        edgeI %= 4;
+        if (edgeI >= 2)
+        {
+            yield return ((axis + 1) % 3) * 4 + 0;
+            yield return ((axis + 1) % 3) * 4 + 3;
+        }
+        else
+        {
+            yield return ((axis + 1) % 3) * 4 + 1;
+            yield return ((axis + 1) % 3) * 4 + 2;
+        }
+        if (edgeI == 1 || edgeI == 2)
+        {
+            yield return ((axis + 2) % 3) * 4 + 0;
+            yield return ((axis + 2) % 3) * 4 + 1;
+        }
+        else
+        {
+            yield return ((axis + 2) % 3) * 4 + 2;
+            yield return ((axis + 2) % 3) * 4 + 3;
+        }
     }
 
     public static int FaceIAxis(int faceI)
