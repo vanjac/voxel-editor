@@ -939,10 +939,6 @@ public class VoxelArrayEditor : VoxelArray
                             UpdateBevel(edgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
                         }
                     }
-                    for (int j = 0; j < bevelsToUpdateI; j++)
-                    {
-                        UpdateBevel(bevelsToUpdate[j], alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: true);
-                    }
                 }
             }
             else
@@ -951,6 +947,10 @@ public class VoxelArrayEditor : VoxelArray
                 selectedThings[i] = new VoxelFaceReference(null, -1);
                 if (pulling && substanceToCreate == null)
                     newVoxel.substance = movingSubstance;
+            }
+            for (int j = 0; j < bevelsToUpdateI; j++)
+            {
+                UpdateBevel(bevelsToUpdate[j], alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: true);
             }
 
             if (newSubstanceBlock != null)
