@@ -68,10 +68,12 @@ public class TouchListener : MonoBehaviour
                 if (hitObject.tag == "Voxel")
                 {
                     hitVoxel = hitObject.GetComponent<Voxel>();
+                    int hitSubMeshI = GetRaycastHitSubMeshIndex(hit);
+                    int hitFaceI = GetVoxelFaceForSubMesh(hitVoxel, hitSubMeshI);
                     if (selectType == VoxelElement.FACES)
-                        hitElementI = Voxel.ClosestFaceI(hit.point - hitVoxel.transform.position);
+                        hitElementI = hitFaceI;
                     else if (selectType == VoxelElement.EDGES)
-                        hitElementI = Voxel.ClosestEdgeI(hit.point - hitVoxel.transform.position);
+                        hitElementI = Voxel.ClosestEdgeI(hit.point - hitVoxel.transform.position); // TODO
                     else
                         hitElementI = -1;
                     if (hitElementI == -1)
@@ -281,5 +283,27 @@ public class TouchListener : MonoBehaviour
             pivot.position = (pivot.position - transform.position).normalized * newDistanceToCamera + transform.position;
             pivot.localScale *= newDistanceToCamera / currentDistanceToCamera;
         }
+    }
+
+    private int GetRaycastHitSubMeshIndex(RaycastHit hit)
+    {
+        var mesh = ((MeshCollider)(hit.collider)).sharedMesh;
+        int index = hit.triangleIndex * 3;
+        for (int subMeshI = 0; subMeshI < mesh.subMeshCount; subMeshI++)
+        {
+            if (mesh.GetIndexStart(subMeshI) > index)
+                return subMeshI - 1;
+        }
+        return mesh.subMeshCount - 1;
+    }
+
+    private int GetVoxelFaceForSubMesh(Voxel v, int subMesh)
+    {
+        for (int faceI = 0; faceI < 6; faceI++)
+        {
+            if (v.faceSubMeshes[faceI] > subMesh)
+                return faceI - 1;
+        }
+        return 5;
     }
 }

@@ -368,19 +368,6 @@ public class Voxel : MonoBehaviour
         return edgeI / 4;
     }
 
-    public static int ClosestFaceI(Vector3 point)
-    {
-        float dist = 1.0f;
-        int closestFaceI = -1;
-        MinDistance(ref dist, Mathf.Abs(point.x),     ref closestFaceI, 0);
-        MinDistance(ref dist, Mathf.Abs(point.x - 1), ref closestFaceI, 1);
-        MinDistance(ref dist, Mathf.Abs(point.y),     ref closestFaceI, 2);
-        MinDistance(ref dist, Mathf.Abs(point.y - 1), ref closestFaceI, 3);
-        MinDistance(ref dist, Mathf.Abs(point.z),     ref closestFaceI, 4);
-        MinDistance(ref dist, Mathf.Abs(point.z - 1), ref closestFaceI, 5);
-        return closestFaceI;
-    }
-
     public static int ClosestEdgeI(Vector3 point)
     {
         float distSq = 1.0f;
@@ -445,6 +432,7 @@ public class Voxel : MonoBehaviour
         }
     }
     public ObjectEntity objectEntity;
+    public byte[] faceSubMeshes = new byte[6];
 
     void Start ()
     {
@@ -606,6 +594,7 @@ public class Voxel : MonoBehaviour
             var corners = GetFaceVertices(faceNum, numVertices);
             faceCorners[faceNum] = corners;
             numVertices += corners[0].count + corners[1].count + corners[2].count + corners[3].count;
+            faceSubMeshes[faceNum] = (byte)numMaterials;
             numMaterials += FaceMaterialCount(faceNum, xRay, coloredHighlightMaterial);
         }
 
