@@ -937,9 +937,10 @@ public class VoxelArrayEditor : VoxelArray
                         var edgeRef = new VoxelEdgeReference(newVoxel, edgeI);
                         if (EdgeIsSelectable(edgeRef))
                         {
-                            newVoxel.edges[edgeI] = movingEdges[movingEdgesI++];
+                            newVoxel.edges[edgeI] = movingEdges[movingEdgesI];
                             UpdateBevel(edgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
                         }
+                        movingEdgesI++;
                     }
                 }
             }
