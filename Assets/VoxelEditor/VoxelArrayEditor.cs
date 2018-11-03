@@ -715,6 +715,10 @@ public class VoxelArrayEditor : VoxelArray
         bool createdSubstance = false;
         bool temporarilyBlockPushingANewSubstance = false;
 
+        // reuse arrays for each face
+        VoxelEdge[] movingEdges = new VoxelEdge[4];
+        VoxelEdgeReference[] bevelsToUpdate = new VoxelEdgeReference[8];
+
         for (int i = 0; i < selectedThings.Count; i++)
         {
             Selectable thing = selectedThings[i];
@@ -776,12 +780,23 @@ public class VoxelArrayEditor : VoxelArray
             VoxelFace movingFace = oldVoxel.faces[faceI];
             movingFace.addSelected = false;
             Substance movingSubstance = oldVoxel.substance;
+            int movingEdgesI = 0;
+            foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+            {
+                movingEdges[movingEdgesI++] = oldVoxel.edges[edgeI];
+            }
+            int bevelsToUpdateI = 0;
 
             bool blocked = false; // is movement blocked?
             Voxel newSubstanceBlock = null;
 
             if (pushing)
             {
+                foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+                {
+                    oldVoxel.edges[edgeI].Clear();
+                    UpdateBevel(new VoxelEdgeReference(oldVoxel, edgeI), alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                }
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
@@ -799,12 +814,26 @@ public class VoxelArrayEditor : VoxelArray
                         {
                             sideVoxel.faces[oppositeSideFaceI] = adjacentSideVoxel.faces[oppositeSideFaceI];
                             sideVoxel.faces[oppositeSideFaceI].addSelected = false;
+                            foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
+                            {
+                                sideVoxel.edges[edgeI] = adjacentSideVoxel.edges[edgeI];
+                                bevelsToUpdate[bevelsToUpdateI++] = new VoxelEdgeReference(sideVoxel, edgeI);
+                            }
                         }
                         else
                         {
                             sideVoxel.faces[oppositeSideFaceI] = movingFace;
                         }
                         voxelsToUpdate.Add(sideVoxel);
+                    }
+                    else
+                    {
+                        // side will be deleted when voxel is cleared but we'll remove/update the bevels now
+                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
+                        {
+                            oldVoxel.edges[edgeI].Clear();
+                            UpdateBevel(new VoxelEdgeReference(oldVoxel, edgeI), alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: true);
+                        }
                     }
                 }
 
@@ -822,6 +851,11 @@ public class VoxelArrayEditor : VoxelArray
             }
             else if (pulling)
             {
+                foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+                {
+                    oldVoxel.edges[edgeI].Clear();
+                    UpdateBevel(new VoxelEdgeReference(oldVoxel, edgeI), alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                }
                 if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
                 {
                     // blocked by object
@@ -844,6 +878,11 @@ public class VoxelArrayEditor : VoxelArray
                         {
                             newVoxel.faces[sideFaceI] = oldVoxel.faces[sideFaceI];
                             newVoxel.faces[sideFaceI].addSelected = false;
+                            foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
+                            {
+                                newVoxel.edges[edgeI] = oldVoxel.edges[edgeI];
+                                bevelsToUpdate[bevelsToUpdateI++] = new VoxelEdgeReference(newVoxel, edgeI);
+                            }
                         }
                         else
                             newVoxel.faces[sideFaceI] = movingFace;
@@ -851,6 +890,11 @@ public class VoxelArrayEditor : VoxelArray
                     else
                     {
                         // delete side
+                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
+                        {
+                            sideVoxel.edges[edgeI].Clear();
+                            UpdateBevel(new VoxelEdgeReference(sideVoxel, edgeI), alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: true);
+                        }
                         sideVoxel.faces[oppositeSideFaceI].Clear();
                         voxelsToUpdate.Add(sideVoxel);
                     }
@@ -883,6 +927,23 @@ public class VoxelArrayEditor : VoxelArray
                 newVoxel.faces[faceI].addSelected = true;
                 newVoxel.substance = movingSubstance;
                 selectedThings[i] = new VoxelFaceReference(newVoxel, faceI);
+                if (pushing || pulling)
+                {
+                    movingEdgesI = 0;
+                    foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+                    {
+                        var edgeRef = new VoxelEdgeReference(newVoxel, edgeI);
+                        if (EdgeIsSelectable(edgeRef))
+                        {
+                            newVoxel.edges[edgeI] = movingEdges[movingEdgesI++];
+                            UpdateBevel(edgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                        }
+                    }
+                    for (int j = 0; j < bevelsToUpdateI; j++)
+                    {
+                        UpdateBevel(bevelsToUpdate[j], alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: true);
+                    }
+                }
             }
             else
             {
@@ -955,6 +1016,13 @@ public class VoxelArrayEditor : VoxelArray
             }
         }
         return voxel;
+    }
+
+    private IEnumerable<int> FaceSurroundingEdgesAlongAxis(int faceI, int axis)
+    {
+        foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+            if (Voxel.EdgeIAxis(edgeI) == axis)
+                yield return edgeI;
     }
 
     public void RotateObjects(float amount)

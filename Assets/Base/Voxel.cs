@@ -83,6 +83,12 @@ public struct VoxelEdge
     public byte bevel;
     public bool addSelected, storedSelected;
 
+    public void Clear()
+    {
+        bevel = 0;
+        addSelected = storedSelected = false;
+    }
+
     public BevelType bevelType
     {
         get
@@ -558,6 +564,10 @@ public class Voxel : MonoBehaviour
         for (int faceI = 0; faceI < faces.Length; faceI++)
         {
             faces[faceI].Clear();
+        }
+        for (int edgeI = 0; edgeI < edges.Length; edgeI++)
+        {
+            edges[edgeI].Clear();
         }
         substance = null;
         // does NOT clear objectEntity!
