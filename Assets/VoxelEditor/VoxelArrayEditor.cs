@@ -795,7 +795,8 @@ public class VoxelArrayEditor : VoxelArray
                 foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
                 {
                     oldVoxel.edges[edgeI].Clear();
-                    UpdateBevel(new VoxelEdgeReference(oldVoxel, edgeI), alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                    UpdateBevel(new VoxelEdgeReference(oldVoxel, edgeI), alsoBevelOppositeConcaveEdge: true,
+                        dontUpdateThisVoxel: true, alsoBevelOppositeConvexEdge: true);
                 }
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
@@ -854,7 +855,8 @@ public class VoxelArrayEditor : VoxelArray
                 foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
                 {
                     oldVoxel.edges[edgeI].Clear();
-                    UpdateBevel(new VoxelEdgeReference(oldVoxel, edgeI), alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                    UpdateBevel(new VoxelEdgeReference(oldVoxel, edgeI), alsoBevelOppositeConcaveEdge: true,
+                        dontUpdateThisVoxel: true, alsoBevelOppositeConvexEdge: true); // convex edge could become concave!!
                 }
                 if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
                 {
@@ -1083,7 +1085,8 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
-    private void UpdateBevel(VoxelEdgeReference edgeRef, bool alsoBevelOppositeConcaveEdge, bool dontUpdateThisVoxel)
+    private void UpdateBevel(VoxelEdgeReference edgeRef, bool alsoBevelOppositeConcaveEdge, bool dontUpdateThisVoxel,
+        bool alsoBevelOppositeConvexEdge=false)
     {
         if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
             return;
@@ -1169,7 +1172,7 @@ public class VoxelArrayEditor : VoxelArray
             }
         }
 
-        if (alsoBevelOppositeConcaveEdge && !convex)
+        if ((alsoBevelOppositeConcaveEdge && !convex) || (alsoBevelOppositeConvexEdge && convex))
         {
             var oppEdgeRef = OpposingEdgeRef(edgeRef);
             if (oppEdgeRef.voxel != null)
