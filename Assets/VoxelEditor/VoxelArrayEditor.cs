@@ -367,7 +367,7 @@ public class VoxelArrayEditor : VoxelArray
         if (edgeRef.voxel.EdgeIsConvex(edgeRef.edgeI))
             return true;
         // concave...
-        var oppEdgeRef = OpposingEdgeRef(edgeRef, false);
+        var oppEdgeRef = OpposingEdgeRef(edgeRef);
         if (oppEdgeRef.voxel == null)
             return false;
         return !oppEdgeRef.voxel.EdgeIsEmpty(oppEdgeRef.edgeI);
@@ -1103,7 +1103,7 @@ public class VoxelArrayEditor : VoxelArray
 
         if (alsoBevelOppositeConcaveEdge && !convex)
         {
-            var oppEdgeRef = OpposingEdgeRef(edgeRef, false);
+            var oppEdgeRef = OpposingEdgeRef(edgeRef);
             if (oppEdgeRef.voxel != null)
             {
                 oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.edge.bevel;
@@ -1121,14 +1121,18 @@ public class VoxelArrayEditor : VoxelArray
         return e1.bevelType == e2.bevelType && e1.bevelSize == e2.bevelSize;
     }
 
-    private VoxelEdgeReference OpposingEdgeRef(VoxelEdgeReference edgeRef, bool createIfMissing)
+    // return null voxel if edge doesn't exist or substances don't match
+    private VoxelEdgeReference OpposingEdgeRef(VoxelEdgeReference edgeRef)
     {
         int faceA, faceB;
         Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
         Vector3 opposingPos = edgeRef.voxel.transform.position
             + Voxel.DirectionForFaceI(faceA) + Voxel.DirectionForFaceI(faceB);
+        Voxel opposingVoxel = VoxelAt(opposingPos, false);
+        if (opposingVoxel != null && opposingVoxel.substance != edgeRef.voxel.substance)
+            opposingVoxel = null;
         int opposingEdgeI = Voxel.EdgeIAxis(edgeRef.edgeI) * 4 + ((edgeRef.edgeI + 2) % 4);
-        return new VoxelEdgeReference(VoxelAt(opposingPos, createIfMissing), opposingEdgeI);
+        return new VoxelEdgeReference(opposingVoxel, opposingEdgeI);
     }
 
     public int GetSelectedFaceNormal()
