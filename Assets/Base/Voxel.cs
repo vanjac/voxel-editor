@@ -368,40 +368,17 @@ public class Voxel : MonoBehaviour
         return edgeI / 4;
     }
 
-    public static int ClosestEdgeI(Vector3 point)
+    public static int[] FaceSurroundingEdges(int faceNum)
     {
-        float distSq = 1.0f;
-        int closestEdgeI = -1;
-        MinDistance(ref distSq, MagSq2D(point.y,     point.z),     ref closestEdgeI, 0);
-        MinDistance(ref distSq, MagSq2D(point.y - 1, point.z),     ref closestEdgeI, 1);
-        MinDistance(ref distSq, MagSq2D(point.y - 1, point.z - 1), ref closestEdgeI, 2);
-        MinDistance(ref distSq, MagSq2D(point.y,     point.z - 1), ref closestEdgeI, 3);
-
-        MinDistance(ref distSq, MagSq2D(point.z,     point.x),     ref closestEdgeI, 4);
-        MinDistance(ref distSq, MagSq2D(point.z - 1, point.x),     ref closestEdgeI, 5);
-        MinDistance(ref distSq, MagSq2D(point.z - 1, point.x - 1), ref closestEdgeI, 6);
-        MinDistance(ref distSq, MagSq2D(point.z,     point.x - 1), ref closestEdgeI, 7);
-
-        MinDistance(ref distSq, MagSq2D(point.x,     point.y),     ref closestEdgeI, 8);
-        MinDistance(ref distSq, MagSq2D(point.x - 1, point.y),     ref closestEdgeI, 9);
-        MinDistance(ref distSq, MagSq2D(point.x - 1, point.y - 1), ref closestEdgeI, 10);
-        MinDistance(ref distSq, MagSq2D(point.x,     point.y - 1), ref closestEdgeI, 11);
-        return closestEdgeI;
+        int axis = FaceIAxis(faceNum);
+        return new int[] {
+            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2], // 0 - 1
+            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + 2], // 1 - 2
+            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2 + 1], // 2 - 3
+            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2)] // 3 - 0
+        };
     }
 
-    private static float MagSq2D(float x, float y)
-    {
-        return x * x + y * y;
-    }
-
-    private static void MinDistance(ref float dist, float newDist, ref int value, int newValue)
-    {
-        if (newDist < dist)
-        {
-            dist = newDist;
-            value = newValue;
-        }
-    }
 
     public static bool InEditor()
     {
@@ -511,6 +488,35 @@ public class Voxel : MonoBehaviour
     public Bounds GetBounds()
     {
         return new Bounds(transform.position + new Vector3(0.5f,0.5f,0.5f), Vector3.one);
+    }
+
+    public float DistanceToEdge(Vector3 point, int edgeI)
+    {
+        switch (edgeI)
+        {
+            case 0:  return EdgeDist(0,  point.y, point.z, 0, 0);
+            case 1:  return EdgeDist(1,  point.y, point.z, 1, 0);
+            case 2:  return EdgeDist(2,  point.y, point.z, 1, 1);
+            case 3:  return EdgeDist(3,  point.y, point.z, 0, 1);
+
+            case 4:  return EdgeDist(4,  point.z, point.x, 0, 0);
+            case 5:  return EdgeDist(5,  point.z, point.x, 1, 0);
+            case 6:  return EdgeDist(6,  point.z, point.x, 1, 1);
+            case 7:  return EdgeDist(7,  point.z, point.x, 0, 1);
+
+            case 8:  return EdgeDist(8,  point.x, point.y, 0, 0);
+            case 9:  return EdgeDist(9,  point.x, point.y, 1, 0);
+            case 10: return EdgeDist(10, point.x, point.y, 1, 1);
+            case 11: return EdgeDist(11, point.x, point.y, 0, 1);
+            default: return 0;
+        }
+    }
+
+    private float EdgeDist(int edgeI, float ptx, float pty, float ex, float ey)
+    {
+        ex = ApplyBevel(ex, edges[edgeI], 0.5f);
+        ey = ApplyBevel(ey, edges[edgeI], 0.5f);
+        return (ptx - ex) * (ptx - ex) + (pty - ey) * (pty - ey);
     }
 
     public bool EdgeIsEmpty(int edgeI)
@@ -1262,7 +1268,7 @@ public class Voxel : MonoBehaviour
     }
 
 
-    private void VertexEdges(int faceNum, int vertexI, out int edgeA, out int edgeB, out int edgeC)
+    private static void VertexEdges(int faceNum, int vertexI, out int edgeA, out int edgeB, out int edgeC)
     {
         int axis = FaceIAxis(faceNum);
         edgeA = axis * 4 + vertexI;
@@ -1272,7 +1278,7 @@ public class Voxel : MonoBehaviour
             + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (vertexI == 1 || vertexI == 2 ? 2 : 0)];
     }
 
-    private int EdgeBOtherFace(int faceNum, int vertexI)
+    private static int EdgeBOtherFace(int faceNum, int vertexI)
     {
         int axis = FaceIAxis(faceNum);
         int other = ((axis + 2) % 3) * 2;
@@ -1282,7 +1288,7 @@ public class Voxel : MonoBehaviour
             return other;
     }
 
-    private int EdgeCOtherFace(int faceNum, int vertexI)
+    private static int EdgeCOtherFace(int faceNum, int vertexI)
     {
         int axis = FaceIAxis(faceNum);
         int other = ((axis + 1) % 3 * 2);
@@ -1292,18 +1298,7 @@ public class Voxel : MonoBehaviour
             return other;
     }
 
-    private int[] FaceSurroundingEdges(int faceNum)
-    {
-        int axis = FaceIAxis(faceNum);
-        return new int[] {
-            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2], // 0 - 1
-            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + 2], // 1 - 2
-            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2 + 1], // 2 - 3
-            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2)] // 3 - 0
-        };
-    }
-
-    private float ApplyBevel(float coord, VoxelEdge edge, float bevelCoord = 0.0f)
+    private static float ApplyBevel(float coord, VoxelEdge edge, float bevelCoord = 0.0f)
     {
         if (edge.hasBevel)
             return (coord - 0.5f) * (1 - edge.bevelSizeFloat * 2 * (1 - bevelCoord)) + 0.5f;

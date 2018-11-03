@@ -73,7 +73,8 @@ public class TouchListener : MonoBehaviour
                     if (selectType == VoxelElement.FACES)
                         hitElementI = hitFaceI;
                     else if (selectType == VoxelElement.EDGES)
-                        hitElementI = Voxel.ClosestEdgeI(hit.point - hitVoxel.transform.position); // TODO
+                        // TODO: doesn't work perfectly
+                        hitElementI = ClosestEdgeOnFace(hitVoxel, hitFaceI, hit.point - hitVoxel.transform.position);
                     else
                         hitElementI = -1;
                     if (hitElementI == -1)
@@ -305,5 +306,21 @@ public class TouchListener : MonoBehaviour
                 return faceI - 1;
         }
         return 5;
+    }
+
+    private int ClosestEdgeOnFace(Voxel v, int faceI, Vector3 point)
+    {
+        int closestEdgeI = -1;
+        float closestDistance = 1.0f;
+        foreach (int faceEdgeI in Voxel.FaceSurroundingEdges(faceI))
+        {
+            float dist = v.DistanceToEdge(point, faceEdgeI);
+            if (dist < closestDistance)
+            {
+                closestEdgeI = faceEdgeI;
+                closestDistance = dist;
+            }
+        }
+        return closestEdgeI;
     }
 }
