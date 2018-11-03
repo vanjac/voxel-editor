@@ -940,6 +940,27 @@ public class VoxelArrayEditor : VoxelArray
                             newVoxel.edges[edgeI] = movingEdges[movingEdgesI];
                             UpdateBevel(edgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
                         }
+                        else // no edge between faces, pulled/pushed to be coplanar with surrounding faces
+                        {
+                            // remove bevel from connected edge...
+                            // find voxel next to this one
+                            int faceA, faceB;
+                            Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
+                            int otherFace = faceA == faceI ? faceB : faceA;
+                            Voxel adjacentVoxel = VoxelAt(newPos + Voxel.DirectionForFaceI(otherFace), false);
+                            if (adjacentVoxel != null && adjacentVoxel.substance == movingSubstance)
+                            {
+                                // find edge on adjacentVoxel connected to edgeRef
+                                foreach (int otherEdgeI in FaceSurroundingEdgesAlongAxis(faceI, Voxel.EdgeIAxis(edgeI)))
+                                {
+                                    if (otherEdgeI == edgeI)
+                                        continue;
+                                    adjacentVoxel.edges[otherEdgeI].Clear();
+                                    UpdateBevel(new VoxelEdgeReference(adjacentVoxel, otherEdgeI), alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: true);
+                                    voxelsToUpdate.Add(adjacentVoxel);
+                                }
+                            }
+                        }
                         movingEdgesI++;
                     }
                 }
