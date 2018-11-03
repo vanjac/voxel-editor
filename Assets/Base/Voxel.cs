@@ -368,15 +368,13 @@ public class Voxel : MonoBehaviour
         return edgeI / 4;
     }
 
-    public static int[] FaceSurroundingEdges(int faceNum)
+    public static System.Collections.Generic.IEnumerable<int> FaceSurroundingEdges(int faceNum)
     {
         int axis = FaceIAxis(faceNum);
-        return new int[] {
-            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2], // 0 - 1
-            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + 2], // 1 - 2
-            ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2 + 1], // 2 - 3
-            ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2)] // 3 - 0
-        };
+        yield return ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2]; // 0 - 1
+        yield return ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + 2]; // 1 - 2
+        yield return ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2 + 1]; // 2 - 3
+        yield return ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2)]; // 3 - 0
     }
 
 
@@ -1041,14 +1039,18 @@ public class Voxel : MonoBehaviour
         if (faces[faceNum].IsEmpty())
             return null;
 
-        int[] surroundingEdges = FaceSurroundingEdges(faceNum);
+        int[] surroundingEdges = new int[4];
+        int surroundingEdgeI = 0;
 
         int triangleCount = 6;
         bool noInnerQuad = false;
         // for each pair of edge vertices
-        foreach (int edgeI in surroundingEdges)
+        foreach (int edgeI in FaceSurroundingEdges(faceNum))
+        {
             if (edges[edgeI].hasBevel)
                 triangleCount += 6 * (edges[edgeI].bevelTypeArray.Length - 1);
+            surroundingEdges[surroundingEdgeI++] = edgeI;
+        }
         for (int i = 0; i < 4; i++)
         {
             int edgeA, edgeB, edgeC;
@@ -1210,8 +1212,7 @@ public class Voxel : MonoBehaviour
         if (face.addSelected || face.storedSelected)
             count++;
 
-        int[] surroundingEdges = FaceSurroundingEdges(faceNum);
-        foreach (int edgeI in surroundingEdges)
+        foreach (int edgeI in FaceSurroundingEdges(faceNum))
         {
             if (edges[edgeI].addSelected || edges[edgeI].storedSelected)
             {
@@ -1244,10 +1245,10 @@ public class Voxel : MonoBehaviour
             yield return selectedMaterial;
 
         int highlightNum = 0;
-        int[] surroundingEdges = FaceSurroundingEdges(faceNum);
-        for (int surroundingEdgeI = 0; surroundingEdgeI < 4; surroundingEdgeI++)
+        int surroundingEdgeI = 0;
+        foreach(int edgeI in FaceSurroundingEdges(faceNum))
         {
-            var e = edges[surroundingEdges[surroundingEdgeI]];
+            var e = edges[edgeI];
             if (e.addSelected || e.storedSelected)
             {
                 int n = surroundingEdgeI + 1;
@@ -1262,6 +1263,7 @@ public class Voxel : MonoBehaviour
                     n = 3 - (n % 4);
                 highlightNum |= 1 << (n % 4);
             }
+            surroundingEdgeI++;
         }
         if (highlightNum != 0)
             yield return highlightMaterials[highlightNum];
