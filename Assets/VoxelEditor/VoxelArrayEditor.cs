@@ -1123,7 +1123,7 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     private void UpdateBevel(VoxelEdgeReference edgeRef, bool alsoBevelOppositeConcaveEdge, bool dontUpdateThisVoxel,
-        bool alsoBevelOppositeConvexEdge=false)
+        bool alsoBevelOppositeConvexEdge=false, bool alwaysUpdateOppositeCaps=false)
     {
         int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
         int maxFaceI = minFaceI + 1;
@@ -1140,8 +1140,13 @@ public class VoxelArrayEditor : VoxelArray
         bool cap = BevelCap(edgeRef, minEdgeRef, type, minType,
             !edgeRef.voxel.faces[minFaceI].IsEmpty(), out alsoOther);
         edgeRef.voxel.edges[edgeRef.edgeI].capMin = cap;
-        if (alsoOther)
+        if (alsoOther || alwaysUpdateOppositeCaps)
         {
+            if (!alsoOther)
+            {
+                cap = BevelCap(minEdgeRef, edgeRef, minType, type,
+                    minEdgeRef.voxel != null && !minEdgeRef.voxel.faces[maxFaceI].IsEmpty(), out alsoOther);
+            }
             minVoxel.edges[edgeRef.edgeI].capMax = cap;
             VoxelModified(minVoxel);
             if (minType == EdgeType.CONCAVE)
@@ -1158,8 +1163,13 @@ public class VoxelArrayEditor : VoxelArray
         cap = BevelCap(edgeRef, maxEdgeRef, type, maxType,
             !edgeRef.voxel.faces[maxFaceI].IsEmpty(), out alsoOther);
         edgeRef.voxel.edges[edgeRef.edgeI].capMax = cap;
-        if (alsoOther)
+        if (alsoOther || alwaysUpdateOppositeCaps)
         {
+            if (!alsoOther)
+            {
+                cap = BevelCap(maxEdgeRef, edgeRef, maxType, type,
+                    maxEdgeRef.voxel != null && !maxEdgeRef.voxel.faces[minFaceI].IsEmpty(), out alsoOther);
+            }
             maxVoxel.edges[edgeRef.edgeI].capMin = cap;
             VoxelModified(maxVoxel);
             if (maxType == EdgeType.CONCAVE)
@@ -1187,13 +1197,15 @@ public class VoxelArrayEditor : VoxelArray
                 {
                     // bevel directions don't match! this won't work!
                     edgeRef.voxel.edges[connectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
-                    UpdateBevel(connectedEdgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                    UpdateBevel(connectedEdgeRef, alsoBevelOppositeConcaveEdge: true,
+                        dontUpdateThisVoxel: true, alwaysUpdateOppositeCaps: alwaysUpdateOppositeCaps);
                 }
                 else if (!BevelsMatch(connectedEdgeRef.edge, edgeRef.edge))
                 {
                     // bevel shapes/sizes don't match! this won't work!
                     edgeRef.voxel.edges[connectedEdgeI].bevel = edgeRef.edge.bevel;
-                    UpdateBevel(connectedEdgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                    UpdateBevel(connectedEdgeRef, alsoBevelOppositeConcaveEdge: true,
+                        dontUpdateThisVoxel: true, alwaysUpdateOppositeCaps: alwaysUpdateOppositeCaps);
                 }
             }
 
@@ -1212,7 +1224,8 @@ public class VoxelArrayEditor : VoxelArray
                         {
                             // bevels overlap! this won't work!
                             edgeRef.voxel.edges[unconnectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
-                            UpdateBevel(unconnectedEdgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: true);
+                            UpdateBevel(unconnectedEdgeRef, alsoBevelOppositeConcaveEdge: true,
+                                dontUpdateThisVoxel: true, alwaysUpdateOppositeCaps: alwaysUpdateOppositeCaps);
                         }
                     }
                 }
@@ -1226,7 +1239,8 @@ public class VoxelArrayEditor : VoxelArray
             if (oppEdgeRef.voxel != null)
             {
                 oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.edge.bevel;
-                UpdateBevel(oppEdgeRef, alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: false);
+                UpdateBevel(oppEdgeRef, alsoBevelOppositeConcaveEdge: false,
+                    dontUpdateThisVoxel: false, alwaysUpdateOppositeCaps: alwaysUpdateOppositeCaps);
             }
         }
         if (!dontUpdateThisVoxel)
