@@ -537,11 +537,6 @@ public class Voxel : MonoBehaviour
         return !faces[faceA].IsEmpty() && !faces[faceB].IsEmpty();
     }
 
-    public bool EdgeIsConcave(int edgeI)
-    {
-        return !EdgeIsEmpty(edgeI) && !EdgeIsConvex(edgeI);
-    }
-
     public bool IsEmpty()
     {
         if (substance != null)
