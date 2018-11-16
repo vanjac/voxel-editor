@@ -157,7 +157,8 @@ public class VoxelArrayEditor : VoxelArray
         ADJUSTED, // selection has moved since it was set
         BOX, // select inside a 3D box
         BOX_EDGES,
-        FACE_FLOOD_FILL
+        FACE_FLOOD_FILL,
+        EDGE_FLOOD_FILL
     }
 
     public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
@@ -221,8 +222,9 @@ public class VoxelArrayEditor : VoxelArray
             TouchDown(new VoxelFaceReference(voxel, elementI));
         else if (elementType == VoxelElement.EDGES)
         {
-            if (EdgeIsSelectable(new VoxelEdgeReference(voxel, elementI)))
-                TouchDown(new VoxelEdgeReference(voxel, elementI));
+            var edgeRef = new VoxelEdgeReference(voxel, elementI);
+            if (EdgeIsSelectable(edgeRef))
+                TouchDown(edgeRef);
         }
     }
 
@@ -255,8 +257,9 @@ public class VoxelArrayEditor : VoxelArray
             TouchDrag(new VoxelFaceReference(voxel, elementI));
         else if (elementType == VoxelElement.EDGES)
         {
-            if (EdgeIsSelectable(new VoxelEdgeReference(voxel, elementI)))
-                TouchDrag(new VoxelEdgeReference(voxel, elementI));
+            var edgeRef = new VoxelEdgeReference(voxel, elementI);
+            if (EdgeIsSelectable(edgeRef))
+                TouchDrag(edgeRef);
         }
     }
 
@@ -283,6 +286,12 @@ public class VoxelArrayEditor : VoxelArray
         ClearSelection();
         if (elementType == VoxelElement.FACES)
             FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: true);
+        else if (elementType == VoxelElement.EDGES)
+        {
+            var edgeRef = new VoxelEdgeReference(voxel, elementI);
+            if (EdgeIsSelectable(edgeRef))
+                EdgeSelectFloodFill(edgeRef, voxel.substance);
+        }
         AutoSetMoveAxesEnabled();
     }
 
@@ -291,14 +300,17 @@ public class VoxelArrayEditor : VoxelArray
     {
         if (voxel == null)
             return;
-        ClearSelection();
         if (voxel.substance == null)
         {
             if (elementType == VoxelElement.FACES)
+            {
+                ClearSelection();
                 FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: false);
+            }
         }
         else
         {
+            ClearSelection();
             SubstanceSelect(voxel.substance);
         }
         AutoSetMoveAxesEnabled();
@@ -322,7 +334,8 @@ public class VoxelArrayEditor : VoxelArray
     {
         if (axes == null)
             return;
-        axes.gameObject.SetActive(SomethingIsSelected() && selectMode != SelectMode.BOX_EDGES);
+        axes.gameObject.SetActive(SomethingIsSelected()
+            && selectMode != SelectMode.BOX_EDGES && selectMode != SelectMode.EDGE_FLOOD_FILL);
         rotateAxis.gameObject.SetActive(TypeIsSelected<ObjectMarker>());
     }
 
@@ -602,6 +615,32 @@ public class VoxelArrayEditor : VoxelArray
             selectionBounds.Encapsulate(faceBounds);
         selectMode = SelectMode.FACE_FLOOD_FILL;
         SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceRef.faceI) / 2);
+    }
+
+    private void EdgeSelectFloodFill(VoxelEdgeReference edgeRef, Substance substance)
+    {
+        selectMode = SelectMode.EDGE_FLOOD_FILL;
+        int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
+        Vector3 minDir = Voxel.DirectionForFaceI(minFaceI);
+        var edgeType = GetEdgeType(edgeRef);
+        SelectContiguousEdges(edgeRef, substance, minDir, edgeType);
+        SelectContiguousEdges(edgeRef, substance, -minDir, edgeType);
+    }
+
+    private void SelectContiguousEdges(VoxelEdgeReference edgeRef, Substance substance,
+        Vector3 direction, EdgeType edgeType)
+    {
+        for (Vector3 voxelPos = edgeRef.voxel.transform.position; true; voxelPos += direction)
+        {
+            Voxel voxel = VoxelAt(voxelPos, false);
+            if (voxel == null || voxel.substance != substance)
+                break;
+            var contigEdgeRef = new VoxelEdgeReference(voxel, edgeRef.edgeI);
+            var contigEdgeType = GetEdgeType(contigEdgeRef);
+            if (contigEdgeType != edgeType)
+                break;
+            SelectThing(contigEdgeRef);
+        }
     }
 
     private void SubstanceSelect(Substance substance)
