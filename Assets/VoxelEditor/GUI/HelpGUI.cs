@@ -13,7 +13,7 @@ public class HelpGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .35f, height * .15f, width * .3f, 0);
+        return new Rect(width * .35f, height * .1f, width * .3f, 0);
     }
 
     public void Start()
@@ -37,6 +37,8 @@ public class HelpGUI : GUIPanel
             StartTutorial(Tutorials.INTRO_TUTORIAL);
         if (GUILayout.Button("Painting"))
             StartTutorial(Tutorials.PAINT_TUTORIAL);
+        if (GUILayout.Button("Bevels"))
+            StartTutorial(Tutorials.BEVEL_TUTORIAL);
         if (GUILayout.Button("Substances"))
             StartTutorial(Tutorials.SUBSTANCE_TUTORIAL);
         if (GUILayout.Button("Objects"))

@@ -46,6 +46,22 @@ public class Tutorials
         () => new TutorialPaintSky()
     };
 
+    public static TutorialPageFactory[] BEVEL_TUTORIAL = new TutorialPageFactory[]
+    {
+        () => new TutorialBevelStart(),
+        () => new TutorialBevelSelect(),
+        () => new TutorialBevelPage(
+            "<i>Tap a bevel shape in the list to bevel the edge.</i>",
+            highlight: "bevel shape"),
+        () => new TutorialBevelPage(
+            "<i>Tap a size to change the size of the bevel.</i>",
+            highlight: "bevel size"),
+        () => new TutorialBevelFillSelect(),
+        () => new SimpleTutorialPage(
+            "<i>When you're done, tap the check button to exit.</i>",
+            highlight: "bevel done")
+    };
+
     public static TutorialPageFactory[] SUBSTANCE_TUTORIAL = new TutorialPageFactory[]
     {
         () => new SimpleTutorialPage(
@@ -564,6 +580,128 @@ public class Tutorials
         {
             PaintGUI paintPanel = guiGameObject.GetComponent<PaintGUI>();
             paintPanel.TutorialShowSky();
+        }
+    }
+
+
+    private class TutorialBevelStart : TutorialPage
+    {
+        public override string GetText()
+        {
+            return "<i>Tap the menu button then choose \"Bevel\" to open Bevel Mode.</i>";
+        }
+
+        public override string GetHighlightID()
+        {
+            return "bevel";
+        }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            if (guiGameObject.GetComponent<BevelGUI>() != null)
+                return TutorialAction.NEXT;
+            else
+                return TutorialAction.NONE;
+        }
+    }
+
+
+    private class TutorialBevelPage : SimpleTutorialPage
+    {
+        private bool panelOpen;
+
+        public TutorialBevelPage(string text, string highlight = "")
+            : base(text, highlight) { }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
+        {
+            panelOpen = guiGameObject.GetComponent<BevelGUI>() != null;
+            return TutorialAction.NONE;
+        }
+
+        public override string GetText()
+        {
+            if (!panelOpen)
+                return "<i>Reopen Bevel Mode. (Tap the menu button and choose \"Bevel\")</i>";
+            else
+                return base.GetText();
+        }
+
+        public override string GetHighlightID()
+        {
+            if (!panelOpen)
+                return "bevel";
+            else
+                return base.GetHighlightID();
+        }
+
+        public override bool ShowNextButton()
+        {
+            return panelOpen;
+        }
+    }
+
+
+    private class TutorialBevelSelect : TutorialBevelPage
+    {
+        public TutorialBevelSelect()
+            : base("Instead of selecting faces, you can now select edges. <i>Tap and drag to select.</i>") { }
+
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+            TouchListener touchListener)
+        {
+            if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.BOX_EDGES)
+            {
+                voxelArray.ClearSelection();
+                voxelArray.ClearStoredSelection();
+            }
+        }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+            TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+            if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.BOX_EDGES)
+                return TutorialAction.NEXT;
+            else
+                return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
+        }
+    }
+
+
+    private class TutorialBevelFillSelect : TutorialBevelPage
+    {
+        public TutorialBevelFillSelect()
+            : base("<i>Double tap an edge to select all contiguous edges.</i>") { }
+
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+            TouchListener touchListener)
+        {
+            if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.EDGE_FLOOD_FILL)
+            {
+                voxelArray.ClearSelection();
+                voxelArray.ClearStoredSelection();
+            }
+        }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+            TouchListener touchListener)
+        {
+            base.Update(voxelArray, guiGameObject, touchListener);
+            if (voxelArray.selectMode == VoxelArrayEditor.SelectMode.EDGE_FLOOD_FILL)
+                return TutorialAction.NEXT;
+            else
+                return TutorialAction.NONE;
+        }
+
+        public override bool ShowNextButton()
+        {
+            return false;
         }
     }
 

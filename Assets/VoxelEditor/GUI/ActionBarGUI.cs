@@ -47,6 +47,7 @@ public class ActionBarGUI : TopPanelGUI
         if (ActionBarButton(GUIIconSet.instance.play))
             editorFile.Play();
 
+        TutorialGUI.TutorialHighlight("bevel");
         if (ActionBarButton(GUIIconSet.instance.overflow))
         {
             var overflow = gameObject.AddComponent<OverflowMenuGUI>();
@@ -85,6 +86,7 @@ public class ActionBarGUI : TopPanelGUI
                 })
             };
         }
+        TutorialGUI.ClearHighlight();
 
         GUILayout.EndHorizontal();
     }
