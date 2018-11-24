@@ -1,3 +1,3 @@
 cd Assets/Resources
-find . ! -name '*.meta' > dirlist.txt
+find . ! -name '*.meta' ! -name '.DS_Store' | sort --ignore-case > dirlist.txt
 cd ..
