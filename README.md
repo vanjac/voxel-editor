@@ -27,7 +27,7 @@ N-Space has built-in documentation and tutorials, which you can access through t
 
 The app has been tested with Unity 2017.4.10 on Android. There's not much Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
-This repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), and others. You can purchase/download them yourself - look in the `Assets/GameAssets/Poliigon` and `Assets/GameAssets/FreePBR` folders for a list of `.meta` files which correspond to the missing textures. It is also possible to test N-Space without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
+This repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), and [Genetica](http://spiralgraphics.biz/genetica.htm). You can purchase/download them yourself - look in the `Assets/GameAssets/Poliigon` / `FreePBR` / `Genetica` folders for a list of `.meta` files which correspond to the missing textures. It is also possible to test N-Space without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
 
 The app has four scenes:
 
@@ -35,6 +35,22 @@ The app has four scenes:
 - `VoxelEditor/editScene`: The Editor interface. If you open this scene directly without first choosing a file, it will look for a file called `mapsave`.
 - `Game/playScene`: The gameplay interface. Again, without choosing a file it will look for `mapsave`.
 - `Menu/fileReceiveScene`: This scene will launch if you try to open a JSON file from another app using N-Space. This only works on Android.
+
+### Build Environment Setup
+
+These notes are mostly for me, but you can read them too.
+
+- Install latest LTS release of Unity 2017, with build tools for Android.
+- Clone repo. **Don't open in Unity yet!!**
+- Optional: Download/copy textures from Poliigon, FreePBR, and Genetica (see above)
+- Open project in Unity, and switch platform to Android
+- Open Player settings and browse for the keystore location.
+- Open Project Settings > Editor and switch Unity Remote device to Android
+
+### For each build
+
+- Enter keystore password
+- Change Device Filter
 
 ## More info
 
