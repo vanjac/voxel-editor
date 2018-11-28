@@ -25,7 +25,7 @@ N-Space has built-in documentation and tutorials, which you can access through t
 
 ## Building the app yourself
 
-The app has been tested with Unity 2017.4.10 on Android. There's not much Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
+The app has been tested with Unity 2017.4.15 on Android. There's not much Android specific code though, so it could theoretically work on iOS. Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
 This repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), and [Genetica](http://spiralgraphics.biz/genetica.htm). You can purchase/download them yourself - look in the `Assets/GameAssets/Poliigon` / `FreePBR` / `Genetica` folders for a list of `.meta` files which correspond to the missing textures. It is also possible to test N-Space without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
 
