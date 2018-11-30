@@ -946,8 +946,9 @@ public class Voxel : MonoBehaviour
                     vertices[corner.cap_i] = Vector3FromArray(vertexPos);
                     tangents[corner.cap_i] = tangent; // TODO
                     // uv TODO
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, beveledEdge, 0.70711f);
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, beveledEdge, 0.70711f);
+                    // 0.29289f = 1 - 1/sqrt(2) for some reason
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, beveledEdge, 0.29289f);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, beveledEdge, 0.29289f);
                     uvs[corner.cap_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
 
                     // normal (b and c are supposed to be swapped)
