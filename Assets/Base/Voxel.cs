@@ -985,8 +985,8 @@ public class Voxel : MonoBehaviour
                         normals[corner.cap_i + bevelI + 1] = capNormal;
                     }
 
-                    // calc uv
-                    float uvCoord = ((float)bevelI + 1) / (float)bevelArray.Length;
+                    // calc uv (this is partially copy/pasted from vertex pos above, which is bad)
+                    float uvCoord = (float)bevelI / (float)(bevelArray.Length - 1);
                     vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
                         edges[edgeC].hasBevel ? uvCoord : xCoord);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
