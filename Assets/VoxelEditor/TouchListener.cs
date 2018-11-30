@@ -39,7 +39,7 @@ public class TouchListener : MonoBehaviour
         cam = GetComponent<Camera>();
     }
 
-    void Update ()
+    void Update()
     {
         if (Input.touchCount == 0)
         {
@@ -73,8 +73,7 @@ public class TouchListener : MonoBehaviour
                     if (selectType == VoxelElement.FACES)
                         hitElementI = hitFaceI;
                     else if (selectType == VoxelElement.EDGES)
-                        // TODO: doesn't work perfectly
-                        hitElementI = ClosestEdgeOnFace(hitVoxel, hitFaceI, hit.point - hitVoxel.transform.position);
+                        hitElementI = ClosestEdgeToUV(hitVoxel, hit.textureCoord, hitFaceI);
                     else
                         hitElementI = -1;
                     if (hitElementI == -1)
@@ -89,8 +88,8 @@ public class TouchListener : MonoBehaviour
                     hitTransformAxis = hitObject.GetComponent<TransformAxis>();
                 }
 
-                if ( (hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
-                    || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10)) ) // xray or SelectedObject layer
+                if ((hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
+                    || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10))) // xray or SelectedObject layer
                 {
                     // allow moving axes through xray substances
                     RaycastHit newHit;
@@ -308,19 +307,29 @@ public class TouchListener : MonoBehaviour
         return 5;
     }
 
-    private int ClosestEdgeOnFace(Voxel v, int faceI, Vector3 point)
+    private int ClosestEdgeToUV(Voxel voxel, Vector2 uv, int faceI)
     {
-        int closestEdgeI = -1;
-        float closestDistance = 1.0f;
-        foreach (int faceEdgeI in Voxel.FaceSurroundingEdges(faceI))
+        float minDist = 1.0f;
+        int closestEdge = -1;
+        int n = 0;
+        foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
         {
-            float dist = v.DistanceToEdge(point, faceEdgeI);
-            if (dist < closestDistance)
+            float dist = 2.0f;
+            if (n == voxel.FaceTransformedEdgeNum(faceI, 0))
+                dist = uv.y - Mathf.Floor(uv.y);
+            if (n == voxel.FaceTransformedEdgeNum(faceI, 1))
+                dist = Mathf.Ceil(uv.x) - uv.x;
+            if (n == voxel.FaceTransformedEdgeNum(faceI, 2))
+                dist = Mathf.Ceil(uv.y) - uv.y;
+            if (n == voxel.FaceTransformedEdgeNum(faceI, 3))
+                dist = uv.x - Mathf.Floor(uv.x);
+            if (dist < minDist)
             {
-                closestEdgeI = faceEdgeI;
-                closestDistance = dist;
+                minDist = dist;
+                closestEdge = edgeI;
             }
+            n++;
         }
-        return closestEdgeI;
+        return closestEdge;
     }
 }

@@ -494,35 +494,6 @@ public class Voxel : MonoBehaviour
         return new Bounds(transform.position + new Vector3(0.5f,0.5f,0.5f), Vector3.one);
     }
 
-    public float DistanceToEdge(Vector3 point, int edgeI)
-    {
-        switch (edgeI)
-        {
-            case 0:  return EdgeDist(0,  point.y, point.z, 0, 0);
-            case 1:  return EdgeDist(1,  point.y, point.z, 1, 0);
-            case 2:  return EdgeDist(2,  point.y, point.z, 1, 1);
-            case 3:  return EdgeDist(3,  point.y, point.z, 0, 1);
-
-            case 4:  return EdgeDist(4,  point.z, point.x, 0, 0);
-            case 5:  return EdgeDist(5,  point.z, point.x, 1, 0);
-            case 6:  return EdgeDist(6,  point.z, point.x, 1, 1);
-            case 7:  return EdgeDist(7,  point.z, point.x, 0, 1);
-
-            case 8:  return EdgeDist(8,  point.x, point.y, 0, 0);
-            case 9:  return EdgeDist(9,  point.x, point.y, 1, 0);
-            case 10: return EdgeDist(10, point.x, point.y, 1, 1);
-            case 11: return EdgeDist(11, point.x, point.y, 0, 1);
-            default: return 0;
-        }
-    }
-
-    private float EdgeDist(int edgeI, float ptx, float pty, float ex, float ey)
-    {
-        ex = ApplyBevel(ex, edges[edgeI], 0.5f);
-        ey = ApplyBevel(ey, edges[edgeI], 0.5f);
-        return (ptx - ex) * (ptx - ex) + (pty - ey) * (pty - ey);
-    }
-
     public bool EdgeIsEmpty(int edgeI)
     {
         int faceA, faceB;
@@ -535,6 +506,21 @@ public class Voxel : MonoBehaviour
         int faceA, faceB;
         EdgeFaces(edgeI, out faceA, out faceB);
         return !faces[faceA].IsEmpty() && !faces[faceB].IsEmpty();
+    }
+
+    public int FaceTransformedEdgeNum(int faceNum, int edgeI)
+    {
+        int n = edgeI + 1;
+        if (faceNum % 2 == 1)
+            n = 4 - (n % 4);
+        if (faceNum == 4)
+            n += 3;
+        if (faceNum == 5)
+            n += 1;
+        n += VoxelFace.GetOrientationRotation(faces[faceNum].orientation);
+        if (VoxelFace.GetOrientationMirror(faces[faceNum].orientation))
+            n = 3 - (n % 4);
+        return n % 4;
     }
 
     public bool IsEmpty()
@@ -1257,17 +1243,8 @@ public class Voxel : MonoBehaviour
             var e = edges[edgeI];
             if (e.addSelected || e.storedSelected)
             {
-                int n = surroundingEdgeI + 1;
-                if (faceNum % 2 == 1)
-                    n = 4 - (n % 4);
-                if (faceNum == 4)
-                    n += 3;
-                if (faceNum == 5)
-                    n += 1;
-                n += VoxelFace.GetOrientationRotation(face.orientation);
-                if (VoxelFace.GetOrientationMirror(face.orientation))
-                    n = 3 - (n % 4);
-                highlightNum |= 1 << (n % 4);
+                int n = FaceTransformedEdgeNum(faceNum, surroundingEdgeI);
+                highlightNum |= 1 << n;
             }
             surroundingEdgeI++;
         }
