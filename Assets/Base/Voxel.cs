@@ -988,9 +988,9 @@ public class Voxel : MonoBehaviour
                     // calc uv
                     float uvCoord = ((float)bevelI + 1) / (float)bevelArray.Length;
                     vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
-                        edges[edgeC].hasBevel ? uvCoord : bevelVector.x);
+                        edges[edgeC].hasBevel ? uvCoord : xCoord);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
-                        edges[edgeB].hasBevel ? uvCoord : bevelVector.x);
+                        edges[edgeB].hasBevel ? uvCoord : xCoord);
                     uvs[bevelVertex] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
                     if (corner.cap_i != -1)
                         uvs[corner.cap_i + bevelI + 1] = uvs[bevelVertex];
