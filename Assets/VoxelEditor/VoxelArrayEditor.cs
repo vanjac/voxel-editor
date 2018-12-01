@@ -1249,24 +1249,23 @@ public class VoxelArrayEditor : VoxelArray
                 }
             }
 
-            if (type == EdgeType.CONVEX)
+            // don't allow full convex bevels to overlap with other bevels
+            foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
             {
-                // don't allow full bevels to overlap with other bevels
-                foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
+                if (edgeRef.voxel.EdgeIsEmpty(unconnectedEdgeI))
+                    continue;
+                var unconnectedEdgeRef = new VoxelEdgeReference(edgeRef.voxel, unconnectedEdgeI);
+                if (unconnectedEdgeRef.edge.hasBevel)
                 {
-                    if (edgeRef.voxel.EdgeIsEmpty(unconnectedEdgeI))
-                        continue;
-                    var unconnectedEdgeRef = new VoxelEdgeReference(edgeRef.voxel, unconnectedEdgeI);
-                    if (unconnectedEdgeRef.edge.hasBevel && edgeRef.voxel.EdgeIsConvex(unconnectedEdgeI))
+                    if ((edgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL
+                        && type == EdgeType.CONVEX)
+                        || (unconnectedEdgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL)
+                            && edgeRef.voxel.EdgeIsConvex(unconnectedEdgeI))
                     {
-                        if (edgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL
-                            || unconnectedEdgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL)
-                        {
-                            // bevels overlap! this won't work!
-                            edgeRef.voxel.edges[unconnectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
-                            UpdateBevel(unconnectedEdgeRef, alsoBevelOppositeConcaveEdge: true,
-                                dontUpdateThisVoxel: true, alwaysUpdateOppositeCaps: alwaysUpdateOppositeCaps);
-                        }
+                        // full convex bevel overlaps with another bevel! this won't work!
+                        edgeRef.voxel.edges[unconnectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
+                        UpdateBevel(unconnectedEdgeRef, alsoBevelOppositeConcaveEdge: true,
+                            dontUpdateThisVoxel: true, alwaysUpdateOppositeCaps: alwaysUpdateOppositeCaps);
                     }
                 }
             }
