@@ -43,3 +43,5 @@ sysinfo.txt
 *.keystore
 upload_certificate.pem
 *.skb
+
+.vscode/settings.json
