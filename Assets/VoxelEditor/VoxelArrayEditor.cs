@@ -1158,7 +1158,7 @@ public class VoxelArrayEditor : VoxelArray
             if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
                 continue;
             edgeRef.voxel.edges[edgeRef.edgeI].bevel = applyBevel.bevel;
-            UpdateBevel(edgeRef, alsoBevelOppositeConcaveEdge: false, dontUpdateThisVoxel: false);
+            UpdateBevel(edgeRef, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: false);
         }
     }
 
