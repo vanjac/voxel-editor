@@ -6,7 +6,7 @@ public class SelectedMap : MonoBehaviour
 {
     public string mapName = "mapsave";
 
-    void Start ()
+    void Start()
     {
         DontDestroyOnLoad(this);
     }

@@ -329,7 +329,7 @@ public class TouchListener : MonoBehaviour
                 case 3:
                     dist = uv.x - Mathf.Floor(uv.x);
                     break;
-            }    
+            }
             if (dist < minDist)
             {
                 minDist = dist;

@@ -16,7 +16,7 @@ public class NewRigidbodyController : MonoBehaviour
     public float stickToGroundHelperDistance = 0.6f; // stops the character
     public float slowDownRate = 20f; // rate at which the controller comes to a stop when there is no input
     public float shellOffset = 0.1f; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
-    
+
     public MouseLook mouseLook = new MouseLook();
 
     public Camera cam;
@@ -68,7 +68,7 @@ public class NewRigidbodyController : MonoBehaviour
             desiredMove *= input.magnitude * maxSpeed;
             if (rigidBody.velocity.sqrMagnitude < (maxSpeed * maxSpeed))
             {
-                rigidBody.AddForce(desiredMove*SlopeMultiplier(), ForceMode.Impulse);
+                rigidBody.AddForce(desiredMove * SlopeMultiplier(), ForceMode.Impulse);
             }
         }
 
@@ -131,11 +131,11 @@ public class NewRigidbodyController : MonoBehaviour
         // get the rotation before it's changed
         float oldYRotation = transform.eulerAngles.y;
 
-        mouseLook.LookRotation (transform, cam.transform);
+        mouseLook.LookRotation(transform, cam.transform);
 
         // Rotate the rigidbody velocity to match the new direction that the character is looking
         Quaternion velRotation = Quaternion.AngleAxis(transform.eulerAngles.y - oldYRotation, Vector3.up);
-        rigidBody.velocity = velRotation*rigidBody.velocity;
+        rigidBody.velocity = velRotation * rigidBody.velocity;
     }
 
     /// sphere cast down just beyond the bottom of the capsule to see if the capsule is colliding round the bottom

@@ -415,7 +415,7 @@ public class Voxel : MonoBehaviour
     public ObjectEntity objectEntity;
     public byte[] faceSubMeshes = new byte[6];
 
-    void Start ()
+    void Start()
     {
         UpdateVoxel();
     }
@@ -491,7 +491,7 @@ public class Voxel : MonoBehaviour
 
     public Bounds GetBounds()
     {
-        return new Bounds(transform.position + new Vector3(0.5f,0.5f,0.5f), Vector3.one);
+        return new Bounds(transform.position + new Vector3(0.5f, 0.5f, 0.5f), Vector3.one);
     }
 
     public bool EdgeIsEmpty(int edgeI)
@@ -609,7 +609,7 @@ public class Voxel : MonoBehaviour
                 return;
             }
         }
-        
+
         // according to Mesh documentation, vertices must be assigned before triangles
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         mesh.name = "Voxel Mesh";
@@ -1239,7 +1239,7 @@ public class Voxel : MonoBehaviour
 
         int highlightNum = 0;
         int surroundingEdgeI = 0;
-        foreach(int edgeI in FaceSurroundingEdges(faceNum))
+        foreach (int edgeI in FaceSurroundingEdges(faceNum))
         {
             var e = edges[edgeI];
             if (e.addSelected || e.storedSelected)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WorldProperties : PropertiesObject
 {
-    private static readonly Dictionary<string, float> skyRotations = new Dictionary<string,float>
+    private static readonly Dictionary<string, float> skyRotations = new Dictionary<string, float>
     {
         {"sky5X1", 102},
         {"sky5X2", 143},

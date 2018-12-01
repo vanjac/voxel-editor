@@ -92,7 +92,8 @@ public class PropertiesObjectType
     // empty constructor for deserialization
     public PropertiesObjectType() { }
 
-    public PropertiesObjectType(string fullName, Type type) {
+    public PropertiesObjectType(string fullName, Type type)
+    {
         this.fullName = fullName;
         description = "";
         longDescription = "";
@@ -167,7 +168,7 @@ public class PropertiesObjectType
 
     // assumes both objects are the same type and have the same order of properties
     public static void CopyProperties(PropertiesObject source, PropertiesObject dest,
-        Entity findEntity=null, Entity replaceEntity=null)
+        Entity findEntity = null, Entity replaceEntity = null)
     {
         var sourceEnumerator = source.Properties().GetEnumerator();
         var destEnumerator = dest.Properties().GetEnumerator();
@@ -453,7 +454,7 @@ public abstract class EntityBehavior : PropertiesObject
 
     public enum Condition : byte
     {
-        ON=0, OFF=1, BOTH=2
+        ON = 0, OFF = 1, BOTH = 2
     }
     public struct BehaviorTargetProperty
     {
@@ -823,7 +824,7 @@ public abstract class DynamicEntityComponent : EntityComponent
 
     // allows composing multiple translations within a single FixedUpdate cycle
     // Rigidbody normally doesn't update its position until the end of the cycle
-    public void RigidbodyTranslate(Rigidbody rb, Vector3 amount, bool applyConstraints=false)
+    public void RigidbodyTranslate(Rigidbody rb, Vector3 amount, bool applyConstraints = false)
     {
         if (rb.position != lastRigidbodyPosition)
         {

@@ -46,7 +46,7 @@ public class VoxelArray : MonoBehaviour
 
     private bool unloadUnusedAssets = false;
 
-    public virtual void Awake ()
+    public virtual void Awake()
     {
         rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
     }

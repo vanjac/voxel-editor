@@ -12,7 +12,7 @@ public class GameTouchControl : MonoBehaviour
     private TapComponent touchedTapComponent;
     public Joystick joystick;
 
-    void OnEnable ()
+    void OnEnable()
     {
         hAxis = new CrossPlatformInputManager.VirtualAxis("Mouse X");
         CrossPlatformInputManager.RegisterVirtualAxis(hAxis);
@@ -26,7 +26,7 @@ public class GameTouchControl : MonoBehaviour
         vAxis.Remove();
     }
 
-    void Update ()
+    void Update()
     {
         if (cam == null)
         {

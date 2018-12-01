@@ -131,7 +131,8 @@ public class MapFileWriter
         if (entity.sensor != null)
             entityObject["sensor"] = WritePropertiesObject(entity.sensor, true);
 
-        if (entity.behaviors.Count != 0) {
+        if (entity.behaviors.Count != 0)
+        {
             JSONArray behaviorsArray = new JSONArray();
             foreach (EntityBehavior behavior in entity.behaviors)
             {

@@ -30,7 +30,7 @@ public class ResourcesDirectory
         return Resources.Load<Material>(path);
     }
 
-    public static Material MakeCustomMaterial(ColorMode colorMode, bool transparent=false)
+    public static Material MakeCustomMaterial(ColorMode colorMode, bool transparent = false)
     {
         Material material = null;
         switch (colorMode)

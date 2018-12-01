@@ -574,7 +574,8 @@ public class Tutorials
     {
         public TutorialPaintSky()
             : base("The \"Sky\" material is special: in the game it is an unobstructed window to the sky. "
-                + "Since the world can't have holes, this is the only way to see the sky.") { }
+                + "Since the world can't have holes, this is the only way to see the sky.")
+        { }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -823,7 +824,8 @@ public class Tutorials
     {
         public TutorialSubstanceAddBehavior()
             : base("<i>Try adding a Move behavior to the platform.</i> Notice that behaviors are organized into multiple categories.",
-            highlight: "add behavior") { }
+            highlight: "add behavior")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -848,7 +850,8 @@ public class Tutorials
     {
         public TutorialSubstanceEditDirection()
             : base("The Move behavior will make this substance move West at a constant speed. "
-            + "<i>Tap the direction to edit it.</i>") { }
+            + "<i>Tap the direction to edit it.</i>")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -959,7 +962,8 @@ public class Tutorials
     {
         public TutorialSubstanceBehaviorConditions()
             : base("<i>Now make one behavior active only in the Off state, and one in the On state.</i> (the substance will start Off).",
-            highlight: "behavior condition") { }
+            highlight: "behavior condition")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -992,7 +996,8 @@ public class Tutorials
         public TutorialSubstanceAddSensor()
             : base("A substance's On/Off state is controlled by a Sensor. "
             + "<i>Give the platform a Pulse sensor.</i> This will make it cycle on/off repeatedly.",
-            highlight: "change sensor") { }
+            highlight: "change sensor")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1015,7 +1020,8 @@ public class Tutorials
     {
         public TutorialSubstancePulseTime()
             : base("<i>Now adjust the time the sensor spends in the on and off state "
-            + "to make the platform move the full distance of the pit.</i>") { }
+            + "to make the platform move the full distance of the pit.</i>")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1140,7 +1146,8 @@ public class Tutorials
     {
         public TutorialObjectAddBehavior()
             : base("<i>Add a Move behavior to the ball.</i>",
-            highlight: "add behavior") { }
+            highlight: "add behavior")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1192,7 +1199,8 @@ public class Tutorials
     {
         public TutorialObjectAddSensor()
             : base("<i>Give the ball a Touch sensor.</i>",
-            highlight: "change sensor") { }
+            highlight: "change sensor")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1242,7 +1250,8 @@ public class Tutorials
             : base("<i>Tap Add Behavior. "
             + "In the behavior menu, tap the \"Target\" button and select the player as the target. "
             + "Then select the Hurt/Heal behavior.</i>",
-            highlight: "behavior target") { }
+            highlight: "behavior target")
+        { }
 
         private bool incorrectTarget = false;
 
@@ -1286,7 +1295,8 @@ public class Tutorials
     {
         public TutorialObjectBehaviorCondition()
             : base("<i>Set Hurt/Heal to activate when the Sensor is On.</i> "
-            + "Even though it targets the Player, it will use the Ball's sensor to turn on/off.") { }
+            + "Even though it targets the Player, it will use the Ball's sensor to turn on/off.")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1320,8 +1330,8 @@ public class Tutorials
                 if (e is BallObject)
                     foreach (EntityBehavior behavior in e.behaviors)
                         if (behavior is HurtHealBehavior)
-                            foreach(Property prop in behavior.Properties())
-                                if(prop.name == "Rate" && (float)prop.value != 0)
+                            foreach (Property prop in behavior.Properties())
+                                if (prop.name == "Rate" && (float)prop.value != 0)
                                     return TutorialAction.NEXT;
             return TutorialAction.NONE;
         }
@@ -1337,7 +1347,8 @@ public class Tutorials
     {
         public TutorialObjectAddPhysicsBehavior()
             : base("If you build some obstacles, you'll notice that the ball can move through walls. "
-            + "<i>Add a Physics behavior to fix this.</i> (it's in a different tab)") { }
+            + "<i>Add a Physics behavior to fix this.</i> (it's in a different tab)")
+        { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {

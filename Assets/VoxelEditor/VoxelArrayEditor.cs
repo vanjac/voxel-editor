@@ -726,7 +726,7 @@ public class VoxelArrayEditor : VoxelArray
         bool negativeAdjustAxis = adjustDirFaceI % 2 == 0;
 
         // sort selectedThings in order along the adjustDirection vector
-        selectedThings.Sort(delegate(Selectable a, Selectable b)
+        selectedThings.Sort(delegate (Selectable a, Selectable b)
         {
             // positive means A is greater than B
             // so positive means B will be adjusted before A
