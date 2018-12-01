@@ -608,7 +608,7 @@ public class VoxelArrayEditor : VoxelArray
             }
         }
 
-        var faceBounds = faceRef.voxel.GetFaceBounds(faceRef.faceI);
+        var faceBounds = faceRef.bounds;
         if (selectMode != SelectMode.FACE_FLOOD_FILL)
             selectionBounds = faceBounds;
         else
@@ -620,6 +620,7 @@ public class VoxelArrayEditor : VoxelArray
     private void EdgeSelectFloodFill(VoxelEdgeReference edgeRef, Substance substance)
     {
         selectMode = SelectMode.EDGE_FLOOD_FILL;
+        selectionBounds = edgeRef.bounds;
         int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
         Vector3 minDir = Voxel.DirectionForFaceI(minFaceI);
         var edgeType = GetEdgeType(edgeRef);
@@ -640,6 +641,7 @@ public class VoxelArrayEditor : VoxelArray
             if (contigEdgeType != edgeType)
                 break;
             SelectThing(contigEdgeRef);
+            selectionBounds.Encapsulate(contigEdgeRef.bounds);
         }
     }
 
