@@ -1047,7 +1047,8 @@ public class Voxel : MonoBehaviour
         {
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-            if (edges[edgeA].hasBevel && edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL)
+            if (edges[edgeA].hasBevel && edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL
+                && EdgeIsConvex(edgeA))
             {
                 noInnerQuad = true; // quad would be convex which might cause problems
                 triangleCount -= 6;
