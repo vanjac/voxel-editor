@@ -315,14 +315,21 @@ public class TouchListener : MonoBehaviour
         foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
         {
             float dist = 2.0f;
-            if (n == voxel.FaceTransformedEdgeNum(faceI, 0))
-                dist = uv.y - Mathf.Floor(uv.y);
-            if (n == voxel.FaceTransformedEdgeNum(faceI, 1))
-                dist = Mathf.Ceil(uv.x) - uv.x;
-            if (n == voxel.FaceTransformedEdgeNum(faceI, 2))
-                dist = Mathf.Ceil(uv.y) - uv.y;
-            if (n == voxel.FaceTransformedEdgeNum(faceI, 3))
-                dist = uv.x - Mathf.Floor(uv.x);
+            switch (voxel.FaceTransformedEdgeNum(faceI, n))
+            {
+                case 0:
+                    dist = uv.y - Mathf.Floor(uv.y);
+                    break;
+                case 1:
+                    dist = Mathf.Ceil(uv.x) - uv.x;
+                    break;
+                case 2:
+                    dist = Mathf.Ceil(uv.y) - uv.y;
+                    break;
+                case 3:
+                    dist = uv.x - Mathf.Floor(uv.x);
+                    break;
+            }    
             if (dist < minDist)
             {
                 minDist = dist;
