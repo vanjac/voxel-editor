@@ -20,6 +20,8 @@ public class EditorFile : MonoBehaviour
     private IEnumerator LoadCoroutine()
     {
         yield return null;
+        var guiGameObject = loadingGUI.gameObject;
+
         string mapName = SelectedMap.Instance().mapName;
         Debug.unityLogger.Log("EditorFile", "Loading " + mapName);
         MapFileReader reader = new MapFileReader(mapName);
@@ -30,7 +32,7 @@ public class EditorFile : MonoBehaviour
         }
         catch (MapReadException e)
         {
-            var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
+            var dialog = guiGameObject.AddComponent<DialogGUI>();
             dialog.message = e.Message;
             dialog.yesButtonText = "Close";
             dialog.yesButtonHandler = () =>
@@ -52,22 +54,16 @@ public class EditorFile : MonoBehaviour
         Destroy(loadingGUI);
         foreach (MonoBehaviour b in enableOnLoad)
             b.enabled = true;
-        if (warnings.Count > 0)
-        {
-            string message = "There were some issues with reading the world:\n\n  •  " +
-                string.Join("\n  •  ", warnings.ToArray());
-            LargeMessageGUI.ShowLargeMessageDialog(loadingGUI.gameObject, message);
-        }
 
         if (!PlayerPrefs.HasKey("last_editScene_version"))
         {
-            var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
+            var dialog = guiGameObject.AddComponent<DialogGUI>();
             dialog.message = "This is your first time using the app. Would you like a tutorial?";
             dialog.yesButtonText = "Yes";
             dialog.noButtonText = "No";
             dialog.yesButtonHandler = () =>
             {
-                TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, dialog.gameObject, voxelArray, touchListener);
+                TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, guiGameObject, voxelArray, touchListener);
             };
         }
         else
@@ -75,17 +71,28 @@ public class EditorFile : MonoBehaviour
             string lastVersion = PlayerPrefs.GetString("last_editScene_version");
             if (CompareVersions(lastVersion, "1.2.0") == -1)
             {
-                var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
+                var dialog = guiGameObject.AddComponent<DialogGUI>();
                 dialog.message = "N-Space has been updated with the ability to bevel edges! Would you like a tutorial?";
                 dialog.yesButtonText = "Yes";
                 dialog.noButtonText = "No";
                 dialog.yesButtonHandler = () =>
                 {
-                    TutorialGUI.StartTutorial(Tutorials.BEVEL_TUTORIAL, dialog.gameObject, voxelArray, touchListener);
+                    TutorialGUI.StartTutorial(Tutorials.BEVEL_TUTORIAL, guiGameObject, voxelArray, touchListener);
                 };
             }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
+
+        if (warnings.Count > 0)
+        {
+            // avoids a bug where two dialogs created on the same frame will put the unfocused one on top
+            // for some reason it's necessary to wait two frames
+            yield return null;
+            yield return null;
+            string message = "There were some issues with reading the world:\n\n  •  " +
+                string.Join("\n  •  ", warnings.ToArray());
+            LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, message);
+        }
     }
 
     // 1: a is greater; -1: b is creater; 0: equal
