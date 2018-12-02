@@ -854,7 +854,13 @@ public class VoxelArrayEditor : VoxelArray
                 foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
                 {
                     oldVoxel.edges[edgeI].Clear();
-                    bevelsToUpdate.Add(new VoxelEdgeReference(oldVoxel, edgeI));
+                    var oldEdgeRef = new VoxelEdgeReference(oldVoxel, edgeI);
+                    bevelsToUpdate.Add(oldEdgeRef);
+                    if (GetEdgeType(oldEdgeRef) == EdgeType.CONCAVE)
+                    {
+                        // the face will be deleted later, so UpdateBevel won't know to update the other halves
+                        bevelsToUpdate.Add(OpposingEdgeRef(oldEdgeRef));
+                    }
                 }
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
