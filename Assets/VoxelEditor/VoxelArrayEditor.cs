@@ -642,6 +642,10 @@ public class VoxelArrayEditor : VoxelArray
                 break;
             SelectThing(contigEdgeRef);
             selectionBounds.Encapsulate(contigEdgeRef.bounds);
+
+            var oppEdgeRef = OpposingEdgeRef(contigEdgeRef);
+            if(oppEdgeRef.voxel != null && !oppEdgeRef.voxel.EdgeIsEmpty(oppEdgeRef.edgeI))
+                SelectThing(oppEdgeRef);
         }
     }
 
