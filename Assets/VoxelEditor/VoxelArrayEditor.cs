@@ -644,7 +644,7 @@ public class VoxelArrayEditor : VoxelArray
             selectionBounds.Encapsulate(contigEdgeRef.bounds);
 
             var oppEdgeRef = OpposingEdgeRef(contigEdgeRef);
-            if(oppEdgeRef.voxel != null && !oppEdgeRef.voxel.EdgeIsEmpty(oppEdgeRef.edgeI))
+            if (oppEdgeRef.voxel != null && !oppEdgeRef.voxel.EdgeIsEmpty(oppEdgeRef.edgeI))
                 SelectThing(oppEdgeRef);
         }
     }
