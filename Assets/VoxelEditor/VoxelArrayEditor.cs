@@ -853,16 +853,7 @@ public class VoxelArrayEditor : VoxelArray
             {
                 foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
                 {
-                    oldVoxel.edges[edgeI].Clear();
-                    var oldEdgeRef = new VoxelEdgeReference(oldVoxel, edgeI);
-                    bevelsToUpdate.Add(oldEdgeRef);
-                    if (GetEdgeType(oldEdgeRef) == EdgeType.CONCAVE)
-                    {
-                        var oppositeOldEdgeRef = OpposingEdgeRef(oldEdgeRef);
-                        // the face will be deleted later, so UpdateBevel won't know to update the other halves
-                        bevelsToUpdate.Add(oppositeOldEdgeRef);
-                        voxelsToUpdate.Add(oppositeOldEdgeRef.voxel);
-                    }
+                    AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                 }
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
@@ -898,23 +889,20 @@ public class VoxelArrayEditor : VoxelArray
                         // side will be deleted when voxel is cleared but we'll remove/update the bevels now
                         foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
                         {
-                            oldVoxel.edges[edgeI].Clear();
-                            var oldEdgeRef = new VoxelEdgeReference(oldVoxel, edgeI);
-                            bevelsToUpdate.Add(oldEdgeRef);
-                            if (GetEdgeType(oldEdgeRef) == EdgeType.CONCAVE)
-                            {
-                                var oppositeOldEdgeRef = OpposingEdgeRef(oldEdgeRef);
-                                // the face will be deleted later, so UpdateBevel won't know to update the other halves
-                                // TODO: this was copied from above. there's probably a better way to do this
-                                bevelsToUpdate.Add(oppositeOldEdgeRef);
-                                voxelsToUpdate.Add(oppositeOldEdgeRef.voxel);
-                            }
+                            AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                         }
                     }
                 }
 
                 if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
+                {
                     blocked = true;
+                    // make sure any concave edges are cleared
+                    foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
+                    {
+                        AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
+                    }
+                }
                 oldVoxel.Clear();
                 if (substanceToCreate != null && !temporarilyBlockPushingANewSubstance)
                     newSubstanceBlock = CreateSubstanceBlock(oldPos, substanceToCreate, movingFace);
@@ -929,8 +917,7 @@ public class VoxelArrayEditor : VoxelArray
             {
                 foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
                 {
-                    oldVoxel.edges[edgeI].Clear();
-                    bevelsToUpdate.Add(new VoxelEdgeReference(oldVoxel, edgeI));
+                    AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                 }
                 if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
                 {
@@ -968,8 +955,7 @@ public class VoxelArrayEditor : VoxelArray
                         // delete side
                         foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
                         {
-                            sideVoxel.edges[edgeI].Clear();
-                            bevelsToUpdate.Add(new VoxelEdgeReference(sideVoxel, edgeI));
+                            AdjustClearEdge(new VoxelEdgeReference(sideVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                         }
                         sideVoxel.faces[oppositeSideFaceI].Clear();
                         voxelsToUpdate.Add(sideVoxel);
@@ -982,6 +968,11 @@ public class VoxelArrayEditor : VoxelArray
                     if (movingSubstance == blockingVoxel.substance)
                     {
                         blocked = true;
+                        foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
+                        {
+                            // clear any bevels on the face that will be deleted
+                            AdjustClearEdge(new VoxelEdgeReference(blockingVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
+                        }
                         blockingVoxel.faces[oppositeFaceI].Clear();
                         voxelsToUpdate.Add(blockingVoxel);
                     }
@@ -1026,6 +1017,7 @@ public class VoxelArrayEditor : VoxelArray
                 if (pulling && substanceToCreate == null)
                     newVoxel.substance = movingSubstance;
             }
+
             foreach (VoxelEdgeReference edgeRef in bevelsToUpdate)
             {
                 UpdateBevel(edgeRef, alsoBevelOppositeConcaveEdge: true,
@@ -1069,6 +1061,24 @@ public class VoxelArrayEditor : VoxelArray
 
         AutoSetMoveAxesEnabled();
     } // end Adjust()
+
+    // fix for an issue when clearing concave edges on a face that will be deleted
+    private void AdjustClearEdge(VoxelEdgeReference edgeRef,
+            HashSet<VoxelEdgeReference> bevelsToUpdate, HashSet<Voxel> voxelsToUpdate)
+    {
+        edgeRef.voxel.edges[edgeRef.edgeI].Clear();
+        bevelsToUpdate.Add(edgeRef);
+        if (GetEdgeType(edgeRef) == EdgeType.CONCAVE)
+        {
+            // the face might be deleted later, so UpdateBevel won't know to update the other halves
+            var oppEdgeRef = OpposingEdgeRef(edgeRef);
+            if (oppEdgeRef.voxel != null)
+            {
+                bevelsToUpdate.Add(oppEdgeRef);
+                voxelsToUpdate.Add(oppEdgeRef.voxel);
+            }
+        }
+    }
 
     private Voxel CreateSubstanceBlock(Vector3 position, Substance substance, VoxelFace faceTemplate)
     {
