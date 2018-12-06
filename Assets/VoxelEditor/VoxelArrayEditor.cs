@@ -858,8 +858,10 @@ public class VoxelArrayEditor : VoxelArray
                     bevelsToUpdate.Add(oldEdgeRef);
                     if (GetEdgeType(oldEdgeRef) == EdgeType.CONCAVE)
                     {
+                        var oppositeOldEdgeRef = OpposingEdgeRef(oldEdgeRef);
                         // the face will be deleted later, so UpdateBevel won't know to update the other halves
-                        bevelsToUpdate.Add(OpposingEdgeRef(oldEdgeRef));
+                        bevelsToUpdate.Add(oppositeOldEdgeRef);
+                        voxelsToUpdate.Add(oppositeOldEdgeRef.voxel);
                     }
                 }
                 for (int sideNum = 0; sideNum < 4; sideNum++)
@@ -897,7 +899,16 @@ public class VoxelArrayEditor : VoxelArray
                         foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
                         {
                             oldVoxel.edges[edgeI].Clear();
-                            bevelsToUpdate.Add(new VoxelEdgeReference(oldVoxel, edgeI));
+                            var oldEdgeRef = new VoxelEdgeReference(oldVoxel, edgeI);
+                            bevelsToUpdate.Add(oldEdgeRef);
+                            if (GetEdgeType(oldEdgeRef) == EdgeType.CONCAVE)
+                            {
+                                var oppositeOldEdgeRef = OpposingEdgeRef(oldEdgeRef);
+                                // the face will be deleted later, so UpdateBevel won't know to update the other halves
+                                // TODO: this was copied from above. there's probably a better way to do this
+                                bevelsToUpdate.Add(oppositeOldEdgeRef);
+                                voxelsToUpdate.Add(oppositeOldEdgeRef.voxel);
+                            }
                         }
                     }
                 }
@@ -1041,7 +1052,8 @@ public class VoxelArrayEditor : VoxelArray
         } // end for each selected face
 
         foreach (Voxel voxel in voxelsToUpdate)
-            VoxelModified(voxel);
+            if (voxel != null)
+                VoxelModified(voxel);
 
         for (int i = selectedThings.Count - 1; i >= 0; i--)
         {
