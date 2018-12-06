@@ -1375,7 +1375,7 @@ public class VoxelArrayEditor : VoxelArray
         // find voxel next to this one
         int faceA, faceB;
         Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
-        int emptyFace = edgeRef.voxel.faces[faceA].IsEmpty() ? faceB : faceA;
+        int emptyFace = edgeRef.voxel.faces[faceA].IsEmpty() ? faceA : faceB;
         int notEmptyFace = emptyFace == faceA ? faceB : faceA;
         Voxel adjacentVoxel = VoxelAt(edgeRef.voxel.transform.position
             + Voxel.DirectionForFaceI(emptyFace), false);
