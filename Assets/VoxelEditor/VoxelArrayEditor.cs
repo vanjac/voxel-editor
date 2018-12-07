@@ -334,8 +334,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         if (axes == null)
             return;
-        axes.gameObject.SetActive(SomethingIsSelected()
-            && selectMode != SelectMode.BOX_EDGES && selectMode != SelectMode.EDGE_FLOOD_FILL);
+        axes.gameObject.SetActive(SomethingIsSelected() && !TypeIsSelected<VoxelEdgeReference>());
         rotateAxis.gameObject.SetActive(TypeIsSelected<ObjectMarker>());
     }
 
