@@ -8,6 +8,7 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 - Sculpt indoor/outdoor 3D environments. The interface is designed to allow rapid design and modification.
 - Paint surfaces with a selection of over 100 high quality materials, along with custom colors.
+- Use the Bevel tool to create complex shapes including rounded edges and stair steps.
 - Use "substances" to create dynamic worlds with moving objects, water, and physics.
 - Wire components together to respond to game events with a powerful logic system.
 - Customize the sky, lighting, and fog.
