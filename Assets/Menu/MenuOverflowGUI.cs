@@ -16,6 +16,11 @@ public class MenuOverflowGUI : GUIPanel
         return GUIStyle.none;
     }
 
+    void Start()
+    {
+        GUIPanel.topPanel = this;
+    }
+
     public override void OnEnable()
     {
         holdOpen = true;
