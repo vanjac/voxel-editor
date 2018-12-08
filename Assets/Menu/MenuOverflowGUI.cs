@@ -42,9 +42,10 @@ public class MenuOverflowGUI : GUIPanel
                 }),
                 new OverflowMenuGUI.MenuItem("About", GUIIconSet.instance.about, () =>
                 {
-                    string text = "Version " + Application.version
-                        + "\nMade with Unity " + Application.unityVersion
-                        + "\n\n" + creditsText.text;
+                    string text = System.String.Format("Version {0}\nMade with Unity {1}\n\n{2}"
+                        + "\n\n----------\n\nSystem Info:\nResolution: {3}x{4}\n DPI: {5}",
+                        Application.version, Application.unityVersion, creditsText.text,
+                        Screen.width, Screen.height, Screen.dpi);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 })
             };
