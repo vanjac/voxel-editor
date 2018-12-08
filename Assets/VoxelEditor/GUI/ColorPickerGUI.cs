@@ -19,7 +19,8 @@ public class ColorPickerGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(height * .55f, height * .1f, width * .5f, 0);
+        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+            GUIPanel.topPanel.panelRect.yMax, 1080, 0);
     }
 
     public void SetColor(Color c)
@@ -38,7 +39,7 @@ public class ColorPickerGUI : GUIPanel
 
         if (hueSliderStyle != null)
         {
-            if(hueTexture == null)
+            if (hueTexture == null)
                 hueTexture = new Texture2D(256, 1);
             for (int x = 0; x < hueTexture.width; x++)
                 hueTexture.SetPixel(x, 0, Color.HSVToRGB(x / 256.0f, saturation, value));

@@ -26,7 +26,8 @@ public class OverflowMenuGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width - height * .4f * (depth + 1), height * .13f, height * .4f, 0);
+        return new Rect(width - 432 * (depth + 1),
+            GUIPanel.topPanel.panelRect.yMax, 432, 0);
     }
 
     public override GUIStyle GetStyle()
@@ -51,7 +52,7 @@ public class OverflowMenuGUI : GUIPanel
                 if (!item.stayOpen)
                 {
                     // destroy self and all parent menus
-                    foreach(OverflowMenuGUI parentMenu in gameObject.GetComponents<OverflowMenuGUI>())
+                    foreach (OverflowMenuGUI parentMenu in gameObject.GetComponents<OverflowMenuGUI>())
                         Destroy(parentMenu);
                 }
                 else

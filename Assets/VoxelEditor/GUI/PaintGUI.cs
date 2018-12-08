@@ -29,7 +29,7 @@ public class PaintGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .15f, height * .05f, width * .7f, height * .9f);
+        return GUIUtils.CenterRect(width / 2, height / 2, width * .7f, height * .9f);
     }
 
     void Start()

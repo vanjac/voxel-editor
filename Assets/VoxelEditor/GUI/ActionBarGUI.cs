@@ -99,7 +99,7 @@ public class ActionBarGUI : TopPanelGUI
                 voxelArray.StoreSelection();
         }
 
-        if(voxelArray.SomethingIsStoredSelected())
+        if (voxelArray.SomethingIsStoredSelected())
         {
             if (ActionBarButton(GUIIconSet.instance.clearSelection))
             {
@@ -134,7 +134,7 @@ public class ActionBarGUI : TopPanelGUI
             picker.title = "Create";
             picker.categories = new PropertiesObjectType[][] {
                 GameScripts.entityTemplates, GameScripts.objectTemplates };
-            picker.categoryNames = new string[] {"Substance", "Object"};
+            picker.categoryNames = new string[] { "Substance", "Object" };
             picker.handler = (PropertiesObjectType type) =>
             {
                 if (typeof(Substance).IsAssignableFrom(type.type))

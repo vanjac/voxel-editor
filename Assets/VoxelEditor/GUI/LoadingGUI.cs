@@ -13,7 +13,7 @@ public class LoadingGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width / 2 - height * 0.2f, height * 0.4f, height * 0.4f, height * 0.2f);
+        return GUIUtils.CenterRect(width / 2, height / 2, 432, 216);
     }
 
     public override void WindowGUI()

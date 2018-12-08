@@ -18,7 +18,7 @@ public class MaterialSelectorGUI : GUIPanel
     private static Texture2D whiteTexture;
     private const int NUM_COLUMNS = 4;
     private const int TEXTURE_MARGIN = 20;
-    private const float CATEGORY_BUTTON_ASPECT = 3.0f;
+    private const float CATEGORY_BUTTON_HEIGHT = 110;
     private const string BACK_BUTTON = "Back";
     private const string PREVIEW_SUFFIX = "_preview";
     private const string PREVIEW_SUFFIX_EXT = PREVIEW_SUFFIX + ".mat";
@@ -86,7 +86,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
+        return GUIUtils.CenterRect(width / 2, height / 2, width * .5f, height * .8f);
     }
 
     public override void WindowGUI()
@@ -186,9 +186,11 @@ public class MaterialSelectorGUI : GUIPanel
         for (int i = 0; i < materialSubDirectories.Count; i++)
         {
             if (i % NUM_COLUMNS == 0)
-                rowRect = GUILayoutUtility.GetAspectRect(NUM_COLUMNS * CATEGORY_BUTTON_ASPECT);
+                rowRect = GUILayoutUtility.GetRect(0, 999999,
+                    CATEGORY_BUTTON_HEIGHT, CATEGORY_BUTTON_HEIGHT,
+                    GUILayout.ExpandWidth(true));
             Rect buttonRect = rowRect;
-            buttonRect.width = buttonRect.height * CATEGORY_BUTTON_ASPECT;
+            buttonRect.width = rowRect.width / NUM_COLUMNS;
             buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
             string subDir = materialSubDirectories[i];
             bool selected;

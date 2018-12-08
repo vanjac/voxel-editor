@@ -13,7 +13,7 @@ public class HelpGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .35f, height * .1f, width * .3f, 0);
+        return GUIUtils.HorizCenterRect(width / 2, height * .1f, 576, 0);
     }
 
     public void Start()
@@ -69,7 +69,7 @@ public class HelpGUI : GUIPanel
             OpenDemoWorld("Demo - Platform Game", "Demos/platforms");
     }
 
-    private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankMap=true)
+    private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankMap = true)
     {
         TutorialGUI.StartTutorial(tutorial, gameObject, voxelArray, touchListener);
         if (openBlankMap && voxelArray == null)

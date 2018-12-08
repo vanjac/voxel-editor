@@ -12,7 +12,8 @@ public class TargetGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .25f, height * .25f, width * .5f, 0);
+        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+            GUIPanel.topPanel.panelRect.yMax, 960, 0);
     }
 
     public override void WindowGUI()

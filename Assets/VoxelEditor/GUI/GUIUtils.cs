@@ -25,6 +25,16 @@ public class GUIUtils
         return style;
     });
 
+    public static Rect CenterRect(float centerX, float centerY, float width, float height)
+    {
+        return new Rect(centerX - width / 2, centerY - height / 2, width, height);
+    }
+
+    public static Rect HorizCenterRect(float centerX, float y, float width, float height)
+    {
+        return new Rect(centerX - width / 2, y, width, height);
+    }
+
     public static bool HighlightedButton(string text, GUIStyle style = null, bool highlight = true, params GUILayoutOption[] options)
     {
         if (style == null)

@@ -48,7 +48,7 @@ public abstract class GUIPanel : MonoBehaviour
 
     private bool IsFocused()
     {
-        for (int i = openPanels.Count - 1; i >= 0; i-- )
+        for (int i = openPanels.Count - 1; i >= 0; i--)
         {
             if (openPanels[i] == this)
                 return true;
@@ -124,7 +124,8 @@ public abstract class GUIPanel : MonoBehaviour
         {
             GUI.enabled = false;
             GUI.color = new Color(1, 1, 1, 0.8f);
-        } else if (verticalSlide && Input.touchCount == 1 && IsFocused())
+        }
+        else if (verticalSlide && Input.touchCount == 1 && IsFocused())
         {
             Touch touch = Input.GetTouch(0);
             GUI.enabled = false;

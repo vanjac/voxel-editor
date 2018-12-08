@@ -24,7 +24,7 @@ public class DialogGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .35f, height * .35f, width * .3f, height * .3f);
+        return GUIUtils.CenterRect(width / 2, height / 2, 576, 324);
     }
 
     public override void WindowGUI()
@@ -86,7 +86,7 @@ public class TextInputDialogGUI : GUIPanel
         if (touchKeyboardSupported)
             return new Rect(0, 0, 0, 0);
         else
-            return new Rect(width * .35f, height * .35f, width * .3f, height * .3f);
+            return GUIUtils.CenterRect(width / 2, height / 2, 576, 324);
     }
 
     public override GUIStyle GetStyle()
@@ -161,7 +161,7 @@ public class LargeMessageGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .2f, height * .2f, width * .6f, height * .6f);
+        return GUIUtils.CenterRect(width / 2, height / 2, width * .6f, height * .6f);
     }
 
     public override void WindowGUI()

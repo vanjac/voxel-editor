@@ -145,7 +145,7 @@ class StoredEntityBehavior : StoredPropertiesObject
 
 public class PropertiesGUI : LeftPanelGUI
 {
-    public const float SLIDE_HIDDEN = - GUIPanel.targetHeight * .45f;
+    public const float SLIDE_HIDDEN = -486;
 
     private float slide = SLIDE_HIDDEN;
     public VoxelArrayEditor voxelArray;
@@ -178,7 +178,7 @@ public class PropertiesGUI : LeftPanelGUI
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(slide, 0, height / 2, height);
+        return new Rect(slide, 0, 540, height);
     }
 
     public override GUIStyle GetStyle()
@@ -546,9 +546,9 @@ public class NewBehaviorGUI : GUIPanel
     {
         if (entityPicker != null)
             // move panel offscreen
-            return new Rect(width, height, width * .5f, height * .8f);
+            return new Rect(width, height, 960, height * .8f);
         else
-            return new Rect(width * .25f, height * .1f, width * .5f, height * .8f);
+            return GUIUtils.CenterRect(width / 2, height / 2, 960, height * .8f);
     }
 
     void Start()

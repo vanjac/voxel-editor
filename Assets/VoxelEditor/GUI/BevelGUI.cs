@@ -65,7 +65,7 @@ public class BevelGUI : LeftPanelGUI
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(0, 0, height / 2, 0);
+        return new Rect(0, 0, 540, 0);
     }
 
     public override void OnEnable()

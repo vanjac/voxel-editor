@@ -11,7 +11,8 @@ public class FilterGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .35f, height * .25f, width * .3f, 0);
+        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+            GUIPanel.topPanel.panelRect.yMax, 576, 0);
     }
 
     public override void WindowGUI()

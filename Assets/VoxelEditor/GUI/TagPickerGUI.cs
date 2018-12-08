@@ -24,7 +24,8 @@ public class TagPickerGUI : GUIPanel
 
     public override Rect GetRect(float width, float height)
     {
-        return new Rect(width * .25f, height * .25f, width * .5f, height * .5f);
+        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+            GUIPanel.topPanel.panelRect.yMax, 960, 540);
     }
 
     public override void WindowGUI()
