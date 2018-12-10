@@ -43,7 +43,7 @@ public class MenuOverflowGUI : GUIPanel
                 new OverflowMenuGUI.MenuItem("About", GUIIconSet.instance.about, () =>
                 {
                     string text = System.String.Format("Version {0}\nMade with Unity {1}\n\n{2}"
-                        + "\n\n----------\n\nSystem Info:\nResolution: {3}x{4}\n DPI: {5}",
+                        + "\n\n----------\n\nSystem Info:\nResolution: {3}x{4}\nDPI: {5}",
                         Application.version, Application.unityVersion, creditsText.text,
                         Screen.width, Screen.height, Screen.dpi);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);

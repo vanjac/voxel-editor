@@ -4,7 +4,20 @@ using UnityEngine;
 
 public abstract class GUIPanel : MonoBehaviour
 {
-    protected const float targetHeight = 1080;
+    // minimum supported targetHeight value
+    // (so the largest supported interface scale)
+    private const int MIN_TARGET_HEIGHT = 1080;
+    // the maximum height of a screen that would still be considered a phone
+    // (and not a "phablet" or tablet). this is the maximum screen height that
+    // would still use MIN_TARGET_HEIGHT -- anything bigger will use higher
+    // values for targetHeight.
+    // 2.7" is the height of a 5.5" diagonal screen with 16:9 ratio.
+    private const float MAX_PHONE_HEIGHT_INCHES = 2.7f;
+
+    // determines the scale of the interface
+    // larger values mean smaller text/UI relative to screen
+    // calculated in OnGUI()
+    private static float targetHeight = 0;
 
     private static GUISkin globalGUISkin = null;
     public GUISkin guiSkin;
@@ -63,6 +76,16 @@ public abstract class GUIPanel : MonoBehaviour
         if (globalGUISkin == null)
             globalGUISkin = guiSkin;
         GUI.skin = globalGUISkin;
+
+        if (targetHeight == 0)
+        {
+            float screenHeightInches = Screen.height / Screen.dpi;
+            if (screenHeightInches < MAX_PHONE_HEIGHT_INCHES)
+                targetHeight = MIN_TARGET_HEIGHT;
+            else
+                targetHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
+            Debug.Log("Target height is " + targetHeight);
+        }
 
         if (Input.touchCount == 1)
         {
