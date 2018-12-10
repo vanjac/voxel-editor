@@ -79,12 +79,20 @@ public abstract class GUIPanel : MonoBehaviour
 
         if (targetHeight == 0)
         {
-            float screenHeightInches = Screen.height / Screen.dpi;
-            if (screenHeightInches < MAX_PHONE_HEIGHT_INCHES)
+            if (Screen.dpi <= 0)
+            {
+                Debug.Log("Unknown screen DPI!");
                 targetHeight = MIN_TARGET_HEIGHT;
+            }
             else
-                targetHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
-            Debug.Log("Target height is " + targetHeight);
+            {
+                float screenHeightInches = Screen.height / Screen.dpi;
+                if (screenHeightInches < MAX_PHONE_HEIGHT_INCHES)
+                    targetHeight = MIN_TARGET_HEIGHT;
+                else
+                    targetHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
+                Debug.Log("Target height is " + targetHeight);
+            }
         }
 
         if (Input.touchCount == 1)
