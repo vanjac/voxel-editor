@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -529,6 +529,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 878046149}
+  - component: {fileID: 878046155}
   - component: {fileID: 878046151}
   - component: {fileID: 878046148}
   - component: {fileID: 878046150}
@@ -553,7 +554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aedd94cb8319ee14f9d0a168308e739a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   title: 
   scroll: {x: 0, y: 0}
   panelRect:
@@ -590,7 +590,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ccd89f203e7ef47869869965d935bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guiSkin: {fileID: 0}
   title: 
   scroll: {x: 0, y: 0}
   panelRect:
@@ -613,7 +612,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 935e5627678bac049a8051b6ec61dab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   title: 
   scroll: {x: 0, y: 0}
   panelRect:
@@ -693,7 +691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e5a0b6826a0684ea6453116622341f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guiSkin: {fileID: 0}
   title: 
   scroll: {x: 0, y: 0}
   panelRect:
@@ -704,6 +701,19 @@ MonoBehaviour:
     height: 0
   voxelArray: {fileID: 213926859}
   touchListener: {fileID: 1179125982}
+--- !u!114 &878046155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 878046147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5068fdaad99bc4659819ec8e37ab4d2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
+  targetHeightOverride: 0
 --- !u!1 &1061257463
 GameObject:
   m_ObjectHideFlags: 0

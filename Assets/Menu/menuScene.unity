@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.31331286, g: 0.20789284, b: 0.39743063, a: 1}
+  m_IndirectSpecularColor: {r: 0.3133128, g: 0.20789295, b: 0.3974287, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -122,6 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1450445162}
   - component: {fileID: 1450445161}
+  - component: {fileID: 1450445165}
   - component: {fileID: 1450445159}
   - component: {fileID: 1450445163}
   - component: {fileID: 1450445160}
@@ -144,9 +145,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c63b5aa3d82e0b4e8d4d5cc9281d407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   title: 
   scroll: {x: 0, y: 0}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   defaultMap: {fileID: 4900000, guid: def87d4fc2d1e4c469422477861bcc22, type: 3}
 --- !u!114 &1450445160
 MonoBehaviour:
@@ -219,9 +225,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6bcaecd9742beb45b85c3ee868fc017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guiSkin: {fileID: 0}
   title: 
   scroll: {x: 0, y: 0}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   creditsText: {fileID: 4900000, guid: e682aff256c26294b9005b4e62ff561d, type: 3}
 --- !u!114 &1450445164
 MonoBehaviour:
@@ -260,6 +271,30 @@ MonoBehaviour:
   copy: {fileID: 2800000, guid: ef8570bda8643ab4e84246dbd0191475, type: 3}
   delete: {fileID: 2800000, guid: a91481f4c06fdb946817fd08f059dd99, type: 3}
   share: {fileID: 2800000, guid: a85f6c8cea88810459e1e20c4380b2b6, type: 3}
+  bevel: {fileID: 0}
+  no: {fileID: 0}
+  bevelIcons:
+    quarter: {fileID: 0}
+    half: {fileID: 0}
+    full: {fileID: 0}
+    square: {fileID: 0}
+    flat: {fileID: 0}
+    curve: {fileID: 0}
+    stair2: {fileID: 0}
+    stair4: {fileID: 0}
+--- !u!114 &1450445165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1450445158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5068fdaad99bc4659819ec8e37ab4d2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
+  targetHeightOverride: 0
 --- !u!1 &2101752314
 GameObject:
   m_ObjectHideFlags: 0

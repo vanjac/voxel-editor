@@ -4,24 +4,11 @@ using UnityEngine;
 
 public abstract class GUIPanel : MonoBehaviour
 {
-    // minimum supported targetHeight value
-    // (so the largest supported interface scale)
-    private const int MIN_TARGET_HEIGHT = 1080;
-    // the maximum height of a screen that would still be considered a phone
-    // (and not a "phablet" or tablet). this is the maximum screen height that
-    // would still use MIN_TARGET_HEIGHT -- anything bigger will use higher
-    // values for targetHeight.
-    // 2.7" is the height of a 5.5" diagonal screen with 16:9 ratio.
-    private const float MAX_PHONE_HEIGHT_INCHES = 2.7f;
-
-    // determines the scale of the interface
-    // larger values mean smaller text/UI relative to screen
-    // calculated in OnGUI()
-    private static float targetHeight = 0;
-
-    private static GUISkin globalGUISkin = null;
-    public GUISkin guiSkin;
-
+    // set by GUIManager
+    // determines scale of interface relative to screen
+    public static float scaleFactor, scaledScreenWidth, scaledScreenHeight;
+    public static Matrix4x4 guiMatrix;
+    public static GUISkin guiSkin = null;
     private static List<GUIPanel> openPanels = new List<GUIPanel>();
 
     public static GameObject guiGameObject
@@ -45,7 +32,6 @@ public abstract class GUIPanel : MonoBehaviour
 
     protected bool holdOpen = false;
     protected bool stealFocus = true;
-    protected float scaleFactor;
 
     public Rect panelRect;
 
@@ -73,28 +59,6 @@ public abstract class GUIPanel : MonoBehaviour
 
     public void OnGUI()
     {
-        if (globalGUISkin == null)
-            globalGUISkin = guiSkin;
-        GUI.skin = globalGUISkin;
-
-        if (targetHeight == 0)
-        {
-            if (Screen.dpi <= 0)
-            {
-                Debug.Log("Unknown screen DPI!");
-                targetHeight = MIN_TARGET_HEIGHT;
-            }
-            else
-            {
-                float screenHeightInches = Screen.height / Screen.dpi;
-                if (screenHeightInches < MAX_PHONE_HEIGHT_INCHES)
-                    targetHeight = MIN_TARGET_HEIGHT;
-                else
-                    targetHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
-                Debug.Log("Target height is " + targetHeight);
-            }
-        }
-
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
@@ -136,11 +100,11 @@ public abstract class GUIPanel : MonoBehaviour
                 Destroy(this);
         }
 
-        scaleFactor = Screen.height / targetHeight;
-        GUI.matrix = Matrix4x4.Scale(new Vector3(scaleFactor, scaleFactor, 1));
-        float scaledScreenWidth = Screen.width / scaleFactor;
+        // these have to be set every frame for each panel for some reason
+        GUI.skin = guiSkin;
+        GUI.matrix = guiMatrix;
 
-        Rect newPanelRect = GetRect(scaledScreenWidth, targetHeight);
+        Rect newPanelRect = GetRect(scaledScreenWidth, scaledScreenHeight);
         if (newPanelRect.width == 0)
             newPanelRect.width = panelRect.width;
         if (newPanelRect.height == 0)

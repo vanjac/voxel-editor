@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class FileReceive : MonoBehaviour
 {
-    public GUISkin guiSkin;
-
     void Start()
     {
         ShareMap.MarkIntentUsedAndroid();
@@ -16,7 +14,6 @@ public class FileReceive : MonoBehaviour
         inputDialog.prompt = "Enter name for imported world...";
         inputDialog.handler = ImportMap;
         inputDialog.cancelHandler = Close;
-        inputDialog.guiSkin = guiSkin;
     }
 
     private void Close()

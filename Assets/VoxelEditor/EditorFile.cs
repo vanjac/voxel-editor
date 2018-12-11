@@ -40,8 +40,6 @@ public class EditorFile : MonoBehaviour
                 voxelArray.unsavedChanges = false;
                 Close();
             };
-            // fix issue where message dialog doesn't use correct skin:
-            dialog.guiSkin = loadingGUI.guiSkin;
             Destroy(loadingGUI);
             Debug.Log(e.InnerException);
             yield break;
