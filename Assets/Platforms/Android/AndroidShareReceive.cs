@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class AndroidShareReceive : MonoBehaviour
+public class AndroidShareReceive
 {
     public static bool FileWaitingToImport()
     {
