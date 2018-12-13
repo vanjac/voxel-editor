@@ -159,7 +159,7 @@ public class EditorFile : MonoBehaviour
         Debug.unityLogger.Log("EditorFile", "OnApplicationPause(" + pauseStatus + ")");
         if (pauseStatus)
             Save();
-        else if (ShareMap.CatchSharedFile())
+        else if (ShareMap.FileWaitingToImport())
         {
             Save();
             SceneManager.LoadScene("fileReceiveScene");

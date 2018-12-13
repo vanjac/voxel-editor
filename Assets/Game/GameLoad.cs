@@ -51,7 +51,7 @@ public class GameLoad : MonoBehaviour
 
     void OnApplicationPause(bool paused)
     {
-        if (!paused && ShareMap.CatchSharedFile())
+        if (!paused && ShareMap.FileWaitingToImport())
         {
             Close("fileReceiveScene");
         }

@@ -18,7 +18,7 @@ public class ShareListener : MonoBehaviour
 
     private void CheckSharedFile()
     {
-        if (ShareMap.CatchSharedFile())
+        if (ShareMap.FileWaitingToImport())
             SceneManager.LoadScene("fileReceiveScene");
     }
 }

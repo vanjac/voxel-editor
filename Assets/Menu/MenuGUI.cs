@@ -125,10 +125,10 @@ public class MenuGUI : GUIPanel
                     UpdateMapList();
                 };
             }),
-#if UNITY_ANDROID
+#if (UNITY_ANDROID || UNITY_IOS)
             new OverflowMenuGUI.MenuItem("Share", GUIIconSet.instance.share, () => {
                 string path = WorldFiles.GetFilePath(fileName);
-                ShareMap.ShareAndroid(path);
+                ShareMap.Share(path);
             })
 #endif
         };

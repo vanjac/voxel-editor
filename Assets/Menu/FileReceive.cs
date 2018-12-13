@@ -8,7 +8,7 @@ public class FileReceive : MonoBehaviour
 {
     void Start()
     {
-        ShareMap.MarkIntentUsedAndroid();
+        ShareMap.ClearFileWaitingToImport();
 
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
         inputDialog.prompt = "Enter name for imported world...";
@@ -38,10 +38,7 @@ public class FileReceive : MonoBehaviour
 
         try
         {
-            using (FileStream fileStream = File.Create(newPath))
-            {
-                ShareMap.ReadSharedURLAndroid(fileStream);
-            }
+            ShareMap.ImportSharedFile(newPath);
             Close();
         }
         catch (System.Exception e)
