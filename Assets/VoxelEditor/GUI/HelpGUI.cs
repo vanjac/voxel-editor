@@ -11,9 +11,10 @@ public class HelpGUI : GUIPanel
 
     private int tab = 0;
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return GUIUtils.HorizCenterRect(width / 2, height * .1f, 576, 0);
+        return GUIUtils.HorizCenterRect(maxRect.center.x,
+            maxRect.yMin + maxRect.height * .1f, 576, 0);
     }
 
     public void Start()

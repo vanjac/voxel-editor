@@ -24,9 +24,9 @@ public class OverflowMenuGUI : GUIPanel
     public int depth = 0;
     private int selected = -1;
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return new Rect(width - 432 * (depth + 1),
+        return new Rect(maxRect.xMax - 432 * (depth + 1),
             GUIPanel.topPanel.panelRect.yMax, 432, 0);
     }
 

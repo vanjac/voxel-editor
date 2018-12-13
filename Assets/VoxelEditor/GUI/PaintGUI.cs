@@ -27,9 +27,10 @@ public class PaintGUI : GUIPanel
         return style;
     });
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return GUIUtils.CenterRect(width / 2, height / 2, width * .7f, height * .9f);
+        return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y,
+            maxRect.width * .7f, maxRect.height * .9f);
     }
 
     void Start()

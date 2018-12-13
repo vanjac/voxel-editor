@@ -6,9 +6,11 @@ public abstract class GUIPanel : MonoBehaviour
 {
     // set by GUIManager
     // determines scale of interface relative to screen
-    public static float scaleFactor, scaledScreenWidth, scaledScreenHeight;
+    public static float scaleFactor;
     public static Matrix4x4 guiMatrix;
+    public static Rect scaledSafeArea;
     public static GUISkin guiSkin = null;
+
     private static List<GUIPanel> openPanels = new List<GUIPanel>();
 
     public static GameObject guiGameObject
@@ -104,7 +106,7 @@ public abstract class GUIPanel : MonoBehaviour
         GUI.skin = guiSkin;
         GUI.matrix = guiMatrix;
 
-        Rect newPanelRect = GetRect(scaledScreenWidth, scaledScreenHeight);
+        Rect newPanelRect = GetRect(scaledSafeArea);
         if (newPanelRect.width == 0)
             newPanelRect.width = panelRect.width;
         if (newPanelRect.height == 0)
@@ -155,7 +157,7 @@ public abstract class GUIPanel : MonoBehaviour
         GUI.color = Color.white;
     }
 
-    public abstract Rect GetRect(float width, float height);
+    public abstract Rect GetRect(Rect maxRect);
 
     public virtual GUIStyle GetStyle()
     {

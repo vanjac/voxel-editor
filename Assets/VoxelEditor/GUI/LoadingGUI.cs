@@ -11,9 +11,9 @@ public class LoadingGUI : GUIPanel
         base.OnEnable();
     }
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return GUIUtils.CenterRect(width / 2, height / 2, 432, 216);
+        return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y, 432, 216);
     }
 
     public override void WindowGUI()

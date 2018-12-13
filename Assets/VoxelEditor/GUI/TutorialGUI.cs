@@ -10,14 +10,16 @@ public enum TutorialAction
 public abstract class TutorialPage
 {
     public virtual void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
-        TouchListener touchListener) { }
+        TouchListener touchListener)
+    { }
     public virtual TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
         TouchListener touchListener)
     {
         return TutorialAction.NONE;
     }
     public virtual void End(VoxelArrayEditor voxelArray, GameObject guiGameObject,
-        TouchListener touchListener) { }
+        TouchListener touchListener)
+    { }
     public abstract string GetText();
     public virtual bool ShowNextButton()
     {
@@ -36,7 +38,7 @@ public class SimpleTutorialPage : TutorialPage
     private readonly string text;
     private readonly string highlight;
 
-    public SimpleTutorialPage(string text, string highlight="")
+    public SimpleTutorialPage(string text, string highlight = "")
     {
         this.text = text;
         this.highlight = highlight;
@@ -151,7 +153,7 @@ public class TutorialGUI : GUIPanel
     {
         pageI = i;
         TutorialPage newPage = null;
-        if(currentTutorial != null && pageI >= 0 && pageI < currentTutorial.Length)
+        if (currentTutorial != null && pageI >= 0 && pageI < currentTutorial.Length)
             newPage = currentTutorial[pageI]();
         if (currentPage != null)
             currentPage.End(voxelArray, gameObject, touchListener);
@@ -170,13 +172,13 @@ public class TutorialGUI : GUIPanel
 
     private float height;
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
         float minHeight = GUI.skin.GetStyle("button_large").fixedHeight;
         Rect leftPanelRect = GUIPanel.leftPanel.panelRect;
         this.height = minHeight * (1.25f - leftPanelRect.xMin / PropertiesGUI.SLIDE_HIDDEN * .25f);
-        return new Rect(leftPanelRect.xMax, height - this.height,
-            width - leftPanelRect.xMax, this.height);
+        return new Rect(leftPanelRect.xMax, maxRect.yMax - this.height,
+            maxRect.width - leftPanelRect.xMax, this.height);
     }
 
     public override GUIStyle GetStyle()

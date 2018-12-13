@@ -7,9 +7,9 @@ public class FadeGUI : GUIPanel
     public Texture background;
     public float backgroundScale;
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return new Rect(0, 0, width, height);
+        return maxRect;
     }
 
     public override void OnEnable()

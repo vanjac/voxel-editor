@@ -12,9 +12,10 @@ public class MenuGUI : GUIPanel
     private OverflowMenuGUI worldOverflowMenu;
     private string selectedWorld;
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return new Rect(width * .2f, 0, width * .6f, height);
+        return new Rect(maxRect.xMin + maxRect.width * .2f, maxRect.yMin,
+            maxRect.width * .6f, maxRect.height);
     }
 
     public override GUIStyle GetStyle()

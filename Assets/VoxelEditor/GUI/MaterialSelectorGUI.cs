@@ -84,9 +84,10 @@ public class MaterialSelectorGUI : GUIPanel
             tab = 1;
     }
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return GUIUtils.CenterRect(width / 2, height / 2, width * .5f, height * .8f);
+        return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y,
+            maxRect.width * .5f, maxRect.height * .8f);
     }
 
     public override void WindowGUI()

@@ -176,9 +176,9 @@ public class PropertiesGUI : LeftPanelGUI
         base.OnEnable();
     }
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
-        return new Rect(slide, 0, 540, height);
+        return new Rect(maxRect.xMin + slide, maxRect.yMin, 540, maxRect.height);
     }
 
     public override GUIStyle GetStyle()
@@ -542,13 +542,13 @@ public class NewBehaviorGUI : GUIPanel
     private Entity targetEntity;
     private bool targetEntityIsActivator = false;
 
-    public override Rect GetRect(float width, float height)
+    public override Rect GetRect(Rect maxRect)
     {
         if (entityPicker != null)
             // move panel offscreen
-            return new Rect(width, height, 960, height * .8f);
+            return new Rect(maxRect.width * 2, maxRect.height * 2, 960, maxRect.height * .8f);
         else
-            return GUIUtils.CenterRect(width / 2, height / 2, 960, height * .8f);
+            return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y, 960, maxRect.height * .8f);
     }
 
     void Start()

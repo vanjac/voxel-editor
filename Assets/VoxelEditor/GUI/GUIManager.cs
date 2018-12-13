@@ -29,20 +29,26 @@ public class GUIManager : MonoBehaviour
 
     void Update()
     {
+        float scaledScreenHeight;
         if (targetHeightOverride != 0)
-            GUIPanel.scaledScreenHeight = targetHeightOverride;
+            scaledScreenHeight = targetHeightOverride;
         else if (Screen.dpi <= 0)
-            GUIPanel.scaledScreenHeight = MIN_TARGET_HEIGHT;
+            scaledScreenHeight = MIN_TARGET_HEIGHT;
         else
         {
             float screenHeightInches = Screen.height / Screen.dpi;
             if (screenHeightInches < MAX_PHONE_HEIGHT_INCHES)
-                GUIPanel.scaledScreenHeight = MIN_TARGET_HEIGHT;
+                scaledScreenHeight = MIN_TARGET_HEIGHT;
             else
-                GUIPanel.scaledScreenHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
+                scaledScreenHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
         }
-        GUIPanel.scaleFactor = Screen.height / GUIPanel.scaledScreenHeight;
-        GUIPanel.scaledScreenWidth = Screen.width / GUIPanel.scaleFactor;
+        GUIPanel.scaleFactor = Screen.height / scaledScreenHeight;
+        var safeArea = Screen.safeArea;
+        GUIPanel.scaledSafeArea = new Rect(
+            safeArea.xMin / GUIPanel.scaleFactor,
+            (Screen.height - safeArea.yMax) / GUIPanel.scaleFactor, // y axis is reversed for GUI
+            safeArea.width / GUIPanel.scaleFactor,
+            safeArea.height / GUIPanel.scaleFactor);
         GUIPanel.guiMatrix = Matrix4x4.Scale(new Vector3(GUIPanel.scaleFactor, GUIPanel.scaleFactor, 1));
     }
 }
