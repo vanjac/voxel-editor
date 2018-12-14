@@ -9,6 +9,8 @@ public class ShareMap
     {
 #if UNITY_ANDROID
         AndroidShare.Share(filePath);
+#elif UNITY_IOS
+        IOSShare.Share(filePath);
 #endif
     }
 
