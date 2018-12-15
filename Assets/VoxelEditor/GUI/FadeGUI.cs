@@ -5,7 +5,7 @@ using UnityEngine;
 public class FadeGUI : GUIPanel
 {
     public Texture background;
-    public float backgroundScale;
+    public float backgroundWidth, backgroundHeight;
 
     public override Rect GetRect(Rect maxRect)
     {
@@ -38,8 +38,8 @@ public class FadeGUI : GUIPanel
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.Box("", GUIStyle.none,
-                GUILayout.Width(background.width * backgroundScale),
-                GUILayout.Height(background.height * backgroundScale));
+                GUILayout.Width(backgroundWidth),
+                GUILayout.Height(backgroundHeight));
             GUI.DrawTexture(GUILayoutUtility.GetLastRect(), background);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

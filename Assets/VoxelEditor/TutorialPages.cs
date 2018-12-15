@@ -23,7 +23,7 @@ public class Tutorials
             "By selecting faces and pushing/pulling them, you can sculpt the world."),
         () => new FullScreenTutorialPage(
             "These buttons appear at the top of the screen, based on context.",
-            "Tutorials/toolbar_buttons", scale: 1.5f),
+            "Tutorials/toolbar_buttons", width:1536, height:798),
         () => new SimpleTutorialPage(
             "Good luck! You can access more tutorials by choosing Help in the menu.")
     };

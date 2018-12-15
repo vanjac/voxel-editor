@@ -63,20 +63,22 @@ public class SimpleTutorialPage : TutorialPage
 public class FullScreenTutorialPage : SimpleTutorialPage
 {
     private Texture image;
-    private float scale;
+    private float backgroundWidth, backgroundHeight;
 
     public FullScreenTutorialPage(string text, string imageResourceName,
-        float scale = 1.0f) : base(text)
+        float width, float height) : base(text)
     {
         image = Resources.Load<Texture>(imageResourceName);
-        this.scale = scale;
+        backgroundWidth = width;
+        backgroundHeight = height;
     }
 
     public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
     {
         var fade = guiGameObject.AddComponent<FadeGUI>();
         fade.background = image;
-        fade.backgroundScale = scale;
+        fade.backgroundWidth = backgroundWidth;
+        fade.backgroundHeight = backgroundHeight;
     }
 
     public override void End(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
