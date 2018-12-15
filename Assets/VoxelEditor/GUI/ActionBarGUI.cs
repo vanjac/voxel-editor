@@ -35,6 +35,9 @@ public class ActionBarGUI : TopPanelGUI
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
+        // overflow menu will not be cut off if the buttons can't fit
+        GUILayout.BeginScrollView(Vector2.zero, GUIStyle.none);
+        GUILayout.BeginHorizontal();
 
         if (ActionBarButton(GUIIconSet.instance.close))
             editorFile.Close();
@@ -47,45 +50,12 @@ public class ActionBarGUI : TopPanelGUI
         if (ActionBarButton(GUIIconSet.instance.play))
             editorFile.Play();
 
+        GUILayout.EndHorizontal();
+        GUILayout.EndScrollView();
+
         TutorialGUI.TutorialHighlight("bevel");
         if (ActionBarButton(GUIIconSet.instance.overflow))
-        {
-            var overflow = gameObject.AddComponent<OverflowMenuGUI>();
-            overflow.items = new OverflowMenuGUI.MenuItem[]
-            {
-                new OverflowMenuGUI.MenuItem("World", GUIIconSet.instance.world, () => {
-                    PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
-                    if (propsGUI != null)
-                    {
-                        propsGUI.worldSelected = true;
-                        propsGUI.normallyOpen = true;
-                    }
-                }),
-                new OverflowMenuGUI.MenuItem("Select...", GUIIconSet.instance.select, () => {
-                    var selectMenu = gameObject.AddComponent<OverflowMenuGUI>();
-                    selectMenu.depth = 1;
-                    selectMenu.items = new OverflowMenuGUI.MenuItem[]
-                    {
-                        new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
-                            SelectByPaintInterface();
-                        }),
-                        new OverflowMenuGUI.MenuItem("With Tag", GUIIconSet.instance.entityTag, () => {
-                            SelectByTagInterface();
-                        })
-                    };
-                }, stayOpen: true),
-                new OverflowMenuGUI.MenuItem("Bevel", GUIIconSet.instance.bevel, () => {
-                    var bevelGUI = gameObject.AddComponent<BevelActionBarGUI>();
-                    bevelGUI.voxelArray = voxelArray;
-                    bevelGUI.touchListener = touchListener;
-                }),
-                new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
-                    var help = gameObject.AddComponent<HelpGUI>();
-                    help.voxelArray = voxelArray;
-                    help.touchListener = touchListener;
-                })
-            };
-        }
+            BuildOverflowMenu();
         TutorialGUI.ClearHighlight();
 
         GUILayout.EndHorizontal();
@@ -163,6 +133,45 @@ public class ActionBarGUI : TopPanelGUI
             ActionBarLabel(moveCount.ToString());
         else
             ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
+    }
+
+    private void BuildOverflowMenu()
+    {
+        var overflow = gameObject.AddComponent<OverflowMenuGUI>();
+        overflow.items = new OverflowMenuGUI.MenuItem[]
+        {
+            new OverflowMenuGUI.MenuItem("World", GUIIconSet.instance.world, () => {
+                PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
+                if (propsGUI != null)
+                {
+                    propsGUI.worldSelected = true;
+                    propsGUI.normallyOpen = true;
+                }
+            }),
+            new OverflowMenuGUI.MenuItem("Select...", GUIIconSet.instance.select, () => {
+                var selectMenu = gameObject.AddComponent<OverflowMenuGUI>();
+                selectMenu.depth = 1;
+                selectMenu.items = new OverflowMenuGUI.MenuItem[]
+                {
+                    new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
+                        SelectByPaintInterface();
+                    }),
+                    new OverflowMenuGUI.MenuItem("With Tag", GUIIconSet.instance.entityTag, () => {
+                        SelectByTagInterface();
+                    })
+                };
+            }, stayOpen: true),
+            new OverflowMenuGUI.MenuItem("Bevel", GUIIconSet.instance.bevel, () => {
+                var bevelGUI = gameObject.AddComponent<BevelActionBarGUI>();
+                bevelGUI.voxelArray = voxelArray;
+                bevelGUI.touchListener = touchListener;
+            }),
+            new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
+                var help = gameObject.AddComponent<HelpGUI>();
+                help.voxelArray = voxelArray;
+                help.touchListener = touchListener;
+            })
+        };
     }
 
     public static bool ActionBarButton(Texture icon)
