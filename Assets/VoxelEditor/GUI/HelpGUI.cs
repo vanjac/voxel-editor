@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class HelpGUI : GUIPanel
 {
+    private static readonly string[] DEMO_WORLD_NAMES = new string[]
+    { "Logic", "Conveyor", "Ball Pit", "Impossible Hallway", "Platform Game" };
+    private static readonly string[] DEMO_WORLD_FILES = new string[]
+    { "logic", "conveyor", "ball_pit", "impossible_hallway", "platforms" };
+
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
@@ -60,14 +65,12 @@ public class HelpGUI : GUIPanel
 
     private void DemoWorldsTab()
     {
-        if (GUILayout.Button("Logic"))
-            OpenDemoWorld("Demo - Logic", "Demos/logic");
-        if (GUILayout.Button("Conveyor"))
-            OpenDemoWorld("Demo - Conveyor", "Demos/conveyor");
-        if (GUILayout.Button("Ball Pit"))
-            OpenDemoWorld("Demo - Ball pit", "Demos/ball_pit");
-        if (GUILayout.Button("Platform Game"))
-            OpenDemoWorld("Demo - Platform Game", "Demos/platforms");
+        for (int i = 0; i < DEMO_WORLD_NAMES.Length; i++)
+        {
+            if (GUILayout.Button(DEMO_WORLD_NAMES[i]))
+                OpenDemoWorld("Demo - " + DEMO_WORLD_NAMES[i],
+                    "Demos/" + DEMO_WORLD_FILES[i]);
+        }
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankMap = true)
