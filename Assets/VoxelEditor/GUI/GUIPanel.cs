@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class GUIPanel : MonoBehaviour
 {
+    // minimum scaled pixels a touch should move before start scrolling
+    public const float SCROLL_THRESHOLD = 32;
+
     // set by GUIManager
     // determines scale of interface relative to screen
     public static float scaleFactor;
@@ -80,11 +83,13 @@ public abstract class GUIPanel : MonoBehaviour
                         Destroy(this);
                 }
             }
-            if (panelSlide && !verticalSlide && Mathf.Abs((touch.position - touchStartPos).x) > Screen.height * .06)
+            if (panelSlide && !verticalSlide
+                && Mathf.Abs((touch.position - touchStartPos).x) / scaleFactor > SCROLL_THRESHOLD)
             {
                 horizontalSlide = true;
             }
-            if (panelSlide && !horizontalSlide && Mathf.Abs((touch.position - touchStartPos).y) > Screen.height * .06)
+            if (panelSlide && !horizontalSlide
+                && Mathf.Abs((touch.position - touchStartPos).y) / scaleFactor > SCROLL_THRESHOLD)
             {
                 verticalSlide = true;
             }
