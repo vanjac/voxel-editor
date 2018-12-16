@@ -178,9 +178,9 @@ public class TutorialGUI : GUIPanel
     {
         float minHeight = GUI.skin.GetStyle("button_large").fixedHeight;
         Rect leftPanelRect = GUIPanel.leftPanel.panelRect;
-        this.height = minHeight * (1.25f - leftPanelRect.xMin / PropertiesGUI.SLIDE_HIDDEN * .25f);
+        this.height = minHeight * (1.25f - (leftPanelRect.xMin - safeRect.xMin) / PropertiesGUI.SLIDE_HIDDEN * .25f);
         return new Rect(leftPanelRect.xMax, safeRect.yMax - this.height,
-            safeRect.width - leftPanelRect.xMax, this.height);
+            safeRect.xMax - leftPanelRect.xMax, this.height);
     }
 
     public override GUIStyle GetStyle()

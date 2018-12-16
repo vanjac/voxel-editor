@@ -24,6 +24,6 @@ public abstract class TopPanelGUI : GUIPanel
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(GUIPanel.leftPanel.panelRect.xMax, safeRect.yMin,
-            safeRect.width - GUIPanel.leftPanel.panelRect.xMax, 0);
+            safeRect.xMax - GUIPanel.leftPanel.panelRect.xMax, 0);
     }
 }
