@@ -158,10 +158,10 @@ public class Tutorials
             "<i>Find the hidden room near the elevator shaft.</i> "
             + "This room will never be seen in the game, so it's a good place to hide extra logic components."),
         () => new SimpleTutorialPage(
-            "<i>Select the green cube. Give it a Delay sensor. "
+            "<i>Select the green ball. Give it a Delay sensor. "
             + "Connect the input to the elevator and change the On time to 5.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Now select the elevator, and connect its Off input to the green cube.</i>"),
+            "<i>Now select the elevator, and connect its Off input to the green ball.</i>"),
         () => new SimpleTutorialPage(
             "<i>Play your game.</i> The elevator should stop on the second floor. Why does it do this?"),
         () => new SimpleTutorialPage(
@@ -186,17 +186,17 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>First, connect the hidden Down arrow cube to the two Down buttons, just like the Up arrow cube.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Next, select the blue cube. Give it a Toggle sensor and connect the On input to the Down arrow cube.</i>"),
+            "<i>Next, select the blue ball. Give it a Toggle sensor and connect the On input to the Down arrow cube.</i>"),
         () => new SimpleTutorialPage(
             "<i>Now tap Add Behavior. In the behavior menu, tap the \"Target\" button and select the elevator as the target. "
             + "Then select the Move behavior.</i>"),
         () => new SimpleTutorialPage(
             "<i>Make the move behavior go Down only when the sensor is On.</i> "
-            + "The sensor of the blue cube will turn it on/off, but the Elevator will move!"),
+            + "The sensor of the blue ball will turn it on/off, but the Elevator will move!"),
         () => new SimpleTutorialPage(
             "<i>Play the game and try the Down button.</i> The elevator should go down, but not stop when it gets to the bottom."),
         () => new SimpleTutorialPage(
-            "The last step is to stop the elevator after going down one floor. See if you can figure out how, using the red cube.")
+            "The last step is to stop the elevator after going down one floor. See if you can figure out how, using the red ball.")
     };
 
     public static TutorialPageFactory[] ADVANCED_GAME_LOGIC_TUTORIAL_2 = new TutorialPageFactory[]
