@@ -22,9 +22,9 @@ public class DialogGUI : GUIPanel
         return dialog;
     }
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y, 576, 324);
+        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 576, 324);
     }
 
     public override void WindowGUI()
@@ -81,12 +81,12 @@ public class TextInputDialogGUI : GUIPanel
     private bool touchKeyboardSupported;
     private string text = "";
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         if (touchKeyboardSupported)
             return new Rect(0, 0, 0, 0);
         else
-            return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y, 576, 324);
+            return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 576, 324);
     }
 
     public override GUIStyle GetStyle()
@@ -159,10 +159,10 @@ public class LargeMessageGUI : GUIPanel
         return dialog;
     }
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y,
-            maxRect.width * .6f, maxRect.height * .6f);
+        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
+            safeRect.width * .6f, safeRect.height * .6f);
     }
 
     public override void WindowGUI()

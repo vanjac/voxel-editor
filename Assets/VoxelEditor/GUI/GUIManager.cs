@@ -43,6 +43,9 @@ public class GUIManager : MonoBehaviour
                 scaledScreenHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
         }
         GUIPanel.scaleFactor = Screen.height / scaledScreenHeight;
+        GUIPanel.scaledScreenArea = new Rect(0, 0,
+            Screen.width / GUIPanel.scaleFactor,
+            Screen.height / GUIPanel.scaleFactor);
         var safeArea = Screen.safeArea;
         GUIPanel.scaledSafeArea = new Rect(
             safeArea.xMin / GUIPanel.scaleFactor,

@@ -17,7 +17,7 @@ public class ColorPickerGUI : GUIPanel
     public ColorChangeHandler handler;
     public bool includeAlpha = false;
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 1080, 0);

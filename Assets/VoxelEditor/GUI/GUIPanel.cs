@@ -8,7 +8,7 @@ public abstract class GUIPanel : MonoBehaviour
     // determines scale of interface relative to screen
     public static float scaleFactor;
     public static Matrix4x4 guiMatrix;
-    public static Rect scaledSafeArea;
+    public static Rect scaledSafeArea, scaledScreenArea;
     public static GUISkin guiSkin = null;
 
     private static List<GUIPanel> openPanels = new List<GUIPanel>();
@@ -106,7 +106,7 @@ public abstract class GUIPanel : MonoBehaviour
         GUI.skin = guiSkin;
         GUI.matrix = guiMatrix;
 
-        Rect newPanelRect = GetRect(scaledSafeArea);
+        Rect newPanelRect = GetRect(scaledSafeArea, scaledScreenArea);
         if (newPanelRect.width == 0)
             newPanelRect.width = panelRect.width;
         if (newPanelRect.height == 0)
@@ -157,7 +157,7 @@ public abstract class GUIPanel : MonoBehaviour
         GUI.color = Color.white;
     }
 
-    public abstract Rect GetRect(Rect maxRect);
+    public abstract Rect GetRect(Rect safeRect, Rect screenRect);
 
     public virtual GUIStyle GetStyle()
     {

@@ -22,7 +22,7 @@ public class TagPickerGUI : GUIPanel
             tags[i] = Entity.TagToString(i);
     }
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 960, 540);

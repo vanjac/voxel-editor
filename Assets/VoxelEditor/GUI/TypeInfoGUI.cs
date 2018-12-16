@@ -6,10 +6,10 @@ public class TypeInfoGUI : GUIPanel
 {
     public PropertiesObjectType type;
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return GUIUtils.HorizCenterRect(maxRect.center.x,
-            maxRect.yMin + maxRect.height * .2f, 960, 0);
+        return GUIUtils.HorizCenterRect(safeRect.center.x,
+            safeRect.yMin + safeRect.height * .2f, 960, 0);
     }
 
     public override void WindowGUI()

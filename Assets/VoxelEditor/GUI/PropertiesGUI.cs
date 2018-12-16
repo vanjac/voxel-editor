@@ -148,6 +148,7 @@ public class PropertiesGUI : LeftPanelGUI
     public const float SLIDE_HIDDEN = -486;
 
     private float slide = SLIDE_HIDDEN;
+    private float bottomGap = 0; // for notched/rounded screens
     public VoxelArrayEditor voxelArray;
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
@@ -176,9 +177,10 @@ public class PropertiesGUI : LeftPanelGUI
         base.OnEnable();
     }
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return new Rect(maxRect.xMin + slide, maxRect.yMin, 540, maxRect.height);
+        bottomGap = screenRect.yMax - safeRect.yMax;
+        return new Rect(safeRect.xMin + slide, safeRect.yMin, 540, screenRect.yMax - safeRect.yMin);
     }
 
     public override GUIStyle GetStyle()
@@ -257,6 +259,7 @@ public class PropertiesGUI : LeftPanelGUI
         if (slide < SLIDE_HIDDEN)
             slide = SLIDE_HIDDEN;
 
+        GUILayout.Space(bottomGap);
         GUILayout.EndScrollView();
     }
 
@@ -542,13 +545,13 @@ public class NewBehaviorGUI : GUIPanel
     private Entity targetEntity;
     private bool targetEntityIsActivator = false;
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         if (entityPicker != null)
             // move panel offscreen
-            return new Rect(maxRect.width * 2, maxRect.height * 2, 960, maxRect.height * .8f);
+            return new Rect(screenRect.width, screenRect.height, 960, safeRect.height * .8f);
         else
-            return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y, 960, maxRect.height * .8f);
+            return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 960, safeRect.height * .8f);
     }
 
     void Start()

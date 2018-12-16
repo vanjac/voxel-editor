@@ -10,7 +10,7 @@ public class TargetGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public bool allowObjectTarget = true, allowNullTarget = false;
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 960, 0);

@@ -9,7 +9,7 @@ public class FilterGUI : GUIPanel
     public FilterHandler handler;
     public VoxelArrayEditor voxelArray;
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 576, 0);

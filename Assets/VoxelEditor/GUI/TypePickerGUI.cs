@@ -29,9 +29,9 @@ public class TypePickerGUI : GUIPanel
         return style;
     });
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return GUIUtils.CenterRect(maxRect.center.x, maxRect.center.y, 960, maxRect.height * .8f);
+        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 960, safeRect.height * .8f);
     }
 
     public override void WindowGUI()

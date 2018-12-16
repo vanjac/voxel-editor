@@ -63,9 +63,9 @@ public class BevelGUI : LeftPanelGUI
 
     private VoxelEdge voxelEdge;
 
-    public override Rect GetRect(Rect maxRect)
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return new Rect(maxRect.xMin, maxRect.yMin, 540, 0);
+        return new Rect(safeRect.xMin, safeRect.yMin, 540, 0);
     }
 
     public override void OnEnable()
