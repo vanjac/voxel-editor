@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameLoad : MonoBehaviour
 {
-    public UnityEngine.UI.Text loadingText;
+    public LoadingGUI loadingGUI;
 
     void Start()
     {
@@ -20,11 +20,22 @@ public class GameLoad : MonoBehaviour
         {
             reader.Read(null, GetComponent<VoxelArray>(), false);
         }
-        catch (MapReadException)
+        catch (MapReadException e)
         {
-            SceneManager.LoadScene("editScene"); // TODO: this is a very bad solution
+            var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
+            dialog.message = e.Message;
+            dialog.yesButtonText = "Close";
+            dialog.yesButtonHandler = () =>
+            {
+                Close("menuScene");
+            };
+            Debug.Log(e.InnerException);
+            yield break;
         }
-        loadingText.enabled = false;
+        finally
+        {
+            Destroy(loadingGUI);
+        }
     }
 
     public void Close(string scene)
