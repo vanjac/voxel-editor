@@ -31,10 +31,10 @@ public class FadeGUI : GUIPanel
         GUI.backgroundColor = Color.black;
         GUI.Box(panelRect, "");
         GUI.backgroundColor = baseColor;
+        GUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+        GUILayout.FlexibleSpace();
         if (background != null)
         {
-            GUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-            GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.Box("", GUIStyle.none,
@@ -44,7 +44,7 @@ public class FadeGUI : GUIPanel
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.EndVertical();
         }
+        GUILayout.EndVertical();
     }
 }
