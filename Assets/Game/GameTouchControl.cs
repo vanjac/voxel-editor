@@ -40,7 +40,9 @@ public class GameTouchControl : MonoBehaviour
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch touch = Input.GetTouch(i);
-            if (touch.phase == TouchPhase.Began && !EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+            if (touch.phase == TouchPhase.Began
+                && !EventSystem.current.IsPointerOverGameObject(touch.fingerId)
+                && GUIPanel.PanelContainingPoint(touch.position) == null)
             {
                 if (touchedTapComponent != null)
                     touchedTapComponent.TapEnd();
