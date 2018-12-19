@@ -88,6 +88,7 @@ public class GameScripts
         HurtHealBehavior.objectType,
         CloneBehavior.objectType,
         LightBehavior.objectType,
+        MoveWithBehavior.objectType,
 
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
@@ -107,7 +108,8 @@ public class GameScripts
             TeleportBehavior.objectType,
             HurtHealBehavior.objectType,
             CloneBehavior.objectType,
-            LightBehavior.objectType
+            LightBehavior.objectType,
+            MoveWithBehavior.objectType
         },
         new BehaviorType[]
         {
