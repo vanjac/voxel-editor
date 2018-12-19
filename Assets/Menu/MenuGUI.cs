@@ -84,6 +84,8 @@ public class MenuGUI : GUIPanel
             }
         }
         UpdateMapList();
+
+        OpenMap(name, "editScene");
     }
 
     private void UpdateMapList()
