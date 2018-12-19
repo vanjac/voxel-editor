@@ -37,24 +37,12 @@ public class SpinBehavior : EntityBehavior
     }
 }
 
-public class SpinComponent : BehaviorComponent
+public class SpinComponent : MotionComponent
 {
     public float speed;
 
-    Rigidbody rigidBody;
-
-    public override void Start()
+    public override Quaternion GetRotateFixed()
     {
-        rigidBody = gameObject.GetComponent<Rigidbody>();
-        base.Start();
-    }
-
-    void FixedUpdate()
-    {
-        Quaternion rotation = Quaternion.AngleAxis(speed * Time.fixedDeltaTime, Vector3.up);
-        if (rigidBody != null)
-            rigidBody.MoveRotation(rigidBody.rotation * rotation);
-        else
-            transform.rotation *= rotation;
+        return Quaternion.AngleAxis(speed * Time.fixedDeltaTime, Vector3.up);
     }
 }

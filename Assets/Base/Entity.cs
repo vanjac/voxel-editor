@@ -789,6 +789,8 @@ public abstract class DynamicEntityComponent : EntityComponent
     public float health;
     private Vector3 lastRigidbodyPosition;
     private Vector3 cumulativeRigidbodyTranslate;
+    private Quaternion lastRigidbodyRotation;
+    private Quaternion cumulativeRigidbodyRotate;
 
     public void Hurt(float amount)
     {
@@ -846,5 +848,17 @@ public abstract class DynamicEntityComponent : EntityComponent
             rb.constraints = constraints;
         }
         rb.MovePosition(rb.position + cumulativeRigidbodyTranslate);
+    }
+
+    public void RigidbodyRotate(Rigidbody rb, Quaternion amount)
+    {
+        if (rb.rotation != lastRigidbodyRotation)
+        {
+            // new FixedUpdate cycle
+            lastRigidbodyRotation = rb.rotation;
+            cumulativeRigidbodyRotate = Quaternion.identity;
+        }
+        cumulativeRigidbodyRotate *= amount;
+        rb.MoveRotation(rb.rotation * cumulativeRigidbodyRotate);
     }
 }

@@ -34,7 +34,7 @@ public class MoveWithBehavior : EntityBehavior
     }
 }
 
-public class MoveWithComponent : BehaviorComponent
+public class MoveWithComponent : MotionComponent
 {
     public EntityReference target;
 
@@ -55,12 +55,17 @@ public class MoveWithComponent : BehaviorComponent
         }
     }
 
-    void LateUpdate()
+    public override Vector3 GetTranslateFixed()
     {
-        if (target.component != null)
-        {
-            transform.position = target.component.transform.TransformPoint(positionOffset);
-            transform.rotation = target.component.transform.rotation * rotationOffset;
-        }
+        if (target.component == null)
+            return Vector3.zero;
+        return target.component.transform.TransformPoint(positionOffset) - transform.position;
+    }
+
+    public override Quaternion GetRotateFixed()
+    {
+        if (target.component == null)
+            return Quaternion.identity;
+        return Quaternion.Inverse(transform.rotation) * target.component.transform.rotation * rotationOffset;
     }
 }

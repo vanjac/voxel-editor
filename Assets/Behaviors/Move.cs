@@ -42,43 +42,12 @@ public class MoveBehavior : EntityBehavior
     }
 }
 
-public class MoveComponent : BehaviorComponent
+public class MoveComponent : MotionComponent
 {
     public Target target;
     public float speed;
 
-    private Rigidbody rigidBody;
-
-    public override void Start()
-    {
-        rigidBody = gameObject.GetComponent<Rigidbody>();
-        base.Start();
-    }
-
-    void OnCollisionEnter()
-    {
-        if (rigidBody != null)
-            rigidBody.velocity = Vector3.zero;
-    }
-
-    public override void LastBehaviorDisabled()
-    {
-        if (rigidBody != null)
-            rigidBody.constraints = RigidbodyConstraints.None;
-    }
-
-    void FixedUpdate()
-    {
-        if (rigidBody != null)
-            rigidBody.velocity = Vector3.zero;
-        Vector3 move = GetMoveFixed();
-        if (rigidBody != null)
-            GetComponent<DynamicEntityComponent>().RigidbodyTranslate(rigidBody, move, true);
-        else
-            transform.Translate(move);
-    }
-
-    public Vector3 GetMoveFixed()
+    public override Vector3 GetTranslateFixed()
     {
         return target.DirectionFrom(transform.position) * speed * Time.fixedDeltaTime;
     }
