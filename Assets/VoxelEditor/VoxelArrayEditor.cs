@@ -719,7 +719,17 @@ public class VoxelArrayEditor : VoxelArray
         AutoSetMoveAxesEnabled();
     }
 
-    public void Adjust(Vector3 adjustDirection)
+    public void Adjust(Vector3 adjustDirection, int count)
+    {
+        var voxelsToUpdate = new HashSet<Voxel>();
+        for (int i = 0; i < count; i++)
+            SingleAdjust(adjustDirection, voxelsToUpdate);
+        foreach (Voxel voxel in voxelsToUpdate)
+            if (voxel != null)
+                VoxelModified(voxel);
+    }
+
+    private void SingleAdjust(Vector3 adjustDirection, HashSet<Voxel> voxelsToUpdate)
     {
         MergeStoredSelected();
         // now we can safely look only the addSelected property and the selectedThings list
@@ -769,8 +779,6 @@ public class VoxelArrayEditor : VoxelArray
             return 0;
         });
 
-        // HashSets prevent duplicate elements
-        var voxelsToUpdate = new HashSet<Voxel>();
         bool createdSubstance = false;
         bool temporarilyBlockPushingANewSubstance = false;
 
@@ -1041,10 +1049,6 @@ public class VoxelArrayEditor : VoxelArray
 
             temporarilyBlockPushingANewSubstance = false;
         } // end for each selected face
-
-        foreach (Voxel voxel in voxelsToUpdate)
-            if (voxel != null)
-                VoxelModified(voxel);
 
         for (int i = selectedThings.Count - 1; i >= 0; i--)
         {

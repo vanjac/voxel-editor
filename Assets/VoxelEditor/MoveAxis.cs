@@ -54,21 +54,23 @@ public class MoveAxis : TransformAxis
 
         float currentPosition = GetAxisPosition();
         float prevPosition = GetOriginPosition();
-        while (currentPosition - prevPosition > 1)
+        int count = 0;
+        if (currentPosition - prevPosition > 1)
         {
-            transform.parent.position += forwardDirection;
-            transform.position -= forwardDirection;
-            moveCount++;
-            currentPosition -= 1;
-            voxelArray.Adjust(forwardDirection);
+            count = (int)Mathf.Floor(currentPosition - prevPosition);
+            voxelArray.Adjust(forwardDirection, count);
         }
-        while (currentPosition - prevPosition < -1)
+        else if (currentPosition - prevPosition < -1)
         {
-            transform.parent.position -= forwardDirection;
-            transform.position += forwardDirection;
-            moveCount--;
-            currentPosition += 1;
-            voxelArray.Adjust(-forwardDirection);
+            count = -(int)Mathf.Floor(prevPosition - currentPosition);
+            voxelArray.Adjust(-forwardDirection, -count);
+        }
+        if (count != 0)
+        {
+            transform.parent.position += forwardDirection * count;
+            transform.position -= forwardDirection * count;
+            moveCount += count;
+            currentPosition -= count;
         }
     }
 }
