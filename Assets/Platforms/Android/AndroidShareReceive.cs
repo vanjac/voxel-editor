@@ -44,8 +44,7 @@ public class AndroidShareReceive
         using (var activity = AndroidShare.GetCurrentActivity())
         using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
         using (var uri = intent.Call<AndroidJavaObject>("getData"))
-        using (var contentResolver = activity.Call<AndroidJavaObject>("getContentResolver"))
-        using (var inputStream = contentResolver.Call<AndroidJavaObject>("openInputStream", uri))
+        using (var inputStream = GetInputStreamForURI(uri, activity))
         {
             byte[] buffer = new byte[1024];
             var bufferPtr = AndroidJNIHelper.ConvertToJNIArray(buffer);
@@ -66,6 +65,25 @@ public class AndroidShareReceive
                 fileStream.Write(newBuffer, 0, bytesRead);
             }
             fileStream.Flush();
+        }
+    }
+
+    private static AndroidJavaObject GetInputStreamForURI(AndroidJavaObject uri, AndroidJavaObject activity)
+    {
+        string scheme = uri.Call<string>("getScheme");
+        if (scheme == "content" || scheme == "android.resource" || scheme == "file")
+        {
+            using (var contentResolver = activity.Call<AndroidJavaObject>("getContentResolver"))
+            {
+                return contentResolver.Call<AndroidJavaObject>("openInputStream", uri);
+            }
+        }
+        else
+        {
+            using (var url = new AndroidJavaObject("java.net.URL", uri.Call<string>("toString")))
+            {
+                return url.Call<AndroidJavaObject>("openStream");
+            }
         }
     }
 }

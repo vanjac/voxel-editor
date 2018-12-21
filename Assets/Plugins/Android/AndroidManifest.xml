@@ -13,6 +13,8 @@
       android:xlargeScreens="true"
       android:anyDensity="true"/>
 
+  <uses-permission android:name="android.permission.INTERNET" />
+
   <application
       android:theme="@style/UnityThemeSelector"
       android:icon="@drawable/app_icon"
@@ -33,11 +35,6 @@
               android:host="*"
               android:pathPattern=".*\\.json"
               android:mimeType="*/*" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <category android:name="android.intent.category.DEFAULT" />
         <data android:scheme="https"
               android:host="*"
               android:pathPattern=".*\\.json"
@@ -50,11 +47,6 @@
         <data android:scheme="http"
               android:host="*"
               android:mimeType="application/json" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <category android:name="android.intent.category.DEFAULT" />
         <data android:scheme="https"
               android:host="*"
               android:mimeType="application/json" />
@@ -64,7 +56,8 @@
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
-        <data android:pathPattern=".*\\.json" />
+        <data android:scheme="file" android:pathPattern=".*\\.json" />
+        <data android:scheme="content" android:pathPattern=".*\\.json" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
