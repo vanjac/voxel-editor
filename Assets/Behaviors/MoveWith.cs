@@ -6,7 +6,10 @@ public class MoveWithBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Move With", "Follow the motion of another object.",
-        "move-resize-variant", typeof(MoveWithBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "move-resize-variant", typeof(MoveWithBehavior),
+        BehaviorType.AndRule(
+            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
     private EntityReference target = new EntityReference(null);
 
