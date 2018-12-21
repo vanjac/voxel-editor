@@ -74,7 +74,8 @@ public class MoveWithComponent : MotionComponent
 
     public override Vector3 GetTranslateFixed()
     {
-        if (target.component == null)
+        if (target.component == null
+                || target.component.transform.position == DynamicEntityComponent.KILL_LOCATION)
             return Vector3.zero;
         if (followRotation)
             return target.component.transform.TransformPoint(positionOffset) - transform.position;
