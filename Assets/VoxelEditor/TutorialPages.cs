@@ -115,7 +115,7 @@ public class Tutorials
         () => new TutorialObjectTouchPlayer(),
         () => new TutorialObjectAddTargetedBehavior(),
         () => new TutorialObjectPage(
-            "By default, Hurt/Heal will hurt the object it's attached to (the ball). "
+            "By default, Hurt/Heal hurts the object it's attached to (the ball). "
             + "By setting a Target, we made it act upon a different object (the player)."),
         () => new TutorialObjectBehaviorCondition(),
         () => new TutorialObjectHurtRate(),
@@ -165,7 +165,7 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "<i>Play your game.</i> The elevator should stop on the second floor. Why does it do this?"),
         () => new SimpleTutorialPage(
-            "We have one functioning button, but there are still three more. <i>Give them all Tap behaviors.</i> "
+            "We have one functioning button, but there are still three more. <i>Give them all Tap sensors.</i> "
             + "We'll make the second Up button work next..."),
         () => new SimpleTutorialPage(
             "The elevator’s Toggle sensor only allows one input, but we have two Up buttons."
@@ -211,7 +211,7 @@ public class Tutorials
             "The trigger should already have a Touch sensor with the filter set to Anything. "
             + "This is good because nothing escapes the Pit of Death."),
         () => new SimpleTutorialPage(
-            "<i>Tap Add Behavior. Tap the Target button, then tap Activators. Then choose the Hurt/Heal behavior.</i>"),
+            "<i>Tap Add Behavior. Tap the Target button, then tap \"Activators\". Then choose the Hurt/Heal behavior.</i>"),
         () => new SimpleTutorialPage(
             "This behavior targets its \"Activators\", which are the objects that \"cause\" the sensor to turn on -- "
             + "in this case, any objects that touch the trigger."),
@@ -1249,7 +1249,7 @@ public class Tutorials
         public TutorialObjectAddTargetedBehavior()
             : base("<i>Tap Add Behavior. "
             + "In the behavior menu, tap the \"Target\" button and select the player as the target. "
-            + "Then select the Hurt/Heal behavior.</i>",
+            + "Then choose Hurt/Heal under the \"Life\" tab.</i>",
             highlight: "behavior target")
         { }
 
