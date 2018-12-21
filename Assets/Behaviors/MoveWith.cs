@@ -12,6 +12,7 @@ public class MoveWithBehavior : EntityBehavior
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
     private EntityReference target = new EntityReference(null);
+    private bool followRotation = true;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -25,7 +26,11 @@ public class MoveWithBehavior : EntityBehavior
             new Property("Parent",
                 () => target,
                 v => target = (EntityReference)v,
-                PropertyGUIs.EntityReference)
+                PropertyGUIs.EntityReference),
+            new Property("Follow rotation?",
+                () => followRotation,
+                v => followRotation = (bool)v,
+                PropertyGUIs.Toggle)
         });
     }
 
@@ -33,6 +38,7 @@ public class MoveWithBehavior : EntityBehavior
     {
         MoveWithComponent component = gameObject.AddComponent<MoveWithComponent>();
         component.target = target;
+        component.followRotation = followRotation;
         return component;
     }
 }
@@ -40,6 +46,7 @@ public class MoveWithBehavior : EntityBehavior
 public class MoveWithComponent : MotionComponent
 {
     public EntityReference target;
+    public bool followRotation;
 
     private Vector3 positionOffset;
     private Quaternion rotationOffset;
@@ -53,8 +60,15 @@ public class MoveWithComponent : MotionComponent
         }
         else
         {
-            positionOffset = target.component.transform.InverseTransformPoint(transform.position);
-            rotationOffset = Quaternion.Inverse(target.component.transform.rotation) * transform.rotation;
+            if (followRotation)
+            {
+                positionOffset = target.component.transform.InverseTransformPoint(transform.position);
+                rotationOffset = Quaternion.Inverse(target.component.transform.rotation) * transform.rotation;
+            }
+            else
+            {
+                positionOffset = transform.position - target.component.transform.position;
+            }
         }
     }
 
@@ -62,12 +76,15 @@ public class MoveWithComponent : MotionComponent
     {
         if (target.component == null)
             return Vector3.zero;
-        return target.component.transform.TransformPoint(positionOffset) - transform.position;
+        if (followRotation)
+            return target.component.transform.TransformPoint(positionOffset) - transform.position;
+        else
+            return target.component.transform.position + positionOffset - transform.position;
     }
 
     public override Quaternion GetRotateFixed()
     {
-        if (target.component == null)
+        if (!followRotation || target.component == null)
             return Quaternion.identity;
         return Quaternion.Inverse(transform.rotation) * target.component.transform.rotation * rotationOffset;
     }
