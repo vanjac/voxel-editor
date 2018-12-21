@@ -42,6 +42,7 @@ The app has four scenes:
 These notes are mostly for me, but you can read them too.
 
 - Install latest LTS release of Unity 2017, with build tools for Android.
+- Install Blender
 - Clone repo. **Don't open in Unity yet!!**
 - Optional: Download/copy textures from Poliigon, FreePBR, and Genetica (see above)
 - Open project in Unity, and switch platform to Android
