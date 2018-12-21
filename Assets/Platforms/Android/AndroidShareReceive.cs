@@ -9,7 +9,7 @@ public class AndroidShareReceive
 {
     public static bool FileWaitingToImport()
     {
-        using (var activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
+        using (var activity = AndroidShare.GetCurrentActivity())
         using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
         {
             if (intent.Call<bool>("hasExtra", "used"))
@@ -25,7 +25,7 @@ public class AndroidShareReceive
 
     public static void ClearFileWaitingToImport()
     {
-        using (var activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
+        using (var activity = AndroidShare.GetCurrentActivity())
         using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
         using (intent.Call<AndroidJavaObject>("putExtra", "used", true))
         { }
@@ -41,7 +41,7 @@ public class AndroidShareReceive
 
     private static void ReadSharedURL(FileStream fileStream)
     {
-        using (var activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
+        using (var activity = AndroidShare.GetCurrentActivity())
         using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
         using (var uri = intent.Call<AndroidJavaObject>("getData"))
         using (var contentResolver = activity.Call<AndroidJavaObject>("getContentResolver"))
