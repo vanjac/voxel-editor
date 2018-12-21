@@ -81,14 +81,16 @@ public class GameScripts
 
     public static BehaviorType[] behaviors = new BehaviorType[]
     {
-        VisibleBehavior.objectType,
         MoveBehavior.objectType,
         SpinBehavior.objectType,
         TeleportBehavior.objectType,
+        MoveWithBehavior.objectType,
+
+        VisibleBehavior.objectType,
+        LightBehavior.objectType,
+
         HurtHealBehavior.objectType,
         CloneBehavior.objectType,
-        LightBehavior.objectType,
-        MoveWithBehavior.objectType,
 
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
@@ -96,20 +98,26 @@ public class GameScripts
         ForceBehavior.objectType
     };
 
-    public static string[] behaviorTabNames = new string[] { "General", "Physics" };
+    public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics" };
 
     public static BehaviorType[][] behaviorTabs = new BehaviorType[][]
     {
         new BehaviorType[]
         {
-            VisibleBehavior.objectType,
             MoveBehavior.objectType,
             SpinBehavior.objectType,
             TeleportBehavior.objectType,
+            MoveWithBehavior.objectType
+        },
+        new BehaviorType[]
+        {
+            VisibleBehavior.objectType,
+            LightBehavior.objectType,
+        },
+        new BehaviorType[]
+        {
             HurtHealBehavior.objectType,
             CloneBehavior.objectType,
-            LightBehavior.objectType,
-            MoveWithBehavior.objectType
         },
         new BehaviorType[]
         {
