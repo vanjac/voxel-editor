@@ -9,24 +9,8 @@ public class Substance : DynamicEntity
 
     public HashSet<Voxel> voxels;
 
-    private Color _highlight = Color.clear;
+    public Color highlight = Color.clear;
     public Material highlightMaterial;
-    public Color highlight
-    {
-        get
-        {
-            return _highlight;
-        }
-        set
-        {
-            _highlight = value;
-            if (highlightMaterial == null)
-                highlightMaterial = Material.Instantiate(Voxel.highlightMaterials[15]);
-            highlightMaterial.color = _highlight;
-        }
-    }
-    private Color oldHighlight = Color.black;
-    private bool willUpdateHighlight;
     public VoxelFace defaultPaint;
 
     public Substance()
@@ -105,32 +89,16 @@ public class Substance : DynamicEntity
         return voxelBounds.center;
     }
 
-    public void UpdateHighlight()
+    public void SetHighlight(Color c)
     {
-        // EntityReferencePropertyManager has a pattern of calling UpdateHighlight twice per frame,
-        // once to set the color to Clear and once to set it back to the highlight.
-        // This is designed to prevent regenerating the mesh more often than necessary.
-        if (!willUpdateHighlight)
-        {
-            foreach (Voxel v in voxels)
-            {
-                v.StartCoroutine(UpdateHighlightCoroutine());
-                break;
-            }
-            willUpdateHighlight = true;
-        }
-    }
-
-    private IEnumerator UpdateHighlightCoroutine()
-    {
-        yield return null;
-        if (oldHighlight != highlight)
-        {
-            foreach (Voxel v in voxels)
-                v.UpdateVoxel();
-            oldHighlight = highlight;
-        }
-        willUpdateHighlight = false;
+        if (c == highlight)
+            return;
+        highlight = c;
+        if (highlightMaterial == null)
+            highlightMaterial = Material.Instantiate(Voxel.highlightMaterials[15]);
+        highlightMaterial.color = highlight;
+        foreach (Voxel v in voxels)
+            v.UpdateVoxel();
     }
 }
 

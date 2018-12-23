@@ -34,6 +34,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     private static bool updateTargets = false;
     private static Entity currentEntity;
     private static List<Entity> targetEntities = new List<Entity>();
+    private static HashSet<Entity> entitiesToClear = new HashSet<Entity>();
     private static Entity behaviorTarget;
     private static int currentTargetEntityI = -1;
 
@@ -50,13 +51,18 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     public static void Reset(Entity entity)
     {
-        foreach (Entity target in targetEntities)
+        foreach (Entity clear in entitiesToClear)
         {
-            if (!(target is Substance))
+            if (clear == entity || !(clear is Substance))
                 continue;
-            ((Substance)target).highlight = Color.clear;
-            ((Substance)target).UpdateHighlight();
+            ((Substance)clear).SetHighlight(Color.clear);
         }
+        entitiesToClear.Clear();
+        entitiesToClear.UnionWith(targetEntities);
+
+        targetEntities.Clear();
+        currentTargetEntityI = -1;
+
         if (currentEntity != entity)
         {
             if (currentEntity != null)
@@ -64,8 +70,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
                 // entity deselected
                 if (currentEntity is Substance)
                 {
-                    ((Substance)currentEntity).highlight = Color.clear;
-                    ((Substance)currentEntity).UpdateHighlight();
+                    ((Substance)currentEntity).SetHighlight(Color.clear);
                 }
                 EntityPreviewManager.EntityDeselected();
             }
@@ -74,16 +79,13 @@ public class EntityReferencePropertyManager : MonoBehaviour
                 // entity selected
                 if (entity is Substance)
                 {
-                    ((Substance)entity).highlight = Color.white;
-                    ((Substance)entity).UpdateHighlight();
+                    ((Substance)entity).SetHighlight(Color.white);
                 }
                 EntityPreviewManager.EntitySelected(entity);
             }
         }
         currentEntity = entity;
         behaviorTarget = null;
-        targetEntities.Clear();
-        currentTargetEntityI = -1;
     }
 
     // TODO: delete this when it is no longer needed
@@ -101,11 +103,11 @@ public class EntityReferencePropertyManager : MonoBehaviour
             return;
         }
         targetEntities.Add(entity);
+        entitiesToClear.Remove(entity);
         currentTargetEntityI = targetEntities.Count - 1;
         if (entity is Substance)
         {
-            ((Substance)entity).highlight = GetColor();
-            ((Substance)entity).UpdateHighlight();
+            ((Substance)entity).SetHighlight(GetColor());
         }
     }
 
