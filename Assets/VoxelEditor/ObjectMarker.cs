@@ -62,6 +62,11 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
                 SetAllMaterials(renderer, Voxel.selectedMaterial);
                 gameObject.layer = 10; // SelectedObject layer, because selected material makes it transparent
             }
+            else if (objectEntity != null && objectEntity.highlight != Color.clear)
+            {
+                SetAllMaterials(renderer, objectEntity.highlightMaterial);
+                gameObject.layer = 0; // default
+            }
             else if (objectEntity != null && objectEntity.xRay)
             {
                 SetAllMaterials(renderer, Voxel.xRayMaterial);

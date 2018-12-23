@@ -53,9 +53,9 @@ public class EntityReferencePropertyManager : MonoBehaviour
     {
         foreach (Entity clear in entitiesToClear)
         {
-            if (clear == entity || !(clear is Substance))
+            if (clear == entity)
                 continue;
-            ((Substance)clear).SetHighlight(Color.clear);
+            clear.SetHighlight(Color.clear);
         }
         entitiesToClear.Clear();
         entitiesToClear.UnionWith(targetEntities);
@@ -68,19 +68,13 @@ public class EntityReferencePropertyManager : MonoBehaviour
             if (currentEntity != null)
             {
                 // entity deselected
-                if (currentEntity is Substance)
-                {
-                    ((Substance)currentEntity).SetHighlight(Color.clear);
-                }
+                currentEntity.SetHighlight(Color.clear);
                 EntityPreviewManager.EntityDeselected();
             }
             if (entity != null)
             {
                 // entity selected
-                if (entity is Substance)
-                {
-                    ((Substance)entity).SetHighlight(Color.white);
-                }
+                entity.SetHighlight(Color.white);
                 EntityPreviewManager.EntitySelected(entity);
             }
         }
@@ -105,10 +99,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         targetEntities.Add(entity);
         entitiesToClear.Remove(entity);
         currentTargetEntityI = targetEntities.Count - 1;
-        if (entity is Substance)
-        {
-            ((Substance)entity).SetHighlight(GetColor());
-        }
+        entity.SetHighlight(GetColor());
     }
 
     public static void SetBehaviorTarget(Entity entity)

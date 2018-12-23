@@ -10,6 +10,8 @@ public abstract class ObjectEntity : DynamicEntity
     public ObjectMarker marker;
     public Vector3Int position;
     public float rotation;
+    public Color highlight = Color.clear;
+    public Material highlightMaterial;
 
     public override PropertiesObjectType ObjectType()
     {
@@ -35,6 +37,18 @@ public abstract class ObjectEntity : DynamicEntity
     public override bool AliveInEditor()
     {
         return marker != null;
+    }
+
+    public override void SetHighlight(Color c)
+    {
+        if (c == highlight)
+            return;
+        highlight = c;
+        if (highlightMaterial == null)
+            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, false);
+        highlightMaterial.color = highlight;
+        if (marker != null)
+            marker.UpdateMarker();
     }
 
     public void InitObjectMarker(VoxelArrayEditor voxelArray)

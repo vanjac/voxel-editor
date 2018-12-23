@@ -89,7 +89,7 @@ public class Substance : DynamicEntity
         return voxelBounds.center;
     }
 
-    public void SetHighlight(Color c)
+    public override void SetHighlight(Color c)
     {
         if (c == highlight)
             return;

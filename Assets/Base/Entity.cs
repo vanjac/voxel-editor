@@ -254,6 +254,7 @@ public abstract class Entity : PropertiesObject
 
     public abstract Vector3 PositionInEditor();
     public abstract bool AliveInEditor();
+    public abstract void SetHighlight(Color c);
 
     public virtual Entity Clone()
     {
