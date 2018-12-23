@@ -1217,12 +1217,15 @@ public class VoxelArrayEditor : VoxelArray
                 cap = BevelCap(minEdgeRef, edgeRef, minType, type,
                     minEdgeRef.voxel != null && !minEdgeRef.voxel.faces[maxFaceI].IsEmpty(), out alsoOther);
             }
-            minVoxel.edges[edgeRef.edgeI].capMax = cap;
-            voxelsToUpdate.Add(minVoxel);
+            if (minVoxel.edges[edgeRef.edgeI].capMax != cap)
+            {
+                minVoxel.edges[edgeRef.edgeI].capMax = cap;
+                voxelsToUpdate.Add(minVoxel);
+            }
             if (minType == EdgeType.CONCAVE)
             {
                 var oppMinEdgeRef = OpposingEdgeRef(minEdgeRef);
-                if (oppMinEdgeRef.voxel != null)
+                if (oppMinEdgeRef.voxel != null && oppMinEdgeRef.edge.capMax != cap)
                 {
                     oppMinEdgeRef.voxel.edges[oppMinEdgeRef.edgeI].capMax = cap;
                     voxelsToUpdate.Add(oppMinEdgeRef.voxel);
@@ -1240,12 +1243,15 @@ public class VoxelArrayEditor : VoxelArray
                 cap = BevelCap(maxEdgeRef, edgeRef, maxType, type,
                     maxEdgeRef.voxel != null && !maxEdgeRef.voxel.faces[minFaceI].IsEmpty(), out alsoOther);
             }
-            maxVoxel.edges[edgeRef.edgeI].capMin = cap;
-            voxelsToUpdate.Add(maxVoxel);
+            if (maxVoxel.edges[edgeRef.edgeI].capMin != cap)
+            {
+                maxVoxel.edges[edgeRef.edgeI].capMin = cap;
+                voxelsToUpdate.Add(maxVoxel);
+            }
             if (maxType == EdgeType.CONCAVE)
             {
                 var oppMaxEdgeRef = OpposingEdgeRef(maxEdgeRef);
-                if (oppMaxEdgeRef.voxel != null)
+                if (oppMaxEdgeRef.voxel != null && oppMaxEdgeRef.edge.capMin != cap)
                 {
                     oppMaxEdgeRef.voxel.edges[oppMaxEdgeRef.edgeI].capMin = cap;
                     voxelsToUpdate.Add(oppMaxEdgeRef.voxel);
