@@ -4,8 +4,18 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class FileReceive : MonoBehaviour
+public class FileReceiveGUI : GUIPanel
 {
+    public override Rect GetRect(Rect safeRect, Rect screenRect)
+    {
+        return new Rect(safeRect.xMin, safeRect.yMin, safeRect.width, 0);
+    }
+
+    public override GUIStyle GetStyle()
+    {
+        return GUIStyle.none;
+    }
+
     void Start()
     {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
@@ -22,6 +32,15 @@ public class FileReceive : MonoBehaviour
     private void Close()
     {
         SceneManager.LoadScene("menuScene");
+    }
+
+    public override void WindowGUI()
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        ActionBarGUI.ActionBarLabel("Importing file...");
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
     }
 
     private void ImportMap(string name)
