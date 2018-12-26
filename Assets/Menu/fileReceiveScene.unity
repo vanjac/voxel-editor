@@ -188,6 +188,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 915bcdca12e2c16478bc1da461e62852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  title: 
+  scroll: {x: 0, y: 0}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!114 &1710008588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +239,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
-  m_AllowMSAA: 0
+  m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
