@@ -298,6 +298,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   targetHeightOverride: 0
+  alternateFonts:
+  - {fileID: 12800000, guid: 7520657f27b79e144b14015465e1c7a7, type: 3}
+  - {fileID: 12800000, guid: 2c71cfec8513c594195e1534fb2a6885, type: 3}
 --- !u!1001 &1726332292
 Prefab:
   m_ObjectHideFlags: 0

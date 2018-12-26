@@ -17,6 +17,9 @@ public class GUIManager : MonoBehaviour
     public GUISkin guiSkin;
     public float targetHeightOverride = 0; // for testing
 
+    // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
+    public Font[] alternateFonts;
+
     void Start()
     {
         GUIPanel.guiSkin = guiSkin;
