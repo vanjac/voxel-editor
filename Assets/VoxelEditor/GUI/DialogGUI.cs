@@ -110,6 +110,8 @@ public class TextInputDialogGUI : GUIPanel
             keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable,
                 false, false, false, false, // autocorrect, multiline, password, alert mode
                 prompt);
+        else
+            title = prompt;
     }
 
     public override void WindowGUI()
