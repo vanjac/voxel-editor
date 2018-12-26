@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class IOSShareReceive
 {
+    private const string INBOX_PATH1 = "Documents/Inbox"; // from Gmail, etc.
+    private const string INBOX_PATH2 = "tmp/com.vantjac.voxel-Inbox"; // from Files
+
     public static bool FileWaitingToImport()
     {
         return GetFileToImport() != null;
@@ -19,18 +22,25 @@ public class IOSShareReceive
             File.Delete(fileToImport);
     }
 
-    private static string InboxPath()
-    {
-        return Application.persistentDataPath.Replace("Documents", "tmp/com.vantjac.voxel-Inbox");
-    }
-
     private static string GetFileToImport()
     {
-        string[] inboxFiles = Directory.GetFiles(InboxPath());
-        if (inboxFiles.Length == 0)
+        string appDir = Application.persistentDataPath.Replace("Documents", "");
+
+        string firstFile = FirstFile(appDir + INBOX_PATH1);
+        if (firstFile != null)
+            return firstFile;
+        return FirstFile(appDir + INBOX_PATH2);
+    }
+
+    private static string FirstFile(string dirPath)
+    {
+        if (!Directory.Exists(dirPath))
+            return null;
+        string[] files = Directory.GetFiles(dirPath);
+        if (files.Length == 0)
             return null;
         else
-            return inboxFiles[0];
+            return files[0];
     }
 
     public static void ImportSharedFile(string filePath)
