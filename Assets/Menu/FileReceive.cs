@@ -8,12 +8,15 @@ public class FileReceive : MonoBehaviour
 {
     void Start()
     {
-        ShareMap.ClearFileWaitingToImport();
-
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
         inputDialog.prompt = "Enter name for imported world...";
         inputDialog.handler = ImportMap;
         inputDialog.cancelHandler = Close;
+    }
+
+    void OnDestroy()
+    {
+        ShareMap.ClearFileWaitingToImport();
     }
 
     private void Close()
