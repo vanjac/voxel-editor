@@ -16,7 +16,9 @@ public class ShareMap
 
     public static bool FileWaitingToImport()
     {
-#if UNITY_ANDROID
+#if UNITY_EDITOR
+        return false;
+#elif UNITY_ANDROID
         return AndroidShareReceive.FileWaitingToImport();
 #elif UNITY_IOS
         return IOSShareReceive.FileWaitingToImport();
