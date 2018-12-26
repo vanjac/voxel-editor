@@ -16,21 +16,29 @@ public class FileReceiveGUI : GUIPanel
         return GUIStyle.none;
     }
 
+    public override void OnEnable()
+    {
+        holdOpen = true;
+        stealFocus = false;
+        base.OnEnable();
+    }
+
+    private void DestroyThis() // to use as callback
+    {
+        Destroy(this);
+    }
+
     void Start()
     {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
         inputDialog.prompt = "Enter name for imported world...";
         inputDialog.handler = ImportMap;
-        inputDialog.cancelHandler = Close;
+        inputDialog.cancelHandler = DestroyThis;
     }
 
     void OnDestroy()
     {
         ShareMap.ClearFileWaitingToImport();
-    }
-
-    private void Close()
-    {
         SceneManager.LoadScene("menuScene");
     }
 
@@ -47,27 +55,27 @@ public class FileReceiveGUI : GUIPanel
     {
         if (name.Length == 0)
         {
-            Close();
+            Destroy(this);
             return;
         }
         string newPath = WorldFiles.GetFilePath(name);
         if (File.Exists(newPath))
         {
             var dialog = DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
-            dialog.yesButtonHandler = Close;
+            dialog.yesButtonHandler = DestroyThis;
             return;
         }
 
         try
         {
             ShareMap.ImportSharedFile(newPath);
-            Close();
+            Destroy(this);
         }
         catch (System.Exception e)
         {
             Debug.Log(e);
             var dialog = DialogGUI.ShowMessageDialog(gameObject, "Error importing world");
-            dialog.yesButtonHandler = Close;
+            dialog.yesButtonHandler = DestroyThis;
         }
     }
 }
