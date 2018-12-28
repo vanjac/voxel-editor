@@ -56,6 +56,16 @@ public class MenuGUI : GUIPanel
             GUILayout.EndHorizontal();
         }
         GUILayout.EndScrollView();
+        if (mapFiles.Count == 0)
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            ActionBarGUI.ActionBarLabel("Tap 'New' to create a new world.");
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+        }
     }
 
     public static void OpenMap(string name, string scene)
