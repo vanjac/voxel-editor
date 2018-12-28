@@ -22,7 +22,7 @@ You can download N-Space for Android on [Google Play](https://play.google.com/st
 
 The app starts on a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world's name to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as JSON files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
 
-N-Space has built-in documentation and tutorials, which you can access through the overflow (!["..."](https://github.com/vanjac/voxel-editor/blob/master/Assets/VoxelEditor/GUI/dots-vertical.png)) menu, by tapping Help.
+N-Space has built-in documentation and tutorials, which you can access through the overflow (!["..."](https://github.com/vanjac/voxel-editor/blob/master/Assets/VoxelEditor/GUI/icons/dots-vertical.png)) menu, by tapping Help.
 
 ## Building the app yourself
 
