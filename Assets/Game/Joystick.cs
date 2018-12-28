@@ -8,7 +8,9 @@ namespace UnityStandardAssets.CrossPlatformInput
 {
     public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
-        public float MovementRange = 0.12f;
+        private const float DOTS_PER_INCH = 72.0f;
+
+        public float MovementRange = 30; // in dots
         public string horizontalAxisName = "Horizontal"; // The name given to the horizontal axis for the cross platform input
         public string verticalAxisName = "Vertical"; // The name given to the vertical axis for the cross platform input
 
@@ -33,7 +35,7 @@ namespace UnityStandardAssets.CrossPlatformInput
         {
             var delta = m_StartPos - value;
             delta.y = -delta.y;
-            delta /= MovementRange * Screen.height;
+            delta /= MovementRange * Screen.dpi / DOTS_PER_INCH;
             m_HorizontalVirtualAxis.Update(-delta.x);
             m_VerticalVirtualAxis.Update(delta.y);
         }
@@ -54,7 +56,7 @@ namespace UnityStandardAssets.CrossPlatformInput
                 data.position.x - m_StartDrag.x,
                 data.position.y - m_StartDrag.y,
                 0);
-            newPos = Vector3.ClampMagnitude(newPos, MovementRange * Screen.height);
+            newPos = Vector3.ClampMagnitude(newPos, MovementRange * Screen.dpi / DOTS_PER_INCH);
 
             transform.position = m_StartPos + newPos;
             UpdateVirtualAxes(transform.position);
