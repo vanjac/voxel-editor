@@ -56,4 +56,6 @@ These notes are mostly for me, but you can read them too.
 
 ## More info
 
+[MIT License](https://github.com/vanjac/voxel-editor/blob/master/LICENSE.txt)
+
 See [credits.txt](https://github.com/vanjac/voxel-editor/blob/master/Assets/Menu/credits.txt) for sources of some assets.
