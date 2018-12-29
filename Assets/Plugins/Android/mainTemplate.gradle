@@ -1,15 +1,18 @@
 buildscript {
 	repositories {
+		google()
 		jcenter()
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:2.3.0'
+		classpath 'com.android.tools.build:gradle:3.2.0'
 	}
 }
 
 allprojects {
    repositories {
+      google()
+      jcenter()
       flatDir {
         dirs 'libs'
       }
@@ -35,6 +38,9 @@ android {
 	defaultConfig {
 		targetSdkVersion **TARGETSDKVERSION**
 		applicationId '**APPLICATIONID**'
+		ndk {
+            abiFilters **ABIFILTERS**
+        }
 	}
 
 	lintOptions {
@@ -60,5 +66,19 @@ android {
   			**SIGNCONFIG**
   		}
 	}
-
+**PACKAGING_OPTIONS**
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
 }
+
+
+**SOURCE_BUILD_SETUP**
