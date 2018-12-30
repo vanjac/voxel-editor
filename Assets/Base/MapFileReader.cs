@@ -390,6 +390,7 @@ public class MapFileReader
         if (voxelObject["e"] != null)
             foreach (JSONNode edgeNode in voxelObject["e"].AsArray)
                 ReadEdge(edgeNode.AsObject, voxel);
+        voxel.UpdateVoxel();
     }
 
     private void ReadFace(JSONObject faceObject, Voxel voxel, List<Material> materials)

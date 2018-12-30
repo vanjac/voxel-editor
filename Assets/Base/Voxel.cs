@@ -415,11 +415,6 @@ public class Voxel : MonoBehaviour
     public ObjectEntity objectEntity;
     public byte[] faceSubMeshes = new byte[6];
 
-    void Start()
-    {
-        UpdateVoxel();
-    }
-
     void OnBecameVisible()
     {
         if (substance != null)
@@ -763,8 +758,8 @@ public class Voxel : MonoBehaviour
                 corners[i].count += corners[i].bevel_count;
                 vertexI += corners[i].bevel_count;
 
-                if (   (SQUARE_LOOP[i].x == 0 && edges[edgeB].capMin) || (SQUARE_LOOP[i].x == 1 && edges[edgeB].capMax)
-                    || (SQUARE_LOOP[i].y == 0 && edges[edgeC].capMin) || (SQUARE_LOOP[i].y == 1 && edges[edgeC].capMax))
+                if ((SQUARE_LOOP[i].x == 0 && edges[edgeB].capMin) || (SQUARE_LOOP[i].x == 1 && edges[edgeB].capMax)
+                 || (SQUARE_LOOP[i].y == 0 && edges[edgeC].capMin) || (SQUARE_LOOP[i].y == 1 && edges[edgeC].capMax))
                 {
                     corners[i].cap_i = vertexI;
                     corners[i].cap_count = bevelEdge.bevelTypeArray.Length + 1;
