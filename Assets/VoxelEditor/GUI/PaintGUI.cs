@@ -21,7 +21,7 @@ public class PaintGUI : GUIPanel
 
     private static readonly Lazy<GUIStyle> previewBoxStyle = new Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUI.skin.GetStyle("button_small"));
+        var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
         style.normal.background = null;
         style.active.background = null;
         return style;
@@ -62,9 +62,9 @@ public class PaintGUI : GUIPanel
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
-        if (GUILayout.Button(GUIIconSet.instance.rotateLeft, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(GUIIconSet.instance.rotateLeft, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(3);
-        if (GUILayout.Button(GUIIconSet.instance.rotateRight, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(GUIIconSet.instance.rotateRight, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(1);
         TutorialGUI.ClearHighlight();
         GUILayout.FlexibleSpace();
@@ -92,9 +92,9 @@ public class PaintGUI : GUIPanel
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
-        if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(5);
-        if (GUILayout.Button(GUIIconSet.instance.flipVertical, GUI.skin.GetStyle("button_small"), GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(GUIIconSet.instance.flipVertical, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(7);
         TutorialGUI.ClearHighlight();
         int oldSelectedLayer = selectedLayer;

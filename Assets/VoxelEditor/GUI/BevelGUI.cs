@@ -109,7 +109,7 @@ public class BevelGUI : LeftPanelGUI
             voxelEdge = voxelArray.GetSelectedBevel();
         }
 
-        GUILayout.Label("Bevel:", GUI.skin.GetStyle("label_title"));
+        GUILayout.Label("Bevel:", GUIStyleSet.instance.labelTitle);
 
         if (!voxelArray.SomethingIsSelected())
         {
@@ -127,7 +127,7 @@ public class BevelGUI : LeftPanelGUI
                 GUIIconSet.instance.bevelIcons.square,
                 GUIIconSet.instance.bevelIcons.stair2,
                 GUIIconSet.instance.bevelIcons.stair4 },
-            3, GUI.skin.GetStyle("button_tab"));
+            3, GUIStyleSet.instance.buttonTab);
         TutorialGUI.ClearHighlight();
 
         TutorialGUI.TutorialHighlight("bevel size");
@@ -137,7 +137,7 @@ public class BevelGUI : LeftPanelGUI
                 GUIIconSet.instance.bevelIcons.quarter,
                 GUIIconSet.instance.bevelIcons.half,
                 GUIIconSet.instance.bevelIcons.full },
-            3, GUI.skin.GetStyle("button_tab"));
+            3, GUIStyleSet.instance.buttonTab);
         TutorialGUI.ClearHighlight();
 
         if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize)

@@ -66,7 +66,7 @@ public class OverflowMenuGUI : GUIPanel
 
     private bool MenuButton(string name, Texture icon, bool highlight)
     {
-        bool pressed = GUIUtils.HighlightedButton(name, GUI.skin.GetStyle("button_large"), highlight);
+        bool pressed = GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, highlight);
         Rect iconRect = GUILayoutUtility.GetLastRect();
         iconRect.width = iconRect.height;
         GUI.Label(iconRect, icon, GUIUtils.LABEL_CENTERED.Value);

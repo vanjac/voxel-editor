@@ -12,7 +12,7 @@ public class ActionBarGUI : TopPanelGUI
 
     private static readonly Lazy<GUIStyle> labelStyle = new Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUI.skin.GetStyle("button_large"));
+        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
         style.alignment = TextAnchor.MiddleCenter;
         style.normal.background = GUI.skin.box.normal.background;
         style.border = GUI.skin.box.border;
@@ -176,17 +176,17 @@ public class ActionBarGUI : TopPanelGUI
 
     public static bool ActionBarButton(Texture icon)
     {
-        return GUILayout.Button(icon, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false));
+        return GUILayout.Button(icon, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
     }
 
     public static bool ActionBarButton(string text)
     {
-        return GUILayout.Button(text, GUI.skin.GetStyle("button_large"), GUILayout.ExpandWidth(false));
+        return GUILayout.Button(text, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
     }
 
     public static bool HighlightedActionBarButton(Texture icon)
     {
-        return GUIUtils.HighlightedButton(icon, GUI.skin.GetStyle("button_large"), true, GUILayout.ExpandWidth(false));
+        return GUIUtils.HighlightedButton(icon, GUIStyleSet.instance.buttonLarge, true, GUILayout.ExpandWidth(false));
     }
 
     public static void ActionBarLabel(string text)

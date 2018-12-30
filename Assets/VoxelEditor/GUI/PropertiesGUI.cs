@@ -462,7 +462,7 @@ public class PropertiesGUI : LeftPanelGUI
         if (mismatchedSelectedBehaviorCounts)
         {
             GUILayout.BeginVertical(GUI.skin.box);
-            GUILayout.Label("(other behaviors...)", GUI.skin.GetStyle("label_title"));
+            GUILayout.Label("(other behaviors...)", GUIStyleSet.instance.labelTitle);
             GUILayout.EndVertical();
         }
     }
@@ -490,7 +490,7 @@ public class PropertiesGUI : LeftPanelGUI
             var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
             typeInfo.type = obj.ObjectType();
         }
-        GUILayout.Label(title, GUI.skin.GetStyle("label_title"));
+        GUILayout.Label(title, GUIStyleSet.instance.labelTitle);
         GUILayout.EndHorizontal();
 
         if (obj == null)

@@ -30,7 +30,7 @@ public class HelpGUI : GUIPanel
     public override void WindowGUI()
     {
         tab = GUILayout.SelectionGrid(tab,
-            new string[] { "Tutorials", "Demo Worlds" }, 2, GUI.skin.GetStyle("button_tab"));
+            new string[] { "Tutorials", "Demo Worlds" }, 2, GUIStyleSet.instance.buttonTab);
         if (tab == 0)
             TutorialsTab();
         if (tab == 1)

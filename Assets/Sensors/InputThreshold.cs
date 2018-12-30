@@ -102,7 +102,7 @@ public class InputThresholdSensor : Sensor
 
             int negativeNum = inputs[i].negative ? 1 : 0;
             int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
-                new string[] { "Positive", "Negative" }, 2, GUI.skin.GetStyle("button_tab"));
+                new string[] { "Positive", "Negative" }, 2, GUIStyleSet.instance.buttonTab);
             if (negativeNum != newNegativeNum)
             {
                 inputs[i].negative = newNegativeNum == 1;

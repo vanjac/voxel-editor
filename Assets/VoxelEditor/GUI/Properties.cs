@@ -50,7 +50,7 @@ public class PropertyGUIs
     public static void Enum(Property property)
     {
         System.Enum e = (System.Enum)property.value;
-        var buttonStyle = GUI.skin.GetStyle("button_tab");
+        var buttonStyle = GUIStyleSet.instance.buttonTab;
         GUILayout.BeginHorizontal();
         foreach (var enumValue in System.Enum.GetValues(e.GetType()))
         {
@@ -145,7 +145,7 @@ public class PropertyGUIs
         GUILayout.Label("When sensor is:");
         TutorialGUI.TutorialHighlight("behavior condition");
         property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
-            (int)condition, new string[] { "On", "Off", "Both" }, 3, GUI.skin.GetStyle("button_tab"));
+            (int)condition, new string[] { "On", "Off", "Both" }, 3, GUIStyleSet.instance.buttonTab);
         TutorialGUI.ClearHighlight();
     }
 

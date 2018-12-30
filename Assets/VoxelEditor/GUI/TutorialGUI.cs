@@ -94,14 +94,14 @@ public class TutorialGUI : GUIPanel
 
     private static readonly Lazy<GUIStyle> buttonStyle = new Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUI.skin.GetStyle("button_large"));
+        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
         style.fixedHeight = 0;
         return style;
     });
     private static readonly Lazy<GUIStyle> textStyle = new Lazy<GUIStyle>(() =>
     {
         // keep original background because it's more opaque than Box
-        var style = new GUIStyle(GUI.skin.GetStyle("button_large"));
+        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
         style.wordWrap = true;
         style.alignment = TextAnchor.MiddleLeft;
         style.fixedHeight = 0;
@@ -176,7 +176,7 @@ public class TutorialGUI : GUIPanel
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        float minHeight = GUI.skin.GetStyle("button_large").fixedHeight;
+        float minHeight = GUIStyleSet.instance.buttonLarge.fixedHeight;
         Rect leftPanelRect = GUIPanel.leftPanel.panelRect;
         this.height = minHeight * (1.25f - (leftPanelRect.xMin - safeRect.xMin) / PropertiesGUI.SLIDE_HIDDEN * .25f);
         return new Rect(leftPanelRect.xMax, safeRect.yMax - this.height,

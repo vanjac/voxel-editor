@@ -37,7 +37,7 @@ public class MenuGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUIUtils.HighlightedButton("New", GUI.skin.GetStyle("button_large")))
+        if (GUIUtils.HighlightedButton("New", GUIStyleSet.instance.buttonLarge))
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
             inputDialog.prompt = "Enter new world name...";
@@ -48,9 +48,9 @@ public class MenuGUI : GUIPanel
         {
             bool selected = worldOverflowMenu != null && fileName == selectedWorld;
             GUILayout.BeginHorizontal();
-            if (GUIUtils.HighlightedButton(fileName, GUI.skin.GetStyle("button_large"), selected))
+            if (GUIUtils.HighlightedButton(fileName, GUIStyleSet.instance.buttonLarge, selected))
                 OpenMap(fileName, "editScene");
-            if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUI.skin.GetStyle("button_large"),
+            if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUIStyleSet.instance.buttonLarge,
                     selected, GUILayout.ExpandWidth(false)))
                 CreateWorldOverflowMenu(fileName);
             GUILayout.EndHorizontal();

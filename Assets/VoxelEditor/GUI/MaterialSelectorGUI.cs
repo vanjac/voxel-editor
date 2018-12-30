@@ -150,7 +150,7 @@ public class MaterialSelectorGUI : GUIPanel
             // TODO: this is ugly
             int m = System.Array.IndexOf(colorModes, COLOR_MODE_NAMES[(int)colorMode]);
             m = GUILayout.SelectionGrid(m, colorModes,
-                colorModes.Length, GUI.skin.GetStyle("button_tab"));
+                colorModes.Length, GUIStyleSet.instance.buttonTab);
             newMode = (ColorMode)System.Array.IndexOf(COLOR_MODE_NAMES, colorModes[m]);
         }
         if (newMode != colorMode)

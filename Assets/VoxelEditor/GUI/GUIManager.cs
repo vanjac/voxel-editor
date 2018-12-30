@@ -20,6 +20,16 @@ public class GUIManager : MonoBehaviour
     public float targetHeightOverride = 0; // for testing
 
     public GUIIconSet iconSet;
+    private GUIStyleSet _styleSet;
+    public GUIStyleSet styleSet
+    {
+        get
+        {
+            if (_styleSet == null)
+                _styleSet = new GUIStyleSet(GUI.skin);
+            return _styleSet;
+        }
+    }
     // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
     public Font[] alternateFonts;
 
