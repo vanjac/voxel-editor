@@ -84,6 +84,11 @@ public class MaterialSelectorGUI : GUIPanel
             tab = 1;
     }
 
+    void OnDestroy()
+    {
+        AssetManager.UnusedAssets();
+    }
+
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
@@ -264,7 +269,7 @@ public class MaterialSelectorGUI : GUIPanel
             }
         }
 
-        Resources.UnloadUnusedAssets();
+        AssetManager.UnusedAssets();
     }
 
     private void MaterialDirectorySelected(string name)

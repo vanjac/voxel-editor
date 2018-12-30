@@ -44,20 +44,9 @@ public class VoxelArray : MonoBehaviour
     protected OctreeNode rootNode;
     private List<ObjectEntity> objects = new List<ObjectEntity>();
 
-    private bool unloadUnusedAssets = false;
-
     public virtual void Awake()
     {
         rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
-    }
-
-    void Update()
-    {
-        if (unloadUnusedAssets)
-        {
-            unloadUnusedAssets = false;
-            Resources.UnloadUnusedAssets();
-        }
     }
 
     public static Vector3Int Vector3ToInt(Vector3 v)
@@ -178,7 +167,7 @@ public class VoxelArray : MonoBehaviour
         {
             Destroy(voxel.gameObject);
             RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
-            unloadUnusedAssets = true;
+            AssetManager.UnusedAssets();
         }
         else
         {

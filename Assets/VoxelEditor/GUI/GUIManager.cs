@@ -71,9 +71,4 @@ public class GUIManager : MonoBehaviour
             safeArea.height / GUIPanel.scaleFactor);
         GUIPanel.guiMatrix = Matrix4x4.Scale(new Vector3(GUIPanel.scaleFactor, GUIPanel.scaleFactor, 1));
     }
-
-    void OnDestroy()
-    {
-        instance = null;
-    }
 }

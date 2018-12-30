@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 213926858}
   - component: {fileID: 213926859}
   - component: {fileID: 213926860}
+  - component: {fileID: 213926861}
   m_Layer: 0
   m_Name: VoxelArray
   m_TagString: VoxelArray
@@ -260,6 +261,17 @@ MonoBehaviour:
   voxelArray: {fileID: 213926859}
   cameraPivot: {fileID: 661348387}
   touchListener: {fileID: 1179125982}
+--- !u!114 &213926861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 213926857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cf7497316b714f0d9d93c27616d34d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &311064049
 Prefab:
   m_ObjectHideFlags: 0
