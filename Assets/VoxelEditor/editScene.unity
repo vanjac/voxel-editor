@@ -524,7 +524,6 @@ GameObject:
   - component: {fileID: 878046150}
   - component: {fileID: 878046154}
   - component: {fileID: 878046152}
-  - component: {fileID: 878046153}
   m_Layer: 0
   m_Name: GUI
   m_TagString: Untagged
@@ -621,57 +620,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineMaterial: {fileID: 2100000, guid: 2558a126d923bbd4c9f2dfc7bbd99124, type: 2}
---- !u!114 &878046153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 878046147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f0502d5ffcf65c47918ac612478a3e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  close: {fileID: 2800000, guid: d93908596c8ffe74f929d4417b01a750, type: 3}
-  x: {fileID: 2800000, guid: 9fc69ad759eaaf243abd3a0ffff807cf, type: 3}
-  next: {fileID: 2800000, guid: 0fab2d0179bffd246a29f4cf65561bc5, type: 3}
-  create: {fileID: 2800000, guid: 8bb23b4cef324ea428433ef09ab2bc6e, type: 3}
-  applySelection: {fileID: 2800000, guid: 026b56777602f674e9f7c304b242258f, type: 3}
-  clearSelection: {fileID: 2800000, guid: 00d830bfa0543c74f89a94d7894a19d3, type: 3}
-  paint: {fileID: 2800000, guid: b716f268f2cc0c644817a72b0bf3d6ce, type: 3}
-  play: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
-  overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
-  world: {fileID: 2800000, guid: 9076f51e512308e48b81eeabfeae83c6, type: 3}
-  help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
-  helpCircle: {fileID: 2800000, guid: fe7fb42b36aa0b34fae803c54f766ab8, type: 3}
-  done: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
-  rotateLeft: {fileID: 2800000, guid: 0d62748abe8faa04c8f75c80793a80e6, type: 3}
-  rotateRight: {fileID: 2800000, guid: 1198250b3cf1af44b9d7b2a93a2cc8ec, type: 3}
-  flipHorizontal: {fileID: 2800000, guid: db8bba60595744c44b0eea385cd24bd3, type: 3}
-  flipVertical: {fileID: 2800000, guid: 7aedd43693e19f248b02170e9ff4fb29, type: 3}
-  compass: {fileID: 2800000, guid: 9df09c8922504d646866e3fcf3089863, type: 3}
-  about: {fileID: 0}
-  select: {fileID: 2800000, guid: a81e8a94ba6da284ca1a45f2694326e5, type: 3}
-  entityTag: {fileID: 2800000, guid: 1c7271f3875d8ce4d98afe91ddc3eb6e, type: 3}
-  target: {fileID: 2800000, guid: e32c2e24ffccfe246a44f3cef0fdec0a, type: 3}
-  rename: {fileID: 0}
-  copy: {fileID: 0}
-  delete: {fileID: 0}
-  share: {fileID: 0}
-  bevel: {fileID: 2800000, guid: a2196131ae0adc94db6a16177538d05f, type: 3}
-  no: {fileID: 2800000, guid: b7365fd42b2f6e1479b471b1498cca62, type: 3}
-  pause: {fileID: 0}
-  restart: {fileID: 0}
-  editor: {fileID: 0}
-  bevelIcons:
-    quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
-    half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}
-    full: {fileID: 2800000, guid: 82908e4490a514243ba4932062757b07, type: 3}
-    square: {fileID: 2800000, guid: a70f93c573269aa439bb860584fcecb4, type: 3}
-    flat: {fileID: 2800000, guid: 25f1a4d2e901df44bbf70e4f15f807f4, type: 3}
-    curve: {fileID: 2800000, guid: 180c1c225960848459d004cc95a15e2f, type: 3}
-    stair2: {fileID: 2800000, guid: 70775c82176ed8b4a979d1a3b777ce50, type: 3}
-    stair4: {fileID: 2800000, guid: 2580dd68d1990d94cbc485272a032af4, type: 3}
 --- !u!114 &878046154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,6 +654,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   targetHeightOverride: 0
+  iconSet:
+    close: {fileID: 2800000, guid: d93908596c8ffe74f929d4417b01a750, type: 3}
+    x: {fileID: 2800000, guid: 9fc69ad759eaaf243abd3a0ffff807cf, type: 3}
+    next: {fileID: 2800000, guid: 0fab2d0179bffd246a29f4cf65561bc5, type: 3}
+    create: {fileID: 2800000, guid: 8bb23b4cef324ea428433ef09ab2bc6e, type: 3}
+    applySelection: {fileID: 2800000, guid: 026b56777602f674e9f7c304b242258f, type: 3}
+    clearSelection: {fileID: 2800000, guid: 00d830bfa0543c74f89a94d7894a19d3, type: 3}
+    paint: {fileID: 2800000, guid: b716f268f2cc0c644817a72b0bf3d6ce, type: 3}
+    play: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
+    overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
+    world: {fileID: 2800000, guid: 9076f51e512308e48b81eeabfeae83c6, type: 3}
+    help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
+    helpCircle: {fileID: 2800000, guid: fe7fb42b36aa0b34fae803c54f766ab8, type: 3}
+    done: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
+    rotateLeft: {fileID: 2800000, guid: 0d62748abe8faa04c8f75c80793a80e6, type: 3}
+    rotateRight: {fileID: 2800000, guid: 1198250b3cf1af44b9d7b2a93a2cc8ec, type: 3}
+    flipHorizontal: {fileID: 2800000, guid: db8bba60595744c44b0eea385cd24bd3, type: 3}
+    flipVertical: {fileID: 2800000, guid: 7aedd43693e19f248b02170e9ff4fb29, type: 3}
+    compass: {fileID: 2800000, guid: 9df09c8922504d646866e3fcf3089863, type: 3}
+    about: {fileID: 0}
+    select: {fileID: 2800000, guid: a81e8a94ba6da284ca1a45f2694326e5, type: 3}
+    entityTag: {fileID: 2800000, guid: 1c7271f3875d8ce4d98afe91ddc3eb6e, type: 3}
+    target: {fileID: 2800000, guid: e32c2e24ffccfe246a44f3cef0fdec0a, type: 3}
+    rename: {fileID: 0}
+    copy: {fileID: 0}
+    delete: {fileID: 0}
+    share: {fileID: 0}
+    bevel: {fileID: 2800000, guid: a2196131ae0adc94db6a16177538d05f, type: 3}
+    no: {fileID: 2800000, guid: b7365fd42b2f6e1479b471b1498cca62, type: 3}
+    pause: {fileID: 0}
+    restart: {fileID: 0}
+    editor: {fileID: 0}
+    bevelIcons:
+      quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
+      half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}
+      full: {fileID: 2800000, guid: 82908e4490a514243ba4932062757b07, type: 3}
+      square: {fileID: 2800000, guid: a70f93c573269aa439bb860584fcecb4, type: 3}
+      flat: {fileID: 2800000, guid: 25f1a4d2e901df44bbf70e4f15f807f4, type: 3}
+      curve: {fileID: 2800000, guid: 180c1c225960848459d004cc95a15e2f, type: 3}
+      stair2: {fileID: 2800000, guid: 70775c82176ed8b4a979d1a3b777ce50, type: 3}
+      stair4: {fileID: 2800000, guid: 2580dd68d1990d94cbc485272a032af4, type: 3}
   alternateFonts:
   - {fileID: 12800000, guid: 7520657f27b79e144b14015465e1c7a7, type: 3}
   - {fileID: 12800000, guid: 2c71cfec8513c594195e1534fb2a6885, type: 3}

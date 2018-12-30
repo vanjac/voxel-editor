@@ -14,14 +14,18 @@ public class GUIManager : MonoBehaviour
     // 2.7" is the height of a 5.5" diagonal screen with 16:9 ratio.
     private const float MAX_PHONE_HEIGHT_INCHES = 2.7f;
 
+    public static GUIManager instance;
+
     public GUISkin guiSkin;
     public float targetHeightOverride = 0; // for testing
 
+    public GUIIconSet iconSet;
     // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
     public Font[] alternateFonts;
 
     void Start()
     {
+        instance = this;
         GUIPanel.guiSkin = guiSkin;
         if (Screen.dpi <= 0)
         {
@@ -56,5 +60,10 @@ public class GUIManager : MonoBehaviour
             safeArea.width / GUIPanel.scaleFactor,
             safeArea.height / GUIPanel.scaleFactor);
         GUIPanel.guiMatrix = Matrix4x4.Scale(new Vector3(GUIPanel.scaleFactor, GUIPanel.scaleFactor, 1));
+    }
+
+    void OnDestroy()
+    {
+        instance = null;
     }
 }

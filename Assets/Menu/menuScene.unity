@@ -126,7 +126,6 @@ GameObject:
   - component: {fileID: 1450445159}
   - component: {fileID: 1450445163}
   - component: {fileID: 1450445160}
-  - component: {fileID: 1450445164}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -234,57 +233,6 @@ MonoBehaviour:
     width: 0
     height: 0
   creditsText: {fileID: 4900000, guid: e682aff256c26294b9005b4e62ff561d, type: 3}
---- !u!114 &1450445164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1450445158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f0502d5ffcf65c47918ac612478a3e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  close: {fileID: 0}
-  x: {fileID: 0}
-  next: {fileID: 0}
-  create: {fileID: 0}
-  applySelection: {fileID: 0}
-  clearSelection: {fileID: 0}
-  paint: {fileID: 0}
-  play: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
-  overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
-  world: {fileID: 0}
-  help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
-  helpCircle: {fileID: 0}
-  done: {fileID: 0}
-  rotateLeft: {fileID: 0}
-  rotateRight: {fileID: 0}
-  flipHorizontal: {fileID: 0}
-  flipVertical: {fileID: 0}
-  compass: {fileID: 0}
-  about: {fileID: 2800000, guid: c51491f24aa308c478dce23ffe9b3f15, type: 3}
-  select: {fileID: 0}
-  entityTag: {fileID: 0}
-  target: {fileID: 0}
-  rename: {fileID: 2800000, guid: 655f20fe0dcfa1546a197b2c5b019e78, type: 3}
-  copy: {fileID: 2800000, guid: ef8570bda8643ab4e84246dbd0191475, type: 3}
-  delete: {fileID: 2800000, guid: a91481f4c06fdb946817fd08f059dd99, type: 3}
-  share: {fileID: 2800000, guid: a85f6c8cea88810459e1e20c4380b2b6, type: 3}
-  bevel: {fileID: 0}
-  no: {fileID: 0}
-  pause: {fileID: 0}
-  restart: {fileID: 0}
-  editor: {fileID: 0}
-  bevelIcons:
-    quarter: {fileID: 0}
-    half: {fileID: 0}
-    full: {fileID: 0}
-    square: {fileID: 0}
-    flat: {fileID: 0}
-    curve: {fileID: 0}
-    stair2: {fileID: 0}
-    stair4: {fileID: 0}
 --- !u!114 &1450445165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,6 +246,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: c13cd2dd2065c804b9826058c6c0a2e5, type: 2}
   targetHeightOverride: 0
+  iconSet:
+    close: {fileID: 0}
+    x: {fileID: 0}
+    next: {fileID: 0}
+    create: {fileID: 0}
+    applySelection: {fileID: 0}
+    clearSelection: {fileID: 0}
+    paint: {fileID: 0}
+    play: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
+    overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
+    world: {fileID: 0}
+    help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
+    helpCircle: {fileID: 0}
+    done: {fileID: 0}
+    rotateLeft: {fileID: 0}
+    rotateRight: {fileID: 0}
+    flipHorizontal: {fileID: 0}
+    flipVertical: {fileID: 0}
+    compass: {fileID: 0}
+    about: {fileID: 2800000, guid: c51491f24aa308c478dce23ffe9b3f15, type: 3}
+    select: {fileID: 0}
+    entityTag: {fileID: 0}
+    target: {fileID: 0}
+    rename: {fileID: 2800000, guid: 655f20fe0dcfa1546a197b2c5b019e78, type: 3}
+    copy: {fileID: 2800000, guid: ef8570bda8643ab4e84246dbd0191475, type: 3}
+    delete: {fileID: 2800000, guid: a91481f4c06fdb946817fd08f059dd99, type: 3}
+    share: {fileID: 2800000, guid: a85f6c8cea88810459e1e20c4380b2b6, type: 3}
+    bevel: {fileID: 0}
+    no: {fileID: 0}
+    pause: {fileID: 0}
+    restart: {fileID: 0}
+    editor: {fileID: 0}
+    bevelIcons:
+      quarter: {fileID: 0}
+      half: {fileID: 0}
+      full: {fileID: 0}
+      square: {fileID: 0}
+      flat: {fileID: 0}
+      curve: {fileID: 0}
+      stair2: {fileID: 0}
+      stair4: {fileID: 0}
   alternateFonts:
   - {fileID: 12800000, guid: 7520657f27b79e144b14015465e1c7a7, type: 3}
   - {fileID: 12800000, guid: 2c71cfec8513c594195e1534fb2a6885, type: 3}

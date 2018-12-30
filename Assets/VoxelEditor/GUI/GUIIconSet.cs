@@ -2,9 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GUIIconSet : MonoBehaviour
+[System.Serializable]
+public struct GUIIconSet
 {
-    public static GUIIconSet instance;
+    public static GUIIconSet instance
+    {
+        get
+        {
+            if (GUIManager.instance == null)
+                return new GUIIconSet();
+            return GUIManager.instance.iconSet;
+        }
+    }
 
     public Texture close, x, next, create, applySelection, clearSelection, paint, play, overflow, world, help;
     public Texture helpCircle, done, rotateLeft, rotateRight, flipHorizontal, flipVertical, compass, about, select;
@@ -17,9 +26,4 @@ public class GUIIconSet : MonoBehaviour
         public Texture square, flat, curve, stair2, stair4;
     }
     public BevelIconSet bevelIcons;
-
-    public void Start()
-    {
-        instance = this;
-    }
 }
