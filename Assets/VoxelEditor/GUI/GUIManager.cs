@@ -15,6 +15,15 @@ public class GUIManager : MonoBehaviour
     private const float MAX_PHONE_HEIGHT_INCHES = 2.7f;
 
     public static GUIManager instance;
+    public static GameObject guiGameObject
+    {
+        get
+        {
+            if (instance == null)
+                return null;
+            return instance.gameObject;
+        }
+    }
 
     public GUISkin guiSkin;
     public float targetHeightOverride = 0; // for testing

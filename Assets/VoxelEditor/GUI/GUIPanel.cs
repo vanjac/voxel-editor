@@ -16,15 +16,6 @@ public abstract class GUIPanel : MonoBehaviour
 
     private static List<GUIPanel> openPanels = new List<GUIPanel>();
 
-    public static GameObject guiGameObject
-    {
-        get
-        {
-            // TODO: don't use GameObject.Find
-            return GameObject.Find("GUI");
-        }
-    }
-
     public static GUIPanel leftPanel, topPanel;
 
     public string title = "";

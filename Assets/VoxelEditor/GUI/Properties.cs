@@ -129,7 +129,7 @@ public class PropertyGUIs
         GUILayout.FlexibleSpace();
         if (GUILayout.Button(" " + tagString + " ", tagFieldStyle.Value, GUILayout.ExpandWidth(false)))
         {
-            TagPickerGUI picker = GUIPanel.guiGameObject.AddComponent<TagPickerGUI>();
+            TagPickerGUI picker = GUIManager.guiGameObject.AddComponent<TagPickerGUI>();
             picker.title = "Change " + property.name;
             picker.handler = (byte tag) =>
             {
@@ -181,7 +181,7 @@ public class PropertyGUIs
         GUILayout.Label(GUIIconSet.instance.target, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
         if (GUILayout.Button("<i>" + text + "</i>", GUILayout.ExpandWidth(false)))
         {
-            BehaviorTargetPicker(GUIPanel.guiGameObject, VoxelArrayEditor.instance,
+            BehaviorTargetPicker(GUIManager.guiGameObject, VoxelArrayEditor.instance,
                 EntityReferencePropertyManager.CurrentEntity(), newValue =>
                 {
                     property.value = newValue;
@@ -245,7 +245,7 @@ public class PropertyGUIs
         AlignedLabel(property);
         if (GUILayout.Button(valueString, GUI.skin.textField))
         {
-            EntityPickerGUI picker = GUIPanel.guiGameObject.AddComponent<EntityPickerGUI>();
+            EntityPickerGUI picker = GUIManager.guiGameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = VoxelArrayEditor.instance;
             picker.allowNone = false;
             picker.allowMultiple = false;
@@ -288,7 +288,7 @@ public class PropertyGUIs
         AlignedLabel(property);
         if (GUILayout.Button(filterString, GUI.skin.textField))
         {
-            FilterGUI filterGUI = GUIPanel.guiGameObject.AddComponent<FilterGUI>();
+            FilterGUI filterGUI = GUIManager.guiGameObject.AddComponent<FilterGUI>();
             filterGUI.title = property.name + " by...";
             filterGUI.voxelArray = VoxelArrayEditor.instance;
             filterGUI.handler = (ActivatedSensor.Filter newFilter) =>
@@ -319,7 +319,7 @@ public class PropertyGUIs
             if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
             {
                 MaterialSelectorGUI materialSelector
-                    = GUIPanel.guiGameObject.AddComponent<MaterialSelectorGUI>();
+                    = GUIManager.guiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = "Change " + property.name;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
@@ -354,7 +354,7 @@ public class PropertyGUIs
         GUI.color = baseColor * valueColor;
         if (GUILayout.Button(property.name))
         {
-            ColorPickerGUI colorPicker = GUIPanel.guiGameObject.AddComponent<ColorPickerGUI>();
+            ColorPickerGUI colorPicker = GUIManager.guiGameObject.AddComponent<ColorPickerGUI>();
             colorPicker.title = property.name;
             colorPicker.SetColor(valueColor);
             colorPicker.handler = (Color color) =>
@@ -382,7 +382,7 @@ public class PropertyGUIs
         AlignedLabel(property);
         if (GUILayout.Button(targetString, GUI.skin.textField))
         {
-            TargetGUI targetGUI = GUIPanel.guiGameObject.AddComponent<TargetGUI>();
+            TargetGUI targetGUI = GUIManager.guiGameObject.AddComponent<TargetGUI>();
             targetGUI.title = property.name;
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.handler = (Target newTarget) =>
@@ -407,7 +407,7 @@ public class PropertyGUIs
         AlignedLabel(property);
         if (GUILayout.Button(targetString, GUI.skin.textField))
         {
-            TargetGUI targetGUI = GUIPanel.guiGameObject.AddComponent<TargetGUI>();
+            TargetGUI targetGUI = GUIManager.guiGameObject.AddComponent<TargetGUI>();
             targetGUI.title = property.name;
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.allowNullTarget = true;
