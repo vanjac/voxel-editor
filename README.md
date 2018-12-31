@@ -18,7 +18,7 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 ## Using the app
 
-You can download N-Space for Android on [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel).
+You can download N-Space on [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel) or the [iOS App Store](https://itunes.apple.com/us/app/n-space/id1448016814).
 
 The app starts on a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world's name to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as JSON files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
 
@@ -41,7 +41,7 @@ The app has four scenes:
 
 These notes are mostly for me, but you can read them too.
 
-- Install latest LTS release of Unity 2017, with build tools for Android.
+- Install latest LTS release of Unity 2017, with build tools for Android/iOS.
 - Install Blender
 - Clone repo. **Don't open in Unity yet!!**
 - Optional: Download/copy textures from Poliigon, FreePBR, and Genetica (see above)
@@ -60,7 +60,7 @@ These notes are mostly for me, but you can read them too.
 
 See [credits.txt](https://github.com/vanjac/voxel-editor/blob/master/Assets/Menu/credits.txt) for sources of some assets.
 
-## Contact me
+## Contact me:
 
 Jacob van't Hoog
 
