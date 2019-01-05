@@ -85,7 +85,7 @@ public class VoxelArray : MonoBehaviour
         GameObject voxelObject = Instantiate(voxelPrefab);
         voxelObject.transform.position = position;
         voxelObject.transform.parent = transform;
-        voxelObject.name = "Voxel at " + position;
+        voxelObject.name = "v " + position;
         return voxelObject.GetComponent<Voxel>();
     }
 

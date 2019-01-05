@@ -601,7 +601,7 @@ public class Voxel : MonoBehaviour
 
         // according to Mesh documentation, vertices must be assigned before triangles
         Mesh mesh = GetComponent<MeshFilter>().mesh;
-        mesh.name = "Voxel Mesh";
+        mesh.name = "v";
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.uv = uvs;
@@ -677,15 +677,15 @@ public class Voxel : MonoBehaviour
         }
         else
         {
-            if (substance == null && !IsEmpty()) // a wall
-            {
-                renderer.enabled = true;
-                theCollider.isTrigger = false;
-            }
-            else if (substance != null)
+            if (substance != null)
             {
                 renderer.enabled = false;
                 theCollider.isTrigger = true;
+            }
+            else if (!IsEmpty()) // a wall
+            {
+                renderer.enabled = true;
+                theCollider.isTrigger = false;
             }
             else // probably an object
             {
