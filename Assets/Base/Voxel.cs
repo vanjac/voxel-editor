@@ -384,12 +384,6 @@ public class Voxel : MonoBehaviour
     }
 
 
-    public static bool InEditor()
-    {
-        // TODO: better way to check this?
-        return SceneManager.GetActiveScene().name == "editScene";
-    }
-
     // see "Voxel Diagram.skp" for a diagram of face/edge numbers
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
     // Edges: 0-3: x, 4-7: y, 8-11: z
@@ -562,7 +556,7 @@ public class Voxel : MonoBehaviour
 
     public void UpdateVoxel()
     {
-        bool inEditor = InEditor();
+        bool inEditor = VoxelArrayEditor.instance != null;
 
         Material coloredHighlightMaterial = null;
         if (substance != null && substance.highlight != Color.clear)
