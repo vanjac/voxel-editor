@@ -2,14 +2,14 @@
 using System.IO;
 using System.IO.Compression;
 using UnityEngine;
-using SimpleJSON;
+using MsgPack;
 using System.Xml;
 using System.Xml.Serialization;
 
 public class MapFileWriter
 {
-    public const int VERSION = 7;
-    private const int FILE_MIN_READER_VERSION = 7;
+    public const int VERSION = 8;
+    private const int FILE_MIN_READER_VERSION = 8;
 
     private string fileName;
 
@@ -26,69 +26,81 @@ public class MapFileWriter
             return;
         }
 
-        JSONObject root = new JSONObject();
-
-        root["writerVersion"] = VERSION;
-        root["minReaderVersion"] = FILE_MIN_READER_VERSION;
-
-        JSONObject camera = new JSONObject();
-        camera["pan"] = WriteVector3(cameraPivot.position);
-        camera["rotate"] = WriteQuaternion(cameraPivot.rotation);
-        camera["scale"] = cameraPivot.localScale.z;
-        root["camera"] = camera;
-
-        root["world"] = WriteWorld(voxelArray);
+        var world = WriteWorld(cameraPivot, voxelArray);
+        var worldObject = new MessagePackObject(world);
 
         string filePath = WorldFiles.GetFilePath(fileName);
         using (FileStream fileStream = File.Create(filePath))
         {
-            using (var sw = new StreamWriter(fileStream))
-            {
-                sw.Write(root.ToString());
-                sw.Flush();
-            }
+            var packer = Packer.Create(fileStream, PackerCompatibilityOptions.None);
+            worldObject.PackToMessage(packer, null);
         }
     }
 
-    private JSONObject WriteWorld(VoxelArray voxelArray)
+    private MessagePackObjectDictionary WriteCamera(Transform cameraPivot)
     {
-        JSONObject world = new JSONObject();
+        var camera = new MessagePackObjectDictionary();
+        camera[FileKeys.CAMERA_PAN] = WriteVector3(cameraPivot.position);
+        camera[FileKeys.CAMERA_ROTATE] = WriteQuaternion(cameraPivot.rotation);
+        camera[FileKeys.CAMERA_SCALE] = cameraPivot.localScale.z;
+        return camera;
+    }
 
-        JSONArray materialsArray = new JSONArray();
+    private MessagePackObjectDictionary WriteWorld(Transform cameraPivot, VoxelArray voxelArray)
+    {
+        var world = new MessagePackObjectDictionary();
+
+        world[FileKeys.WORLD_WRITER_VERSION] = VERSION;
+        world[FileKeys.WORLD_MIN_READER_VERSION] = FILE_MIN_READER_VERSION;
+
+        world[FileKeys.WORLD_CAMERA] = new MessagePackObject(WriteCamera(cameraPivot));
+
+        var materialsList = new List<MessagePackObject>();
         var foundMaterials = new List<string>();
-        JSONArray substancesArray = new JSONArray();
+        var substancesList = new List<MessagePackObject>();
         var foundSubstances = new List<Substance>();
 
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
             foreach (VoxelFace face in voxel.faces)
             {
-                AddMaterial(face.material, foundMaterials, materialsArray);
-                AddMaterial(face.overlay, foundMaterials, materialsArray);
+                AddMaterial(face.material, foundMaterials, materialsList);
+                AddMaterial(face.overlay, foundMaterials, materialsList);
             }
             if (voxel.substance != null && !foundSubstances.Contains(voxel.substance))
             {
                 foundSubstances.Add(voxel.substance);
-                substancesArray[-1] = WriteEntity(voxel.substance, false);
+                substancesList.Add(new MessagePackObject(WriteEntity(voxel.substance, false)));
             }
         }
 
-        world["materials"] = materialsArray;
+        world[FileKeys.WORLD_MATERIALS] = new MessagePackObject(materialsList);
         if (foundSubstances.Count != 0)
-            world["substances"] = substancesArray;
-        world["global"] = WritePropertiesObject(voxelArray.world, false);
-        world["map"] = WriteMap(voxelArray, foundMaterials, foundSubstances);
+            world[FileKeys.WORLD_SUBSTANCES] = new MessagePackObject(substancesList);
+        world[FileKeys.WORLD_GLOBAL] = new MessagePackObject(WritePropertiesObject(voxelArray.world, false));
 
-        JSONArray objectsArray = new JSONArray();
+        var voxelsList = new List<MessagePackObject>();
+        foreach (Voxel voxel in voxelArray.IterateVoxels())
+        {
+            if (voxel.CanBeDeleted())
+            {
+                Debug.Log("Empty voxel found!");
+                continue;
+            }
+            voxelsList.Add(WriteVoxel(voxel, foundMaterials, foundSubstances));
+        }
+        world[FileKeys.WORLD_VOXELS] = new MessagePackObject(voxelsList);
+
+        var objectsList = new List<MessagePackObject>();
         foreach (ObjectEntity obj in voxelArray.IterateObjects())
-            objectsArray[-1] = WriteObjectEntity(obj, true);
-        if (objectsArray.Count != 0)
-            world["objects"] = objectsArray;
+            objectsList.Add(new MessagePackObject(WriteObjectEntity(obj, true)));
+        if (objectsList.Count != 0)
+            world[FileKeys.WORLD_OBJECTS] = new MessagePackObject(objectsList);
 
         return world;
     }
 
-    void AddMaterial(Material material, List<string> foundMaterials, JSONArray materialsArray)
+    void AddMaterial(Material material, List<string> foundMaterials, List<MessagePackObject> materialsList)
     {
         if (material == null)
             return;
@@ -96,66 +108,66 @@ public class MapFileWriter
         if (foundMaterials.Contains(name))
             return;
         foundMaterials.Add(name);
-        materialsArray[-1] = WriteMaterial(material);
+        materialsList.Add(new MessagePackObject(WriteMaterial(material)));
     }
 
-    private JSONObject WriteMaterial(Material material)
+    private MessagePackObjectDictionary WriteMaterial(Material material)
     {
-        JSONObject materialObject = new JSONObject();
+        var materialDict = new MessagePackObjectDictionary();
         if (ResourcesDirectory.IsCustomMaterial(material))
         {
-            materialObject["mode"] = ResourcesDirectory.GetCustomMaterialColorMode(material).ToString();
-            materialObject["color"] = WriteColor(material.color);
-            materialObject["alpha"] = ResourcesDirectory.GetCustomMaterialIsTransparent(material);
+            materialDict[FileKeys.MATERIAL_MODE] = ResourcesDirectory.GetCustomMaterialColorMode(material).ToString();
+            materialDict[FileKeys.MATERIAL_COLOR] = WriteColor(material.color);
+            materialDict[FileKeys.MATERIAL_ALPHA] = ResourcesDirectory.GetCustomMaterialIsTransparent(material);
         }
         else
         {
-            materialObject["name"] = material.name;
+            materialDict[FileKeys.MATERIAL_NAME] = material.name;
         }
-        return materialObject;
+        return materialDict;
     }
 
-    private JSONObject WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
+    private MessagePackObjectDictionary WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
     {
-        JSONObject entityObject = WriteEntity(objectEntity, includeName);
-        entityObject["at"] = WriteIntVector3(objectEntity.position);
-        entityObject["rotate"] = objectEntity.rotation;
+        var entityDict = WriteEntity(objectEntity, includeName);
+        entityDict[FileKeys.OBJECT_POSITION] = WriteIntVector3(objectEntity.position);
+        entityDict[FileKeys.OBJECT_ROTATION] = objectEntity.rotation;
 
-        return entityObject;
+        return entityDict;
     }
 
-    private JSONObject WriteEntity(Entity entity, bool includeName)
+    private MessagePackObjectDictionary WriteEntity(Entity entity, bool includeName)
     {
-        JSONObject entityObject = WritePropertiesObject(entity, includeName);
+        var entityDict = WritePropertiesObject(entity, includeName);
 
         if (entity.sensor != null)
-            entityObject["sensor"] = WritePropertiesObject(entity.sensor, true);
+            entityDict[FileKeys.ENTITY_SENSOR] = new MessagePackObject(WritePropertiesObject(entity.sensor, true));
 
         if (entity.behaviors.Count != 0)
         {
-            JSONArray behaviorsArray = new JSONArray();
+            var behaviorsList = new List<MessagePackObject>();
             foreach (EntityBehavior behavior in entity.behaviors)
             {
-                JSONObject behaviorObject = WritePropertiesObject(behavior, true);
-                behaviorsArray[-1] = behaviorObject;
+                var behaviorDict = WritePropertiesObject(behavior, true);
+                behaviorsList.Add(new MessagePackObject(behaviorDict));
             }
-            entityObject["behaviors"] = behaviorsArray;
+            entityDict[FileKeys.ENTITY_BEHAVIORS] = new MessagePackObject(behaviorsList);
         }
 
         if (entity.guid != System.Guid.Empty)
-            entityObject["id"] = entity.guid.ToString(); // can be referenced by EntityReference properties
+            entityDict[FileKeys.ENTITY_ID] = entity.guid.ToString(); // can be referenced by EntityReference properties
 
-        return entityObject;
+        return entityDict;
     }
 
-    private JSONObject WritePropertiesObject(PropertiesObject obj, bool includeName)
+    private MessagePackObjectDictionary WritePropertiesObject(PropertiesObject obj, bool includeName)
     {
-        JSONObject propsObject = new JSONObject();
+        var propsDict = new MessagePackObjectDictionary();
 
         if (includeName)
-            propsObject["name"] = obj.ObjectType().fullName;
+            propsDict[FileKeys.PROPOBJ_NAME] = obj.ObjectType().fullName;
 
-        JSONArray propertiesArray = new JSONArray();
+        var propertiesList = new List<MessagePackObject>();
         foreach (Property prop in obj.Properties())
         {
             object value = prop.value;
@@ -164,13 +176,13 @@ public class MapFileWriter
                 Debug.Log(prop.name + " is null!");
                 continue;
             }
-            JSONArray propArray = new JSONArray();
-            propArray[0] = prop.name;
+            var propList = new List<MessagePackObject>();
+            propList.Add(prop.name);
             var valueType = value.GetType();
 
             if (valueType == typeof(Material))
             {
-                propArray[1] = WriteMaterial((Material)value);
+                propList.Add(new MessagePackObject(WriteMaterial((Material)value)));
             }
             else // not a Material
             {
@@ -196,126 +208,122 @@ public class MapFileWriter
                     xmlSerializer.Serialize(xmlWriter, value, ns);
                     valueString = textWriter.ToString();
                 }
-                propArray[1] = valueString;
+                propList.Add(valueString);
             }
 
             if (prop.explicitType)
-                propArray[2] = value.GetType().FullName;
-            propertiesArray[-1] = propArray;
+                propList.Add(value.GetType().FullName);
+            propertiesList.Add(new MessagePackObject(propList));
         }
-        propsObject["properties"] = propertiesArray;
+        propsDict[FileKeys.PROPOBJ_PROPERTIES] = new MessagePackObject(propertiesList);
 
-        return propsObject;
+        return propsDict;
     }
 
-    private JSONObject WriteMap(VoxelArray voxelArray, List<string> materials, List<Substance> substances)
+    private MessagePackObject WriteVoxel(Voxel voxel, List<string> materials, List<Substance> substances)
     {
-        JSONObject map = new JSONObject();
-        JSONArray voxels = new JSONArray();
-        foreach (Voxel voxel in voxelArray.IterateVoxels())
-        {
-            if (voxel.CanBeDeleted())
-            {
-                Debug.Log("Empty voxel found!");
-                voxelArray.VoxelModified(voxel);
-                continue;
-            }
-            voxels[-1] = WriteVoxel(voxel, materials, substances);
-        }
-        map["voxels"] = voxels;
-        return map;
-    }
+        var voxelList = new List<MessagePackObject>();
+        voxelList.Add(WriteIntVector3(voxel.transform.position));
 
-    private JSONObject WriteVoxel(Voxel voxel, List<string> materials, List<Substance> substances)
-    {
-        JSONObject voxelObject = new JSONObject();
-        voxelObject["at"] = WriteIntVector3(voxel.transform.position);
-
-        JSONArray faces = new JSONArray();
+        var facesList = new List<MessagePackObject>();
         for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
         {
             VoxelFace face = voxel.faces[faceI];
             if (face.IsEmpty())
                 continue;
-            faces[-1] = WriteFace(face, faceI, materials);
+            facesList.Add(WriteFace(face, faceI, materials));
         }
-        voxelObject["f"] = faces;
+        voxelList.Add(new MessagePackObject(facesList));
 
-        JSONArray edges = new JSONArray();
+        if (voxel.substance != null)
+            voxelList.Add(substances.IndexOf(voxel.substance));
+        else
+            voxelList.Add(-1);
+
+        var edgesList = new List<MessagePackObject>();
         for (int edgeI = 0; edgeI < voxel.edges.Length; edgeI++)
         {
             VoxelEdge edge = voxel.edges[edgeI];
             if (!edge.hasBevel)
                 continue;
-            edges[-1] = WriteEdge(edge, edgeI);
+            edgesList.Add(WriteEdge(edge, edgeI));
         }
-        if (edges.Count != 0)
-            voxelObject["e"] = edges;
+        voxelList.Add(new MessagePackObject(edgesList));
 
-        if (voxel.substance != null)
-            voxelObject["s"].AsInt = substances.IndexOf(voxel.substance);
-
-        return voxelObject;
+        StripDataList(voxelList,
+            new bool[] { false, facesList.Count == 0, voxel.substance == null, edgesList.Count == 0 });
+        return new MessagePackObject(voxelList);
     }
 
-    private JSONObject WriteFace(VoxelFace face, int faceI, List<string> materials)
+    private MessagePackObject WriteFace(VoxelFace face, int faceI, List<string> materials)
     {
-        JSONObject faceObject = new JSONObject();
-        faceObject["i"].AsInt = faceI;
+        var faceList = new List<MessagePackObject>();
+        faceList.Add(faceI);
         if (face.material != null)
-        {
-            faceObject["mat"].AsInt = materials.IndexOf(face.material.name);
-        }
+            faceList.Add(materials.IndexOf(face.material.name));
+        else
+            faceList.Add(-1);
         if (face.overlay != null)
-        {
-            faceObject["over"].AsInt = materials.IndexOf(face.overlay.name);
-        }
-        if (face.orientation != 0)
-        {
-            faceObject["orient"].AsInt = face.orientation;
-        }
-        return faceObject;
+            faceList.Add(materials.IndexOf(face.overlay.name));
+        else
+            faceList.Add(-1);
+        faceList.Add(face.orientation);
+
+        StripDataList(faceList, new bool[] {
+            false, face.material == null, face.overlay == null, face.orientation == 0 });
+        return new MessagePackObject(faceList);
     }
 
-    private JSONObject WriteEdge(VoxelEdge edge, int edgeI)
+    private MessagePackObject WriteEdge(VoxelEdge edge, int edgeI)
     {
-        JSONObject edgeObject = new JSONObject();
-        edgeObject["i"].AsInt = edgeI;
-        edgeObject["bevel"].AsInt = edge.bevel;
-        return edgeObject;
+        var edgeList = new List<MessagePackObject>();
+        edgeList.Add(edgeI);
+        edgeList.Add(edge.bevel);
+        return new MessagePackObject(edgeList);
     }
 
-    private JSONArray WriteVector3(Vector3 v)
+    // strip null values from the end of the list
+    private void StripDataList(List<MessagePackObject> list, bool[] nullValues)
     {
-        JSONArray a = new JSONArray();
-        a[0] = v.x;
-        a[1] = v.y;
-        a[2] = v.z;
-        return a;
+        for (int i = nullValues.Length - 1; i >= 0; i--)
+        {
+            if (!nullValues[i])
+                return;
+            list.RemoveAt(i);
+        }
     }
 
-    private JSONArray WriteQuaternion(Quaternion v)
+    private MessagePackObject WriteVector3(Vector3 v)
+    {
+        var l = new List<MessagePackObject>();
+        l.Add(v.x);
+        l.Add(v.y);
+        l.Add(v.z);
+        return new MessagePackObject(l);
+    }
+
+    private MessagePackObject WriteQuaternion(Quaternion v)
     {
         return WriteVector3(v.eulerAngles);
     }
 
-    private JSONArray WriteIntVector3(Vector3 v)
+    private MessagePackObject WriteIntVector3(Vector3 v)
     {
-        JSONArray a = new JSONArray();
-        a[0] = Mathf.RoundToInt(v.x);
-        a[1] = Mathf.RoundToInt(v.y);
-        a[2] = Mathf.RoundToInt(v.z);
-        return a;
+        var l = new List<MessagePackObject>();
+        l.Add((int)(Mathf.RoundToInt(v.x)));
+        l.Add((int)(Mathf.RoundToInt(v.y)));
+        l.Add((int)(Mathf.RoundToInt(v.z)));
+        return new MessagePackObject(l);
     }
 
-    private JSONArray WriteColor(Color c)
+    private MessagePackObject WriteColor(Color c)
     {
-        JSONArray a = new JSONArray();
-        a[0] = c.r;
-        a[1] = c.g;
-        a[2] = c.b;
+        var l = new List<MessagePackObject>();
+        l.Add(c.r);
+        l.Add(c.g);
+        l.Add(c.b);
         if (c.a != 1)
-            a[3] = c.a;
-        return a;
+            l.Add(c.a);
+        return new MessagePackObject(l);
     }
 }
