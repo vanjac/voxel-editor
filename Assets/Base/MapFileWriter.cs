@@ -37,15 +37,6 @@ public class MapFileWriter
         }
     }
 
-    private MessagePackObjectDictionary WriteCamera(Transform cameraPivot)
-    {
-        var camera = new MessagePackObjectDictionary();
-        camera[FileKeys.CAMERA_PAN] = WriteVector3(cameraPivot.position);
-        camera[FileKeys.CAMERA_ROTATE] = WriteQuaternion(cameraPivot.rotation);
-        camera[FileKeys.CAMERA_SCALE] = cameraPivot.localScale.z;
-        return camera;
-    }
-
     private MessagePackObjectDictionary WriteWorld(Transform cameraPivot, VoxelArray voxelArray)
     {
         var world = new MessagePackObjectDictionary();
@@ -98,6 +89,15 @@ public class MapFileWriter
             world[FileKeys.WORLD_OBJECTS] = new MessagePackObject(objectsList);
 
         return world;
+    }
+
+    private MessagePackObjectDictionary WriteCamera(Transform cameraPivot)
+    {
+        var camera = new MessagePackObjectDictionary();
+        camera[FileKeys.CAMERA_PAN] = WriteVector3(cameraPivot.position);
+        camera[FileKeys.CAMERA_ROTATE] = WriteQuaternion(cameraPivot.rotation);
+        camera[FileKeys.CAMERA_SCALE] = cameraPivot.localScale.z;
+        return camera;
     }
 
     void AddMaterial(Material material, List<string> foundMaterials, List<MessagePackObject> materialsList)

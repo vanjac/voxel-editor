@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using UnityEngine;
-using SimpleJSON;
+using MsgPack;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -17,6 +17,8 @@ public class MapReadException : Exception
 public class MapFileReader
 {
     public const int VERSION = MapFileWriter.VERSION;
+
+    private const string ERROR_INVALID_FILE = "Invalid world file";
 
     private string fileName;
     private int fileWriterVersion;
@@ -40,54 +42,47 @@ public class MapFileReader
             missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
             missingMaterial.color = Color.magenta;
         }
-        string jsonString;
 
+        MessagePackObject world;
+
+        string filePath = WorldFiles.GetFilePath(fileName);
         try
         {
-            string filePath = WorldFiles.GetFilePath(fileName);
             using (FileStream fileStream = File.Open(filePath, FileMode.Open))
             {
-                using (var sr = new StreamReader(fileStream))
-                {
-                    jsonString = sr.ReadToEnd();
-                }
+                world = Unpacking.UnpackObject(fileStream);
             }
+        }
+        catch (UnpackException e)
+        {
+            throw new MapReadException(ERROR_INVALID_FILE, e);
+        }
+        catch (MessageTypeException e)
+        {
+            throw new MapReadException(ERROR_INVALID_FILE, e);
         }
         catch (Exception e)
         {
             throw new MapReadException("An error occurred while reading the file", e);
         }
+        if (!world.IsDictionary)
+            throw new MapReadException(ERROR_INVALID_FILE);
+        MessagePackObjectDictionary worldDict = world.AsDictionary();
+        if (!worldDict.ContainsKey(FileKeys.WORLD_WRITER_VERSION)
+            || !worldDict.ContainsKey(FileKeys.WORLD_MIN_READER_VERSION))
+            throw new MapReadException(ERROR_INVALID_FILE);
 
-        JSONNode rootNode;
-        try
-        {
-            rootNode = JSON.Parse(jsonString);
-        }
-        catch (Exception e)
-        {
-            throw new MapReadException("Invalid world file", e);
-        }
-        if (rootNode == null)
-            throw new MapReadException("Invalid world file");
-        JSONObject root = rootNode.AsObject;
-        if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
-        {
-            throw new MapReadException("Invalid world file");
-        }
-        if (root["minReaderVersion"].AsInt > VERSION)
+        if (worldDict[FileKeys.WORLD_MIN_READER_VERSION].AsInt32() > VERSION)
         {
             throw new MapReadException("This world file requires a newer version of the app");
         }
-        fileWriterVersion = root["writerVersion"].AsInt;
+        fileWriterVersion = worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32();
 
         EntityReference.ResetEntityIds();
 
         try
         {
-            if (editor && cameraPivot != null && root["camera"] != null)
-                ReadCamera(root["camera"].AsObject, cameraPivot);
-            if (root["world"] != null)
-                ReadWorld(root["world"].AsObject, voxelArray);
+            ReadWorld(worldDict, cameraPivot, voxelArray);
         }
         catch (MapReadException e)
         {
@@ -102,64 +97,44 @@ public class MapFileReader
         return warnings;
     }
 
-    private void ReadCamera(JSONObject camera, Transform cameraPivot)
+    private void ReadWorld(MessagePackObjectDictionary world, Transform cameraPivot, VoxelArray voxelArray)
     {
-        if (camera["pan"] != null)
-            cameraPivot.position = ReadVector3(camera["pan"].AsArray);
-        if (camera["rotate"] != null)
-            cameraPivot.rotation = ReadQuaternion(camera["rotate"].AsArray);
-        if (camera["scale"] != null)
-        {
-            float scale = camera["scale"].AsFloat;
-            cameraPivot.localScale = new Vector3(scale, scale, scale);
-        }
-    }
+        if (editor && cameraPivot != null && world.ContainsKey(FileKeys.WORLD_CAMERA))
+            ReadCamera(world[FileKeys.WORLD_CAMERA].AsDictionary(), cameraPivot);
 
-    private void ReadWorld(JSONObject world, VoxelArray voxelArray)
-    {
         var materials = new List<Material>();
-        if (world["materials"] != null)
+        if (world.ContainsKey(FileKeys.WORLD_MATERIALS))
         {
-            foreach (JSONNode matNode in world["materials"].AsArray)
-            {
-                JSONObject matObject = matNode.AsObject;
-                materials.Add(ReadMaterial(matObject));
-            }
+            foreach (var matObj in world[FileKeys.WORLD_MATERIALS].AsList())
+                materials.Add(ReadMaterial(matObj.AsDictionary()));
         }
 
         var substances = new List<Substance>();
-        if (world["substances"] != null)
+        if (world.ContainsKey(FileKeys.WORLD_SUBSTANCES))
         {
-            foreach (JSONNode subNode in world["substances"].AsArray)
+            foreach (var subObj in world[FileKeys.WORLD_SUBSTANCES].AsList())
             {
                 Substance s = new Substance();
-                ReadEntity(subNode.AsObject, s);
+                ReadEntity(subObj.AsDictionary(), s);
                 substances.Add(s);
             }
         }
 
-        if (world["global"] != null)
-            ReadPropertiesObject(world["global"].AsObject, voxelArray.world);
-        if (fileWriterVersion <= 2 && world["sky"] != null)
+        if (world.ContainsKey(FileKeys.WORLD_GLOBAL))
+            ReadPropertiesObject(world[FileKeys.WORLD_GLOBAL].AsDictionary(), voxelArray.world);
+
+        if (world.ContainsKey(FileKeys.WORLD_VOXELS))
         {
-            Material sky = materials[world["sky"].AsInt];
-            if (sky != missingMaterial) // default skybox is null
-                voxelArray.world.SetSky(sky);
+            foreach (var voxelObj in world[FileKeys.WORLD_VOXELS].AsList())
+                ReadVoxel(voxelObj, voxelArray, materials, substances);
         }
-        if (world["map"] != null)
-            ReadMap(world["map"].AsObject, voxelArray, materials, substances);
-        if (fileWriterVersion <= 2 && world["player"] != null)
+
+        if (world.ContainsKey(FileKeys.WORLD_OBJECTS))
         {
-            PlayerObject player = new PlayerObject();
-            ReadObjectEntity(world["player"].AsObject, player);
-            voxelArray.AddObject(player);
-        }
-        if (world["objects"] != null)
-        {
-            foreach (JSONNode objNode in world["objects"].AsArray)
+            foreach (var objObj in world[FileKeys.WORLD_OBJECTS].AsList())
             {
-                JSONObject objObject = objNode.AsObject;
-                string typeName = objObject["name"];
+                var objDict = objObj.AsDictionary();
+                string typeName = objDict[FileKeys.PROPOBJ_NAME].AsString();
                 var objType = GameScripts.FindTypeWithName(GameScripts.objects, typeName);
                 if (objType == null)
                 {
@@ -167,7 +142,7 @@ public class MapFileReader
                     continue;
                 }
                 ObjectEntity obj = (ObjectEntity)objType.Create();
-                ReadObjectEntity(objObject, obj);
+                ReadObjectEntity(objDict, obj);
                 voxelArray.AddObject(obj);
             }
         }
@@ -187,11 +162,24 @@ public class MapFileReader
         }
     }
 
-    private Material ReadMaterial(JSONObject matObject)
+    private void ReadCamera(MessagePackObjectDictionary camera, Transform cameraPivot)
     {
-        if (matObject["name"] != null)
+        if (camera.ContainsKey(FileKeys.CAMERA_PAN))
+            cameraPivot.position = ReadVector3(camera[FileKeys.CAMERA_PAN]);
+        if (camera.ContainsKey(FileKeys.CAMERA_ROTATE))
+            cameraPivot.rotation = ReadQuaternion(camera[FileKeys.CAMERA_ROTATE]);
+        if (camera.ContainsKey(FileKeys.CAMERA_SCALE))
         {
-            string name = matObject["name"];
+            float scale = camera[FileKeys.CAMERA_SCALE].AsSingle();
+            cameraPivot.localScale = new Vector3(scale, scale, scale);
+        }
+    }
+
+    private Material ReadMaterial(MessagePackObjectDictionary matDict)
+    {
+        if (matDict.ContainsKey(FileKeys.MATERIAL_NAME))
+        {
+            string name = matDict[FileKeys.MATERIAL_NAME].AsString();
             foreach (string dirEntry in ResourcesDirectory.dirList)
             {
                 if (dirEntry.Length <= 2)
@@ -206,15 +194,15 @@ public class MapFileReader
             warnings.Add("Unrecognized material: " + name);
             return missingMaterial;
         }
-        else if (matObject["mode"] != null)
+        else if (matDict.ContainsKey(FileKeys.MATERIAL_MODE))
         {
-            ColorMode mode = (ColorMode)System.Enum.Parse(typeof(ColorMode), matObject["mode"]);
-            if (matObject["color"] != null)
+            ColorMode mode = (ColorMode)System.Enum.Parse(typeof(ColorMode), matDict[FileKeys.MATERIAL_MODE].AsString());
+            if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
             {
-                Color color = ReadColor(matObject["color"].AsArray);
+                Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
                 bool alpha = color.a != 1;
-                if (matObject["alpha"] != null)
-                    alpha = matObject["alpha"].AsBool; // new with version 4
+                if (matDict.ContainsKey(FileKeys.MATERIAL_ALPHA))
+                    alpha = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean(); // new with version 4
                 Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
                 mat.color = color;
                 return mat;
@@ -231,40 +219,40 @@ public class MapFileReader
         }
     }
 
-    private void ReadObjectEntity(JSONObject entityObject, ObjectEntity objectEntity)
+    private void ReadObjectEntity(MessagePackObjectDictionary entityDict, ObjectEntity objectEntity)
     {
-        ReadEntity(entityObject, objectEntity);
-        if (entityObject["at"] != null)
-            objectEntity.position = ReadVector3Int(entityObject["at"].AsArray);
-        if (entityObject["rotate"] != null)
-            objectEntity.rotation = entityObject["rotate"].AsFloat;
+        ReadEntity(entityDict, objectEntity);
+        if (entityDict.ContainsKey(FileKeys.OBJECT_POSITION))
+            objectEntity.position = ReadVector3Int(entityDict[FileKeys.OBJECT_POSITION]);
+        if (entityDict.ContainsKey(FileKeys.OBJECT_ROTATION))
+            objectEntity.rotation = entityDict[FileKeys.OBJECT_ROTATION].AsSingle();
     }
 
-    private void ReadEntity(JSONObject entityObject, Entity entity)
+    private void ReadEntity(MessagePackObjectDictionary entityDict, Entity entity)
     {
-        ReadPropertiesObject(entityObject, entity);
+        ReadPropertiesObject(entityDict, entity);
 
-        if (entityObject["sensor"] != null)
+        if (entityDict.ContainsKey(FileKeys.ENTITY_SENSOR))
         {
-            JSONObject sensorObject = entityObject["sensor"].AsObject;
-            string sensorName = sensorObject["name"];
+            var sensorDict = entityDict[FileKeys.ENTITY_SENSOR].AsDictionary();
+            string sensorName = sensorDict[FileKeys.PROPOBJ_NAME].AsString();
             var sensorType = GameScripts.FindTypeWithName(GameScripts.sensors, sensorName);
             if (sensorType == null)
                 warnings.Add("Unrecognized sensor: " + sensorName);
             else
             {
                 Sensor newSensor = (Sensor)sensorType.Create();
-                ReadPropertiesObject(sensorObject, newSensor);
+                ReadPropertiesObject(sensorDict, newSensor);
                 entity.sensor = newSensor;
             }
         }
 
-        if (entityObject["behaviors"] != null)
+        if (entityDict.ContainsKey(FileKeys.ENTITY_BEHAVIORS))
         {
-            foreach (JSONNode behaviorNode in entityObject["behaviors"].AsArray)
+            foreach (var behaviorObj in entityDict[FileKeys.ENTITY_BEHAVIORS].AsList())
             {
-                JSONObject behaviorObject = behaviorNode.AsObject;
-                string behaviorName = behaviorObject["name"];
+                var behaviorDict = behaviorObj.AsDictionary();
+                string behaviorName = behaviorDict[FileKeys.PROPOBJ_NAME].AsString();
                 var behaviorType = GameScripts.FindTypeWithName(GameScripts.behaviors, behaviorName);
                 if (behaviorType == null)
                 {
@@ -272,34 +260,26 @@ public class MapFileReader
                     continue;
                 }
                 EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
-                ReadPropertiesObject(behaviorObject, newBehavior);
-                if (fileWriterVersion <= 5 && behaviorObject["target"] != null)
-                {
-                    if (behaviorObject["target"] == "activator")
-                        newBehavior.targetEntityIsActivator = true;
-                    else
-                        newBehavior.targetEntity = new EntityReference(new System.Guid(behaviorObject["target"]));
-                }
+                ReadPropertiesObject(behaviorDict, newBehavior);
                 entity.behaviors.Add(newBehavior);
             }
         }
 
-        if (entityObject["id"] != null)
+        if (entityDict.ContainsKey(FileKeys.ENTITY_ID))
         {
-            System.Guid id = new System.Guid(entityObject["id"]);
+            System.Guid id = new System.Guid(entityDict[FileKeys.ENTITY_ID].AsString());
             EntityReference.AddExistingEntityId(entity, id);
         }
     }
 
-    private void ReadPropertiesObject(JSONObject propsObject, PropertiesObject obj)
+    private void ReadPropertiesObject(MessagePackObjectDictionary propsDict, PropertiesObject obj)
     {
-        if (propsObject["properties"] != null)
+        if (propsDict.ContainsKey(FileKeys.PROPOBJ_PROPERTIES))
         {
-            foreach (JSONNode propNode in propsObject["properties"].AsArray)
+            foreach (var propObj in propsDict[FileKeys.PROPOBJ_PROPERTIES].AsList())
             {
-                JSONArray propArray = propNode.AsArray;
-                string name = propArray[0];
-                string valueString = propArray[1];
+                var propList = propObj.AsList();
+                string name = propList[0].AsString();
 
                 bool foundProp = false;
                 Property prop = new Property(null, null, null, null);
@@ -319,18 +299,19 @@ public class MapFileReader
                 }
 
                 System.Type propType;
-                if (propArray.Count > 2)
-                    propType = System.Type.GetType(propArray[2]); // explicit type
+                if (propList.Count > 2)
+                    propType = System.Type.GetType(propList[2].AsString()); // explicit type
                 else
                     propType = prop.value.GetType();
 
                 if (propType == typeof(Material))
                 {
                     // skip equality check
-                    prop.setter(ReadMaterial(propArray[1].AsObject));
+                    prop.setter(ReadMaterial(propList[1].AsDictionary()));
                 }
                 else
                 {
+                    string valueString = propList[1].AsString();
                     XmlSerializer xmlSerializer = new XmlSerializer(propType);
                     using (var textReader = new StringReader(valueString))
                     {
@@ -343,25 +324,14 @@ public class MapFileReader
         }
     }
 
-    private void ReadMap(JSONObject map, VoxelArray voxelArray,
+    private void ReadVoxel(MessagePackObject voxelObj, VoxelArray voxelArray,
         List<Material> materials, List<Substance> substances)
     {
-        if (map["voxels"] != null)
-        {
-            foreach (JSONNode voxelNode in map["voxels"].AsArray)
-            {
-                JSONObject voxelObject = voxelNode.AsObject;
-                ReadVoxel(voxelObject, voxelArray, materials, substances);
-            }
-        }
-    }
-
-    private void ReadVoxel(JSONObject voxelObject, VoxelArray voxelArray,
-        List<Material> materials, List<Substance> substances)
-    {
-        if (voxelObject["at"] == null)
+        var voxelList = voxelObj.AsList();
+        if (voxelList.Count == 0)
             return;
-        Vector3 position = ReadVector3(voxelObject["at"].AsArray);
+
+        Vector3 position = ReadVector3(voxelList[0]);
         Voxel voxel = null;
         if (!editor)
             // slightly faster -- doesn't add to octree
@@ -369,82 +339,71 @@ public class MapFileReader
         else
             voxel = voxelArray.VoxelAt(position, true);
 
-        if (voxelObject["s"] != null)
-            voxel.substance = substances[voxelObject["s"].AsInt];
-
-        if (voxelObject["f"] != null)
+        if (voxelList.Count >= 2)
         {
-            foreach (JSONNode faceNode in voxelObject["f"].AsArray)
+            foreach (var faceObj in voxelList[1].AsList())
             {
-                JSONObject faceObject = faceNode.AsObject;
-                if (fileWriterVersion == 0)
-                {
-                    // faces were oriented differently. Get voxel for each face
-                    int faceI = faceObject["i"].AsInt;
-                    voxel = voxelArray.VoxelAt(position + Voxel.DirectionForFaceI(faceI), true);
-                }
-                ReadFace(faceObject, voxel, materials);
+                ReadFace(faceObj, voxel, materials);
             }
         }
 
-        if (voxelObject["e"] != null)
-            foreach (JSONNode edgeNode in voxelObject["e"].AsArray)
-                ReadEdge(edgeNode.AsObject, voxel);
+        if (voxelList.Count >= 3 && voxelList[2].AsInt32() != -1)
+            voxel.substance = substances[voxelList[2].AsInt32()];
+
+        if (voxelList.Count >= 4)
+            foreach (var edgeObj in voxelList[3].AsList())
+                ReadEdge(edgeObj, voxel);
+
         voxel.UpdateVoxel();
     }
 
-    private void ReadFace(JSONObject faceObject, Voxel voxel, List<Material> materials)
+    private void ReadFace(MessagePackObject faceObj, Voxel voxel, List<Material> materials)
     {
-        if (faceObject["i"] == null)
+        var faceList = faceObj.AsList();
+        if (faceList.Count == 0)
             return;
-        int faceI = faceObject["i"].AsInt;
-        if (fileWriterVersion == 0)
-            faceI = Voxel.OppositeFaceI(faceI);
-        if (faceObject["mat"] != null)
-        {
-            int matI = faceObject["mat"].AsInt;
-            voxel.faces[faceI].material = materials[matI];
-        }
-        if (faceObject["over"] != null)
-        {
-            int matI = faceObject["over"].AsInt;
-            voxel.faces[faceI].overlay = materials[matI];
-        }
-        if (faceObject["orient"] != null)
-        {
-            voxel.faces[faceI].orientation = (byte)(faceObject["orient"].AsInt);
-        }
+        int faceI = faceList[0].AsInt32();
+        if (faceList.Count >= 2 && faceList[1].AsInt32() != -1)
+            voxel.faces[faceI].material = materials[faceList[1].AsInt32()];
+        if (faceList.Count >= 3 && faceList[2].AsInt32() != -1)
+            voxel.faces[faceI].overlay = materials[faceList[2].AsInt32()];
+        if (faceList.Count >= 4)
+            voxel.faces[faceI].orientation = faceList[3].AsByte();
     }
 
-    private void ReadEdge(JSONObject edgeObject, Voxel voxel)
+    private void ReadEdge(MessagePackObject edgeObj, Voxel voxel)
     {
-        if (edgeObject["i"] == null)
+        var edgeList = edgeObj.AsList();
+        if (edgeList.Count == 0)
             return;
-        int edgeI = edgeObject["i"].AsInt;
-        if (edgeObject["bevel"] != null)
-            voxel.edges[edgeI].bevel = (byte)(edgeObject["bevel"].AsInt);
+        int edgeI = edgeList[0].AsInt32();
+        if (edgeList.Count >= 2)
+            voxel.edges[edgeI].bevel = edgeList[1].AsByte();
     }
 
-    private Vector3 ReadVector3(JSONArray a)
+    private Vector3 ReadVector3(MessagePackObject o)
     {
-        return new Vector3(a[0], a[1], a[2]);
+        var l = o.AsList();
+        return new Vector3(l[0].AsSingle(), l[1].AsSingle(), l[2].AsSingle());
     }
 
-    private Vector3Int ReadVector3Int(JSONArray a)
+    private Vector3Int ReadVector3Int(MessagePackObject o)
     {
-        return new Vector3Int(a[0], a[1], a[2]);
+        var l = o.AsList();
+        return new Vector3Int(l[0].AsInt32(), l[1].AsInt32(), l[2].AsInt32());
     }
 
-    private Quaternion ReadQuaternion(JSONArray a)
+    private Quaternion ReadQuaternion(MessagePackObject o)
     {
-        return Quaternion.Euler(ReadVector3(a));
+        return Quaternion.Euler(ReadVector3(o));
     }
 
-    private Color ReadColor(JSONArray a)
+    private Color ReadColor(MessagePackObject o)
     {
-        if (a.Count == 4)
-            return new Color(a[0], a[1], a[2], a[3]);
+        var l = o.AsList();
+        if (l.Count == 4)
+            return new Color(l[0].AsSingle(), l[1].AsSingle(), l[2].AsSingle(), l[3].AsSingle());
         else
-            return new Color(a[0], a[1], a[2]);
+            return new Color(l[0].AsSingle(), l[1].AsSingle(), l[2].AsSingle());
     }
 }
