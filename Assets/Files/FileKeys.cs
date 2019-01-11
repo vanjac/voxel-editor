@@ -11,6 +11,7 @@ public class FileKeys
     public const string WORLD_MIN_READER_VERSION = "r";
     public const string WORLD_CAMERA = "c";
     public const string WORLD_MATERIALS = "m";
+    public const string WORLD_OVERLAYS = "n";
     public const string WORLD_SUBSTANCES = "s";
     public const string WORLD_GLOBAL = "g";
     public const string WORLD_VOXELS = "v";

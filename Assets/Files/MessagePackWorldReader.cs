@@ -78,7 +78,14 @@ public class MessagePackWorldReader : WorldFileReader
         if (world.ContainsKey(FileKeys.WORLD_MATERIALS))
         {
             foreach (var matObj in world[FileKeys.WORLD_MATERIALS].AsList())
-                materials.Add(ReadMaterial(matObj.AsDictionary()));
+                materials.Add(ReadMaterial(matObj.AsDictionary(), false));
+        }
+
+        var overlays = new List<Material>();
+        if (world.ContainsKey(FileKeys.WORLD_OVERLAYS))
+        {
+            foreach (var matObj in world[FileKeys.WORLD_OVERLAYS].AsList())
+                overlays.Add(ReadMaterial(matObj.AsDictionary(), true));
         }
 
         var substances = new List<Substance>();
@@ -98,7 +105,7 @@ public class MessagePackWorldReader : WorldFileReader
         if (world.ContainsKey(FileKeys.WORLD_VOXELS))
         {
             foreach (var voxelObj in world[FileKeys.WORLD_VOXELS].AsList())
-                ReadVoxel(voxelObj, voxelArray, materials, substances);
+                ReadVoxel(voxelObj, voxelArray, materials, overlays, substances);
         }
 
         if (world.ContainsKey(FileKeys.WORLD_OBJECTS))
@@ -147,7 +154,7 @@ public class MessagePackWorldReader : WorldFileReader
         }
     }
 
-    private Material ReadMaterial(MessagePackObjectDictionary matDict)
+    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool alpha)
     {
         if (matDict.ContainsKey(FileKeys.MATERIAL_NAME))
         {
@@ -172,9 +179,8 @@ public class MessagePackWorldReader : WorldFileReader
             if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
             {
                 Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
-                bool alpha = color.a != 1;
                 if (matDict.ContainsKey(FileKeys.MATERIAL_ALPHA))
-                    alpha = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean(); // new with version 4
+                    alpha = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
                 Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
                 mat.color = color;
                 return mat;
@@ -279,7 +285,7 @@ public class MessagePackWorldReader : WorldFileReader
                 if (propType == typeof(Material))
                 {
                     // skip equality check
-                    prop.setter(ReadMaterial(propList[1].AsDictionary()));
+                    prop.setter(ReadMaterial(propList[1].AsDictionary(), true));
                 }
                 else
                 {
@@ -297,7 +303,7 @@ public class MessagePackWorldReader : WorldFileReader
     }
 
     private void ReadVoxel(MessagePackObject voxelObj, VoxelArray voxelArray,
-        List<Material> materials, List<Substance> substances)
+        List<Material> materials, List<Material> overlays, List<Substance> substances)
     {
         var voxelList = voxelObj.AsList();
         if (voxelList.Count == 0)
@@ -315,7 +321,7 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (var faceObj in voxelList[1].AsList())
             {
-                ReadFace(faceObj, voxel, materials);
+                ReadFace(faceObj, voxel, materials, overlays);
             }
         }
 
@@ -329,7 +335,8 @@ public class MessagePackWorldReader : WorldFileReader
         voxel.UpdateVoxel();
     }
 
-    private void ReadFace(MessagePackObject faceObj, Voxel voxel, List<Material> materials)
+    private void ReadFace(MessagePackObject faceObj, Voxel voxel,
+        List<Material> materials, List<Material> overlays)
     {
         var faceList = faceObj.AsList();
         if (faceList.Count == 0)
@@ -338,7 +345,7 @@ public class MessagePackWorldReader : WorldFileReader
         if (faceList.Count >= 2 && faceList[1].AsInt32() != -1)
             voxel.faces[faceI].material = materials[faceList[1].AsInt32()];
         if (faceList.Count >= 3 && faceList[2].AsInt32() != -1)
-            voxel.faces[faceI].overlay = materials[faceList[2].AsInt32()];
+            voxel.faces[faceI].overlay = overlays[faceList[2].AsInt32()];
         if (faceList.Count >= 4)
             voxel.faces[faceI].orientation = faceList[3].AsByte();
     }
