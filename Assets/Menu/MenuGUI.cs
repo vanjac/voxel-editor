@@ -53,7 +53,7 @@ public class MenuGUI : GUIPanel
 
             GUILayout.BeginHorizontal();
             if (GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, selected))
-                OpenWorld(path, "editScene");
+                OpenWorld(path, Scenes.EDITOR);
             if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUIStyleSet.instance.buttonLarge,
                     selected, GUILayout.ExpandWidth(false)))
                 CreateWorldOverflowMenu(path);
@@ -98,7 +98,7 @@ public class MenuGUI : GUIPanel
         }
         UpdateWorldList();
 
-        OpenWorld(path, "editScene");
+        OpenWorld(path, Scenes.EDITOR);
     }
 
     private void UpdateWorldList()
@@ -132,7 +132,7 @@ public class MenuGUI : GUIPanel
         worldOverflowMenu.items = new OverflowMenuGUI.MenuItem[]
         {
             new OverflowMenuGUI.MenuItem("Play", GUIIconSet.instance.play, () => {
-                MenuGUI.OpenWorld(path, "playScene");
+                MenuGUI.OpenWorld(path, Scenes.GAME);
             }),
             new OverflowMenuGUI.MenuItem("Rename", GUIIconSet.instance.rename, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();

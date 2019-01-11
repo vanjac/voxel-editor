@@ -102,7 +102,7 @@ public class HelpGUI : GUIPanel
             if (voxelArray != null)
                 voxelArray.GetComponent<EditorFile>().Save();
             SelectedWorld.Instance().worldPath = path;
-            SceneManager.LoadScene("editScene");
+            SceneManager.LoadScene(Scenes.EDITOR);
         }
         Destroy(this);
     }

@@ -39,7 +39,7 @@ public class FileReceiveGUI : GUIPanel
     void OnDestroy()
     {
         ShareMap.ClearFileWaitingToImport();
-        SceneManager.LoadScene("menuScene");
+        SceneManager.LoadScene(Scenes.MENU);
     }
 
     public override void WindowGUI()

@@ -129,14 +129,14 @@ public class EditorFile : MonoBehaviour
     {
         Debug.unityLogger.Log("EditorFile", "Play");
         Save();
-        SceneManager.LoadScene("playScene");
+        SceneManager.LoadScene(Scenes.GAME);
     }
 
     public void Close()
     {
         Debug.unityLogger.Log("EditorFile", "Close");
         Save();
-        SceneManager.LoadScene("menuScene");
+        SceneManager.LoadScene(Scenes.MENU);
     }
 
     void OnEnable()
@@ -159,7 +159,7 @@ public class EditorFile : MonoBehaviour
         else if (ShareMap.FileWaitingToImport())
         {
             Save();
-            SceneManager.LoadScene("fileReceiveScene");
+            SceneManager.LoadScene(Scenes.FILE_RECEIVE);
         }
     }
 }
