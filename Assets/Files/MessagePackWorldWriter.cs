@@ -1,43 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using UnityEngine;
 using MsgPack;
 using System.Xml;
 using System.Xml.Serialization;
 
-public class MapFileWriter
+public class MessagePackWorldWriter
 {
     public const int VERSION = 8;
     private const int FILE_MIN_READER_VERSION = 8;
 
-    private string fileName;
-
-    public MapFileWriter(string fileName)
-    {
-        this.fileName = fileName;
-    }
-
-    public void Write(Transform cameraPivot, VoxelArray voxelArray)
+    public static void Write(string filePath, Transform cameraPivot, VoxelArray voxelArray)
     {
         if (voxelArray.IsEmpty())
         {
             Debug.Log("World is empty! File will not be written.");
             return;
         }
+        Debug.Log("Writing MessagePack file " + filePath);
 
         var world = WriteWorld(cameraPivot, voxelArray);
         var worldObject = new MessagePackObject(world);
 
-        string filePath = WorldFiles.GetFilePath(fileName);
         using (FileStream fileStream = File.Create(filePath))
         {
+            fileStream.WriteByte((byte)'m');
             var packer = Packer.Create(fileStream, PackerCompatibilityOptions.None);
             worldObject.PackToMessage(packer, null);
         }
     }
 
-    private MessagePackObjectDictionary WriteWorld(Transform cameraPivot, VoxelArray voxelArray)
+    private static MessagePackObjectDictionary WriteWorld(Transform cameraPivot, VoxelArray voxelArray)
     {
         var world = new MessagePackObjectDictionary();
 
@@ -91,7 +84,7 @@ public class MapFileWriter
         return world;
     }
 
-    private MessagePackObjectDictionary WriteCamera(Transform cameraPivot)
+    private static MessagePackObjectDictionary WriteCamera(Transform cameraPivot)
     {
         var camera = new MessagePackObjectDictionary();
         camera[FileKeys.CAMERA_PAN] = WriteVector3(cameraPivot.position);
@@ -100,7 +93,7 @@ public class MapFileWriter
         return camera;
     }
 
-    void AddMaterial(Material material, List<string> foundMaterials, List<MessagePackObject> materialsList)
+    private static void AddMaterial(Material material, List<string> foundMaterials, List<MessagePackObject> materialsList)
     {
         if (material == null)
             return;
@@ -111,7 +104,7 @@ public class MapFileWriter
         materialsList.Add(new MessagePackObject(WriteMaterial(material)));
     }
 
-    private MessagePackObjectDictionary WriteMaterial(Material material)
+    private static MessagePackObjectDictionary WriteMaterial(Material material)
     {
         var materialDict = new MessagePackObjectDictionary();
         if (ResourcesDirectory.IsCustomMaterial(material))
@@ -127,7 +120,7 @@ public class MapFileWriter
         return materialDict;
     }
 
-    private MessagePackObjectDictionary WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
+    private static MessagePackObjectDictionary WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
     {
         var entityDict = WriteEntity(objectEntity, includeName);
         entityDict[FileKeys.OBJECT_POSITION] = WriteIntVector3(objectEntity.position);
@@ -136,7 +129,7 @@ public class MapFileWriter
         return entityDict;
     }
 
-    private MessagePackObjectDictionary WriteEntity(Entity entity, bool includeName)
+    private static MessagePackObjectDictionary WriteEntity(Entity entity, bool includeName)
     {
         var entityDict = WritePropertiesObject(entity, includeName);
 
@@ -160,7 +153,7 @@ public class MapFileWriter
         return entityDict;
     }
 
-    private MessagePackObjectDictionary WritePropertiesObject(PropertiesObject obj, bool includeName)
+    private static MessagePackObjectDictionary WritePropertiesObject(PropertiesObject obj, bool includeName)
     {
         var propsDict = new MessagePackObjectDictionary();
 
@@ -220,7 +213,7 @@ public class MapFileWriter
         return propsDict;
     }
 
-    private MessagePackObject WriteVoxel(Voxel voxel, List<string> materials, List<Substance> substances)
+    private static MessagePackObject WriteVoxel(Voxel voxel, List<string> materials, List<Substance> substances)
     {
         var voxelList = new List<MessagePackObject>();
         voxelList.Add(WriteIntVector3(voxel.transform.position));
@@ -255,7 +248,7 @@ public class MapFileWriter
         return new MessagePackObject(voxelList);
     }
 
-    private MessagePackObject WriteFace(VoxelFace face, int faceI, List<string> materials)
+    private static MessagePackObject WriteFace(VoxelFace face, int faceI, List<string> materials)
     {
         var faceList = new List<MessagePackObject>();
         faceList.Add(faceI);
@@ -274,7 +267,7 @@ public class MapFileWriter
         return new MessagePackObject(faceList);
     }
 
-    private MessagePackObject WriteEdge(VoxelEdge edge, int edgeI)
+    private static MessagePackObject WriteEdge(VoxelEdge edge, int edgeI)
     {
         var edgeList = new List<MessagePackObject>();
         edgeList.Add(edgeI);
@@ -283,7 +276,7 @@ public class MapFileWriter
     }
 
     // strip null values from the end of the list
-    private void StripDataList(List<MessagePackObject> list, bool[] nullValues)
+    private static void StripDataList(List<MessagePackObject> list, bool[] nullValues)
     {
         for (int i = nullValues.Length - 1; i >= 0; i--)
         {
@@ -293,7 +286,7 @@ public class MapFileWriter
         }
     }
 
-    private MessagePackObject WriteVector3(Vector3 v)
+    private static MessagePackObject WriteVector3(Vector3 v)
     {
         var l = new List<MessagePackObject>();
         l.Add(v.x);
@@ -302,12 +295,12 @@ public class MapFileWriter
         return new MessagePackObject(l);
     }
 
-    private MessagePackObject WriteQuaternion(Quaternion v)
+    private static MessagePackObject WriteQuaternion(Quaternion v)
     {
         return WriteVector3(v.eulerAngles);
     }
 
-    private MessagePackObject WriteIntVector3(Vector3 v)
+    private static MessagePackObject WriteIntVector3(Vector3 v)
     {
         var l = new List<MessagePackObject>();
         l.Add((int)(Mathf.RoundToInt(v.x)));
@@ -316,7 +309,7 @@ public class MapFileWriter
         return new MessagePackObject(l);
     }
 
-    private MessagePackObject WriteColor(Color c)
+    private static MessagePackObject WriteColor(Color c)
     {
         var l = new List<MessagePackObject>();
         l.Add(c.r);

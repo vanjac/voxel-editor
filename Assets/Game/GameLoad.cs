@@ -15,10 +15,10 @@ public class GameLoad : MonoBehaviour
     private IEnumerator LoadCoroutine()
     {
         yield return null;
-        MapFileReader reader = new MapFileReader(SelectedMap.Instance().mapName);
         try
         {
-            reader.Read(null, GetComponent<VoxelArray>(), false);
+            ReadWorldFile.Read(SelectedWorld.Instance().worldPath,
+                null, GetComponent<VoxelArray>(), false);
         }
         catch (MapReadException e)
         {

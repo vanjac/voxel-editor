@@ -32,7 +32,7 @@ public class FileReceiveGUI : GUIPanel
     {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
         inputDialog.prompt = "Enter name for imported world...";
-        inputDialog.handler = ImportMap;
+        inputDialog.handler = ImportWorld;
         inputDialog.cancelHandler = DestroyThis;
     }
 
@@ -51,14 +51,14 @@ public class FileReceiveGUI : GUIPanel
         GUILayout.EndHorizontal();
     }
 
-    private void ImportMap(string name)
+    private void ImportWorld(string name)
     {
         if (name.Length == 0)
         {
             Destroy(this);
             return;
         }
-        string newPath = WorldFiles.GetFilePath(name);
+        string newPath = WorldFiles.GetNewWorldPath(name);
         if (File.Exists(newPath))
         {
             var dialog = DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");

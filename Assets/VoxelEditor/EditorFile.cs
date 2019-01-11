@@ -22,13 +22,11 @@ public class EditorFile : MonoBehaviour
         yield return null;
         var guiGameObject = loadingGUI.gameObject;
 
-        string mapName = SelectedMap.Instance().mapName;
-        Debug.unityLogger.Log("EditorFile", "Loading " + mapName);
-        MapFileReader reader = new MapFileReader(mapName);
         List<string> warnings;
         try
         {
-            warnings = reader.Read(cameraPivot, voxelArray, true);
+            warnings = ReadWorldFile.Read(SelectedWorld.Instance().worldPath,
+                cameraPivot, voxelArray, true);
         }
         catch (MapReadException e)
         {
@@ -41,7 +39,7 @@ public class EditorFile : MonoBehaviour
                 Close();
             };
             Destroy(loadingGUI);
-            Debug.Log(e.InnerException);
+            Debug.Log(e);
             yield break;
         }
         // reading the file creates new voxels which sets the unsavedChanges flag
@@ -122,9 +120,8 @@ public class EditorFile : MonoBehaviour
             Debug.unityLogger.Log("EditorFile", "No unsaved changes");
             return;
         }
-        Debug.unityLogger.Log("EditorFile", "Saving...");
-        MapFileWriter writer = new MapFileWriter(SelectedMap.Instance().mapName);
-        writer.Write(cameraPivot, voxelArray);
+        MessagePackWorldWriter.Write(SelectedWorld.Instance().worldPath,
+            cameraPivot, voxelArray);
         voxelArray.unsavedChanges = false;
     }
 

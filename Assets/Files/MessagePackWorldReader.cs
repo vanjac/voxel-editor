@@ -1,76 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using UnityEngine;
 using MsgPack;
 using System.Xml;
 using System.Xml.Serialization;
 
-public class MapReadException : Exception
+
+public class MessagePackWorldReader : WorldFileReader
 {
-    public MapReadException() { }
-    public MapReadException(string message) : base(message) { }
-    public MapReadException(string message, Exception inner) : base(message, inner) { }
-}
+    public const int VERSION = MessagePackWorldWriter.VERSION;
 
-public class MapFileReader
-{
-    public const int VERSION = MapFileWriter.VERSION;
-
-    private const string ERROR_INVALID_FILE = "Invalid world file";
-
-    private string fileName;
     private int fileWriterVersion;
-    private Material missingMaterial; // material to be used when material can't be created
-
+    private MessagePackObject worldObject;
     private List<string> warnings = new List<string>();
     private bool editor;
 
-    public MapFileReader(string fileName)
+    public void ReadStream(FileStream fileStream)
     {
-        this.fileName = fileName;
-    }
-
-    // return warnings
-    public List<string> Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
-    {
-        this.editor = editor;
-        if (missingMaterial == null)
-        {
-            // allowTransparency is true in case the material is used for an overlay, so the alpha value can be adjusted
-            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
-            missingMaterial.color = Color.magenta;
-        }
-
-        MessagePackObject world;
-
-        string filePath = WorldFiles.GetFilePath(fileName);
         try
         {
-            using (FileStream fileStream = File.Open(filePath, FileMode.Open))
-            {
-                world = Unpacking.UnpackObject(fileStream);
-            }
+            worldObject = Unpacking.UnpackObject(fileStream);
         }
         catch (UnpackException e)
         {
-            throw new MapReadException(ERROR_INVALID_FILE, e);
+            throw new InvalidMapFileException(e);
         }
         catch (MessageTypeException e)
         {
-            throw new MapReadException(ERROR_INVALID_FILE, e);
+            throw new InvalidMapFileException(e);
         }
-        catch (Exception e)
-        {
-            throw new MapReadException("An error occurred while reading the file", e);
-        }
-        if (!world.IsDictionary)
-            throw new MapReadException(ERROR_INVALID_FILE);
-        MessagePackObjectDictionary worldDict = world.AsDictionary();
+        if (!worldObject.IsDictionary)
+            throw new InvalidMapFileException();
+    }
+
+
+    public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    {
+        this.editor = editor;
+
+        MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
         if (!worldDict.ContainsKey(FileKeys.WORLD_WRITER_VERSION)
             || !worldDict.ContainsKey(FileKeys.WORLD_MIN_READER_VERSION))
-            throw new MapReadException(ERROR_INVALID_FILE);
+            throw new InvalidMapFileException();
 
         if (worldDict[FileKeys.WORLD_MIN_READER_VERSION].AsInt32() > VERSION)
         {
@@ -192,7 +164,7 @@ public class MapFileReader
                     return ResourcesDirectory.GetMaterial(newDirEntry);
             }
             warnings.Add("Unrecognized material: " + name);
-            return missingMaterial;
+            return ReadWorldFile.missingMaterial;
         }
         else if (matDict.ContainsKey(FileKeys.MATERIAL_MODE))
         {
@@ -215,7 +187,7 @@ public class MapFileReader
         else
         {
             warnings.Add("Error reading material");
-            return missingMaterial;
+            return ReadWorldFile.missingMaterial;
         }
     }
 

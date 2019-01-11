@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class MenuGUI : GUIPanel
 {
-    public TextAsset defaultMap;
+    public TextAsset defaultWorld;
 
-    private List<string> mapFiles = new List<string>();
+    private List<string> worldPaths = new List<string>();
+    private List<string> worldNames = new List<string>();
     private OverflowMenuGUI worldOverflowMenu;
-    private string selectedWorld;
+    private string selectedWorldPath;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -32,7 +33,7 @@ public class MenuGUI : GUIPanel
 
     void Start()
     {
-        UpdateMapList();
+        UpdateWorldList();
     }
 
     public override void WindowGUI()
@@ -41,22 +42,25 @@ public class MenuGUI : GUIPanel
         {
             TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
             inputDialog.prompt = "Enter new world name...";
-            inputDialog.handler = NewMap;
+            inputDialog.handler = NewWorld;
         }
         scroll = GUILayout.BeginScrollView(scroll);
-        foreach (string fileName in mapFiles)
+        for (int i = 0; i < worldPaths.Count; i++)
         {
-            bool selected = worldOverflowMenu != null && fileName == selectedWorld;
+            string path = worldPaths[i];
+            string name = worldNames[i];
+            bool selected = worldOverflowMenu != null && path == selectedWorldPath;
+
             GUILayout.BeginHorizontal();
-            if (GUIUtils.HighlightedButton(fileName, GUIStyleSet.instance.buttonLarge, selected))
-                OpenMap(fileName, "editScene");
+            if (GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, selected))
+                OpenWorld(path, "editScene");
             if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUIStyleSet.instance.buttonLarge,
                     selected, GUILayout.ExpandWidth(false)))
-                CreateWorldOverflowMenu(fileName);
+                CreateWorldOverflowMenu(path);
             GUILayout.EndHorizontal();
         }
         GUILayout.EndScrollView();
-        if (mapFiles.Count == 0)
+        if (worldPaths.Count == 0)
         {
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
@@ -68,109 +72,121 @@ public class MenuGUI : GUIPanel
         }
     }
 
-    public static void OpenMap(string name, string scene)
+    public static void OpenWorld(string path, string scene)
     {
-        SelectedMap selectedMap = SelectedMap.Instance();
-        selectedMap.mapName = name;
+        SelectedWorld.Instance().worldPath = path;
         SceneManager.LoadScene(scene);
     }
 
-    private void NewMap(string name)
+    private void NewWorld(string name)
     {
         if (name.Length == 0)
             return;
-        string filePath = WorldFiles.GetFilePath(name);
-        if (File.Exists(filePath))
+        string path = WorldFiles.GetNewWorldPath(name);
+        if (File.Exists(path))
         {
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        using (FileStream fileStream = File.Create(filePath))
+        using (FileStream fileStream = File.Create(path))
         {
             using (var sw = new StreamWriter(fileStream))
             {
-                sw.Write(defaultMap.text);
+                sw.Write(defaultWorld.text);
                 sw.Flush();
             }
         }
-        UpdateMapList();
+        UpdateWorldList();
 
-        OpenMap(name, "editScene");
+        OpenWorld(path, "editScene");
     }
 
-    private void UpdateMapList()
+    private void UpdateWorldList()
     {
-        string[] files = Directory.GetFiles(WorldFiles.GetDirectoryPath());
-        mapFiles.Clear();
-        foreach (string name in files)
-            mapFiles.Add(Path.GetFileNameWithoutExtension(name));
-        mapFiles.Sort();
+        string[] files = Directory.GetFiles(WorldFiles.GetWorldsDirectory());
+        worldPaths.Clear();
+        foreach (string path in files)
+        {
+            if (WorldFiles.IsWorldFile(path))
+                worldPaths.Add(path);
+            else if (WorldFiles.IsOldWorldFile(path))
+            {
+                string newPath = WorldFiles.GetNewWorldPath(Path.GetFileNameWithoutExtension(path));
+                Debug.Log("Updating " + path + " to " + newPath);
+                File.Move(path, newPath);
+                worldPaths.Add(newPath);
+            }
+        }
+        worldPaths.Sort();
+
+        worldNames.Clear();
+        foreach (string path in worldPaths)
+            worldNames.Add(Path.GetFileNameWithoutExtension(path));
     }
 
-    private void CreateWorldOverflowMenu(string fileName)
+    private void CreateWorldOverflowMenu(string path)
     {
+        string name = Path.GetFileNameWithoutExtension(path);
         worldOverflowMenu = gameObject.AddComponent<OverflowMenuGUI>();
-        selectedWorld = fileName;
+        selectedWorldPath = path;
         worldOverflowMenu.items = new OverflowMenuGUI.MenuItem[]
         {
             new OverflowMenuGUI.MenuItem("Play", GUIIconSet.instance.play, () => {
-                MenuGUI.OpenMap(fileName, "playScene");
+                MenuGUI.OpenWorld(path, "playScene");
             }),
             new OverflowMenuGUI.MenuItem("Rename", GUIIconSet.instance.rename, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-                inputDialog.prompt = "Enter new name for " + fileName;
-                inputDialog.handler = RenameMap;
+                inputDialog.prompt = "Enter new name for " + name;
+                inputDialog.handler = RenameWorld;
             }),
             new OverflowMenuGUI.MenuItem("Copy", GUIIconSet.instance.copy, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
                 inputDialog.prompt = "Enter new world name...";
-                inputDialog.handler = CopyMap;
+                inputDialog.handler = CopyWorld;
             }),
             new OverflowMenuGUI.MenuItem("Delete", GUIIconSet.instance.delete, () => {
                 DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
-                dialog.message = "Are you sure you want to delete " + fileName + "?";
+                dialog.message = "Are you sure you want to delete " + name + "?";
                 dialog.yesButtonText = "Yes";
                 dialog.noButtonText = "No";
                 dialog.yesButtonHandler = () =>
                 {
-                    File.Delete(WorldFiles.GetFilePath(fileName));
-                    UpdateMapList();
+                    File.Delete(path);
+                    UpdateWorldList();
                 };
             }),
 #if (UNITY_ANDROID || UNITY_IOS)
-            new OverflowMenuGUI.MenuItem("Share", GUIIconSet.instance.share, () => {
-                string path = WorldFiles.GetFilePath(fileName);
-                ShareMap.Share(path);
-            })
+            new OverflowMenuGUI.MenuItem("Share", GUIIconSet.instance.share,
+                () => ShareMap.Share(path))
 #endif
         };
     }
 
-    private void RenameMap(string newName)
+    private void RenameWorld(string newName)
     {
         if (newName.Length == 0)
             return;
-        string newPath = WorldFiles.GetFilePath(newName);
+        string newPath = WorldFiles.GetNewWorldPath(newName);
         if (File.Exists(newPath))
         {
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Move(WorldFiles.GetFilePath(selectedWorld), newPath);
-        UpdateMapList();
+        File.Move(selectedWorldPath, newPath);
+        UpdateWorldList();
     }
 
-    private void CopyMap(string newName)
+    private void CopyWorld(string newName)
     {
         if (newName.Length == 0)
             return;
-        string newPath = WorldFiles.GetFilePath(newName);
+        string newPath = WorldFiles.GetNewWorldPath(newName);
         if (File.Exists(newPath))
         {
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        File.Copy(WorldFiles.GetFilePath(selectedWorld), newPath);
-        UpdateMapList();
+        File.Copy(selectedWorldPath, newPath);
+        UpdateWorldList();
     }
 }

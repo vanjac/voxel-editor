@@ -73,35 +73,35 @@ public class HelpGUI : GUIPanel
         }
     }
 
-    private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankMap = true)
+    private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankWorld = true)
     {
         TutorialGUI.StartTutorial(tutorial, gameObject, voxelArray, touchListener);
-        if (openBlankMap && voxelArray == null)
+        if (openBlankWorld && voxelArray == null)
             OpenDemoWorld("Tutorial", "default");
         Destroy(this);
     }
 
-    private void OpenDemoWorld(string mapName, string templateName)
+    private void OpenDemoWorld(string name, string templateName)
     {
-        if (voxelArray == null || SelectedMap.Instance().mapName != mapName)
+        string path = WorldFiles.GetNewWorldPath(name);
+        if (voxelArray == null || SelectedWorld.Instance().worldPath != path)
         {
             // create and load the file
-            string filePath = WorldFiles.GetFilePath(mapName);
-            if (!File.Exists(filePath))
+            if (!File.Exists(path))
             {
-                TextAsset mapText = Resources.Load<TextAsset>(templateName);
-                using (FileStream fileStream = File.Create(filePath))
+                TextAsset data = Resources.Load<TextAsset>(templateName);
+                using (FileStream fileStream = File.Create(path))
                 {
                     using (var sw = new StreamWriter(fileStream))
                     {
-                        sw.Write(mapText.text);
+                        sw.Write(data.text);
                         sw.Flush();
                     }
                 }
             }
             if (voxelArray != null)
                 voxelArray.GetComponent<EditorFile>().Save();
-            SelectedMap.Instance().mapName = mapName;
+            SelectedWorld.Instance().worldPath = path;
             SceneManager.LoadScene("editScene");
         }
         Destroy(this);
