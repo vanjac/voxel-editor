@@ -23,11 +23,11 @@ public class MoveWithBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Parent",
+            new Property("par", "Parent",
                 () => target,
                 v => target = (EntityReference)v,
                 PropertyGUIs.EntityReference),
-            new Property("Follow rotation?",
+            new Property("fro", "Follow rotation?",
                 () => followRotation,
                 v => followRotation = (bool)v,
                 PropertyGUIs.Toggle)

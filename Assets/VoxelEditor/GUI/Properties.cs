@@ -109,6 +109,7 @@ public class PropertyGUIs
     public static void Int(Property property)
     {
         Property wrapper = new Property(
+            property.id,
             property.name,
             () => (float)(int)property.value,
             v => property.value = (int)(float)v,

@@ -90,7 +90,7 @@ class StoredPropertiesObject : PropertiesObject
             };
 
             properties.Add(new Property(
-                firstProperty.name, getter, setter, gui, firstProperty.explicitType));
+                firstProperty.id, firstProperty.name, getter, setter, gui, firstProperty.explicitType));
         }
     }
 

@@ -151,7 +151,7 @@ public class GameScripts
                 var ball = new BallObject();
                 foreach (Property prop in ball.Properties())
                 {
-                    if (prop.name == "Material")
+                    if (prop.id == "mat")
                     {
                         Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
                         lightMat.color = new Color(1, 1, 1, 0.25f);
@@ -172,7 +172,7 @@ public class GameScripts
                 // TODO: there should be a better way to set properties
                 foreach (Property prop in ball.Properties())
                 {
-                    if (prop.name == "Material")
+                    if (prop.id == "mat")
                     {
                         Material neuronMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
                         neuronMat.color = new Color(.09f, .38f, .87f, .25f);
@@ -187,11 +187,11 @@ public class GameScripts
                 light.condition = EntityBehavior.Condition.ON;
                 foreach (Property prop in light.Properties())
                 {
-                    if (prop.name == "Color")
+                    if (prop.id == "col")
                         prop.setter(new Color(.09f, .38f, .87f));
-                    else if (prop.name == "Size")
+                    else if (prop.id == "siz")
                         prop.setter(2.0f);
-                    else if (prop.name == "Intensity")
+                    else if (prop.id == "int")
                         prop.setter(3.0f);
                 }
                 ball.behaviors.Add(light);

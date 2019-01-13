@@ -25,11 +25,11 @@ public class TouchSensor : ActivatedSensor
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Min velocity",
+            new Property("vel", "Min velocity",
                 () => minVelocity,
                 v => minVelocity = (float)v,
                 PropertyGUIs.Float),
-            new Property("Direction",
+            new Property("dir", "Direction",
                 () => direction,
                 v => direction = (Target)v,
                 PropertyGUIs.TargetDirectionFilter)

@@ -49,25 +49,25 @@ public class WorldProperties : PropertiesObject
     {
         return new Property[]
         {
-            new Property("Sky",
+            new Property("sky", "Sky",
                 () => RenderSettings.skybox,
                 v => {
                     SetSky((Material)v);
                 },
                 PropertyGUIs.Material("GameAssets/Skies", false, MaterialSelectorGUI.ColorModeSet.UNLIT_ONLY)),
-            new Property("Ambient light intensity",
+            new Property("amb", "Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,
                 PropertyGUIs.Slider(0, 3)),
-            new Property("Sun intensity",
+            new Property("sin", "Sun intensity",
                 () => RenderSettings.sun.intensity,
                 v => RenderSettings.sun.intensity = (float)v,
                 PropertyGUIs.Slider(0, 3)),
-            new Property("Sun color",
+            new Property("sco", "Sun color",
                 () => RenderSettings.sun.color,
                 v => RenderSettings.sun.color = (Color)v,
                 PropertyGUIs.Color),
-            new Property("Sun pitch",
+            new Property("spi", "Sun pitch",
                 () => {
                     float value = RenderSettings.sun.transform.rotation.eulerAngles.x;
                     if (value > 270)
@@ -80,7 +80,7 @@ public class WorldProperties : PropertiesObject
                     RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
                 },
                 PropertyGUIs.Slider(-90, 90)),
-            new Property("Sun yaw",
+            new Property("sya", "Sun yaw",
                 () => RenderSettings.sun.transform.rotation.eulerAngles.y,
                 v => {
                     Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
@@ -90,7 +90,7 @@ public class WorldProperties : PropertiesObject
                     UpdateSky();
                 },
                 PropertyGUIs.Slider(0, 360)),
-            new Property("Fog density",
+            new Property("fdn", "Fog density",
                 () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
                 v => {
                     float value = (float)v;
@@ -103,7 +103,7 @@ public class WorldProperties : PropertiesObject
                     }
                 },
                 PropertyGUIs.Slider(0, 1)),
-            new Property("Fog color",
+            new Property("fco", "Fog color",
                 () => RenderSettings.fogColor,
                 v => RenderSettings.fogColor = (Color) v,
                 PropertyGUIs.Color)

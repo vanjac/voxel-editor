@@ -280,7 +280,7 @@ public class JSONWorldReader : WorldFileReader
                 string valueString = propArray[1];
 
                 bool foundProp = false;
-                Property prop = new Property(null, null, null, null);
+                Property prop = new Property(null, null, null, null, null);
                 foreach (Property checkProp in obj.Properties())
                 {
                     if (checkProp.name == name)

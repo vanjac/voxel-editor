@@ -25,19 +25,19 @@ public class HurtHealBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Amount",
+            new Property("num", "Amount",
                 () => amount,
                 v => amount = (float)v,
                 PropertyGUIs.Float),
-            new Property("Rate",
+            new Property("rat", "Rate",
                 () => rate,
                 v => rate = (float)v,
                 PropertyGUIs.Time),
-            new Property("Min health",
+            new Property("min", "Min health",
                 () => minHealth,
                 v => minHealth = (float)v,
                 PropertyGUIs.Float),
-            new Property("Max health",
+            new Property("max", "Max health",
                 () => maxHealth,
                 v => maxHealth = (float)v,
                 PropertyGUIs.Float)

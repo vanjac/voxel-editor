@@ -23,15 +23,15 @@ public class MotionSensor : Sensor
     {
         return Property.JoinProperties(new Property[]
         {
-            new Property("Min velocity",
+            new Property("vel", "Min velocity",
                 () => minVelocity,
                 v => minVelocity = (float)v,
                 PropertyGUIs.Float),
-            new Property("Min angular vel.",
+            new Property("ang", "Min angular vel.",
                 () => minAngularVelocity,
                 v => minAngularVelocity = (float)v,
                 PropertyGUIs.Float),
-            new Property("Direction",
+            new Property("dir", "Direction",
                 () => direction,
                 v => direction = (Target)v,
                 PropertyGUIs.TargetDirectionFilter)

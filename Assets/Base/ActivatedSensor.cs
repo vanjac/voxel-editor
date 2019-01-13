@@ -142,7 +142,7 @@ public abstract class ActivatedSensor : Sensor
     {
         return Property.JoinProperties(new Property[]
         {
-            new Property("Filter",
+            new Property("fil", "Filter",
                 () => filter,
                 v => filter = (Filter)v,
                 PropertyGUIs.Filter,

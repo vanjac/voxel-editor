@@ -40,11 +40,11 @@ public class InputThresholdSensor : Sensor
     {
         return Property.JoinProperties(new Property[]
         {
-            new Property("Threshold",
+            new Property("thr", "Threshold",
                 () => threshold,
                 v => threshold = (int)v,
                 PropertyGUIs.Int),
-            new Property("Inputs",
+            new Property("inp", "Inputs",
                 () => inputs,
                 v => inputs = (Input[])v,
                 InputsGUI)

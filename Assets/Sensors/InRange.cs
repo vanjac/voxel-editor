@@ -20,7 +20,7 @@ public class InRangeSensor : ActivatedSensor
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Distance",
+            new Property("dis", "Distance",
                 () => distance,
                 v => distance = (float)v,
                 PropertyGUIs.Float)

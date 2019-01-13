@@ -174,7 +174,7 @@ public class MessagePackWorldWriter
                 continue;
             }
             var propList = new List<MessagePackObject>();
-            propList.Add(prop.name);
+            propList.Add(prop.id);
             var valueType = value.GetType();
 
             if (valueType == typeof(Material))

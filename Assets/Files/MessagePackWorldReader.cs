@@ -257,13 +257,13 @@ public class MessagePackWorldReader : WorldFileReader
             foreach (var propObj in propsDict[FileKeys.PROPOBJ_PROPERTIES].AsList())
             {
                 var propList = propObj.AsList();
-                string name = propList[0].AsString();
+                string id = propList[0].AsString();
 
                 bool foundProp = false;
-                Property prop = new Property(null, null, null, null);
+                Property prop = new Property(null, null, null, null, null);
                 foreach (Property checkProp in obj.Properties())
                 {
-                    if (checkProp.name == name)
+                    if (checkProp.id == id)
                     {
                         prop = checkProp;
                         foundProp = true;
@@ -272,7 +272,7 @@ public class MessagePackWorldReader : WorldFileReader
                 }
                 if (!foundProp)
                 {
-                    warnings.Add("Unrecognized property: " + name);
+                    warnings.Add("Unrecognized property: " + id);
                     continue;
                 }
 

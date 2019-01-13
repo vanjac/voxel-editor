@@ -946,7 +946,7 @@ public class Tutorials
         private sbyte GetMoveBehaviorDirection(EntityBehavior behavior)
         {
             foreach (Property prop in behavior.Properties())
-                if (prop.name == "Toward")
+                if (prop.id == "dir")
                     return ((Target)(prop.value)).direction;
             return -1;
         }
@@ -1032,9 +1032,9 @@ public class Tutorials
                 if (e is Substance && e.sensor is PulseSensor)
                     foreach (Property prop in e.sensor.Properties())
                     {
-                        if (prop.name == "Off time" && (float)prop.value > 1)
+                        if (prop.id == "oft" && (float)prop.value > 1)
                             offTimeSet = true;
-                        else if (prop.name == "On time" && (float)prop.value > 1)
+                        else if (prop.id == "ont" && (float)prop.value > 1)
                             onTimeSet = true;
                     }
             return onTimeSet && offTimeSet ? TutorialAction.NEXT : TutorialAction.NONE;
@@ -1124,7 +1124,7 @@ public class Tutorials
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is BallObject)
                     foreach (Property prop in e.Properties())
-                        if (prop.name == "Material")
+                        if (prop.id == "mat")
                         {
                             Color propColor = ((Material)prop.value).color;
                             if (prevColor.Equals(Color.clear))
@@ -1182,7 +1182,7 @@ public class Tutorials
                     foreach (EntityBehavior behavior in e.behaviors)
                         if (behavior is MoveBehavior)
                             foreach (Property prop in behavior.Properties())
-                                if (prop.name == "Toward"
+                                if (prop.id == "dir"
                                     && ((Target)(prop.value)).entityRef.entity is PlayerObject)
                                     return TutorialAction.NEXT;
             return TutorialAction.NONE;
@@ -1231,7 +1231,7 @@ public class Tutorials
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is BallObject && e.sensor is TouchSensor)
                     foreach (Property prop in e.sensor.Properties())
-                        if (prop.name == "Filter" && prop.value is ActivatedSensor.EntityFilter
+                        if (prop.id == "fil" && prop.value is ActivatedSensor.EntityFilter
                             && ((ActivatedSensor.EntityFilter)(prop.value)).entityRef.entity is PlayerObject)
                             return TutorialAction.NEXT;
             return TutorialAction.NONE;
@@ -1331,7 +1331,7 @@ public class Tutorials
                     foreach (EntityBehavior behavior in e.behaviors)
                         if (behavior is HurtHealBehavior)
                             foreach (Property prop in behavior.Properties())
-                                if (prop.name == "Rate" && (float)prop.value != 0)
+                                if (prop.id == "rat" && (float)prop.value != 0)
                                     return TutorialAction.NEXT;
             return TutorialAction.NONE;
         }
