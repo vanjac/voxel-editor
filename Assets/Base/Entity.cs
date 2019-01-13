@@ -178,6 +178,25 @@ public class PropertiesObjectType
         }
         return value;
     }
+
+    public static object GetProperty(PropertiesObject obj, string key)
+    {
+        foreach (Property prop in obj.Properties())
+            if (prop.id == key)
+                return prop.getter();
+        return null;
+    }
+
+    public static bool SetProperty(PropertiesObject obj, string key, object value)
+    {
+        foreach (Property prop in obj.Properties())
+            if (prop.id == key)
+            {
+                prop.setter(value);
+                return true;
+            }
+        return false;
+    }
 }
 
 public interface PropertiesObject
