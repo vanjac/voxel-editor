@@ -45,3 +45,4 @@ upload_certificate.pem
 *.skb
 
 .vscode/settings.json
+*.log
