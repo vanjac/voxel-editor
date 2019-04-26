@@ -9,8 +9,6 @@ public class FacePickerGUI : ActionBarGUI
     public bool onlyFaces = false;
     public bool clearStoredSelection = true;
 
-    private int selectedEntitiesCount; // only if onlyFaces is true
-
     public override void OnEnable()
     {
         // copied from CreateSubstanceGUI
@@ -41,17 +39,15 @@ public class FacePickerGUI : ActionBarGUI
     {
         base.Start();
         voxelArray.ClearSelection();
-        if(clearStoredSelection)
+        if (clearStoredSelection)
             voxelArray.ClearStoredSelection();
-        if (onlyFaces)
-            selectedEntitiesCount = voxelArray.GetSelectedEntities().Count;
     }
 
     void Update()
     {
         if (voxelArray.SomethingIsAddSelected())
         {
-            if (onlyFaces && voxelArray.GetSelectedEntities().Count > selectedEntitiesCount)
+            if (onlyFaces && !voxelArray.FacesAreAddSelected())
             {
                 voxelArray.ClearSelection();
             }

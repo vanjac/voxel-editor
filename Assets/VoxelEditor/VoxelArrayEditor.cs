@@ -446,6 +446,14 @@ public class VoxelArrayEditor : VoxelArray
         return TypeIsSelected<VoxelFaceReference>();
     }
 
+    public bool FacesAreAddSelected()
+    {
+        foreach (var thing in selectedThings)
+            if (thing is VoxelFaceReference)
+                return true;
+        return false;
+    }
+
     public ICollection<Entity> GetSelectedEntities()
     {
         var selectedEntities = new HashSet<Entity>();
