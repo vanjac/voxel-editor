@@ -12,7 +12,7 @@ public class TypePickerGUI : GUIPanel
 
     private int selectedCategory;
 
-    private static readonly Lazy<GUIStyle> descriptionStyle = new Lazy<GUIStyle>(() =>
+    private static readonly System.Lazy<GUIStyle> descriptionStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.wordWrap = true;
@@ -21,7 +21,7 @@ public class TypePickerGUI : GUIPanel
         return style;
     });
 
-    private static readonly Lazy<GUIStyle> helpIconStyle = new Lazy<GUIStyle>(() =>
+    private static readonly System.Lazy<GUIStyle> helpIconStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.padding = new RectOffset(0, 0, 0, 0);
