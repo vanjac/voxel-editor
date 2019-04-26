@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#if UNITY_IOS
+
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -60,3 +62,5 @@ public class IOSPostBuild
         }
     }
 }
+
+#endif
