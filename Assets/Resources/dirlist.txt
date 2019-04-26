@@ -1,10 +1,12 @@
 .
 ./default.json
 ./Demos
-./Demos/ball_pit.json
-./Demos/conveyor.json
-./Demos/logic.json
-./Demos/platforms.json
+./Demos/ball_pit.bytes
+./Demos/conveyor.bytes
+./Demos/impossible_hallway.bytes
+./Demos/launcher.bytes
+./Demos/logic.bytes
+./Demos/platforms.bytes
 ./dirlist.txt
 ./GameAssets
 ./GameAssets/Materials
@@ -272,6 +274,7 @@
 ./Icons/heart.png
 ./Icons/human-greeting.png
 ./Icons/lightbulb-on.png
+./Icons/move-resize-variant.png
 ./Icons/pulse.png
 ./Icons/radar.png
 ./Icons/rocket.png
@@ -289,5 +292,5 @@
 ./ObjectPrefabs
 ./ObjectPrefabs/Player.prefab
 ./Tutorials
-./Tutorials/advanced_game_logic_1.json
+./Tutorials/advanced_game_logic_1.bytes
 ./Tutorials/toolbar_buttons.png

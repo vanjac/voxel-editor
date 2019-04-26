@@ -92,11 +92,7 @@ public class HelpGUI : GUIPanel
                 TextAsset data = Resources.Load<TextAsset>(templateName);
                 using (FileStream fileStream = File.Create(path))
                 {
-                    using (var sw = new StreamWriter(fileStream))
-                    {
-                        sw.Write(data.text);
-                        sw.Flush();
-                    }
+                    fileStream.Write(data.bytes, 0, data.bytes.Length);
                 }
             }
             if (voxelArray != null)
