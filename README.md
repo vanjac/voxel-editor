@@ -20,13 +20,13 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 You can download N-Space on [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel) or the [iOS App Store](https://itunes.apple.com/us/app/n-space/id1448016814).
 
-The app starts on a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world's name to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as JSON files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
+The app opens to a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as `.nspace` files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
 
 N-Space has built-in documentation and tutorials, which you can access through the overflow (!["..."](https://github.com/vanjac/voxel-editor/blob/master/Assets/VoxelEditor/GUI/icons/dots-vertical.png)) menu, by tapping Help.
 
 ## Building the app yourself
 
-The app has been tested with Unity 2017.4.X on Android and iOS. There is little platform-specific code (only for importing/exporting files). Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
+The app has been tested with Unity 2018.3.X on Android and iOS. There is little platform-specific code (only for importing/exporting files). Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
 This repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), and [Genetica](http://spiralgraphics.biz/genetica.htm). You can purchase/download them yourself - look in the `Assets/GameAssets/Poliigon` / `FreePBR` / `Genetica` folders for a list of `.meta` files which correspond to the missing textures. It is also possible to test N-Space without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
 
@@ -41,7 +41,7 @@ The app has four scenes:
 
 These notes are mostly for me, but you can read them too.
 
-- Install latest LTS release of Unity 2017, with build tools for Android/iOS.
+- Install latest release of Unity 2018, with build tools for Android/iOS.
 - Install Blender
 - Clone repo. **Don't open in Unity yet!!**
 - Optional: Download/copy textures from Poliigon, FreePBR, and Genetica (see above)
