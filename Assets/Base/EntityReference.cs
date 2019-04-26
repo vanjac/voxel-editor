@@ -155,6 +155,21 @@ public struct Target
             return Voxel.DirectionForFaceI(direction);
     }
 
+    public float DistanceFrom(Vector3 point)
+    {
+        if (entityRef.entity != null)
+        {
+            EntityComponent c = entityRef.component;
+            if (c != null)
+                return (c.transform.position - point).magnitude;
+            return 0.0f;
+        }
+        else if (direction == -1)
+            return 0.0f;
+        else
+            return float.PositiveInfinity;
+    }
+
     public bool MatchesDirection(Vector3 point, Vector3 direction)
     {
         Vector3 targetDirection = DirectionFrom(point);
