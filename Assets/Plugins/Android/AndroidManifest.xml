@@ -26,44 +26,89 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
 
-      <!-- open from web browser -->
+      <!-- https://stackoverflow.com/a/39316622 -->
+
+      <!-- Mime type set -->
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.BROWSABLE" />
         <category android:name="android.intent.category.DEFAULT" />
-        <data android:scheme="http"
-              android:host="*"
-              android:pathPattern=".*\\.json"
-              android:mimeType="*/*" />
-        <data android:scheme="https"
-              android:host="*"
-              android:pathPattern=".*\\.json"
-              android:mimeType="*/*" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <data android:scheme="http"
-              android:host="*"
-              android:mimeType="application/json" />
-        <data android:scheme="https"
-              android:host="*"
-              android:mimeType="application/json" />
+
+        <data android:scheme="file" />
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:scheme="content" />
+
+        <!-- Valid mime types -->
+        <data android:mimeType="application/json" />
+        <data android:mimeType="application/vnd.vantjac.nspace" />
+
+        <!-- Invalid mime types -->
+        <data android:mimeType="application/nspace" />
+        <data android:mimeType="application/octet-stream" />
       </intent-filter>
 
-      <!-- open from file browser -->
+      <!-- Mime type not set but valid extensions -->
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.BROWSABLE" />
         <category android:name="android.intent.category.DEFAULT" />
-        <data android:scheme="file" android:pathPattern=".*\\.json" />
-        <data android:scheme="content" android:pathPattern=".*\\.json" />
+
+        <data android:scheme="file" />
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:scheme="content" />
+
+        <data android:host="*" />
+
+        <data android:pathPattern="/.*\\.nspace" />
+        <data android:pathPattern="/.*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.nspace" />
+
+        <data android:pathPattern="/.*\\.json" />
+        <data android:pathPattern="/.*..*\\.json" />
+        <data android:pathPattern="/.*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
       </intent-filter>
+
+      <!-- Invalid mime type but valid extensions -->
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.BROWSABLE" />
         <category android:name="android.intent.category.DEFAULT" />
-        <data android:mimeType="application/json" />
+
+        <data android:scheme="file" />
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:scheme="content" />
+
+        <data android:host="*" />
+        <data android:mimeType="*/*" />
+
+        <data android:pathPattern="/.*\\.nspace" />
+        <data android:pathPattern="/.*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*..*..*\\.nspace" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.nspace" />
+
+        <data android:pathPattern="/.*\\.json" />
+        <data android:pathPattern="/.*..*\\.json" />
+        <data android:pathPattern="/.*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
       </intent-filter>
+
 
       <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
     </activity>
