@@ -22,7 +22,7 @@ public class InCameraSensor : Sensor
     {
         return Property.JoinProperties(new Property[]
         {
-            new Property("Max distance",
+            new Property("dis", "Max distance",
                 () => maxDistance,
                 v => maxDistance = (float)v,
                 PropertyGUIs.Float)

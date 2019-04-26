@@ -18,7 +18,12 @@ public class AndroidShareReceive
             {
                 if (uri == null)
                     return false;
-                return uri.Call<string>("toString") != "";
+                string uriString = uri.Call<string>("toString");
+                if (uriString == "")
+                    return false;
+                Debug.Log("Intent uri " + uriString);
+                Debug.Log("Intent type " + intent.Call<string>("getType"));
+                return true;
             }
         }
     }

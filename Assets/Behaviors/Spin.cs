@@ -22,7 +22,7 @@ public class SpinBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Speed",
+            new Property("vel", "Speed",
                 () => speed,
                 v => speed = (float)v,
                 PropertyGUIs.Float)

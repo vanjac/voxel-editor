@@ -6,7 +6,7 @@ buildscript {
 
 	dependencies {
 		classpath 'com.android.tools.build:gradle:3.2.0'
-	}
+**BUILD_SCRIPT_DEPS**}
 }
 
 allprojects {
@@ -23,6 +23,7 @@ allprojects {
 }
 
 apply plugin: 'com.android.application'
+**APPLY_PLUGINS**
 
 dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -35,12 +36,20 @@ android {
 	compileSdkVersion **APIVERSION**
 	buildToolsVersion '**BUILDTOOLS**'
 
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
 	defaultConfig {
+		minSdkVersion **MINSDKVERSION**
 		targetSdkVersion **TARGETSDKVERSION**
 		applicationId '**APPLICATIONID**'
 		ndk {
             abiFilters **ABIFILTERS**
         }
+		versionCode **VERSIONCODE**
+		versionName '**VERSIONNAME**'
 	}
 
 	lintOptions {
@@ -49,9 +58,8 @@ android {
 
 	aaptOptions {
 		noCompress '.unity3d', '.ress', '.resource', '.obb'**STREAMING_ASSETS**
-	}
+	}**SIGN**
 
-**SIGN**
 	buildTypes {
   		debug {
  			minifyEnabled **MINIFY_DEBUG**
@@ -62,11 +70,10 @@ android {
   		release {
  			minifyEnabled **MINIFY_RELEASE**
  			useProguard **PROGUARD_RELEASE**
-  			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt'**USER_PROGUARD**
-  			**SIGNCONFIG**
+  			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt'**USER_PROGUARD****SIGNCONFIG**
   		}
-	}
-**PACKAGING_OPTIONS**
+	}**PACKAGING_OPTIONS****SPLITS**
+**BUILT_APK_LOCATION**
     bundle {
         language {
             enableSplit = false
@@ -78,7 +85,4 @@ android {
             enableSplit = true
         }
     }
-}
-
-
-**SOURCE_BUILD_SETUP**
+}**SPLITS_VERSION_CODE****REPOSITORIES****SOURCE_BUILD_SETUP**

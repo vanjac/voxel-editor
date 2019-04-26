@@ -1,62 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using UnityEngine;
 using SimpleJSON;
 using System.Xml;
 using System.Xml.Serialization;
 
-public class MapReadException : Exception
+public class JSONWorldReader : WorldFileReader
 {
-    public MapReadException() { }
-    public MapReadException(string message) : base(message) { }
-    public MapReadException(string message, Exception inner) : base(message, inner) { }
-}
+    public const int VERSION = 7;
 
-public class MapFileReader
-{
-    public const int VERSION = MapFileWriter.VERSION;
-
-    private string fileName;
     private int fileWriterVersion;
-    private Material missingMaterial; // material to be used when material can't be created
 
+    private string jsonString;
     private List<string> warnings = new List<string>();
     private bool editor;
 
-    public MapFileReader(string fileName)
+    public void ReadStream(FileStream fileStream)
     {
-        this.fileName = fileName;
-    }
-
-    // return warnings
-    public List<string> Read(Transform cameraPivot, VoxelArray voxelArray, bool editor)
-    {
-        this.editor = editor;
-        if (missingMaterial == null)
-        {
-            // allowTransparency is true in case the material is used for an overlay, so the alpha value can be adjusted
-            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
-            missingMaterial.color = Color.magenta;
-        }
-        string jsonString;
-
         try
         {
-            string filePath = WorldFiles.GetFilePath(fileName);
-            using (FileStream fileStream = File.Open(filePath, FileMode.Open))
+            using (var sr = new StreamReader(fileStream))
             {
-                using (var sr = new StreamReader(fileStream))
-                {
-                    jsonString = sr.ReadToEnd();
-                }
+                jsonString = '{' + sr.ReadToEnd();
             }
         }
         catch (Exception e)
         {
             throw new MapReadException("An error occurred while reading the file", e);
         }
+    }
+
+
+    public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    {
+        this.editor = editor;
 
         JSONNode rootNode;
         try
@@ -143,7 +121,7 @@ public class MapFileReader
         if (fileWriterVersion <= 2 && world["sky"] != null)
         {
             Material sky = materials[world["sky"].AsInt];
-            if (sky != missingMaterial) // default skybox is null
+            if (sky != ReadWorldFile.missingMaterial) // default skybox is null
                 voxelArray.world.SetSky(sky);
         }
         if (world["map"] != null)
@@ -204,7 +182,7 @@ public class MapFileReader
                     return ResourcesDirectory.GetMaterial(newDirEntry);
             }
             warnings.Add("Unrecognized material: " + name);
-            return missingMaterial;
+            return ReadWorldFile.missingMaterial;
         }
         else if (matObject["mode"] != null)
         {
@@ -227,7 +205,7 @@ public class MapFileReader
         else
         {
             warnings.Add("Error reading material");
-            return missingMaterial;
+            return ReadWorldFile.missingMaterial;
         }
     }
 
@@ -302,7 +280,7 @@ public class MapFileReader
                 string valueString = propArray[1];
 
                 bool foundProp = false;
-                Property prop = new Property(null, null, null, null);
+                Property prop = new Property(null, null, null, null, null);
                 foreach (Property checkProp in obj.Properties())
                 {
                     if (checkProp.name == name)

@@ -152,7 +152,7 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
-  defaultMap: {fileID: 4900000, guid: def87d4fc2d1e4c469422477861bcc22, type: 3}
+  defaultWorld: {fileID: 4900000, guid: def87d4fc2d1e4c469422477861bcc22, type: 3}
 --- !u!114 &1450445160
 MonoBehaviour:
   m_ObjectHideFlags: 0

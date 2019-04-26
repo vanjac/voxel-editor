@@ -22,19 +22,19 @@ public class LightBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Size",
+            new Property("siz", "Size",
                 () => size,
                 v => size = (float)v,
                 PropertyGUIs.Slider(1, 30)),
-            new Property("Color",
+            new Property("col", "Color",
                 () => color,
                 v => color = (Color)v,
                 PropertyGUIs.Color),
-            new Property("Intensity",
+            new Property("int", "Intensity",
                 () => intensity,
                 v => intensity = (float)v,
                 PropertyGUIs.Slider(0, 5)),
-            new Property("Halo?",
+            new Property("hal", "Halo?",
                 () => halo,
                 v => halo = (bool)v,
                 PropertyGUIs.Toggle)

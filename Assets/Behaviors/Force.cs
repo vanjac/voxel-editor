@@ -33,23 +33,23 @@ public class ForceBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Mode",
+            new Property("fmo", "Mode",
                 () => mode,
                 v => mode = (ForceBehaviorMode)v,
                 PropertyGUIs.Enum),
-            new Property("Ignore mass?",
+            new Property("ima", "Ignore mass?",
                 () => ignoreMass,
                 v => ignoreMass = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("Stop object first?",
+            new Property("sto", "Stop object first?",
                 () => stopObjectFirst,
                 v => stopObjectFirst = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("Strength",
+            new Property("mag", "Strength",
                 () => strength,
                 v => strength = (float)v,
                 PropertyGUIs.Float),
-            new Property("Toward",
+            new Property("dir", "Toward",
                 () => target,
                 v => target = (Target)v,
                 PropertyGUIs.Target)

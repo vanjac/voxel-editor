@@ -15,10 +15,10 @@ public class GameLoad : MonoBehaviour
     private IEnumerator LoadCoroutine()
     {
         yield return null;
-        MapFileReader reader = new MapFileReader(SelectedMap.Instance().mapName);
         try
         {
-            reader.Read(null, GetComponent<VoxelArray>(), false);
+            ReadWorldFile.Read(SelectedWorld.Instance().worldPath,
+                null, GetComponent<VoxelArray>(), false);
         }
         catch (MapReadException e)
         {
@@ -27,7 +27,7 @@ public class GameLoad : MonoBehaviour
             dialog.yesButtonText = "Close";
             dialog.yesButtonHandler = () =>
             {
-                Close("menuScene");
+                Close(Scenes.MENU);
             };
             Debug.Log(e.InnerException);
             yield break;
@@ -64,7 +64,7 @@ public class GameLoad : MonoBehaviour
     {
         if (!paused && ShareMap.FileWaitingToImport())
         {
-            Close("fileReceiveScene");
+            Close(Scenes.FILE_RECEIVE);
         }
     }
 }

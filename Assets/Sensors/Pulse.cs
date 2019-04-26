@@ -20,15 +20,15 @@ public class PulseSensor : Sensor
     {
         return Property.JoinProperties(new Property[]
         {
-            new Property("Start on?",
+            new Property("sta", "Start on?",
                 () => startOn,
                 v => startOn = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("Off time",
+            new Property("oft", "Off time",
                 () => offTime,
                 v => offTime = (float)v,
                 PropertyGUIs.Time),
-            new Property("On time",
+            new Property("ont", "On time",
                 () => onTime,
                 v => onTime = (float)v,
                 PropertyGUIs.Time)

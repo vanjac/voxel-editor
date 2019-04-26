@@ -10,6 +10,7 @@ public delegate void PropertyGUI(Property property);
 
 public struct Property
 {
+    public string id;
     public string name;
     public GetProperty getter;
     public SetProperty setter;
@@ -28,18 +29,10 @@ public struct Property
     }
     public bool explicitType; // store object type with property in file
 
-    public Property(string name, GetProperty getter, SetProperty setter, PropertyGUI gui)
+    public Property(string id, string name, GetProperty getter, SetProperty setter,
+        PropertyGUI gui, bool explicitType = false)
     {
-        this.name = name;
-        this.getter = getter;
-        this.setter = setter;
-        this.gui = gui;
-        explicitType = false;
-    }
-
-    public Property(string name, GetProperty getter, SetProperty setter, PropertyGUI gui,
-        bool explicitType)
-    {
+        this.id = id;
         this.name = name;
         this.getter = getter;
         this.setter = setter;
@@ -102,46 +95,32 @@ public class PropertiesObjectType
         constructor = DefaultConstructor;
     }
 
-    public PropertiesObjectType(string fullName, string description, string iconName, Type type)
-    {
-        this.fullName = fullName;
-        this.description = description;
-        longDescription = "";
-        this.iconName = iconName;
-        this.type = type;
-        constructor = DefaultConstructor;
-    }
-
-    public PropertiesObjectType(string fullName, string description, string longDescription, string iconName, Type type)
-    {
-        this.fullName = fullName;
-        this.description = description;
-        this.longDescription = longDescription;
-        this.iconName = iconName;
-        this.type = type;
-        constructor = DefaultConstructor;
-    }
-
     public PropertiesObjectType(string fullName, string description, string iconName,
-        Type type, PropertiesObjectConstructor constructor)
+        Type type, PropertiesObjectConstructor constructor = null)
     {
         this.fullName = fullName;
         this.description = description;
         longDescription = "";
         this.iconName = iconName;
         this.type = type;
-        this.constructor = constructor;
+        if (constructor == null)
+            this.constructor = DefaultConstructor;
+        else
+            this.constructor = constructor;
     }
 
-    public PropertiesObjectType(string fullName, string description, string iconName, string longDescription,
-        Type type, PropertiesObjectConstructor constructor)
+    public PropertiesObjectType(string fullName, string description, string longDescription,
+        string iconName, Type type, PropertiesObjectConstructor constructor = null)
     {
         this.fullName = fullName;
         this.description = description;
         this.longDescription = longDescription;
         this.iconName = iconName;
         this.type = type;
-        this.constructor = constructor;
+        if (constructor == null)
+            this.constructor = DefaultConstructor;
+        else
+            this.constructor = constructor;
     }
 
     public PropertiesObjectType(PropertiesObjectType baseType, PropertiesObjectConstructor newConstructor)
@@ -199,6 +178,25 @@ public class PropertiesObjectType
         }
         return value;
     }
+
+    public static object GetProperty(PropertiesObject obj, string key)
+    {
+        foreach (Property prop in obj.Properties())
+            if (prop.id == key)
+                return prop.getter();
+        return null;
+    }
+
+    public static bool SetProperty(PropertiesObject obj, string key, object value)
+    {
+        foreach (Property prop in obj.Properties())
+            if (prop.id == key)
+            {
+                prop.setter(value);
+                return true;
+            }
+        return false;
+    }
 }
 
 public interface PropertiesObject
@@ -241,7 +239,7 @@ public abstract class Entity : PropertiesObject
     {
         return new Property[]
         {
-            new Property("Tag",
+            new Property("tag", "Tag",
                 () => tag,
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
@@ -486,7 +484,7 @@ public abstract class EntityBehavior : PropertiesObject
     {
         return new Property[]
         {
-            new Property("Target",
+            new Property("tar", "Target",
                 () => new BehaviorTargetProperty(targetEntity, targetEntityIsActivator),
                 v => {
                     var prop = (BehaviorTargetProperty)v;
@@ -517,7 +515,7 @@ public abstract class EntityBehavior : PropertiesObject
                     targetEntityIsActivator = prop.targetEntityIsActivator;
                 },
                 PropertyGUIs.BehaviorTarget),
-            new Property("Condition",
+            new Property("con", "Condition",
                 () => condition,
                 v => condition = (Condition)v,
                 (Property property) => {
@@ -589,30 +587,24 @@ public class BehaviorType : PropertiesObjectType
         this.rule = DefaultRule;
     }
 
-    public BehaviorType(string fullName, string description, string iconName, Type type)
-        : base(fullName, description, iconName, type)
-    {
-        this.rule = DefaultRule;
-    }
-
-    public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type)
-        : base(fullName, description, longDescription, iconName, type)
-    {
-        this.rule = DefaultRule;
-    }
-
     public BehaviorType(string fullName, string description, string iconName, Type type,
-        BehaviorRule rule)
+        BehaviorRule rule = null)
         : base(fullName, description, iconName, type)
     {
-        this.rule = rule;
+        if (rule == null)
+            this.rule = DefaultRule;
+        else
+            this.rule = rule;
     }
 
     public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type,
-        BehaviorRule rule)
+        BehaviorRule rule = null)
         : base(fullName, description, longDescription, iconName, type)
     {
-        this.rule = rule;
+        if (rule == null)
+            this.rule = DefaultRule;
+        else
+            this.rule = rule;
     }
 
     private static bool DefaultRule(Entity checkEntity)
@@ -768,11 +760,11 @@ public abstract class DynamicEntity : Entity
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("X-Ray?",
+            new Property("xra", "X-Ray?",
                 () => xRay,
                 v => {xRay = (bool)v; UpdateEntityEditor();},
                 PropertyGUIs.Toggle),
-            new Property("Health",
+            new Property("hea", "Health",
                 () => health,
                 v => health = (float)v,
                 PropertyGUIs.Float)

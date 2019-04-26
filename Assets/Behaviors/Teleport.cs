@@ -23,11 +23,11 @@ public class TeleportBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("To",
+            new Property("loc", "To",
                 () => target,
                 v => target = (EntityReference)v,
                 PropertyGUIs.EntityReference),
-            new Property("Relative to",
+            new Property("rel", "Relative to",
                 () => origin,
                 v => origin = (EntityReference)v,
                 (Property property) => {

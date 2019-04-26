@@ -19,7 +19,7 @@ public class AndroidShare
         {
             using (intentObject.Call<AndroidJavaObject>("setAction", intentClass.GetStatic<string>("ACTION_SEND")))
             { }
-            using (intentObject.Call<AndroidJavaObject>("setType", "application/json"))
+            using (intentObject.Call<AndroidJavaObject>("setType", "application/vnd.vantjac.nspace"))
             { }
             // default file name for Google Drive
             using (intentObject.Call<AndroidJavaObject>("putExtra", intentClass.GetStatic<string>("EXTRA_SUBJECT"), Path.GetFileName(filePath)))

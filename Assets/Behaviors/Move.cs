@@ -22,11 +22,11 @@ public class MoveBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Speed",
+            new Property("vel", "Speed",
                 () => speed,
                 v => speed = (float)v,
                 PropertyGUIs.Float),
-            new Property("Toward",
+            new Property("dir", "Toward",
                 () => target,
                 v => target = (Target)v,
                 PropertyGUIs.Target)

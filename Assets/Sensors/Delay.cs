@@ -25,19 +25,19 @@ public class DelaySensor : Sensor
     {
         return Property.JoinProperties(new Property[]
         {
-            new Property("Input",
+            new Property("inp", "Input",
                 () => input,
                 v => input = (EntityReference)v,
                 PropertyGUIs.EntityReference),
-            new Property("Off time",
+            new Property("oft", "Off time",
                 () => offTime,
                 v => offTime = (float)v,
                 PropertyGUIs.Time),
-            new Property("On time",
+            new Property("ont", "On time",
                 () => onTime,
                 v => onTime = (float)v,
                 PropertyGUIs.Time),
-            new Property("Start on?",
+            new Property("sta", "Start on?",
                 () => startOn,
                 v => startOn = (bool)v,
                 PropertyGUIs.Toggle)

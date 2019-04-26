@@ -23,15 +23,15 @@ public class ToggleSensor : Sensor
     {
         return Property.JoinProperties(new Property[]
         {
-            new Property("Start on?",
+            new Property("sta", "Start on?",
                 () => startOn,
                 v => startOn = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("Off input",
+            new Property("ofi", "Off input",
                 () => offInput,
                 v => offInput = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull),
-            new Property("On input",
+            new Property("oni", "On input",
                 () => onInput,
                 v => onInput = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull)

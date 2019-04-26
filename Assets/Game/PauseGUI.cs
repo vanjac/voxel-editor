@@ -100,15 +100,15 @@ public class PauseGUI : GUIPanel
             }),
             new OverflowMenuGUI.MenuItem("Restart", GUIIconSet.instance.restart, () =>
             {
-                gameLoad.Close("playScene");
+                gameLoad.Close(Scenes.GAME);
             }),
             new OverflowMenuGUI.MenuItem("Editor", GUIIconSet.instance.editor, () =>
             {
-                gameLoad.Close("editScene");
+                gameLoad.Close(Scenes.EDITOR);
             }),
             new OverflowMenuGUI.MenuItem("Close", GUIIconSet.instance.x, () =>
             {
-                gameLoad.Close("menuScene");
+                gameLoad.Close(Scenes.MENU);
             })
         };
 

@@ -20,7 +20,7 @@ public class WaterBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Density",
+            new Property("den", "Density",
                 () => density,
                 v => density = (float)v,
                 PropertyGUIs.Float)

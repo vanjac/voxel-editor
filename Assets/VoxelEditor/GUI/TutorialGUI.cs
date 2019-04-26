@@ -120,7 +120,7 @@ public class TutorialGUI : GUIPanel
     {
         currentTutorial = tutorial;
 
-        // voxelArray is null if opening a tutorial from menuScene
+        // voxelArray is null if opening a tutorial from menu
         if (voxelArray != null)
         {
             var tutorialGUI = guiGameObject.GetComponent<TutorialGUI>();

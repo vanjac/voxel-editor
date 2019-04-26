@@ -149,16 +149,9 @@ public class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                foreach (Property prop in ball.Properties())
-                {
-                    if (prop.name == "Material")
-                    {
-                        Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                        lightMat.color = new Color(1, 1, 1, 0.25f);
-                        prop.setter(lightMat);
-                        break;
-                    }
-                }
+                Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
+                lightMat.color = new Color(1, 1, 1, 0.25f);
+                PropertiesObjectType.SetProperty(ball, "mat", lightMat);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
                 return ball;
@@ -169,32 +162,21 @@ public class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                // TODO: there should be a better way to set properties
-                foreach (Property prop in ball.Properties())
-                {
-                    if (prop.name == "Material")
-                    {
-                        Material neuronMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                        neuronMat.color = new Color(.09f, .38f, .87f, .25f);
-                        prop.setter(neuronMat);
-                        break;
-                    }
-                }
+                Material neuronMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
+                neuronMat.color = new Color(.09f, .38f, .87f, .25f);
+                PropertiesObjectType.SetProperty(ball, "mat", neuronMat);
+
                 ball.sensor = new InputThresholdSensor();
                 ball.behaviors.Add(new VisibleBehavior());
                 ball.behaviors.Add(new SolidBehavior());
+
                 var light = new LightBehavior();
                 light.condition = EntityBehavior.Condition.ON;
-                foreach (Property prop in light.Properties())
-                {
-                    if (prop.name == "Color")
-                        prop.setter(new Color(.09f, .38f, .87f));
-                    else if (prop.name == "Size")
-                        prop.setter(2.0f);
-                    else if (prop.name == "Intensity")
-                        prop.setter(3.0f);
-                }
+                PropertiesObjectType.SetProperty(light, "col", new Color(.09f, .38f, .87f));
+                PropertiesObjectType.SetProperty(light, "siz", 2.0f);
+                PropertiesObjectType.SetProperty(light, "int", 3.0f);
                 ball.behaviors.Add(light);
+
                 return ball;
             })
     };

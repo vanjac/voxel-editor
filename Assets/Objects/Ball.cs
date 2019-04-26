@@ -29,7 +29,7 @@ public class BallObject : ObjectEntity
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("Material",
+            new Property("mat", "Material",
                 () => material,
                 v =>
                 {
