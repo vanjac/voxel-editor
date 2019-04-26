@@ -17,6 +17,7 @@ Assets from Unity Standard Assets:
     Ethan character mesh
     Various scripts
 
-Scripts:
+Libraries:
     SimpleJSON: http://wiki.unity3d.com/index.php/SimpleJSON
+    MessagePack for CLI (Apache License 2.0): https://github.com/msgpack/msgpack-cli
     Other sources listed in scripts (see the GitHub repository above)
