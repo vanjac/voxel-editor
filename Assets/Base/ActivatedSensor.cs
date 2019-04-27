@@ -66,7 +66,7 @@ public abstract class ActivatedSensor : Sensor
                         return _entityType;
                     }
                     Debug.Log("Couldn't find matching filter type for " + _entityType.fullName + "!");
-                    _entityType = null;
+                    _entityType = Entity.objectType;
                 }
                 return _entityType;
             }
