@@ -8,7 +8,7 @@ public class TagPickerGUI : GUIPanel
     public TagHandler handler;
 
     private string[] tags;
-    private static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> buttonStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.button);
         style.fontSize = GUI.skin.font.fontSize * 2;

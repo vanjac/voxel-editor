@@ -10,7 +10,7 @@ public class ActionBarGUI : TopPanelGUI
     public EditorFile editorFile;
     public TouchListener touchListener;
 
-    private static readonly System.Lazy<GUIStyle> labelStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> labelStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
         style.alignment = TextAnchor.MiddleCenter;

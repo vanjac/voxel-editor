@@ -162,7 +162,7 @@ public class PropertiesGUI : LeftPanelGUI
     List<StoredEntityBehavior> editBehaviors = new List<StoredEntityBehavior>();
     bool mismatchedSelectedBehaviorCounts; // selected entities have different numbers of behaviors
 
-    private static readonly System.Lazy<GUIStyle> iconStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> iconStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.padding = new RectOffset(0, 0, 0, 0);

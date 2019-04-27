@@ -19,7 +19,7 @@ public class PaintGUI : GUIPanel
     private int selectedLayer = 0;
     private MaterialSelectorGUI materialSelector;
 
-    private static readonly System.Lazy<GUIStyle> previewBoxStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> previewBoxStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
         style.normal.background = null;

@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class GUIUtils
 {
-    public static readonly System.Lazy<GUIStyle> LABEL_WORD_WRAPPED = new System.Lazy<GUIStyle>(() =>
+    public static readonly Lazy<GUIStyle> LABEL_WORD_WRAPPED = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.wordWrap = true;
         return style;
     });
 
-    public static readonly System.Lazy<GUIStyle> LABEL_CENTERED = new System.Lazy<GUIStyle>(() =>
+    public static readonly Lazy<GUIStyle> LABEL_CENTERED = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.MiddleCenter;
         return style;
     });
 
-    public static readonly System.Lazy<GUIStyle> LABEL_HORIZ_CENTERED = new System.Lazy<GUIStyle>(() =>
+    public static readonly Lazy<GUIStyle> LABEL_HORIZ_CENTERED = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.UpperCenter;

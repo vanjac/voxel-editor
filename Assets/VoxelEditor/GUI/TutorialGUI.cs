@@ -92,13 +92,13 @@ public class TutorialGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
-    private static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> buttonStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
         style.fixedHeight = 0;
         return style;
     });
-    private static readonly System.Lazy<GUIStyle> textStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> textStyle = new Lazy<GUIStyle>(() =>
     {
         // keep original background because it's more opaque than Box
         var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
