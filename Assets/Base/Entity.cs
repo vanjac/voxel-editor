@@ -60,7 +60,7 @@ public class PropertiesObjectType
 
     public delegate PropertiesObject PropertiesObjectConstructor();
 
-    public readonly string fullName;
+    public string fullName; // not readonly so it can be serialized
     [XmlIgnore]
     public readonly string description;
     [XmlIgnore]
