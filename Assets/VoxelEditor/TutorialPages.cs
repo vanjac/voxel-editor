@@ -182,7 +182,7 @@ public class Tutorials
             + "going up, going down, and stopped. But sensors can only be On/Off..."),
         () => new SimpleTutorialPage(
             "To solve this, we use Targeted Behaviors. "
-            + "Remember that these are behaviors which use their host object to turn on/off, but act upon a Target object."),
+            + "Remember that these behaviors use their host object to turn on/off, but act upon a Target object."),
         () => new SimpleTutorialPage(
             "<i>First, connect the hidden Down arrow cube to the two Down buttons, just like the Up arrow cube.</i>"),
         () => new SimpleTutorialPage(
@@ -418,7 +418,7 @@ public class Tutorials
         public override string GetText()
         {
             return "<i>Now select a different face and pull it towards the center of the room. "
-                + "Keep pulling as far as you can.</i>";
+                + "Keep pulling until you reach the other side.</i>";
         }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
