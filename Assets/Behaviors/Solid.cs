@@ -24,24 +24,15 @@ public class SolidBehavior : EntityBehavior
 
 public class SolidComponent : BehaviorComponent
 {
-    private System.Collections.Generic.IEnumerable<Collider> IterateColliders()
-    {
-        Collider c = GetComponent<Collider>();
-        if (c != null)
-            yield return c;
-        foreach (BoxCollider childCollider in GetComponentsInChildren<BoxCollider>())
-            yield return childCollider;
-    }
-
     public override void BehaviorEnabled()
     {
-        foreach (Collider c in IterateColliders())
+        foreach (Collider c in GetComponentsInChildren<Collider>())
             c.isTrigger = false;
     }
 
     public override void LastBehaviorDisabled()
     {
-        foreach (Collider c in IterateColliders())
+        foreach (Collider c in GetComponentsInChildren<Collider>())
             c.isTrigger = true;
     }
 }

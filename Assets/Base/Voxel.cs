@@ -645,12 +645,9 @@ public class Voxel : MonoBehaviour
         else
         {
             useMeshCollider = false;
-            if (substance == null) // TODO
-            {
-                foreach (VoxelEdge edge in edges)
-                    if (edge.hasBevel)
-                        useMeshCollider = true;
-            }
+            foreach (VoxelEdge edge in edges)
+                if (edge.hasBevel)
+                    useMeshCollider = true;
         }
         Collider theCollider;
         if (useMeshCollider)
@@ -662,6 +659,8 @@ public class Voxel : MonoBehaviour
             meshCollider.sharedMesh = null;
             meshCollider.sharedMesh = mesh;
             boxCollider.enabled = false;
+
+            meshCollider.convex = (!inEditor && substance != null);
         }
         else
         {
