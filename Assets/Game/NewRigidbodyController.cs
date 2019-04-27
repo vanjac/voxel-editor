@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
@@ -14,7 +14,6 @@ public class NewRigidbodyController : MonoBehaviour
 
     public float groundCheckDistance = 0.1f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
     public float stickToGroundHelperDistance = 0.6f; // stops the character
-    public float slowDownRate = 20f; // rate at which the controller comes to a stop when there is no input
     public float shellOffset = 0.1f; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
 
     public MouseLook mouseLook = new MouseLook();
@@ -151,13 +150,15 @@ public class NewRigidbodyController : MonoBehaviour
             grounded = true;
             groundContactNormal = hitInfo.normal;
             // move with moving object
+            Vector3 move = Vector3.zero;
             foreach (MotionComponent motionComponent in hitInfo.transform.GetComponents<MotionComponent>())
+            {
                 if (motionComponent.enabled)
-                {
-                    Vector3 move = motionComponent.GetTranslateFixed();
-                    move.y = 0;
-                    rigidBody.MovePosition(rigidBody.position + move);
-                }
+                    move += motionComponent.GetTranslateFixed();
+            }
+            move.y = 0;
+            if (move != Vector3.zero)
+                rigidBody.MovePosition(rigidBody.position + move);
         }
         else
         {
