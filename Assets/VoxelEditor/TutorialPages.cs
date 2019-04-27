@@ -10,7 +10,7 @@ public class Tutorials
             "Welcome! This is a brief tutorial that will guide you through the app. "
             + "You can access this tutorial and others at any time. Press the right arrow to continue."),
         () => new SimpleTutorialPage(
-            "Right now you are looking at the interior of a room. One wall is hidden so you can see inside. "
+            "Right now you are looking at the interior of a room. Two walls are hidden so you can see inside. "
             + "The green person marks the player location."),
         () => new TutorialIntroNavigation(),
         () => new TutorialIntroSelectFace(),

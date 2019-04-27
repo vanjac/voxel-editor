@@ -90,11 +90,7 @@ public class MenuGUI : GUIPanel
         }
         using (FileStream fileStream = File.Create(path))
         {
-            using (var sw = new StreamWriter(fileStream))
-            {
-                sw.Write(defaultWorld.text);
-                sw.Flush();
-            }
+            fileStream.Write(defaultWorld.bytes, 0, defaultWorld.bytes.Length);
         }
         UpdateWorldList();
 
