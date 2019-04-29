@@ -37,7 +37,7 @@ The app has four scenes:
 - `Menu/menuScene`: The file selection menu
 - `VoxelEditor/editScene`: The Editor interface. If you open this scene directly without first choosing a file, it will look for a file called `mapsave`.
 - `Game/playScene`: The gameplay interface. Again, without choosing a file it will look for `mapsave`.
-- `Menu/fileReceiveScene`: This scene will launch if you try to open a JSON file from another app using N-Space. This only works on Android.
+- `Menu/fileReceiveScene`: This scene will launch if you try to open a world file from another app using N-Space. This only works on Android.
 
 ### Build Environment Setup
 
