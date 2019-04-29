@@ -4,6 +4,10 @@
 
 A mobile app for building 3D interactive worlds. This is a work in progress.
 
+- [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel)
+- [iOS App Store](https://itunes.apple.com/us/app/n-space/id1448016814)
+- [Subreddit](https://www.reddit.com/r/nspace/)
+
 ## Features
 
 - Sculpt indoor/outdoor 3D environments. The interface is designed to allow rapid design and modification.
@@ -17,8 +21,6 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 - World files can be sent to/from other apps.
 
 ## Using the app
-
-You can download N-Space on [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel) or the [iOS App Store](https://itunes.apple.com/us/app/n-space/id1448016814).
 
 The app opens to a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as `.nspace` files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
 
