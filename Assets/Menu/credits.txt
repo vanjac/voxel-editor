@@ -18,6 +18,19 @@ Assets from Unity Standard Assets:
     Various scripts
 
 Libraries:
-    SimpleJSON: http://wiki.unity3d.com/index.php/SimpleJSON
-    MessagePack for CLI (Apache License 2.0): https://github.com/msgpack/msgpack-cli
+    SimpleJSON
+    Copyright (c) 2012-2017 Markus Göbel (Bunny83)
+
+    MessagePack for CLI
+    Copyright (C) 2010-2018 FUJIWARA, Yusuke
+
+    SunVox modular synthesizer
+    Copyright (c) 2008 - 2017, Alexander Zolotov <nightradio@gmail.com>, WarmPlace.ru
+
+    Ogg Vorbis 'Tremor' integer playback codec
+    Copyright (c) 2002, Xiph.org Foundation
+
+    SunVox-Unity
+    Copyright (c) 2018, AlRado
+
     Other sources listed in scripts (see the GitHub repository above)
