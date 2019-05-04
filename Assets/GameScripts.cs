@@ -95,10 +95,12 @@ public class GameScripts
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
         WaterBehavior.objectType,
-        ForceBehavior.objectType
+        ForceBehavior.objectType,
+
+        SunVoxSongBehavior.objectType
     };
 
-    public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics" };
+    public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics", "Sound" };
 
     public static BehaviorType[][] behaviorTabs = new BehaviorType[][]
     {
@@ -126,6 +128,10 @@ public class GameScripts
             WaterBehavior.objectType,
             ForceBehavior.objectType
         },
+        new BehaviorType[]
+        {
+            SunVoxSongBehavior.objectType
+        }
     };
 
     public static PropertiesObjectType[] objects = new PropertiesObjectType[]

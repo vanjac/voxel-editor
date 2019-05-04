@@ -208,7 +208,6 @@ MonoBehaviour:
     m_RotationOrder: 0
   groundCheckDistance: 0.1
   stickToGroundHelperDistance: 0.6
-  slowDownRate: 20
   shellOffset: 0.1
   mouseLook:
     XSensitivity: 2
