@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +7,15 @@ public class SunVoxSongBehavior : EntityBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Song", "Play a song created with SunVox",
         "sunvox", typeof(SunVoxSongBehavior));
+
+    public enum PlayMode
+    {
+        ONCE, LOOP, BACKGROUND
+    }
+
+    private float volume = 25.0f, fadeIn = 0, fadeOut = 0;
+    private PlayMode playMode = PlayMode.LOOP;
+
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -17,24 +26,50 @@ public class SunVoxSongBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-
+            new Property("pmo", "Play mode",
+                () => playMode,
+                v => playMode = (PlayMode)v,
+                PropertyGUIs.Enum),
+            new Property("vol", "Volume",
+                () => volume,
+                v => volume = (float)v,
+                PropertyGUIs.Float),
+            new Property("fin", "Fade in",
+                () => fadeIn,
+                v => fadeIn = (float)v,
+                PropertyGUIs.Float),
+            new Property("fou", "Fade out",
+                () => fadeOut,
+                v => fadeOut = (float)v,
+                PropertyGUIs.Float)
         });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)
     {
-        return gameObject.AddComponent<SunVoxSongComponent>();
+        var component = gameObject.AddComponent<SunVoxSongComponent>();
+        component.playMode = playMode;
+        component.volume = volume;
+        component.fadeIn = fadeIn;
+        component.fadeOut = fadeOut;
+        component.Init();
+        return component;
     }
 }
 
 
 public class SunVoxSongComponent : BehaviorComponent
 {
-    private int slot;
+    public float volume, fadeIn, fadeOut;
+    public SunVoxSongBehavior.PlayMode playMode;
 
-    public override void Start()
+    private int slot;
+    private float currentVolume = 0;
+    private bool fadingIn, fadingOut;
+
+    public void Init()
     {
-        TextAsset songAsset = Resources.Load<TextAsset>("burningrome");
+        TextAsset songAsset = Resources.Load<TextAsset>("problem");
         slot = SunVoxUtils.OpenUnusedSlot();
         int result = SunVox.sv_load_from_memory(slot, songAsset.bytes, songAsset.bytes.Length);
         if (result != 0)
@@ -44,7 +79,17 @@ public class SunVoxSongComponent : BehaviorComponent
         }
         Debug.Log(System.Runtime.InteropServices.Marshal.PtrToStringAuto(SunVox.sv_get_song_name(0)));
 
-        base.Start();
+        currentVolume = 0;
+        UpdateSunVoxVolume();
+
+        if (playMode == SunVoxSongBehavior.PlayMode.ONCE)
+            SunVox.sv_set_autostop(slot, 1);
+        else
+            SunVox.sv_set_autostop(slot, 0);
+        if (playMode == SunVoxSongBehavior.PlayMode.BACKGROUND)
+            SunVox.sv_play_from_beginning(slot);
+
+        StartCoroutine(VolumeUpdateCoroutine()); // runs even while disabled
     }
 
     public void OnDestroy()
@@ -54,11 +99,59 @@ public class SunVoxSongComponent : BehaviorComponent
 
     public override void BehaviorEnabled()
     {
-        SunVox.sv_play_from_beginning(slot);
+        if (playMode != SunVoxSongBehavior.PlayMode.BACKGROUND)
+            currentVolume = 0;
+        fadingIn = true;
+        fadingOut = false;
+        UpdateSunVoxVolume();
+        if (playMode != SunVoxSongBehavior.PlayMode.BACKGROUND)
+            SunVox.sv_play_from_beginning(slot);
     }
 
     public override void BehaviorDisabled()
     {
-        SunVox.sv_stop(slot);
+        fadingOut = true;
+        fadingIn = false;
+    }
+
+    private IEnumerator VolumeUpdateCoroutine()
+    {
+        while (true)
+        {
+            if (fadingIn)
+            {
+                if (fadeIn == 0)
+                    currentVolume = volume;
+                else
+                    currentVolume += volume / fadeIn * Time.unscaledDeltaTime;
+                if (currentVolume >= volume)
+                {
+                    currentVolume = volume;
+                    fadingIn = false;
+                }
+                UpdateSunVoxVolume();
+            }
+            else if (fadingOut)
+            {
+                if (fadeOut == 0)
+                    currentVolume = 0;
+                else
+                    currentVolume -= volume / fadeOut * Time.unscaledDeltaTime;
+                if (currentVolume <= 0)
+                {
+                    currentVolume = 0;
+                    fadingOut = false;
+                    if (playMode != SunVoxSongBehavior.PlayMode.BACKGROUND)
+                        SunVox.sv_stop(slot);
+                }
+                UpdateSunVoxVolume();
+            }
+            yield return null;
+        }
+    }
+
+    private void UpdateSunVoxVolume()
+    {
+        SunVox.sv_volume(slot, (int)(currentVolume * 256.0f / 100.0f));
     }
 }
