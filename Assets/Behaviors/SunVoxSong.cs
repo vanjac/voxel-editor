@@ -13,6 +13,7 @@ public class SunVoxSongBehavior : EntityBehavior
         ONCE, LOOP, BACKGROUND
     }
 
+    private EmbeddedData songData = new EmbeddedData();
     private float volume = 25.0f, fadeIn = 0, fadeOut = 0;
     private PlayMode playMode = PlayMode.LOOP;
 
@@ -26,6 +27,10 @@ public class SunVoxSongBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
+            new Property("dat", "Song file",
+                () => songData,
+                v => songData = (EmbeddedData)v,
+                SongFileGUI),
             new Property("pmo", "Play mode",
                 () => playMode,
                 v => playMode = (PlayMode)v,
@@ -45,9 +50,23 @@ public class SunVoxSongBehavior : EntityBehavior
         });
     }
 
+    private void SongFileGUI(Property property)
+    {
+        if (GUILayout.Button("Load file"))
+        {
+            var browser = GUIManager.guiGameObject.AddComponent<FileBrowser>();
+            browser.fileAction = (path) =>
+            {
+                var bytes = System.IO.File.ReadAllBytes(path);
+                property.value = new EmbeddedData(bytes);
+            };
+        }
+    }
+
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<SunVoxSongComponent>();
+        component.songData = songData;
         component.playMode = playMode;
         component.volume = volume;
         component.fadeIn = fadeIn;
@@ -60,6 +79,7 @@ public class SunVoxSongBehavior : EntityBehavior
 
 public class SunVoxSongComponent : BehaviorComponent
 {
+    public EmbeddedData songData;
     public float volume, fadeIn, fadeOut;
     public SunVoxSongBehavior.PlayMode playMode;
 
@@ -69,9 +89,8 @@ public class SunVoxSongComponent : BehaviorComponent
 
     public void Init()
     {
-        TextAsset songAsset = Resources.Load<TextAsset>("problem");
         slot = SunVoxUtils.OpenUnusedSlot();
-        int result = SunVox.sv_load_from_memory(slot, songAsset.bytes, songAsset.bytes.Length);
+        int result = SunVox.sv_load_from_memory(slot, songData.bytes, songData.bytes.Length);
         if (result != 0)
         {
             Debug.LogError("Error loading file");
