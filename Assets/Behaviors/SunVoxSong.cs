@@ -93,8 +93,6 @@ public class SunVoxSongComponent : BehaviorComponent
             SunVox.sv_set_autostop(slot, 1);
         else
             SunVox.sv_set_autostop(slot, 0);
-        if (playMode == SunVoxSongBehavior.PlayMode.BACKGROUND)
-            SunVox.sv_play_from_beginning(slot);
 
         StartCoroutine(VolumeUpdateCoroutine()); // runs even while disabled
     }
@@ -123,6 +121,11 @@ public class SunVoxSongComponent : BehaviorComponent
 
     private IEnumerator VolumeUpdateCoroutine()
     {
+        yield return null; // wait a frame to allow world to finish loading
+
+        if (playMode == SunVoxSongBehavior.PlayMode.BACKGROUND)
+            SunVox.sv_play_from_beginning(slot);
+
         while (true)
         {
             if (fadingIn)
@@ -153,6 +156,7 @@ public class SunVoxSongComponent : BehaviorComponent
                 }
                 UpdateSunVoxVolume();
             }
+
             yield return null;
         }
     }
