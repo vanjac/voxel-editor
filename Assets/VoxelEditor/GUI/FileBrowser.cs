@@ -7,7 +7,7 @@ public class FileBrowser : GUIPanel
 {
     public System.Action<string> fileAction;
     public string path;
-    private string[] fileList = new string[0];
+    private List<string> fileList = new List<string>();
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -23,9 +23,14 @@ public class FileBrowser : GUIPanel
     private void UpdateFileList()
     {
         scroll = Vector2.zero;
-        fileList = Directory.GetFileSystemEntries(path);
-        for (int i = 0; i < fileList.Length; i++)
-            fileList[i] = Path.GetFileName(fileList[i]);
+        string[] files = Directory.GetFileSystemEntries(path);
+        fileList.Clear();
+        foreach (string file in files)
+        {
+            string name = Path.GetFileName(file);
+            if (!name.StartsWith("."))
+                fileList.Add(name);
+        }
     }
 
     public override void WindowGUI()
