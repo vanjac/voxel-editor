@@ -287,7 +287,14 @@ public class MessagePackWorldReader : WorldFileReader
                     // skip equality check
                     prop.setter(ReadMaterial(propList[1].AsDictionary(), true));
                 }
-                else
+                else if (propType == typeof(EmbeddedData))
+                {
+                    var dataList = propList[1].AsList();
+                    var name = dataList[0].AsString();
+                    var bytes = dataList[1].AsBinary();
+                    prop.setter(new EmbeddedData(name, bytes));
+                }
+                else // not a special type
                 {
                     string valueString = propList[1].AsString();
                     XmlSerializer xmlSerializer = new XmlSerializer(propType);

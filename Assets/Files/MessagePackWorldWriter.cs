@@ -181,7 +181,15 @@ public class MessagePackWorldWriter
             {
                 propList.Add(new MessagePackObject(WriteMaterial((Material)value, true)));
             }
-            else // not a Material
+            else if (valueType == typeof(EmbeddedData))
+            {
+                var embeddedData = (EmbeddedData)value;
+                var dataList = new List<MessagePackObject>();
+                dataList.Add(embeddedData.name);
+                dataList.Add(embeddedData.bytes);
+                propList.Add(new MessagePackObject(dataList));
+            }
+            else // not a special type
             {
                 XmlSerializer xmlSerializer;
                 try
