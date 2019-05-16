@@ -27,10 +27,11 @@ public class SunVoxSongBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("dat", "Song file",
+            new Property("dat", "Song",
                 () => songData,
                 v => songData = (EmbeddedData)v,
-                SongFileGUI),
+                PropertyGUIs.File(
+                    Application.persistentDataPath.Replace("com.vantjac.voxel", "nightradio.sunvox"))),
             new Property("pmo", "Play mode",
                 () => playMode,
                 v => playMode = (PlayMode)v,
@@ -48,19 +49,6 @@ public class SunVoxSongBehavior : EntityBehavior
                 v => fadeOut = (float)v,
                 PropertyGUIs.Float)
         });
-    }
-
-    private void SongFileGUI(Property property)
-    {
-        if (GUILayout.Button("Load file"))
-        {
-            var browser = GUIManager.guiGameObject.AddComponent<FileBrowser>();
-            browser.fileAction = (path) =>
-            {
-                var bytes = System.IO.File.ReadAllBytes(path);
-                property.value = new EmbeddedData(bytes);
-            };
-        }
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

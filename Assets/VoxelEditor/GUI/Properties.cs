@@ -420,4 +420,28 @@ public class PropertyGUIs
         }
         GUILayout.EndHorizontal();
     }
+
+    public static PropertyGUI File(string directoryPath)
+    {
+        return (Property property) =>
+        {
+            var embeddedData = (EmbeddedData)property.value;
+
+            GUILayout.BeginHorizontal();
+            AlignedLabel(property);
+            if (GUILayout.Button(embeddedData.name, GUI.skin.textField))
+            {
+                var browser = GUIManager.guiGameObject.AddComponent<FileBrowser>();
+                browser.title = "Select " + property.name;
+                browser.path = directoryPath;
+                browser.fileAction = (path) =>
+                {
+                    string name = System.IO.Path.GetFileName(path);
+                    var bytes = System.IO.File.ReadAllBytes(path);
+                    property.value = new EmbeddedData(name, bytes);
+                };
+            }
+            GUILayout.EndHorizontal();
+        };
+    }
 }

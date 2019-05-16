@@ -6,8 +6,7 @@ using System.IO;
 public class FileBrowser : GUIPanel
 {
     public System.Action<string> fileAction;
-
-    private string path;
+    public string path;
     private string[] fileList = new string[0];
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
@@ -18,23 +17,22 @@ public class FileBrowser : GUIPanel
 
     void Start()
     {
-        path = Application.persistentDataPath;
         UpdateFileList();
     }
 
     private void UpdateFileList()
     {
+        scroll = Vector2.zero;
         fileList = Directory.GetFileSystemEntries(path);
         for (int i = 0; i < fileList.Length; i++)
             fileList[i] = Path.GetFileName(fileList[i]);
-        scroll = Vector2.zero;
     }
 
     public override void WindowGUI()
     {
         GUILayout.Label(path);
         scroll = GUILayout.BeginScrollView(scroll);
-        if (GUILayout.Button(".."))
+        if (GUIUtils.HighlightedButton("Back"))
         {
             path = Path.GetDirectoryName(path);
             UpdateFileList();
