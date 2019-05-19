@@ -47,3 +47,31 @@ public class SunVoxUtils
         SunVox.sv_close_slot(slot);
     }
 }
+
+
+public class SunVoxPlayer : AudioPlayer
+{
+    private int slot;
+
+    public static AudioPlayer Factory(byte[] data)
+    {
+        return new SunVoxPlayer(data);
+    }
+
+    public SunVoxPlayer(byte[] data)
+    {
+        slot = SunVoxUtils.OpenUnusedSlot();
+        int result = SunVox.sv_load_from_memory(slot, data, data.Length);
+        if (result != 0)
+        {
+            Debug.LogError("Error loading file");
+            return;
+        }
+        SunVox.sv_play_from_beginning(slot);
+    }
+
+    public void Stop()
+    {
+        SunVoxUtils.CloseSlot(slot);
+    }
+}

@@ -421,7 +421,8 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static PropertyGUI File(string directoryPath)
+    public static PropertyGUI AudioFile(string directoryPath, string extensions,
+        AudioPlayerFactory playerFactory)
     {
         return (Property property) =>
         {
@@ -431,9 +432,11 @@ public class PropertyGUIs
             AlignedLabel(property);
             if (GUILayout.Button(embeddedData.name, GUI.skin.textField))
             {
-                var browser = GUIManager.guiGameObject.AddComponent<FileBrowser>();
+                var browser = GUIManager.guiGameObject.AddComponent<AudioBrowserGUI>();
                 browser.title = "Select " + property.name;
                 browser.path = directoryPath;
+                browser.extensions = extensions;
+                browser.playerFactory = playerFactory;
                 browser.fileAction = (path) =>
                 {
                     string name = System.IO.Path.GetFileName(path);
