@@ -48,6 +48,18 @@ public class MenuOverflowGUI : GUIPanel
                         Application.version, Application.unityVersion, creditsText.text,
                         Screen.width, Screen.height, Screen.dpi);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
+                }),
+                new OverflowMenuGUI.MenuItem("Subreddit", GUIIconSet.instance.reddit, () =>
+                {
+                    Application.OpenURL("https://www.reddit.com/r/nspace/");
+                }),
+                new OverflowMenuGUI.MenuItem("Videos", GUIIconSet.instance.youTube, () =>
+                {
+                    Application.OpenURL("https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2");
+                }),
+                new OverflowMenuGUI.MenuItem("GitHub", GUIIconSet.instance.gitHub, () =>
+                {
+                    Application.OpenURL("https://github.com/vanjac/voxel-editor/");
                 })
             };
         }
