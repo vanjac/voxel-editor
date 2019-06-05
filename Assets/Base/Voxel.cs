@@ -407,7 +407,7 @@ public class Voxel : MonoBehaviour
         }
     }
     public ObjectEntity objectEntity;
-    public byte[] faceSubMeshes = new byte[6];
+    public int[] faceVertexIndices = new int[6];
 
     void OnBecameVisible()
     {
@@ -571,15 +571,23 @@ public class Voxel : MonoBehaviour
             gameObject.layer = 0; // default
 
         var faceCorners = new FaceCornerVertices[6][];
+        var faceTriangles = new int[6][];
         int numVertices = 0;
-        int numMaterials = 0;
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
+            faceVertexIndices[faceNum] = numVertices;
             var corners = GetFaceVertices(faceNum, numVertices);
             faceCorners[faceNum] = corners;
             numVertices += corners[0].count + corners[1].count + corners[2].count + corners[3].count;
-            faceSubMeshes[faceNum] = (byte)numMaterials;
-            numMaterials += FaceMaterialCount(faceNum, xRay, coloredHighlightMaterial);
+            try
+            {
+                faceTriangles[faceNum] = GenerateFaceTriangles(faceNum, corners);
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+                Debug.LogError("Vertex indices don't match!");
+                return;
+            }
         }
 
         var vertices = new Vector3[numVertices];
@@ -607,35 +615,37 @@ public class Voxel : MonoBehaviour
         mesh.uv = uvs;
         mesh.normals = normals;
         mesh.tangents = tangents;
-        mesh.subMeshCount = numMaterials;
+        mesh.subMeshCount = 0;
 
-        Material[] materials = new Material[numMaterials];
-        numMaterials = 0;
-        for (int faceNum = 0; faceNum < 6; faceNum++)
+        List<Material> matList = new List<Material>();
+        foreach (var matInfo in IterateVoxelMaterials(xRay, coloredHighlightMaterial))
         {
-            int[] triangles;
-            try
-            {
-                triangles = GenerateFaceTriangles(faceNum, faceCorners[faceNum]);
-            }
-            catch (System.IndexOutOfRangeException)
-            {
-                Debug.LogError("Vertex indices don't match!");
-                return;
-            }
-            if (triangles == null)
+            if (matInfo.material == null || matInfo.NoFaces())
                 continue;
-
-            foreach (Material faceMaterial in IterateFaceMaterials(faceNum, xRay, coloredHighlightMaterial))
+            int triangleCount = 0;
+            for (int i = 0; i < 6; i++)
             {
-                materials[numMaterials] = faceMaterial;
-                mesh.SetTriangles(triangles, numMaterials);
-                numMaterials++;
+                if (matInfo.faces[i])
+                    triangleCount += faceTriangles[i].Length;
             }
+            int[] triangles = new int[triangleCount];
+            triangleCount = 0;
+            for (int i = 0; i < 6; i++)
+            {
+                if (matInfo.faces[i])
+                {
+                    System.Array.Copy(faceTriangles[i], 0, triangles, triangleCount,
+                        faceTriangles[i].Length);
+                    triangleCount += faceTriangles[i].Length;
+                }
+            }
+            mesh.subMeshCount++;
+            mesh.SetTriangles(triangles, matList.Count);
+            matList.Add(matInfo.material);
         }
 
         Renderer renderer = GetComponent<Renderer>();
-        renderer.materials = materials;
+        renderer.materials = matList.ToArray(); // TODO
         MeshCollider meshCollider = GetComponent<MeshCollider>();
         BoxCollider boxCollider = GetComponent<BoxCollider>();
 
@@ -728,6 +738,26 @@ public class Voxel : MonoBehaviour
         {
             count = bevelProfile_count = bevel_count = cap_count = 0;
             innerQuad_i = edgeB_i = edgeC_i = bevelProfile_i = bevel_i = cap_i = -1;
+        }
+    }
+
+    private struct VoxelMaterialInfo
+    {
+        public Material material;
+        public bool[] faces;
+
+        public VoxelMaterialInfo(Material material, bool[] faces)
+        {
+            this.material = material;
+            this.faces = faces;
+        }
+
+        public bool NoFaces()
+        {
+            foreach (bool face in faces)
+                if (face)
+                    return false;
+            return true;
         }
     }
 
@@ -1017,7 +1047,7 @@ public class Voxel : MonoBehaviour
     private int[] GenerateFaceTriangles(int faceNum, FaceCornerVertices[] vertices)
     {
         if (faces[faceNum].IsEmpty())
-            return null;
+            return new int[0];
 
         int[] surroundingEdges = new int[4];
         int surroundingEdgeI = 0;
@@ -1173,72 +1203,95 @@ public class Voxel : MonoBehaviour
         triangleArray[i + 2] = ccw ? vertex2 : vertex1;
     }
 
-    private int FaceMaterialCount(int faceNum, bool xRay, Material coloredHighlightMaterial)
+    private IEnumerable<VoxelMaterialInfo> IterateVoxelMaterials(
+        bool xRay, Material coloredHighlightMaterial)
     {
-        VoxelFace face = faces[faceNum];
-        if (face.IsEmpty())
-            return 0;
-        int count = 0;
+        if (IsEmpty())
+            yield break; // no materials
+
+        bool[] facesEnabled = new bool[6];
+        // apply following materials to all non-empty faces
+        for (int i = 0; i < 6; i++)
+            facesEnabled[i] = !faces[i].IsEmpty();
+
         if (xRay)
-            count++;
-        else
-        {
-            if (face.material != null)
-                count++;
-            if (face.overlay != null)
-                count++;
-        }
+            yield return new VoxelMaterialInfo(xRayMaterial, facesEnabled);
+
         if (coloredHighlightMaterial != null)
-            count++;
-        if (face.addSelected || face.storedSelected)
-            count++;
+            yield return new VoxelMaterialInfo(coloredHighlightMaterial, facesEnabled);
 
-        foreach (int edgeI in FaceSurroundingEdges(faceNum))
+        for (int i = 0; i < 6; i++) // apply to all selected faces
+            facesEnabled[i] = faces[i].addSelected || faces[i].storedSelected;
+        yield return new VoxelMaterialInfo(selectedMaterial, facesEnabled);
+
+        // show selected edges
+        for (int i = 0; i < 6; i++)
+            facesEnabled[i] = false;
+        for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            if (edges[edgeI].addSelected || edges[edgeI].storedSelected)
+            if (faces[faceNum].IsEmpty())
+                continue;
+            int highlightNum = 0;
+            int surroundingEdgeI = 0;
+            foreach (int edgeI in FaceSurroundingEdges(faceNum))
             {
-                count++;
-                break;
+                var e = edges[edgeI];
+                if (e.addSelected || e.storedSelected)
+                {
+                    int n = FaceTransformedEdgeNum(faceNum, surroundingEdgeI);
+                    highlightNum |= 1 << n;
+                }
+                surroundingEdgeI++;
             }
+            facesEnabled[faceNum] = true;
+            if (highlightNum != 0)
+                yield return new VoxelMaterialInfo(highlightMaterials[highlightNum], facesEnabled);
+            facesEnabled[faceNum] = false;
         }
 
-        return count;
+        if (!xRay) // materials and overlays
+        {
+            // facesEnabled is already cleared from above
+            foreach (var mat in IteratePaintMaterials(facesEnabled, false))
+                yield return mat;
+            foreach (var mat in IteratePaintMaterials(facesEnabled, true))
+                yield return mat;
+        }
     }
 
-
-    private IEnumerable<Material> IterateFaceMaterials(int faceNum, bool xRay, Material coloredHighlightMaterial)
+    // facesEnabled should be an array of 6 falses
+    private IEnumerable<VoxelMaterialInfo> IteratePaintMaterials(bool[] facesEnabled, bool overlay)
     {
-        VoxelFace face = faces[faceNum];
-        if (face.IsEmpty())
-            yield break;
-        if (xRay)
-            yield return xRayMaterial;
-        else
+        bool[] facesUsed = new bool[6];
+        for (int i = 0; i < 6; i++)
         {
-            if (face.material != null)
-                yield return face.material;
-            if (face.overlay != null)
-                yield return face.overlay;
-        }
-        if (coloredHighlightMaterial != null)
-            yield return coloredHighlightMaterial;
-        if (face.addSelected || face.storedSelected)
-            yield return selectedMaterial;
-
-        int highlightNum = 0;
-        int surroundingEdgeI = 0;
-        foreach (int edgeI in FaceSurroundingEdges(faceNum))
-        {
-            var e = edges[edgeI];
-            if (e.addSelected || e.storedSelected)
+            if (facesUsed[i])
+                continue;
+            Material mat;
+            if (overlay)
+                mat = faces[i].overlay;
+            else
+                mat = faces[i].material;
+            if (mat == null)
+                continue;
+            facesEnabled[i] = true;
+            for (int j = i + 1; j < 6; j++)
             {
-                int n = FaceTransformedEdgeNum(faceNum, surroundingEdgeI);
-                highlightNum |= 1 << n;
+                Material mat2;
+                if (overlay)
+                    mat2 = faces[j].overlay;
+                else
+                    mat2 = faces[j].material;
+                if (mat2 == mat)
+                {
+                    facesEnabled[j] = true;
+                    facesUsed[j] = true;
+                }
             }
-            surroundingEdgeI++;
+            yield return new VoxelMaterialInfo(mat, facesEnabled);
+            for (int j = i; j < 6; j++)
+                facesEnabled[j] = false;
         }
-        if (highlightNum != 0)
-            yield return highlightMaterials[highlightNum];
     }
 
 

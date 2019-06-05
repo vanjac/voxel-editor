@@ -68,8 +68,8 @@ public class TouchListener : MonoBehaviour
                 if (hitObject.tag == "Voxel")
                 {
                     hitVoxel = hitObject.GetComponent<Voxel>();
-                    int hitSubMeshI = GetRaycastHitSubMeshIndex(hit);
-                    int hitFaceI = GetVoxelFaceForSubMesh(hitVoxel, hitSubMeshI);
+                    int hitVertexI = GetRaycastHitVertexIndex(hit);
+                    int hitFaceI = GetVoxelFaceForVertex(hitVoxel, hitVertexI);
                     if (selectType == VoxelElement.FACES)
                         hitElementI = hitFaceI;
                     else if (selectType == VoxelElement.EDGES)
@@ -285,23 +285,18 @@ public class TouchListener : MonoBehaviour
         }
     }
 
-    private int GetRaycastHitSubMeshIndex(RaycastHit hit)
+    // the first vertex of the triangle that was hit
+    private int GetRaycastHitVertexIndex(RaycastHit hit)
     {
         var mesh = ((MeshCollider)(hit.collider)).sharedMesh;
-        int index = hit.triangleIndex * 3;
-        for (int subMeshI = 0; subMeshI < mesh.subMeshCount; subMeshI++)
-        {
-            if (mesh.GetIndexStart(subMeshI) > index)
-                return subMeshI - 1;
-        }
-        return mesh.subMeshCount - 1;
+        return mesh.triangles[hit.triangleIndex * 3];
     }
 
-    private int GetVoxelFaceForSubMesh(Voxel v, int subMesh)
+    private int GetVoxelFaceForVertex(Voxel v, int vertex)
     {
         for (int faceI = 0; faceI < 6; faceI++)
         {
-            if (v.faceSubMeshes[faceI] > subMesh)
+            if (v.faceVertexIndices[faceI] > vertex)
                 return faceI - 1;
         }
         return 5;
