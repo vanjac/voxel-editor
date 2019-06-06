@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class FileReceiveGUI : GUIPanel
 {
+    bool openingWorld = false;
+
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(safeRect.xMin, safeRect.yMin, safeRect.width, 0);
@@ -39,7 +41,8 @@ public class FileReceiveGUI : GUIPanel
     void OnDestroy()
     {
         ShareMap.ClearFileWaitingToImport();
-        SceneManager.LoadScene(Scenes.MENU);
+        if (!openingWorld)
+            SceneManager.LoadScene(Scenes.MENU);
     }
 
     public override void WindowGUI()
@@ -69,6 +72,8 @@ public class FileReceiveGUI : GUIPanel
         try
         {
             ShareMap.ImportSharedFile(newPath);
+            MenuGUI.OpenWorld(newPath, Scenes.EDITOR);
+            openingWorld = true;
             Destroy(this);
         }
         catch (System.Exception e)
