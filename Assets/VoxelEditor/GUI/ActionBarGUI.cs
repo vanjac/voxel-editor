@@ -140,6 +140,11 @@ public class ActionBarGUI : TopPanelGUI
         var overflow = gameObject.AddComponent<OverflowMenuGUI>();
         overflow.items = new OverflowMenuGUI.MenuItem[]
         {
+            new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
+                var help = gameObject.AddComponent<HelpGUI>();
+                help.voxelArray = voxelArray;
+                help.touchListener = touchListener;
+            }),
             new OverflowMenuGUI.MenuItem("World", GUIIconSet.instance.world, () => {
                 PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
                 if (propsGUI != null)
@@ -166,10 +171,15 @@ public class ActionBarGUI : TopPanelGUI
                 bevelGUI.voxelArray = voxelArray;
                 bevelGUI.touchListener = touchListener;
             }),
-            new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
-                var help = gameObject.AddComponent<HelpGUI>();
-                help.voxelArray = voxelArray;
-                help.touchListener = touchListener;
+            new OverflowMenuGUI.MenuItem("Revert", GUIIconSet.instance.undo, () => {
+                var dialog = gameObject.AddComponent<DialogGUI>();
+                dialog.title = "Are you sure?";
+                dialog.message = "Undo changes and revert to the last saved version?";
+                dialog.yesButtonText = "Yes";
+                dialog.noButtonText = "No";
+                dialog.yesButtonHandler = () => {
+                    editorFile.Revert();
+                };
             })
         };
     }

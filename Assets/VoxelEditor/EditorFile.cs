@@ -139,6 +139,12 @@ public class EditorFile : MonoBehaviour
         SceneManager.LoadScene(Scenes.MENU);
     }
 
+    public void Revert()
+    {
+        Debug.unityLogger.Log("EditorFile", "Revert");
+        SceneManager.LoadScene(Scenes.EDITOR);
+    }
+
     void OnEnable()
     {
         Debug.unityLogger.Log("EditorFile", "OnEnable()");

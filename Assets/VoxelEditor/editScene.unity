@@ -724,6 +724,10 @@ MonoBehaviour:
     restart: {fileID: 0}
     editor: {fileID: 0}
     playAudio: {fileID: 2800000, guid: 553f1c882f4dc401286a240925b9bc2f, type: 3}
+    reddit: {fileID: 0}
+    youTube: {fileID: 0}
+    gitHub: {fileID: 0}
+    undo: {fileID: 2800000, guid: 3ca559fa1674c439f95e6569092d453e, type: 3}
     bevelIcons:
       quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
       half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}
