@@ -13,13 +13,13 @@ public class MapReadException : Exception
 
 public class InvalidMapFileException : MapReadException
 {
-    public InvalidMapFileException() : base("Invalid world file") { }
-    public InvalidMapFileException(Exception inner) : base("Invalid world file", inner) { }
+    public InvalidMapFileException() : base("Not a recognized file format") { }
+    public InvalidMapFileException(Exception inner) : base("Not a recognized file format", inner) { }
 }
 
 public interface WorldFileReader
 {
-    void ReadStream(FileStream fileStream);
+    void ReadStream(Stream fileStream);
     // return warnings
     List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor);
 }
@@ -31,33 +31,50 @@ public class ReadWorldFile
     // return warnings
     public static List<string> Read(string filePath, Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
-        // allowTransparency is true in case the material is used for an overlay, so the alpha value can be adjusted
-        missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
-        missingMaterial.color = Color.magenta;
-
         WorldFileReader reader;
+        using (FileStream stream = File.Open(filePath, FileMode.Open))
+            reader = ReadStream(stream);
+        return BuildWorld(reader, cameraPivot, voxelArray, editor);
+    }
+
+    public static List<string> Read(TextAsset asset, Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    {
+        WorldFileReader reader;
+        using (MemoryStream stream = new MemoryStream(asset.bytes))
+            reader = ReadStream(stream);
+        return BuildWorld(reader, cameraPivot, voxelArray, editor);
+    }
+
+    private static WorldFileReader ReadStream(Stream stream)
+    {
         try
         {
-            using (FileStream fileStream = File.Open(filePath, FileMode.Open))
-            {
-                int firstByte = fileStream.ReadByte();
-                if (firstByte == 'm')
-                {
-                    Debug.Log("Reading MessagePack file " + filePath);
-                    reader = new MessagePackWorldReader();
-                }
-                else if (firstByte == '{')
-                {
-                    Debug.Log("Reading JSON file " + filePath);
-                    reader = new JSONWorldReader();
-                }
-                else
-                {
-                    throw new InvalidMapFileException();
-                }
-                reader.ReadStream(fileStream);
-            }
+            WorldFileReader reader = GetReaderForStream(stream);
+            reader.ReadStream(stream);
+            return reader;
+        }
+        catch (MapReadException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new MapReadException("An error occurred while reading the file", e);
+        }
+    }
 
+    private static List<string> BuildWorld(WorldFileReader reader,
+        Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    {
+        if (missingMaterial == null)
+        {
+            // allowTransparency is true in case the material is used for an overlay, so the alpha value can be adjusted
+            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
+            missingMaterial.color = Color.magenta;
+        }
+
+        try
+        {
             return reader.BuildWorld(cameraPivot, voxelArray, editor);
         }
         catch (MapReadException e)
@@ -68,9 +85,26 @@ public class ReadWorldFile
         {
             throw new MapReadException("An error occurred while reading the file", e);
         }
-        finally
+    }
+
+    private static WorldFileReader GetReaderForStream(Stream stream)
+    {
+        byte[] firstBytes = new byte[4];
+        stream.Read(firstBytes, 0, 4);
+        stream.Seek(0, SeekOrigin.Begin);
+        if (firstBytes[0] == 'm')
         {
-            missingMaterial = null;
+            Debug.Log("Reading MessagePack file " + stream);
+            return new MessagePackWorldReader();
+        }
+        else if (firstBytes[0] == '{')
+        {
+            Debug.Log("Reading JSON file " + stream);
+            return new JSONWorldReader();
+        }
+        else
+        {
+            throw new InvalidMapFileException();
         }
     }
 }

@@ -16,13 +16,13 @@ public class JSONWorldReader : WorldFileReader
     private List<string> warnings = new List<string>();
     private bool editor;
 
-    public void ReadStream(FileStream fileStream)
+    public void ReadStream(Stream stream)
     {
         try
         {
-            using (var sr = new StreamReader(fileStream))
+            using (var sr = new StreamReader(stream))
             {
-                jsonString = '{' + sr.ReadToEnd();
+                jsonString = sr.ReadToEnd();
             }
         }
         catch (Exception e)

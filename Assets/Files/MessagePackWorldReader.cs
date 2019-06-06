@@ -16,11 +16,13 @@ public class MessagePackWorldReader : WorldFileReader
     private List<string> warnings = new List<string>();
     private bool editor;
 
-    public void ReadStream(FileStream fileStream)
+    public void ReadStream(Stream stream)
     {
+        // skip the first identifying byte 'm'
+        stream.ReadByte();
         try
         {
-            worldObject = Unpacking.UnpackObject(fileStream);
+            worldObject = Unpacking.UnpackObject(stream);
         }
         catch (UnpackException e)
         {
