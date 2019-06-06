@@ -76,6 +76,14 @@
         <data android:pathPattern="/.*..*..*..*..*\\.json" />
         <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
+
+        <data android:pathPattern="/.*\\.sunvox" />
+        <data android:pathPattern="/.*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />
       </intent-filter>
 
       <!-- Invalid mime type but valid extensions -->
@@ -107,6 +115,14 @@
         <data android:pathPattern="/.*..*..*..*..*\\.json" />
         <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
+
+        <data android:pathPattern="/.*\\.sunvox" />
+        <data android:pathPattern="/.*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />
       </intent-filter>
 
 
