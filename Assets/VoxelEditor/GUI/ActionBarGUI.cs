@@ -174,7 +174,7 @@ public class ActionBarGUI : TopPanelGUI
             new OverflowMenuGUI.MenuItem("Revert", GUIIconSet.instance.undo, () => {
                 var dialog = gameObject.AddComponent<DialogGUI>();
                 dialog.title = "Are you sure?";
-                dialog.message = "Undo changes and revert to the last saved version?";
+                dialog.message = "Undo all changes since the world was opened?";
                 dialog.yesButtonText = "Yes";
                 dialog.noButtonText = "No";
                 dialog.yesButtonHandler = () => {
