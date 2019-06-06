@@ -102,6 +102,14 @@ public class ReadWorldFile
             Debug.Log("Reading JSON file " + stream);
             return new JSONWorldReader();
         }
+        else if (firstBytes[0] == 'S'
+              && firstBytes[1] == 'V'
+              && firstBytes[2] == 'O'
+              && firstBytes[3] == 'X')
+        {
+            Debug.Log("Reading SunVox file " + stream);
+            return new SunVoxWorldReader();
+        }
         else
         {
             throw new InvalidMapFileException();
