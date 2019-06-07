@@ -44,6 +44,14 @@ public class DataImportGUI : GUIPanel
         if (!worldSelected)
         {
             scroll = GUILayout.BeginScrollView(scroll);
+            GUILayout.Label("Import a " + type.ToString() + " file by opening it in N-Space...");
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Box("", GUIStyle.none, GUILayout.Width(150), GUILayout.Height(150));
+            GUI.DrawTexture(GUILayoutUtility.GetLastRect(), GUIIconSet.instance.import);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.Label("Or import from a world...");
             for (int i = 0; i < worldPaths.Count; i++)
             {
                 string path = worldPaths[i];
