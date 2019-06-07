@@ -81,7 +81,7 @@ public class DataImportGUI : GUIPanel
                     playingData = null;
                 }
             }
-            if (dataList != null)
+            if (dataList != null && dataList.Count > 0)
             {
                 foreach (EmbeddedData data in dataList)
                 {
@@ -112,6 +112,14 @@ public class DataImportGUI : GUIPanel
                     }
                     GUILayout.EndHorizontal();
                 }
+            }
+            else
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                ActionBarGUI.ActionBarLabel("World contains no " + type.ToString() + " files.");
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
             }
         }
     }
