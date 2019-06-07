@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface AudioPlayer
+{
+    void Stop();
+}
+
+public delegate AudioPlayer AudioPlayerFactory(byte[] data);
+
 public class DataImportGUI : GUIPanel
 {
     public EmbeddedDataType type;
