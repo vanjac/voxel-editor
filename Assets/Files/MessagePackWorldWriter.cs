@@ -186,6 +186,7 @@ public class MessagePackWorldWriter
                 var embeddedData = (EmbeddedData)value;
                 var dataList = new List<MessagePackObject>();
                 dataList.Add(embeddedData.name);
+                dataList.Add(embeddedData.type.ToString());
                 dataList.Add(embeddedData.bytes);
                 propList.Add(new MessagePackObject(dataList));
             }

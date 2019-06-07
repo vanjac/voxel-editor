@@ -22,7 +22,7 @@ public class SunVoxWorldReader : WorldFileReader
             if (obj is PlayerObject)
             {
                 var behavior = new SunVoxSongBehavior();
-                PropertiesObjectType.SetProperty(behavior, "dat", new EmbeddedData("imported", bytes));
+                PropertiesObjectType.SetProperty(behavior, "dat", new EmbeddedData("imported", bytes, EmbeddedDataType.SunVox));
                 obj.behaviors.Add(behavior);
             }
         }

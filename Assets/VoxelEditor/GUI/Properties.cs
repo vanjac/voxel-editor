@@ -441,7 +441,7 @@ public class PropertyGUIs
                 {
                     string name = System.IO.Path.GetFileName(path);
                     var bytes = System.IO.File.ReadAllBytes(path);
-                    property.value = new EmbeddedData(name, bytes);
+                    property.value = new EmbeddedData(name, bytes, EmbeddedDataType.SunVox);
                 };
             }
             GUILayout.EndHorizontal();

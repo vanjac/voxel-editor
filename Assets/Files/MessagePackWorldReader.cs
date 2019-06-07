@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -293,8 +293,9 @@ public class MessagePackWorldReader : WorldFileReader
                 {
                     var dataList = propList[1].AsList();
                     var name = dataList[0].AsString();
-                    var bytes = dataList[1].AsBinary();
-                    prop.setter(new EmbeddedData(name, bytes));
+                    var type = (EmbeddedDataType)System.Enum.Parse(typeof(EmbeddedDataType), dataList[1].AsString());
+                    var bytes = dataList[2].AsBinary();
+                    prop.setter(new EmbeddedData(name, bytes, type));
                 }
                 else // not a special type
                 {
