@@ -6,11 +6,14 @@ public class DataImportGUI : GUIPanel
 {
     public EmbeddedDataType type;
     public System.Action<EmbeddedData> dataAction;
+    public AudioPlayerFactory playerFactory;
 
     private List<string> worldPaths = new List<string>();
     private List<string> worldNames = new List<string>();
     private bool worldSelected;
     private List<EmbeddedData> dataList;
+    private AudioPlayer playingAudio;
+    private EmbeddedData playingData;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -21,6 +24,12 @@ public class DataImportGUI : GUIPanel
     void Start()
     {
         WorldFiles.ListWorlds(worldPaths, worldNames);
+    }
+
+    void OnDestroy()
+    {
+        if (playingAudio != null)
+            playingAudio.Stop();
     }
 
     public override void WindowGUI()
@@ -58,16 +67,43 @@ public class DataImportGUI : GUIPanel
                 dataList = null;
                 scroll = Vector2.zero;
                 scrollVelocity = Vector2.zero;
+                if (playingAudio != null)
+                {
+                    playingAudio.Stop();
+                    playingAudio = null;
+                    playingData = null;
+                }
             }
             if (dataList != null)
             {
                 foreach (EmbeddedData data in dataList)
                 {
+                    GUILayout.BeginHorizontal();
                     if (GUILayout.Button(data.name, GUIStyleSet.instance.buttonLarge))
                     {
                         dataAction(data);
                         Destroy(this);
                     }
+                    if (playerFactory != null && GUIUtils.HighlightedButton(
+                        GUIIconSet.instance.playAudio,
+                        GUIStyleSet.instance.buttonLarge,
+                        playingData == data,
+                        GUILayout.ExpandWidth(false)))
+                    {
+                        if (playingAudio != null)
+                            playingAudio.Stop();
+                        if (playingData == data)
+                        {
+                            playingAudio = null;
+                            playingData = null;
+                        }
+                        else
+                        {
+                            playingAudio = playerFactory(data.bytes);
+                            playingData = data;
+                        }
+                    }
+                    GUILayout.EndHorizontal();
                 }
             }
         }

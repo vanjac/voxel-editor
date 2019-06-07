@@ -421,7 +421,7 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static PropertyGUI EmbeddedData(EmbeddedDataType type)
+    public static PropertyGUI EmbeddedData(EmbeddedDataType type, AudioPlayerFactory playerFactory = null)
     {
         return (Property property) =>
         {
@@ -434,6 +434,7 @@ public class PropertyGUIs
                 var import = GUIManager.guiGameObject.AddComponent<DataImportGUI>();
                 import.title = "Select " + property.name;
                 import.type = type;
+                import.playerFactory = playerFactory;
                 import.dataAction = (data) =>
                 {
                     property.value = data;
