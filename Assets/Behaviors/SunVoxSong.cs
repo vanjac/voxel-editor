@@ -30,9 +30,7 @@ public class SunVoxSongBehavior : EntityBehavior
             new Property("dat", "Song",
                 () => songData,
                 v => songData = (EmbeddedData)v,
-                PropertyGUIs.AudioFile(
-                    Application.persistentDataPath.Replace("com.vantjac.voxel", "nightradio.sunvox"),
-                    ".sunvox", SunVoxPlayer.Factory)),
+                PropertyGUIs.EmbeddedData(EmbeddedDataType.SunVox)),
             new Property("pmo", "Play mode",
                 () => playMode,
                 v => playMode = (PlayMode)v,

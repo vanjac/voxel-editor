@@ -421,8 +421,7 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static PropertyGUI AudioFile(string directoryPath, string extensions,
-        AudioPlayerFactory playerFactory)
+    public static PropertyGUI EmbeddedData(EmbeddedDataType type)
     {
         return (Property property) =>
         {
@@ -432,16 +431,12 @@ public class PropertyGUIs
             AlignedLabel(property);
             if (GUILayout.Button(embeddedData.name, GUI.skin.textField))
             {
-                var browser = GUIManager.guiGameObject.AddComponent<AudioBrowserGUI>();
-                browser.title = "Select " + property.name;
-                browser.path = directoryPath;
-                browser.extensions = extensions;
-                browser.playerFactory = playerFactory;
-                browser.fileAction = (path) =>
+                var import = GUIManager.guiGameObject.AddComponent<DataImportGUI>();
+                import.title = "Select " + property.name;
+                import.type = type;
+                import.dataAction = (data) =>
                 {
-                    string name = System.IO.Path.GetFileName(path);
-                    var bytes = System.IO.File.ReadAllBytes(path);
-                    property.value = new EmbeddedData(name, bytes, EmbeddedDataType.SunVox);
+                    property.value = data;
                 };
             }
             GUILayout.EndHorizontal();

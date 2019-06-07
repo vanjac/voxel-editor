@@ -46,6 +46,14 @@ public class ReadWorldFile
         return BuildWorld(reader, cameraPivot, voxelArray, editor);
     }
 
+    public static List<EmbeddedData> ReadEmbeddedData(string filePath, EmbeddedDataType type)
+    {
+        WorldFileReader reader;
+        using (FileStream stream = File.Open(filePath, FileMode.Open))
+            reader = ReadStream(stream);
+        return reader.FindEmbeddedData(type);
+    }
+
     private static WorldFileReader ReadStream(Stream stream)
     {
         try
