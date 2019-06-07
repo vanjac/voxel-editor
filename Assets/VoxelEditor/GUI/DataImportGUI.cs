@@ -25,7 +25,7 @@ public class DataImportGUI : GUIPanel
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
-            safeRect.width * .7f, safeRect.height * .9f);
+            safeRect.width * .6f, safeRect.height * .9f);
     }
 
     void Start()
