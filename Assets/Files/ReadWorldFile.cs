@@ -22,6 +22,7 @@ public interface WorldFileReader
     void ReadStream(Stream fileStream);
     // return warnings
     List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor);
+    List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type);
 }
 
 public class ReadWorldFile

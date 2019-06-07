@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -42,14 +42,7 @@ public class MessagePackWorldReader : WorldFileReader
         this.editor = editor;
 
         MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
-        if (!worldDict.ContainsKey(FileKeys.WORLD_WRITER_VERSION)
-            || !worldDict.ContainsKey(FileKeys.WORLD_MIN_READER_VERSION))
-            throw new InvalidMapFileException();
-
-        if (worldDict[FileKeys.WORLD_MIN_READER_VERSION].AsInt32() > VERSION)
-        {
-            throw new MapReadException("This world file requires a newer version of the app");
-        }
+        CheckWorldValid(worldDict);
         fileWriterVersion = worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32();
 
         EntityReference.ResetEntityIds();
@@ -69,6 +62,18 @@ public class MessagePackWorldReader : WorldFileReader
 
         EntityReference.DoneLoadingEntities();
         return warnings;
+    }
+
+    private void CheckWorldValid(MessagePackObjectDictionary worldDict)
+    {
+        if (!worldDict.ContainsKey(FileKeys.WORLD_WRITER_VERSION)
+            || !worldDict.ContainsKey(FileKeys.WORLD_MIN_READER_VERSION))
+            throw new InvalidMapFileException();
+
+        if (worldDict[FileKeys.WORLD_MIN_READER_VERSION].AsInt32() > VERSION)
+        {
+            throw new MapReadException("This world file requires a newer version of the app");
+        }
     }
 
     private void ReadWorld(MessagePackObjectDictionary world, Transform cameraPivot, VoxelArray voxelArray)
@@ -394,5 +399,82 @@ public class MessagePackWorldReader : WorldFileReader
             return new Color(l[0].AsSingle(), l[1].AsSingle(), l[2].AsSingle(), l[3].AsSingle());
         else
             return new Color(l[0].AsSingle(), l[1].AsSingle(), l[2].AsSingle());
+    }
+
+
+    /* EmbeddedData search */
+
+    public List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type)
+    {
+        MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
+        CheckWorldValid(worldDict);
+
+        List<EmbeddedData> dataList = new List<EmbeddedData>();
+        try
+        {
+            foreach (var data in IterateEmbeddedData(worldDict, type))
+                dataList.Add(data);
+        }
+        catch (MapReadException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new MapReadException("Error reading world file", e);
+        }
+        return dataList;
+    }
+
+    private IEnumerable<EmbeddedData> IterateEmbeddedData(
+        MessagePackObjectDictionary worldDict, EmbeddedDataType type)
+    {
+        var typeString = type.ToString();
+        foreach (var propList in IterateProperties(worldDict))
+        {
+            if (!propList[1].IsList)
+                continue;
+            var dataList = propList[1].AsList();
+            if (dataList.Count >= 3 && dataList[1].UnderlyingType == typeof(string)
+                && dataList[1].AsString() == typeString)
+            {
+                var name = dataList[0].AsString();
+                var bytes = dataList[2].AsBinary();
+                yield return new EmbeddedData(name, bytes, type);
+            }
+        }
+    }
+
+    private IEnumerable<IList<MessagePackObject>> IterateProperties(MessagePackObjectDictionary worldDict)
+    {
+        foreach (var propsDict in IterateWorldPropObjects(worldDict))
+            if (propsDict.ContainsKey(FileKeys.PROPOBJ_PROPERTIES))
+                foreach (var propObj in propsDict[FileKeys.PROPOBJ_PROPERTIES].AsList())
+                    yield return propObj.AsList();
+    }
+
+    private IEnumerable<MessagePackObjectDictionary> IterateWorldPropObjects(MessagePackObjectDictionary worldDict)
+    {
+        if (worldDict.ContainsKey(FileKeys.WORLD_GLOBAL))
+            yield return worldDict[FileKeys.WORLD_GLOBAL].AsDictionary();
+        if (worldDict.ContainsKey(FileKeys.WORLD_SUBSTANCES))
+            foreach (var subObj in worldDict[FileKeys.WORLD_SUBSTANCES].AsList())
+                foreach (var propObj in IterateEntityPropObjects(subObj.AsDictionary()))
+                    yield return propObj;
+        if (worldDict.ContainsKey(FileKeys.WORLD_OBJECTS))
+            foreach (var subObj in worldDict[FileKeys.WORLD_OBJECTS].AsList())
+                foreach (var propObj in IterateEntityPropObjects(subObj.AsDictionary()))
+                    yield return propObj;
+    }
+
+    private IEnumerable<MessagePackObjectDictionary> IterateEntityPropObjects(MessagePackObjectDictionary entityDict)
+    {
+        yield return entityDict;
+
+        if (entityDict.ContainsKey(FileKeys.ENTITY_SENSOR))
+            yield return entityDict[FileKeys.ENTITY_SENSOR].AsDictionary();
+        if (entityDict.ContainsKey(FileKeys.ENTITY_BEHAVIORS))
+            foreach (var behaviorObj in entityDict[FileKeys.ENTITY_BEHAVIORS].AsList())
+                yield return behaviorObj.AsDictionary();
     }
 }

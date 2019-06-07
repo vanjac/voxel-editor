@@ -31,6 +31,11 @@ public class JSONWorldReader : WorldFileReader
         }
     }
 
+    public List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type)
+    {
+        return new List<EmbeddedData>();
+    }
+
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {

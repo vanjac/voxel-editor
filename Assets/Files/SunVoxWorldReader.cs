@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class SunVoxWorldReader : WorldFileReader
 {
-    byte[] bytes;
+    private EmbeddedData data;
 
     public void ReadStream(Stream stream)
     {
-        bytes = new byte[stream.Length];
+        byte[] bytes = new byte[stream.Length];
         stream.Read(bytes, 0, bytes.Length);
+        // TODO: determine file name
+        data = new EmbeddedData("imported", bytes, EmbeddedDataType.SunVox);
     }
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
@@ -22,10 +24,18 @@ public class SunVoxWorldReader : WorldFileReader
             if (obj is PlayerObject)
             {
                 var behavior = new SunVoxSongBehavior();
-                PropertiesObjectType.SetProperty(behavior, "dat", new EmbeddedData("imported", bytes, EmbeddedDataType.SunVox));
+                PropertiesObjectType.SetProperty(behavior, "dat", data);
                 obj.behaviors.Add(behavior);
             }
         }
         return warnings;
+    }
+
+    public List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type)
+    {
+        List<EmbeddedData> dataList = new List<EmbeddedData>();
+        if (type == EmbeddedDataType.SunVox)
+            dataList.Add(data);
+        return dataList;
     }
 }
