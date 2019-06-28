@@ -12,12 +12,13 @@ public class JSONWorldReader : WorldFileReader
 
     private int fileWriterVersion;
 
-    private string jsonString;
+    private JSONNode rootNode;
     private List<string> warnings = new List<string>();
     private bool editor;
 
     public void ReadStream(Stream stream)
     {
+        string jsonString;
         try
         {
             using (var sr = new StreamReader(stream))
@@ -29,6 +30,16 @@ public class JSONWorldReader : WorldFileReader
         {
             throw new MapReadException("An error occurred while reading the file", e);
         }
+        try
+        {
+            rootNode = JSON.Parse(jsonString);
+        }
+        catch (Exception e)
+        {
+            throw new MapReadException("Invalid world file", e);
+        }
+        if (rootNode == null)
+            throw new MapReadException("Invalid world file");
     }
 
     public List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type)
@@ -41,17 +52,6 @@ public class JSONWorldReader : WorldFileReader
     {
         this.editor = editor;
 
-        JSONNode rootNode;
-        try
-        {
-            rootNode = JSON.Parse(jsonString);
-        }
-        catch (Exception e)
-        {
-            throw new MapReadException("Invalid world file", e);
-        }
-        if (rootNode == null)
-            throw new MapReadException("Invalid world file");
         JSONObject root = rootNode.AsObject;
         if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
         {
