@@ -54,6 +54,12 @@ public class ReadWorldFile
         return reader.FindEmbeddedData(type);
     }
 
+    public static List<EmbeddedData> ReadEmbeddedData(Stream stream, EmbeddedDataType type)
+    {
+        WorldFileReader reader = ReadStream(stream);
+        return reader.FindEmbeddedData(type);
+    }
+
     private static WorldFileReader ReadStream(Stream stream)
     {
         try

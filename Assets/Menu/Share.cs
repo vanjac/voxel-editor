@@ -16,12 +16,10 @@ public class ShareMap
 
     public static bool FileWaitingToImport()
     {
-#if UNITY_EDITOR
-        return false;
+#if UNITY_IOS || UNITY_EDITOR
+        return IOSShareReceive.FileWaitingToImport();
 #elif UNITY_ANDROID
         return AndroidShareReceive.FileWaitingToImport();
-#elif UNITY_IOS
-        return IOSShareReceive.FileWaitingToImport();
 #else
         return false;
 #endif
@@ -29,19 +27,30 @@ public class ShareMap
 
     public static void ClearFileWaitingToImport()
     {
-#if UNITY_ANDROID
-        AndroidShareReceive.ClearFileWaitingToImport();
-#elif UNITY_IOS
+#if UNITY_IOS || UNITY_EDITOR
         IOSShareReceive.ClearFileWaitingToImport();
+#elif UNITY_ANDROID
+        AndroidShareReceive.ClearFileWaitingToImport();
 #endif
     }
 
     public static void ImportSharedFile(string filePath)
     {
-#if UNITY_ANDROID
-        AndroidShareReceive.ImportSharedFile(filePath);
-#elif UNITY_IOS
+#if UNITY_IOS || UNITY_EDITOR
         IOSShareReceive.ImportSharedFile(filePath);
+#elif UNITY_ANDROID
+        AndroidShareReceive.ImportSharedFile(filePath);
+#endif
+    }
+
+    public static Stream GetImportStream()
+    {
+#if UNITY_IOS || UNITY_EDITOR
+        return IOSShareReceive.GetImportStream();
+#elif UNITY_ANDROID
+        return AndroidShareReceive.GetImportStream();
+#else
+        return null;
 #endif
     }
 }

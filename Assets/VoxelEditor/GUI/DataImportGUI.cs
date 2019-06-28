@@ -31,12 +31,23 @@ public class DataImportGUI : GUIPanel
     void Start()
     {
         WorldFiles.ListWorlds(worldPaths, worldNames);
+        EditorFile.instance.importWorldHandler = ImportWorldHandler;
     }
 
     void OnDestroy()
     {
+        StopPlayer();
+        EditorFile.instance.importWorldHandler = null;
+    }
+
+    private EmbeddedData StopPlayer()
+    {
         if (playingAudio != null)
             playingAudio.Stop();
+        playingAudio = null;
+        var data = playingData;
+        playingData = null;
+        return data;
     }
 
     public override void WindowGUI()
@@ -82,12 +93,7 @@ public class DataImportGUI : GUIPanel
                 dataList = null;
                 scroll = Vector2.zero;
                 scrollVelocity = Vector2.zero;
-                if (playingAudio != null)
-                {
-                    playingAudio.Stop();
-                    playingAudio = null;
-                    playingData = null;
-                }
+                StopPlayer();
             }
             if (dataList != null && dataList.Count > 0)
             {
@@ -105,14 +111,7 @@ public class DataImportGUI : GUIPanel
                         playingData == data,
                         GUILayout.ExpandWidth(false)))
                     {
-                        if (playingAudio != null)
-                            playingAudio.Stop();
-                        if (playingData == data)
-                        {
-                            playingAudio = null;
-                            playingData = null;
-                        }
-                        else
+                        if (StopPlayer() != data)
                         {
                             playingAudio = playerFactory(data.bytes);
                             playingData = data;
@@ -129,6 +128,22 @@ public class DataImportGUI : GUIPanel
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }
+        }
+    }
+
+
+    private void ImportWorldHandler(System.IO.Stream stream)
+    {
+        StopPlayer();
+        worldSelected = true;
+        dataList = null;
+        try
+        {
+            dataList = ReadWorldFile.ReadEmbeddedData(stream, type);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError(e);
         }
     }
 }

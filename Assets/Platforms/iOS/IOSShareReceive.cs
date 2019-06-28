@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS
+﻿#if UNITY_IOS || UNITY_EDITOR
 
 using System.Collections;
 using System.Collections.Generic;
@@ -50,6 +50,14 @@ public class IOSShareReceive
             throw new System.Exception("No file waiting to import!");
         Debug.Log("Moving from " + oldFilePath + " to " + filePath);
         File.Copy(oldFilePath, filePath);
+    }
+
+    public static Stream GetImportStream()
+    {
+        string oldFilePath = GetFileToImport();
+        if (oldFilePath == null)
+            throw new System.Exception("No file waiting to import!");
+        return File.Open(oldFilePath, FileMode.Open);
     }
 }
 

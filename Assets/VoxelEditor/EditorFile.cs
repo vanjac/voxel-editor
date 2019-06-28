@@ -5,12 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class EditorFile : MonoBehaviour
 {
+    public static EditorFile instance;
     public LoadingGUI loadingGUI;
     public List<MonoBehaviour> enableOnLoad;
 
     public VoxelArrayEditor voxelArray;
     public Transform cameraPivot;
     public TouchListener touchListener;
+
+    public System.Action<System.IO.Stream> importWorldHandler;
+
+    void Start()
+    {
+        instance = this;
+    }
 
     public void Load()
     {
@@ -164,8 +172,27 @@ public class EditorFile : MonoBehaviour
             Save();
         else if (ShareMap.FileWaitingToImport())
         {
-            Save();
-            SceneManager.LoadScene(Scenes.FILE_RECEIVE);
+            if (importWorldHandler == null)
+            {
+                Save();
+                SceneManager.LoadScene(Scenes.FILE_RECEIVE);
+            }
+            else
+            {
+                try
+                {
+                    using (System.IO.Stream stream = ShareMap.GetImportStream())
+                        importWorldHandler(stream);
+                }
+                catch (System.Exception)
+                {
+                    DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "An error occurred while reading the file.");
+                }
+                finally
+                {
+                    ShareMap.ClearFileWaitingToImport();
+                }
+            }
         }
     }
 }

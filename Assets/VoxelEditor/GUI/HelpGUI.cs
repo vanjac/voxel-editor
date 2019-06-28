@@ -96,7 +96,7 @@ public class HelpGUI : GUIPanel
                 }
             }
             if (voxelArray != null)
-                voxelArray.GetComponent<EditorFile>().Save();
+                EditorFile.instance.Save();
             SelectedWorld.Instance().worldPath = path;
             SceneManager.LoadScene(Scenes.EDITOR);
         }

@@ -1,4 +1,4 @@
-﻿#if UNITY_ANDROID
+﻿#if UNITY_ANDROID && !UNITY_EDITOR
 
 using System.Collections;
 using System.Collections.Generic;
@@ -44,7 +44,15 @@ public class AndroidShareReceive
         }
     }
 
-    private static void ReadSharedURL(FileStream fileStream)
+    public static Stream GetImportStream()
+    {
+        MemoryStream stream = new MemoryStream();
+        ReadSharedURL(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+        return stream;
+    }
+
+    private static void ReadSharedURL(Stream outputStream)
     {
         using (var activity = AndroidShare.GetCurrentActivity())
         using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
@@ -67,9 +75,9 @@ public class AndroidShareReceive
                 if (bytesRead <= 0)
                     break;
                 byte[] newBuffer = AndroidJNIHelper.ConvertFromJNIArray<byte[]>(bufferPtr);
-                fileStream.Write(newBuffer, 0, bytesRead);
+                outputStream.Write(newBuffer, 0, bytesRead);
             }
-            fileStream.Flush();
+            outputStream.Flush();
         }
     }
 
