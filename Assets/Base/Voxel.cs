@@ -55,28 +55,28 @@ public struct VoxelEdge
     }
 
     // each bevel shape starts at (1, 0) and goes to the y=x diagonal
-    public static readonly Vector2[] SHAPE_SQUARE = new Vector2[] {
+    private static readonly Vector2[] SHAPE_SQUARE = new Vector2[] {
         new Vector2(1.0f, 0.0f), new Vector2(0.0f, 0.0f) };
-    public static readonly Vector2[] SHAPE_FLAT = new Vector2[] {
+    private static readonly Vector2[] SHAPE_FLAT = new Vector2[] {
         new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.5f) };
-    public static readonly Vector2[] SHAPE_CURVE = new Vector2[] {
+    private static readonly Vector2[] SHAPE_CURVE = new Vector2[] {
         new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
-    public static readonly Vector2[] SHAPE_STAIR_2 = new Vector2[] {
+    private static readonly Vector2[] SHAPE_STAIR_2 = new Vector2[] {
         new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.5f) };
-    public static readonly Vector2[] SHAPE_STAIR_4 = new Vector2[] {
+    private static readonly Vector2[] SHAPE_STAIR_4 = new Vector2[] {
         new Vector2(1.0f, 0.0f), new Vector2(0.75f, 0.0f), new Vector2(0.75f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f) };
 
     // a pair of normals for each line segment connecting 2 vertices
-    public static readonly Vector2[] NORMALS_SQUARE = new Vector2[] {
+    private static readonly Vector2[] NORMALS_SQUARE = new Vector2[] {
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f) };
-    public static readonly Vector2[] NORMALS_FLAT = new Vector2[] {
+    private static readonly Vector2[] NORMALS_FLAT = new Vector2[] {
         new Vector2(0.70710f, 0.70710f), new Vector2(0.70710f, 0.70710f) };
-    public static readonly Vector2[] NORMALS_CURVE = new Vector2[] {
+    private static readonly Vector2[] NORMALS_CURVE = new Vector2[] {
         new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.96592f, 0.25881f),
         new Vector2(0.86602f, 0.5f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
-    public static readonly Vector2[] NORMALS_STAIR_2 = new Vector2[] {
+    private static readonly Vector2[] NORMALS_STAIR_2 = new Vector2[] {
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
-    public static readonly Vector2[] NORMALS_STAIR_4 = new Vector2[] {
+    private static readonly Vector2[] NORMALS_STAIR_4 = new Vector2[] {
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f),
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
 
