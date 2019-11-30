@@ -58,7 +58,7 @@ public class GUIManager : MonoBehaviour
         float scaledScreenHeight;
         if (targetHeightOverride != 0)
             scaledScreenHeight = targetHeightOverride;
-        else if (Screen.dpi <= 0)
+        else if (Application.isEditor || Screen.dpi <= 0)
             scaledScreenHeight = MIN_TARGET_HEIGHT;
         else
         {
