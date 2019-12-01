@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class AudioClipWorldReader : WorldFileReader
 {
-    private EmbeddedData data;
+    private EmbeddedData data = new EmbeddedData();
     private UnityEngine.AudioType audioType;
 
     public AudioClipWorldReader(UnityEngine.AudioType audioType)
@@ -29,6 +29,16 @@ public class AudioClipWorldReader : WorldFileReader
             System.Threading.Thread.Sleep(10);
         Debug.Log("done!");
         AudioClip audioClip = DownloadHandlerAudioClip.GetContent(www);
+        if (audioClip == null)
+        {
+            Debug.LogError("Couldn't get audio clip");
+            return;
+        }
+        if (audioClip.samples == 0)
+        {
+            Debug.LogError("Audio data is empty");
+            return;
+        }
         float[] samples = new float[audioClip.samples * audioClip.channels];
         audioClip.LoadAudioData();
         audioClip.GetData(samples, 0);

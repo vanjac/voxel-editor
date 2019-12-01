@@ -72,6 +72,9 @@ public class SoundComponent : BehaviorComponent
 
     public void Init()
     {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        if (songData.bytes.Length == 0)
+            return;
         float[] samples = new float[songData.bytes.Length / 4];
         System.Buffer.BlockCopy(songData.bytes, 0, samples, 0, songData.bytes.Length);
 
@@ -79,7 +82,6 @@ public class SoundComponent : BehaviorComponent
         AudioClip clip = AudioClip.Create(songData.name, samples.Length / 2, 2, 44100, false);
         clip.SetData(samples, 0);
 
-        audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = clip;
         //audioSource.playOnAwake = false;
     }
