@@ -14,7 +14,7 @@ public class SoundBehavior : EntityBehavior
     }
 
     private EmbeddedData songData = new EmbeddedData();
-    private float volume = 25.0f, fadeIn = 0, fadeOut = 0;
+    private float volume = 50.0f, fadeIn = 0, fadeOut = 0;
     private PlayMode playMode = PlayMode.LOOP;
 
     public override BehaviorType BehaviorObjectType()
@@ -73,6 +73,8 @@ public class SoundComponent : BehaviorComponent
     public void Init()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.volume = volume;
+
         if (songData.bytes.Length == 0)
             return;
         float[] samples = new float[songData.bytes.Length / 4];
@@ -90,5 +92,11 @@ public class SoundComponent : BehaviorComponent
     {
         base.Start();
         audioSource.Play();
+    }
+
+    void Update()
+    {
+        // TODO: this holds a DC offset when paused
+        audioSource.pitch = Time.timeScale; // allow pausing
     }
 }

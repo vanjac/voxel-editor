@@ -14,7 +14,7 @@ public class SunVoxSongBehavior : EntityBehavior
     }
 
     private EmbeddedData songData = new EmbeddedData();
-    private float volume = 25.0f, fadeIn = 0, fadeOut = 0;
+    private float volume = 33.0f, fadeIn = 0, fadeOut = 0;
     private PlayMode playMode = PlayMode.LOOP;
 
 
