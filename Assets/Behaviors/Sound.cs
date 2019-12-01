@@ -31,7 +31,7 @@ public class SoundBehavior : EntityBehavior
             new Property("dat", "Song",
                 () => songData,
                 v => songData = (EmbeddedData)v,
-                PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio)), // TODO player
+                PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)), // TODO player
             new Property("pmo", "Play mode",
                 () => playMode,
                 v => playMode = (PlayMode)v,
@@ -64,6 +64,30 @@ public class SoundBehavior : EntityBehavior
     }
 }
 
+public class SoundPlayer : AudioPlayer
+{
+    private GameObject gameObject;
+
+    public static AudioPlayer Factory(byte[] data)
+    {
+        return new SoundPlayer(data);
+    }
+
+    public SoundPlayer(byte[] data)
+    {
+        gameObject = new GameObject("Sound");
+        AudioSource source = gameObject.AddComponent<AudioSource>();
+        source.volume = 0.5f;
+        source.clip = SoundComponent.CreateAudioClipFromData(data);
+        source.Play();
+    }
+
+    public void Stop()
+    {
+        GameObject.Destroy(gameObject);
+    }
+}
+
 public class SoundComponent : BehaviorComponent
 {
     public EmbeddedData songData;
@@ -72,6 +96,18 @@ public class SoundComponent : BehaviorComponent
 
     private AudioSource audioSource;
     private bool fadingIn, fadingOut;
+
+    public static AudioClip CreateAudioClipFromData(byte[] bytes)
+    {
+        float[] samples = new float[bytes.Length / 4 - 1];
+        System.Buffer.BlockCopy(bytes, 4, samples, 0, bytes.Length - 4);
+        int channels = bytes[0];
+        int frequency = (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+        Debug.Log(channels + " channels, " + frequency + "Hz");
+        AudioClip clip = AudioClip.Create("audio", samples.Length / channels, channels, frequency, false);
+        clip.SetData(samples, 0);
+        return clip;
+    }
 
     public void Init()
     {
@@ -82,16 +118,7 @@ public class SoundComponent : BehaviorComponent
 
         if (songData.bytes.Length == 0)
             return;
-        float[] samples = new float[songData.bytes.Length / 4 - 1];
-        System.Buffer.BlockCopy(songData.bytes, 4, samples, 0, songData.bytes.Length - 4);
-        int channels = songData.bytes[0];
-        int frequency = (songData.bytes[1] << 16) | (songData.bytes[2] << 8) | songData.bytes[3];
-        Debug.Log(channels + " channels, " + frequency + "Hz");
-        // TODO TODO TODO
-        AudioClip clip = AudioClip.Create(songData.name, samples.Length / channels, channels, frequency, false);
-        clip.SetData(samples, 0);
-
-        audioSource.clip = clip;
+        audioSource.clip = CreateAudioClipFromData(songData.bytes);;
         StartCoroutine(VolumeUpdateCoroutine());
     }
 
