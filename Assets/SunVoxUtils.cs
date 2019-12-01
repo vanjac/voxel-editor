@@ -67,7 +67,7 @@ public class SunVoxPlayer : AudioPlayer
             Debug.LogError("Error loading file");
             return;
         }
-        SunVox.sv_volume(slot, 64); // 25%
+        SunVox.sv_volume(slot, 79); // 31%
         SunVox.sv_play_from_beginning(slot);
     }
 
