@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO a lot of this file is copied from SunVoxSong.cs and that's no good
+
 public class SoundBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
@@ -54,7 +56,7 @@ public class SoundBehavior : EntityBehavior
         var component = gameObject.AddComponent<SoundComponent>();
         component.songData = songData;
         component.playMode = playMode;
-        component.volume = volume;
+        component.volume = volume / 100.0f;
         component.fadeIn = fadeIn;
         component.fadeOut = fadeOut;
         component.Init();
@@ -69,11 +71,14 @@ public class SoundComponent : BehaviorComponent
     public SoundBehavior.PlayMode playMode;
 
     private AudioSource audioSource;
+    private bool fadingIn, fadingOut;
 
     public void Init()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.volume = volume;
+        audioSource.volume = 0;
+        audioSource.loop = playMode != SoundBehavior.PlayMode.ONCE;
+        audioSource.playOnAwake = false;
 
         if (songData.bytes.Length == 0)
             return;
@@ -85,18 +90,64 @@ public class SoundComponent : BehaviorComponent
         clip.SetData(samples, 0);
 
         audioSource.clip = clip;
-        //audioSource.playOnAwake = false;
+        StartCoroutine(VolumeUpdateCoroutine());
     }
 
-    public override void Start()
+    public override void BehaviorEnabled()
     {
-        base.Start();
-        audioSource.Play();
+        if (playMode != SoundBehavior.PlayMode.BACKGROUND)
+            audioSource.volume = 0;
+        fadingIn = true;
+        fadingOut = false;
+        if (playMode != SoundBehavior.PlayMode.BACKGROUND)
+            audioSource.Play();
     }
 
-    void Update()
+    public override void BehaviorDisabled()
     {
-        // TODO: this holds a DC offset when paused
-        audioSource.pitch = Time.timeScale; // allow pausing
+        fadingOut = true;
+        fadingIn = false;
+    }
+
+    private IEnumerator VolumeUpdateCoroutine()
+    {
+        yield return null; // wait a frame to allow world to finish loading
+
+        if (playMode == SoundBehavior.PlayMode.BACKGROUND)
+            audioSource.Play();
+
+        while (true)
+        {
+            // TODO: this holds a DC offset when paused
+            audioSource.pitch = Time.timeScale; // allow pausing
+            if (fadingIn)
+            {
+                if (fadeIn == 0)
+                    audioSource.volume = volume;
+                else
+                    audioSource.volume += volume / fadeIn * Time.unscaledDeltaTime;
+                if (audioSource.volume >= volume)
+                {
+                    audioSource.volume = volume;
+                    fadingIn = false;
+                }
+            }
+            else if (fadingOut)
+            {
+                if (fadeOut == 0)
+                    audioSource.volume = 0;
+                else
+                    audioSource.volume -= volume / fadeOut * Time.unscaledDeltaTime;
+                if (audioSource.volume <= 0)
+                {
+                    audioSource.volume = 0;
+                    fadingOut = false;
+                    if (playMode != SoundBehavior.PlayMode.BACKGROUND)
+                        audioSource.Stop();
+                }
+            }
+
+            yield return null;
+        }
     }
 }

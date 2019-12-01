@@ -55,7 +55,7 @@ public class SunVoxSongBehavior : EntityBehavior
         var component = gameObject.AddComponent<SunVoxSongComponent>();
         component.songData = songData;
         component.playMode = playMode;
-        component.volume = volume;
+        component.volume = volume / 100.0f;
         component.fadeIn = fadeIn;
         component.fadeOut = fadeOut;
         component.Init();
@@ -162,6 +162,6 @@ public class SunVoxSongComponent : BehaviorComponent
 
     private void UpdateSunVoxVolume()
     {
-        SunVox.sv_volume(slot, (int)(currentVolume * 256.0f / 100.0f));
+        SunVox.sv_volume(slot, (int)(currentVolume * 256.0f));
     }
 }
