@@ -97,6 +97,7 @@ public class GameScripts
         WaterBehavior.objectType,
         ForceBehavior.objectType,
 
+        SoundBehavior.objectType,
         SunVoxSongBehavior.objectType
     };
 
@@ -130,6 +131,7 @@ public class GameScripts
         },
         new BehaviorType[]
         {
+            SoundBehavior.objectType,
             SunVoxSongBehavior.objectType
         }
     };
