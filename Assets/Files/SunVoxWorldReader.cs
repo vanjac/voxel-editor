@@ -37,6 +37,7 @@ public class SunVoxWorldReader : WorldFileReader
                 var behavior = new SunVoxSongBehavior();
                 PropertiesObjectType.SetProperty(behavior, "dat", data);
                 obj.behaviors.Add(behavior);
+                break;
             }
         }
         return warnings;

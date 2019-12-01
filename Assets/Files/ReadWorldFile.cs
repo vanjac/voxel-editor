@@ -125,6 +125,13 @@ public class ReadWorldFile
             Debug.Log("Reading SunVox file " + stream);
             return new SunVoxWorldReader();
         }
+        else if (firstBytes[0] == 'I'
+              && firstBytes[1] == 'D'
+              && firstBytes[2] == '3')
+        {
+            Debug.Log("Reading MP3 file " + stream);
+            return new AudioClipWorldReader();
+        }
         else
         {
             throw new InvalidMapFileException();
