@@ -82,11 +82,13 @@ public class SoundComponent : BehaviorComponent
 
         if (songData.bytes.Length == 0)
             return;
-        float[] samples = new float[songData.bytes.Length / 4];
-        System.Buffer.BlockCopy(songData.bytes, 0, samples, 0, songData.bytes.Length);
-
+        float[] samples = new float[songData.bytes.Length / 4 - 1];
+        System.Buffer.BlockCopy(songData.bytes, 4, samples, 0, songData.bytes.Length - 4);
+        int channels = songData.bytes[0];
+        int frequency = (songData.bytes[1] << 16) | (songData.bytes[2] << 8) | songData.bytes[3];
+        Debug.Log(channels + " channels, " + frequency + "Hz");
         // TODO TODO TODO
-        AudioClip clip = AudioClip.Create(songData.name, samples.Length / 2, 2, 44100, false);
+        AudioClip clip = AudioClip.Create(songData.name, samples.Length / channels, channels, frequency, false);
         clip.SetData(samples, 0);
 
         audioSource.clip = clip;

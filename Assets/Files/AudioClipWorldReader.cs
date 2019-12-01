@@ -39,11 +39,16 @@ public class AudioClipWorldReader : WorldFileReader
             Debug.LogError("Audio data is empty");
             return;
         }
+
         float[] samples = new float[audioClip.samples * audioClip.channels];
         audioClip.LoadAudioData();
         audioClip.GetData(samples, 0);
-        byte[] bytes = new byte[samples.Length * 4];
-        System.Buffer.BlockCopy(samples, 0, bytes, 0, bytes.Length);
+        byte[] bytes = new byte[samples.Length * 4 + 4];
+        bytes[0] = (byte)audioClip.channels;
+        bytes[1] = (byte)(audioClip.frequency >> 16);
+        bytes[2] = (byte)((audioClip.frequency >> 8) & 0xff);
+        bytes[3] = (byte)(audioClip.frequency & 0xff);
+        System.Buffer.BlockCopy(samples, 0, bytes, 4, bytes.Length - 4);
         data = new EmbeddedData(Path.GetFileNameWithoutExtension(path), bytes, EmbeddedDataType.Audio);
     }
 
