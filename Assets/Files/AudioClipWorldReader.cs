@@ -6,6 +6,12 @@ using UnityEngine.Networking;
 public class AudioClipWorldReader : WorldFileReader
 {
     private EmbeddedData data;
+    private UnityEngine.AudioType audioType;
+
+    public AudioClipWorldReader(UnityEngine.AudioType audioType)
+    {
+        this.audioType = audioType;
+    }
 
     public void ReadStream(Stream stream)
     {
@@ -16,7 +22,7 @@ public class AudioClipWorldReader : WorldFileReader
         fs.Close();
         Debug.Log("Loading audio from " + path);
         // TODO file type
-        UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + path, AudioType.MPEG);
+        UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + path, audioType);
         var asyncOp = www.SendWebRequest();
         // TODO this seems like a very bad idea
         while (!asyncOp.isDone)

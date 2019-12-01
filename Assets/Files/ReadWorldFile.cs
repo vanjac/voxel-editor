@@ -125,12 +125,29 @@ public class ReadWorldFile
             Debug.Log("Reading SunVox file " + stream);
             return new SunVoxWorldReader();
         }
-        else if (firstBytes[0] == 'I'
+        else if ((firstBytes[0] == 'I'
               && firstBytes[1] == 'D'
               && firstBytes[2] == '3')
+              || firstBytes[0] == 255)
         {
             Debug.Log("Reading MP3 file " + stream);
-            return new AudioClipWorldReader();
+            return new AudioClipWorldReader(AudioType.MPEG);
+        }
+        else if (firstBytes[0] == 'R'
+              && firstBytes[1] == 'I'
+              && firstBytes[2] == 'F'
+              && firstBytes[3] == 'F')
+        {
+            Debug.Log("Reading WAV file " + stream);
+            return new AudioClipWorldReader(AudioType.WAV);
+        }
+        else if (firstBytes[0] == 'O'
+              && firstBytes[1] == 'g'
+              && firstBytes[2] == 'g'
+              && firstBytes[3] == 'S')
+        {
+            Debug.Log("Reading Ogg file " + stream);
+            return new AudioClipWorldReader(AudioType.OGGVORBIS);
         }
         else
         {
