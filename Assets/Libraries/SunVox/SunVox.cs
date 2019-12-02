@@ -109,7 +109,7 @@ public class SunVox {
       unsigned int latency_frames = ( user_latency * sample_rate_Hz ) / user_ticks_per_second; //latency in frames
       sv_audio_callback( buf, frames, latency_frames, sv_get_ticks() + sunvox_latency );
   */
-  [DllImport (LIBRARY_NAME)] public static extern int sv_audio_callback( byte[] buf, int frames, int latency, int out_time );
+  [DllImport (LIBRARY_NAME)] public static extern int sv_audio_callback( float[] buf, int frames, int latency, int out_time );
 
   /*
     sv_audio_callback2() - send some data to the Input module and receive the filtered data from the Output module.
@@ -120,7 +120,7 @@ public class SunVox {
       in_channels - number of input channels;
       in_buf - input buffer; stereo data will be interleaved in this buffer: LRLR... ; where the LR is the one frame (Left+Right channels);
   */
-  [DllImport (LIBRARY_NAME)] public static extern int sv_audio_callback2( byte[] buf, int frames, int latency, int out_time, int in_type, int in_channels, byte[] in_buf );
+  [DllImport (LIBRARY_NAME)] public static extern int sv_audio_callback2( float[] buf, int frames, int latency, int out_time, int in_type, int in_channels, float[] in_buf );
 
   /*
     sv_open_slot(), sv_close_slot(), sv_lock_slot(), sv_unlock_slot() - 

@@ -7,13 +7,17 @@ public class SunVoxUtils
     private static bool init = false;
     private static HashSet<int> openSlots = new HashSet<int>();
 
+    private static GameObject audioOutput;
+
     public static int OpenUnusedSlot()
     {
         if (!init)
         {
             Debug.Log("SunVox init");
             init = true;
-            int version = SunVox.sv_init("0", 44100, 2, 0);
+            // TODO: what if there are a different number of channels??
+            int version = SunVox.sv_init("0", AudioSettings.outputSampleRate, 2,
+                SunVox.SV_INIT_FLAG_USER_AUDIO_CALLBACK | SunVox.SV_INIT_FLAG_AUDIO_FLOAT32);
             if (version < 0)
             {
                 Debug.LogError("Error initializing SunVox");
@@ -24,6 +28,11 @@ public class SunVoxUtils
             int minor1 = (version >> 8) & 255;
             int minor2 = (version) & 255;
             Debug.Log(System.String.Format("SunVox lib version: {0}.{1}.{2}", major, minor1, minor2));
+        }
+        if (audioOutput == null)
+        {
+            audioOutput = new GameObject("SunVox out");
+            audioOutput.AddComponent<SunVoxFilter>();
         }
 
         int slot = 0;
@@ -48,6 +57,34 @@ public class SunVoxUtils
     }
 }
 
+
+public class SunVoxFilter : MonoBehaviour
+{
+    private AudioSource audioSource;
+    private int sampleRate;
+
+    void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        sampleRate = AudioSettings.outputSampleRate;
+    }
+
+    void Update()
+    {
+        // TODO: like SoundComponent, this holds a DC offset when paused
+        audioSource.pitch = Time.timeScale; // allow pausing
+    }
+
+    void OnAudioFilterRead(float[] data, int channels)
+    {
+        int numSamples = data.Length / channels;
+        float time = (float)numSamples / sampleRate;
+        int ticks = (int)(time * SunVox.sv_get_ticks_per_second());
+        // I think I got this right but I'm not sure?
+        // TODO check the docs again... e.g. what is "user_ticks_per_second"?
+        SunVox.sv_audio_callback(data, numSamples, numSamples, SunVox.sv_get_ticks() + ticks);
+    } 
+}
 
 public class SunVoxPlayer : AudioPlayer
 {

@@ -83,7 +83,7 @@ public class SunVoxSongComponent : BehaviorComponent
             Debug.LogError("Error loading file");
             return;
         }
-        Debug.Log(System.Runtime.InteropServices.Marshal.PtrToStringAuto(SunVox.sv_get_song_name(0)));
+        //Debug.Log(System.Runtime.InteropServices.Marshal.PtrToStringAuto(SunVox.sv_get_song_name(0)));
 
         currentVolume = 0;
         UpdateSunVoxVolume();
