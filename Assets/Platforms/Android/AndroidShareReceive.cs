@@ -7,6 +7,18 @@ using UnityEngine;
 
 public class AndroidShareReceive
 {
+    public static void OpenFileManager()
+    {
+        using (AndroidJavaObject activity = AndroidShare.GetCurrentActivity())
+        using (AndroidJavaClass downloadManagerClass = new AndroidJavaClass("android.app.DownloadManager"))
+        using (AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent"))
+        {
+            using (intentObject.Call<AndroidJavaObject>("setAction", downloadManagerClass.GetStatic<string>("ACTION_VIEW_DOWNLOADS")))
+            { }
+            activity.Call("startActivity", intentObject);
+        }
+    }
+
     public static bool FileWaitingToImport()
     {
         using (var activity = AndroidShare.GetCurrentActivity())

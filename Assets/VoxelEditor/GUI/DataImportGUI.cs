@@ -55,11 +55,10 @@ public class DataImportGUI : GUIPanel
         if (!worldSelected)
         {
             scroll = GUILayout.BeginScrollView(scroll);
-            GUILayout.Label("Import a " + type.ToString() + " file by opening it in N-Space...");
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Box("", GUIStyle.none, GUILayout.Width(150), GUILayout.Height(150));
-            GUI.DrawTexture(GUILayoutUtility.GetLastRect(), GUIIconSet.instance.import);
+            if (GUILayout.Button("Choose a file to open in N-Space", GUIStyleSet.instance.buttonLarge))
+                ShareMap.OpenFileManager();
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.Label("Or import from a world...");

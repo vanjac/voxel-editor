@@ -14,6 +14,15 @@ public class ShareMap
 #endif
     }
 
+    public static void OpenFileManager()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        AndroidShareReceive.OpenFileManager();
+#else
+        Application.OpenURL("file:///");
+#endif
+    }
+
     public static bool FileWaitingToImport()
     {
 #if UNITY_IOS || UNITY_EDITOR
