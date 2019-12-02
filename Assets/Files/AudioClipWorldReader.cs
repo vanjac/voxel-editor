@@ -28,27 +28,19 @@ public class AudioClipWorldReader : WorldFileReader
         while (!asyncOp.isDone)
             System.Threading.Thread.Sleep(10);
         Debug.Log("done!");
-        AudioClip audioClip = DownloadHandlerAudioClip.GetContent(www);
-        if (audioClip == null)
+        AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+        if (clip == null)
         {
             Debug.LogError("Couldn't get audio clip");
             return;
         }
-        if (audioClip.samples == 0)
+        if (clip.samples == 0)
         {
             Debug.LogError("Audio data is empty");
             return;
         }
 
-        float[] samples = new float[audioClip.samples * audioClip.channels];
-        audioClip.LoadAudioData();
-        audioClip.GetData(samples, 0);
-        byte[] bytes = new byte[samples.Length * 4 + 4];
-        bytes[0] = (byte)audioClip.channels;
-        bytes[1] = (byte)(audioClip.frequency >> 16);
-        bytes[2] = (byte)((audioClip.frequency >> 8) & 0xff);
-        bytes[3] = (byte)(audioClip.frequency & 0xff);
-        System.Buffer.BlockCopy(samples, 0, bytes, 4, bytes.Length - 4);
+        byte[] bytes = AudioCompression.Compress(clip);
         data = new EmbeddedData(Path.GetFileNameWithoutExtension(path), bytes, EmbeddedDataType.Audio);
     }
 

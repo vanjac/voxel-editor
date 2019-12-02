@@ -78,7 +78,7 @@ public class SoundPlayer : AudioPlayer
         gameObject = new GameObject("Sound");
         AudioSource source = gameObject.AddComponent<AudioSource>();
         source.volume = 0.5f;
-        source.clip = SoundComponent.CreateAudioClipFromData(data);
+        source.clip = AudioCompression.Decompress(data);
         source.Play();
     }
 
@@ -97,18 +97,6 @@ public class SoundComponent : BehaviorComponent
     private AudioSource audioSource;
     private bool fadingIn, fadingOut;
 
-    public static AudioClip CreateAudioClipFromData(byte[] bytes)
-    {
-        float[] samples = new float[bytes.Length / 4 - 1];
-        System.Buffer.BlockCopy(bytes, 4, samples, 0, bytes.Length - 4);
-        int channels = bytes[0];
-        int frequency = (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
-        Debug.Log(channels + " channels, " + frequency + "Hz");
-        AudioClip clip = AudioClip.Create("audio", samples.Length / channels, channels, frequency, false);
-        clip.SetData(samples, 0);
-        return clip;
-    }
-
     public void Init()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
@@ -118,7 +106,7 @@ public class SoundComponent : BehaviorComponent
 
         if (songData.bytes.Length == 0)
             return;
-        audioSource.clip = CreateAudioClipFromData(songData.bytes);;
+        audioSource.clip = AudioCompression.Decompress(songData.bytes);
         StartCoroutine(VolumeUpdateCoroutine());
     }
 
