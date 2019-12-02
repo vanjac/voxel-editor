@@ -17,7 +17,7 @@ public class SoundBehavior : EntityBehavior
 
     private EmbeddedData songData = new EmbeddedData();
     private float volume = 50.0f, fadeIn = 0, fadeOut = 0;
-    private PlayMode playMode = PlayMode.LOOP;
+    private PlayMode playMode = PlayMode.ONCE;
 
     public override BehaviorType BehaviorObjectType()
     {
