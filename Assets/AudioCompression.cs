@@ -3,22 +3,47 @@ using UnityEngine;
 
 public static class AudioCompression
 {
+    private static int GetClosestOpusSampleRate(int sampleRate)
+    {
+        if (sampleRate >= 36000)
+            return 48000;
+        else if (sampleRate >= 20000)
+            return 24000;
+        else if (sampleRate >= 14000)
+            return 16000;
+        else if (sampleRate >= 10000)
+            return 12000;
+        else
+            return 8000;
+    }
+
     public static byte[] Compress(AudioClip clip)
     {
         clip.LoadAudioData();
 
+        int opusSampleRate = GetClosestOpusSampleRate(clip.frequency);
+        Debug.Log("Audio is " + clip.frequency + "Hz, storing at " + opusSampleRate + "Hz");
+
         IntPtr error;
-        IntPtr encoder = Opus.opus_encoder_create(48000, clip.channels, (int)Opus.Application.Audio, out error);
+        IntPtr encoder = Opus.opus_encoder_create(opusSampleRate, clip.channels,
+            (int)Opus.Application.Audio, out error);
         if ((Opus.Errors)error != Opus.Errors.OK)
             throw new Exception("Error creating encoder " + (Opus.Errors)error);
 
         // seems to default to 100 kbit/s for 48000Hz 2 channels
+        int bitrate;
+        Opus.opus_encoder_ctl(encoder, Opus.Ctl.GetBitrateRequest, out bitrate);
 
-        int frameSize = 960;
+        int frameSize = opusSampleRate / 50; // 20ms
         int blockSize = frameSize * clip.channels;
         float[] sampleBlock = new float[blockSize];
-        byte[] packet = new byte[1024];
-        byte[] bytes = new byte[(int)(clip.length * 50000)];
+        int maxPacketSize = 4 * bitrate / 50 / 8; // 20ms, multiply by 4 to be safe
+        byte[] packet = new byte[maxPacketSize];
+        int maxSize = 2 * clip.samples / opusSampleRate * bitrate / 8; // multiply by 2 to be safe
+        byte[] bytes = new byte[maxSize];
+
+        Debug.Log("Bitrate: " + bitrate + " Frame size: " + frameSize);
+        Debug.Log("Max packet: " + maxPacketSize + " Max size: " + maxSize);
 
         // header
         bytes[0] = (byte)clip.channels;
@@ -37,7 +62,7 @@ public static class AudioCompression
         int largestPacket = 0;
         for (int i = 0; i < samples; i += frameSize) {
             clip.GetData(sampleBlock, i);
-            int packetSize = Opus.opus_encode_float(encoder, sampleBlock, frameSize, packet, packet.Length);
+            int packetSize = Opus.opus_encode_float(encoder, sampleBlock, frameSize, packet, maxPacketSize);
             if (packetSize < 0)
                 throw new Exception("Encoding failed " + (Opus.Errors)packetSize);
             if (packetSize > largestPacket)
@@ -50,7 +75,7 @@ public static class AudioCompression
         // rest of header
         bytes[8] = (byte)(largestPacket >> 8);
         bytes[9] = (byte)(largestPacket & 0xff);
-        Debug.Log("Final length " + byteI);
+        Debug.Log("Compressed size: " + byteI);
         Array.Resize(ref bytes, byteI);
         return bytes;
     }
@@ -68,12 +93,13 @@ public static class AudioCompression
 
         AudioClip clip = AudioClip.Create("audio", samples, channels, frequency, false);
 
+        int opusSampleRate = GetClosestOpusSampleRate(clip.frequency);
         IntPtr error;
-        IntPtr decoder = Opus.opus_decoder_create(48000, channels, out error);
+        IntPtr decoder = Opus.opus_decoder_create(opusSampleRate, channels, out error);
         if ((Opus.Errors)error != Opus.Errors.OK)
             throw new Exception("Error creating decoder " + (Opus.Errors)error);
 
-        int frameSize = 960;
+        int frameSize = opusSampleRate / 50; // 20ms
         int blockSize = frameSize * channels;
         float[] sampleBlock = new float[blockSize];
         byte[] packet = new byte[largestPacket];
