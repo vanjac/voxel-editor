@@ -72,6 +72,7 @@ public static class AudioCompression
             System.Buffer.BlockCopy(packet, 0, bytes, byteI + 2, packetSize);
             byteI += packetSize + 2;
         }
+        Opus.opus_encoder_destroy(encoder);
         // rest of header
         bytes[8] = (byte)(largestPacket >> 8);
         bytes[9] = (byte)(largestPacket & 0xff);
@@ -116,6 +117,7 @@ public static class AudioCompression
             clip.SetData(sampleBlock, sampleI);
             sampleI += numSamples;
         }
+        Opus.opus_decoder_destroy(decoder);
         return clip;
     }
 }
