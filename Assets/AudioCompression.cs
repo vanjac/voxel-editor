@@ -19,6 +19,9 @@ public static class AudioCompression
 
     public static byte[] Compress(AudioClip clip)
     {
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
         clip.LoadAudioData();
 
         int opusSampleRate = GetClosestOpusSampleRate(clip.frequency);
@@ -30,8 +33,7 @@ public static class AudioCompression
         if ((Opus.Errors)error != Opus.Errors.OK)
             throw new Exception("Error creating encoder " + (Opus.Errors)error);
 
-        // seems to default to 100 kbit/s for 48000Hz 2 channels
-        int bitrate;
+        int bitrate; // use the default selected by Opus
         Opus.opus_encoder_ctl(encoder, Opus.Ctl.GetBitrateRequest, out bitrate);
 
         int frameSize = opusSampleRate / 50; // 20ms
@@ -78,11 +80,17 @@ public static class AudioCompression
         bytes[9] = (byte)(largestPacket & 0xff);
         Debug.Log("Compressed size: " + byteI);
         Array.Resize(ref bytes, byteI);
+
+        stopwatch.Stop();
+        Debug.Log("Encoding took " + stopwatch.ElapsedMilliseconds);
         return bytes;
     }
 
     public static AudioClip Decompress(byte[] bytes)
     {
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
         // header
         int channels = bytes[0];
         int frequency = (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
@@ -118,6 +126,9 @@ public static class AudioCompression
             sampleI += numSamples;
         }
         Opus.opus_decoder_destroy(decoder);
+
+        stopwatch.Stop();
+        Debug.Log("Decoding took " + stopwatch.ElapsedMilliseconds);
         return clip;
     }
 }

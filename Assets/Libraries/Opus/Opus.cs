@@ -32,7 +32,9 @@ public class Opus
     public enum Ctl : int
     {
         SetBitrateRequest = 4002,
-        GetBitrateRequest = 4003
+        GetBitrateRequest = 4003,
+        SetComplexityRequest = 4010,
+        GetComplexityRequest = 4011
     }
 
     /// <summary>

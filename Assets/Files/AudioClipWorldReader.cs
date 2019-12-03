@@ -23,11 +23,14 @@ public class AudioClipWorldReader : WorldFileReader
         Debug.Log("Loading audio from " + path);
         // TODO file type
         UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + path, audioType);
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         var asyncOp = www.SendWebRequest();
         // TODO this seems like a very bad idea
         while (!asyncOp.isDone)
             System.Threading.Thread.Sleep(10);
-        Debug.Log("done!");
+        stopwatch.Stop();
+        Debug.Log("Loading audio took " + stopwatch.ElapsedMilliseconds);
         AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
         if (clip == null)
         {
