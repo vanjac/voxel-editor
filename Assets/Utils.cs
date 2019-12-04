@@ -28,3 +28,7 @@ public class Lazy<T>
         this.constructor = constructor;
     }
 }
+
+
+// an empty monobehaviour for running coroutines on any GameObject
+public class CoroutineMonoBehaviour : MonoBehaviour { }

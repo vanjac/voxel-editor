@@ -78,7 +78,7 @@ public class SoundPlayer : AudioPlayer
         gameObject = new GameObject("Sound");
         AudioSource source = gameObject.AddComponent<AudioSource>();
         source.volume = 0.5f;
-        source.clip = AudioCompression.Decompress(data);
+        source.clip = AudioCompression.Decompress(data, gameObject.AddComponent<CoroutineMonoBehaviour>());
         source.Play();
     }
 
@@ -106,7 +106,7 @@ public class SoundComponent : BehaviorComponent
 
         if (songData.bytes.Length == 0)
             return;
-        audioSource.clip = AudioCompression.Decompress(songData.bytes);
+        audioSource.clip = AudioCompression.Decompress(songData.bytes, this);
         StartCoroutine(VolumeUpdateCoroutine());
     }
 
