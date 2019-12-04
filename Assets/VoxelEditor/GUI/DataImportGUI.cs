@@ -17,7 +17,7 @@ public class DataImportGUI : GUIPanel
 
     private List<string> worldPaths = new List<string>();
     private List<string> worldNames = new List<string>();
-    private bool worldSelected;
+    private bool worldSelected, loadingWorld;
     private List<EmbeddedData> dataList;
     private AudioPlayer playingAudio;
     private EmbeddedData playingData;
@@ -52,7 +52,17 @@ public class DataImportGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (!worldSelected)
+        if (loadingWorld)
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("Loading world...");
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+        }
+        else if (!worldSelected)
         {
             scroll = GUILayout.BeginScrollView(scroll);
             GUILayout.BeginHorizontal();
@@ -70,14 +80,7 @@ public class DataImportGUI : GUIPanel
                 if (GUILayout.Button(name, GUIStyleSet.instance.buttonLarge))
                 {
                     worldSelected = true;
-                    try
-                    {
-                        dataList = ReadWorldFile.ReadEmbeddedData(path, type);
-                    }
-                    catch (System.Exception e)
-                    {
-                        Debug.LogError(e);
-                    }
+                    StartCoroutine(LoadWorldCoroutine(path));
                     scroll = Vector2.zero;
                     scrollVelocity = Vector2.zero;
                 }
@@ -131,18 +134,34 @@ public class DataImportGUI : GUIPanel
     }
 
 
-    private void ImportWorldHandler(System.IO.Stream stream)
+    private IEnumerator LoadWorldCoroutine(string path = null, System.IO.Stream stream = null)
     {
-        StopPlayer();
-        worldSelected = true;
-        dataList = null;
+        loadingWorld = true;
+        yield return null;
+        yield return null;
         try
         {
-            dataList = ReadWorldFile.ReadEmbeddedData(stream, type);
+            if (stream != null)
+                dataList = ReadWorldFile.ReadEmbeddedData(stream, type);
+            else
+                dataList = ReadWorldFile.ReadEmbeddedData(path, type);
         }
         catch (System.Exception e)
         {
             Debug.LogError(e);
         }
+        finally
+        {
+            loadingWorld = false;
+        }
+    }
+
+    private void ImportWorldHandler(System.IO.Stream stream)
+    {
+        StopPlayer();
+        dataList = null;
+        worldSelected = true;
+        loadingWorld = true;
+        StartCoroutine(LoadWorldCoroutine(stream: stream));
     }
 }
