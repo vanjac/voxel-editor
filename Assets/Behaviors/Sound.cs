@@ -77,7 +77,6 @@ public class SoundPlayer : AudioPlayer
     {
         gameObject = new GameObject("Sound");
         AudioSource source = gameObject.AddComponent<AudioSource>();
-        source.volume = 0.5f;
         source.clip = AudioCompression.Decompress(data, gameObject.AddComponent<CoroutineMonoBehaviour>());
         source.Play();
     }
