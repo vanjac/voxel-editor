@@ -16,29 +16,9 @@ public class AudioClipWorldReader : WorldFileReader
     public void ReadStream(Stream stream)
     {
         FileStream fs = stream as FileStream;
-        string path;
-        bool tempFile = fs == null;
-        if (tempFile)
-        {
-            Debug.Log("Writing to a temporary audio file");
-            path = Path.Combine(Application.temporaryCachePath, "Imported audio");
-            byte[] buffer = new byte[8192];
-            using (FileStream tmp = File.Create(path))
-            {
-                while (true)
-                {
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    if (bytesRead <= 0)
-                        break;
-                    tmp.Write(buffer, 0, bytesRead);
-                }
-            }
-        }
-        else
-        {
-            path = fs.Name;
-            fs.Close();
-        }
+        if (fs == null)
+            return;
+        string path = fs.Name;
         Debug.Log("Loading audio from " + path);
 
         // TODO file type
@@ -65,9 +45,6 @@ public class AudioClipWorldReader : WorldFileReader
 
         byte[] bytes = AudioCompression.Compress(clip);
         data = new EmbeddedData(Path.GetFileNameWithoutExtension(path), bytes, EmbeddedDataType.Audio);
-
-        if (tempFile)
-            File.Delete(path);
     }
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)

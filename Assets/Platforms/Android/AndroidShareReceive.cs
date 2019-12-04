@@ -46,6 +46,11 @@ public class AndroidShareReceive
         using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
         using (intent.Call<AndroidJavaObject>("putExtra", "used", true))
         { }
+        try
+        {
+            File.Delete(GetTempPath());
+        }
+        catch (System.Exception e) { }
     }
 
     public static void ImportSharedFile(string filePath)
@@ -58,10 +63,15 @@ public class AndroidShareReceive
 
     public static Stream GetImportStream()
     {
-        MemoryStream stream = new MemoryStream();
-        ReadSharedURL(stream);
-        stream.Seek(0, SeekOrigin.Begin);
-        return stream;
+        FileStream tmp = File.Create(GetTempPath());
+        ReadSharedURL(tmp);
+        tmp.Seek(0, SeekOrigin.Begin);
+        return tmp;
+    }
+
+    private static string GetTempPath()
+    {
+        return Path.Combine(Application.temporaryCachePath, "Imported");
     }
 
     private static void ReadSharedURL(Stream outputStream)

@@ -153,6 +153,8 @@ public class DataImportGUI : GUIPanel
         finally
         {
             loadingWorld = false;
+            stream.Close();
+            ShareMap.ClearFileWaitingToImport();
         }
     }
 
