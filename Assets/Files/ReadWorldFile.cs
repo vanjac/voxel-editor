@@ -126,9 +126,10 @@ public class ReadWorldFile
             return new SunVoxWorldReader();
         }
         else if ((firstBytes[0] == 'I'
-              && firstBytes[1] == 'D'
-              && firstBytes[2] == '3')
-              || firstBytes[0] == 255)
+               && firstBytes[1] == 'D'
+               && firstBytes[2] == '3')
+            ||   (firstBytes[0] == 255 // frame header sync (first 11 bits)
+               && firstBytes[1] >> 5 == 7))
         {
             Debug.Log("Reading MP3 file " + stream);
             return new AudioClipWorldReader(AudioType.MPEG);
