@@ -88,6 +88,9 @@ public static class AudioCompression
 
     public static AudioClip Decompress(byte[] bytes)
     {
+        if (bytes.Length < 10)
+            return null;
+
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
 

@@ -71,7 +71,7 @@ public class AndroidShareReceive
         using (var uri = intent.Call<AndroidJavaObject>("getData"))
         using (var inputStream = GetInputStreamForURI(uri, activity))
         {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[8192];
             var bufferPtr = AndroidJNIHelper.ConvertToJNIArray(buffer);
             // get the method id of InputStream.read(byte[] b, int off, int len)
             var readMethodId = AndroidJNIHelper.GetMethodID(inputStream.GetRawClass(), "read", "([BII)I");
