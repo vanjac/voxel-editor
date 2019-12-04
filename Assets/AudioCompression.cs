@@ -99,6 +99,9 @@ public static class AudioCompression
 
         Debug.Log(frequency + "Hz " + channels + " channels, " + samples + " samples");
 
+        if (samples == 0 || channels == 0 || frequency == 0)
+            return null;
+
         AudioClip clip = AudioClip.Create("audio", samples, channels, frequency, false);
         coroutineObject.StartCoroutine(DecompressCoroutine(clip, bytes));
         return clip;
