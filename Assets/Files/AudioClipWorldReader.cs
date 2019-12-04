@@ -3,6 +3,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
+// Only supports loading from FileStreams!
 public class AudioClipWorldReader : WorldFileReader
 {
     private EmbeddedData data = new EmbeddedData();
@@ -19,6 +20,7 @@ public class AudioClipWorldReader : WorldFileReader
         if (fs == null)
             return;
         string path = fs.Name;
+        fs.Close();
         Debug.Log("Loading audio from " + path);
 
         // TODO file type
