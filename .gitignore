@@ -45,3 +45,6 @@ upload_certificate.pem
 
 .vscode/settings.json
 *.log
+
+/opus/opus/*
+/opus/build/*

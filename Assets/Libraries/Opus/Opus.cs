@@ -3,7 +3,11 @@ using System.Runtime.InteropServices;
 
 public class Opus
 {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private const string LIBRARY_NAME = "libopus";
+#else
     private const string LIBRARY_NAME = "opus";
+#endif
 
     [DllImport(LIBRARY_NAME)]
     public static extern IntPtr opus_encoder_create(int Fs, int channels, int application, out IntPtr error);

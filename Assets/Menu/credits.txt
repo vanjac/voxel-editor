@@ -45,4 +45,7 @@ Libraries:
                         CSIRO, Gregory Maxwell, Mark Borgerding,
                         Erik de Castro Lopo
 
+    Opus-Android build script
+    Copyright (c) 2015 xuan9
+
     Other sources listed in scripts (see the GitHub repository above)
