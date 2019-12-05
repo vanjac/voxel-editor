@@ -33,6 +33,8 @@ public class AudioClipWorldReader : WorldFileReader
             System.Threading.Thread.Sleep(10);
         stopwatch.Stop();
         Debug.Log("Loading audio took " + stopwatch.ElapsedMilliseconds);
+        if (www.error != null)
+            throw new MapReadException(www.error);
         AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
         if (clip == null || clip.samples == 0)
             throw new MapReadException("Unable to read audio (unsupported format?)");
