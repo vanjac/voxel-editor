@@ -79,10 +79,7 @@ public class SunVoxSongComponent : BehaviorComponent
         slot = SunVoxUtils.OpenUnusedSlot();
         int result = SunVox.sv_load_from_memory(slot, songData.bytes, songData.bytes.Length);
         if (result != 0)
-        {
-            Debug.LogError("Error loading file");
-            return;
-        }
+            throw new MapReadException("Error reading SunVox file");
         //Debug.Log(System.Runtime.InteropServices.Marshal.PtrToStringAuto(SunVox.sv_get_song_name(0)));
 
         currentVolume = 0;

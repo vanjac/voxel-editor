@@ -32,7 +32,7 @@ public static class AudioCompression
         IntPtr encoder = Opus.opus_encoder_create(opusSampleRate, clip.channels,
             (int)Opus.Application.Audio, out error);
         if ((Opus.Errors)error != Opus.Errors.OK)
-            throw new Exception("Error creating encoder " + (Opus.Errors)error);
+            throw new MapReadException("Error creating Opus encoder: " + (Opus.Errors)error);
 
         int bitrate; // use the default selected by Opus
         Opus.opus_encoder_ctl(encoder, Opus.Ctl.GetBitrateRequest, out bitrate);
@@ -67,7 +67,7 @@ public static class AudioCompression
             clip.GetData(sampleBlock, i);
             int packetSize = Opus.opus_encode_float(encoder, sampleBlock, frameSize, packet, maxPacketSize);
             if (packetSize < 0)
-                throw new Exception("Encoding failed " + (Opus.Errors)packetSize);
+                throw new MapReadException("Opus encoding failed: " + (Opus.Errors)packetSize);
             if (packetSize > largestPacket)
                 largestPacket = packetSize;
             bytes[byteI] = (byte)(packetSize >> 8);

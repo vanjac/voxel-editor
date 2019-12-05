@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,7 +29,7 @@ public class GameLoad : MonoBehaviour
             {
                 Close(Scenes.MENU);
             };
-            Debug.Log(e.InnerException);
+            Debug.LogError(e.InnerException);
             yield break;
         }
         finally

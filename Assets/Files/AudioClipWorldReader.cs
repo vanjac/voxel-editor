@@ -18,7 +18,7 @@ public class AudioClipWorldReader : WorldFileReader
     {
         FileStream fs = stream as FileStream;
         if (fs == null)
-            return;
+            throw new MapReadException("Can't read audio from this location");
         string path = fs.Name;
         fs.Close();
         Debug.Log("Loading audio from " + path);
@@ -34,16 +34,8 @@ public class AudioClipWorldReader : WorldFileReader
         stopwatch.Stop();
         Debug.Log("Loading audio took " + stopwatch.ElapsedMilliseconds);
         AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
-        if (clip == null)
-        {
-            Debug.LogError("Couldn't get audio clip");
-            return;
-        }
-        if (clip.samples == 0)
-        {
-            Debug.LogError("Audio data is empty");
-            return;
-        }
+        if (clip == null || clip.samples == 0)
+            throw new MapReadException("Unable to read audio (unsupported format?)");
 
         byte[] bytes = AudioCompression.Compress(clip);
         data = new EmbeddedData(Path.GetFileNameWithoutExtension(path), bytes, EmbeddedDataType.Audio);
