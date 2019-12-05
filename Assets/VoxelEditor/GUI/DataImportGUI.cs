@@ -18,6 +18,7 @@ public class DataImportGUI : GUIPanel
     private List<string> worldPaths = new List<string>();
     private List<string> worldNames = new List<string>();
     private bool worldSelected, loadingWorld;
+    private string errorMessage = null;
     private List<EmbeddedData> dataList;
     private AudioPlayer playingAudio;
     private EmbeddedData playingData;
@@ -126,7 +127,10 @@ public class DataImportGUI : GUIPanel
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
-                ActionBarGUI.ActionBarLabel("World contains no " + type.ToString() + " files.");
+                if (errorMessage != null)
+                    ActionBarGUI.ActionBarLabel(errorMessage);
+                else
+                    ActionBarGUI.ActionBarLabel("World contains no " + type.ToString() + " files.");
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }
@@ -137,6 +141,7 @@ public class DataImportGUI : GUIPanel
     private IEnumerator LoadWorldCoroutine(string path = null, System.IO.Stream stream = null)
     {
         loadingWorld = true;
+        errorMessage = null;
         yield return null;
         yield return null;
         try
@@ -146,15 +151,18 @@ public class DataImportGUI : GUIPanel
             else
                 dataList = ReadWorldFile.ReadEmbeddedData(path, type);
         }
-        catch (System.Exception e)
+        catch (MapReadException e)
         {
-            Debug.LogError(e);
+            errorMessage = e.Message;
         }
         finally
         {
             loadingWorld = false;
-            stream.Close();
-            ShareMap.ClearFileWaitingToImport();
+            if (stream != null)
+            {
+                stream.Close();
+                ShareMap.ClearFileWaitingToImport();
+            }
         }
     }
 
