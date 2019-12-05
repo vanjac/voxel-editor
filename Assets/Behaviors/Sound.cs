@@ -15,7 +15,7 @@ public class SoundBehavior : EntityBehavior
         ONCE, LOOP, BACKGROUND
     }
 
-    private EmbeddedData songData = new EmbeddedData();
+    private EmbeddedData soundData = new EmbeddedData();
     private float volume = 50.0f, fadeIn = 0, fadeOut = 0;
     private PlayMode playMode = PlayMode.ONCE;
 
@@ -28,9 +28,9 @@ public class SoundBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("dat", "Song",
-                () => songData,
-                v => songData = (EmbeddedData)v,
+            new Property("dat", "Sound",
+                () => soundData,
+                v => soundData = (EmbeddedData)v,
                 PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)), // TODO player
             new Property("pmo", "Play mode",
                 () => playMode,
@@ -54,7 +54,7 @@ public class SoundBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<SoundComponent>();
-        component.songData = songData;
+        component.soundData = soundData;
         component.playMode = playMode;
         component.volume = volume / 100.0f;
         component.fadeIn = fadeIn;
@@ -89,7 +89,7 @@ public class SoundPlayer : AudioPlayer
 
 public class SoundComponent : BehaviorComponent
 {
-    public EmbeddedData songData;
+    public EmbeddedData soundData;
     public float volume, fadeIn, fadeOut;
     public SoundBehavior.PlayMode playMode;
 
@@ -103,9 +103,9 @@ public class SoundComponent : BehaviorComponent
         audioSource.loop = playMode != SoundBehavior.PlayMode.ONCE;
         audioSource.playOnAwake = false;
 
-        if (songData.bytes.Length == 0)
+        if (soundData.bytes.Length == 0)
             return;
-        audioSource.clip = AudioCompression.Decompress(songData.bytes, this);
+        audioSource.clip = AudioCompression.Decompress(soundData.bytes, this);
         StartCoroutine(VolumeUpdateCoroutine());
     }
 
