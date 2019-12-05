@@ -85,6 +85,12 @@ public class EditorFile : MonoBehaviour
                     TutorialGUI.StartTutorial(Tutorials.BEVEL_TUTORIAL, guiGameObject, voxelArray, touchListener);
                 };
             }
+            else if (CompareVersions(lastVersion, "1.3.0") == -1)
+            {
+                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "<b>Version 1.3.0 update</b>\n\n"
+                    + "N-Space has been updated with new behaviors for sound and music. Try them out!\n\n"
+                    + "Also, check the main menu for links to video tutorials and a subreddit.");
+            }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
 
