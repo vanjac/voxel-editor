@@ -55,6 +55,7 @@ public class TouchComponent : SensorComponent
     // could have multiple instances of the same collider if it's touching multiple voxels
     private List<Collider> touchingColliders = new List<Collider>();
     private List<Collider> rejectedColliders = new List<Collider>();
+    private List<EntityComponent> touchingEntities = new List<EntityComponent>();
 
     private void CollisionStart(Collider c, Vector3 relativeVelocity)
     {
@@ -73,6 +74,7 @@ public class TouchComponent : SensorComponent
             && !rejectedColliders.Contains(c))
         {
             touchingColliders.Add(c);
+            touchingEntities.Add(entity);
             AddActivator(entity);
         }
         else
@@ -84,9 +86,11 @@ public class TouchComponent : SensorComponent
     {
         if (!rejectedColliders.Remove(c))
         {
+            EntityComponent entity = EntityComponent.FindEntityComponent(c);
             touchingColliders.Remove(c);
-            if (!touchingColliders.Contains(c)) // could have multiple instances
-                RemoveActivator(EntityComponent.FindEntityComponent(c));
+            touchingEntities.Remove(entity);
+            if (!touchingEntities.Contains(entity)) // could have multiple instances
+                RemoveActivator(entity);
         }
     }
 
