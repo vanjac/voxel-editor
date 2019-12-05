@@ -60,12 +60,11 @@ public class SunVoxUtils
 
 public class SunVoxFilter : MonoBehaviour
 {
-    private AudioSource audioSource;
     private int sampleRate;
 
     void Start()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
+        gameObject.AddComponent<AudioSource>();
         sampleRate = AudioSettings.outputSampleRate;
     }
 
