@@ -84,7 +84,7 @@ public class HelpGUI : GUIPanel
     private void OpenDemoWorld(string name, string templateName)
     {
         string path = WorldFiles.GetNewWorldPath(name);
-        if (voxelArray == null || SelectedWorld.Instance().worldPath != path)
+        if (voxelArray == null || SelectedWorld.worldPath != path)
         {
             // create and load the file
             if (!File.Exists(path))
@@ -97,7 +97,7 @@ public class HelpGUI : GUIPanel
             }
             if (voxelArray != null)
                 EditorFile.instance.Save();
-            SelectedWorld.Instance().worldPath = path;
+            SelectedWorld.worldPath = path;
             SceneManager.LoadScene(Scenes.EDITOR);
         }
         Destroy(this);
