@@ -48,7 +48,7 @@ public class EditorFile : MonoBehaviour
                 Close();
             };
             Destroy(loadingGUI);
-            Debug.Log(e);
+            Debug.LogError(e);
             yield break;
         }
         // reading the file creates new voxels which sets the unsavedChanges flag
@@ -190,9 +190,10 @@ public class EditorFile : MonoBehaviour
                 {
                     importWorldHandler(ShareMap.GetImportStream());
                 }
-                catch (System.Exception)
+                catch (System.Exception e)
                 {
                     DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "An error occurred while reading the file.");
+                    Debug.LogError(e);
                 }
             }
         }

@@ -1,12 +1,16 @@
 ﻿#if UNITY_ANDROID && !UNITY_EDITOR
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.IO;
 using UnityEngine;
 
-public class AndroidShareReceive
+public static class AndroidShareReceive
 {
+    private static string tempPath = null;
+
     public static void OpenFileManager()
     {
         using (AndroidJavaObject activity = AndroidShare.GetCurrentActivity())
@@ -48,9 +52,14 @@ public class AndroidShareReceive
         { }
         try
         {
-            File.Delete(GetTempPath());
+            if (tempPath != null)
+                File.Delete(tempPath);
+            tempPath = null;
         }
-        catch (System.Exception e) { }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
 
     public static void ImportSharedFile(string filePath)
@@ -63,15 +72,33 @@ public class AndroidShareReceive
 
     public static Stream GetImportStream()
     {
-        FileStream tmp = File.Create(GetTempPath());
+        string name = Path.GetFileNameWithoutExtension(GetImportURI());
+        Debug.Log("Original name: " + name);
+        // %2F is a '/'
+        string[] parts = name.Split(new string[] {"%2f", "%2F"}, StringSplitOptions.RemoveEmptyEntries);
+        name = parts[parts.Length - 1];
+        name = string.Concat(Regex.Split(name, "%[0-9a-fA-F]{2}"));
+        name = string.Concat(name.Split('%'));
+        name = string.Concat(name.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
+        name = name.Trim();
+        if (name.Length == 0)
+            name = "Imported";
+        else if (name.Length > 32)
+            name = name.Substring(0, 32);
+
+        tempPath = Path.Combine(Application.temporaryCachePath, name);
+        FileStream tmp = File.Create(tempPath);
         ReadSharedURL(tmp);
         tmp.Seek(0, SeekOrigin.Begin);
         return tmp;
     }
 
-    private static string GetTempPath()
+    private static string GetImportURI()
     {
-        return Path.Combine(Application.temporaryCachePath, "Imported");
+        using (var activity = AndroidShare.GetCurrentActivity())
+        using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
+        using (var uri = intent.Call<AndroidJavaObject>("getData"))
+            return uri.Call<string>("toString");
     }
 
     private static void ReadSharedURL(Stream outputStream)
