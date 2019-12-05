@@ -30,20 +30,17 @@ public class ReadWorldFile
     public static Material missingMaterial;
 
     // return warnings
-    public static List<string> Read(string filePath, Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    public static List<string> Read(Stream stream, Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
         WorldFileReader reader;
-        using (FileStream stream = File.Open(filePath, FileMode.Open))
+        using (stream)
             reader = ReadStream(stream);
         return BuildWorld(reader, cameraPivot, voxelArray, editor);
     }
 
     public static List<string> Read(TextAsset asset, Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
-        WorldFileReader reader;
-        using (MemoryStream stream = new MemoryStream(asset.bytes))
-            reader = ReadStream(stream);
-        return BuildWorld(reader, cameraPivot, voxelArray, editor);
+        return Read(new MemoryStream(asset.bytes), cameraPivot, voxelArray, editor);
     }
 
     public static List<EmbeddedData> ReadEmbeddedData(string filePath, EmbeddedDataType type)

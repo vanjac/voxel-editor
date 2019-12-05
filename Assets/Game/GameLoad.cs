@@ -17,7 +17,7 @@ public class GameLoad : MonoBehaviour
         yield return null;
         try
         {
-            ReadWorldFile.Read(SelectedWorld.worldPath,
+            ReadWorldFile.Read(SelectedWorld.GetLoadStream(),
                 null, GetComponent<VoxelArray>(), false);
         }
         catch (MapReadException e)

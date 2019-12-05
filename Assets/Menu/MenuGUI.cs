@@ -74,7 +74,7 @@ public class MenuGUI : GUIPanel
 
     public static void OpenWorld(string path, string scene)
     {
-        SelectedWorld.worldPath = path;
+        SelectedWorld.SelectSavedWorld(path);
         SceneManager.LoadScene(scene);
     }
 

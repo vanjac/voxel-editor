@@ -40,15 +40,15 @@ public class HelpGUI : GUIPanel
     private void TutorialsTab()
     {
         if (GUILayout.Button("Introduction"))
-            StartTutorial(Tutorials.INTRO_TUTORIAL);
+            StartTutorial(Tutorials.INTRO_TUTORIAL, "Introduction");
         if (GUILayout.Button("Painting"))
-            StartTutorial(Tutorials.PAINT_TUTORIAL);
+            StartTutorial(Tutorials.PAINT_TUTORIAL, "Painting");
         if (GUILayout.Button("Bevels"))
-            StartTutorial(Tutorials.BEVEL_TUTORIAL);
+            StartTutorial(Tutorials.BEVEL_TUTORIAL, "Bevels");
         if (GUILayout.Button("Substances"))
-            StartTutorial(Tutorials.SUBSTANCE_TUTORIAL);
+            StartTutorial(Tutorials.SUBSTANCE_TUTORIAL, "Substances");
         if (GUILayout.Button("Objects"))
-            StartTutorial(Tutorials.OBJECT_TUTORIAL);
+            StartTutorial(Tutorials.OBJECT_TUTORIAL, "Objects");
         if (GUILayout.Button("Tips and Shortcuts"))
         {
             LargeMessageGUI.ShowLargeMessageDialog(gameObject, Tutorials.TIPS_AND_SHORTCUTS_TUTORIAL);
@@ -56,11 +56,11 @@ public class HelpGUI : GUIPanel
         }
         if (GUILayout.Button("Advanced game logic 1"))
         {
-            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1, false);
-            OpenDemoWorld("Advanced game logic 1", "Tutorials/advanced_game_logic_1");
+            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1);
+            OpenDemoWorld("Tutorial - Advanced game logic 1", "Tutorials/advanced_game_logic_1");
         }
         if (GUILayout.Button("Advanced game logic 2"))
-            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2);
+            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2, "Advanced game logic 2");
     }
 
     private void DemoWorldsTab()
@@ -73,33 +73,25 @@ public class HelpGUI : GUIPanel
         }
     }
 
-    private void StartTutorial(TutorialPageFactory[] tutorial, bool openBlankWorld = true)
+    private void StartTutorial(TutorialPageFactory[] tutorial, string worldName = null)
     {
         TutorialGUI.StartTutorial(tutorial, gameObject, voxelArray, touchListener);
-        if (openBlankWorld && voxelArray == null)
-            OpenDemoWorld("Tutorial", "default");
+        if (worldName != null && voxelArray == null)
+            OpenDemoWorld("Tutorial - " + worldName, "default");
         Destroy(this);
     }
 
     private void OpenDemoWorld(string name, string templateName)
     {
+        if (voxelArray != null)
+            EditorFile.instance.Save();
+
+        TextAsset worldAsset = Resources.Load<TextAsset>(templateName);
         string path = WorldFiles.GetNewWorldPath(name);
-        if (voxelArray == null || SelectedWorld.worldPath != path)
-        {
-            // create and load the file
-            if (!File.Exists(path))
-            {
-                TextAsset data = Resources.Load<TextAsset>(templateName);
-                using (FileStream fileStream = File.Create(path))
-                {
-                    fileStream.Write(data.bytes, 0, data.bytes.Length);
-                }
-            }
-            if (voxelArray != null)
-                EditorFile.instance.Save();
-            SelectedWorld.worldPath = path;
-            SceneManager.LoadScene(Scenes.EDITOR);
-        }
+        for (int i = 2; File.Exists(path); i++) // autonumber
+            path = WorldFiles.GetNewWorldPath(name + " " + i);
+        SelectedWorld.SelectDemoWorld(worldAsset, path);
+        SceneManager.LoadScene(Scenes.EDITOR);
         Destroy(this);
     }
 }

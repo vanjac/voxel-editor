@@ -34,7 +34,7 @@ public class EditorFile : MonoBehaviour
         List<string> warnings;
         try
         {
-            warnings = ReadWorldFile.Read(SelectedWorld.worldPath,
+            warnings = ReadWorldFile.Read(SelectedWorld.GetLoadStream(),
                 cameraPivot, voxelArray, true);
         }
         catch (MapReadException e)
@@ -129,7 +129,7 @@ public class EditorFile : MonoBehaviour
             Debug.unityLogger.Log("EditorFile", "No unsaved changes");
             return;
         }
-        MessagePackWorldWriter.Write(SelectedWorld.worldPath,
+        MessagePackWorldWriter.Write(SelectedWorld.GetSavePath(),
             cameraPivot, voxelArray);
         voxelArray.unsavedChanges = false;
     }
