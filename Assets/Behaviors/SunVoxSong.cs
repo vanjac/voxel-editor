@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class SunVoxSongBehavior : EntityBehavior
@@ -8,7 +9,8 @@ public class SunVoxSongBehavior : EntityBehavior
         "Song", "Play a song created with SunVox",
 #if UNITY_ANDROID
         "If you have SunVox installed, songs can be found in "
-        + Application.persistentDataPath.Replace(Application.identifier, "nightradio.sunvox")
+        + Regex.Replace(Application.persistentDataPath.Replace(Application.identifier, "nightradio.sunvox"),
+            @"^/storage/emulated/\d*", "")
         + "\n\n"
 #else
         ""
