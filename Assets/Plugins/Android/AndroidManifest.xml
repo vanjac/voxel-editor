@@ -54,6 +54,8 @@
         <data android:mimeType="audio/mp3" />
         <data android:mimeType="audio/mpeg3" />
         <data android:mimeType="audio/x-mpeg-3" />
+        <data android:mimeType="application/mpeg"/>
+        <data android:mimeType="application/mpeg3"/>
         <data android:mimeType="audio/wav" />
         <data android:mimeType="audio/wave" />
         <data android:mimeType="audio/x-wav" />
@@ -61,6 +63,7 @@
         <data android:mimeType="audio/vnd.wave" />
         <data android:mimeType="audio/ogg" />
         <data android:mimeType="application/ogg" />
+        <data android:mimeType="application/x-ogg"/>
       </intent-filter>
 
       <!-- Mime type not set but valid extensions -->
@@ -99,6 +102,10 @@
         <data android:pathPattern="/.*..*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />
+
+        <data android:pathPattern=".*\\.mp3"/>
+        <data android:pathPattern=".*\\.wav"/>
+        <data android:pathPattern=".*\\.ogg"/>
       </intent-filter>
 
       <!-- Invalid mime type but valid extensions -->
@@ -138,6 +145,10 @@
         <data android:pathPattern="/.*..*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />
+
+        <data android:pathPattern=".*\\.mp3"/>
+        <data android:pathPattern=".*\\.wav"/>
+        <data android:pathPattern=".*\\.ogg"/>
       </intent-filter>
 
 
