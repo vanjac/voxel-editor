@@ -43,6 +43,7 @@ public class PauseGUI : GUIPanel
         {
             paused = false;
             Time.timeScale = 1;
+            AudioListener.pause = false;
             Destroy(fade);
         }
 
@@ -89,6 +90,7 @@ public class PauseGUI : GUIPanel
     private void PauseGame()
     {
         Time.timeScale = 0;
+        AudioListener.pause = true;
         paused = true;
 
         pauseMenu = gameObject.AddComponent<OverflowMenuGUI>();

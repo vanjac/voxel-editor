@@ -69,12 +69,6 @@ public class SunVoxFilter : MonoBehaviour
         sampleRate = AudioSettings.outputSampleRate;
     }
 
-    void Update()
-    {
-        // TODO: like SoundComponent, this holds a DC offset when paused
-        audioSource.pitch = Time.timeScale; // allow pausing
-    }
-
     void OnAudioFilterRead(float[] data, int channels)
     {
         int numSamples = data.Length / channels;

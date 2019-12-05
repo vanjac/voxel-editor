@@ -134,8 +134,6 @@ public class SoundComponent : BehaviorComponent
 
         while (true)
         {
-            // TODO: this holds a DC offset when paused
-            audioSource.pitch = Time.timeScale; // allow pausing
             if (fadingIn)
             {
                 if (fadeIn == 0)
