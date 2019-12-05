@@ -70,13 +70,17 @@ public class SunVoxSongComponent : BehaviorComponent
     public float volume, fadeIn, fadeOut;
     public SunVoxSongBehavior.PlayMode playMode;
 
-    private int slot;
+    private int slot = -1;
     private float currentVolume = 0;
     private bool fadingIn, fadingOut;
 
     public void Init()
     {
+        if (songData.bytes.Length == 0)
+            return;
         slot = SunVoxUtils.OpenUnusedSlot();
+        if (slot < 0)
+            return;
         int result = SunVox.sv_load_from_memory(slot, songData.bytes, songData.bytes.Length);
         if (result != 0)
             throw new MapReadException("Error reading SunVox file");
@@ -95,11 +99,14 @@ public class SunVoxSongComponent : BehaviorComponent
 
     public void OnDestroy()
     {
-        SunVoxUtils.CloseSlot(slot);
+        if (slot >= 0)
+            SunVoxUtils.CloseSlot(slot);
     }
 
     public override void BehaviorEnabled()
     {
+        if (slot < 0)
+            return;
         if (playMode != SunVoxSongBehavior.PlayMode.BACKGROUND)
             currentVolume = 0;
         fadingIn = true;
