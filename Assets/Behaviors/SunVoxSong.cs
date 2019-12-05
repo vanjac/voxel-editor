@@ -6,6 +6,14 @@ public class SunVoxSongBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Song", "Play a song created with SunVox",
+#if UNITY_ANDROID
+        "If you have SunVox installed, songs can be found in "
+        + Application.persistentDataPath.Replace(Application.identifier, "nightradio.sunvox")
+        + "\n\n"
+#else
+        ""
+#endif
+        + "Watch the video tutorial for more information.",
         "sunvox", typeof(SunVoxSongBehavior));
 
     public enum PlayMode
