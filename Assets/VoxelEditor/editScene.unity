@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3133128, g: 0.20789295, b: 0.3974287, a: 1}
+  m_IndirectSpecularColor: {r: 0.31331286, g: 0.20789284, b: 0.39743063, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1069,7 +1069,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
-  m_Mesh: {fileID: 4300002, guid: ff0de075e8964ea4d8efaa80192027c0, type: 3}
+  m_Mesh: {fileID: 4300004, guid: ff0de075e8964ea4d8efaa80192027c0, type: 3}
 --- !u!1 &1179125977
 GameObject:
   m_ObjectHideFlags: 0
