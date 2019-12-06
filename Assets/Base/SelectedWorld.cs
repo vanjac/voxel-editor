@@ -30,6 +30,7 @@ public static class SelectedWorld
 
     public static string GetSavePath()
     {
+        demoWorldAsset = null; // load from the saved file next time
         return worldPath;
     }
 }
