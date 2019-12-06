@@ -154,6 +154,7 @@ public class DataImportGUI : GUIPanel
         catch (MapReadException e)
         {
             errorMessage = e.Message;
+            Debug.LogError(e.InnerException);
         }
         finally
         {
