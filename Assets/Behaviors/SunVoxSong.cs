@@ -7,8 +7,8 @@ public class SunVoxSongBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Song", "Play a song created with SunVox",
-        "One-shot mode plays the entire sound to completion, even after the sensor turns off.\n"
-        + "In Background mode the song is always playing, but muted when the sensor is off.\n\n"
+        "•  One-shot mode plays the entire sound to completion, even after the sensor turns off.\n"
+        + "•  In Background mode the song is always playing, but muted when the sensor is off.\n\n"
 #if UNITY_ANDROID
         + "If you have SunVox installed, songs can be found in "
         + Regex.Replace(Application.persistentDataPath.Replace(Application.identifier, "nightradio.sunvox"),
@@ -111,8 +111,13 @@ public class SunVoxSongComponent : BehaviorComponent
     {
         if (slot < 0)
             return;
-        if (playMode != PlayMode.BKGND && fadeIn != 0)
-            currentVolume = 0;
+        if (playMode != PlayMode.BKGND)
+        {
+            if (fadeIn == 0)
+                currentVolume = volume;
+            else
+                currentVolume = 0;
+        }
         fadingIn = true;
         fadingOut = false;
         UpdateSunVoxVolume();

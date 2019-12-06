@@ -13,8 +13,9 @@ public class SoundBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Sound", "Play a sound",
-        "One-shot mode plays the entire sound to completion, even after the sensor turns off.\n"
-        + "In Background mode the sound is always playing, but muted when the sensor is off.",
+        "•  One-shot mode plays the entire sound every time the sensor turns on. "
+        + "Multiple copies can play at once. Fades have no effect.\n"
+        + "•  In Background mode the sound is always playing, but muted when the sensor is off.",
         "volume-high", typeof(SoundBehavior));
 
     private EmbeddedData soundData = new EmbeddedData();
@@ -108,26 +109,38 @@ public class SoundComponent : BehaviorComponent
         if (soundData.bytes.Length == 0)
             return;
         audioSource.clip = AudioCompression.Decompress(soundData.bytes, this);
-        StartCoroutine(VolumeUpdateCoroutine());
+
+        if (playMode != PlayMode._1SHOT)
+            StartCoroutine(VolumeUpdateCoroutine());
     }
 
     public override void BehaviorEnabled()
     {
-        if (playMode != PlayMode.BKGND && fadeIn != 0)
-            audioSource.volume = 0;
-        fadingIn = true;
-        fadingOut = false;
-        if (playMode != PlayMode.BKGND)
-            audioSource.Play();
+        if (playMode == PlayMode._1SHOT)
+        {
+            audioSource.volume = volume;
+            audioSource.PlayOneShot(audioSource.clip);
+        }
+        else
+        {
+            if (playMode != PlayMode.BKGND)
+            {
+                if (fadeIn == 0)
+                    audioSource.volume = volume;
+                else
+                    audioSource.volume = 0;
+            }
+            fadingIn = true;
+            fadingOut = false;
+            if (playMode != PlayMode.BKGND)
+                audioSource.Play();
+        }
     }
 
     public override void BehaviorDisabled()
     {
-        if (playMode != PlayMode._1SHOT)
-        {
-            fadingOut = true;
-            fadingIn = false;
-        }
+        fadingOut = true;
+        fadingIn = false;
     }
 
     private IEnumerator VolumeUpdateCoroutine()
