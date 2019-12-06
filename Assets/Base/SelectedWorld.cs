@@ -22,10 +22,14 @@ public static class SelectedWorld
 
     public static Stream GetLoadStream()
     {
-        if (demoWorldAsset == null)
-            return File.Open(worldPath, FileMode.Open);
-        else
-            return new MemoryStream(demoWorldAsset.bytes);
+        try {
+            if (demoWorldAsset == null)
+                return File.Open(worldPath, FileMode.Open);
+            else
+                return new MemoryStream(demoWorldAsset.bytes);
+        } catch (System.Exception e) {
+            throw new MapReadException("Error opening file", e);
+        }
     }
 
     public static string GetSavePath()

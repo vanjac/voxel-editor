@@ -46,8 +46,12 @@ public class ReadWorldFile
     public static List<EmbeddedData> ReadEmbeddedData(string filePath, EmbeddedDataType type)
     {
         WorldFileReader reader;
-        using (FileStream stream = File.Open(filePath, FileMode.Open))
-            reader = ReadStream(stream);
+        try {
+            using (FileStream stream = File.Open(filePath, FileMode.Open))
+                reader = ReadStream(stream);
+        } catch (System.Exception e) {
+            throw new MapReadException("Error opening file", e);
+        }
         return reader.FindEmbeddedData(type);
     }
 
