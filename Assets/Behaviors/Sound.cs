@@ -4,17 +4,18 @@ using UnityEngine;
 
 // TODO a lot of this file is copied from SunVoxSong.cs and that's no good
 
+public enum PlayMode
+{
+    ONCE, _1SHOT, LOOP, BKGND
+}
+
 public class SoundBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Sound", "Play a sound",
-        "In Background mode the sound is always playing, but muted when the sensor is off.",
+        "One-shot mode plays the entire sound to completion, even after the sensor turns off.\n"
+        + "In Background mode the sound is always playing, but muted when the sensor is off.",
         "volume-high", typeof(SoundBehavior));
-    
-    public enum PlayMode
-    {
-        ONCE, LOOP, BACKGROUND
-    }
 
     private EmbeddedData soundData = new EmbeddedData();
     private float volume = 50.0f, fadeIn = 0, fadeOut = 0;
@@ -32,7 +33,7 @@ public class SoundBehavior : EntityBehavior
             new Property("dat", "Sound",
                 () => soundData,
                 v => soundData = (EmbeddedData)v,
-                PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)), // TODO player
+                PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)),
             new Property("pmo", "Play mode",
                 () => playMode,
                 v => playMode = (PlayMode)v,
@@ -92,7 +93,7 @@ public class SoundComponent : BehaviorComponent
 {
     public EmbeddedData soundData;
     public float volume, fadeIn, fadeOut;
-    public SoundBehavior.PlayMode playMode;
+    public PlayMode playMode;
 
     private AudioSource audioSource;
     private bool fadingIn, fadingOut;
@@ -101,7 +102,7 @@ public class SoundComponent : BehaviorComponent
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.volume = 0;
-        audioSource.loop = playMode != SoundBehavior.PlayMode.ONCE;
+        audioSource.loop = playMode == PlayMode.LOOP || playMode == PlayMode.BKGND;
         audioSource.playOnAwake = false;
 
         if (soundData.bytes.Length == 0)
@@ -112,25 +113,28 @@ public class SoundComponent : BehaviorComponent
 
     public override void BehaviorEnabled()
     {
-        if (playMode != SoundBehavior.PlayMode.BACKGROUND)
+        if (playMode != PlayMode.BKGND && fadeIn != 0)
             audioSource.volume = 0;
         fadingIn = true;
         fadingOut = false;
-        if (playMode != SoundBehavior.PlayMode.BACKGROUND)
+        if (playMode != PlayMode.BKGND)
             audioSource.Play();
     }
 
     public override void BehaviorDisabled()
     {
-        fadingOut = true;
-        fadingIn = false;
+        if (playMode != PlayMode._1SHOT)
+        {
+            fadingOut = true;
+            fadingIn = false;
+        }
     }
 
     private IEnumerator VolumeUpdateCoroutine()
     {
         yield return null; // wait a frame to allow world to finish loading
 
-        if (playMode == SoundBehavior.PlayMode.BACKGROUND)
+        if (playMode == PlayMode.BKGND)
             audioSource.Play();
 
         while (true)
@@ -157,7 +161,7 @@ public class SoundComponent : BehaviorComponent
                 {
                     audioSource.volume = 0;
                     fadingOut = false;
-                    if (playMode != SoundBehavior.PlayMode.BACKGROUND)
+                    if (playMode != PlayMode.BKGND)
                         audioSource.Stop();
                 }
             }

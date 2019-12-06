@@ -7,7 +7,8 @@ public class SunVoxSongBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Song", "Play a song created with SunVox",
-        "In Background mode the song is always playing, but muted when the sensor is off.\n\n"
+        "One-shot mode plays the entire sound to completion, even after the sensor turns off.\n"
+        + "In Background mode the song is always playing, but muted when the sensor is off.\n\n"
 #if UNITY_ANDROID
         + "If you have SunVox installed, songs can be found in "
         + Regex.Replace(Application.persistentDataPath.Replace(Application.identifier, "nightradio.sunvox"),
@@ -15,11 +16,6 @@ public class SunVoxSongBehavior : EntityBehavior
 #endif
         + "Watch the video tutorial for more information.",
         "sunvox", typeof(SunVoxSongBehavior));
-
-    public enum PlayMode
-    {
-        ONCE, LOOP, BACKGROUND
-    }
 
     private EmbeddedData songData = new EmbeddedData();
     private float volume = 31.0f, fadeIn = 0, fadeOut = 0;
@@ -76,7 +72,7 @@ public class SunVoxSongComponent : BehaviorComponent
 {
     public EmbeddedData songData;
     public float volume, fadeIn, fadeOut;
-    public SunVoxSongBehavior.PlayMode playMode;
+    public PlayMode playMode;
 
     private int slot = -1;
     private float currentVolume = 0;
@@ -97,7 +93,7 @@ public class SunVoxSongComponent : BehaviorComponent
         currentVolume = 0;
         UpdateSunVoxVolume();
 
-        if (playMode == SunVoxSongBehavior.PlayMode.ONCE)
+        if (playMode == PlayMode.ONCE || playMode == PlayMode._1SHOT)
             SunVox.sv_set_autostop(slot, 1);
         else
             SunVox.sv_set_autostop(slot, 0);
@@ -115,26 +111,29 @@ public class SunVoxSongComponent : BehaviorComponent
     {
         if (slot < 0)
             return;
-        if (playMode != SunVoxSongBehavior.PlayMode.BACKGROUND)
+        if (playMode != PlayMode.BKGND && fadeIn != 0)
             currentVolume = 0;
         fadingIn = true;
         fadingOut = false;
         UpdateSunVoxVolume();
-        if (playMode != SunVoxSongBehavior.PlayMode.BACKGROUND)
+        if (playMode != PlayMode.BKGND)
             SunVox.sv_play_from_beginning(slot);
     }
 
     public override void BehaviorDisabled()
     {
-        fadingOut = true;
-        fadingIn = false;
+        if (playMode != PlayMode._1SHOT)
+        {
+            fadingOut = true;
+            fadingIn = false;
+        }
     }
 
     private IEnumerator VolumeUpdateCoroutine()
     {
         yield return null; // wait a frame to allow world to finish loading
 
-        if (playMode == SunVoxSongBehavior.PlayMode.BACKGROUND)
+        if (playMode == PlayMode.BKGND)
             SunVox.sv_play_from_beginning(slot);
 
         while (true)
@@ -162,7 +161,7 @@ public class SunVoxSongComponent : BehaviorComponent
                 {
                     currentVolume = 0;
                     fadingOut = false;
-                    if (playMode != SunVoxSongBehavior.PlayMode.BACKGROUND)
+                    if (playMode != PlayMode.BKGND)
                         SunVox.sv_stop(slot);
                 }
                 UpdateSunVoxVolume();

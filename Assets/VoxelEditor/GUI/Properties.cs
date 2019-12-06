@@ -56,7 +56,10 @@ public class PropertyGUIs
         {
             string name = enumValue.ToString();
             // sentence case
-            name = Char.ToUpper(name[0]) + name.Substring(1).ToLower();
+            if (name[0] == '_')
+                name = name.Substring(1).ToLower();
+            else
+                name = Char.ToUpper(name[0]) + name.Substring(1).ToLower();
             if (enumValue.Equals(e))
                 GUIUtils.HighlightedButton(name, buttonStyle);
             else if (GUILayout.Button(name, buttonStyle))
