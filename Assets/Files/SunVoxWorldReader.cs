@@ -20,6 +20,8 @@ public class SunVoxWorldReader : WorldFileReader
         SunVoxUtils.CloseSlot(slot);
         if (name != null)
             name = name.Trim();
+        if (name != null && name.Length > 32)
+            name = name.Substring(0, 32);
         if (name == null || name == "")
             name = "imported";
 
