@@ -7,13 +7,11 @@ public class SunVoxSongBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Song", "Play a song created with SunVox",
+        "In Background mode the song is always playing, but muted when the sensor is off.\n\n"
 #if UNITY_ANDROID
-        "If you have SunVox installed, songs can be found in "
+        + "If you have SunVox installed, songs can be found in "
         + Regex.Replace(Application.persistentDataPath.Replace(Application.identifier, "nightradio.sunvox"),
-            @"^/storage/emulated/\d*", "")
-        + "\n\n"
-#else
-        ""
+            @"^/storage/emulated/\d*", "") + "\n\n"
 #endif
         + "Watch the video tutorial for more information.",
         "sunvox", typeof(SunVoxSongBehavior));

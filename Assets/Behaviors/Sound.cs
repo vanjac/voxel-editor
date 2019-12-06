@@ -8,6 +8,7 @@ public class SoundBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Sound", "Play a sound",
+        "In Background mode the sound is always playing, but muted when the sensor is off.",
         "volume-high", typeof(SoundBehavior));
     
     public enum PlayMode
