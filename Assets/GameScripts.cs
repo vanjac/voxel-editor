@@ -98,7 +98,7 @@ public class GameScripts
         ForceBehavior.objectType,
 
         SoundBehavior.objectType,
-        SunVoxSongBehavior.objectType
+        //SunVoxSongBehavior.objectType
     };
 
     public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics", "Sound" };
@@ -132,7 +132,7 @@ public class GameScripts
         new BehaviorType[]
         {
             SoundBehavior.objectType,
-            SunVoxSongBehavior.objectType
+            //SunVoxSongBehavior.objectType
         }
     };
 

@@ -30,15 +30,6 @@ Libraries:
     MessagePack for CLI
     Copyright (C) 2010-2018 FUJIWARA, Yusuke
 
-    SunVox modular synthesizer
-    Copyright (c) 2008 - 2017, Alexander Zolotov <nightradio@gmail.com>, WarmPlace.ru
-
-    Ogg Vorbis 'Tremor' integer playback codec
-    Copyright (c) 2002, Xiph.org Foundation
-
-    SunVox-Unity
-    Copyright (c) 2018, AlRado
-
     Opus audio codec
     Copyright 2001-2011 Xiph.Org, Skype Limited, Octasic,
                         Jean-Marc Valin, Timothy B. Terriberry,

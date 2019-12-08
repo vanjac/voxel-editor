@@ -118,14 +118,14 @@ public class ReadWorldFile
             Debug.Log("Reading JSON file " + stream);
             return new JSONWorldReader();
         }
-        else if (firstBytes[0] == 'S'
+        /*else if (firstBytes[0] == 'S'
               && firstBytes[1] == 'V'
               && firstBytes[2] == 'O'
               && firstBytes[3] == 'X')
         {
             Debug.Log("Reading SunVox file " + stream);
             return new SunVoxWorldReader();
-        }
+        }*/
         else if ((firstBytes[0] == 'I'
                && firstBytes[1] == 'D'
                && firstBytes[2] == '3')

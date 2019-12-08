@@ -95,13 +95,13 @@
         <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
 
-        <data android:pathPattern="/.*\\.sunvox" />
+        <!--<data android:pathPattern="/.*\\.sunvox" />
         <data android:pathPattern="/.*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*..*\\.sunvox" />
-        <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />-->
 
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
@@ -138,13 +138,13 @@
         <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
 
-        <data android:pathPattern="/.*\\.sunvox" />
+        <!--<data android:pathPattern="/.*\\.sunvox" />
         <data android:pathPattern="/.*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*\\.sunvox" />
         <data android:pathPattern="/.*..*..*..*..*..*\\.sunvox" />
-        <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />
+        <data android:pathPattern="/.*..*..*..*..*..*..*\\.sunvox" />-->
 
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
