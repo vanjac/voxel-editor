@@ -151,6 +151,22 @@ public class ReadWorldFile
             Debug.Log("Reading Ogg file " + stream);
             return new AudioClipWorldReader(AudioType.OGGVORBIS);
         }
+        else if (firstBytes[0] == 'E'
+              && firstBytes[1] == 'x'
+              && firstBytes[2] == 't'
+              && firstBytes[3] == 'e')
+        {
+            Debug.Log("Reading XM file " + stream);
+            return new AudioClipWorldReader(AudioType.XM);
+        }
+        else if (firstBytes[0] == 'I'
+              && firstBytes[1] == 'M'
+              && firstBytes[2] == 'P'
+              && firstBytes[3] == 'M')
+        {
+            Debug.Log("Reading IT file " + stream);
+            return new AudioClipWorldReader(AudioType.IT);
+        }
         else
         {
             throw new InvalidMapFileException();

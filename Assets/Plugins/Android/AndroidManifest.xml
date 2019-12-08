@@ -64,6 +64,9 @@
         <data android:mimeType="audio/ogg" />
         <data android:mimeType="application/ogg" />
         <data android:mimeType="application/x-ogg"/>
+        <data android:mimeType="audio/vorbis" />
+        <data android:mimeType="audio/xm"/>
+        <data android:mimeType="audio/it"/>
       </intent-filter>
 
       <!-- Mime type not set but valid extensions -->
@@ -106,6 +109,8 @@
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
         <data android:pathPattern=".*\\.ogg"/>
+        <data android:pathPattern=".*\\.xm"/>
+        <data android:pathPattern=".*\\.it"/>
       </intent-filter>
 
       <!-- Invalid mime type but valid extensions -->
@@ -149,6 +154,8 @@
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
         <data android:pathPattern=".*\\.ogg"/>
+        <data android:pathPattern=".*\\.xm"/>
+        <data android:pathPattern=".*\\.it"/>
       </intent-filter>
 
 

@@ -88,7 +88,7 @@ public class EditorFile : MonoBehaviour
             else if (CompareVersions(lastVersion, "1.3.0") == -1)
             {
                 LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "<b>Version 1.3.0 update</b>\n\n"
-                    + "N-Space has been updated with new behaviors for sound and music. Try them out!\n\n"
+                    + "N-Space has been updated with a new behavior for sound effects and music. Try it out!\n\n"
                     + "Also, check the main menu for links to video tutorials and a subreddit.");
             }
         }
