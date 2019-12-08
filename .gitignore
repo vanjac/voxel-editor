@@ -32,6 +32,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 iosBuild/
+*.aab
 
 /Assets/GameAssets/Poliigon/*.jpg
 /Assets/GameAssets/Poliigon/*.png
