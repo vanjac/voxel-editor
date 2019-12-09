@@ -49,3 +49,4 @@ upload_certificate.pem
 
 /opus/opus/*
 /opus/build/*
+/opus/dependencies/*

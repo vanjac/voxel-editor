@@ -6,6 +6,18 @@ It's important that opus is built with floating point support. Fixed point is no
 
 Build dlls using the VS2015 solution.
 
+## Mac
+
+Run:
+
+```
+./configure
+make
+make install
+```
+
+Find the `.dylib` file in `/usr/local/lib`.
+
 ## Android
 
 Build `.so` libraries using the Ndk with the following command:
@@ -13,3 +25,9 @@ Build `.so` libraries using the Ndk with the following command:
 `ndk-build APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk NDK_PROJECT_PATH=build`
 
 (Android.mk taken from https://github.com/xuan9/Opus-Android)
+
+## iOS
+
+Run the `build-libopus.sh` script. (Based on https://github.com/chrisballinger/Opus-iOS).
+
+Make sure to update the script when the SDK is updated.
