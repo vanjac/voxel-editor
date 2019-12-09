@@ -3,7 +3,9 @@ using System.Runtime.InteropServices;
 
 public class Opus
 {
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || (UNITY_IOS && !UNITY_EDITOR)
+    private const string LIBRARY_NAME = "__Internal";
+#elif UNITY_ANDROID && !UNITY_EDITOR
     private const string LIBRARY_NAME = "libopus";
 #else
     private const string LIBRARY_NAME = "opus";
@@ -65,34 +67,34 @@ public class Opus
         /// <summary>
         /// No error.
         /// </summary>
-        OK              = 0,
+        OK = 0,
         /// <summary>
         /// One or more invalid/out of range arguments.
         /// </summary>
-        BadArg          = -1,
+        BadArg = -1,
         /// <summary>
         /// Not enough bytes allocated in the buffer.
         /// </summary>
-        BufferTooSmall   = -2,
+        BufferTooSmall = -2,
         /// <summary>
         /// An internal error was detected.
         /// </summary>
-        InternalError   = -3,
+        InternalError = -3,
         /// <summary>
         /// The compressed data passed is corrupted.
         /// </summary>
-        InvalidPacket   = -4,
+        InvalidPacket = -4,
         /// <summary>
         /// Invalid/unsupported request number.
         /// </summary>
-        Unimplemented   = -5,
+        Unimplemented = -5,
         /// <summary>
         /// An encoder or decoder structure is invalid or already freed.
         /// </summary>
-        InvalidState    = -6,
+        InvalidState = -6,
         /// <summary>
         /// Memory allocation has failed.
         /// </summary>
-        AllocFail       = -7
+        AllocFail = -7
     }
 }
