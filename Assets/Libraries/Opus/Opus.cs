@@ -3,9 +3,7 @@ using System.Runtime.InteropServices;
 
 public class Opus
 {
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || (UNITY_IOS && !UNITY_EDITOR)
-    private const string LIBRARY_NAME = "__Internal";
-#elif UNITY_ANDROID && !UNITY_EDITOR
+#if (UNITY_ANDROID && !UNITY_EDITOR) || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
     private const string LIBRARY_NAME = "libopus";
 #else
     private const string LIBRARY_NAME = "opus";
