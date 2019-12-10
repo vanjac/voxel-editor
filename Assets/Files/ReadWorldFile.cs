@@ -151,6 +151,14 @@ public class ReadWorldFile
             Debug.Log("Reading Ogg file " + stream);
             return new AudioClipWorldReader(AudioType.OGGVORBIS);
         }
+        else if (firstBytes[0] == 'F'
+              && firstBytes[1] == 'O'
+              && firstBytes[2] == 'R'
+              && firstBytes[3] == 'M')
+        {
+            Debug.Log("Reading AIFF file " + stream);
+            return new AudioClipWorldReader(AudioType.AIFF);
+        }
         else if (firstBytes[0] == 'E'
               && firstBytes[1] == 'x'
               && firstBytes[2] == 't'
