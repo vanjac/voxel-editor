@@ -46,10 +46,13 @@ public class ReadWorldFile
     public static List<EmbeddedData> ReadEmbeddedData(string filePath, EmbeddedDataType type)
     {
         WorldFileReader reader;
-        try {
+        try
+        {
             using (FileStream stream = File.Open(filePath, FileMode.Open))
                 reader = ReadStream(stream);
-        } catch (System.Exception e) {
+        }
+        catch (System.Exception e)
+        {
             throw new MapReadException("Error opening file", e);
         }
         return reader.FindEmbeddedData(type);
@@ -129,7 +132,7 @@ public class ReadWorldFile
         else if ((firstBytes[0] == 'I'
                && firstBytes[1] == 'D'
                && firstBytes[2] == '3')
-            ||   (firstBytes[0] == 255 // frame header sync (first 11 bits)
+              || (firstBytes[0] == 255 // frame header sync (first 11 bits)
                && firstBytes[1] >> 5 == 7))
         {
             Debug.Log("Reading MP3 file " + stream);
