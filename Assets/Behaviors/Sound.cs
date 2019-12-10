@@ -16,7 +16,7 @@ public class SoundBehavior : EntityBehavior
         "•  One-shot mode plays the entire sound every time the sensor turns on. "
         + "Multiple copies can play at once. Fades have no effect.\n"
         + "•  In Background mode the sound is always playing, but muted when the sensor is off.\n\n"
-        + "Supported formats: MP3, WAV, OGG, XM, IT",
+        + "Supported formats: MP3, WAV, OGG, AIF, XM, IT",
         "volume-high", typeof(SoundBehavior));
 
     private EmbeddedData soundData = new EmbeddedData();
