@@ -29,6 +29,8 @@ public static class IOSPostBuild
             // TODO? https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW37
             //rootDict.SetBoolean("UISupportsDocumentBrowser", true);
 
+            rootDict.SetBoolean("LSSupportsOpeningDocumentsInPlace", false);
+
             var documentTypesArray = rootDict.CreateArray("CFBundleDocumentTypes");
 
             var nspaceDocTypeDict = documentTypesArray.AddDict();
