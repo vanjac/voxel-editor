@@ -65,6 +65,8 @@
         <data android:mimeType="application/ogg" />
         <data android:mimeType="application/x-ogg"/>
         <data android:mimeType="audio/vorbis" />
+        <data android:mimeType="audio/x-aiff"/>
+        <data android:mimeType="audio/aiff"/>
         <data android:mimeType="audio/xm"/>
         <data android:mimeType="audio/it"/>
       </intent-filter>
@@ -108,7 +110,12 @@
 
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
+        <data android:pathPattern=".*\\.wave"/>
         <data android:pathPattern=".*\\.ogg"/>
+        <data android:pathPattern=".*\\.oga"/>
+        <data android:pathPattern=".*\\.aiff"/>
+        <data android:pathPattern=".*\\.aif"/>
+        <data android:pathPattern=".*\\.aifc"/>
         <data android:pathPattern=".*\\.xm"/>
         <data android:pathPattern=".*\\.it"/>
       </intent-filter>
@@ -153,7 +160,12 @@
 
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
+        <data android:pathPattern=".*\\.wave"/>
         <data android:pathPattern=".*\\.ogg"/>
+        <data android:pathPattern=".*\\.oga"/>
+        <data android:pathPattern=".*\\.aiff"/>
+        <data android:pathPattern=".*\\.aif"/>
+        <data android:pathPattern=".*\\.aifc"/>
         <data android:pathPattern=".*\\.xm"/>
         <data android:pathPattern=".*\\.it"/>
       </intent-filter>
