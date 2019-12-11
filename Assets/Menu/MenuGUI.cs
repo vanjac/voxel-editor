@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuGUI : GUIPanel
 {
-    public TextAsset defaultWorld;
+    public TextAsset indoorTemplate, floatingTemplate;
 
     private List<string> worldPaths = new List<string>();
     private List<string> worldNames = new List<string>();
@@ -40,9 +40,7 @@ public class MenuGUI : GUIPanel
     {
         if (GUIUtils.HighlightedButton("New", GUIStyleSet.instance.buttonLarge))
         {
-            TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-            inputDialog.prompt = "Enter new world name...";
-            inputDialog.handler = NewWorld;
+            AskNewWorldTemplate();
         }
         scroll = GUILayout.BeginScrollView(scroll);
         for (int i = 0; i < worldPaths.Count; i++)
@@ -78,7 +76,24 @@ public class MenuGUI : GUIPanel
         SceneManager.LoadScene(scene);
     }
 
-    private void NewWorld(string name)
+    private void AskNewWorldTemplate()
+    {
+        var menu = gameObject.AddComponent<OverflowMenuGUI>();
+        menu.items = new OverflowMenuGUI.MenuItem[]
+        {
+            new OverflowMenuGUI.MenuItem("Indoor", null, () => AskNewWorldName(indoorTemplate)),
+            new OverflowMenuGUI.MenuItem("Floating", null, () => AskNewWorldName(floatingTemplate))
+        };
+    }
+
+    private void AskNewWorldName(TextAsset template)
+    {
+        TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
+        inputDialog.prompt = "Enter new world name...";
+        inputDialog.handler = (string name) => NewWorld(name, template);
+    }
+
+    private void NewWorld(string name, TextAsset template)
     {
         if (name.Length == 0)
             return;
@@ -90,7 +105,7 @@ public class MenuGUI : GUIPanel
         }
         using (FileStream fileStream = File.Create(path))
         {
-            fileStream.Write(defaultWorld.bytes, 0, defaultWorld.bytes.Length);
+            fileStream.Write(template.bytes, 0, template.bytes.Length);
         }
         UpdateWorldList();
 

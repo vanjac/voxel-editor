@@ -45,7 +45,7 @@ public class AudioClipWorldReader : WorldFileReader
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
-        var warnings = ReadWorldFile.Read(Resources.Load<TextAsset>("default"),
+        var warnings = ReadWorldFile.Read(Resources.Load<TextAsset>("Templates/indoor"),
             cameraPivot, voxelArray, editor);
         foreach (var obj in voxelArray.IterateObjects())
         {

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3133128, g: 0.20789295, b: 0.3974287, a: 1}
+  m_IndirectSpecularColor: {r: 0.31331286, g: 0.20789284, b: 0.39743063, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -153,7 +153,8 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
-  defaultWorld: {fileID: 4900000, guid: e9263386a0d0849c0a906ee14a96e198, type: 3}
+  indoorTemplate: {fileID: 4900000, guid: e9263386a0d0849c0a906ee14a96e198, type: 3}
+  floatingTemplate: {fileID: 4900000, guid: 58aa081aec3afac4785f957b023888f6, type: 3}
 --- !u!114 &1450445160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,6 +294,8 @@ MonoBehaviour:
     reddit: {fileID: 2800000, guid: 789e0959fe4fc43f1a1900850edd7218, type: 3}
     youTube: {fileID: 2800000, guid: cabf6c236add74d008a721d1a5e5d6b3, type: 3}
     gitHub: {fileID: 2800000, guid: 076587c5b9ee64ac982f8ffa94e05e66, type: 3}
+    undo: {fileID: 0}
+    import: {fileID: 0}
     bevelIcons:
       quarter: {fileID: 0}
       half: {fileID: 0}

@@ -77,7 +77,7 @@ public class HelpGUI : GUIPanel
     {
         TutorialGUI.StartTutorial(tutorial, gameObject, voxelArray, touchListener);
         if (worldName != null && voxelArray == null)
-            OpenDemoWorld("Tutorial - " + worldName, "default");
+            OpenDemoWorld("Tutorial - " + worldName, "Templates/indoor");
         Destroy(this);
     }
 
