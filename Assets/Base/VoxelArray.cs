@@ -72,12 +72,14 @@ public class VoxelArray : MonoBehaviour
 
     public Voxel InstantiateVoxel(Vector3Int position)
     {
+        Voxel voxel = new Voxel();
+        voxel.position = position;
         GameObject voxelObject = Instantiate(voxelPrefab);
         voxelObject.transform.position = position;
         voxelObject.transform.parent = transform;
         voxelObject.name = "v " + position;
-        var voxel = voxelObject.GetComponent<Voxel>();
-        voxel.position = position;
+        voxel.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+        voxel.voxelComponent.voxel = voxel;
         return voxel;
     }
 
@@ -157,7 +159,7 @@ public class VoxelArray : MonoBehaviour
     {
         if (voxel.CanBeDeleted())
         {
-            Destroy(voxel.gameObject);
+            Destroy(voxel.voxelComponent.gameObject);
             RemoveVoxelRecursive(rootNode, voxel.position, voxel);
             AssetManager.UnusedAssets();
         }
@@ -169,7 +171,7 @@ public class VoxelArray : MonoBehaviour
 
     public virtual void ObjectModified(ObjectEntity obj)
     {
-
+        // do nothing, to be extended
     }
 
     public bool IsEmpty()

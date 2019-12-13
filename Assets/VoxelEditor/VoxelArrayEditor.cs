@@ -194,9 +194,9 @@ public class VoxelArrayEditor : VoxelArray
 
         if (instance == null)
             instance = this;
-        Voxel.selectedMaterial = selectedMaterial;
-        Voxel.xRayMaterial = xRayMaterial;
-        Voxel.highlightMaterials = highlightMaterials;
+        VoxelComponent.selectedMaterial = selectedMaterial;
+        VoxelComponent.xRayMaterial = xRayMaterial;
+        VoxelComponent.highlightMaterials = highlightMaterials;
 
         ClearSelection();
         selectionChanged = false;

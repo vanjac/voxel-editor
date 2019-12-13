@@ -206,40 +206,12 @@ public struct VoxelEdge
 }
 
 
-public class Voxel : MonoBehaviour
+public class Voxel
 {
     public static VoxelFace EMPTY_FACE = new VoxelFace();
 
-    public static Material selectedMaterial; // set by VoxelArrayEditor instance
-    public static Material xRayMaterial;
-    public static Material[] highlightMaterials;
+    public readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
 
-    // constants for generating mesh
-    private readonly static Vector2[] SQUARE_LOOP = new Vector2[]
-    {
-        Vector2.zero, Vector2.right, Vector2.one, Vector2.up
-    };
-
-    private readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
-
-    private static readonly Vector3[] POSITIVE_S_XYZ = new Vector3[]
-    {
-        new Vector3(0, 0, -1), new Vector3(0, 0, 1),
-        new Vector3(-1, 0, 0), new Vector3(1, 0, 0),
-        new Vector3(1, 0, 0), new Vector3(-1, 0, 0)
-    };
-
-    private static readonly Vector3[] POSITIVE_T_XYZ = new Vector3[]
-    {
-        Vector3.up, Vector3.up,
-        Vector3.forward, Vector3.forward,
-        Vector3.up, Vector3.up
-    };
-
-    private static readonly Vector2[] POSITIVE_U_ST = new Vector2[]
-    {
-        Vector2.right, Vector2.down, Vector2.left, Vector2.up
-    };
 
     public static Vector3 DirectionForFaceI(int faceI)
     {
@@ -408,20 +380,8 @@ public class Voxel : MonoBehaviour
         }
     }
     public ObjectEntity objectEntity;
-    public int[] faceVertexIndices = new int[6];
 
-    void OnBecameVisible()
-    {
-        if (substance != null)
-            // don't use substance.component (doesn't work for clones)
-            transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
-    }
-
-    void OnBecameInvisible()
-    {
-        if (substance != null)
-            transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
-    }
+    public VoxelComponent voxelComponent;
 
     public Bounds GetFaceBounds(int faceI)
     {
@@ -544,29 +504,71 @@ public class Voxel : MonoBehaviour
         // does NOT clear objectEntity!
     }
 
-    public Voxel Clone()
+    public void UpdateVoxel()
     {
-        Voxel vClone = Instantiate<Voxel>(this);
-        vClone.position = position;
-        for (int i = 0; i < 6; i++)
-            vClone.faces[i] = faces[i];
-        // don't add to substance
-        vClone._substance = _substance;
-        // don't copy objectEntity
-        return vClone;
+        voxelComponent.UpdateVoxel();
+    }
+}
+
+
+public class VoxelComponent : MonoBehaviour
+{
+    public static Material selectedMaterial; // set by VoxelArrayEditor instance
+    public static Material xRayMaterial;
+    public static Material[] highlightMaterials;
+
+    // constants for generating mesh
+    private readonly static Vector2[] SQUARE_LOOP = new Vector2[]
+    {
+        Vector2.zero, Vector2.right, Vector2.one, Vector2.up
+    };
+
+    private static readonly Vector3[] POSITIVE_S_XYZ = new Vector3[]
+    {
+        new Vector3(0, 0, -1), new Vector3(0, 0, 1),
+        new Vector3(-1, 0, 0), new Vector3(1, 0, 0),
+        new Vector3(1, 0, 0), new Vector3(-1, 0, 0)
+    };
+
+    private static readonly Vector3[] POSITIVE_T_XYZ = new Vector3[]
+    {
+        Vector3.up, Vector3.up,
+        Vector3.forward, Vector3.forward,
+        Vector3.up, Vector3.up
+    };
+
+    private static readonly Vector2[] POSITIVE_U_ST = new Vector2[]
+    {
+        Vector2.right, Vector2.down, Vector2.left, Vector2.up
+    };
+
+    public Voxel voxel;
+    public int[] faceVertexIndices = new int[6];
+
+    void OnBecameVisible()
+    {
+        if (voxel.substance != null)
+            // don't use substance.component (doesn't work for clones)
+            transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 
+    void OnBecameInvisible()
+    {
+        if (voxel.substance != null)
+            transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+    }
+    
     public void UpdateVoxel()
     {
         bool inEditor = VoxelArrayEditor.instance != null;
 
         Material coloredHighlightMaterial = null;
-        if (substance != null && substance.highlight != Color.clear)
-            coloredHighlightMaterial = substance.highlightMaterial;
+        if (voxel.substance != null && voxel.substance.highlight != Color.clear)
+            coloredHighlightMaterial = voxel.substance.highlightMaterial;
 
         bool xRay = false;
-        if (substance != null && inEditor)
-            xRay = substance.xRay;
+        if (voxel.substance != null && inEditor)
+            xRay = voxel.substance.xRay;
         if (xRay)
             gameObject.layer = 8; // XRay layer
         else
@@ -657,7 +659,7 @@ public class Voxel : MonoBehaviour
         else
         {
             useMeshCollider = false;
-            foreach (VoxelEdge edge in edges)
+            foreach (VoxelEdge edge in voxel.edges)
                 if (edge.hasBevel)
                     useMeshCollider = true;
         }
@@ -672,7 +674,7 @@ public class Voxel : MonoBehaviour
             meshCollider.sharedMesh = mesh;
             boxCollider.enabled = false;
 
-            meshCollider.convex = (!inEditor && substance != null);
+            meshCollider.convex = !inEditor && voxel.substance != null;
         }
         else
         {
@@ -688,12 +690,12 @@ public class Voxel : MonoBehaviour
         }
         else
         {
-            if (substance != null)
+            if (voxel.substance != null)
             {
                 renderer.enabled = false;
                 theCollider.isTrigger = true;
             }
-            else if (!IsEmpty()) // a wall
+            else if (!voxel.IsEmpty()) // a wall
             {
                 renderer.enabled = true;
                 theCollider.isTrigger = false;
@@ -767,7 +769,7 @@ public class Voxel : MonoBehaviour
     {
         var corners = new FaceCornerVertices[4] {
             new FaceCornerVertices(0), new FaceCornerVertices(0), new FaceCornerVertices(0), new FaceCornerVertices(0)};
-        if (faces[faceNum].IsEmpty())
+        if (voxel.faces[faceNum].IsEmpty())
             return corners;
         for (int i = 0; i < 4; i++)
         {
@@ -775,16 +777,16 @@ public class Voxel : MonoBehaviour
             corners[i].count++;
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-            if (edges[edgeB].hasBevel || edges[edgeC].hasBevel)
+            if (voxel.edges[edgeB].hasBevel || voxel.edges[edgeC].hasBevel)
             {
-                VoxelEdge bevelEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
+                VoxelEdge bevelEdge = voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeC];
                 corners[i].bevel_i = vertexI;
                 corners[i].bevel_count = bevelEdge.bevelTypeArray.Length * 2 - 2;
                 corners[i].count += corners[i].bevel_count;
                 vertexI += corners[i].bevel_count;
 
-                if ((SQUARE_LOOP[i].x == 0 && edges[edgeB].capMin) || (SQUARE_LOOP[i].x == 1 && edges[edgeB].capMax)
-                 || (SQUARE_LOOP[i].y == 0 && edges[edgeC].capMin) || (SQUARE_LOOP[i].y == 1 && edges[edgeC].capMax))
+                if ((SQUARE_LOOP[i].x == 0 && voxel.edges[edgeB].capMin) || (SQUARE_LOOP[i].x == 1 && voxel.edges[edgeB].capMax)
+                 || (SQUARE_LOOP[i].y == 0 && voxel.edges[edgeC].capMin) || (SQUARE_LOOP[i].y == 1 && voxel.edges[edgeC].capMax))
                 {
                     corners[i].cap_i = vertexI;
                     corners[i].cap_count = bevelEdge.bevelTypeArray.Length + 1;
@@ -792,14 +794,14 @@ public class Voxel : MonoBehaviour
                     vertexI += corners[i].cap_count;
                 }
             }
-            if (edges[edgeA].hasBevel && !edges[edgeB].hasBevel && !edges[edgeC].hasBevel)
+            if (voxel.edges[edgeA].hasBevel && !voxel.edges[edgeB].hasBevel && !voxel.edges[edgeC].hasBevel)
             {
-                bool concaveB = faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
-                bool concaveC = faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
+                bool concaveB = voxel.faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
+                bool concaveC = voxel.faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
                 if (!concaveB && !concaveC)
                 {
                     corners[i].bevelProfile_i = vertexI;
-                    corners[i].bevelProfile_count = edges[edgeA].bevelTypeArray.Length * 2 - 3;
+                    corners[i].bevelProfile_count = voxel.edges[edgeA].bevelTypeArray.Length * 2 - 3;
                     corners[i].count += corners[i].bevelProfile_count;
                     vertexI += corners[i].bevelProfile_count;
 
@@ -838,12 +840,12 @@ public class Voxel : MonoBehaviour
     private void GenerateFaceVertices(int faceNum, FaceCornerVertices[] corners,
         Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
     {
-        VoxelFace face = faces[faceNum];
+        VoxelFace face = voxel.faces[faceNum];
         if (face.IsEmpty())
             return;
 
-        int axis = FaceIAxis(faceNum);
-        Vector3 normal = DirectionForFaceI(faceNum);
+        int axis = Voxel.FaceIAxis(faceNum);
+        Vector3 normal = Voxel.DirectionForFaceI(faceNum);
         int rotation = VoxelFace.GetOrientationRotation(face.orientation);
         bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
 
@@ -880,16 +882,16 @@ public class Voxel : MonoBehaviour
             FaceCornerVertices corner = corners[i];
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-            bool concaveB = faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
-            bool concaveC = faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
+            bool concaveB = voxel.faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
+            bool concaveC = voxel.faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
             bool concaveA = concaveB || concaveC;
 
             vertexPos[axis] = faceNum % 2; // will stay for all planar vertices
 
             vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x,
-                corner.edgeC_i != -1 && !concaveA ? edges[edgeA] : edges[edgeC]);
+                corner.edgeC_i != -1 && !concaveA ? voxel.edges[edgeA] : voxel.edges[edgeC]);
             vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y,
-                corner.edgeB_i != -1 && !concaveA ? edges[edgeA] : edges[edgeB]);
+                corner.edgeB_i != -1 && !concaveA ? voxel.edges[edgeA] : voxel.edges[edgeB]);
             vertices[corner.innerQuad_i] = Vector3FromArray(vertexPos);
             uvs[corner.innerQuad_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
             normals[corner.innerQuad_i] = normal;
@@ -897,7 +899,7 @@ public class Voxel : MonoBehaviour
 
             if (corner.edgeB_i != -1)
             {
-                vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA]);
+                vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, voxel.edges[edgeC].hasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA]);
                 vertexPos[(axis + 2) % 3] = SQUARE_LOOP[i].y; // will never have both edgeB and a bevel
                 vertices[corner.edgeB_i] = Vector3FromArray(vertexPos);
                 uvs[corner.edgeB_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
@@ -907,7 +909,7 @@ public class Voxel : MonoBehaviour
             if (corner.edgeC_i != -1)
             {
                 vertexPos[(axis + 1) % 3] = SQUARE_LOOP[i].x;
-                vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA]);
+                vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA]);
                 vertices[corner.edgeC_i] = Vector3FromArray(vertexPos);
                 uvs[corner.edgeC_i] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
                 normals[corner.edgeC_i] = normal;
@@ -915,19 +917,19 @@ public class Voxel : MonoBehaviour
             }
             if (corner.bevelProfile_i != -1)
             {
-                Vector2[] bevelArray = edges[edgeA].bevelTypeArray;
+                Vector2[] bevelArray = voxel.edges[edgeA].bevelTypeArray;
                 for (int bevelI = 0; bevelI < bevelArray.Length - 1; bevelI++)
                 {
                     Vector2 bevelVector = bevelArray[bevelI + 1];
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelVector.x);
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelVector.y);
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, voxel.edges[edgeA], bevelVector.x);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, voxel.edges[edgeA], bevelVector.y);
                     vertices[corner.bevelProfile_i + bevelI] = Vector3FromArray(vertexPos);
                     uvs[corner.bevelProfile_i + bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
                     normals[corner.bevelProfile_i + bevelI] = normal;
                     tangents[corner.bevelProfile_i + bevelI] = tangent;
 
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeA], bevelVector.y); // x/y are swapped
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeA], bevelVector.x);
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, voxel.edges[edgeA], bevelVector.y); // x/y are swapped
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, voxel.edges[edgeA], bevelVector.x);
                     // last iteration vertices will overlap
                     vertices[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = Vector3FromArray(vertexPos);
                     uvs[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
@@ -940,8 +942,8 @@ public class Voxel : MonoBehaviour
 
             if (corner.bevel_i != -1)
             {
-                VoxelEdge beveledEdge = edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeC];
-                bool concave = edges[edgeB].hasBevel ? concaveB : concaveC;
+                VoxelEdge beveledEdge = voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeC];
+                bool concave = voxel.edges[edgeB].hasBevel ? concaveB : concaveC;
 
                 Vector3 capNormal = Vector3.zero;
                 if (corner.cap_i != -1)
@@ -959,8 +961,8 @@ public class Voxel : MonoBehaviour
 
                     // normal (b and c are supposed to be swapped)
                     vertexPos[axis] = 0;
-                    vertexPos[(axis + 1) % 3] = edges[edgeB].hasBevel ? (1 - SQUARE_LOOP[i].x * 2) : 0;
-                    vertexPos[(axis + 2) % 3] = edges[edgeC].hasBevel ? (1 - SQUARE_LOOP[i].y * 2) : 0;
+                    vertexPos[(axis + 1) % 3] = voxel.edges[edgeB].hasBevel ? (1 - SQUARE_LOOP[i].x * 2) : 0;
+                    vertexPos[(axis + 2) % 3] = voxel.edges[edgeC].hasBevel ? (1 - SQUARE_LOOP[i].y * 2) : 0;
                     capNormal = Vector3FromArray(vertexPos);
                     if (concave)
                         capNormal = -capNormal;
@@ -978,10 +980,10 @@ public class Voxel : MonoBehaviour
                     vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, xCoord);
                     if (concave)
                         xCoord = 1; // concave bevels aren't joined
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
-                        edges[edgeC].hasBevel ? bevelVector.y : xCoord);
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
-                        edges[edgeB].hasBevel ? bevelVector.y : xCoord);
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, voxel.edges[edgeC].hasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA],
+                        voxel.edges[edgeC].hasBevel ? bevelVector.y : xCoord);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA],
+                        voxel.edges[edgeB].hasBevel ? bevelVector.y : xCoord);
                     vertices[bevelVertex] = Vector3FromArray(vertexPos);
                     tangents[bevelVertex] = tangent; // TODO
 
@@ -994,10 +996,10 @@ public class Voxel : MonoBehaviour
 
                     // calc uv (this is partially copy/pasted from vertex pos above, which is bad)
                     float uvCoord = (float)bevelI / (float)(bevelArray.Length - 1);
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, edges[edgeC].hasBevel ? edges[edgeC] : edges[edgeA],
-                        edges[edgeC].hasBevel ? uvCoord : xCoord);
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, edges[edgeB].hasBevel ? edges[edgeB] : edges[edgeA],
-                        edges[edgeB].hasBevel ? uvCoord : xCoord);
+                    vertexPos[(axis + 1) % 3] = ApplyBevel(SQUARE_LOOP[i].x, voxel.edges[edgeC].hasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA],
+                        voxel.edges[edgeC].hasBevel ? uvCoord : xCoord);
+                    vertexPos[(axis + 2) % 3] = ApplyBevel(SQUARE_LOOP[i].y, voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA],
+                        voxel.edges[edgeB].hasBevel ? uvCoord : xCoord);
                     uvs[bevelVertex] = CalcUV(vertexPos, positiveU_xyz, positiveV_xyz);
                     if (corner.cap_i != -1)
                         uvs[corner.cap_i + bevelI + 1] = uvs[bevelVertex];
@@ -1018,8 +1020,8 @@ public class Voxel : MonoBehaviour
                 {
                     Vector2 normalVector = bevelNormalArray[bevelI];
                     vertexPos[axis] = normalVector.x * ((faceNum % 2) * 2 - 1);
-                    vertexPos[(axis + 1) % 3] = edges[edgeC].hasBevel ? normalVector.y * (SQUARE_LOOP[i].x * 2 - 1) : 0;
-                    vertexPos[(axis + 2) % 3] = edges[edgeB].hasBevel ? normalVector.y * (SQUARE_LOOP[i].y * 2 - 1) : 0;
+                    vertexPos[(axis + 1) % 3] = voxel.edges[edgeC].hasBevel ? normalVector.y * (SQUARE_LOOP[i].x * 2 - 1) : 0;
+                    vertexPos[(axis + 2) % 3] = voxel.edges[edgeB].hasBevel ? normalVector.y * (SQUARE_LOOP[i].y * 2 - 1) : 0;
                     if (concave)
                     {
                         vertexPos[(axis + 1) % 3] *= -1;
@@ -1039,7 +1041,7 @@ public class Voxel : MonoBehaviour
 
     private Vector2 CalcUV(float[] vertex, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
     {
-        Vector3 vector = Vector3FromArray(vertex) + position;
+        Vector3 vector = Vector3FromArray(vertex) + voxel.position;
         return new Vector2(
             vector.x * positiveU_xyz.x + vector.y * positiveU_xyz.y + vector.z * positiveU_xyz.z,
             vector.x * positiveV_xyz.x + vector.y * positiveV_xyz.y + vector.z * positiveV_xyz.z);
@@ -1048,7 +1050,7 @@ public class Voxel : MonoBehaviour
 
     private int[] GenerateFaceTriangles(int faceNum, FaceCornerVertices[] vertices)
     {
-        if (faces[faceNum].IsEmpty())
+        if (voxel.faces[faceNum].IsEmpty())
             return new int[0];
 
         int[] surroundingEdges = new int[4];
@@ -1057,18 +1059,18 @@ public class Voxel : MonoBehaviour
         int triangleCount = 6;
         bool noInnerQuad = false;
         // for each pair of edge vertices
-        foreach (int edgeI in FaceSurroundingEdges(faceNum))
+        foreach (int edgeI in Voxel.FaceSurroundingEdges(faceNum))
         {
-            if (edges[edgeI].hasBevel)
-                triangleCount += 6 * (edges[edgeI].bevelTypeArray.Length - 1);
+            if (voxel.edges[edgeI].hasBevel)
+                triangleCount += 6 * (voxel.edges[edgeI].bevelTypeArray.Length - 1);
             surroundingEdges[surroundingEdgeI++] = edgeI;
         }
         for (int i = 0; i < 4; i++)
         {
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-            if (edges[edgeA].hasBevel && edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL
-                && EdgeIsConvex(edgeA))
+            if (voxel.edges[edgeA].hasBevel && voxel.edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL
+                && voxel.EdgeIsConvex(edgeA))
             {
                 noInnerQuad = true; // quad would be convex which might cause problems
                 triangleCount -= 6;
@@ -1108,7 +1110,7 @@ public class Voxel : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             int j = (i + 1) % 4;
-            if (edges[surroundingEdges[i]].hasBevel)
+            if (voxel.edges[surroundingEdges[i]].hasBevel)
             {
                 for (int bevelI = 0; bevelI < vertices[i].bevel_count / 2; bevelI++)
                 {
@@ -1167,7 +1169,7 @@ public class Voxel : MonoBehaviour
             {
                 int edgeA, edgeB, edgeC;
                 VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-                bool capCCW = faceCCW ^ (edges[edgeC].hasBevel) ^ (i % 2 == 0);
+                bool capCCW = faceCCW ^ (voxel.edges[edgeC].hasBevel) ^ (i % 2 == 0);
                 for (int capI = 1; capI < vertices[i].cap_count - 1; capI++)
                 {
                     AddTriangle(triangles, triangleCount, capCCW,
@@ -1208,13 +1210,13 @@ public class Voxel : MonoBehaviour
     private IEnumerable<VoxelMaterialInfo> IterateVoxelMaterials(
         bool xRay, Material coloredHighlightMaterial)
     {
-        if (IsEmpty())
+        if (voxel.IsEmpty())
             yield break; // no materials
 
         bool[] facesEnabled = new bool[6];
         // apply following materials to all non-empty faces
         for (int i = 0; i < 6; i++)
-            facesEnabled[i] = !faces[i].IsEmpty();
+            facesEnabled[i] = !voxel.faces[i].IsEmpty();
 
         if (xRay)
             yield return new VoxelMaterialInfo(xRayMaterial, facesEnabled);
@@ -1223,7 +1225,7 @@ public class Voxel : MonoBehaviour
             yield return new VoxelMaterialInfo(coloredHighlightMaterial, facesEnabled);
 
         for (int i = 0; i < 6; i++) // apply to all selected faces
-            facesEnabled[i] = faces[i].addSelected || faces[i].storedSelected;
+            facesEnabled[i] = voxel.faces[i].addSelected || voxel.faces[i].storedSelected;
         yield return new VoxelMaterialInfo(selectedMaterial, facesEnabled);
 
         // show selected edges
@@ -1231,16 +1233,16 @@ public class Voxel : MonoBehaviour
             facesEnabled[i] = false;
         for (int faceNum = 0; faceNum < 6; faceNum++)
         {
-            if (faces[faceNum].IsEmpty())
+            if (voxel.faces[faceNum].IsEmpty())
                 continue;
             int highlightNum = 0;
             int surroundingEdgeI = 0;
-            foreach (int edgeI in FaceSurroundingEdges(faceNum))
+            foreach (int edgeI in Voxel.FaceSurroundingEdges(faceNum))
             {
-                var e = edges[edgeI];
+                var e = voxel.edges[edgeI];
                 if (e.addSelected || e.storedSelected)
                 {
-                    int n = FaceTransformedEdgeNum(faceNum, surroundingEdgeI);
+                    int n = voxel.FaceTransformedEdgeNum(faceNum, surroundingEdgeI);
                     highlightNum |= 1 << n;
                 }
                 surroundingEdgeI++;
@@ -1271,9 +1273,9 @@ public class Voxel : MonoBehaviour
                 continue;
             Material mat;
             if (overlay)
-                mat = faces[i].overlay;
+                mat = voxel.faces[i].overlay;
             else
-                mat = faces[i].material;
+                mat = voxel.faces[i].material;
             if (mat == null)
                 continue;
             facesEnabled[i] = true;
@@ -1281,9 +1283,9 @@ public class Voxel : MonoBehaviour
             {
                 Material mat2;
                 if (overlay)
-                    mat2 = faces[j].overlay;
+                    mat2 = voxel.faces[j].overlay;
                 else
-                    mat2 = faces[j].material;
+                    mat2 = voxel.faces[j].material;
                 if (mat2 == mat)
                 {
                     facesEnabled[j] = true;
@@ -1299,17 +1301,17 @@ public class Voxel : MonoBehaviour
 
     private static void VertexEdges(int faceNum, int vertexI, out int edgeA, out int edgeB, out int edgeC)
     {
-        int axis = FaceIAxis(faceNum);
+        int axis = Voxel.FaceIAxis(faceNum);
         edgeA = axis * 4 + vertexI;
         edgeB = ((axis + 1) % 3) * 4
-            + SQUARE_LOOP_COORD_INDEX[(vertexI >= 2 ? 1 : 0) + (faceNum % 2) * 2];
+            + Voxel.SQUARE_LOOP_COORD_INDEX[(vertexI >= 2 ? 1 : 0) + (faceNum % 2) * 2];
         edgeC = ((axis + 2) % 3) * 4
-            + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (vertexI == 1 || vertexI == 2 ? 2 : 0)];
+            + Voxel.SQUARE_LOOP_COORD_INDEX[(faceNum % 2) + (vertexI == 1 || vertexI == 2 ? 2 : 0)];
     }
 
     private static int EdgeBOtherFace(int faceNum, int vertexI)
     {
-        int axis = FaceIAxis(faceNum);
+        int axis = Voxel.FaceIAxis(faceNum);
         int other = ((axis + 2) % 3) * 2;
         if (vertexI >= 2)
             return other + 1;
@@ -1319,7 +1321,7 @@ public class Voxel : MonoBehaviour
 
     private static int EdgeCOtherFace(int faceNum, int vertexI)
     {
-        int axis = FaceIAxis(faceNum);
+        int axis = Voxel.FaceIAxis(faceNum);
         int other = ((axis + 1) % 3 * 2);
         if (vertexI == 1 || vertexI == 2)
             return other + 1;

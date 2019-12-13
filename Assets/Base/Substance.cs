@@ -31,17 +31,20 @@ public class Substance : DynamicEntity
         substanceObject.transform.position = PositionInEditor();
         foreach (Voxel voxel in voxels)
         {
+            // TODO: need to update this!
             if (storeComponent)
             {
-                voxel.transform.parent = substanceObject.transform;
+                voxel.voxelComponent.transform.parent = substanceObject.transform;
             }
             else
             {
                 // clone
-                Voxel vClone = voxel.Clone();
+                VoxelComponent vComp = voxel.voxelComponent;
+                VoxelComponent vClone = Component.Instantiate<VoxelComponent>(vComp);
+                vClone.voxel = vComp.voxel;
                 vClone.transform.parent = substanceObject.transform;
-                vClone.transform.position = voxel.transform.position;
-                vClone.transform.rotation = voxel.transform.rotation;
+                vClone.transform.position = vComp.transform.position;
+                vClone.transform.rotation = vComp.transform.rotation;
             }
         }
         SubstanceComponent component = substanceObject.AddComponent<SubstanceComponent>();
@@ -95,7 +98,7 @@ public class Substance : DynamicEntity
             return;
         highlight = c;
         if (highlightMaterial == null)
-            highlightMaterial = Material.Instantiate(Voxel.highlightMaterials[15]);
+            highlightMaterial = Material.Instantiate(VoxelComponent.highlightMaterials[15]);
         highlightMaterial.color = highlight;
         foreach (Voxel v in voxels)
             v.UpdateVoxel();

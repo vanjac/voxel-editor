@@ -67,7 +67,7 @@ public class TouchListener : MonoBehaviour
                 GameObject hitObject = hit.transform.gameObject;
                 if (hitObject.tag == "Voxel")
                 {
-                    hitVoxel = hitObject.GetComponent<Voxel>();
+                    hitVoxel = hitObject.GetComponent<VoxelComponent>().voxel;
                     int hitVertexI = GetRaycastHitVertexIndex(hit);
                     int hitFaceI = GetVoxelFaceForVertex(hitVoxel, hitVertexI);
                     if (selectType == VoxelElement.FACES)
@@ -296,7 +296,7 @@ public class TouchListener : MonoBehaviour
     {
         for (int faceI = 0; faceI < 6; faceI++)
         {
-            if (v.faceVertexIndices[faceI] > vertex)
+            if (v.voxelComponent.faceVertexIndices[faceI] > vertex)
                 return faceI - 1;
         }
         return 5;
