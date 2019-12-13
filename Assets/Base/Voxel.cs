@@ -508,6 +508,11 @@ public class Voxel
     {
         voxelComponent.UpdateVoxel();
     }
+
+    public void VoxelDeleted()
+    {
+        voxelComponent.VoxelDeleted(this);
+    }
 }
 
 
@@ -542,8 +547,8 @@ public class VoxelComponent : MonoBehaviour
         Vector2.right, Vector2.down, Vector2.left, Vector2.up
     };
 
-    public Voxel voxel;
-    public int[] faceVertexIndices = new int[6];
+    private Voxel voxel;
+    private int[] faceVertexIndices = new int[6];
 
     void OnBecameVisible()
     {
@@ -557,7 +562,38 @@ public class VoxelComponent : MonoBehaviour
         if (voxel.substance != null)
             transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
-    
+
+    public void GetVoxelFaceForVertex(int vertex, out Voxel voxel, out int faceNum)
+    {
+        voxel = this.voxel;
+        for (int faceI = 0; faceI < 6; faceI++)
+        {
+            if (faceVertexIndices[faceI] > vertex)
+            {
+                faceNum = faceI - 1;
+                return;
+            }
+        }
+        faceNum = 5;
+    }
+
+    public void AddVoxel(Voxel voxel)
+    {
+        this.voxel = voxel;
+    }
+
+    public void VoxelDeleted(Voxel voxel)
+    {
+        Destroy(gameObject);
+    }
+
+    public VoxelComponent Clone()
+    {
+        VoxelComponent vClone = Component.Instantiate<VoxelComponent>(this);
+        vClone.voxel = voxel;
+        return vClone;
+    }
+
     public void UpdateVoxel()
     {
         bool inEditor = VoxelArrayEditor.instance != null;

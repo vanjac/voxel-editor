@@ -29,22 +29,24 @@ public class Substance : DynamicEntity
         substanceObject.name = "Substance";
         substanceObject.transform.parent = voxelArray.transform;
         substanceObject.transform.position = PositionInEditor();
-        foreach (Voxel voxel in voxels)
+
+        var voxelComponents = new HashSet<VoxelComponent>();
+        foreach (Voxel v in voxels)
+            voxelComponents.Add(v.voxelComponent);
+        foreach (VoxelComponent vc in voxelComponents)
         {
             // TODO: need to update this!
             if (storeComponent)
             {
-                voxel.voxelComponent.transform.parent = substanceObject.transform;
+                vc.transform.parent = substanceObject.transform;
             }
             else
             {
                 // clone
-                VoxelComponent vComp = voxel.voxelComponent;
-                VoxelComponent vClone = Component.Instantiate<VoxelComponent>(vComp);
-                vClone.voxel = vComp.voxel;
+                VoxelComponent vClone = vc.Clone();
                 vClone.transform.parent = substanceObject.transform;
-                vClone.transform.position = vComp.transform.position;
-                vClone.transform.rotation = vComp.transform.rotation;
+                vClone.transform.position = vc.transform.position;
+                vClone.transform.rotation = vc.transform.rotation;
             }
         }
         SubstanceComponent component = substanceObject.AddComponent<SubstanceComponent>();

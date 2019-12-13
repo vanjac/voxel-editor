@@ -79,7 +79,7 @@ public class VoxelArray : MonoBehaviour
         voxelObject.transform.parent = transform;
         voxelObject.name = "v " + position;
         voxel.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
-        voxel.voxelComponent.voxel = voxel;
+        voxel.voxelComponent.AddVoxel(voxel);
         return voxel;
     }
 
@@ -159,7 +159,7 @@ public class VoxelArray : MonoBehaviour
     {
         if (voxel.CanBeDeleted())
         {
-            Destroy(voxel.voxelComponent.gameObject);
+            voxel.VoxelDeleted();
             RemoveVoxelRecursive(rootNode, voxel.position, voxel);
             AssetManager.UnusedAssets();
         }
