@@ -230,7 +230,7 @@ public class MessagePackWorldWriter
         List<string> materials, List<string> overlays, List<Substance> substances)
     {
         var voxelList = new List<MessagePackObject>();
-        voxelList.Add(WriteIntVector3(voxel.transform.position));
+        voxelList.Add(WriteIntVector3(voxel.position));
 
         var facesList = new List<MessagePackObject>();
         for (int faceI = 0; faceI < voxel.faces.Length; faceI++)

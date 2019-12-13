@@ -344,7 +344,7 @@ public class JSONWorldReader : WorldFileReader
     {
         if (voxelObject["at"] == null)
             return;
-        Vector3 position = ReadVector3(voxelObject["at"].AsArray);
+        Vector3Int position = ReadVector3Int(voxelObject["at"].AsArray);
         Voxel voxel = null;
         if (!editor)
             // slightly faster -- doesn't add to octree
@@ -364,7 +364,7 @@ public class JSONWorldReader : WorldFileReader
                 {
                     // faces were oriented differently. Get voxel for each face
                     int faceI = faceObject["i"].AsInt;
-                    voxel = voxelArray.VoxelAt(position + Voxel.DirectionForFaceI(faceI), true);
+                    voxel = voxelArray.VoxelAt(position + Voxel.DirectionForFaceI(faceI).ToInt(), true);
                 }
                 ReadFace(faceObject, voxel, materials);
             }

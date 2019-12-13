@@ -384,6 +384,7 @@ public class Voxel : MonoBehaviour
     }
 
 
+    public Vector3Int position;
     // see "Voxel Diagram.skp" for a diagram of face/edge numbers
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
     // Edges: 0-3: x, 4-7: y, 8-11: z
@@ -449,7 +450,7 @@ public class Voxel : MonoBehaviour
                 bounds = new Bounds(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0, 0, 0));
                 break;
         }
-        bounds.center += transform.position;
+        bounds.center += position;
         return bounds;
     }
 
@@ -475,12 +476,12 @@ public class Voxel : MonoBehaviour
             center.z = 0;
         else if (edgeI == 2 || edgeI == 3 || edgeI == 5 || edgeI == 6)
             center.z = 1;
-        return new Bounds(center + transform.position, size);
+        return new Bounds(center + position, size);
     }
 
     public Bounds GetBounds()
     {
-        return new Bounds(transform.position + new Vector3(0.5f, 0.5f, 0.5f), Vector3.one);
+        return new Bounds(position + new Vector3(0.5f, 0.5f, 0.5f), Vector3.one);
     }
 
     public bool EdgeIsEmpty(int edgeI)
@@ -546,6 +547,7 @@ public class Voxel : MonoBehaviour
     public Voxel Clone()
     {
         Voxel vClone = Instantiate<Voxel>(this);
+        vClone.position = position;
         for (int i = 0; i < 6; i++)
             vClone.faces[i] = faces[i];
         // don't add to substance
@@ -1037,7 +1039,7 @@ public class Voxel : MonoBehaviour
 
     private Vector2 CalcUV(float[] vertex, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
     {
-        Vector3 vector = Vector3FromArray(vertex) + transform.position;
+        Vector3 vector = Vector3FromArray(vertex) + position;
         return new Vector2(
             vector.x * positiveU_xyz.x + vector.y * positiveU_xyz.y + vector.z * positiveU_xyz.z,
             vector.x * positiveV_xyz.x + vector.y * positiveV_xyz.y + vector.z * positiveV_xyz.z);

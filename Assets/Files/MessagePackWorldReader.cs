@@ -324,7 +324,7 @@ public class MessagePackWorldReader : WorldFileReader
         if (voxelList.Count == 0)
             return;
 
-        Vector3 position = ReadVector3(voxelList[0]);
+        Vector3Int position = ReadVector3Int(voxelList[0]);
         Voxel voxel = null;
         if (!editor)
             // slightly faster -- doesn't add to octree

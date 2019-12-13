@@ -58,12 +58,12 @@ public class MoveAxis : TransformAxis
         if (currentPosition - prevPosition > 1)
         {
             count = (int)Mathf.Floor(currentPosition - prevPosition);
-            voxelArray.Adjust(forwardDirection, count);
+            voxelArray.Adjust(forwardDirection.ToInt(), count);
         }
         else if (currentPosition - prevPosition < -1)
         {
             count = -(int)Mathf.Floor(prevPosition - currentPosition);
-            voxelArray.Adjust(-forwardDirection, -count);
+            voxelArray.Adjust((-forwardDirection).ToInt(), -count);
         }
         if (count != 0)
         {
