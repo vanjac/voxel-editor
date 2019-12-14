@@ -26,9 +26,6 @@ public class VisibleComponent : BehaviorComponent
 {
     private System.Collections.Generic.IEnumerable<Renderer> IterateRenderers()
     {
-        Renderer r = GetComponent<Renderer>();
-        if (r != null)
-            yield return r;
         foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
             yield return childRenderer;
     }
