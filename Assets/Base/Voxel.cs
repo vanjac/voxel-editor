@@ -376,7 +376,19 @@ public class Voxel
                 _substance.RemoveVoxel(this);
             _substance = value;
             if (_substance != null)
+            {
                 _substance.AddVoxel(this);
+                if (voxelComponent != null && !voxelComponent.IsSingleBlock())
+                {
+                    // TODO this seems pretty ugly
+                    voxelComponent.VoxelDeleted(this);
+                    GameObject singleBlockGO = new GameObject();
+                    singleBlockGO.transform.position = GetBounds().center;
+                    singleBlockGO.transform.parent = voxelComponent.transform.parent;
+                    voxelComponent = singleBlockGO.AddComponent<VoxelComponent>();
+                    voxelComponent.AddVoxel(this);
+                }
+            }
         }
     }
     public ObjectEntity objectEntity;
@@ -551,16 +563,29 @@ public class VoxelComponent : MonoBehaviour
     private FaceVertexIndex[] faceVertexIndices;
     private bool updateFlag = false;
 
+    void Awake()
+    {
+        gameObject.tag = "Voxel";
+        gameObject.AddComponent<MeshFilter>();
+        gameObject.AddComponent<MeshRenderer>();
+    }
+
+    public bool IsSingleBlock()
+    {
+        return voxels.Count == 1;
+    }
+
     void OnBecameVisible()
     {
-        // TODO: check if substance in game
-        // don't use substance.component (doesn't work for clones)
-        transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+        if (IsSingleBlock())
+            // don't use substance.component (doesn't work for clones)
+            transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 
     void OnBecameInvisible()
     {
-        transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
+        if (IsSingleBlock())
+            transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 
     public void GetVoxelFaceForVertex(int vertex, out Voxel voxel, out int faceNum)
@@ -599,13 +624,17 @@ public class VoxelComponent : MonoBehaviour
         return vClone;
     }
 
+    void Start()
+    {
+        // important, otherwise the game breaks :/
+        if (updateFlag)
+            UpdateVoxelImmediate();
+    }
+
     void Update()
     {
         if (updateFlag)
-        {
-            updateFlag = false;
             UpdateVoxelImmediate();
-        }
     }
 
     public void UpdateVoxel()
@@ -615,17 +644,26 @@ public class VoxelComponent : MonoBehaviour
 
     private void UpdateVoxelImmediate()
     {
+        updateFlag = false;
         bool inEditor = VoxelArrayEditor.instance != null;
+        Substance substance = null;
+        if (IsSingleBlock())
+            substance = voxels[0].substance;
 
-        // TODO:
-        //if (xRay)
-        //    gameObject.layer = 8; // XRay layer
-        //else
-        //    gameObject.layer = 0; // default
+        if (substance != null && substance.xRay)
+            gameObject.layer = 8; // XRay layer
+        else
+            gameObject.layer = 0; // default
+        
+        int numFaces = 0;
+        foreach (Voxel v in voxels)
+            foreach (VoxelFace f in v.faces)
+                if (!f.IsEmpty())
+                    numFaces++;
 
         VoxelMeshInfo[] voxelInfos = new VoxelMeshInfo[voxels.Count];
-        faceVertexIndices = new FaceVertexIndex[voxels.Count * 6]; // TODO not all of these will be used
-        int numFaces = 0;
+        faceVertexIndices = new FaceVertexIndex[numFaces];
+        numFaces = 0;
         int numVertices = 0;
 
         for (int i = 0; i < voxels.Count; i++)
@@ -634,11 +672,11 @@ public class VoxelComponent : MonoBehaviour
             VoxelMeshInfo info = new VoxelMeshInfo(voxel);
             for (int faceNum = 0; faceNum < 6; faceNum++)
             {
+                if (!voxel.faces[faceNum].IsEmpty())
+                    faceVertexIndices[numFaces++] = new FaceVertexIndex(voxel, faceNum, numVertices);
                 var corners = GetFaceVertices(voxel, faceNum, numVertices);
                 info.faceCorners[faceNum] = corners;
                 int faceVertices = corners[0].count + corners[1].count + corners[2].count + corners[3].count;
-                if (faceVertices != 0)
-                    faceVertexIndices[numFaces++] = new FaceVertexIndex(voxel, faceNum, numVertices);
                 numVertices += faceVertices;
                 try
                 {
@@ -676,10 +714,7 @@ public class VoxelComponent : MonoBehaviour
         }
 
         // according to Mesh documentation, vertices must be assigned before triangles
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-        if (meshFilter == null)
-            meshFilter = gameObject.AddComponent<MeshFilter>();
-        Mesh mesh = meshFilter.mesh;
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
         mesh.name = "v";
         mesh.Clear();
         mesh.vertices = vertices;
@@ -719,46 +754,61 @@ public class VoxelComponent : MonoBehaviour
         }
 
         MeshRenderer renderer = GetComponent<MeshRenderer>();
-        if (renderer == null)
-            renderer = gameObject.AddComponent<MeshRenderer>();
         renderer.materials = matList.ToArray(); // TODO
 
-        // TODO: use BoxColliders and convex MeshColliders when possible
-
-        MeshCollider collider = GetComponent<MeshCollider>();
-        if (collider == null)
-            collider = gameObject.AddComponent<MeshCollider>();
-        collider.enabled = true;
-        // force the collider to update. It otherwise might not since we're using the same mesh object
-        // this fixes a bug where rays would pass through a voxel that used to be empty
-        collider.sharedMesh = null;
-        collider.sharedMesh = mesh;
-        collider.convex = false;
-
-        renderer.enabled = true;
-        // TODO
-        /*if (inEditor)
+        bool useMeshCollider = true;
+        if (!inEditor && substance != null)
         {
-            renderer.enabled = true;
+            useMeshCollider = false;
+            foreach (VoxelEdge edge in voxels[0].edges)
+            {
+                if (edge.hasBevel)
+                {
+                    useMeshCollider = true;
+                    break;
+                }
+            }
+        }
+
+        MeshCollider meshCollider = GetComponent<MeshCollider>();
+        BoxCollider boxCollider = GetComponent<BoxCollider>();
+        Collider theCollider;
+
+        if (useMeshCollider)
+        {
+            if (boxCollider != null)
+                Destroy(boxCollider);
+            if (meshCollider == null)
+                meshCollider = gameObject.AddComponent<MeshCollider>();
+            // force the collider to update. It otherwise might not since we're using the same mesh object
+            // this fixes a bug where rays would pass through a voxel that used to be empty
+            meshCollider.sharedMesh = null;
+            meshCollider.sharedMesh = mesh;
+            meshCollider.convex = !inEditor && substance != null;
+            theCollider = meshCollider;
         }
         else
         {
-            if (voxel.substance != null)
-            {
-                renderer.enabled = false;
-                theCollider.isTrigger = true;
-            }
-            else if (!voxel.IsEmpty()) // a wall
-            {
-                renderer.enabled = true;
-                theCollider.isTrigger = false;
-            }
-            else // probably an object
-            {
-                renderer.enabled = false;
-                theCollider.enabled = false;
-            }
-        }*/
+            if (meshCollider != null)
+                Destroy(meshCollider);
+            if (boxCollider == null)
+                boxCollider = gameObject.AddComponent<BoxCollider>();
+            Bounds bounds = voxels[0].GetBounds();
+            boxCollider.size = bounds.size;
+            boxCollider.center = bounds.center - transform.position;
+            theCollider = boxCollider;
+        }
+
+        if (!inEditor && substance != null)
+        {
+            renderer.enabled = false;
+            theCollider.isTrigger = true;
+        }
+        else
+        {
+            renderer.enabled = true;
+            theCollider.isTrigger = false;
+        }
     } // end UpdateVoxel()
 
     // Utility functions for UpdateVoxel() ...

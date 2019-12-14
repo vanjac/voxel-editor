@@ -38,11 +38,10 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
-    public GameObject voxelPrefab;
-
     public WorldProperties world = new WorldProperties();
     protected OctreeNode rootNode;
     private List<ObjectEntity> objects = new List<ObjectEntity>();
+    private VoxelComponent voxelComponent;
 
     public virtual void Awake()
     {
@@ -74,12 +73,17 @@ public class VoxelArray : MonoBehaviour
     {
         Voxel voxel = new Voxel();
         voxel.position = position;
-        GameObject voxelObject = Instantiate(voxelPrefab);
-        voxelObject.transform.position = position;
-        voxelObject.transform.parent = transform;
-        voxelObject.name = "v " + position;
-        voxel.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
-        voxel.voxelComponent.AddVoxel(voxel);
+
+        if (voxelComponent == null)
+        {
+            GameObject voxelObject = new GameObject();
+            voxelObject.transform.position = Vector3.zero;
+            voxelObject.transform.parent = transform;
+            voxelObject.name = "megavoxel";
+            voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+        }
+        voxel.voxelComponent = voxelComponent;
+        voxelComponent.AddVoxel(voxel);
         return voxel;
     }
 
