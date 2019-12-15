@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class VoxelArray : MonoBehaviour
 {
+    private const int COMPONENT_BLOCK_SIZE = 4;
+
     protected class OctreeNode
     {
         public Vector3Int position;
         public int size;
         public OctreeNode[] branches = new OctreeNode[8];
         public Voxel voxel;
+        public VoxelComponent voxelComponent;
         public Bounds bounds
         {
             get
@@ -45,7 +48,7 @@ public class VoxelArray : MonoBehaviour
 
     public virtual void Awake()
     {
-        rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
+        rootNode = new OctreeNode(new Vector3Int(-4, -4, -4), 8);
     }
 
     public Voxel VoxelAt(Vector3Int position, bool createIfMissing)
@@ -69,26 +72,44 @@ public class VoxelArray : MonoBehaviour
         return SearchOctreeRecursive(rootNode, position, createIfMissing);
     }
 
-    public Voxel InstantiateVoxel(Vector3Int position)
+    public Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent = null)
     {
         Voxel voxel = new Voxel();
         voxel.position = position;
 
-        if (voxelComponent == null)
+        if (useComponent == null)
         {
-            GameObject voxelObject = new GameObject();
-            voxelObject.transform.position = Vector3.zero;
-            voxelObject.transform.parent = transform;
-            voxelObject.name = "megavoxel";
-            voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+            if (voxelComponent == null)
+            {
+                GameObject voxelObject = new GameObject();
+                voxelObject.transform.parent = transform;
+                voxelObject.name = "megavoxel";
+                voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+            }
+            voxel.voxelComponent = voxelComponent;
         }
-        voxel.voxelComponent = voxelComponent;
-        voxelComponent.AddVoxel(voxel);
+        else
+        {
+            voxel.voxelComponent = useComponent;
+        }
+        voxel.voxelComponent.AddVoxel(voxel);
         return voxel;
     }
 
-    private Voxel SearchOctreeRecursive(OctreeNode node, Vector3Int position, bool createIfMissing)
+    private Voxel SearchOctreeRecursive(OctreeNode node, Vector3Int position, bool createIfMissing,
+        VoxelComponent useComponent = null)
     {
+        if (useComponent == null && node.size == COMPONENT_BLOCK_SIZE)
+        {
+            if (node.voxelComponent == null)
+            {
+                GameObject voxelObject = new GameObject();
+                voxelObject.transform.parent = transform;
+                voxelObject.name = node.position.ToString();
+                node.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+            }
+            useComponent = node.voxelComponent;
+        }
         if (node.size == 1)
         {
             if (!createIfMissing)
@@ -97,7 +118,7 @@ public class VoxelArray : MonoBehaviour
                 return node.voxel;
             else
             {
-                Voxel newVoxel = InstantiateVoxel(position);
+                Voxel newVoxel = InstantiateVoxel(position, useComponent);
                 node.voxel = newVoxel;
                 return newVoxel;
             }
@@ -121,7 +142,7 @@ public class VoxelArray : MonoBehaviour
             branch = new OctreeNode(branchPos, halfSize);
             node.branches[branchI] = branch;
         }
-        return SearchOctreeRecursive(branch, position, createIfMissing);
+        return SearchOctreeRecursive(branch, position, createIfMissing, useComponent);
     }
 
     // return if empty

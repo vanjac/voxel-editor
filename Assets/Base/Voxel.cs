@@ -524,6 +524,7 @@ public class Voxel
     public void VoxelDeleted()
     {
         voxelComponent.VoxelDeleted(this);
+        voxelComponent.UpdateVoxel();
     }
 }
 
