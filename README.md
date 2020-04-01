@@ -65,6 +65,4 @@ See [credits.txt](https://github.com/vanjac/voxel-editor/blob/master/Assets/Menu
 
 ## Contact me:
 
-Jacob van't Hoog
-
 vantjac.dev@gmail.com
