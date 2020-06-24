@@ -296,6 +296,8 @@ MonoBehaviour:
     gitHub: {fileID: 2800000, guid: 076587c5b9ee64ac982f8ffa94e05e66, type: 3}
     undo: {fileID: 0}
     import: {fileID: 0}
+    indoor: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
+    floating: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
     bevelIcons:
       quarter: {fileID: 0}
       half: {fileID: 0}
