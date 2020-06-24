@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +17,7 @@ public class GameScripts
     {
         new PropertiesObjectType("Solid Substance",
             "A block that is solid and opaque by default",
-            "cube",
+            "wall",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
@@ -51,7 +51,7 @@ public class GameScripts
             }),
         new PropertiesObjectType("Glass",
             "Solid block of glass",
-            "cube",
+            "window-closed-variant",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
