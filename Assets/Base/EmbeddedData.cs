@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum EmbeddedDataType
 {
-    None, SunVox, Audio
+    None, Audio
 }
 
 public class EmbeddedData

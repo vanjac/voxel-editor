@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -97,8 +97,7 @@ public class GameScripts
         WaterBehavior.objectType,
         ForceBehavior.objectType,
 
-        SoundBehavior.objectType,
-        //SunVoxSongBehavior.objectType
+        SoundBehavior.objectType
     };
 
     public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics", "Sound" };
@@ -131,8 +130,7 @@ public class GameScripts
         },
         new BehaviorType[]
         {
-            SoundBehavior.objectType,
-            //SunVoxSongBehavior.objectType
+            SoundBehavior.objectType
         }
     };
 

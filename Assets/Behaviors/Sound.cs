@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO a lot of this file is copied from SunVoxSong.cs and that's no good
-
 public enum PlayMode
 {
     ONCE, _1SHOT, LOOP, BKGND
