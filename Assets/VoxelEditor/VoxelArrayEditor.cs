@@ -367,12 +367,13 @@ public class VoxelArrayEditor : VoxelArray
         SelectThing(new VoxelFaceReference(voxel, faceI));
     }
 
-    private void DeselectThing(Selectable thing)
+    private void DeselectThing(int index)
     {
+        Selectable thing = selectedThings[index];
         if (!thing.addSelected)
             return;
         thing.addSelected = false;
-        selectedThings.Remove(thing);
+        selectedThings.RemoveAt(index);
         thing.SelectionStateUpdated();
         selectionChanged = true;
     }
@@ -535,7 +536,7 @@ public class VoxelArrayEditor : VoxelArray
             else if (thing is ObjectEntity)
                 thingSubstance = selectObjectSubstance;
             if (thingSubstance != boxSelectSubstance || !ThingInBoxSelection(thing, selectionBounds))
-                DeselectThing(thing);
+                DeselectThing(i);
         }
         UpdateBoxSelectionRecursive(rootNode, selectionBounds, boxSelectSubstance, selectMode == SelectMode.BOX_EDGES);
     }
