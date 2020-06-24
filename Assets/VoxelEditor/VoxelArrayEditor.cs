@@ -593,36 +593,44 @@ public class VoxelArrayEditor : VoxelArray
         return bounds.Contains(thingBounds.min) && bounds.Contains(thingBounds.max);
     }
 
-    private void FaceSelectFloodFill(VoxelFaceReference faceRef, Substance substance, bool stayOnPlane)
+    private void FaceSelectFloodFill(VoxelFaceReference start, Substance substance, bool stayOnPlane)
     {
-        if (faceRef.voxel == null || faceRef.voxel.substance != substance
-            || faceRef.face.IsEmpty() || faceRef.selected) // stop at boundaries of stored selection
-            return;
-        SelectThing(faceRef);
+        // this used to be a recursive algorithm but it would cause stack overflow exceptions
+        Queue<VoxelFaceReference> facesToSelect = new Queue<VoxelFaceReference>();
+        facesToSelect.Enqueue(start);
 
-        Vector3Int position = faceRef.voxel.position;
-        for (int sideNum = 0; sideNum < 4; sideNum++)
+        // reset selection bounds
+        selectMode = SelectMode.FACE_FLOOD_FILL;
+        selectionBounds = start.bounds;
+
+        while (facesToSelect.Count != 0)
         {
-            int sideFaceI = Voxel.SideFaceI(faceRef.faceI, sideNum);
-            Vector3Int newPos = position + Voxel.DirectionForFaceI(sideFaceI).ToInt();
-            FaceSelectFloodFill(new VoxelFaceReference(VoxelAt(newPos, false), faceRef.faceI), substance, stayOnPlane);
+            VoxelFaceReference faceRef = facesToSelect.Dequeue();
+            if (faceRef.voxel == null || faceRef.voxel.substance != substance
+                || faceRef.face.IsEmpty() || faceRef.selected) // stop at boundaries of stored selection
+                continue;
+            SelectThing(faceRef);
 
-            if (!stayOnPlane)
+            Vector3Int position = faceRef.voxel.position;
+            for (int sideNum = 0; sideNum < 4; sideNum++)
             {
-                FaceSelectFloodFill(new VoxelFaceReference(faceRef.voxel, sideFaceI), substance, stayOnPlane);
-                newPos += Voxel.DirectionForFaceI(faceRef.faceI).ToInt();
-                FaceSelectFloodFill(new VoxelFaceReference(VoxelAt(newPos, false), Voxel.OppositeFaceI(sideFaceI)),
-                    substance, stayOnPlane);
+                int sideFaceI = Voxel.SideFaceI(faceRef.faceI, sideNum);
+                Vector3Int newPos = position + Voxel.DirectionForFaceI(sideFaceI).ToInt();
+                facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false), faceRef.faceI));
+
+                if (!stayOnPlane)
+                {
+                    facesToSelect.Enqueue(new VoxelFaceReference(faceRef.voxel, sideFaceI));
+                    newPos += Voxel.DirectionForFaceI(faceRef.faceI).ToInt();
+                    facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false), Voxel.OppositeFaceI(sideFaceI)));
+                }
             }
+
+            // grow bounds
+            selectionBounds.Encapsulate(faceRef.bounds);
         }
 
-        var faceBounds = faceRef.bounds;
-        if (selectMode != SelectMode.FACE_FLOOD_FILL)
-            selectionBounds = faceBounds;
-        else
-            selectionBounds.Encapsulate(faceBounds);
-        selectMode = SelectMode.FACE_FLOOD_FILL;
-        SetMoveAxes(position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(faceRef.faceI) / 2);
+        SetMoveAxes(start.voxel.position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(start.faceI) / 2);
     }
 
     private void EdgeSelectFloodFill(VoxelEdgeReference edgeRef, Substance substance)
