@@ -146,11 +146,11 @@ public class TouchListener : MonoBehaviour
                         voxelArray.TouchDown(hitVoxel, hitElementI, selectType);
                         selectingXRay = hitVoxel.substance != null && hitVoxel.substance.xRay;
                     }
-                    else if (touch.tapCount == 2)
+                    else if (touch.tapCount == 2 && touch.phase == TouchPhase.Began)
                     {
                         voxelArray.DoubleTouch(hitVoxel, hitElementI, selectType);
                     }
-                    else if (touch.tapCount == 3)
+                    else if (touch.tapCount == 3 && touch.phase == TouchPhase.Began)
                     {
                         voxelArray.TripleTouch(hitVoxel, hitElementI, selectType);
                     }
@@ -171,11 +171,11 @@ public class TouchListener : MonoBehaviour
                         movingAxis = hitTransformAxis;
                         movingAxis.TouchDown(touch);
                     }
-                    else if (touch.tapCount == 2 && lastHitVoxel != null)
+                    else if (touch.tapCount == 2 && touch.phase == TouchPhase.Began && lastHitVoxel != null)
                     {
                         voxelArray.DoubleTouch(lastHitVoxel, lastHitElementI, selectType);
                     }
-                    else if (touch.tapCount == 3 && lastHitVoxel != null)
+                    else if (touch.tapCount == 3 && touch.phase == TouchPhase.Began && lastHitVoxel != null)
                     {
                         voxelArray.TripleTouch(lastHitVoxel, lastHitElementI, selectType);
                     }
