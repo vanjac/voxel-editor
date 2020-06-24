@@ -100,6 +100,7 @@ public class DataImportGUI : GUIPanel
             }
             if (dataList != null && dataList.Count > 0)
             {
+                scroll = GUILayout.BeginScrollView(scroll);
                 foreach (EmbeddedData data in dataList)
                 {
                     GUILayout.BeginHorizontal();
@@ -122,6 +123,7 @@ public class DataImportGUI : GUIPanel
                     }
                     GUILayout.EndHorizontal();
                 }
+                GUILayout.EndScrollView();
             }
             else
             {
@@ -150,6 +152,8 @@ public class DataImportGUI : GUIPanel
                 dataList = ReadWorldFile.ReadEmbeddedData(stream, type);
             else
                 dataList = ReadWorldFile.ReadEmbeddedData(path, type);
+            foreach (EmbeddedData data in dataList)
+                Debug.Log(data.name);
         }
         catch (MapReadException e)
         {
