@@ -78,11 +78,16 @@ public class MenuGUI : GUIPanel
 
     private void AskNewWorldTemplate()
     {
-        var menu = gameObject.AddComponent<OverflowMenuGUI>();
-        menu.items = new OverflowMenuGUI.MenuItem[]
-        {
-            new OverflowMenuGUI.MenuItem("Indoor", GUIIconSet.instance.indoor, () => AskNewWorldName(indoorTemplate)),
-            new OverflowMenuGUI.MenuItem("Floating", GUIIconSet.instance.floating, () => AskNewWorldName(floatingTemplate))
+        var menu = gameObject.AddComponent<TemplatePickerGUI>();
+        menu.handler = (value) => {
+            switch (value) {
+                case 0:
+                    AskNewWorldName(indoorTemplate);
+                    break;
+                case 1:
+                    AskNewWorldName(floatingTemplate);
+                    break;
+            }
         };
     }
 
