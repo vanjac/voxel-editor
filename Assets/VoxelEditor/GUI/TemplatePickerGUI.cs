@@ -9,7 +9,7 @@ public class TemplatePickerGUI : GUIPanel
 
     private static readonly Lazy<GUIStyle> buttonStyle = new Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUI.skin.button);
+        var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
         style.imagePosition = ImagePosition.ImageAbove;
         return style;
     });
@@ -17,10 +17,11 @@ public class TemplatePickerGUI : GUIPanel
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return GUIUtils.HorizCenterRect(safeRect.center.x, 180,
-            960, 360);
+            900, 480);
     }
 
     void Start() {
+        title = "New World";
         options = new GUIContent[]
         {
             new GUIContent("Indoor", GUIIconSet.instance.indoor),
