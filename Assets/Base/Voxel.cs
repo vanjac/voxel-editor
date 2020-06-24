@@ -378,7 +378,7 @@ public class Voxel
             if (_substance != null)
             {
                 _substance.AddVoxel(this);
-                if (voxelComponent != null && !voxelComponent.IsSingleBlock())
+                if (voxelComponent != null)
                 {
                     // TODO this seems pretty ugly
                     voxelComponent.VoxelDeleted(this);
@@ -563,6 +563,7 @@ public class VoxelComponent : MonoBehaviour
     private List<Voxel> voxels = new List<Voxel>();
     private FaceVertexIndex[] faceVertexIndices;
     private bool updateFlag = false;
+    public bool isDestroyed = false;
 
     void Awake()
     {
@@ -615,7 +616,8 @@ public class VoxelComponent : MonoBehaviour
     {
         voxels.Remove(voxel);
         if (voxels.Count == 0)
-            Destroy(gameObject);
+            // this will cause voxel to be destroyed in the next frame
+            UpdateVoxel();
     }
 
     public VoxelComponent Clone()
@@ -645,6 +647,13 @@ public class VoxelComponent : MonoBehaviour
 
     private void UpdateVoxelImmediate()
     {
+        if (voxels.Count == 0)
+        {
+            Destroy(gameObject);
+            isDestroyed = true;
+            return;
+        }
+
         updateFlag = false;
         bool inEditor = VoxelArrayEditor.instance != null;
         Substance substance = null;

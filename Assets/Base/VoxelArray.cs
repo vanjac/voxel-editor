@@ -101,7 +101,7 @@ public class VoxelArray : MonoBehaviour
     {
         if (useComponent == null && node.size == COMPONENT_BLOCK_SIZE)
         {
-            if (node.voxelComponent == null)
+            if (node.voxelComponent == null || node.voxelComponent.isDestroyed)
             {
                 GameObject voxelObject = new GameObject();
                 voxelObject.transform.parent = transform;
