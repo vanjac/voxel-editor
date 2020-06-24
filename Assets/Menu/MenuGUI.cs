@@ -81,8 +81,8 @@ public class MenuGUI : GUIPanel
         var menu = gameObject.AddComponent<OverflowMenuGUI>();
         menu.items = new OverflowMenuGUI.MenuItem[]
         {
-            new OverflowMenuGUI.MenuItem("Indoor", null, () => AskNewWorldName(indoorTemplate)),
-            new OverflowMenuGUI.MenuItem("Floating", null, () => AskNewWorldName(floatingTemplate))
+            new OverflowMenuGUI.MenuItem("Indoor", GUIIconSet.instance.indoor, () => AskNewWorldName(indoorTemplate)),
+            new OverflowMenuGUI.MenuItem("Floating", GUIIconSet.instance.floating, () => AskNewWorldName(floatingTemplate))
         };
     }
 
