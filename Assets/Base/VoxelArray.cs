@@ -69,7 +69,7 @@ public class VoxelArray : MonoBehaviour
             newRoot.branches[branchI] = rootNode;
             rootNode = newRoot;
         }
-        return SearchOctreeRecursive(rootNode, position, createIfMissing);
+        return SearchOctree(rootNode, position, createIfMissing);
     }
 
     public Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent = null)
@@ -96,53 +96,55 @@ public class VoxelArray : MonoBehaviour
         return voxel;
     }
 
-    private Voxel SearchOctreeRecursive(OctreeNode node, Vector3Int position, bool createIfMissing,
-        VoxelComponent useComponent = null)
+    private Voxel SearchOctree(OctreeNode node, Vector3Int position, bool createIfMissing)
     {
-        if (useComponent == null && node.size == COMPONENT_BLOCK_SIZE)
+        VoxelComponent useComponent = null;
+        while (node.size != 1)
         {
-            if (node.voxelComponent == null || node.voxelComponent.isDestroyed)
+            // TODO what if smallest node is smaller than COMPONENT_BLOCK_SIZE?
+            if (createIfMissing && useComponent == null && node.size == COMPONENT_BLOCK_SIZE)
             {
-                GameObject voxelObject = new GameObject();
-                voxelObject.transform.parent = transform;
-                voxelObject.name = node.position.ToString();
-                node.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+                if (node.voxelComponent == null || node.voxelComponent.isDestroyed)
+                {
+                    GameObject voxelObject = new GameObject();
+                    voxelObject.transform.parent = transform;
+                    voxelObject.name = node.position.ToString();
+                    node.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+                }
+                useComponent = node.voxelComponent;
             }
-            useComponent = node.voxelComponent;
-        }
-        if (node.size == 1)
-        {
-            if (!createIfMissing)
-                return node.voxel;
-            else if (node.voxel != null)
-                return node.voxel;
-            else
+
+            int halfSize = node.size / 2;
+            bool xLarge = position.x >= node.position.x + halfSize;
+            bool yLarge = position.y >= node.position.y + halfSize;
+            bool zLarge = position.z >= node.position.z + halfSize;
+            int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
+            OctreeNode branch = node.branches[branchI];
+            if (branch == null)
             {
-                Voxel newVoxel = InstantiateVoxel(position, useComponent);
-                node.voxel = newVoxel;
-                return newVoxel;
+                if (!createIfMissing)
+                    return null;
+                Vector3Int branchPos = new Vector3Int(
+                    node.position.x + (xLarge ? halfSize : 0),
+                    node.position.y + (yLarge ? halfSize : 0),
+                    node.position.z + (zLarge ? halfSize : 0)
+                    );
+                branch = new OctreeNode(branchPos, halfSize);
+                node.branches[branchI] = branch;
             }
+            node = branch;
         }
 
-        int halfSize = node.size / 2;
-        bool xLarge = position.x >= node.position.x + halfSize;
-        bool yLarge = position.y >= node.position.y + halfSize;
-        bool zLarge = position.z >= node.position.z + halfSize;
-        int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
-        OctreeNode branch = node.branches[branchI];
-        if (branch == null)
+        if (!createIfMissing)
+            return node.voxel;
+        else if (node.voxel != null)
+            return node.voxel;
+        else
         {
-            if (!createIfMissing)
-                return null;
-            Vector3Int branchPos = new Vector3Int(
-                node.position.x + (xLarge ? halfSize : 0),
-                node.position.y + (yLarge ? halfSize : 0),
-                node.position.z + (zLarge ? halfSize : 0)
-                );
-            branch = new OctreeNode(branchPos, halfSize);
-            node.branches[branchI] = branch;
+            Voxel newVoxel = InstantiateVoxel(position, useComponent);
+            node.voxel = newVoxel;
+            return newVoxel;
         }
-        return SearchOctreeRecursive(branch, position, createIfMissing, useComponent);
     }
 
     // return if empty
