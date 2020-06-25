@@ -393,6 +393,7 @@ public class Voxel
     }
     public ObjectEntity objectEntity;
 
+    public VoxelArray.OctreeNode octreeNode;
     public VoxelComponent voxelComponent;
 
     public Bounds GetFaceBounds(int faceI)

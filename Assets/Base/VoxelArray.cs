@@ -6,10 +6,11 @@ public class VoxelArray : MonoBehaviour
 {
     private const int COMPONENT_BLOCK_SIZE = 4;
 
-    protected class OctreeNode
+    public class OctreeNode
     {
         public Vector3Int position;
         public int size;
+        public OctreeNode parent;
         public OctreeNode[] branches = new OctreeNode[8];
         public Voxel voxel;
         public VoxelComponent voxelComponent;
@@ -51,10 +52,22 @@ public class VoxelArray : MonoBehaviour
         rootNode = new OctreeNode(new Vector3Int(-4, -4, -4), 8);
     }
 
-    public Voxel VoxelAt(Vector3Int position, bool createIfMissing)
+    public Voxel VoxelAt(Vector3Int position, bool createIfMissing, Voxel searchStart)
     {
-        while (!rootNode.InBounds(position))
+        return VoxelAt(position, createIfMissing, (searchStart == null) ? rootNode : searchStart.octreeNode);
+    }
+
+    public Voxel VoxelAt(Vector3Int position, bool createIfMissing, OctreeNode searchStart = null)
+    {
+        if (searchStart == null)
+            searchStart = rootNode;
+        while (!searchStart.InBounds(position))
         {
+            if (searchStart != rootNode)
+            {
+                searchStart = searchStart.parent;
+                continue;
+            }
             // will it be the large end of the new node that will be created
             bool xLarge = position.x < rootNode.position.x;
             bool yLarge = position.y < rootNode.position.y;
@@ -67,9 +80,11 @@ public class VoxelArray : MonoBehaviour
                 );
             OctreeNode newRoot = new OctreeNode(newRootPos, rootNode.size * 2);
             newRoot.branches[branchI] = rootNode;
+            rootNode.parent = newRoot;
             rootNode = newRoot;
         }
-        return SearchOctree(rootNode, position, createIfMissing);
+        Voxel result = SearchDown(searchStart, position, createIfMissing);
+        return result;
     }
 
     public Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent = null)
@@ -96,7 +111,7 @@ public class VoxelArray : MonoBehaviour
         return voxel;
     }
 
-    private Voxel SearchOctree(OctreeNode node, Vector3Int position, bool createIfMissing)
+    private Voxel SearchDown(OctreeNode node, Vector3Int position, bool createIfMissing)
     {
         VoxelComponent useComponent = null;
         while (node.size != 1)
@@ -131,6 +146,7 @@ public class VoxelArray : MonoBehaviour
                     );
                 branch = new OctreeNode(branchPos, halfSize);
                 node.branches[branchI] = branch;
+                branch.parent = node;
             }
             node = branch;
         }
@@ -143,6 +159,7 @@ public class VoxelArray : MonoBehaviour
         {
             Voxel newVoxel = InstantiateVoxel(position, useComponent);
             node.voxel = newVoxel;
+            newVoxel.octreeNode = node;
             return newVoxel;
         }
     }
@@ -156,6 +173,7 @@ public class VoxelArray : MonoBehaviour
             if (node.voxel == voxelToRemove)
             {
                 node.voxel = null;
+                voxelToRemove.octreeNode = null;
                 return true;
             }
             return false;
@@ -171,6 +189,7 @@ public class VoxelArray : MonoBehaviour
         if (branch != null)
             if (RemoveVoxelRecursive(branch, position, voxelToRemove))
             {
+                node.branches[branchI].parent = null;
                 node.branches[branchI] = null;
             }
 
