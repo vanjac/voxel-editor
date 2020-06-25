@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -616,13 +616,13 @@ public class VoxelArrayEditor : VoxelArray
             {
                 int sideFaceI = Voxel.SideFaceI(faceRef.faceI, sideNum);
                 Vector3Int newPos = position + Voxel.DirectionForFaceI(sideFaceI).ToInt();
-                facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false), faceRef.faceI));
+                facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false, faceRef.voxel), faceRef.faceI));
 
                 if (!stayOnPlane)
                 {
                     facesToSelect.Enqueue(new VoxelFaceReference(faceRef.voxel, sideFaceI));
                     newPos += Voxel.DirectionForFaceI(faceRef.faceI).ToInt();
-                    facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false), Voxel.OppositeFaceI(sideFaceI)));
+                    facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false, faceRef.voxel), Voxel.OppositeFaceI(sideFaceI)));
                 }
             }
 
