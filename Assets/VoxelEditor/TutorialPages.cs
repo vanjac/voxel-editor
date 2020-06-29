@@ -574,7 +574,7 @@ public class Tutorials
     {
         public TutorialPaintSky()
             : base("The \"Sky\" material is special: in the game it is an unobstructed window to the sky. "
-                + "Since the world can't have holes, this is the only way to see the sky.")
+                + "In an Indoor-type world, this is the only way to see the sky.")
         { }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
