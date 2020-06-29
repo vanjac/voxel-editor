@@ -42,9 +42,13 @@ public class GUIManager : MonoBehaviour
     // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
     public Font[] alternateFonts;
 
-    void Start()
+    void Awake()
     {
         instance = this;
+    }
+
+    void Start()
+    {
         GUIPanel.guiSkin = guiSkin;
         if (Screen.dpi <= 0)
         {

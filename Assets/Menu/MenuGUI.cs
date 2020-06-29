@@ -13,6 +13,16 @@ public class MenuGUI : GUIPanel
     private OverflowMenuGUI worldOverflowMenu;
     private string selectedWorldPath;
 
+    private GUIContent[] startOptions;
+
+    // copied from TemplatePickerGUI
+    private static readonly Lazy<GUIStyle> startButtonStyle = new Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
+        style.imagePosition = ImagePosition.ImageAbove;
+        return style;
+    });
+
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(safeRect.xMin + safeRect.width * .2f, safeRect.yMin,
@@ -34,39 +44,60 @@ public class MenuGUI : GUIPanel
     void Start()
     {
         UpdateWorldList();
+        startOptions = new GUIContent[]
+        {
+            new GUIContent("Tutorial", GUIIconSet.instance.helpLarge),
+            new GUIContent("New World", GUIIconSet.instance.newWorldLarge)
+        };
     }
 
     public override void WindowGUI()
     {
-        if (GUIUtils.HighlightedButton("New", GUIStyleSet.instance.buttonLarge))
-        {
-            AskNewWorldTemplate();
-        }
-        scroll = GUILayout.BeginScrollView(scroll);
-        for (int i = 0; i < worldPaths.Count; i++)
-        {
-            string path = worldPaths[i];
-            string name = worldNames[i];
-            bool selected = worldOverflowMenu != null && path == selectedWorldPath;
-
-            GUILayout.BeginHorizontal();
-            if (GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, selected))
-                OpenWorld(path, Scenes.EDITOR);
-            if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUIStyleSet.instance.buttonLarge,
-                    selected, GUILayout.ExpandWidth(false)))
-                CreateWorldOverflowMenu(path);
-            GUILayout.EndHorizontal();
-        }
-        GUILayout.EndScrollView();
         if (worldPaths.Count == 0)
         {
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            ActionBarGUI.ActionBarLabel("Tap 'New' to create a new world.");
+
+            // copied from TemplatePickerGUI
+            GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(900), GUILayout.Height(480));
+            GUILayout.Label("Welcome to N-Space\nFollowing the tutorial is recommended!", GUIUtils.LABEL_HORIZ_CENTERED.Value);
+            int selection = GUILayout.SelectionGrid(-1, startOptions, 2, startButtonStyle.Value, GUILayout.ExpandHeight(true));
+            if (selection == 0)
+            {
+                TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, null, null, null);
+                HelpGUI.OpenDemoWorld("Tutorial - Introduction", "Templates/indoor");
+            }
+            else if (selection == 1)
+            {
+                AskNewWorldTemplate();
+            }
+            GUILayout.EndVertical();
+
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
+        }
+        else
+        {
+            if (GUIUtils.HighlightedButton("New", GUIStyleSet.instance.buttonLarge))
+                AskNewWorldTemplate();
+            scroll = GUILayout.BeginScrollView(scroll);
+            for (int i = 0; i < worldPaths.Count; i++)
+            {
+                string path = worldPaths[i];
+                string name = worldNames[i];
+                bool selected = worldOverflowMenu != null && path == selectedWorldPath;
+
+                GUILayout.BeginHorizontal();
+                if (GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, selected))
+                    OpenWorld(path, Scenes.EDITOR);
+                if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUIStyleSet.instance.buttonLarge,
+                        selected, GUILayout.ExpandWidth(false)))
+                    CreateWorldOverflowMenu(path);
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndScrollView();
         }
     }
 

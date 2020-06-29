@@ -296,8 +296,10 @@ MonoBehaviour:
     gitHub: {fileID: 2800000, guid: 076587c5b9ee64ac982f8ffa94e05e66, type: 3}
     undo: {fileID: 0}
     import: {fileID: 0}
-    indoor: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
-    floating: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
+    indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
+    floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
+    newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}
+    helpLarge: {fileID: 2800000, guid: 0bb4905118ec61d46ac168a97c9d37df, type: 3}
     bevelIcons:
       quarter: {fileID: 0}
       half: {fileID: 0}
@@ -351,21 +353,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
       propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 108221571722832052, guid: 132cee2e1c52c4ead9713413359cb4b7,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 108221571722832052, guid: 132cee2e1c52c4ead9713413359cb4b7,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 108221571722832052, guid: 132cee2e1c52c4ead9713413359cb4b7,
-        type: 3}
-      propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

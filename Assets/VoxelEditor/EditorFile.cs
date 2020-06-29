@@ -60,18 +60,7 @@ public class EditorFile : MonoBehaviour
         foreach (MonoBehaviour b in enableOnLoad)
             b.enabled = true;
 
-        if (!PlayerPrefs.HasKey("last_editScene_version"))
-        {
-            var dialog = guiGameObject.AddComponent<DialogGUI>();
-            dialog.message = "This is your first time using the app. Would you like a tutorial?";
-            dialog.yesButtonText = "Yes";
-            dialog.noButtonText = "No";
-            dialog.yesButtonHandler = () =>
-            {
-                TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, guiGameObject, voxelArray, touchListener);
-            };
-        }
-        else
+        if (PlayerPrefs.HasKey("last_editScene_version"))
         {
             string lastVersion = PlayerPrefs.GetString("last_editScene_version");
             if (CompareVersions(lastVersion, "1.2.0") == -1)

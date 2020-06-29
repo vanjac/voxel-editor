@@ -24,8 +24,8 @@ public class TemplatePickerGUI : GUIPanel
         title = "New World";
         options = new GUIContent[]
         {
-            new GUIContent("Indoor", GUIIconSet.instance.indoor),
-            new GUIContent("Floating", GUIIconSet.instance.floating)
+            new GUIContent("Indoor", GUIIconSet.instance.indoorLarge),
+            new GUIContent("Floating", GUIIconSet.instance.floatingLarge)
         };
     }
 
