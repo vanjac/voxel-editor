@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 public class MessagePackWorldWriter
 {
-    public const int VERSION = 8;
+    public const int VERSION = 9;
     private const int FILE_MIN_READER_VERSION = 8;
 
     public static void Write(string filePath, Transform cameraPivot, VoxelArray voxelArray)
@@ -36,6 +36,8 @@ public class MessagePackWorldWriter
 
         world[FileKeys.WORLD_WRITER_VERSION] = VERSION;
         world[FileKeys.WORLD_MIN_READER_VERSION] = FILE_MIN_READER_VERSION;
+
+        world[FileKeys.WORLD_TYPE] = (int)voxelArray.type;
 
         world[FileKeys.WORLD_CAMERA] = new MessagePackObject(WriteCamera(cameraPivot));
 

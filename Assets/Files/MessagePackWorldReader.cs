@@ -11,7 +11,6 @@ public class MessagePackWorldReader : WorldFileReader
 {
     public const int VERSION = MessagePackWorldWriter.VERSION;
 
-    private int fileWriterVersion;
     private MessagePackObject worldObject;
     private List<string> warnings = new List<string>();
     private bool editor;
@@ -43,7 +42,6 @@ public class MessagePackWorldReader : WorldFileReader
 
         MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
         CheckWorldValid(worldDict);
-        fileWriterVersion = worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32();
 
         EntityReference.ResetEntityIds();
 
@@ -78,6 +76,9 @@ public class MessagePackWorldReader : WorldFileReader
 
     private void ReadWorld(MessagePackObjectDictionary world, Transform cameraPivot, VoxelArray voxelArray)
     {
+        if (world.ContainsKey(FileKeys.WORLD_TYPE))
+            voxelArray.type = (VoxelArray.WorldType)world[FileKeys.WORLD_TYPE].AsInt32();
+
         if (editor && cameraPivot != null && world.ContainsKey(FileKeys.WORLD_CAMERA))
             ReadCamera(world[FileKeys.WORLD_CAMERA].AsDictionary(), cameraPivot);
 

@@ -42,7 +42,12 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
+    public enum WorldType {
+        INDOOR, FLOATING, OUTDOOR
+    }
+
     public WorldProperties world = new WorldProperties();
+    public WorldType type = WorldType.INDOOR;
     protected OctreeNode rootNode;
     private List<ObjectEntity> objects = new List<ObjectEntity>();
     private VoxelComponent voxelComponent;

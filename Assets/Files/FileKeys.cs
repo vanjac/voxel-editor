@@ -9,6 +9,7 @@ public class FileKeys
 
     public const string WORLD_WRITER_VERSION = "w";
     public const string WORLD_MIN_READER_VERSION = "r";
+    public const string WORLD_TYPE = "t";
     public const string WORLD_CAMERA = "c";
     public const string WORLD_MATERIALS = "m";
     public const string WORLD_OVERLAYS = "n";
