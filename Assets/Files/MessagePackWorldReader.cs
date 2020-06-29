@@ -11,7 +11,6 @@ public class MessagePackWorldReader : WorldFileReader
 {
     public const int VERSION = MessagePackWorldWriter.VERSION;
 
-    private int fileWriterVersion;
     private MessagePackObject worldObject;
     private List<string> warnings = new List<string>();
     private bool editor;
@@ -43,7 +42,6 @@ public class MessagePackWorldReader : WorldFileReader
 
         MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
         CheckWorldValid(worldDict);
-        fileWriterVersion = worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32();
 
         EntityReference.ResetEntityIds();
 
@@ -78,6 +76,9 @@ public class MessagePackWorldReader : WorldFileReader
 
     private void ReadWorld(MessagePackObjectDictionary world, Transform cameraPivot, VoxelArray voxelArray)
     {
+        if (world.ContainsKey(FileKeys.WORLD_TYPE))
+            voxelArray.type = (VoxelArray.WorldType)world[FileKeys.WORLD_TYPE].AsInt32();
+
         if (editor && cameraPivot != null && world.ContainsKey(FileKeys.WORLD_CAMERA))
             ReadCamera(world[FileKeys.WORLD_CAMERA].AsDictionary(), cameraPivot);
 
@@ -324,13 +325,9 @@ public class MessagePackWorldReader : WorldFileReader
         if (voxelList.Count == 0)
             return;
 
-        Vector3 position = ReadVector3(voxelList[0]);
+        Vector3Int position = ReadVector3Int(voxelList[0]);
         Voxel voxel = null;
-        if (!editor)
-            // slightly faster -- doesn't add to octree
-            voxel = voxelArray.InstantiateVoxel(position);
-        else
-            voxel = voxelArray.VoxelAt(position, true);
+        voxel = voxelArray.VoxelAt(position, true);
 
         if (voxelList.Count >= 2)
         {

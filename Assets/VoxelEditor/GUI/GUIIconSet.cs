@@ -19,6 +19,7 @@ public struct GUIIconSet
     public Texture helpCircle, done, rotateLeft, rotateRight, flipHorizontal, flipVertical, compass, about, select;
     public Texture entityTag, target, rename, copy, delete, share, bevel, no, pause, restart, editor, playAudio;
     public Texture reddit, youTube, gitHub, undo, import;
+    public Texture indoorLarge, floatingLarge, newWorldLarge, helpLarge;
 
     [System.Serializable]
     public struct BevelIconSet

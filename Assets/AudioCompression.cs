@@ -97,7 +97,7 @@ public static class AudioCompression
         int frequency = (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
         int samples = (bytes[4] << 24) | (bytes[5] << 16) | (bytes[6] << 8) | bytes[7];
 
-        Debug.Log(frequency + "Hz " + channels + " channels, " + samples + " samples");
+        //Debug.Log(frequency + "Hz " + channels + " channels, " + samples + " samples");
 
         if (samples == 0 || channels == 0 || frequency == 0)
             return null;
@@ -110,7 +110,7 @@ public static class AudioCompression
     private static IEnumerator DecompressCoroutine(AudioClip clip, byte[] bytes)
     {
         int largestPacket = (bytes[8] << 8) | bytes[9];
-        Debug.Log("Largest packet: " + largestPacket);
+        //Debug.Log("Largest packet: " + largestPacket);
 
         int opusSampleRate = GetClosestOpusSampleRate(clip.frequency);
         IntPtr error;
@@ -144,6 +144,6 @@ public static class AudioCompression
             }
         }
         Opus.opus_decoder_destroy(decoder);
-        Debug.Log("Completely decompressed!");
+        //Debug.Log("Completely decompressed!");
     }
 }

@@ -67,9 +67,10 @@ public class TouchListener : MonoBehaviour
                 GameObject hitObject = hit.transform.gameObject;
                 if (hitObject.tag == "Voxel")
                 {
-                    hitVoxel = hitObject.GetComponent<Voxel>();
+                    var voxelComponent = hitObject.GetComponent<VoxelComponent>();
                     int hitVertexI = GetRaycastHitVertexIndex(hit);
-                    int hitFaceI = GetVoxelFaceForVertex(hitVoxel, hitVertexI);
+                    int hitFaceI;
+                    voxelComponent.GetVoxelFaceForVertex(hitVertexI, out hitVoxel, out hitFaceI);
                     if (selectType == VoxelElement.FACES)
                         hitElementI = hitFaceI;
                     else if (selectType == VoxelElement.EDGES)
@@ -145,11 +146,11 @@ public class TouchListener : MonoBehaviour
                         voxelArray.TouchDown(hitVoxel, hitElementI, selectType);
                         selectingXRay = hitVoxel.substance != null && hitVoxel.substance.xRay;
                     }
-                    else if (touch.tapCount == 2)
+                    else if (touch.tapCount == 2 && touch.phase == TouchPhase.Began)
                     {
                         voxelArray.DoubleTouch(hitVoxel, hitElementI, selectType);
                     }
-                    else if (touch.tapCount == 3)
+                    else if (touch.tapCount == 3 && touch.phase == TouchPhase.Began)
                     {
                         voxelArray.TripleTouch(hitVoxel, hitElementI, selectType);
                     }
@@ -170,11 +171,11 @@ public class TouchListener : MonoBehaviour
                         movingAxis = hitTransformAxis;
                         movingAxis.TouchDown(touch);
                     }
-                    else if (touch.tapCount == 2 && lastHitVoxel != null)
+                    else if (touch.tapCount == 2 && touch.phase == TouchPhase.Began && lastHitVoxel != null)
                     {
                         voxelArray.DoubleTouch(lastHitVoxel, lastHitElementI, selectType);
                     }
-                    else if (touch.tapCount == 3 && lastHitVoxel != null)
+                    else if (touch.tapCount == 3 && touch.phase == TouchPhase.Began && lastHitVoxel != null)
                     {
                         voxelArray.TripleTouch(lastHitVoxel, lastHitElementI, selectType);
                     }
@@ -290,16 +291,6 @@ public class TouchListener : MonoBehaviour
     {
         var mesh = ((MeshCollider)(hit.collider)).sharedMesh;
         return mesh.triangles[hit.triangleIndex * 3];
-    }
-
-    private int GetVoxelFaceForVertex(Voxel v, int vertex)
-    {
-        for (int faceI = 0; faceI < 6; faceI++)
-        {
-            if (v.faceVertexIndices[faceI] > vertex)
-                return faceI - 1;
-        }
-        return 5;
     }
 
     private int ClosestEdgeToUV(Voxel voxel, Vector2 uv, int faceI)

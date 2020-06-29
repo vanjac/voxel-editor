@@ -51,8 +51,8 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
-    m_EnableRealtimeLightmaps: 1
+    m_EnableBakedLightmaps: 0
+    m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 10
     m_Resolution: 2
@@ -210,8 +210,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a814eb6b00c098041a697a8d0fa43a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voxelPrefab: {fileID: 1695945752962522, guid: 6aaef85e5238dcc4e9250d27386663fb,
-    type: 3}
   axes: {fileID: 609989223}
   rotateAxis: {fileID: 1097770323}
   selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
@@ -729,6 +727,8 @@ MonoBehaviour:
     gitHub: {fileID: 0}
     undo: {fileID: 2800000, guid: 3ca559fa1674c439f95e6569092d453e, type: 3}
     import: {fileID: 2800000, guid: 10566212bae5b46968b736b518c502eb, type: 3}
+    indoor: {fileID: 0}
+    floating: {fileID: 0}
     bevelIcons:
       quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
       half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}

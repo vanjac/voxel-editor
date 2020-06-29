@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class VoxelArray : MonoBehaviour
 {
-    protected class OctreeNode
+    private const int COMPONENT_BLOCK_SIZE = 4;
+
+    public class OctreeNode
     {
         public Vector3Int position;
         public int size;
+        public OctreeNode parent;
         public OctreeNode[] branches = new OctreeNode[8];
         public Voxel voxel;
+        public VoxelComponent voxelComponent;
         public Bounds bounds
         {
             get
@@ -38,35 +42,41 @@ public class VoxelArray : MonoBehaviour
         }
     }
 
-    public GameObject voxelPrefab;
+    public enum WorldType {
+        INDOOR, FLOATING, OUTDOOR
+    }
 
     public WorldProperties world = new WorldProperties();
+    public WorldType type = WorldType.INDOOR;
     protected OctreeNode rootNode;
     private List<ObjectEntity> objects = new List<ObjectEntity>();
+    private VoxelComponent voxelComponent;
 
     public virtual void Awake()
     {
-        rootNode = new OctreeNode(new Vector3Int(-2, -2, -2), 8);
+        rootNode = new OctreeNode(new Vector3Int(-4, -4, -4), 8);
     }
 
-    public static Vector3Int Vector3ToInt(Vector3 v)
+    public Voxel VoxelAt(Vector3Int position, bool createIfMissing, Voxel searchStart)
     {
-        return new Vector3Int(
-            Mathf.RoundToInt(v.x),
-            Mathf.RoundToInt(v.y),
-            Mathf.RoundToInt(v.z)
-            );
+        return VoxelAt(position, createIfMissing, (searchStart == null) ? rootNode : searchStart.octreeNode);
     }
 
-    public Voxel VoxelAt(Vector3 position, bool createIfMissing)
+    public Voxel VoxelAt(Vector3Int position, bool createIfMissing, OctreeNode searchStart = null)
     {
-        Vector3Int intPosition = Vector3ToInt(position);
-        while (!rootNode.InBounds(intPosition))
+        if (searchStart == null)
+            searchStart = rootNode;
+        while (!searchStart.InBounds(position))
         {
+            if (searchStart != rootNode)
+            {
+                searchStart = searchStart.parent;
+                continue;
+            }
             // will it be the large end of the new node that will be created
-            bool xLarge = intPosition.x < rootNode.position.x;
-            bool yLarge = intPosition.y < rootNode.position.y;
-            bool zLarge = intPosition.z < rootNode.position.z;
+            bool xLarge = position.x < rootNode.position.x;
+            bool yLarge = position.y < rootNode.position.y;
+            bool zLarge = position.z < rootNode.position.z;
             int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
             Vector3Int newRootPos = new Vector3Int(
                 rootNode.position.x - (xLarge ? rootNode.size : 0),
@@ -75,55 +85,88 @@ public class VoxelArray : MonoBehaviour
                 );
             OctreeNode newRoot = new OctreeNode(newRootPos, rootNode.size * 2);
             newRoot.branches[branchI] = rootNode;
+            rootNode.parent = newRoot;
             rootNode = newRoot;
         }
-        return SearchOctreeRecursive(rootNode, intPosition, createIfMissing);
+        Voxel result = SearchDown(searchStart, position, createIfMissing);
+        return result;
     }
 
-    public Voxel InstantiateVoxel(Vector3 position)
+    public Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent = null)
     {
-        GameObject voxelObject = Instantiate(voxelPrefab);
-        voxelObject.transform.position = position;
-        voxelObject.transform.parent = transform;
-        voxelObject.name = "v " + position;
-        return voxelObject.GetComponent<Voxel>();
-    }
+        Voxel voxel = new Voxel();
+        voxel.position = position;
 
-    private Voxel SearchOctreeRecursive(OctreeNode node, Vector3Int position, bool createIfMissing)
-    {
-        if (node.size == 1)
+        if (useComponent == null)
         {
-            if (!createIfMissing)
-                return node.voxel;
-            else if (node.voxel != null)
-                return node.voxel;
-            else
+            if (voxelComponent == null)
             {
-                Voxel newVoxel = InstantiateVoxel(position);
-                node.voxel = newVoxel;
-                return newVoxel;
+                GameObject voxelObject = new GameObject();
+                voxelObject.transform.parent = transform;
+                voxelObject.name = "megavoxel";
+                voxelComponent = voxelObject.AddComponent<VoxelComponent>();
             }
+            voxel.voxelComponent = voxelComponent;
+        }
+        else
+        {
+            voxel.voxelComponent = useComponent;
+        }
+        voxel.voxelComponent.AddVoxel(voxel);
+        return voxel;
+    }
+
+    private Voxel SearchDown(OctreeNode node, Vector3Int position, bool createIfMissing)
+    {
+        VoxelComponent useComponent = null;
+        while (node.size != 1)
+        {
+            // TODO what if smallest node is smaller than COMPONENT_BLOCK_SIZE?
+            if (createIfMissing && useComponent == null && node.size == COMPONENT_BLOCK_SIZE)
+            {
+                if (node.voxelComponent == null || node.voxelComponent.isDestroyed)
+                {
+                    GameObject voxelObject = new GameObject();
+                    voxelObject.transform.parent = transform;
+                    voxelObject.name = node.position.ToString();
+                    node.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
+                }
+                useComponent = node.voxelComponent;
+            }
+
+            int halfSize = node.size / 2;
+            bool xLarge = position.x >= node.position.x + halfSize;
+            bool yLarge = position.y >= node.position.y + halfSize;
+            bool zLarge = position.z >= node.position.z + halfSize;
+            int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
+            OctreeNode branch = node.branches[branchI];
+            if (branch == null)
+            {
+                if (!createIfMissing)
+                    return null;
+                Vector3Int branchPos = new Vector3Int(
+                    node.position.x + (xLarge ? halfSize : 0),
+                    node.position.y + (yLarge ? halfSize : 0),
+                    node.position.z + (zLarge ? halfSize : 0)
+                    );
+                branch = new OctreeNode(branchPos, halfSize);
+                node.branches[branchI] = branch;
+                branch.parent = node;
+            }
+            node = branch;
         }
 
-        int halfSize = node.size / 2;
-        bool xLarge = position.x >= node.position.x + halfSize;
-        bool yLarge = position.y >= node.position.y + halfSize;
-        bool zLarge = position.z >= node.position.z + halfSize;
-        int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
-        OctreeNode branch = node.branches[branchI];
-        if (branch == null)
+        if (!createIfMissing)
+            return node.voxel;
+        else if (node.voxel != null)
+            return node.voxel;
+        else
         {
-            if (!createIfMissing)
-                return null;
-            Vector3Int branchPos = new Vector3Int(
-                node.position.x + (xLarge ? halfSize : 0),
-                node.position.y + (yLarge ? halfSize : 0),
-                node.position.z + (zLarge ? halfSize : 0)
-                );
-            branch = new OctreeNode(branchPos, halfSize);
-            node.branches[branchI] = branch;
+            Voxel newVoxel = InstantiateVoxel(position, useComponent);
+            node.voxel = newVoxel;
+            newVoxel.octreeNode = node;
+            return newVoxel;
         }
-        return SearchOctreeRecursive(branch, position, createIfMissing);
     }
 
     // return if empty
@@ -135,6 +178,7 @@ public class VoxelArray : MonoBehaviour
             if (node.voxel == voxelToRemove)
             {
                 node.voxel = null;
+                voxelToRemove.octreeNode = null;
                 return true;
             }
             return false;
@@ -150,6 +194,7 @@ public class VoxelArray : MonoBehaviour
         if (branch != null)
             if (RemoveVoxelRecursive(branch, position, voxelToRemove))
             {
+                node.branches[branchI].parent = null;
                 node.branches[branchI] = null;
             }
 
@@ -165,8 +210,8 @@ public class VoxelArray : MonoBehaviour
     {
         if (voxel.CanBeDeleted())
         {
-            Destroy(voxel.gameObject);
-            RemoveVoxelRecursive(rootNode, Vector3ToInt(voxel.transform.position), voxel);
+            voxel.VoxelDeleted();
+            RemoveVoxelRecursive(rootNode, voxel.position, voxel);
             AssetManager.UnusedAssets();
         }
         else
@@ -177,7 +222,7 @@ public class VoxelArray : MonoBehaviour
 
     public virtual void ObjectModified(ObjectEntity obj)
     {
-
+        // do nothing, to be extended
     }
 
     public bool IsEmpty()

@@ -17,7 +17,7 @@ public class GameScripts
     {
         new PropertiesObjectType("Solid Substance",
             "A block that is solid and opaque by default",
-            "cube",
+            "wall",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
@@ -51,7 +51,7 @@ public class GameScripts
             }),
         new PropertiesObjectType("Glass",
             "Solid block of glass",
-            "cube",
+            "window-closed-variant",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
@@ -97,8 +97,7 @@ public class GameScripts
         WaterBehavior.objectType,
         ForceBehavior.objectType,
 
-        SoundBehavior.objectType,
-        //SunVoxSongBehavior.objectType
+        SoundBehavior.objectType
     };
 
     public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics", "Sound" };
@@ -131,8 +130,7 @@ public class GameScripts
         },
         new BehaviorType[]
         {
-            SoundBehavior.objectType,
-            //SunVoxSongBehavior.objectType
+            SoundBehavior.objectType
         }
     };
 

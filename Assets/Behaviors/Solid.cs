@@ -6,7 +6,7 @@ public class SolidBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Solid", "Blocks and collides with other objects",
-        "cube", typeof(SolidBehavior),
+        "wall", typeof(SolidBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
