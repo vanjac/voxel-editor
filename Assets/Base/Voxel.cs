@@ -570,7 +570,8 @@ public class VoxelComponent : MonoBehaviour
     {
         gameObject.tag = "Voxel";
         gameObject.AddComponent<MeshFilter>();
-        gameObject.AddComponent<MeshRenderer>();
+        var render = gameObject.AddComponent<MeshRenderer>();
+        render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.TwoSided;
     }
 
     public bool IsSingleBlock()
