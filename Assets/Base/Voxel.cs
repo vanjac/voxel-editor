@@ -1197,20 +1197,32 @@ public class VoxelComponent : MonoBehaviour
         }
 
         Vector2[] bevelArray = beveledEdge.bevelTypeArray;
+        float lastY = bevelArray[bevelArray.Length - 1].y;
         int bevelVertex = hEdge.bevel_i;
         for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
         {
             Vector2 bevelVector = bevelArray[bevelI];
             float xCoord = bevelVector.x;
+            float yCoord;
             if (concave)
                 xCoord = 2 - xCoord;
             vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, xCoord);
             if (concave)
                 xCoord = 1; // concave bevels aren't joined
+            if (concave && isEdgeB)
+                // fix joined concave and convex edges
+                // special zero check for SHAPE_SQUARE
+                yCoord = lastY != 0 ? bevelVector.y / lastY : ((float)bevelI / (bevelArray.Length - 1));
+            else
+                yCoord = bevelVector.y;
             vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, voxel.edges[edgeC].hasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA],
-                voxel.edges[edgeC].hasBevel ? bevelVector.y : xCoord);
+                voxel.edges[edgeC].hasBevel ? yCoord : xCoord);
+            if (concave && !isEdgeB)
+                yCoord = lastY != 0 ? bevelVector.y / lastY : ((float)bevelI / (bevelArray.Length - 1));
+            else
+                yCoord = bevelVector.y;
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA],
-                voxel.edges[edgeB].hasBevel ? bevelVector.y : xCoord);
+                voxel.edges[edgeB].hasBevel ? yCoord : xCoord);
             vertices[bevelVertex] = Vector3FromArray(vertexPos) + positionOffset;
             tangents[bevelVertex] = tangent; // TODO
 

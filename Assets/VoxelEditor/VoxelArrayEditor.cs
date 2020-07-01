@@ -1247,23 +1247,6 @@ public class VoxelArrayEditor : VoxelArray
 
         if (edgeRef.edge.hasBevel && EdgeIsCorner(type.Value))
         {
-            // don't allow convex and concave bevels to be joined at a corner
-            // don't allow bevels of different shapes/sizes to be joined at a corner
-            foreach (int connectedEdgeI in Voxel.ConnectedEdges(edgeRef.edgeI))
-            {
-                var connectedEdgeRef = new VoxelEdgeReference(voxel, connectedEdgeI);
-                var connectedEdgeType = GetEdgeType(connectedEdgeRef);
-                if (!EdgeIsCorner(connectedEdgeType) || !connectedEdgeRef.edge.hasBevel)
-                    continue;
-                if (type != connectedEdgeType)
-                {
-                    // bevel directions don't match! this won't work!
-                    voxel.edges[connectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
-                    UpdateBevel(connectedEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
-                        dontUpdateThisVoxel: true, type: connectedEdgeType);
-                }
-            }
-
             // don't allow full convex bevels to overlap with other bevels
             foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
             {
