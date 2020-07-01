@@ -57,11 +57,7 @@ public class VoxelArray : MonoBehaviour
         rootNode = new OctreeNode(new Vector3Int(-4, -4, -4), 8);
     }
 
-    public Voxel VoxelAt(Vector3Int position, bool createIfMissing, Voxel searchStart)
-    {
-        return VoxelAt(position, createIfMissing, (searchStart == null) ? rootNode : searchStart.octreeNode);
-    }
-
+    // will NOT create if missing
     public static Voxel VoxelAtAdjacent(Vector3Int position, Voxel searchStart)
     {
         if (searchStart == null)
@@ -78,17 +74,10 @@ public class VoxelArray : MonoBehaviour
         return SearchDown(currentNode, position, false, null);
     }
 
-    public Voxel VoxelAt(Vector3Int position, bool createIfMissing, OctreeNode searchStart = null)
+    public Voxel VoxelAt(Vector3Int position, bool createIfMissing)
     {
-        if (searchStart == null)
-            searchStart = rootNode;
-        while (!searchStart.InBounds(position))
+        while (!rootNode.InBounds(position))
         {
-            if (searchStart != rootNode)
-            {
-                searchStart = searchStart.parent;
-                continue;
-            }
             if (!createIfMissing)
                 return null;
             // create new root node...
@@ -107,10 +96,10 @@ public class VoxelArray : MonoBehaviour
             rootNode.parent = newRoot;
             rootNode = newRoot;
         }
-        return SearchDown(searchStart, position, createIfMissing, this);
+        return SearchDown(rootNode, position, createIfMissing, this);
     }
 
-    private Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent = null)
+    private Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent)
     {
         Voxel voxel = new Voxel();
         voxel.position = position;

@@ -616,13 +616,13 @@ public class VoxelArrayEditor : VoxelArray
             {
                 int sideFaceI = Voxel.SideFaceI(faceRef.faceI, sideNum);
                 Vector3Int newPos = position + Voxel.DirectionForFaceI(sideFaceI).ToInt();
-                facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false, faceRef.voxel), faceRef.faceI));
+                facesToSelect.Enqueue(new VoxelFaceReference(VoxelArray.VoxelAtAdjacent(newPos, faceRef.voxel), faceRef.faceI));
 
                 if (!stayOnPlane)
                 {
                     facesToSelect.Enqueue(new VoxelFaceReference(faceRef.voxel, sideFaceI));
                     newPos += Voxel.DirectionForFaceI(faceRef.faceI).ToInt();
-                    facesToSelect.Enqueue(new VoxelFaceReference(VoxelAt(newPos, false, faceRef.voxel), Voxel.OppositeFaceI(sideFaceI)));
+                    facesToSelect.Enqueue(new VoxelFaceReference(VoxelArray.VoxelAtAdjacent(newPos, faceRef.voxel), Voxel.OppositeFaceI(sideFaceI)));
                 }
             }
 
@@ -830,7 +830,7 @@ public class VoxelArrayEditor : VoxelArray
             Voxel oldVoxel = faceRef.voxel;
             Vector3Int oldPos = oldVoxel.position;
             Vector3Int newPos = oldPos + adjustDirection;
-            Voxel newVoxel = VoxelAt(newPos, true, oldVoxel);
+            Voxel newVoxel = VoxelAt(newPos, true);
 
             int faceI = faceRef.faceI;
             int oppositeFaceI = Voxel.OppositeFaceI(faceI);
@@ -886,11 +886,11 @@ public class VoxelArrayEditor : VoxelArray
                     {
                         // add side
                         Vector3Int sideFaceDir = Voxel.DirectionForFaceI(sideFaceI).ToInt();
-                        Voxel sideVoxel = VoxelAt(oldPos + sideFaceDir, true, oldVoxel);
+                        Voxel sideVoxel = VoxelAt(oldPos + sideFaceDir, true);
                         int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
 
                         // if possible, the new side should have the properties of the adjacent side
-                        Voxel adjacentSideVoxel = VoxelAt(oldPos - adjustDirection + sideFaceDir, false, oldVoxel);
+                        Voxel adjacentSideVoxel = VoxelArray.VoxelAtAdjacent(oldPos - adjustDirection + sideFaceDir, oldVoxel);
                         if (adjacentSideVoxel != null && !adjacentSideVoxel.faces[oppositeSideFaceI].IsEmpty()
                             && movingSubstance == adjacentSideVoxel.substance)
                         {
@@ -956,7 +956,7 @@ public class VoxelArrayEditor : VoxelArray
                 {
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
                     int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
-                    Voxel sideVoxel = VoxelAt(newPos + Voxel.DirectionForFaceI(sideFaceI).ToInt(), false, newVoxel);
+                    Voxel sideVoxel = VoxelArray.VoxelAtAdjacent(newPos + Voxel.DirectionForFaceI(sideFaceI).ToInt(), newVoxel);
                     if (sideVoxel == null || sideVoxel.faces[oppositeSideFaceI].IsEmpty() || movingSubstance != sideVoxel.substance)
                     {
                         // add side
@@ -986,7 +986,7 @@ public class VoxelArrayEditor : VoxelArray
                     }
                 }
 
-                Voxel blockingVoxel = VoxelAt(newPos + adjustDirection, false, newVoxel);
+                Voxel blockingVoxel = VoxelArray.VoxelAtAdjacent(newPos + adjustDirection, newVoxel);
                 if (blockingVoxel != null && !blockingVoxel.faces[oppositeFaceI].IsEmpty())
                 {
                     if (movingSubstance == blockingVoxel.substance)
@@ -1114,7 +1114,7 @@ public class VoxelArrayEditor : VoxelArray
         voxel.substance = substance;
         for (int faceI = 0; faceI < 6; faceI++)
         {
-            Voxel adjacentVoxel = VoxelAt(position + Voxel.DirectionForFaceI(faceI).ToInt(), false, voxel);
+            Voxel adjacentVoxel = VoxelArray.VoxelAtAdjacent(position + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
             if (adjacentVoxel == null || adjacentVoxel.substance != substance)
             {
                 // create boundary
@@ -1208,8 +1208,8 @@ public class VoxelArrayEditor : VoxelArray
     {
         int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
         int maxFaceI = minFaceI + 1;
-        Voxel minVoxel = VoxelAt(edgeRef.voxel.position + Voxel.DirectionForFaceI(minFaceI).ToInt(), false, edgeRef.voxel);
-        Voxel maxVoxel = VoxelAt(edgeRef.voxel.position + Voxel.DirectionForFaceI(maxFaceI).ToInt(), false, edgeRef.voxel);
+        Voxel minVoxel = VoxelArray.VoxelAtAdjacent(edgeRef.voxel.position + Voxel.DirectionForFaceI(minFaceI).ToInt(), edgeRef.voxel);
+        Voxel maxVoxel = VoxelArray.VoxelAtAdjacent(edgeRef.voxel.position + Voxel.DirectionForFaceI(maxFaceI).ToInt(), edgeRef.voxel);
         var minEdgeRef = new VoxelEdgeReference(minVoxel, edgeRef.edgeI);
         var maxEdgeRef = new VoxelEdgeReference(maxVoxel, edgeRef.edgeI);
 
@@ -1377,7 +1377,7 @@ public class VoxelArrayEditor : VoxelArray
         Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
         Vector3Int opposingPos = edgeRef.voxel.position
             + Voxel.DirectionForFaceI(faceA).ToInt() + Voxel.DirectionForFaceI(faceB).ToInt();
-        Voxel opposingVoxel = VoxelAt(opposingPos, false, edgeRef.voxel);
+        Voxel opposingVoxel = VoxelArray.VoxelAtAdjacent(opposingPos, edgeRef.voxel);
         if (opposingVoxel != null && opposingVoxel.substance != edgeRef.voxel.substance)
             opposingVoxel = null;
         int opposingEdgeI = Voxel.EdgeIAxis(edgeRef.edgeI) * 4 + ((edgeRef.edgeI + 2) % 4);
@@ -1391,8 +1391,8 @@ public class VoxelArrayEditor : VoxelArray
         Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
         int emptyFace = edgeRef.voxel.faces[faceA].IsEmpty() ? faceA : faceB;
         int notEmptyFace = emptyFace == faceA ? faceB : faceA;
-        Voxel adjacentVoxel = VoxelAt(edgeRef.voxel.position
-            + Voxel.DirectionForFaceI(emptyFace).ToInt(), false, edgeRef.voxel);
+        Voxel adjacentVoxel = VoxelArray.VoxelAtAdjacent(edgeRef.voxel.position
+            + Voxel.DirectionForFaceI(emptyFace).ToInt(), edgeRef.voxel);
         if (adjacentVoxel != null && adjacentVoxel.substance == edgeRef.voxel.substance)
         {
             // find edge on adjacentVoxel connected to edgeRef
