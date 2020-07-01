@@ -987,7 +987,7 @@ public class VoxelComponent : MonoBehaviour
         Vector3Int capDir = Voxel.DirectionForFaceI(capFaceI).ToInt();
         Voxel adjacent = VoxelArray.VoxelAtAdjacent(voxel.position + capDir, voxel);
 
-        if (BevelCap(voxel, adjacent, edgeI, !voxel.faces[capFaceI].IsEmpty()))
+        if (BevelCap(voxel, adjacent, edgeI, capFaceI))
         {
             hEdge.cap_i = vertexI;
             hEdge.cap_count = bevelEdge.bevelTypeArray.Length + 1;
@@ -996,8 +996,22 @@ public class VoxelComponent : MonoBehaviour
         }
     }
 
-    private static bool BevelCap(Voxel thisVoxel, Voxel otherVoxel, int edgeI, bool face)
+    private static bool BevelCap(Voxel thisVoxel, Voxel otherVoxel, int edgeI, int capFaceI)
     {
+        // check for joined corner faces that don't match
+        bool face = !thisVoxel.faces[capFaceI].IsEmpty();
+        foreach (int connectedI in Voxel.ConnectedEdges(edgeI))
+        {
+            int faceA, faceB;
+            Voxel.EdgeFaces(connectedI, out faceA, out faceB);
+            // only use faces on this half of the edge
+            if (faceA != capFaceI && faceB != capFaceI)
+                continue;
+            VoxelEdge connectedEdge = thisVoxel.edges[connectedI];
+            if (connectedEdge.hasBevel && !VoxelEdge.BevelsMatch(thisVoxel.edges[edgeI], connectedEdge))
+                return true;
+        }
+
         bool otherEmpty = (otherVoxel == null || otherVoxel.EdgeIsEmpty(edgeI));
         bool match = false;
         if (otherVoxel != null)
