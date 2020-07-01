@@ -203,6 +203,13 @@ public struct VoxelEdge
             return bevelType != BevelType.NONE;
         }
     }
+
+    public static bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
+    {
+        if (!e1.hasBevel && !e2.hasBevel)
+            return true;
+        return e1.bevelType == e2.bevelType && e1.bevelSize == e2.bevelSize;
+    }
 }
 
 
@@ -939,12 +946,12 @@ public class VoxelComponent : MonoBehaviour
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
             if (voxel.edges[edgeB].hasBevel)
             {
-                GetBevelVertices(ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB);
+                GetBevelVertices(voxel, ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB, i, edgeB, false);
                 corners[i].count += corners[i].hEdgeB.count;
             }
             if (voxel.edges[edgeC].hasBevel)
             {
-                GetBevelVertices(ref vertexI, voxel.edges[edgeC], ref corners[i].hEdgeC);
+                GetBevelVertices(voxel, ref vertexI, voxel.edges[edgeC], ref corners[i].hEdgeC, i, edgeC, true);
                 corners[i].count += corners[i].hEdgeC.count;
             }
             if (voxel.edges[edgeA].hasBevel && !voxel.edges[edgeB].hasBevel && !voxel.edges[edgeC].hasBevel)
@@ -988,20 +995,58 @@ public class VoxelComponent : MonoBehaviour
         return corners;
     }
 
-    private static void GetBevelVertices(ref int vertexI, VoxelEdge bevelEdge, ref FaceHalfEdgeVertices hEdge)
+    private static void GetBevelVertices(Voxel voxel, ref int vertexI, VoxelEdge bevelEdge,
+        ref FaceHalfEdgeVertices hEdge, int cornerI, int edgeI, bool isEdgeC)
     {
         hEdge.bevel_i = vertexI;
         hEdge.bevel_count = bevelEdge.bevelTypeArray.Length * 2 - 2;
         hEdge.count += hEdge.bevel_count;
         vertexI += hEdge.bevel_count;
 
-        // TODO determine if cap!!
-        if (false)
+        int capFaceI = Voxel.EdgeIAxis(edgeI) * 2;
+        if (!isEdgeC && SQUARE_LOOP[cornerI].x == 1)  // TODO is this right??
+            capFaceI++;
+        else if (isEdgeC && SQUARE_LOOP[cornerI].y == 1)
+            capFaceI++;
+        Vector3Int capDir = Voxel.DirectionForFaceI(capFaceI).ToInt();
+        Voxel adjacent = VoxelArray.VoxelAtAdjacent(voxel.position + capDir, voxel);
+
+        if (BevelCap(voxel, adjacent, edgeI, !voxel.faces[capFaceI].IsEmpty()))
         {
             hEdge.cap_i = vertexI;
             hEdge.cap_count = bevelEdge.bevelTypeArray.Length + 1;
             hEdge.count += hEdge.cap_count;
             vertexI += hEdge.cap_count;
+        }
+    }
+
+    private static bool BevelCap(Voxel thisVoxel, Voxel otherVoxel, int edgeI, bool face)
+    {
+        bool otherEmpty = (otherVoxel == null || otherVoxel.EdgeIsEmpty(edgeI));
+        bool match = false;
+        if (otherVoxel != null)
+        {
+            if (otherVoxel.substance != thisVoxel.substance)
+                otherEmpty = true;
+            else
+                match = VoxelEdge.BevelsMatch(thisVoxel.edges[edgeI], otherVoxel.edges[edgeI]);
+        }
+
+        if (thisVoxel.EdgeIsConvex(edgeI))
+        {
+            if (!otherEmpty && otherVoxel.EdgeIsConvex(edgeI))
+                return !match;
+            else
+                return !face;
+        }
+        else // this voxel is concave
+        {
+            if (otherEmpty)
+                return face;
+            else if (otherVoxel.edges[edgeI].hasBevel && !otherVoxel.EdgeIsConvex(edgeI))
+                return !match;  // other voxel edge is concave
+            else
+                return true;
         }
     }
 

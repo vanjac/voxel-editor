@@ -62,6 +62,22 @@ public class VoxelArray : MonoBehaviour
         return VoxelAt(position, createIfMissing, (searchStart == null) ? rootNode : searchStart.octreeNode);
     }
 
+    public static Voxel VoxelAtAdjacent(Vector3Int position, Voxel searchStart)
+    {
+        if (searchStart == null)
+            return null;
+        OctreeNode currentNode = searchStart.octreeNode;
+        if (currentNode == null)
+            return null;
+        while (!currentNode.InBounds(position))
+        {
+            currentNode = currentNode.parent;
+            if (currentNode == null)
+                return null;
+        }
+        return SearchDown(currentNode, position, false, null);
+    }
+
     public Voxel VoxelAt(Vector3Int position, bool createIfMissing, OctreeNode searchStart = null)
     {
         if (searchStart == null)
@@ -73,6 +89,9 @@ public class VoxelArray : MonoBehaviour
                 searchStart = searchStart.parent;
                 continue;
             }
+            if (!createIfMissing)
+                return null;
+            // create new root node...
             // will it be the large end of the new node that will be created
             bool xLarge = position.x < rootNode.position.x;
             bool yLarge = position.y < rootNode.position.y;
@@ -88,11 +107,10 @@ public class VoxelArray : MonoBehaviour
             rootNode.parent = newRoot;
             rootNode = newRoot;
         }
-        Voxel result = SearchDown(searchStart, position, createIfMissing);
-        return result;
+        return SearchDown(searchStart, position, createIfMissing, this);
     }
 
-    public Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent = null)
+    private Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent = null)
     {
         Voxel voxel = new Voxel();
         voxel.position = position;
@@ -116,7 +134,8 @@ public class VoxelArray : MonoBehaviour
         return voxel;
     }
 
-    private Voxel SearchDown(OctreeNode node, Vector3Int position, bool createIfMissing)
+    // voxelArray is only used if createIfMissing is true
+    private static Voxel SearchDown(OctreeNode node, Vector3Int position, bool createIfMissing, VoxelArray voxelArray)
     {
         VoxelComponent useComponent = null;
         while (node.size != 1)
@@ -127,7 +146,7 @@ public class VoxelArray : MonoBehaviour
                 if (node.voxelComponent == null || node.voxelComponent.isDestroyed)
                 {
                     GameObject voxelObject = new GameObject();
-                    voxelObject.transform.parent = transform;
+                    voxelObject.transform.parent = voxelArray.transform;
                     voxelObject.name = node.position.ToString();
                     node.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
                 }
@@ -162,7 +181,7 @@ public class VoxelArray : MonoBehaviour
             return node.voxel;
         else
         {
-            Voxel newVoxel = InstantiateVoxel(position, useComponent);
+            Voxel newVoxel = voxelArray.InstantiateVoxel(position, useComponent);
             node.voxel = newVoxel;
             newVoxel.octreeNode = node;
             return newVoxel;

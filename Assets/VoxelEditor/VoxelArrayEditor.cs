@@ -1201,7 +1201,6 @@ public class VoxelArrayEditor : VoxelArray
     // Call this function after an edgeRef's bevel settings have been set. It will:
     //   - Clear the bevel if the edge is empty or flat
     //   - Update the caps on the edge and adjacent edges
-    //   - Change/remove the bevels of connected edges if necessary to avoid conflicts
     //   - Add all modified voxels to voxelsToUpdate (except given voxel with dontUpdateThisVoxel=true)
     //   - Optionally repeat all of this for the other "half" of the edge
     private void UpdateBevel(VoxelEdgeReference edgeRef, HashSet<Voxel> voxelsToUpdate, bool alsoBevelOppositeConcaveEdge,
@@ -1293,13 +1292,6 @@ public class VoxelArrayEditor : VoxelArray
                     UpdateBevel(connectedEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
                         dontUpdateThisVoxel: true, alwaysUpdateAdjacentCaps: alwaysUpdateAdjacentCaps);
                 }
-                else if (!BevelsMatch(connectedEdgeRef.edge, edgeRef.edge))
-                {
-                    // bevel shapes/sizes don't match! this won't work!
-                    edgeRef.voxel.edges[connectedEdgeI].bevel = edgeRef.edge.bevel;
-                    UpdateBevel(connectedEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
-                        dontUpdateThisVoxel: true, alwaysUpdateAdjacentCaps: alwaysUpdateAdjacentCaps);
-                }
             }
 
             // don't allow full convex bevels to overlap with other bevels
@@ -1348,13 +1340,6 @@ public class VoxelArrayEditor : VoxelArray
             voxelsToUpdate.Add(edgeRef.voxel);
     }
 
-    private bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
-    {
-        if (!e1.hasBevel && !e2.hasBevel)
-            return true;
-        return e1.bevelType == e2.bevelType && e1.bevelSize == e2.bevelSize;
-    }
-
     private bool BevelCap(VoxelEdgeReference thisBevel, VoxelEdgeReference otherBevel,
         EdgeType thisType, EdgeType otherType, bool face, out bool alsoChangeOtherCap)
     {
@@ -1364,7 +1349,7 @@ public class VoxelArrayEditor : VoxelArray
             if (otherBevel.voxel.substance != thisBevel.voxel.substance)
                 otherType = EdgeType.EMPTY;
             else
-                match = BevelsMatch(thisBevel.edge, otherBevel.edge);
+                match = VoxelEdge.BevelsMatch(thisBevel.edge, otherBevel.edge);
         }
 
         alsoChangeOtherCap = false;
