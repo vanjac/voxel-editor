@@ -11,7 +11,7 @@ public class LightBehavior : EntityBehavior
 
     private float size = 10, intensity = 1;
     private Color color = Color.white;
-    private bool halo = true;
+    private bool halo = false;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -77,6 +77,11 @@ public class LightComponent : BehaviorComponent
         lightComponent.intensity = intensity;
         lightComponent.color = color;
         lightComponent.enabled = false;
+
+        lightComponent.shadows = LightShadows.Hard;
+        // fix seams (also done in directional light)
+        lightComponent.shadowBias = 0.0f;
+        lightComponent.shadowNormalBias = 0.0f;
 
         base.Start();
     }
