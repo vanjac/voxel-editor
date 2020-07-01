@@ -129,7 +129,7 @@ public class VoxelArray : MonoBehaviour
         VoxelComponent useComponent = null;
         while (node.size != 1)
         {
-            // TODO what if smallest node is smaller than COMPONENT_BLOCK_SIZE?
+            // initial root node is larger than COMPONENT_BLOCK_SIZE so a component node should always be found
             if (createIfMissing && useComponent == null && node.size == COMPONENT_BLOCK_SIZE)
             {
                 if (node.voxelComponent == null || node.voxelComponent.isDestroyed)
