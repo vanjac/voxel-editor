@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public struct VoxelFace
 {
@@ -80,6 +79,7 @@ public struct VoxelEdge
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f),
         new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
 
+    // 0x08 and 0x80 used to be used for caps and may still be used in old world files
     public byte bevel;
     public bool addSelected, storedSelected;
 
@@ -110,30 +110,6 @@ public struct VoxelEdge
         set
         {
             bevel = (byte)((bevel & 0x8f) | ((byte)value << 4));
-        }
-    }
-
-    public bool capMin
-    {
-        get
-        {
-            return (bevel & 0x08) != 0;
-        }
-        set
-        {
-            bevel = (byte)((bevel & 0xF7) | (value ? 0x08 : 0));
-        }
-    }
-
-    public bool capMax
-    {
-        get
-        {
-            return (bevel & 0x80) != 0;
-        }
-        set
-        {
-            bevel = (byte)((bevel & 0x7F) | (value ? 0x80 : 0));
         }
     }
 
