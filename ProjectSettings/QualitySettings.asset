@@ -8,7 +8,7 @@ QualitySettings:
   m_QualitySettings:
   - serializedVersion: 2
     name: Medium
-    pixelLightCount: 3
+    pixelLightCount: 2
     shadows: 1
     shadowResolution: 0
     shadowProjection: 0
