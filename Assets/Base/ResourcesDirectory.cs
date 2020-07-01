@@ -75,6 +75,7 @@ public class ResourcesDirectory
             material.renderQueue = 3000;
             if (material.shader.name == "Standard")
             {
+                material.SetFloat("_Mode", 3); // transparent
                 // http://answers.unity.com/answers/1265884/view.html
                 material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
                 material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
