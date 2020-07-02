@@ -12,7 +12,7 @@ public class Opus
 #endif
 
     [DllImport(LIBRARY_NAME)]
-    public static extern IntPtr opus_encoder_create(int Fs, int channels, int application, out IntPtr error);
+    public static extern IntPtr opus_encoder_create(int Fs, int channels, int application, out int error);
 
     [DllImport(LIBRARY_NAME)]
     public static extern void opus_encoder_destroy(IntPtr encoder);
@@ -21,7 +21,7 @@ public class Opus
     public static extern int opus_encode_float(IntPtr st, float[] pcm, int frame_size, byte[] data, int max_data_bytes);
 
     [DllImport(LIBRARY_NAME)]
-    public static extern IntPtr opus_decoder_create(int Fs, int channels, out IntPtr error);
+    public static extern IntPtr opus_decoder_create(int Fs, int channels, out int error);
 
     [DllImport(LIBRARY_NAME)]
     public static extern void opus_decoder_destroy(IntPtr decoder);
@@ -29,18 +29,33 @@ public class Opus
     [DllImport(LIBRARY_NAME)]
     public static extern int opus_decode_float(IntPtr st, byte[] data, int len, float[] pcm, int frame_size, int decode_fec);
 
+#if UNITY_IOS && !UNITY_EDITOR
+    // varargs don't work on iOS, so use a helper function added to libopus
     [DllImport(LIBRARY_NAME)]
-    public static extern int opus_encoder_ctl(IntPtr st, Ctl request, int value);
+    public static extern int opus_encoder_ctl2(IntPtr st, Ctl request, out int result);
 
-    [DllImport(LIBRARY_NAME)]
-    public static extern int opus_encoder_ctl(IntPtr st, Ctl request, out int value);
+    public static int opus_encoder_ctl(IntPtr st, Ctl request, out int result)
+    {
+        return opus_encoder_ctl2(st, request, out result);
+    }
+#else
+    [DllImport(LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int opus_encoder_ctl(IntPtr st, Ctl request, out int result);
+#endif
 
     public enum Ctl : int
     {
+        GetApplicationRequest = 4001,
         SetBitrateRequest = 4002,
         GetBitrateRequest = 4003,
         SetComplexityRequest = 4010,
         GetComplexityRequest = 4011
+    }
+
+    public enum Bitrate : int
+    {
+        Auto = -1000,
+        Max = -1
     }
 
     /// <summary>
