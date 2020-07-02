@@ -18,6 +18,9 @@ public class ShareMap
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
         AndroidShareReceive.OpenFileManager();
+#elif UNITY_IOS && !UNITY_EDITOR
+        // Files app
+        Application.OpenURL("shareddocuments://");
 #else
         Application.OpenURL("file:///");
 #endif

@@ -23,6 +23,10 @@ public static class IOSPostBuild
 
             PlistElementDict rootDict = plist.root;
 
+            // allow the app to launch the Files app
+            var schemesArray = rootDict.CreateArray("LSApplicationQueriesSchemes");
+            schemesArray.AddString("shareddocuments");
+
             // allow the app to open JSON/N-Space files
             // https://developer.apple.com/documentation/uikit/view_controllers/adding_a_document_browser_to_your_app/setting_up_a_document_browser_app
 
