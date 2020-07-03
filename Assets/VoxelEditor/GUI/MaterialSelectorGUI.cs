@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -57,7 +57,7 @@ public class MaterialSelectorGUI : GUIPanel
     private ColorPickerGUI colorPicker;
     private ColorMode colorMode;
 
-    private static readonly Lazy<GUIStyle> directoryButtonStyle = new Lazy<GUIStyle>(() =>
+    private static readonly System.Lazy<GUIStyle> directoryButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.button);
         style.padding.left = 16;

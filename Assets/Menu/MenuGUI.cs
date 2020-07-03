@@ -16,7 +16,7 @@ public class MenuGUI : GUIPanel
     private GUIContent[] startOptions;
 
     // copied from TemplatePickerGUI
-    private static readonly Lazy<GUIStyle> startButtonStyle = new Lazy<GUIStyle>(() =>
+    private static readonly System.Lazy<GUIStyle> startButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
         style.imagePosition = ImagePosition.ImageAbove;
