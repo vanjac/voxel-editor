@@ -162,7 +162,7 @@ PlayerSettings:
     Android: com.vantjac.voxel
     iOS: com.vantjac.voxel
   buildNumber:
-    iOS: 1
+    iOS: 2
   AndroidBundleVersionCode: 27
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
