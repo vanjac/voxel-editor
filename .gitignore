@@ -39,6 +39,8 @@ iosBuild/
 /Assets/GameAssets/FreePBR/*.png
 /Assets/GameAssets/FreePBR/*.psd
 /Assets/GameAssets/Genetica/*.png
+/Assets/GameAssets/3dtextures/*/*.jpg
+/Assets/GameAssets/3dtextures/*/*.png
 
 *.keystore
 upload_certificate.pem

@@ -14,6 +14,8 @@
 ./Materials/Bricks+Blocks/octostone.mat
 ./Materials/Bricks+Blocks/redbricks2b.mat
 ./Materials/Bricks+Blocks/tiledstone1.mat
+./Materials/Ceiling
+./Materials/Ceiling/Ceiling_Gypsum_001_SD.mat
 ./Materials/Concrete
 ./Materials/Concrete/Concrete07.mat
 ./Materials/Concrete/Concrete18.mat
@@ -124,6 +126,8 @@
 ./Overlays/$Invisible.mat
 ./Overlays/Fencing
 ./Overlays/Fencing/FenceChainLink001.mat
+./Overlays/Glass
+./Overlays/Glass/Glass_Blocks_001_SD.mat
 ./Overlays/Grates
 ./Overlays/Grates/GrateInterwovenFloor001.mat
 ./Overlays/Grates/GrateMetal001.mat

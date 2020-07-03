@@ -12,7 +12,7 @@ If you have any questions, feedback, or suggestions, please send me an email:
 
 SOURCES:
 
-Materials from Poliigon.com, FreePBR.com, spiralgraphics.biz (Genetica)
+Materials from Poliigon.com, FreePBR.com, 3dtextures.me, spiralgraphics.biz (Genetica)
 Skies from Sky5X One (Unity Asset Store)
 Icons from materialdesignicons.com
 Roboto font, used for UI: https://fonts.google.com/specimen/Roboto
