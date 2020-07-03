@@ -189,18 +189,29 @@ PlayerSettings:
   uIStatusBarHidden: 1
   uIExitOnSuspend: 0
   uIStatusBarStyle: 0
-  iPhoneSplashScreen: {fileID: 0}
-  iPhoneHighResSplashScreen: {fileID: 0}
-  iPhoneTallHighResSplashScreen: {fileID: 0}
-  iPhone47inSplashScreen: {fileID: 0}
-  iPhone55inPortraitSplashScreen: {fileID: 0}
-  iPhone55inLandscapeSplashScreen: {fileID: 0}
-  iPhone58inPortraitSplashScreen: {fileID: 0}
-  iPhone58inLandscapeSplashScreen: {fileID: 0}
-  iPadPortraitSplashScreen: {fileID: 0}
-  iPadHighResPortraitSplashScreen: {fileID: 0}
-  iPadLandscapeSplashScreen: {fileID: 0}
-  iPadHighResLandscapeSplashScreen: {fileID: 0}
+  iPhoneSplashScreen: {fileID: 2800000, guid: 2d6ab366984a14985a57b679907a26fe, type: 3}
+  iPhoneHighResSplashScreen: {fileID: 2800000, guid: 0895918ca39774907bb9994fd729d4b9,
+    type: 3}
+  iPhoneTallHighResSplashScreen: {fileID: 2800000, guid: 6872ee3799982442b9cb32cb7eaac5d3,
+    type: 3}
+  iPhone47inSplashScreen: {fileID: 2800000, guid: f35fcfc5646904994a7c21c31e3f620e,
+    type: 3}
+  iPhone55inPortraitSplashScreen: {fileID: 2800000, guid: 34c9be9e23bcb4d1ca6e911f8961ff65,
+    type: 3}
+  iPhone55inLandscapeSplashScreen: {fileID: 2800000, guid: 420e9931341d444e88c4734a31758ca1,
+    type: 3}
+  iPhone58inPortraitSplashScreen: {fileID: 2800000, guid: dfb2007a939c74316959f82b84b53789,
+    type: 3}
+  iPhone58inLandscapeSplashScreen: {fileID: 2800000, guid: 66c165ef3500547448bbebfac3688f2e,
+    type: 3}
+  iPadPortraitSplashScreen: {fileID: 2800000, guid: e086b2d1bd3484c4da24611598b63114,
+    type: 3}
+  iPadHighResPortraitSplashScreen: {fileID: 2800000, guid: dbce5e15fb106442eaa2e88c44b5c7bb,
+    type: 3}
+  iPadLandscapeSplashScreen: {fileID: 2800000, guid: 69a596fff71754fc99a9ab43edee19e8,
+    type: 3}
+  iPadHighResLandscapeSplashScreen: {fileID: 2800000, guid: 50df3510210994f34a44ed278546fd6d,
+    type: 3}
   appleTVSplashScreen: {fileID: 0}
   appleTVSplashScreen2x: {fileID: 0}
   tvOSSmallIconLayers: []
@@ -211,22 +222,22 @@ PlayerSettings:
   tvOSTopShelfImageLayers2x: []
   tvOSTopShelfImageWideLayers: []
   tvOSTopShelfImageWideLayers2x: []
-  iOSLaunchScreenType: 1
+  iOSLaunchScreenType: 3
   iOSLaunchScreenPortrait: {fileID: 0}
   iOSLaunchScreenLandscape: {fileID: 0}
   iOSLaunchScreenBackgroundColor:
     serializedVersion: 2
     rgba: 4294967295
   iOSLaunchScreenFillPct: 100
-  iOSLaunchScreenSize: 100
+  iOSLaunchScreenSize: 1
   iOSLaunchScreenCustomXibPath: 
-  iOSLaunchScreeniPadType: 1
+  iOSLaunchScreeniPadType: 3
   iOSLaunchScreeniPadImage: {fileID: 0}
   iOSLaunchScreeniPadBackgroundColor:
     serializedVersion: 2
     rgba: 4294967295
   iOSLaunchScreeniPadFillPct: 100
-  iOSLaunchScreeniPadSize: 100
+  iOSLaunchScreeniPadSize: 1
   iOSLaunchScreeniPadCustomXibPath: 
   iOSUseLaunchScreenStoryboard: 0
   iOSLaunchScreenCustomStoryboardPath: 
