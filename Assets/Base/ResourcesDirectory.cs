@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+// Remember that Unity resource paths always use forward slashes
 public class ResourcesDirectory
 {
+    private const string MATERIAL_EXTENSION = ".mat";
+
     private static string[] _dirList = null;
     public static string[] dirList
     {
@@ -12,12 +15,11 @@ public class ResourcesDirectory
         {
             if (_dirList == null)
             {
-                TextAsset dirListText = Resources.Load<TextAsset>("dirlist");
+                TextAsset dirListText = Resources.Load<TextAsset>("GameAssets/dirlist");
                 _dirList = dirListText.text.Split('\n');
                 // fix issue when checking out a branch in git:
                 for (int i = 0; i < _dirList.Length; i++)
                     _dirList[i] = _dirList[i].Trim();
-                Resources.UnloadAsset(dirListText);
             }
             return _dirList;
         }
@@ -26,8 +28,27 @@ public class ResourcesDirectory
     public static Material GetMaterial(string path)
     {
         // remove extension if necessary
-        path = Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path);
-        return Resources.Load<Material>(path);
+        if (path.EndsWith(MATERIAL_EXTENSION))
+            path = path.Substring(0, path.Length - MATERIAL_EXTENSION.Length);
+        return Resources.Load<Material>("GameAssets/" + path);
+    }
+
+    public static Material FindMaterial(string name, bool editor)
+    {
+        foreach (string dirEntry in ResourcesDirectory.dirList)
+        {
+            if (dirEntry.Length <= 2)
+                continue;
+            string newDirEntry = dirEntry.Substring(2);
+            string checkFileName = newDirEntry.Substring(newDirEntry.LastIndexOf("/") + 1);
+            if (checkFileName.EndsWith(MATERIAL_EXTENSION))
+                checkFileName = checkFileName.Substring(0, checkFileName.Length - MATERIAL_EXTENSION.Length);
+            if ((!editor) && checkFileName.StartsWith("$")) // special alternate materials for game
+                checkFileName = checkFileName.Substring(1);
+            if (checkFileName == name)
+                return GetMaterial(newDirEntry);
+        }
+        return null;
     }
 
     public static Material MakeCustomMaterial(ColorMode colorMode, bool transparent = false)

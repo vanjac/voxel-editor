@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -42,7 +42,7 @@ public class MaterialSelectorGUI : GUIPanel
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
-    public string rootDirectory = "GameAssets/Materials";
+    public string rootDirectory = "Materials";
     public ColorModeSet colorModeSet = ColorModeSet.DEFAULT;
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
@@ -252,16 +252,24 @@ public class MaterialSelectorGUI : GUIPanel
             if (dirEntry.Length <= 2)
                 continue;
             string newDirEntry = dirEntry.Substring(2);
-            string fileName = Path.GetFileName(newDirEntry);
-            string extension = Path.GetExtension(newDirEntry);
-            string directory = Path.GetDirectoryName(newDirEntry);
+            int slash = newDirEntry.LastIndexOf("/");
+            if (slash != -1)
+            {
+                if (newDirEntry.Substring(0, slash) != materialDirectory)
+                    continue;
+            }
+            else
+            {
+                if (materialDirectory != "")
+                    continue;
+            }
+
+            string fileName = newDirEntry.Substring(slash + 1);
             if (fileName.StartsWith("$"))
                 continue; // special alternate materials for game
-            if (directory != materialDirectory)
-                continue;
-            if (extension == "")
+            if (!fileName.Contains("."))
                 materialSubDirectories.Add(fileName);
-            else if (extension == ".mat")
+            else if (fileName.EndsWith(".mat"))
             {
                 if (fileName.EndsWith(PREVIEW_SUFFIX_EXT))
                     materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
@@ -276,14 +284,14 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (name == BACK_BUTTON)
         {
-            if (materialDirectory.Trim() != "")
-                materialDirectory = Path.GetDirectoryName(materialDirectory);
+            if (materialDirectory.Length != 0)
+                materialDirectory = materialDirectory.Substring(0, materialDirectory.LastIndexOf("/"));
             UpdateMaterialDirectory();
             return;
         }
         else
         {
-            if (materialDirectory.Trim() == "")
+            if (materialDirectory.Length == 0)
                 materialDirectory = name;
             else
                 materialDirectory += "/" + name;
@@ -300,7 +308,7 @@ public class MaterialSelectorGUI : GUIPanel
             {
                 string newPath = materialDirectory + "/"
                     + material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
-                material = Resources.Load<Material>(newPath);
+                material = ResourcesDirectory.GetMaterial(newPath);
             }
             handler(material);
         }

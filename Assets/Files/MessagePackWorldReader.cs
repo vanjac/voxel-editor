@@ -167,19 +167,13 @@ public class MessagePackWorldReader : WorldFileReader
         if (matDict.ContainsKey(FileKeys.MATERIAL_NAME))
         {
             string name = matDict[FileKeys.MATERIAL_NAME].AsString();
-            foreach (string dirEntry in ResourcesDirectory.dirList)
+            Material mat = ResourcesDirectory.FindMaterial(name, editor);
+            if (mat == null)
             {
-                if (dirEntry.Length <= 2)
-                    continue;
-                string newDirEntry = dirEntry.Substring(2);
-                string checkFileName = Path.GetFileNameWithoutExtension(newDirEntry);
-                if ((!editor) && checkFileName.StartsWith("$")) // special alternate materials for game
-                    checkFileName = checkFileName.Substring(1);
-                if (checkFileName == name)
-                    return ResourcesDirectory.GetMaterial(newDirEntry);
+                warnings.Add("Unrecognized material: " + name);
+                return ReadWorldFile.missingMaterial;
             }
-            warnings.Add("Unrecognized material: " + name);
-            return ReadWorldFile.missingMaterial;
+            return mat;
         }
         else if (matDict.ContainsKey(FileKeys.MATERIAL_MODE))
         {

@@ -12,7 +12,7 @@ public static class WorldFiles
 
     public static string GetNewWorldPath(string name)
     {
-        return GetWorldsDirectory() + "/" + name + ".nspace";
+        return Path.Combine(GetWorldsDirectory(), name + ".nspace");
     }
 
     public static bool IsWorldFile(string path)

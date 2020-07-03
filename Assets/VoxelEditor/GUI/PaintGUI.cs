@@ -126,7 +126,7 @@ public class PaintGUI : GUIPanel
         materialSelector.closeOnSelect = false;
         if (selectedLayer == 0)
         {
-            materialSelector.rootDirectory = "GameAssets/Materials";
+            materialSelector.rootDirectory = "Materials";
             materialSelector.handler = (Material mat) =>
             {
                 if (mat != null || paint.overlay != null)
@@ -137,7 +137,7 @@ public class PaintGUI : GUIPanel
         }
         else
         {
-            materialSelector.rootDirectory = "GameAssets/Overlays";
+            materialSelector.rootDirectory = "Overlays";
             materialSelector.allowAlpha = true;
             materialSelector.handler = (Material mat) =>
             {
@@ -186,7 +186,7 @@ public class PaintGUI : GUIPanel
     {
         scrollVelocity = new Vector2(0, 3000);
         selectedLayer = 0;
-        paint.material = ResourcesDirectory.GetMaterial("GameAssets/Materials/Sky");
+        paint.material = ResourcesDirectory.GetMaterial("Materials/Sky");
         handler(paint);
         UpdateMaterialSelector();
     }
