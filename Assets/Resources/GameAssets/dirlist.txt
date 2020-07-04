@@ -140,6 +140,8 @@
 ./Overlays/Symbols/cancel.mat
 ./Overlays/Symbols/check.mat
 ./Overlays/Symbols/close.mat
+./Overlays/Symbols/exit-run.mat
+./Overlays/Symbols/heart.mat
 ./Overlays/Symbols/radioactive.mat
 ./Overlays/Symbols/target.mat
 ./Overlays/Text Caps
