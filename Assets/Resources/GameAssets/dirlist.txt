@@ -246,6 +246,8 @@
 ./Overlays/Water/WaterBasicNighttime_preview.mat
 ./Overlays/Water/WaterDropletsLargeComplex003.mat
 ./Skies
+./Skies/hipp8.mat
+./Skies/hipp8_preview.mat
 ./Skies/sky_procedural.mat
 ./Skies/sky_procedural_preview.mat
 ./Skies/sky5X1.mat

@@ -14,6 +14,7 @@ SOURCES:
 
 Materials from Poliigon.com, FreePBR.com, 3dtextures.me, spiralgraphics.biz (Genetica)
 Skies from Sky5X One (Unity Asset Store)
+Space spheremap from NASA 3D Resources
 Icons from materialdesignicons.com
 Roboto font, used for UI: https://fonts.google.com/specimen/Roboto
 Cooper Black font, used for character overlays
