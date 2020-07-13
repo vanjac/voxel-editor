@@ -130,20 +130,9 @@ public class BevelGUI : LeftPanelGUI
             3, GUIStyleSet.instance.buttonTab);
         TutorialGUI.ClearHighlight();
 
-        TutorialGUI.TutorialHighlight("bevel size");
-        GUILayout.Label("Size:");
-        var newBevelSize = (VoxelEdge.BevelSize)GUILayout.SelectionGrid((int)voxelEdge.bevelSize,
-            new Texture[] {
-                GUIIconSet.instance.bevelIcons.quarter,
-                GUIIconSet.instance.bevelIcons.half,
-                GUIIconSet.instance.bevelIcons.full },
-            3, GUIStyleSet.instance.buttonTab);
-        TutorialGUI.ClearHighlight();
-
-        if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize)
+        if (newBevelType != voxelEdge.bevelType)
         {
             voxelEdge.bevelType = newBevelType;
-            voxelEdge.bevelSize = newBevelSize;
             voxelArray.BevelSelectedEdges(voxelEdge);
         }
     }

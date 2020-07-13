@@ -48,10 +48,6 @@ public struct VoxelEdge
     {
         NONE, FLAT, CURVE, SQUARE, STAIR_2, STAIR_4
     }
-    public enum BevelSize : byte
-    {
-        QUARTER, HALF, FULL
-    }
 
     // each bevel shape starts at (1, 0) and goes to the y=x diagonal
     private static readonly Vector2[] SHAPE_SQUARE = new Vector2[] {
@@ -93,23 +89,11 @@ public struct VoxelEdge
     {
         get
         {
-            return (BevelType)(bevel & 0x07);
+            return (BevelType)bevel;
         }
         set
         {
-            bevel = (byte)((bevel & 0xF8) | (byte)value);
-        }
-    }
-
-    public BevelSize bevelSize
-    {
-        get
-        {
-            return (BevelSize)((bevel >> 4) & 0x07);
-        }
-        set
-        {
-            bevel = (byte)((bevel & 0x8f) | ((byte)value << 4));
+            bevel = (byte)value;
         }
     }
 
@@ -155,36 +139,12 @@ public struct VoxelEdge
         }
     }
 
-    public float bevelSizeFloat
-    {
-        get
-        {
-            switch (bevelSize)
-            {
-                case BevelSize.QUARTER:
-                    return 0.25f;
-                case BevelSize.HALF:
-                    return 0.5f;
-                case BevelSize.FULL:
-                    return 1.0f;
-            }
-            return 0.0f;
-        }
-    }
-
     public bool hasBevel
     {
         get
         {
             return bevelType != BevelType.NONE;
         }
-    }
-
-    public static bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
-    {
-        if (!e1.hasBevel && !e2.hasBevel)
-            return true;
-        return e1.bevelType == e2.bevelType && e1.bevelSize == e2.bevelSize;
     }
 }
 
@@ -1015,7 +975,7 @@ public class VoxelComponent : MonoBehaviour
             if (faceA != capFaceI && faceB != capFaceI)
                 continue;
             VoxelEdge connectedEdge = thisVoxel.edges[connectedI];
-            if (connectedEdge.hasBevel && !VoxelEdge.BevelsMatch(thisVoxel.edges[edgeI], connectedEdge))
+            if (connectedEdge.hasBevel && thisVoxel.edges[edgeI].bevelType != connectedEdge.bevelType)
             {
                 if (thisVoxel.EdgeIsConvex(edgeI) && thisVoxel.EdgeIsConvex(connectedI))
                     reverseCap = connectedEdge;
@@ -1030,7 +990,7 @@ public class VoxelComponent : MonoBehaviour
             if (otherVoxel.substance != thisVoxel.substance)
                 otherEmpty = true;
             else
-                match = VoxelEdge.BevelsMatch(thisVoxel.edges[edgeI], otherVoxel.edges[edgeI]);
+                match = thisVoxel.edges[edgeI].bevelType == otherVoxel.edges[edgeI].bevelType;
         }
 
         if (thisVoxel.EdgeIsConvex(edgeI))
@@ -1199,8 +1159,6 @@ public class VoxelComponent : MonoBehaviour
             if (hEdge.reverseCap != null)
             {
                 // found all this with trial and error sorry in advance
-                if (hEdge.reverseCap.Value.bevelSizeFloat < beveledEdge.bevelSizeFloat)
-                    hEdge.reverseCap = beveledEdge;
                 if (bHasBevel && cHasBevel)  // joined
                 {
                     vertexPos[(axis + 1) % 3] = ApplyBevel(vertexPos[(axis + 1) % 3], voxel.edges[edgeC]);
@@ -1365,8 +1323,7 @@ public class VoxelComponent : MonoBehaviour
         {
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-            if (voxel.edges[edgeA].hasBevel && voxel.edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL
-                && voxel.EdgeIsConvex(edgeA))
+            if (voxel.edges[edgeA].hasBevel && voxel.EdgeIsConvex(edgeA))
             {
                 noInnerQuad = true; // quad would be convex which might cause problems
                 triangleCount -= 6;
@@ -1659,7 +1616,7 @@ public class VoxelComponent : MonoBehaviour
     private static float ApplyBevel(float coord, VoxelEdge edge, float bevelCoord = 0.0f)
     {
         if (edge.hasBevel)
-            return (coord - 0.5f) * (1 - edge.bevelSizeFloat * 2 * (1 - bevelCoord)) + 0.5f;
+            return (coord - 0.5f) * (1 - 2 * (1 - bevelCoord)) + 0.5f;
         else
             return coord;
     }

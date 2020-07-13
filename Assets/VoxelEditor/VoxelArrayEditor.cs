@@ -1255,10 +1255,7 @@ public class VoxelArrayEditor : VoxelArray
                 var unconnectedEdgeRef = new VoxelEdgeReference(voxel, unconnectedEdgeI);
                 if (unconnectedEdgeRef.edge.hasBevel)
                 {
-                    if ((edgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL
-                        && type == EdgeType.CONVEX)
-                        || (unconnectedEdgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL)
-                            && voxel.EdgeIsConvex(unconnectedEdgeI))
+                    if (type == EdgeType.CONVEX || voxel.EdgeIsConvex(unconnectedEdgeI))
                     {
                         // full convex bevel overlaps with another bevel! this won't work!
                         voxel.edges[unconnectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
