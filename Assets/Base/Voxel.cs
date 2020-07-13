@@ -809,8 +809,6 @@ public class VoxelComponent : MonoBehaviour
         // innerQuad_i of the zeroth corner is always the lowest-numbered vertex of the face.
         public int innerQuad_i;
         // The profile of a bevel orthogonal to the face.
-        // edgeC and edgeB are the first and last vertices of the profile (in that order)
-        // So only the middle vertices are part of bevelProfile.
         public int bevelProfile_i, bevelProfile_count;
 
         public FaceHalfEdgeVertices hEdgeB, hEdgeC;
@@ -825,13 +823,6 @@ public class VoxelComponent : MonoBehaviour
 
     private struct FaceHalfEdgeVertices
     {
-        public int count;
-
-        /* on face plane */
-
-        // "Tabs" on the edge of the quad to leave a rectangular cutout for the bevel profile
-        public int tab_i;
-
         /* not on face plane */
 
         // The first bevel vertex will be identical to innerRect but with a different normal.
@@ -839,14 +830,10 @@ public class VoxelComponent : MonoBehaviour
         // (potentially) different normals.
         public int bevel_i, bevel_count;
 
-        public int cap_i, cap_count;
-        public VoxelEdge? reverseCap;
-
         public FaceHalfEdgeVertices(int ignored)
         {
-            count = bevel_count = cap_count = 0;
-            tab_i = bevel_i = cap_i = -1;
-            reverseCap = null;
+            bevel_count = 0;
+            bevel_i = -1;
         }
     }
 
@@ -885,49 +872,19 @@ public class VoxelComponent : MonoBehaviour
             if (voxel.edges[edgeB].hasBevel)
             {
                 GetBevelVertices(voxel, ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB, i, edgeB, false);
-                corners[i].count += corners[i].hEdgeB.count;
+                corners[i].count += corners[i].hEdgeB.bevel_count;
             }
             if (voxel.edges[edgeC].hasBevel)
             {
                 GetBevelVertices(voxel, ref vertexI, voxel.edges[edgeC], ref corners[i].hEdgeC, i, edgeC, true);
-                corners[i].count += corners[i].hEdgeC.count;
+                corners[i].count += corners[i].hEdgeC.bevel_count;
             }
             if (voxel.edges[edgeA].hasBevel && !voxel.edges[edgeB].hasBevel && !voxel.edges[edgeC].hasBevel)
             {
-                bool concaveB = voxel.faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
-                bool concaveC = voxel.faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
-                if (!concaveB && !concaveC)
-                {
-                    corners[i].bevelProfile_i = vertexI;
-                    corners[i].bevelProfile_count = voxel.edges[edgeA].bevelTypeArray.Length * 2 - 3;
-                    corners[i].count += corners[i].bevelProfile_count;
-                    vertexI += corners[i].bevelProfile_count;
-
-                    if (corners[i].hEdgeB.tab_i == -1)
-                    {
-                        corners[i].hEdgeB.tab_i = vertexI++;
-                        corners[i].count++;
-                    }
-                    if (corners[i].hEdgeC.tab_i == -1)
-                    {
-                        corners[i].hEdgeC.tab_i = vertexI++;
-                        corners[i].count++;
-                    }
-                    int nextI = (i + 1) % 4;
-                    int prevI = (i + 3) % 4;
-                    int otherEdgeBI = i % 2 == 0 ? nextI : prevI;
-                    int otherEdgeCI = i % 2 == 0 ? prevI : nextI;
-                    if (corners[otherEdgeBI].hEdgeB.tab_i == -1)
-                    {
-                        corners[otherEdgeBI].hEdgeB.tab_i = vertexI++;
-                        corners[otherEdgeBI].count++;
-                    }
-                    if (corners[otherEdgeCI].hEdgeC.tab_i == -1)
-                    {
-                        corners[otherEdgeCI].hEdgeC.tab_i = vertexI++;
-                        corners[otherEdgeCI].count++;
-                    }
-                }
+                corners[i].bevelProfile_i = vertexI;
+                corners[i].bevelProfile_count = voxel.edges[edgeA].bevelTypeArray.Length * 2 - 1;
+                corners[i].count += corners[i].bevelProfile_count;
+                vertexI += corners[i].bevelProfile_count;
             }
         } // end for each corner
         return corners;
@@ -938,81 +895,7 @@ public class VoxelComponent : MonoBehaviour
     {
         hEdge.bevel_i = vertexI;
         hEdge.bevel_count = bevelEdge.bevelTypeArray.Length * 2 - 2;
-        hEdge.count += hEdge.bevel_count;
         vertexI += hEdge.bevel_count;
-
-        int capFaceI = Voxel.EdgeIAxis(edgeI) * 2;
-        if (!isEdgeC && SQUARE_LOOP[cornerI].x == 1)  // TODO is this right??
-            capFaceI++;
-        else if (isEdgeC && SQUARE_LOOP[cornerI].y == 1)
-            capFaceI++;
-        Vector3Int capDir = Voxel.DirectionForFaceI(capFaceI).ToInt();
-        Voxel adjacent = VoxelArray.VoxelAtAdjacent(voxel.position + capDir, voxel);
-
-        if (BevelCap(voxel, adjacent, edgeI, capFaceI, out hEdge.reverseCap))
-        {
-            hEdge.cap_i = vertexI;
-            hEdge.cap_count = bevelEdge.bevelTypeArray.Length + 1;
-            if (hEdge.reverseCap != null)
-                hEdge.cap_count++; // extra vertex to make square
-            hEdge.count += hEdge.cap_count;
-            vertexI += hEdge.cap_count;
-        }
-    }
-
-    private static bool BevelCap(Voxel thisVoxel, Voxel otherVoxel, int edgeI, int capFaceI,
-        out VoxelEdge? reverseCap)
-    {
-        reverseCap = null;
-
-        // check for joined corner faces that don't match
-        bool face = !thisVoxel.faces[capFaceI].IsEmpty();
-        foreach (int connectedI in Voxel.ConnectedEdges(edgeI))
-        {
-            int faceA, faceB;
-            Voxel.EdgeFaces(connectedI, out faceA, out faceB);
-            // only use faces on this half of the edge
-            if (faceA != capFaceI && faceB != capFaceI)
-                continue;
-            VoxelEdge connectedEdge = thisVoxel.edges[connectedI];
-            if (connectedEdge.hasBevel && thisVoxel.edges[edgeI].bevelType != connectedEdge.bevelType)
-            {
-                if (thisVoxel.EdgeIsConvex(edgeI) && thisVoxel.EdgeIsConvex(connectedI))
-                    reverseCap = connectedEdge;
-                return true;
-            }
-        }
-
-        bool otherEmpty = (otherVoxel == null || otherVoxel.EdgeIsEmpty(edgeI));
-        bool match = false;
-        if (otherVoxel != null)
-        {
-            if (otherVoxel.substance != thisVoxel.substance)
-                otherEmpty = true;
-            else
-                match = thisVoxel.edges[edgeI].bevelType == otherVoxel.edges[edgeI].bevelType;
-        }
-
-        if (thisVoxel.EdgeIsConvex(edgeI))
-        {
-            if (!otherEmpty && otherVoxel.EdgeIsConvex(edgeI))
-            {
-                if (!match)
-                    reverseCap = otherVoxel.edges[edgeI];
-                return !match;
-            }
-            else
-                return !face;
-        }
-        else // this voxel is concave
-        {
-            if (otherEmpty)
-                return face;
-            else if (otherVoxel.edges[edgeI].hasBevel && !otherVoxel.EdgeIsConvex(edgeI))
-                return !match;  // other voxel edge is concave
-            else
-                return true;
-        }
     }
 
 
@@ -1063,47 +946,26 @@ public class VoxelComponent : MonoBehaviour
             FaceCornerVertices corner = corners[i];
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-            bool concaveB = voxel.faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
-            bool concaveC = voxel.faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
-            bool concaveA = concaveB || concaveC;
 
             vertexPos[axis] = faceNum % 2; // will stay for all planar vertices
             Vector2 squarePos = SQUARE_LOOP[i];
 
             // set the innerQuad vertex
             vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x,
-                corner.hEdgeC.tab_i != -1 && !concaveA ? voxel.edges[edgeA] : voxel.edges[edgeC]);
+                voxel.edges[edgeC].hasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA]);
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y,
-                corner.hEdgeB.tab_i != -1 && !concaveA ? voxel.edges[edgeA] : voxel.edges[edgeB]);
+                voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA]);
             vertices[corner.innerQuad_i] = Vector3FromArray(vertexPos) + positionOffset;
             uvs[corner.innerQuad_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
             normals[corner.innerQuad_i] = normal;
             tangents[corner.innerQuad_i] = tangent;
 
-            if (corner.hEdgeB.tab_i != -1)
-            {
-                vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, voxel.edges[edgeC].hasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA]);
-                vertexPos[(axis + 2) % 3] = squarePos.y; // will never have both edgeB and a bevel
-                vertices[corner.hEdgeB.tab_i] = Vector3FromArray(vertexPos) + positionOffset;
-                uvs[corner.hEdgeB.tab_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
-                normals[corner.hEdgeB.tab_i] = normal;
-                tangents[corner.hEdgeB.tab_i] = tangent;
-            }
-            if (corner.hEdgeC.tab_i != -1)
-            {
-                vertexPos[(axis + 1) % 3] = squarePos.x;
-                vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA]);
-                vertices[corner.hEdgeC.tab_i] = Vector3FromArray(vertexPos) + positionOffset;
-                uvs[corner.hEdgeC.tab_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
-                normals[corner.hEdgeC.tab_i] = normal;
-                tangents[corner.hEdgeC.tab_i] = tangent;
-            }
             if (corner.bevelProfile_i != -1)
             {
                 Vector2[] bevelArray = voxel.edges[edgeA].bevelTypeArray;
-                for (int bevelI = 0; bevelI < bevelArray.Length - 1; bevelI++)
+                for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
                 {
-                    Vector2 bevelVector = bevelArray[bevelI + 1];
+                    Vector2 bevelVector = bevelArray[bevelI];
                     vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, voxel.edges[edgeA], bevelVector.x);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, voxel.edges[edgeA], bevelVector.y);
                     vertices[corner.bevelProfile_i + bevelI] = Vector3FromArray(vertexPos) + positionOffset;
@@ -1126,14 +988,14 @@ public class VoxelComponent : MonoBehaviour
             if (corner.hEdgeB.bevel_i != -1)
             {
                 GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeB], corner.hEdgeB, false,
-                    concaveB, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
+                    axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
                     edgeA, edgeB, edgeC,
                     vertices, uvs, normals, tangents);
             }
             if (corner.hEdgeC.bevel_i != -1)
             {
                 GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeC], corner.hEdgeC, true,
-                    concaveC, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
+                    axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
                     edgeA, edgeB, edgeC,
                     vertices, uvs, normals, tangents);
             }
@@ -1141,77 +1003,13 @@ public class VoxelComponent : MonoBehaviour
     }
 
     private static void GenerateBevelVertices(Voxel voxel, int faceNum, VoxelEdge beveledEdge, FaceHalfEdgeVertices hEdge, bool isEdgeC,
-        bool concave, int axis, Vector2 squarePos, Vector3 positionOffset, Vector4 tangent, Vector3 positiveU_xyz, Vector3 positiveV_xyz,
+        int axis, Vector2 squarePos, Vector3 positionOffset, Vector4 tangent, Vector3 positiveU_xyz, Vector3 positiveV_xyz,
         int edgeA, int edgeB, int edgeC,
         Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
     {
         bool isEdgeB = !isEdgeC;
-        bool aHasBevel = voxel.edges[edgeA].hasBevel;
         bool bHasBevel = voxel.edges[edgeB].hasBevel;
         bool cHasBevel = voxel.edges[edgeC].hasBevel;
-
-        Vector3 capNormal = Vector3.zero;
-        if (hEdge.cap_i != -1)
-        {
-            vertexPos[axis] = faceNum % 2;
-            vertexPos[(axis + 1) % 3] = squarePos.x;
-            vertexPos[(axis + 2) % 3] = squarePos.y;
-            if (hEdge.reverseCap != null)
-            {
-                // found all this with trial and error sorry in advance
-                if (bHasBevel && cHasBevel)  // joined
-                {
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(vertexPos[(axis + 1) % 3], voxel.edges[edgeC]);
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(vertexPos[(axis + 2) % 3], voxel.edges[edgeB]);
-                }
-                else if (isEdgeC)
-                    vertexPos[(axis + 1) % 3] = ApplyBevel(vertexPos[(axis + 1) % 3], hEdge.reverseCap.Value);
-                else // isEdgeB
-                    vertexPos[(axis + 2) % 3] = ApplyBevel(vertexPos[(axis + 2) % 3], hEdge.reverseCap.Value);
-            }
-            vertices[hEdge.cap_i] = Vector3FromArray(vertexPos) + positionOffset;
-            if (hEdge.reverseCap != null)
-            {
-                // extra vertex to make a square
-                if (aHasBevel)
-                {
-                    vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge);
-                    if (isEdgeB)
-                        vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, cHasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA]);
-                    else
-                        vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, bHasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA]);
-                }
-                else
-                    vertexPos[axis] = ApplyBevel(faceNum % 2, hEdge.reverseCap.Value);
-                vertices[hEdge.cap_i + hEdge.cap_count - 1] = Vector3FromArray(vertexPos) + positionOffset;
-                vertexPos[axis] = faceNum % 2; // reset
-            }
-
-            tangents[hEdge.cap_i] = tangent; // TODO
-            // uv TODO
-            // 0.29289f = 1 - 1/sqrt(2) for some reason
-            vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, beveledEdge, 0.29289f);
-            vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, beveledEdge, 0.29289f);
-            uvs[hEdge.cap_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
-            if (hEdge.reverseCap != null)
-            {
-                tangents[hEdge.cap_i + hEdge.cap_count - 1] = tangent;
-                vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, hEdge.reverseCap.Value, 0);
-                vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, hEdge.reverseCap.Value, 0);
-                uvs[hEdge.cap_i + hEdge.cap_count - 1] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
-            }
-
-            // normal (b and c are supposed to be swapped)
-            vertexPos[axis] = aHasBevel ? (1 - (faceNum % 2) * 2) : 0;
-            vertexPos[(axis + 1) % 3] = bHasBevel ? (1 - squarePos.x * 2) : 0;
-            vertexPos[(axis + 2) % 3] = cHasBevel ? (1 - squarePos.y * 2) : 0;
-            capNormal = Vector3FromArray(vertexPos);
-            if (concave ^ (hEdge.reverseCap != null))
-                capNormal = -capNormal;
-            normals[hEdge.cap_i] = capNormal;
-            if (hEdge.reverseCap != null)
-                normals[hEdge.cap_i + hEdge.cap_count - 1] = capNormal;
-        }
 
         Vector2[] bevelArray = beveledEdge.bevelTypeArray;
         float lastY = bevelArray[bevelArray.Length - 1].y;
@@ -1219,46 +1017,21 @@ public class VoxelComponent : MonoBehaviour
         for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
         {
             Vector2 bevelVector = bevelArray[bevelI];
-            float xCoord = bevelVector.x;
-            float yCoord;
-            if (concave)
-                xCoord = 2 - xCoord;
-            vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, xCoord);
-            if (concave)
-                xCoord = 1; // concave bevels aren't joined
-            if (concave && isEdgeB)
-                // fix joined concave and convex edges
-                // special zero check for SHAPE_SQUARE
-                yCoord = lastY != 0 ? bevelVector.y / lastY : ((float)bevelI / (bevelArray.Length - 1));
-            else
-                yCoord = bevelVector.y;
+            vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, bevelVector.x);
             vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, cHasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA],
-                cHasBevel ? yCoord : xCoord);
-            if (concave && !isEdgeB)
-                yCoord = lastY != 0 ? bevelVector.y / lastY : ((float)bevelI / (bevelArray.Length - 1));
-            else
-                yCoord = bevelVector.y;
+                cHasBevel ? bevelVector.y : bevelVector.x);
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, bHasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA],
-                bHasBevel ? yCoord : xCoord);
+                bHasBevel ? bevelVector.y : bevelVector.x);
             vertices[bevelVertex] = Vector3FromArray(vertexPos) + positionOffset;
             tangents[bevelVertex] = tangent; // TODO
-
-            if (hEdge.cap_i != -1)
-            {
-                vertices[hEdge.cap_i + bevelI + 1] = Vector3FromArray(vertexPos) + positionOffset;
-                tangents[hEdge.cap_i + bevelI + 1] = tangent; // TODO
-                normals[hEdge.cap_i + bevelI + 1] = capNormal;
-            }
 
             // calc uv (this is partially copy/pasted from vertex pos above, which is bad)
             float uvCoord = (float)bevelI / (float)(bevelArray.Length - 1);
             vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, cHasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA],
-                cHasBevel ? uvCoord : xCoord);
+                cHasBevel ? uvCoord : bevelVector.x);
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, bHasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA],
-                bHasBevel ? uvCoord : xCoord);
+                bHasBevel ? uvCoord : bevelVector.x);
             uvs[bevelVertex] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
-            if (hEdge.cap_i != -1)
-                uvs[hEdge.cap_i + bevelI + 1] = uvs[bevelVertex];
 
             if (bevelI != 0 && bevelI != bevelArray.Length - 1)
             {
@@ -1278,11 +1051,6 @@ public class VoxelComponent : MonoBehaviour
             vertexPos[axis] = normalVector.x * ((faceNum % 2) * 2 - 1);
             vertexPos[(axis + 1) % 3] = isEdgeC ? normalVector.y * (squarePos.x * 2 - 1) : 0;
             vertexPos[(axis + 2) % 3] = isEdgeB ? normalVector.y * (squarePos.y * 2 - 1) : 0;
-            if (concave)
-            {
-                vertexPos[(axis + 1) % 3] *= -1;
-                vertexPos[(axis + 2) % 3] *= -1;
-            }
             normals[hEdge.bevel_i + bevelI] = Vector3FromArray(vertexPos);
         }
     }
@@ -1330,21 +1098,7 @@ public class VoxelComponent : MonoBehaviour
             }
 
             if (vertices[i].bevelProfile_count != 0)
-                triangleCount += 3 * (vertices[i].bevelProfile_count + 1);
-            if (i % 2 == 0) // make sure each edge only counts once
-            {
-                if (vertices[i].hEdgeB.tab_i != -1)
-                    triangleCount += 6;
-            }
-            else
-            {
-                if (vertices[i].hEdgeC.tab_i != -1)
-                    triangleCount += 6;
-            }
-            if (vertices[i].hEdgeB.cap_i != -1)
-                triangleCount += 3 * (vertices[i].hEdgeB.cap_count - 2);
-            if (vertices[i].hEdgeC.cap_i != -1)
-                triangleCount += 3 * (vertices[i].hEdgeC.cap_count - 2);
+                triangleCount += 3 * (vertices[i].bevelProfile_count - 1);
         }
 
         var triangles = new int[triangleCount];
@@ -1391,19 +1145,6 @@ public class VoxelComponent : MonoBehaviour
             if (vertices[i].bevelProfile_count != 0)
             {
                 bool profileCCW = faceCCW ^ (i % 2 == 0);
-                // first
-                AddTriangle(triangles, triangleCount, profileCCW,
-                    vertices[i].innerQuad_i,
-                    vertices[i].bevelProfile_i,
-                    vertices[i].hEdgeC.tab_i);
-                triangleCount += 3;
-                // last
-                AddTriangle(triangles, triangleCount, profileCCW,
-                    vertices[i].innerQuad_i,
-                    vertices[i].hEdgeB.tab_i,
-                    vertices[i].bevelProfile_i + vertices[i].bevelProfile_count - 1);
-                triangleCount += 3;
-                // middle
                 for (int profileI = 0; profileI < vertices[i].bevelProfile_count - 1; profileI++)
                 {
                     AddTriangle(triangles, triangleCount, profileCCW,
@@ -1413,53 +1154,9 @@ public class VoxelComponent : MonoBehaviour
                     triangleCount += 3;
                 }
             }
-            if (i % 2 == 0 && vertices[i].hEdgeB.tab_i != -1)
-            {
-                QuadTriangles(triangles, triangleCount, faceCCW,
-                    vertices[i].innerQuad_i,
-                    vertices[i].hEdgeB.tab_i,
-                    vertices[j].hEdgeB.tab_i,
-                    vertices[j].innerQuad_i);
-                triangleCount += 6;
-            }
-            if (i % 2 == 1 && vertices[i].hEdgeC.tab_i != -1)
-            {
-                QuadTriangles(triangles, triangleCount, faceCCW,
-                    vertices[i].innerQuad_i,
-                    vertices[i].hEdgeC.tab_i,
-                    vertices[j].hEdgeC.tab_i,
-                    vertices[j].innerQuad_i);
-                triangleCount += 6;
-            }
-            if (vertices[i].hEdgeB.cap_i != -1)
-            {
-                GenerateCapTriangles(voxel, faceNum, vertices,
-                    triangles, ref triangleCount, vertices[i].hEdgeB, i, faceCCW, false);
-            }
-            if (vertices[i].hEdgeC.cap_i != -1)
-            {
-                GenerateCapTriangles(voxel, faceNum, vertices,
-                    triangles, ref triangleCount, vertices[i].hEdgeC, i, faceCCW, true);
-            }
         }
 
         return triangles;
-    }
-
-    private static void GenerateCapTriangles(Voxel voxel, int faceNum, FaceCornerVertices[] vertices,
-        int[] triangles, ref int triangleCount, FaceHalfEdgeVertices hEdge, int i, bool faceCCW, bool isEdgeC)
-    {
-        int edgeA, edgeB, edgeC;
-        VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-        bool capCCW = faceCCW ^ (isEdgeC) ^ (i % 2 == 0);
-        for (int capI = 1; capI < hEdge.cap_count - 1; capI++)
-        {
-            AddTriangle(triangles, triangleCount, capCCW,
-                hEdge.cap_i,
-                hEdge.cap_i + capI,
-                hEdge.cap_i + capI + 1);
-            triangleCount += 3;
-        }
     }
 
     // specify vertices 0-3 of a quad in counter-clockwise order
