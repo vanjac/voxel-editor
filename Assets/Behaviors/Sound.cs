@@ -11,9 +11,9 @@ public class SoundBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Sound", "Play a sound",
-        "•  One-shot mode plays the entire sound every time the sensor turns on. "
+        "•  One-shot mode plays the entire sound every time the behavior is active. "
         + "Multiple copies can play at once. Fades have no effect.\n"
-        + "•  In Background mode the sound is always playing, but muted when the sensor is off.\n\n"
+        + "•  In Background mode the sound is always playing, but muted when the behavior is inactive.\n\n"
         + "Supported formats: MP3, WAV, OGG, AIF, XM, IT",
         "volume-high", typeof(SoundBehavior));
 
