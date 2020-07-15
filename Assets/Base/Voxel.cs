@@ -827,9 +827,6 @@ public class VoxelComponent : MonoBehaviour
 
     private struct FaceHalfEdgeVertices
     {
-        /* not on face plane */
-
-        // The first bevel vertex will be identical to innerRect but with a different normal.
         // The middle bevel vertices (not including first/last) are doubled up -- same position,
         // (potentially) different normals.
         public int bevel_i, bevel_count;
@@ -1014,10 +1011,8 @@ public class VoxelComponent : MonoBehaviour
         {
             int edgeA, edgeB, edgeC;
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
-
             Vector2 squarePos = SQUARE_LOOP[i];
 
-            // END PLANAR VERTICES
             if (faceVerts.hEdgesB[i].bevel_i != -1)
             {
                 GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeB], faceVerts.hEdgesB[i], false,
