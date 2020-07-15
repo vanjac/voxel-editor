@@ -333,7 +333,11 @@ public class VoxelArrayEditor : VoxelArray
     // called by TouchListener
     public void DoubleTouch(Voxel voxel, int elementI, VoxelElement elementType)
     {
-        ClearSelection();
+        if (drawSelect && elementType == VoxelElement.FACES)
+            // flood fill inside existing selection
+            DeselectThing(new VoxelFaceReference(voxel, elementI));
+        else
+            ClearSelection();
         if (elementType == VoxelElement.FACES)
             FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), stayOnPlane: true);
         else if (elementType == VoxelElement.EDGES)
