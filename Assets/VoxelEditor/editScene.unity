@@ -740,6 +740,7 @@ MonoBehaviour:
     undo: {fileID: 2800000, guid: 3ca559fa1674c439f95e6569092d453e, type: 3}
     import: {fileID: 2800000, guid: 10566212bae5b46968b736b518c502eb, type: 3}
     fill: {fileID: 2800000, guid: 89445942d3294e84caeb98591980d3a7, type: 3}
+    draw: {fileID: 2800000, guid: addd569b17e6bd04fb21b6224a0d7705, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}

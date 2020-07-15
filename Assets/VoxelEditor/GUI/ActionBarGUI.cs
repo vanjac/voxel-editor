@@ -79,10 +79,17 @@ public class ActionBarGUI : TopPanelGUI
         }
     }
 
-    protected void EditGUI()
+    protected void EditGUI(string message = null)
     {
         if (!voxelArray.FacesAreSelected())
+        {
+            if (message != null)
+            {
+                GUILayout.FlexibleSpace();
+                ActionBarLabel(message);
+            }
             return;
+        }
 
         TutorialGUI.TutorialHighlight("paint");
         if (ActionBarButton(GUIIconSet.instance.paint))
@@ -131,6 +138,8 @@ public class ActionBarGUI : TopPanelGUI
             moveCount = Mathf.Abs(((MoveAxis)touchListener.movingAxis).moveCount);
         if (moveCount != 0)
             ActionBarLabel(moveCount.ToString());
+        else if (message != null)
+            ActionBarLabel(message);
         else
             ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
     }
@@ -158,6 +167,9 @@ public class ActionBarGUI : TopPanelGUI
                 selectMenu.depth = 1;
                 selectMenu.items = new OverflowMenuGUI.MenuItem[]
                 {
+                    new OverflowMenuGUI.MenuItem("Draw", GUIIconSet.instance.draw, () => {
+                        DrawSelectInterface();
+                    }),
                     new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
                         SelectByPaintInterface();
                     }),
@@ -273,5 +285,12 @@ public class ActionBarGUI : TopPanelGUI
         {
             voxelArray.FillSelectPaint();
         };
+    }
+
+    private void DrawSelectInterface()
+    {
+        DrawSelectGUI drawSelect= gameObject.AddComponent<DrawSelectGUI>();
+        drawSelect.voxelArray = voxelArray;
+        drawSelect.touchListener = touchListener;
     }
 }

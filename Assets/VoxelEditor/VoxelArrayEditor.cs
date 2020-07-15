@@ -158,10 +158,13 @@ public class VoxelArrayEditor : VoxelArray
         BOX, // select inside a 3D box
         BOX_EDGES,
         FACE_FLOOD_FILL,
-        EDGE_FLOOD_FILL
+        EDGE_FLOOD_FILL,
+        DRAW_SELECT,
+        DRAW_DESELECT
     }
 
     public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
+    public bool drawSelect = false;
     // all faces where face.addSelected == true
     private List<Selectable> selectedThings = new List<Selectable>();
     // all faces where face.storedSelected == true
@@ -236,9 +239,6 @@ public class VoxelArrayEditor : VoxelArray
             ClearSelection();
             return;
         }
-        selectMode = thing is VoxelEdgeReference ? SelectMode.BOX_EDGES : SelectMode.BOX;
-        boxSelectStartBounds = thing.bounds;
-        selectionBounds = boxSelectStartBounds;
         if (thing is VoxelFaceReference)
             boxSelectSubstance = ((VoxelFaceReference)thing).voxel.substance;
         else if (thing is VoxelEdgeReference)
@@ -247,7 +247,29 @@ public class VoxelArrayEditor : VoxelArray
             boxSelectSubstance = selectObjectSubstance;
         else
             boxSelectSubstance = null;
-        UpdateBoxSelection();
+        if (drawSelect)
+        {
+            MergeStoredSelected();
+            if (thing.addSelected)
+            {
+                DeselectThing(thing);
+                selectMode = SelectMode.DRAW_DESELECT;
+            }
+            else
+            {
+                SelectThing(thing);
+                SetMoveAxes(thing.bounds.center);
+                selectMode = SelectMode.DRAW_SELECT;
+            }
+            return;
+        }
+        else
+        {
+            selectMode = thing is VoxelEdgeReference ? SelectMode.BOX_EDGES : SelectMode.BOX;
+            boxSelectStartBounds = thing.bounds;
+            selectionBounds = boxSelectStartBounds;
+            UpdateBoxSelection();
+        }
     }
 
     // called by TouchListener
@@ -265,13 +287,41 @@ public class VoxelArrayEditor : VoxelArray
 
     public void TouchDrag(Selectable thing)
     {
-        if (selectMode != SelectMode.BOX && selectMode != SelectMode.BOX_EDGES)
+        if (selectMode == SelectMode.DRAW_SELECT || selectMode == SelectMode.DRAW_DESELECT)
+        {
+            DrawTouchDrag(thing);
+            return;
+        }
+        else if (selectMode != SelectMode.BOX && selectMode != SelectMode.BOX_EDGES)
             return;
         Bounds oldSelectionBounds = selectionBounds;
         selectionBounds = boxSelectStartBounds;
         selectionBounds.Encapsulate(thing.bounds);
         if (oldSelectionBounds != selectionBounds)
             UpdateBoxSelection();
+    }
+
+    private void DrawTouchDrag(Selectable thing)
+    {
+        // make sure substance matches start of selection
+        if (boxSelectSubstance == selectObjectSubstance)
+        {
+            if (!(thing is ObjectMarker))
+                return;
+        }
+        else
+        {
+            if (!(thing is VoxelFaceReference)
+                || ((VoxelFaceReference)thing).voxel.substance != boxSelectSubstance)
+                return;
+        }
+        if (selectMode == SelectMode.DRAW_SELECT)
+        {
+            SelectThing(thing);
+            SetMoveAxes(thing.bounds.center);
+        }
+        else
+            DeselectThing(thing);
     }
 
     // called by TouchListener
@@ -365,6 +415,16 @@ public class VoxelArrayEditor : VoxelArray
     private void SelectFace(Voxel voxel, int faceI)
     {
         SelectThing(new VoxelFaceReference(voxel, faceI));
+    }
+
+    private void DeselectThing(Selectable thing)
+    {
+        if (!thing.addSelected)
+            return;
+        thing.addSelected = false;
+        selectedThings.Remove(thing);
+        thing.SelectionStateUpdated();
+        selectionChanged = true;
     }
 
     private void DeselectThing(int index)
