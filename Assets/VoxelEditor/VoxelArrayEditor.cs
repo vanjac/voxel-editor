@@ -285,7 +285,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         ClearSelection();
         if (elementType == VoxelElement.FACES)
-            FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: true);
+            FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), stayOnPlane: true);
         else if (elementType == VoxelElement.EDGES)
         {
             var edgeRef = new VoxelEdgeReference(voxel, elementI);
@@ -305,7 +305,7 @@ public class VoxelArrayEditor : VoxelArray
             if (elementType == VoxelElement.FACES)
             {
                 ClearSelection();
-                FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: false);
+                FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), stayOnPlane: false);
             }
         }
         else
@@ -593,8 +593,11 @@ public class VoxelArrayEditor : VoxelArray
         return bounds.Contains(thingBounds.min) && bounds.Contains(thingBounds.max);
     }
 
-    private void FaceSelectFloodFill(VoxelFaceReference start, Substance substance, bool stayOnPlane)
+    private void FaceSelectFloodFill(VoxelFaceReference start, bool stayOnPlane, bool matchPaint = false)
     {
+        Substance substance = start.voxel.substance;
+        VoxelFace paint = start.face;
+
         // this used to be a recursive algorithm but it would cause stack overflow exceptions
         Queue<VoxelFaceReference> facesToSelect = new Queue<VoxelFaceReference>();
         facesToSelect.Enqueue(start);
@@ -608,6 +611,8 @@ public class VoxelArrayEditor : VoxelArray
             VoxelFaceReference faceRef = facesToSelect.Dequeue();
             if (faceRef.voxel == null || faceRef.voxel.substance != substance
                 || faceRef.face.IsEmpty() || faceRef.selected) // stop at boundaries of stored selection
+                continue;
+            if (matchPaint && faceRef.face != paint)
                 continue;
             SelectThing(faceRef);
 
@@ -631,6 +636,18 @@ public class VoxelArrayEditor : VoxelArray
         }
 
         SetMoveAxes(start.voxel.position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(start.faceI) / 2);
+    }
+
+    public void FillSelectPaint()
+    {
+        if (GetSelectedPaint().IsEmpty())
+            return;
+        foreach (VoxelFaceReference face in IterateSelected<VoxelFaceReference>())
+        {
+            ClearSelection();
+            FaceSelectFloodFill(face, true, true);
+            break;
+        }
     }
 
     private void EdgeSelectFloodFill(VoxelEdgeReference edgeRef, Substance substance)
@@ -1150,9 +1167,7 @@ public class VoxelArrayEditor : VoxelArray
         // because of the order of IterateSelected, add selected faces will be preferred
         foreach (var faceRef in IterateSelected<VoxelFaceReference>())
         {
-            VoxelFace face = faceRef.face;
-            face.addSelected = false;
-            face.storedSelected = false;
+            VoxelFace face = faceRef.face.PaintOnly();
             return face;
         }
         return new VoxelFace();

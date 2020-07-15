@@ -23,6 +23,29 @@ public struct VoxelFace
         storedSelected = false;
     }
 
+    public VoxelFace PaintOnly()
+    {
+        VoxelFace paintOnly = this;
+        paintOnly.addSelected = false;
+        paintOnly.storedSelected = false;
+        return paintOnly;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is VoxelFace && this == (VoxelFace)obj;
+    }
+
+    public static bool operator ==(VoxelFace s1, VoxelFace s2)
+    {
+        return s1.material == s2.material && s1.overlay == s2.overlay
+            && s1.orientation == s2.orientation;
+    }
+    public static bool operator !=(VoxelFace s1, VoxelFace s2)
+    {
+        return !(s1 == s2);
+    }
+
     public static int GetOrientationRotation(byte orientation)
     {
         return orientation & 3;

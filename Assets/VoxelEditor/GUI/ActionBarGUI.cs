@@ -161,6 +161,9 @@ public class ActionBarGUI : TopPanelGUI
                     new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
                         SelectByPaintInterface();
                     }),
+                    new OverflowMenuGUI.MenuItem("Fill Paint", GUIIconSet.instance.fill, () => {
+                        FillPaintInterface();
+                    }),
                     new OverflowMenuGUI.MenuItem("With Tag", GUIIconSet.instance.entityTag, () => {
                         SelectByTagInterface();
                     })
@@ -256,6 +259,19 @@ public class ActionBarGUI : TopPanelGUI
             if (paint.IsEmpty())
                 return;
             voxelArray.SelectAllWithPaint(paint);
+        };
+    }
+
+    private void FillPaintInterface()
+    {
+        FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
+        facePicker.voxelArray = voxelArray;
+        facePicker.message = "Tap to fill paint...";
+        facePicker.onlyFaces = true;
+        facePicker.clearStoredSelection = false;
+        facePicker.pickAction = () =>
+        {
+            voxelArray.FillSelectPaint();
         };
     }
 }
