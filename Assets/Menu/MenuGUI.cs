@@ -133,6 +133,12 @@ public class MenuGUI : GUIPanel
     {
         if (name.Length == 0)
             return;
+        if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+        {
+            DialogGUI.ShowMessageDialog(gameObject,
+                "That name contains a special character which is not allowed.");
+            return;
+        }
         string path = WorldFiles.GetNewWorldPath(name);
         if (File.Exists(path))
         {
