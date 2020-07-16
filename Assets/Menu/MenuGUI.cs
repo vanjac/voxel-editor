@@ -145,9 +145,18 @@ public class MenuGUI : GUIPanel
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        using (FileStream fileStream = File.Create(path))
+        try
         {
-            fileStream.Write(template.bytes, 0, template.bytes.Length);
+            using (FileStream fileStream = File.Create(path))
+            {
+                fileStream.Write(template.bytes, 0, template.bytes.Length);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            DialogGUI.ShowMessageDialog(gameObject, "Error creating world file");
+            Debug.LogError(ex);
+            return;
         }
         UpdateWorldList();
 
