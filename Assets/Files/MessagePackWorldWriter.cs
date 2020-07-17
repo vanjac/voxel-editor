@@ -255,7 +255,7 @@ public class MessagePackWorldWriter
             VoxelEdge edge = voxel.edges[edgeI];
             if (!edge.hasBevel)
                 continue;
-            edgesList.Add(WriteEdge(edge, edgeI));
+            edgesList.Add(WriteEdge(voxel, edge, edgeI));
         }
         voxelList.Add(new MessagePackObject(edgesList));
 
@@ -284,11 +284,13 @@ public class MessagePackWorldWriter
         return new MessagePackObject(faceList);
     }
 
-    private static MessagePackObject WriteEdge(VoxelEdge edge, int edgeI)
+    private static MessagePackObject WriteEdge(Voxel voxel, VoxelEdge edge, int edgeI)
     {
         var edgeList = new List<MessagePackObject>();
         edgeList.Add(edgeI);
-        edgeList.Add(edge.bevel);
+        // TODO!
+        if (edge.hasBevel)
+            edgeList.Add((byte)voxel.bevelType);
         return new MessagePackObject(edgeList);
     }
 

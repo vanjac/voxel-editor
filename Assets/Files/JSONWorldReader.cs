@@ -395,7 +395,7 @@ public class JSONWorldReader : WorldFileReader
             return;
         int edgeI = edgeObject["i"].AsInt;
         if (edgeObject["bevel"] != null)
-            voxel.edges[edgeI].bevel = (byte)(edgeObject["bevel"].AsInt);
+        { }  // TODO!
     }
 
     private Vector3 ReadVector3(JSONArray a)

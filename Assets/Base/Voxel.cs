@@ -46,107 +46,13 @@ public struct VoxelFace
 
 public struct VoxelEdge
 {
-    public enum BevelType : byte
-    {
-        NONE, FLAT, CURVE, SQUARE, STAIR_2, STAIR_4
-    }
-
-    // each bevel shape starts at (1, 0) and goes to the y=x diagonal
-    private static readonly Vector2[] SHAPE_SQUARE = new Vector2[] {
-        new Vector2(1.0f, 0.0f), new Vector2(0.0f, 0.0f) };
-    private static readonly Vector2[] SHAPE_FLAT = new Vector2[] {
-        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.5f) };
-    private static readonly Vector2[] SHAPE_CURVE = new Vector2[] {
-        new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
-    private static readonly Vector2[] SHAPE_STAIR_2 = new Vector2[] {
-        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.5f) };
-    private static readonly Vector2[] SHAPE_STAIR_4 = new Vector2[] {
-        new Vector2(1.0f, 0.0f), new Vector2(0.75f, 0.0f), new Vector2(0.75f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f) };
-
-    // a pair of normals for each line segment connecting 2 vertices
-    private static readonly Vector2[] NORMALS_SQUARE = new Vector2[] {
-        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f) };
-    private static readonly Vector2[] NORMALS_FLAT = new Vector2[] {
-        new Vector2(0.70710f, 0.70710f), new Vector2(0.70710f, 0.70710f) };
-    private static readonly Vector2[] NORMALS_CURVE = new Vector2[] {
-        new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.96592f, 0.25881f),
-        new Vector2(0.86602f, 0.5f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
-    private static readonly Vector2[] NORMALS_STAIR_2 = new Vector2[] {
-        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
-    private static readonly Vector2[] NORMALS_STAIR_4 = new Vector2[] {
-        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f),
-        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
-
-    // 0x08 and 0x80 used to be used for caps and may still be used in old world files
-    public byte bevel;
+    public bool hasBevel;
     public bool addSelected, storedSelected;
 
     public void Clear()
     {
-        bevel = 0;
+        hasBevel = false;
         addSelected = storedSelected = false;
-    }
-
-    public BevelType bevelType
-    {
-        get
-        {
-            return (BevelType)bevel;
-        }
-        set
-        {
-            bevel = (byte)value;
-        }
-    }
-
-    public Vector2[] bevelTypeArray
-    {
-        get
-        {
-            switch (bevelType)
-            {
-                case BevelType.SQUARE:
-                    return SHAPE_SQUARE;
-                case BevelType.FLAT:
-                    return SHAPE_FLAT;
-                case BevelType.CURVE:
-                    return SHAPE_CURVE;
-                case BevelType.STAIR_2:
-                    return SHAPE_STAIR_2;
-                case BevelType.STAIR_4:
-                    return SHAPE_STAIR_4;
-            }
-            return null;
-        }
-    }
-
-    public Vector2[] bevelTypeNormalArray
-    {
-        get
-        {
-            switch (bevelType)
-            {
-                case BevelType.SQUARE:
-                    return NORMALS_SQUARE;
-                case BevelType.FLAT:
-                    return NORMALS_FLAT;
-                case BevelType.CURVE:
-                    return NORMALS_CURVE;
-                case BevelType.STAIR_2:
-                    return NORMALS_STAIR_2;
-                case BevelType.STAIR_4:
-                    return NORMALS_STAIR_4;
-            }
-            return null;
-        }
-    }
-
-    public bool hasBevel
-    {
-        get
-        {
-            return bevelType != BevelType.NONE;
-        }
     }
 }
 
@@ -154,6 +60,11 @@ public struct VoxelEdge
 public class Voxel
 {
     public readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
+
+    public enum BevelType : byte
+    {
+        NONE, FLAT, CURVE, SQUARE, STAIR_2, STAIR_4
+    }
 
     public static Vector3 DirectionForFaceI(int faceI)
     {
@@ -319,6 +230,7 @@ public class Voxel
     // Each group of four follows the pattern (0,0), (1,0), (1,1), (0,1)
     // for the Y/Z axes (0-3), Z/X axes (4-7, note order), or X/Y axes (8-11)
     public VoxelEdge[] edges = new VoxelEdge[12];
+    public BevelType bevelType = BevelType.NONE;
     private Substance _substance = null;
     public Substance substance
     {
@@ -469,6 +381,7 @@ public class Voxel
         {
             edges[edgeI].Clear();
         }
+        bevelType = BevelType.NONE;
         substance = null;
         // does NOT clear objectEntity!
     }
@@ -516,6 +429,32 @@ public class VoxelComponent : MonoBehaviour
     {
         Vector2.right, Vector2.down, Vector2.left, Vector2.up
     };
+
+    // each bevel shape starts at (1, 0) and goes to the y=x diagonal
+    private static readonly Vector2[] SHAPE_SQUARE = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.0f, 0.0f) };
+    private static readonly Vector2[] SHAPE_FLAT = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.5f) };
+    private static readonly Vector2[] SHAPE_CURVE = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
+    private static readonly Vector2[] SHAPE_STAIR_2 = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.5f) };
+    private static readonly Vector2[] SHAPE_STAIR_4 = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.75f, 0.0f), new Vector2(0.75f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f) };
+
+    // a pair of normals for each line segment connecting 2 vertices
+    private static readonly Vector2[] NORMALS_SQUARE = new Vector2[] {
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f) };
+    private static readonly Vector2[] NORMALS_FLAT = new Vector2[] {
+        new Vector2(0.70710f, 0.70710f), new Vector2(0.70710f, 0.70710f) };
+    private static readonly Vector2[] NORMALS_CURVE = new Vector2[] {
+        new Vector2(1.0f, 0.0f), new Vector2(0.96592f, 0.25881f), new Vector2(0.96592f, 0.25881f),
+        new Vector2(0.86602f, 0.5f), new Vector2(0.86602f, 0.5f), new Vector2(0.70710f, 0.70710f) };
+    private static readonly Vector2[] NORMALS_STAIR_2 = new Vector2[] {
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
+    private static readonly Vector2[] NORMALS_STAIR_4 = new Vector2[] {
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f),
+        new Vector2(0.0f, 1.0f), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 0.0f) };
 
     private List<Voxel> voxels = new List<Voxel>();
     private FaceVertexIndex[] faceVertexIndices;
@@ -867,6 +806,46 @@ public class VoxelComponent : MonoBehaviour
         }
     }
 
+
+    public static Vector2[] BevelTypeArray(Voxel voxel)
+    {
+        switch (voxel.bevelType)
+        {
+            case Voxel.BevelType.SQUARE:
+                return SHAPE_SQUARE;
+            case Voxel.BevelType.FLAT:
+                return SHAPE_FLAT;
+            case Voxel.BevelType.CURVE:
+                return SHAPE_CURVE;
+            case Voxel.BevelType.STAIR_2:
+                return SHAPE_STAIR_2;
+            case Voxel.BevelType.STAIR_4:
+                return SHAPE_STAIR_4;
+            default:
+                return System.Array.Empty<Vector2>();
+        }
+    }
+
+    public static Vector2[] BevelTypeNormalArray(Voxel voxel)
+    {
+        switch (voxel.bevelType)
+        {
+            case Voxel.BevelType.SQUARE:
+                return NORMALS_SQUARE;
+            case Voxel.BevelType.FLAT:
+                return NORMALS_FLAT;
+            case Voxel.BevelType.CURVE:
+                return NORMALS_CURVE;
+            case Voxel.BevelType.STAIR_2:
+                return NORMALS_STAIR_2;
+            case Voxel.BevelType.STAIR_4:
+                return NORMALS_STAIR_4;
+            default:
+                return System.Array.Empty<Vector2>();
+        }
+    }
+
+
     private static FaceVertices GetFaceVertices(Voxel voxel, int faceNum, int vertexI)
     {
         FaceVertices vertices = new FaceVertices(0);
@@ -890,7 +869,7 @@ public class VoxelComponent : MonoBehaviour
                 // bevel profile, could be overriden later in loop
                 vertices.bevelProfileCorner = i;
                 // -1 for the overlapping middle vertex, but +1 for the opposite corner (fan origin)
-                vertices.facePlane_count = voxel.edges[edgeA].bevelTypeArray.Length * 2;
+                vertices.facePlane_count = BevelTypeArray(voxel).Length * 2;
             }
         }
         vertices.count += vertices.facePlane_count;
@@ -901,18 +880,18 @@ public class VoxelComponent : MonoBehaviour
         {
             int edgeI = Voxel.FaceSurroundingEdge(faceNum, faceEdgeNum);
             if (voxel.edges[edgeI].hasBevel)
-                vertices.count += GetBevelVertices(ref vertexI, voxel.edges[edgeI], ref vertices.edges[faceEdgeNum]);
+                vertices.count += GetBevelVertices(ref vertexI, voxel, ref vertices.edges[faceEdgeNum]);
         }
         return vertices;
     }
 
     // return number of vertices added
-    private static int GetBevelVertices(ref int vertexI, VoxelEdge bevelEdge,
+    private static int GetBevelVertices(ref int vertexI, Voxel voxel,
         ref FaceEdgeVertices hEdge)
     {
         hEdge.bevel_i = vertexI;
         // for each side
-        hEdge.bevel_count = 2 * (bevelEdge.bevelTypeArray.Length * 2 - 2);
+        hEdge.bevel_count = 2 * (BevelTypeArray(voxel).Length * 2 - 2);
         vertexI += hEdge.bevel_count;
         return hEdge.bevel_count;
     }
@@ -984,8 +963,7 @@ public class VoxelComponent : MonoBehaviour
 
                 // then bevel vertices
                 squarePos = SQUARE_LOOP[faceVerts.bevelProfileCorner];
-                int edgeA = Voxel.OrthogonalEdge(faceNum, faceVerts.bevelProfileCorner);
-                Vector2[] bevelArray = voxel.edges[edgeA].bevelTypeArray;
+                Vector2[] bevelArray = BevelTypeArray(voxel);
                 for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
                 {
                     Vector2 bevelVector = bevelArray[bevelI];
@@ -1043,7 +1021,7 @@ public class VoxelComponent : MonoBehaviour
         Vector2[] squarePos = new Vector2[] {
             SQUARE_LOOP[faceEdgeNum], SQUARE_LOOP[(faceEdgeNum + 1) % 4] };
 
-        Vector2[] bevelArray = voxel.edges[edgeI].bevelTypeArray;
+        Vector2[] bevelArray = BevelTypeArray(voxel);
         int bevelVertex = edgeVerts.bevel_i;
         for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
         {
@@ -1095,7 +1073,7 @@ public class VoxelComponent : MonoBehaviour
         }
 
         // add normals for each bevel vertex
-        Vector2[] bevelNormalArray = voxel.edges[edgeI].bevelTypeNormalArray;
+        Vector2[] bevelNormalArray = BevelTypeNormalArray(voxel);
         for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
         {
             Vector2 normalVector = bevelNormalArray[bevelI];
@@ -1145,8 +1123,7 @@ public class VoxelComponent : MonoBehaviour
         {
             if (vertices.edges[faceEdgeNum].bevel_count != 0)
             {
-                int edgeI = Voxel.FaceSurroundingEdge(faceNum, faceEdgeNum);
-                triangleCount += 6 * (voxel.edges[edgeI].bevelTypeArray.Length - 1);
+                triangleCount += 6 * (BevelTypeArray(voxel).Length - 1);
             }
         }
 

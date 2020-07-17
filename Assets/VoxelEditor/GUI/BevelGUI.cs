@@ -61,7 +61,7 @@ public class BevelGUI : LeftPanelGUI
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
-    private VoxelEdge voxelEdge;
+    private Voxel.BevelType bevelType;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -106,7 +106,7 @@ public class BevelGUI : LeftPanelGUI
         if (voxelArray.selectionChanged)
         {
             voxelArray.selectionChanged = false;
-            voxelEdge = voxelArray.GetSelectedBevel();
+            bevelType = voxelArray.GetSelectedBevelType();
         }
 
         GUILayout.Label("Bevel:", GUIStyleSet.instance.labelTitle);
@@ -119,7 +119,7 @@ public class BevelGUI : LeftPanelGUI
 
         TutorialGUI.TutorialHighlight("bevel shape");
         GUILayout.Label("Shape:");
-        var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
+        var newBevelType = (Voxel.BevelType)GUILayout.SelectionGrid((int)bevelType,
             new Texture[] {
                 GUIIconSet.instance.no,
                 GUIIconSet.instance.bevelIcons.flat,
@@ -130,10 +130,10 @@ public class BevelGUI : LeftPanelGUI
             3, GUIStyleSet.instance.buttonTab);
         TutorialGUI.ClearHighlight();
 
-        if (newBevelType != voxelEdge.bevelType)
+        if (newBevelType != bevelType)
         {
-            voxelEdge.bevelType = newBevelType;
-            voxelArray.BevelSelectedEdges(voxelEdge);
+            bevelType = newBevelType;
+            voxelArray.BevelSelectedEdges(bevelType);
         }
     }
 }

@@ -1176,26 +1176,32 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
-    public VoxelEdge GetSelectedBevel()
+    public Voxel.BevelType GetSelectedBevelType()
     {
         foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
         {
-            var edge = edgeRef.edge;
-            edge.addSelected = false;
-            edge.storedSelected = false;
-            return edge;
+            if (edgeRef.edge.hasBevel)
+                return edgeRef.voxel.bevelType;
+            else
+                return Voxel.BevelType.NONE;
         }
-        return new VoxelEdge();
+        return Voxel.BevelType.NONE;
     }
 
-    public void BevelSelectedEdges(VoxelEdge applyBevel)
+    public void BevelSelectedEdges(Voxel.BevelType bevelType)
     {
         var voxelsToUpdate = new HashSet<Voxel>();
         foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
         {
             if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
                 continue;
-            edgeRef.voxel.edges[edgeRef.edgeI].bevel = applyBevel.bevel;
+            if (bevelType == Voxel.BevelType.NONE)
+                edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = false;
+            else
+            {
+                edgeRef.voxel.bevelType = bevelType;
+                edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = true;
+            }
             UpdateBevel(edgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: false);
         }
         foreach (Voxel voxel in voxelsToUpdate)
@@ -1264,7 +1270,7 @@ public class VoxelArrayEditor : VoxelArray
                     if (type == EdgeType.CONVEX || voxel.EdgeIsConvex(unconnectedEdgeI))
                     {
                         // full convex bevel overlaps with another bevel! this won't work!
-                        voxel.edges[unconnectedEdgeI].bevelType = VoxelEdge.BevelType.NONE;
+                        voxel.edges[unconnectedEdgeI].hasBevel = false;
                         UpdateBevel(unconnectedEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
                             dontUpdateThisVoxel: true);
                     }
@@ -1277,7 +1283,8 @@ public class VoxelArrayEditor : VoxelArray
             var oppEdgeRef = OpposingEdgeRef(edgeRef);
             if (oppEdgeRef.voxel != null)
             {
-                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.edge.bevel;
+                oppEdgeRef.voxel.bevelType = edgeRef.voxel.bevelType;
+                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].hasBevel = edgeRef.edge.hasBevel;
                 UpdateBevel(oppEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
                     dontUpdateThisVoxel: false, type: type);
             }
@@ -1287,7 +1294,8 @@ public class VoxelArrayEditor : VoxelArray
             var oppEdgeRef = OpposingFlatEdgeRef(edgeRef);
             if (oppEdgeRef.voxel != null)
             {
-                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.edge.bevel;
+                oppEdgeRef.voxel.bevelType = edgeRef.voxel.bevelType;
+                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].hasBevel = edgeRef.edge.hasBevel;
                 UpdateBevel(oppEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
                     dontUpdateThisVoxel: false, type: type);
             }

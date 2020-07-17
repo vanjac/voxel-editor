@@ -363,7 +363,15 @@ public class MessagePackWorldReader : WorldFileReader
             return;
         int edgeI = edgeList[0].AsInt32();
         if (edgeList.Count >= 2)
-            voxel.edges[edgeI].bevel = edgeList[1].AsByte();
+        {
+            // TODO!
+            var bevelType = (Voxel.BevelType)(edgeList[1].AsByte() & 0x07);
+            if (bevelType != Voxel.BevelType.NONE)
+            {
+                voxel.bevelType = bevelType;
+                voxel.edges[edgeI].hasBevel = true;
+            }
+        }
     }
 
     private Vector3 ReadVector3(MessagePackObject o)
