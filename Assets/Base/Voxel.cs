@@ -997,8 +997,7 @@ public class VoxelComponent : MonoBehaviour
             for (int i = 0; i < faceVerts.facePlane_count; i++)
             {
                 int vIndex = faceVerts.facePlane_i + i;
-                Vector3ToArray(vertices[vIndex], vertexUVPos);
-                uvs[vIndex] = CalcUV(voxel, vertexUVPos, positiveU_xyz, positiveV_xyz);
+                uvs[vIndex] = CalcUV(voxel, vertices[vIndex], positiveU_xyz, positiveV_xyz);
                 normals[vIndex] = normal;
                 tangents[vIndex] = tangent;
             }
@@ -1067,7 +1066,7 @@ public class VoxelComponent : MonoBehaviour
                     vertexUVPos[edgeAxis] = vertexPos[edgeAxis];
                 }
                 vertices[bevelVertex] = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
-                uvs[bevelVertex] = CalcUV(voxel, vertexUVPos, positiveU_xyz, positiveV_xyz);
+                uvs[bevelVertex] = CalcUV(voxel, Vector3FromArray(vertexUVPos) + positionOffset, positiveU_xyz, positiveV_xyz);
                 tangents[bevelVertex] = tangent; // TODO
 
                 bevelVertex++;
@@ -1116,9 +1115,8 @@ public class VoxelComponent : MonoBehaviour
         array[2] = vector.z;
     }
 
-    private static Vector2 CalcUV(Voxel voxel, float[] vertex, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
+    private static Vector2 CalcUV(Voxel voxel, Vector3 vector, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
     {
-        Vector3 vector = Vector3FromArray(vertex) + voxel.position;
         return new Vector2(
             vector.x * positiveU_xyz.x + vector.y * positiveU_xyz.y + vector.z * positiveU_xyz.z,
             vector.x * positiveV_xyz.x + vector.y * positiveV_xyz.y + vector.z * positiveV_xyz.z);
