@@ -964,7 +964,10 @@ public class VoxelComponent : MonoBehaviour
                 // start with triangle fan origin (opposite corner)
                 Vector2 squarePos;
                 if (voxel.concaveBevel)
+                {
                     squarePos = SQUARE_LOOP[faceVerts.bevelProfileCorner];
+                    normal = -normal;
+                }
                 else
                     squarePos = SQUARE_LOOP[(faceVerts.bevelProfileCorner + 2) % 4];
                 vertexPos[(axis + 1) % 3] = squarePos.x;
@@ -989,9 +992,6 @@ public class VoxelComponent : MonoBehaviour
                     vertices[faceVerts.facePlane_i + faceVerts.facePlane_count - 1 - bevelI]
                         = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
                 }
-
-                if (voxel.concaveBevel)
-                    normal = -normal;
             }
 
             for (int i = 0; i < faceVerts.facePlane_count; i++)
