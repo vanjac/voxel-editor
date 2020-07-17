@@ -939,6 +939,8 @@ public class VoxelComponent : MonoBehaviour
         // generate face plane
         if (faceVerts.facePlane_count != 0)
         {
+            Vector3 normal = Voxel.DirectionForFaceI(faceNum);
+
             vertexPos[axis] = faceNum % 2; // will stay for all planar vertices
             if (faceVerts.bevelProfileCorner == -1)
             {
@@ -950,7 +952,10 @@ public class VoxelComponent : MonoBehaviour
                     Vector2 squarePos = SQUARE_LOOP[i];
                     vertexPos[(axis + 1) % 3] = squarePos.x;
                     vertexPos[(axis + 2) % 3] = squarePos.y;
-                    vertices[faceVerts.facePlane_i + i] = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
+                    // DON'T use MakeConcave here
+                    // concave voxels shouldn't actually have any default quads
+                    // but this makes them easier to work with for testing
+                    vertices[faceVerts.facePlane_i + i] = Vector3FromArray(vertexPos) + positionOffset;
                 }
             }
             else
@@ -984,9 +989,11 @@ public class VoxelComponent : MonoBehaviour
                     vertices[faceVerts.facePlane_i + faceVerts.facePlane_count - 1 - bevelI]
                         = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
                 }
+
+                if (voxel.concaveBevel)
+                    normal = -normal;
             }
 
-            Vector3 normal = Voxel.DirectionForFaceI(faceNum);
             for (int i = 0; i < faceVerts.facePlane_count; i++)
             {
                 int vIndex = faceVerts.facePlane_i + i;
