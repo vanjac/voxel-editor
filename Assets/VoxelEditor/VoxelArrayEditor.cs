@@ -1176,19 +1176,21 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
-    public Voxel.BevelType GetSelectedBevelType()
+    public Voxel.BevelType GetSelectedBevelType(out bool concave)
     {
         foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
         {
+            concave = edgeRef.voxel.concaveBevel;
             if (edgeRef.edge.hasBevel)
                 return edgeRef.voxel.bevelType;
             else
                 return Voxel.BevelType.NONE;
         }
+        concave = false;
         return Voxel.BevelType.NONE;
     }
 
-    public void BevelSelectedEdges(Voxel.BevelType bevelType)
+    public void BevelSelectedEdges(Voxel.BevelType bevelType, bool concave)
     {
         var voxelsToUpdate = new HashSet<Voxel>();
         foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
@@ -1200,6 +1202,7 @@ public class VoxelArrayEditor : VoxelArray
             else
             {
                 edgeRef.voxel.bevelType = bevelType;
+                edgeRef.voxel.concaveBevel = concave;
                 edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = true;
             }
             UpdateBevel(edgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: false);

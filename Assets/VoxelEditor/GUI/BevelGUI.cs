@@ -62,6 +62,7 @@ public class BevelGUI : LeftPanelGUI
     public TouchListener touchListener;
 
     private Voxel.BevelType bevelType;
+    private bool concaveBevel;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -106,7 +107,7 @@ public class BevelGUI : LeftPanelGUI
         if (voxelArray.selectionChanged)
         {
             voxelArray.selectionChanged = false;
-            bevelType = voxelArray.GetSelectedBevelType();
+            bevelType = voxelArray.GetSelectedBevelType(out concaveBevel);
         }
 
         GUILayout.Label("Bevel:", GUIStyleSet.instance.labelTitle);
@@ -129,11 +130,16 @@ public class BevelGUI : LeftPanelGUI
                 GUIIconSet.instance.bevelIcons.stair4 },
             3, GUIStyleSet.instance.buttonTab);
         TutorialGUI.ClearHighlight();
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Concave");
+        var newConcaveBevel = GUILayout.Toggle(concaveBevel, "");
+        GUILayout.EndHorizontal();
 
-        if (newBevelType != bevelType)
+        if (newBevelType != bevelType || newConcaveBevel != concaveBevel)
         {
             bevelType = newBevelType;
-            voxelArray.BevelSelectedEdges(bevelType);
+            concaveBevel = newConcaveBevel;
+            voxelArray.BevelSelectedEdges(bevelType, concaveBevel);
         }
     }
 }
