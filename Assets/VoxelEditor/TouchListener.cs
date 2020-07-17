@@ -297,11 +297,11 @@ public class TouchListener : MonoBehaviour
     {
         float minDist = 1.0f;
         int closestEdge = -1;
-        int n = 0;
-        foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
         {
+            int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
             float dist = 2.0f;
-            switch (voxel.FaceTransformedEdgeNum(faceI, n))
+            switch (voxel.FaceTransformedEdgeNum(faceI, faceEdgeNum))
             {
                 case 0:
                     dist = uv.y - Mathf.Floor(uv.y);
@@ -321,7 +321,6 @@ public class TouchListener : MonoBehaviour
                 minDist = dist;
                 closestEdge = edgeI;
             }
-            n++;
         }
         return closestEdge;
     }

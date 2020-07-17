@@ -864,10 +864,10 @@ public class VoxelArrayEditor : VoxelArray
             VoxelFace movingFace = oldVoxel.faces[faceI];
             movingFace.addSelected = false;
             Substance movingSubstance = oldVoxel.substance;
-            int movingEdgesI = 0;
-            foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+            for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
             {
-                movingEdges[movingEdgesI++] = oldVoxel.edges[edgeI];
+                int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
+                movingEdges[faceEdgeNum++] = oldVoxel.edges[edgeI];
             }
 
             bool blocked = false; // is movement blocked?
@@ -875,8 +875,9 @@ public class VoxelArrayEditor : VoxelArray
 
             if (pushing)
             {
-                foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+                for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                 {
+                    int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
                     AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                 }
                 for (int sideNum = 0; sideNum < 4; sideNum++)
@@ -922,8 +923,9 @@ public class VoxelArrayEditor : VoxelArray
                 {
                     blocked = true;
                     // make sure any concave edges are cleared
-                    foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
+                    for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                     {
+                        int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
                         AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                     }
                 }
@@ -939,8 +941,9 @@ public class VoxelArrayEditor : VoxelArray
             }
             else if (pulling)
             {
-                foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+                for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                 {
+                    int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
                     AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                 }
                 if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
@@ -992,8 +995,9 @@ public class VoxelArrayEditor : VoxelArray
                     if (movingSubstance == blockingVoxel.substance)
                     {
                         blocked = true;
-                        foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
+                        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                         {
+                            int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
                             // clear any bevels on the face that will be deleted
                             AdjustClearEdge(new VoxelEdgeReference(blockingVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                         }
@@ -1020,17 +1024,16 @@ public class VoxelArrayEditor : VoxelArray
                 selectedThings[i] = new VoxelFaceReference(newVoxel, faceI);
                 if (pushing || pulling)
                 {
-                    movingEdgesI = 0;
-                    foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+                    for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                     {
+                        int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
                         var edgeRef = new VoxelEdgeReference(newVoxel, edgeI);
-                        newVoxel.edges[edgeI] = movingEdges[movingEdgesI];
+                        newVoxel.edges[edgeI] = movingEdges[faceEdgeNum];
                         // if the face was pushed/pulled to be coplanar with surrounding faces,
                         // UpdateBevel will automatically catch this, and clear the bevel along with the
                         // surrounding face's bevel (with alsoBevelOppositeFlatEdge=true)
                         UpdateBevel(edgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
                             dontUpdateThisVoxel: true, alsoBevelOppositeFlatEdge: true);
-                        movingEdgesI++;
                     }
                 }
             }
@@ -1131,9 +1134,12 @@ public class VoxelArrayEditor : VoxelArray
 
     private IEnumerable<int> FaceSurroundingEdgesAlongAxis(int faceI, int axis)
     {
-        foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
+        {
+            int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
             if (Voxel.EdgeIAxis(edgeI) == axis)
                 yield return edgeI;
+        }
     }
 
     public void RotateObjects(float amount)
