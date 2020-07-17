@@ -97,7 +97,8 @@ public class GameScripts
         WaterBehavior.objectType,
         ForceBehavior.objectType,
 
-        SoundBehavior.objectType
+        SoundBehavior.objectType,
+        Sound3DBehavior.objectType
     };
 
     public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics", "Sound" };
@@ -130,7 +131,8 @@ public class GameScripts
         },
         new BehaviorType[]
         {
-            SoundBehavior.objectType
+            SoundBehavior.objectType,
+            Sound3DBehavior.objectType
         }
     };
 
