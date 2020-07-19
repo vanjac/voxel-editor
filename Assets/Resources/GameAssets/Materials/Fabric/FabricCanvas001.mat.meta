@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: d6bc069fa5ffdfc4e9620db9e39a224b
-timeCreated: 1529097840
-licenseType: Free
+labels:
+- Sound_fabric
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 2100000
