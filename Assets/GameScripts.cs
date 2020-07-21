@@ -34,7 +34,7 @@ public class GameScripts
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new WaterBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("Overlays/water/WaterBasicDaytime");
+                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("WaterBasicDaytime", true);
                 return substance;
             }),
         new PropertiesObjectType("Trigger",
@@ -46,7 +46,7 @@ public class GameScripts
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("Overlays/Invisible");
+                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("Invisible", true);
                 return substance;
             }),
         new PropertiesObjectType("Glass",

@@ -6,48 +6,38 @@ using UnityEngine;
 // Remember that Unity resource paths always use forward slashes
 public class ResourcesDirectory
 {
-    private const string MATERIAL_EXTENSION = ".mat";
-
-    private static string[] _dirList = null;
-    public static string[] dirList
+    // map name to info
+    private static Dictionary<string, MaterialInfo> _materialInfos = null;
+    public static Dictionary<string, MaterialInfo> materialInfos
     {
         get
         {
-            if (_dirList == null)
+            if (_materialInfos == null)
             {
-                TextAsset dirListText = Resources.Load<TextAsset>("GameAssets/dirlist");
-                _dirList = dirListText.text.Split('\n');
-                // fix issue when checking out a branch in git:
-                for (int i = 0; i < _dirList.Length; i++)
-                    _dirList[i] = _dirList[i].Trim();
+                MaterialDatabase database = Resources.Load<MaterialDatabase>("materials");
+                _materialInfos = new Dictionary<string, MaterialInfo>();
+                foreach (MaterialInfo info in database.materials)
+                {
+                    _materialInfos.Add(info.name, info);
+                }
             }
-            return _dirList;
+            return _materialInfos;
         }
     }
 
-    public static Material GetMaterial(string path)
+    public static Material LoadMaterial(MaterialInfo info)
     {
-        // remove extension if necessary
-        if (path.EndsWith(MATERIAL_EXTENSION))
-            path = path.Substring(0, path.Length - MATERIAL_EXTENSION.Length);
-        return Resources.Load<Material>("GameAssets/" + path);
+        return Resources.Load<Material>("GameAssets/" + info.path);
     }
 
     public static Material FindMaterial(string name, bool editor)
     {
-        foreach (string dirEntry in ResourcesDirectory.dirList)
-        {
-            if (dirEntry.Length <= 2)
-                continue;
-            string newDirEntry = dirEntry.Substring(2);
-            string checkFileName = newDirEntry.Substring(newDirEntry.LastIndexOf("/") + 1);
-            if (checkFileName.EndsWith(MATERIAL_EXTENSION))
-                checkFileName = checkFileName.Substring(0, checkFileName.Length - MATERIAL_EXTENSION.Length);
-            if ((!editor) && checkFileName.StartsWith("$")) // special alternate materials for game
-                checkFileName = checkFileName.Substring(1);
-            if (checkFileName == name)
-                return GetMaterial(newDirEntry);
-        }
+        MaterialInfo info;
+        // special alternate materials for game
+        if ((!editor) && materialInfos.TryGetValue("$" + name, out info))
+            return LoadMaterial(info);
+        if (materialInfos.TryGetValue(name, out info))
+            return LoadMaterial(info);
         return null;
     }
 
