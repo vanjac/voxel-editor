@@ -868,11 +868,12 @@ public class VoxelArrayEditor : VoxelArray
             {
                 var aFace = (VoxelFaceReference)a;
                 var bFace = (VoxelFaceReference)b;
-                if (aFace.faceI == oppositeAdjustDirFaceI)
-                    if (bFace.faceI != oppositeAdjustDirFaceI)
-                        return -1; // move one substance back before moving other forward
-                    else if (bFace.faceI == oppositeAdjustDirFaceI)
-                        return 1;
+                if (aFace.faceI == oppositeAdjustDirFaceI
+                        && bFace.faceI != oppositeAdjustDirFaceI)
+                    return -1; // move one substance back before moving other forward
+                if (bFace.faceI == oppositeAdjustDirFaceI
+                        && aFace.faceI != oppositeAdjustDirFaceI)
+                    return 1;
             }
             return 0;
         });
