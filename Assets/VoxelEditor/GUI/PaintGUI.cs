@@ -186,7 +186,7 @@ public class PaintGUI : GUIPanel
     {
         scrollVelocity = new Vector2(0, 3000);
         selectedLayer = 0;
-        paint.material = ResourcesDirectory.GetMaterial("Materials/Sky");
+        paint.material = ResourcesDirectory.FindMaterial("Sky", true);
         handler(paint);
         UpdateMaterialSelector();
     }

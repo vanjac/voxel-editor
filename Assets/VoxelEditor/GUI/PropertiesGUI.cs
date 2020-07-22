@@ -351,8 +351,6 @@ public class PropertiesGUI : LeftPanelGUI
                 {
                     Substance clone = (Substance)(singleSelectedEntity.Clone());
                     clone.defaultPaint = voxelArray.GetSelectedPaint();
-                    clone.defaultPaint.addSelected = false;
-                    clone.defaultPaint.storedSelected = false;
                     voxelArray.substanceToCreate = clone;
                     var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
                     createGUI.voxelArray = voxelArray;

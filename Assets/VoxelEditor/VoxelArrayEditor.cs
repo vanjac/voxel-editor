@@ -158,10 +158,13 @@ public class VoxelArrayEditor : VoxelArray
         BOX, // select inside a 3D box
         BOX_EDGES,
         FACE_FLOOD_FILL,
-        EDGE_FLOOD_FILL
+        EDGE_FLOOD_FILL,
+        DRAW_SELECT,
+        DRAW_DESELECT
     }
 
     public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
+    public bool drawSelect = false;
     // all faces where face.addSelected == true
     private List<Selectable> selectedThings = new List<Selectable>();
     // all faces where face.storedSelected == true
@@ -236,9 +239,6 @@ public class VoxelArrayEditor : VoxelArray
             ClearSelection();
             return;
         }
-        selectMode = thing is VoxelEdgeReference ? SelectMode.BOX_EDGES : SelectMode.BOX;
-        boxSelectStartBounds = thing.bounds;
-        selectionBounds = boxSelectStartBounds;
         if (thing is VoxelFaceReference)
             boxSelectSubstance = ((VoxelFaceReference)thing).voxel.substance;
         else if (thing is VoxelEdgeReference)
@@ -247,7 +247,29 @@ public class VoxelArrayEditor : VoxelArray
             boxSelectSubstance = selectObjectSubstance;
         else
             boxSelectSubstance = null;
-        UpdateBoxSelection();
+        if (drawSelect)
+        {
+            MergeStoredSelected();
+            if (thing.addSelected)
+            {
+                DeselectThing(thing);
+                selectMode = SelectMode.DRAW_DESELECT;
+            }
+            else
+            {
+                SelectThing(thing);
+                SetMoveAxes(thing.bounds.center);
+                selectMode = SelectMode.DRAW_SELECT;
+            }
+            return;
+        }
+        else
+        {
+            selectMode = thing is VoxelEdgeReference ? SelectMode.BOX_EDGES : SelectMode.BOX;
+            boxSelectStartBounds = thing.bounds;
+            selectionBounds = boxSelectStartBounds;
+            UpdateBoxSelection();
+        }
     }
 
     // called by TouchListener
@@ -265,13 +287,41 @@ public class VoxelArrayEditor : VoxelArray
 
     public void TouchDrag(Selectable thing)
     {
-        if (selectMode != SelectMode.BOX && selectMode != SelectMode.BOX_EDGES)
+        if (selectMode == SelectMode.DRAW_SELECT || selectMode == SelectMode.DRAW_DESELECT)
+        {
+            DrawTouchDrag(thing);
+            return;
+        }
+        else if (selectMode != SelectMode.BOX && selectMode != SelectMode.BOX_EDGES)
             return;
         Bounds oldSelectionBounds = selectionBounds;
         selectionBounds = boxSelectStartBounds;
         selectionBounds.Encapsulate(thing.bounds);
         if (oldSelectionBounds != selectionBounds)
             UpdateBoxSelection();
+    }
+
+    private void DrawTouchDrag(Selectable thing)
+    {
+        // make sure substance matches start of selection
+        if (boxSelectSubstance == selectObjectSubstance)
+        {
+            if (!(thing is ObjectMarker))
+                return;
+        }
+        else
+        {
+            if (!(thing is VoxelFaceReference)
+                || ((VoxelFaceReference)thing).voxel.substance != boxSelectSubstance)
+                return;
+        }
+        if (selectMode == SelectMode.DRAW_SELECT)
+        {
+            SelectThing(thing);
+            SetMoveAxes(thing.bounds.center);
+        }
+        else
+            DeselectThing(thing);
     }
 
     // called by TouchListener
@@ -283,9 +333,13 @@ public class VoxelArrayEditor : VoxelArray
     // called by TouchListener
     public void DoubleTouch(Voxel voxel, int elementI, VoxelElement elementType)
     {
-        ClearSelection();
+        if (drawSelect && elementType == VoxelElement.FACES)
+            // flood fill inside existing selection
+            DeselectThing(new VoxelFaceReference(voxel, elementI));
+        else
+            ClearSelection();
         if (elementType == VoxelElement.FACES)
-            FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: true);
+            FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), stayOnPlane: true);
         else if (elementType == VoxelElement.EDGES)
         {
             var edgeRef = new VoxelEdgeReference(voxel, elementI);
@@ -305,7 +359,7 @@ public class VoxelArrayEditor : VoxelArray
             if (elementType == VoxelElement.FACES)
             {
                 ClearSelection();
-                FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), voxel.substance, stayOnPlane: false);
+                FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), stayOnPlane: false);
             }
         }
         else
@@ -365,6 +419,16 @@ public class VoxelArrayEditor : VoxelArray
     private void SelectFace(Voxel voxel, int faceI)
     {
         SelectThing(new VoxelFaceReference(voxel, faceI));
+    }
+
+    private void DeselectThing(Selectable thing)
+    {
+        if (!thing.addSelected)
+            return;
+        thing.addSelected = false;
+        selectedThings.Remove(thing);
+        thing.SelectionStateUpdated();
+        selectionChanged = true;
     }
 
     private void DeselectThing(int index)
@@ -593,8 +657,11 @@ public class VoxelArrayEditor : VoxelArray
         return bounds.Contains(thingBounds.min) && bounds.Contains(thingBounds.max);
     }
 
-    private void FaceSelectFloodFill(VoxelFaceReference start, Substance substance, bool stayOnPlane)
+    private void FaceSelectFloodFill(VoxelFaceReference start, bool stayOnPlane, bool matchPaint = false)
     {
+        Substance substance = start.voxel.substance;
+        VoxelFace paint = start.face;
+
         // this used to be a recursive algorithm but it would cause stack overflow exceptions
         Queue<VoxelFaceReference> facesToSelect = new Queue<VoxelFaceReference>();
         facesToSelect.Enqueue(start);
@@ -608,6 +675,8 @@ public class VoxelArrayEditor : VoxelArray
             VoxelFaceReference faceRef = facesToSelect.Dequeue();
             if (faceRef.voxel == null || faceRef.voxel.substance != substance
                 || faceRef.face.IsEmpty() || faceRef.selected) // stop at boundaries of stored selection
+                continue;
+            if (matchPaint && faceRef.face != paint)
                 continue;
             SelectThing(faceRef);
 
@@ -631,6 +700,18 @@ public class VoxelArrayEditor : VoxelArray
         }
 
         SetMoveAxes(start.voxel.position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(start.faceI) / 2);
+    }
+
+    public void FillSelectPaint()
+    {
+        if (GetSelectedPaint().IsEmpty())
+            return;
+        foreach (VoxelFaceReference face in IterateSelected<VoxelFaceReference>())
+        {
+            ClearSelection();
+            FaceSelectFloodFill(face, true, true);
+            break;
+        }
     }
 
     private void EdgeSelectFloodFill(VoxelEdgeReference edgeRef, Substance substance)
@@ -787,11 +868,12 @@ public class VoxelArrayEditor : VoxelArray
             {
                 var aFace = (VoxelFaceReference)a;
                 var bFace = (VoxelFaceReference)b;
-                if (aFace.faceI == oppositeAdjustDirFaceI)
-                    if (bFace.faceI != oppositeAdjustDirFaceI)
-                        return -1; // move one substance back before moving other forward
-                    else if (bFace.faceI == oppositeAdjustDirFaceI)
-                        return 1;
+                if (aFace.faceI == oppositeAdjustDirFaceI
+                        && bFace.faceI != oppositeAdjustDirFaceI)
+                    return -1; // move one substance back before moving other forward
+                if (bFace.faceI == oppositeAdjustDirFaceI
+                        && aFace.faceI != oppositeAdjustDirFaceI)
+                    return 1;
             }
             return 0;
         });
@@ -1156,9 +1238,7 @@ public class VoxelArrayEditor : VoxelArray
         // because of the order of IterateSelected, add selected faces will be preferred
         foreach (var faceRef in IterateSelected<VoxelFaceReference>())
         {
-            VoxelFace face = faceRef.face;
-            face.addSelected = false;
-            face.storedSelected = false;
+            VoxelFace face = faceRef.face.PaintOnly();
             return face;
         }
         return new VoxelFace();
