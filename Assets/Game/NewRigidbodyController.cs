@@ -113,7 +113,9 @@ public class NewRigidbodyController : MonoBehaviour
         }
         else if (grounded)
         {
-            footstepDistance += rigidBody.velocity.magnitude * Time.fixedDeltaTime;
+            Vector3 velocity = rigidBody.velocity;
+            velocity.y = 0;
+            footstepDistance += velocity.magnitude * Time.fixedDeltaTime;
             if (footstepDistance > footstepStride)
             {
                 footstepDistance -= footstepStride;
