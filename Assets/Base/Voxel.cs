@@ -595,6 +595,19 @@ public class VoxelComponent : MonoBehaviour
         return voxels.Count == 1;
     }
 
+    public Voxel GetSingleBlock()
+    {
+        return voxels[0];
+    }
+
+    public Substance GetSubstance()
+    {
+        if (IsSingleBlock())
+            return GetSingleBlock().substance;
+        else
+            return null;
+    }
+
     void OnBecameVisible()
     {
         if (IsSingleBlock())
@@ -674,9 +687,7 @@ public class VoxelComponent : MonoBehaviour
 
         updateFlag = false;
         bool inEditor = VoxelArrayEditor.instance != null;
-        Substance substance = null;
-        if (IsSingleBlock())
-            substance = voxels[0].substance;
+        Substance substance = GetSubstance();
 
         if (substance != null && substance.xRay)
             gameObject.layer = 8; // XRay layer
@@ -788,7 +799,7 @@ public class VoxelComponent : MonoBehaviour
         if (!inEditor && substance != null)
         {
             useMeshCollider = false;
-            foreach (VoxelEdge edge in voxels[0].edges)
+            foreach (VoxelEdge edge in GetSingleBlock().edges)
             {
                 if (edge.hasBevel)
                 {
@@ -821,7 +832,7 @@ public class VoxelComponent : MonoBehaviour
                 Destroy(meshCollider);
             if (boxCollider == null)
                 boxCollider = gameObject.AddComponent<BoxCollider>();
-            Bounds bounds = voxels[0].GetBounds();
+            Bounds bounds = GetSingleBlock().GetBounds();
             boxCollider.size = bounds.size;
             boxCollider.center = bounds.center - transform.position;
             theCollider = boxCollider;

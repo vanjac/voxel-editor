@@ -182,17 +182,28 @@ public class NewRigidbodyController : MonoBehaviour
                 rigidBody.MovePosition(rigidBody.position + move);
 
             // determine footstep sound
-            if (hitInfo.transform.gameObject.tag == "Voxel")
+            if (hitInfo.collider.gameObject.tag == "Voxel")
             {
-                var voxelComponent = hitInfo.transform.GetComponent<VoxelComponent>();
-                int hitVertexI = TouchListener.GetRaycastHitVertexIndex(hitInfo);
+                var voxelComponent = hitInfo.collider.GetComponent<VoxelComponent>();
                 Voxel voxel;
                 int faceI;
-                voxelComponent.GetVoxelFaceForVertex(hitVertexI, out voxel, out faceI);
+                if (voxelComponent.GetSubstance() != null)
+                {
+                    // substances use convex hulls which don't have submeshes
+                    // so just use the top face of the voxel
+                    voxel = voxelComponent.GetSingleBlock();
+                    faceI = 3;
+                }
+                else
+                {
+                    int hitVertexI = TouchListener.GetRaycastHitVertexIndex(hitInfo);
+                    voxelComponent.GetVoxelFaceForVertex(hitVertexI, out voxel, out faceI);
+                }
                 footstepSound = voxel.faces[faceI].GetSound();
             }
             else
             {
+                Debug.Log("no voxel");
                 footstepSound = MaterialSound.GENERIC;
             }
         }

@@ -45,6 +45,21 @@ public class ResourcesDirectory
     {
         if (material == null)
             return MaterialSound.GENERIC;
+        if (IsCustomMaterial(material))
+        {
+            ColorMode colorMode = GetCustomMaterialColorMode(material);
+            switch (colorMode)
+            {
+                case ColorMode.GLOSSY:
+                    return MaterialSound.TILE;
+                case ColorMode.METAL:
+                    return MaterialSound.METAL;
+                case ColorMode.GLASS:
+                    return MaterialSound.GLASS;
+                default:
+                    return MaterialSound.GENERIC;
+            }
+        }
         MaterialInfo info;
         // special alternate materials for game
         if (materialInfos.TryGetValue("$" + material.name, out info))
