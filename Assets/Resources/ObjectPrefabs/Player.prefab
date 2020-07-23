@@ -391,7 +391,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 9d6524c48058aa342b07194d7accf322, type: 3}
     - {fileID: 8300000, guid: 901beeddaaad52644b3124f35f553138, type: 3}
   - sound: 16
-    volume: 1
+    volume: 0.4
     left:
     - {fileID: 8300000, guid: 4a29989a50faaa24f8c7f45506f56467, type: 3}
     - {fileID: 8300000, guid: 13706a6daca469e4fba4790807876d9b, type: 3}
