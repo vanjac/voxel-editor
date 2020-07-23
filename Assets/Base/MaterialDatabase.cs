@@ -10,7 +10,8 @@ public enum MaterialSound
 
 // could represent a material or a directory!
 [System.Serializable]
-public struct MaterialInfo {
+public struct MaterialInfo
+{
     public bool isDirectory;
     public string name;
     // without extension, starting from Assets/Resources/GameAssets/

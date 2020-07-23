@@ -25,6 +25,7 @@ public class NewRigidbodyController : MonoBehaviour
     private Vector3 groundContactNormal;
     private bool jump, previouslyGrounded, jumping, grounded;
     public bool disableGroundCheck;
+    private MaterialSound footstepSound;
 
     void Start()
     {
@@ -159,6 +160,21 @@ public class NewRigidbodyController : MonoBehaviour
             move.y = 0;
             if (move != Vector3.zero)
                 rigidBody.MovePosition(rigidBody.position + move);
+
+            // determine footstep sound
+            if (hitInfo.transform.gameObject.tag == "Voxel")
+            {
+                var voxelComponent = hitInfo.transform.GetComponent<VoxelComponent>();
+                int hitVertexI = TouchListener.GetRaycastHitVertexIndex(hitInfo);
+                Voxel voxel;
+                int faceI;
+                voxelComponent.GetVoxelFaceForVertex(hitVertexI, out voxel, out faceI);
+                footstepSound = voxel.faces[faceI].GetSound();
+            }
+            else
+            {
+                footstepSound = MaterialSound.GENERIC;
+            }
         }
         else
         {

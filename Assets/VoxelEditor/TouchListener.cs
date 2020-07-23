@@ -287,13 +287,13 @@ public class TouchListener : MonoBehaviour
     }
 
     // the first vertex of the triangle that was hit
-    private int GetRaycastHitVertexIndex(RaycastHit hit)
+    public static int GetRaycastHitVertexIndex(RaycastHit hit)
     {
         var mesh = ((MeshCollider)(hit.collider)).sharedMesh;
         return mesh.triangles[hit.triangleIndex * 3];
     }
 
-    private int ClosestEdgeToUV(Voxel voxel, Vector2 uv, int faceI)
+    private static int ClosestEdgeToUV(Voxel voxel, Vector2 uv, int faceI)
     {
         float minDist = 1.0f;
         int closestEdge = -1;
