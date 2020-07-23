@@ -98,21 +98,46 @@ public class NewRigidbodyController : MonoBehaviour
                 StickToGroundHelper();
             }
         }
-        jump = false;
 
-        if (grounded)
+        // footstep sounds...
+        if (grounded && jump)
+        {
+            PlayFootstep();
+            footstepDistance = 0;
+        }
+        else if (!previouslyGrounded && grounded)
+        {
+            // landed
+            StartCoroutine(LandSoundCoroutine());
+            footstepDistance = 0;
+        }
+        else if (grounded)
         {
             footstepDistance += rigidBody.velocity.magnitude * Time.fixedDeltaTime;
             if (footstepDistance > footstepStride)
             {
                 footstepDistance -= footstepStride;
-                if (leftFoot)
-                    footstepSoundPlayer.PlayLeftFoot(footstepSound);
-                else
-                    footstepSoundPlayer.PlayRightFoot(footstepSound);
-                leftFoot = !leftFoot;
+                PlayFootstep();
             }
         }
+
+        jump = false;
+    }
+
+    private void PlayFootstep()
+    {
+        if (leftFoot)
+            footstepSoundPlayer.PlayLeftFoot(footstepSound);
+        else
+            footstepSoundPlayer.PlayRightFoot(footstepSound);
+        leftFoot = !leftFoot;
+    }
+
+    private IEnumerator LandSoundCoroutine()
+    {
+        PlayFootstep();
+        yield return new WaitForSeconds(1.0f / 30.0f);
+        PlayFootstep();
     }
 
 
