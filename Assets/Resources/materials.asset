@@ -647,7 +647,7 @@ MonoBehaviour:
     name: FenceChainLink001
     path: Overlays/Fencing/FenceChainLink001
     parent: Overlays/Fencing
-    sound: 14
+    sound: 17
   - isDirectory: 1
     name: Glass
     path: Overlays/Glass
