@@ -15,22 +15,27 @@ public class NewRigidbodyController : MonoBehaviour
     public float groundCheckDistance = 0.1f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
     public float stickToGroundHelperDistance = 0.6f; // stops the character
     public float shellOffset = 0.1f; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
+    public float footstepStride = 1.0f;
 
     public MouseLook mouseLook = new MouseLook();
 
     public Camera cam;
     private Rigidbody rigidBody;
     private CapsuleCollider capsule;
+    private FootstepSounds footstepSoundPlayer;
     private float yRotation;
     private Vector3 groundContactNormal;
     private bool jump, previouslyGrounded, jumping, grounded;
     public bool disableGroundCheck;
     private MaterialSound footstepSound;
+    private float footstepDistance;
+    private bool leftFoot;
 
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
+        footstepSoundPlayer = GetComponent<FootstepSounds>();
         mouseLook.Init(transform, cam.transform);
     }
 
@@ -68,6 +73,7 @@ public class NewRigidbodyController : MonoBehaviour
             desiredMove *= input.magnitude * maxSpeed;
             if (rigidBody.velocity.sqrMagnitude < (maxSpeed * maxSpeed))
             {
+                // TODO: scale by time??
                 rigidBody.AddForce(desiredMove * SlopeMultiplier(), ForceMode.Impulse);
             }
         }
@@ -93,6 +99,20 @@ public class NewRigidbodyController : MonoBehaviour
             }
         }
         jump = false;
+
+        if (grounded)
+        {
+            footstepDistance += rigidBody.velocity.magnitude * Time.fixedDeltaTime;
+            if (footstepDistance > footstepStride)
+            {
+                footstepDistance -= footstepStride;
+                if (leftFoot)
+                    footstepSoundPlayer.PlayLeftFoot(footstepSound);
+                else
+                    footstepSoundPlayer.PlayRightFoot(footstepSound);
+                leftFoot = !leftFoot;
+            }
+        }
     }
 
 

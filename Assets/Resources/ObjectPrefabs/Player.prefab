@@ -220,6 +220,7 @@ MonoBehaviour:
   groundCheckDistance: 0.1
   stickToGroundHelperDistance: 0.6
   shellOffset: 0.1
+  footstepStride: 1
   mouseLook:
     XSensitivity: 2
     YSensitivity: 2
