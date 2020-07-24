@@ -41,6 +41,34 @@ public class ResourcesDirectory
         return null;
     }
 
+    public static MaterialSound GetMaterialSound(Material material)
+    {
+        if (material == null)
+            return MaterialSound.GENERIC;
+        if (IsCustomMaterial(material))
+        {
+            ColorMode colorMode = GetCustomMaterialColorMode(material);
+            switch (colorMode)
+            {
+                case ColorMode.GLOSSY:
+                    return MaterialSound.TILE;
+                case ColorMode.METAL:
+                    return MaterialSound.METAL;
+                case ColorMode.GLASS:
+                    return MaterialSound.GLASS;
+                default:
+                    return MaterialSound.GENERIC;
+            }
+        }
+        MaterialInfo info;
+        // special alternate materials for game
+        if (materialInfos.TryGetValue("$" + material.name, out info))
+            return info.sound;
+        if (materialInfos.TryGetValue(material.name, out info))
+            return info.sound;
+        return MaterialSound.GENERIC;
+    }
+
     public static Material MakeCustomMaterial(ColorMode colorMode, bool transparent = false)
     {
         Material material = null;
