@@ -27,6 +27,7 @@ public class NewRigidbodyController : MonoBehaviour
     private Vector3 groundContactNormal;
     private bool jump, previouslyGrounded, jumping, grounded;
     public bool disableGroundCheck;
+    private bool previouslyUnderWater;
     private MaterialSound footstepSound;
     private float footstepDistance;
     private bool leftFoot;
@@ -107,7 +108,8 @@ public class NewRigidbodyController : MonoBehaviour
             PlayFootstep();
             footstepDistance = 0;
         }
-        else if (!previouslyGrounded && grounded)
+        else if ((!previouslyGrounded && grounded && !underWater)
+            || (!previouslyUnderWater && underWater))
         {
             // landed
             StartCoroutine(LandSoundCoroutine());
@@ -126,6 +128,7 @@ public class NewRigidbodyController : MonoBehaviour
         }
 
         jump = false;
+        previouslyUnderWater = underWater;
     }
 
     private void PlayFootstep()
