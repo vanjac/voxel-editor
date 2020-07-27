@@ -46,6 +46,14 @@ public struct VoxelFace
         return !(s1 == s2);
     }
 
+    public override int GetHashCode()
+    {
+        int result = material.GetHashCode();
+        result = 37 * result + overlay.GetHashCode();
+        result = 37 * result + (int)orientation;
+        return result;
+    }
+
     public static int GetOrientationRotation(byte orientation)
     {
         return orientation & 3;
