@@ -100,7 +100,9 @@ public class NewRigidbodyController : MonoBehaviour
         }
 
         // footstep sounds...
-        if (grounded && jump)
+        if (underWater)
+            footstepSound = MaterialSound.SWIM;
+        if ((grounded || underWater) && jump)
         {
             PlayFootstep();
             footstepDistance = 0;
@@ -111,7 +113,7 @@ public class NewRigidbodyController : MonoBehaviour
             StartCoroutine(LandSoundCoroutine());
             footstepDistance = 0;
         }
-        else if (grounded)
+        else if (grounded || underWater)
         {
             Vector3 velocity = rigidBody.velocity;
             velocity.y = 0;

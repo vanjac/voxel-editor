@@ -406,6 +406,14 @@ MonoBehaviour:
     right:
     - {fileID: 8300000, guid: 539afa4f9c4efd4418acf77d86f371ad, type: 3}
     - {fileID: 8300000, guid: 0be243c8f2679624f80d645100841a03, type: 3}
+  - sound: 18
+    volume: 1
+    left:
+    - {fileID: 8300000, guid: 52725716e1817e0489e0c5fb1e800e93, type: 3}
+    - {fileID: 8300000, guid: 0d4e63cc8ace5d041864259d2b3c36c1, type: 3}
+    right:
+    - {fileID: 8300000, guid: 8e90d9b54aee4f34fa89344c5fa3f3ac, type: 3}
+    - {fileID: 8300000, guid: 1ec685850f3a8364ead832920805526a, type: 3}
 --- !u!1 &1367000421178514
 GameObject:
   m_ObjectHideFlags: 0
