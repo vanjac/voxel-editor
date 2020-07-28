@@ -91,6 +91,7 @@ public class GameScripts
 
         HurtHealBehavior.objectType,
         CloneBehavior.objectType,
+        ScoreBehavior.objectType,
 
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
@@ -121,6 +122,7 @@ public class GameScripts
         {
             HurtHealBehavior.objectType,
             CloneBehavior.objectType,
+            ScoreBehavior.objectType,
         },
         new BehaviorType[]
         {
