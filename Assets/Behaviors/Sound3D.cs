@@ -17,7 +17,7 @@ public class Sound3DBehavior : EntityBehavior
         + "Higher values increase the volume outside fade distance.\n"
         + "•  \"Max distance\": Sound will be inaudible past this distance.\n\n"
         + "See Sound behavior for additional documentation.",
-        "headphones", typeof(Sound3DBehavior));
+        "headphones", typeof(Sound3DBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private EmbeddedData soundData = new EmbeddedData();
     private float volume = 50.0f, minDistance = 1, maxDistance = 30;
