@@ -76,7 +76,8 @@ public class GameScripts
         MotionSensor.objectType,
         TapSensor.objectType,
         InRangeSensor.objectType,
-        InCameraSensor.objectType
+        InCameraSensor.objectType,
+        CheckScoreSensor.objectType
     };
 
     public static BehaviorType[] behaviors = new BehaviorType[]
