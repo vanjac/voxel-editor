@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FootstepSounds : MonoBehaviour
 {
-    private const float VOLUME = 0.5f;
+    private const float VOLUME = 0.3f;
 
     [System.Serializable]
     public struct FootstepSoundEntry
