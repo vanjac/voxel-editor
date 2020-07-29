@@ -187,6 +187,7 @@ public class GameScripts
                 PropertiesObjectType.SetProperty(light, "col", new Color(.09f, .38f, .87f));
                 PropertiesObjectType.SetProperty(light, "siz", 2.0f);
                 PropertiesObjectType.SetProperty(light, "int", 3.0f);
+                PropertiesObjectType.SetProperty(light, "hal", true);
                 ball.behaviors.Add(light);
 
                 return ball;
