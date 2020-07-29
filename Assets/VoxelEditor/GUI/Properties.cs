@@ -292,7 +292,7 @@ public class PropertyGUIs
                     property.value = new EntityReference(entity);
                     return;
                 }
-                property.value = null;
+                property.value = new EntityReference(null);
             };
         }
         GUILayout.EndHorizontal();

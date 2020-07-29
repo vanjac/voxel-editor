@@ -10,6 +10,7 @@ public class PulseSensor : Sensor
     private bool startOn = false;
     private float offTime = 1;
     private float onTime = 1;
+    private EntityReference resetInput = new EntityReference(null);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -31,7 +32,11 @@ public class PulseSensor : Sensor
             new Property("ont", "On time",
                 () => onTime,
                 v => onTime = (float)v,
-                PropertyGUIs.Time)
+                PropertyGUIs.Time),
+            new Property("rst", "Reset",
+                () => resetInput,
+                v => resetInput = (EntityReference)v,
+                PropertyGUIs.EntityReferenceWithNull)
         }, base.Properties());
     }
 
@@ -41,6 +46,7 @@ public class PulseSensor : Sensor
         pulse.offTime = offTime;
         pulse.onTime = onTime;
         pulse.startOn = startOn;
+        pulse.resetInput = resetInput;
         return pulse;
     }
 }
@@ -49,7 +55,9 @@ public class PulseComponent : SensorComponent
 {
     public bool startOn;
     public float offTime, onTime;
+    public EntityReference resetInput;
     private float startTime;
+    private bool resetWasOn = false;
 
     void Start()
     {
@@ -62,6 +70,13 @@ public class PulseComponent : SensorComponent
             AddActivator(null);
         else
             RemoveActivator(null);
+
+        bool resetIsOn = false;
+        if (resetInput.component != null)
+            resetIsOn = resetInput.component.IsOn();
+        if (resetIsOn && !resetWasOn)
+            startTime = Time.time;
+        resetWasOn = resetIsOn;
     }
 
     private bool CheckState()
