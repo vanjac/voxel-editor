@@ -66,17 +66,17 @@ public class PulseComponent : SensorComponent
 
     public void Update()
     {
-        if (CheckState())
-            AddActivator(null);
-        else
-            RemoveActivator(null);
-
         bool resetIsOn = false;
         if (resetInput.component != null)
             resetIsOn = resetInput.component.IsOn();
         if (resetIsOn && !resetWasOn)
             startTime = Time.time;
         resetWasOn = resetIsOn;
+        
+        if (CheckState())
+            AddActivator(null);
+        else
+            RemoveActivator(null);
     }
 
     private bool CheckState()
