@@ -20,7 +20,8 @@ public class Sound3DBehavior : EntityBehavior
         "headphones", typeof(Sound3DBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private EmbeddedData soundData = new EmbeddedData();
-    private float volume = 50.0f, minDistance = 1, maxDistance = 30;
+    private float volume = 50.0f;
+    private (float, float) distanceRange = (1, 30);
     private PlayMode playMode = PlayMode.ONCE;
     private SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
 
@@ -49,14 +50,10 @@ public class Sound3DBehavior : EntityBehavior
                 () => volume,
                 v => volume = (float)v,
                 PropertyGUIs.Float),
-            new Property("min", "Fade distance",
-                () => minDistance,
-                v => minDistance = (float)v,
-                PropertyGUIs.Float),
-            new Property("max", "Max distance",
-                () => maxDistance,
-                v => maxDistance = (float)v,
-                PropertyGUIs.Float)
+            new Property("dis", "Fade distance",
+                () => distanceRange,
+                v => distanceRange = ((float, float))v,
+                PropertyGUIs.FloatRange)
         });
     }
 
@@ -66,8 +63,8 @@ public class Sound3DBehavior : EntityBehavior
         component.soundData = soundData;
         component.playMode = playMode;
         component.volume = volume / 100.0f;
-        component.minDistance = minDistance;
-        component.maxDistance = maxDistance;
+        component.minDistance = distanceRange.Item1;
+        component.maxDistance = distanceRange.Item2;
         component.fadeIn = 0;
         component.fadeOut = 0;
         component.spatial = true;

@@ -16,6 +16,12 @@ public class PropertyGUIs
         style.padding.right = 0;
         return style;
     });
+    private static readonly System.Lazy<GUIStyle> inlineLabelStyle = new System.Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(alignedLabelStyle.Value);
+        style.padding.left = 0;
+        return style;
+    });
     private static readonly System.Lazy<GUIStyle> tagFieldStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.textField);
@@ -25,7 +31,8 @@ public class PropertyGUIs
 
     public static void AlignedLabel(Property property)
     {
-        GUILayout.Label(property.name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
+        if (property.name != "")
+            GUILayout.Label(property.name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
     }
 
     public static void Empty(Property property) { }
@@ -123,6 +130,29 @@ public class PropertyGUIs
     public static void Time(Property property)
     {
         Float(property);
+    }
+
+    public static void FloatRange(Property property)
+    {
+        GUILayout.Label(property.name + ":");
+        GUILayout.BeginHorizontal();
+        var range = ((float, float))property.value;
+        Property wrapper1 = new Property(
+            property.id + "1",
+            "",
+            () => range.Item1,
+            v => property.value = ((float)v, range.Item2),
+            PropertyGUIs.Empty);
+        Float(wrapper1);
+        GUILayout.Label("to", inlineLabelStyle.Value, GUILayout.ExpandWidth(false));
+        Property wrapper2 = new Property(
+            property.id + "2",
+            "",
+            () => range.Item2,
+            v => property.value = (range.Item1, (float)v),
+            PropertyGUIs.Empty);
+        Float(wrapper2);
+        GUILayout.EndHorizontal();
     }
 
     public static void Tag(Property property)
