@@ -10,8 +10,8 @@ public class RandomPulseSensor : Sensor
         + " Useful for unpredictable behavior, flickering lights, etc.",
         "chart-histogram", typeof(RandomPulseSensor));
     
-    private (float, float) offTimeRange = (1, 1);
-    private (float, float) onTimeRange = (1, 1);
+    private (float, float) offTimeRange = (1, 5);
+    private (float, float) onTimeRange = (1, 5);
 
     public override PropertiesObjectType ObjectType()
     {
