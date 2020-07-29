@@ -72,6 +72,7 @@ public class GameScripts
         InputThresholdSensor.objectType,
         ToggleSensor.objectType,
         PulseSensor.objectType,
+        RandomPulseSensor.objectType,
         DelaySensor.objectType,
         MotionSensor.objectType,
         TapSensor.objectType,
