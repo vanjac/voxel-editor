@@ -41,7 +41,7 @@ public class CarryableBehavior : EntityBehavior
 public class CarryableComponent : BehaviorComponent
 {
     private static readonly Vector3 CARRY_VECTOR = new Vector3(0, -0.4f, 1.5f);
-    private const float MASS_SCALE = 200f;  // higher values have less effect on player physics
+    private const float MASS_SCALE = 400f;  // higher values have less effect on player physics
     private const float BREAK_FORCE = 40f;
 
     public float throwSpeed;
@@ -49,11 +49,14 @@ public class CarryableComponent : BehaviorComponent
 
     public void Tap(EntityComponent player)
     {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            return;
         if (joint == null)
         {
             joint = gameObject.AddComponent<FixedJoint>();
             joint.connectedBody = player.GetComponent<Rigidbody>();
-            joint.massScale = MASS_SCALE;
+            joint.massScale = MASS_SCALE * rb.mass;
             joint.breakForce = BREAK_FORCE;
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = CARRY_VECTOR;
@@ -66,11 +69,14 @@ public class CarryableComponent : BehaviorComponent
 
     private IEnumerator Drop()
     {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            yield break;
         Destroy(joint);
         joint = null;
-        GetComponent<Rigidbody>().WakeUp();
+        rb.WakeUp();
         yield return null;
-        GetComponent<Rigidbody>().WakeUp();
+        rb.WakeUp();
     }
 
     public override void BehaviorDisabled()
