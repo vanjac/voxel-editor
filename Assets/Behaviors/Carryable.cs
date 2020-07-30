@@ -60,9 +60,22 @@ public class CarryableComponent : BehaviorComponent
         }
         else
         {
-            Destroy(joint);
-            joint = null;
-            GetComponent<Rigidbody>().WakeUp();
+            StartCoroutine(Drop());
         }
+    }
+
+    private IEnumerator Drop()
+    {
+        Destroy(joint);
+        joint = null;
+        GetComponent<Rigidbody>().WakeUp();
+        yield return null;
+        GetComponent<Rigidbody>().WakeUp();
+    }
+
+    public override void BehaviorDisabled()
+    {
+        if (joint != null)
+            StartCoroutine(Drop());
     }
 }

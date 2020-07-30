@@ -60,7 +60,7 @@ public class GameTouchControl : MonoBehaviour
                         touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
                     }
                     CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
-                    if (hitCarryable != null && hit.distance <= CARRY_DISTANCE)
+                    if (hitCarryable != null && hitCarryable.enabled && hit.distance <= CARRY_DISTANCE)
                         hitCarryable.Tap(PlayerComponent.instance);
                 }
             }
