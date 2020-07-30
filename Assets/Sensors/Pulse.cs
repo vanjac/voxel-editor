@@ -10,7 +10,7 @@ public class PulseSensor : Sensor
         + "When the input turns off, the pulse completes a full cycle then stops.",
         "pulse", typeof(PulseSensor));
 
-    private bool startOn = false;
+    private bool startOn = true;
     private float offTime = 1;
     private float onTime = 1;
     private EntityReference input = new EntityReference(null);
