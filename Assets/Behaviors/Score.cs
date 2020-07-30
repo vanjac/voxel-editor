@@ -40,6 +40,7 @@ public class ScoreComponent : BehaviorComponent
 
     public override void BehaviorEnabled()
     {
-        PlayerComponent.instance.score += amount;
+        if (PlayerComponent.instance != null)  // not dead
+            PlayerComponent.instance.score += amount;
     }
 }
