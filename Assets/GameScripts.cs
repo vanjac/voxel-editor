@@ -97,6 +97,7 @@ public class GameScripts
 
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
+        CarryableBehavior.objectType,
         WaterBehavior.objectType,
         ForceBehavior.objectType,
 
@@ -130,6 +131,7 @@ public class GameScripts
         {
             SolidBehavior.objectType,
             PhysicsBehavior.objectType,
+            CarryableBehavior.objectType,
             WaterBehavior.objectType,
             ForceBehavior.objectType
         },

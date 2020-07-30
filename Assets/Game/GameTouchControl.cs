@@ -6,6 +6,7 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class GameTouchControl : MonoBehaviour
 {
+    private const float CARRY_DISTANCE = 3;
     private Camera cam;
     private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
@@ -58,6 +59,9 @@ public class GameTouchControl : MonoBehaviour
                         touchedTapComponent = hitTapComponent;
                         touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
                     }
+                    CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
+                    if (hitCarryable != null && hit.distance <= CARRY_DISTANCE)
+                        hitCarryable.Tap(PlayerComponent.instance);
                 }
             }
             // don't move joystick and camera with same touch
