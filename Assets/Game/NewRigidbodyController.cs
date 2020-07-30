@@ -235,7 +235,6 @@ public class NewRigidbodyController : MonoBehaviour
             }
             else
             {
-                Debug.Log("no voxel");
                 footstepSound = MaterialSound.GENERIC;
             }
         }
