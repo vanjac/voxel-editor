@@ -12,6 +12,7 @@ public class CarryableBehavior : EntityBehavior
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
     
     private float throwSpeed = 0;
+    private float throwAngle = 0;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -22,10 +23,14 @@ public class CarryableBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("thw", "Throw speed",
+            new Property("ths", "Throw speed",
                 () => throwSpeed,
                 v => throwSpeed = (float)v,
-                PropertyGUIs.Float)
+                PropertyGUIs.Float),
+            new Property("tha", "Throw angle",
+                () => throwAngle,
+                v => throwAngle = (float)v,
+                PropertyGUIs.Float),
         });
     }
 
@@ -33,6 +38,7 @@ public class CarryableBehavior : EntityBehavior
     {
         var component = gameObject.AddComponent<CarryableComponent>();
         component.throwSpeed = throwSpeed;
+        component.throwAngle = throwAngle;
         return component;
     }
 }
@@ -44,7 +50,7 @@ public class CarryableComponent : BehaviorComponent
     private const float MASS_SCALE = 400f;  // higher values have less effect on player physics
     private const float BREAK_FORCE = 40f;
 
-    public float throwSpeed;
+    public float throwSpeed, throwAngle;
     private FixedJoint joint;
 
     public void Tap(EntityComponent player)
@@ -64,6 +70,10 @@ public class CarryableComponent : BehaviorComponent
         else
         {
             StartCoroutine(Drop());
+            float degrees = throwAngle * Mathf.Deg2Rad;
+            Vector3 throwNormal = player.transform.forward * Mathf.Cos(degrees)
+                + Vector3.up * Mathf.Sin(degrees);
+            rb.AddForce(throwNormal * throwSpeed, ForceMode.VelocityChange);
         }
     }
 
