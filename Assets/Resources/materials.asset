@@ -224,6 +224,11 @@ MonoBehaviour:
     parent: Materials/Ground
     sound: 8
   - isDirectory: 0
+    name: GroundSandDesertRippled001_preview
+    path: Materials/Ground/GroundSandDesertRippled001_preview
+    parent: Materials/Ground
+    sound: 0
+  - isDirectory: 0
     name: sandydrysoil
     path: Materials/Ground/sandydrysoil
     parent: Materials/Ground
@@ -248,6 +253,11 @@ MonoBehaviour:
     path: Materials/Metal/MetalCorrugatedGarageDoor001
     parent: Materials/Metal
     sound: 9
+  - isDirectory: 0
+    name: MetalCorrugatedGarageDoor001_preview
+    path: Materials/Metal/MetalCorrugatedGarageDoor001_preview
+    parent: Materials/Metal
+    sound: 0
   - isDirectory: 0
     name: MetalGrime010
     path: Materials/Metal/MetalGrime010
@@ -1253,6 +1263,11 @@ MonoBehaviour:
     path: Overlays/Water/WaterDropletsLargeComplex003
     parent: Overlays/Water
     sound: 16
+  - isDirectory: 0
+    name: WaterDropletsLargeComplex003_preview
+    path: Overlays/Water/WaterDropletsLargeComplex003_preview
+    parent: Overlays/Water
+    sound: 0
   - isDirectory: 1
     name: Skies
     path: Skies
