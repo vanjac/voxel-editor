@@ -11,7 +11,6 @@ public class GameTouchControl : MonoBehaviour
     private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
     private TapComponent touchedTapComponent;
-    // might or might not be currently carried, doesn't matter
     private CarryableComponent carriedComponent;
     public Joystick joystick;
 
@@ -62,12 +61,19 @@ public class GameTouchControl : MonoBehaviour
                         touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
                     }
                     CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
-                    if (hitCarryable != null && hitCarryable.enabled && hit.distance <= CARRY_DISTANCE)
+                    if (hitCarryable != null && hitCarryable.enabled)
                     {
-                        if (hitCarryable != carriedComponent && carriedComponent != null)
-                            carriedComponent.Drop();
-                        hitCarryable.Tap(PlayerComponent.instance);
-                        carriedComponent = hitCarryable;
+                        if (hitCarryable.IsCarried())
+                        {
+                            hitCarryable.Throw(PlayerComponent.instance);
+                        }
+                        else if (hit.distance <= CARRY_DISTANCE)
+                        {
+                            if (carriedComponent != null && carriedComponent.IsCarried())
+                                carriedComponent.Drop();
+                            hitCarryable.Carry(PlayerComponent.instance);
+                            carriedComponent = hitCarryable;
+                        }
                     }
                 }
             }

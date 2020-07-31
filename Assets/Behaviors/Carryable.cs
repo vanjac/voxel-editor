@@ -46,8 +46,8 @@ public class CarryableBehavior : EntityBehavior
 
 public class CarryableComponent : BehaviorComponent
 {
-    // measured from player feet to bottom of object
-    private static readonly Vector3 CARRY_VECTOR = new Vector3(0, 0.1f, 1.5f);
+    // measured from player feet to point on object closest to player feet
+    private static readonly Vector3 CARRY_VECTOR = new Vector3(0, 0.1f, 0.85f);
     private const float MASS_SCALE = 400f;  // higher values have less effect on player physics
     private const float BREAK_FORCE = 40f;
     private const float PICK_UP_TIME = 0.25f;
@@ -62,28 +62,29 @@ public class CarryableComponent : BehaviorComponent
         base.Start();
     }
 
-    public void Tap(EntityComponent player)
+    public bool IsCarried()
     {
-        if (rb == null)
-            return;
-        if (joint == null)
+        return joint != null;
+    }
+
+    public void Carry(EntityComponent player)
+    {
+        joint = gameObject.AddComponent<FixedJoint>();
+        joint.connectedBody = player.GetComponent<Rigidbody>();
+        joint.massScale = MASS_SCALE * rb.mass;
+        joint.breakForce = BREAK_FORCE;
+        StartCoroutine(PickUpAnimCoroutine(player));
+    }
+
+    public void Throw(EntityComponent player)
+    {
+        Drop();
+        if (throwSpeed != 0 && rb != null)
         {
-            joint = gameObject.AddComponent<FixedJoint>();
-            joint.connectedBody = player.GetComponent<Rigidbody>();
-            joint.massScale = MASS_SCALE * rb.mass;
-            joint.breakForce = BREAK_FORCE;
-            StartCoroutine(PickUpAnimCoroutine(player));
-        }
-        else
-        {
-            Drop();
-            if (throwSpeed != 0)
-            {
-                float degrees = throwAngle * Mathf.Deg2Rad;
-                Vector3 throwNormal = player.transform.forward * Mathf.Cos(degrees)
-                    + Vector3.up * Mathf.Sin(degrees);
-                rb.AddForce(throwNormal * throwSpeed, ForceMode.VelocityChange);
-            }
+            float degrees = throwAngle * Mathf.Deg2Rad;
+            Vector3 throwNormal = player.transform.forward * Mathf.Cos(degrees)
+                + Vector3.up * Mathf.Sin(degrees);
+            rb.AddForce(throwNormal * throwSpeed, ForceMode.VelocityChange);
         }
     }
 
@@ -120,6 +121,11 @@ public class CarryableComponent : BehaviorComponent
         carryVector += Vector3.down * player.GetComponent<CapsuleCollider>().height / 2;
         Bounds bounds = GetRigidbodyBounds(rb);
         carryVector += Vector3.up * (rb.transform.position.y - bounds.min.y);
+        // get closest point when object is moved in front of player
+        Vector3 carryPoint = rb.ClosestPointOnBounds(
+            rb.transform.position - player.transform.forward * 100f);
+        float carryDist = Vector3.Project(carryPoint - rb.transform.position, player.transform.forward).magnitude;
+        carryVector += Vector3.forward * carryDist;
 
         float startTime = Time.fixedTime;
         while (Time.fixedTime - startTime < PICK_UP_TIME)
