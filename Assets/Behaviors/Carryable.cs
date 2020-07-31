@@ -46,7 +46,8 @@ public class CarryableBehavior : EntityBehavior
 
 public class CarryableComponent : BehaviorComponent
 {
-    private static readonly Vector3 CARRY_VECTOR = new Vector3(0, -0.4f, 1.5f);
+    // measured from player feet to bottom of object
+    private static readonly Vector3 CARRY_VECTOR = new Vector3(0, 0.1f, 1.5f);
     private const float MASS_SCALE = 400f;  // higher values have less effect on player physics
     private const float BREAK_FORCE = 40f;
 
@@ -65,7 +66,12 @@ public class CarryableComponent : BehaviorComponent
             joint.massScale = MASS_SCALE * rb.mass;
             joint.breakForce = BREAK_FORCE;
             joint.autoConfigureConnectedAnchor = false;
-            joint.connectedAnchor = CARRY_VECTOR;
+
+            Vector3 carryVector = CARRY_VECTOR;
+            carryVector += Vector3.down * player.GetComponent<CapsuleCollider>().height / 2;
+            Bounds bounds = GetRigidbodyBounds(rb);
+            carryVector += Vector3.up * (rb.transform.position.y - bounds.min.y);
+            joint.connectedAnchor = carryVector;
         }
         else
         {
@@ -87,6 +93,15 @@ public class CarryableComponent : BehaviorComponent
         rb.WakeUp();
         yield return null;
         rb.WakeUp();
+    }
+
+    private Bounds GetRigidbodyBounds(Rigidbody rb)
+    {
+        Collider[] colliders = rb.GetComponentsInChildren<Collider>();
+        Bounds b = colliders[0].bounds;
+        foreach (Collider c in colliders)
+            b.Encapsulate(c.bounds);
+        return b;
     }
 
     public override void BehaviorDisabled()
