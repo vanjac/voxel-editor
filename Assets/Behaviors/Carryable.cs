@@ -112,6 +112,7 @@ public class CarryableComponent : BehaviorComponent
 
     private IEnumerator PickUpAnimCoroutine(EntityComponent player)
     {
+        joint.enableCollision = false;
         // calculate the start anchor...
         joint.autoConfigureConnectedAnchor = true;
         yield return new WaitForFixedUpdate();
@@ -133,13 +134,14 @@ public class CarryableComponent : BehaviorComponent
         float startTime = Time.fixedTime;
         while (Time.fixedTime - startTime < PICK_UP_TIME)
         {
-            joint.connectedAnchor = Vector3.Lerp(startAnchor, carryVector,
+            joint.connectedAnchor = Vector3.Slerp(startAnchor, carryVector,
                 EaseInOutSine((Time.fixedTime - startTime) / PICK_UP_TIME));
             yield return new WaitForFixedUpdate();
             if (joint == null)
                 yield break;
         }
         joint.connectedAnchor = carryVector;
+        joint.enableCollision = true;
     }
 
     float EaseInOutSine(float x)
