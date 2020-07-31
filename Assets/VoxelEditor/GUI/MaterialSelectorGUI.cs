@@ -222,7 +222,10 @@ public class MaterialSelectorGUI : GUIPanel
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
             Material material = materials[i];
             bool selected;
-            if (material == highlightMaterial)
+            if (material == highlightMaterial
+                || (material != null && highlightMaterial != null
+                    && material.name.EndsWith(PREVIEW_SUFFIX)
+                    && material.name == highlightMaterial.name + PREVIEW_SUFFIX))
                 // highlight the button
                 selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
             else
