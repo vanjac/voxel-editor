@@ -6,10 +6,12 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class GameTouchControl : MonoBehaviour
 {
+    private const float DRAG_THRESHOLD = 64;
     private const float CARRY_DISTANCE = 3;
     private Camera cam;
     private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
+    private Vector2 lookTouchStart;
     private TapComponent touchedTapComponent;
     private CarryableComponent carriedComponent;
     public Joystick joystick;
@@ -50,6 +52,7 @@ public class GameTouchControl : MonoBehaviour
                 if (touchedTapComponent != null)
                     touchedTapComponent.TapEnd();
                 lookTouchId = touch.fingerId;
+                lookTouchStart = touch.position;
 
                 RaycastHit hit;
                 if (Physics.Raycast(cam.ScreenPointToRay(touch.position), out hit))
@@ -59,21 +62,6 @@ public class GameTouchControl : MonoBehaviour
                     {
                         touchedTapComponent = hitTapComponent;
                         touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
-                    }
-                    CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
-                    if (hitCarryable != null && hitCarryable.enabled)
-                    {
-                        if (hitCarryable.IsCarried())
-                        {
-                            hitCarryable.Throw(PlayerComponent.instance);
-                        }
-                        else if (hit.distance <= CARRY_DISTANCE)
-                        {
-                            if (carriedComponent != null && carriedComponent.IsCarried())
-                                carriedComponent.Drop();
-                            hitCarryable.Carry(PlayerComponent.instance);
-                            carriedComponent = hitCarryable;
-                        }
                     }
                 }
             }
@@ -97,7 +85,30 @@ public class GameTouchControl : MonoBehaviour
                     touchedTapComponent.TapEnd();
                     touchedTapComponent = null;
                 }
-            }
+                if (touch.phase == TouchPhase.Ended
+                    && (touch.position - lookTouchStart).magnitude / GUIPanel.scaleFactor < DRAG_THRESHOLD)
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(cam.ScreenPointToRay(touch.position), out hit))
+                    {
+                        CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
+                        if (hitCarryable != null && hitCarryable.enabled)
+                        {
+                            if (hitCarryable.IsCarried())
+                            {
+                                hitCarryable.Throw(PlayerComponent.instance);
+                            }
+                            else if (hit.distance <= CARRY_DISTANCE)
+                            {
+                                if (carriedComponent != null && carriedComponent.IsCarried())
+                                    carriedComponent.Drop();
+                                hitCarryable.Carry(PlayerComponent.instance);
+                                carriedComponent = hitCarryable;
+                            }
+                        }
+                    }
+                }
+            }  // end if touch.fingerId == lookTouchId
         }
         if (!setAxes)
         {
