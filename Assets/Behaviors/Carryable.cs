@@ -12,7 +12,7 @@ public class CarryableBehavior : EntityBehavior
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
     
     private float throwSpeed = 0;
-    private float throwAngle = 0;
+    private float throwAngle = 25;
 
     public override BehaviorType BehaviorObjectType()
     {
