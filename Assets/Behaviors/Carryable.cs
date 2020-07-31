@@ -50,6 +50,7 @@ public class CarryableComponent : BehaviorComponent
     private static readonly Vector3 CARRY_VECTOR = new Vector3(0, 0.1f, 1.5f);
     private const float MASS_SCALE = 400f;  // higher values have less effect on player physics
     private const float BREAK_FORCE = 40f;
+    private const float PICK_UP_TIME = 0.25f;
 
     public float throwSpeed, throwAngle;
     private FixedJoint joint;
@@ -71,13 +72,7 @@ public class CarryableComponent : BehaviorComponent
             joint.connectedBody = player.GetComponent<Rigidbody>();
             joint.massScale = MASS_SCALE * rb.mass;
             joint.breakForce = BREAK_FORCE;
-            joint.autoConfigureConnectedAnchor = false;
-
-            Vector3 carryVector = CARRY_VECTOR;
-            carryVector += Vector3.down * player.GetComponent<CapsuleCollider>().height / 2;
-            Bounds bounds = GetRigidbodyBounds(rb);
-            carryVector += Vector3.up * (rb.transform.position.y - bounds.min.y);
-            joint.connectedAnchor = carryVector;
+            StartCoroutine(PickUpAnimCoroutine(player));
         }
         else
         {
@@ -109,6 +104,39 @@ public class CarryableComponent : BehaviorComponent
         rb.WakeUp();
         yield return new WaitForFixedUpdate();
         rb.WakeUp();
+    }
+
+    private IEnumerator PickUpAnimCoroutine(EntityComponent player)
+    {
+        // calculate the start anchor...
+        joint.autoConfigureConnectedAnchor = true;
+        yield return new WaitForFixedUpdate();
+        if (joint == null)
+            yield break;
+        Vector3 startAnchor = joint.connectedAnchor;
+        joint.autoConfigureConnectedAnchor = false;
+
+        Vector3 carryVector = CARRY_VECTOR;
+        carryVector += Vector3.down * player.GetComponent<CapsuleCollider>().height / 2;
+        Bounds bounds = GetRigidbodyBounds(rb);
+        carryVector += Vector3.up * (rb.transform.position.y - bounds.min.y);
+
+        float startTime = Time.fixedTime;
+        while (Time.fixedTime - startTime < PICK_UP_TIME)
+        {
+            joint.connectedAnchor = Vector3.Lerp(startAnchor, carryVector,
+                EaseInOutSine((Time.fixedTime - startTime) / PICK_UP_TIME));
+            yield return new WaitForFixedUpdate();
+            if (joint == null)
+                yield break;
+        }
+        joint.connectedAnchor = carryVector;
+    }
+
+    float EaseInOutSine(float x)
+    {
+        // https://easings.net/#easeInOutSine
+        return -(Mathf.Cos(Mathf.PI * x) - 1) / 2;
     }
 
     private Bounds GetRigidbodyBounds(Rigidbody rb)
