@@ -11,6 +11,8 @@ public class GameTouchControl : MonoBehaviour
     private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
     private TapComponent touchedTapComponent;
+    // might or might not be currently carried, doesn't matter
+    private CarryableComponent carriedComponent;
     public Joystick joystick;
 
     void OnEnable()
@@ -61,7 +63,12 @@ public class GameTouchControl : MonoBehaviour
                     }
                     CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
                     if (hitCarryable != null && hitCarryable.enabled && hit.distance <= CARRY_DISTANCE)
+                    {
+                        if (hitCarryable != carriedComponent && carriedComponent != null)
+                            carriedComponent.Drop();
                         hitCarryable.Tap(PlayerComponent.instance);
+                        carriedComponent = hitCarryable;
+                    }
                 }
             }
             // don't move joystick and camera with same touch

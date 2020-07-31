@@ -53,10 +53,16 @@ public class CarryableComponent : BehaviorComponent
 
     public float throwSpeed, throwAngle;
     private FixedJoint joint;
+    private Rigidbody rb;
+
+    public override void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        base.Start();
+    }
 
     public void Tap(EntityComponent player)
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
         if (rb == null)
             return;
         if (joint == null)
@@ -75,23 +81,33 @@ public class CarryableComponent : BehaviorComponent
         }
         else
         {
-            StartCoroutine(Drop());
-            float degrees = throwAngle * Mathf.Deg2Rad;
-            Vector3 throwNormal = player.transform.forward * Mathf.Cos(degrees)
-                + Vector3.up * Mathf.Sin(degrees);
-            rb.AddForce(throwNormal * throwSpeed, ForceMode.VelocityChange);
+            Drop();
+            if (throwSpeed != 0)
+            {
+                float degrees = throwAngle * Mathf.Deg2Rad;
+                Vector3 throwNormal = player.transform.forward * Mathf.Cos(degrees)
+                    + Vector3.up * Mathf.Sin(degrees);
+                rb.AddForce(throwNormal * throwSpeed, ForceMode.VelocityChange);
+            }
         }
     }
 
-    private IEnumerator Drop()
+    public void Drop()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb == null)
-            yield break;
+        if (joint == null)
+            return;
         Destroy(joint);
         joint = null;
+        StartCoroutine(WakeUpCoroutine());
+    }
+
+    private IEnumerator WakeUpCoroutine()
+    {
+        if (rb == null)
+            yield break;
+        // please wake up
         rb.WakeUp();
-        yield return null;
+        yield return new WaitForFixedUpdate();
         rb.WakeUp();
     }
 
@@ -106,7 +122,6 @@ public class CarryableComponent : BehaviorComponent
 
     public override void BehaviorDisabled()
     {
-        if (joint != null)
-            StartCoroutine(Drop());
+        Drop();
     }
 }
