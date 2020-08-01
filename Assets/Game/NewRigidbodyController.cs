@@ -235,7 +235,11 @@ public class NewRigidbodyController : MonoBehaviour
             }
             else
             {
-                footstepSound = MaterialSound.GENERIC;
+                Renderer hitRender = hitInfo.collider.GetComponent<Renderer>();
+                if (hitRender != null)
+                    footstepSound = ResourcesDirectory.GetMaterialSound(hitRender.material);
+                else
+                    footstepSound = MaterialSound.GENERIC;
             }
         }
         else
