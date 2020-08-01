@@ -42,13 +42,10 @@ public class TapComponent : SensorComponent
     private EntityComponent player;
 
     // called by GameTouchControl
-    public void TapStart(EntityComponent player, float distance)
+    public void TapStart(EntityComponent player)
     {
-        if (distance <= maxDistance)
-        {
-            this.player = player;
-            AddActivator(player);
-        }
+        this.player = player;
+        AddActivator(player);
     }
 
     // called by GameTouchControl

@@ -41,6 +41,7 @@ public class GameTouchControl : MonoBehaviour
         }
         if (cam == null)
             return; // sometimes null for a few cycles
+        RaycastHit hit;
         bool setAxes = false;
         for (int i = 0; i < Input.touchCount; i++)
         {
@@ -50,18 +51,20 @@ public class GameTouchControl : MonoBehaviour
                 && GUIPanel.PanelContainingPoint(touch.position) == null)
             {
                 if (touchedTapComponent != null)
+                {
                     touchedTapComponent.TapEnd();
+                    touchedTapComponent = null;
+                }
                 lookTouchId = touch.fingerId;
                 lookTouchStart = touch.position;
 
-                RaycastHit hit;
                 if (TapRaycast(touch.position, out hit))
                 {
                     TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
-                    if (hitTapComponent != null)
+                    if (hitTapComponent != null && hit.distance <= hitTapComponent.maxDistance)
                     {
                         touchedTapComponent = hitTapComponent;
-                        touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
+                        touchedTapComponent.TapStart(PlayerComponent.instance);
                     }
                 }
             }
@@ -80,6 +83,25 @@ public class GameTouchControl : MonoBehaviour
                 setAxes = true;
                 hAxis.Update(touch.deltaPosition.x * 150f / cam.pixelHeight);
                 vAxis.Update(touch.deltaPosition.y * 150f / cam.pixelHeight);
+                if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary
+                    && touchedTapComponent != null)
+                {
+                    // check for early cancel (tap left component)
+                    if (TapRaycast(touch.position, out hit))
+                    {
+                        TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
+                        if (hitTapComponent != touchedTapComponent || hit.distance > touchedTapComponent.maxDistance)
+                        {
+                            touchedTapComponent.TapEnd();
+                            touchedTapComponent = null;
+                        }
+                    }
+                    else
+                    {
+                        touchedTapComponent.TapEnd();
+                        touchedTapComponent = null;
+                    }
+                }
                 if (touch.phase == TouchPhase.Ended && touchedTapComponent != null)
                 {
                     touchedTapComponent.TapEnd();
@@ -88,7 +110,6 @@ public class GameTouchControl : MonoBehaviour
                 if (touch.phase == TouchPhase.Ended
                     && (touch.position - lookTouchStart).magnitude / GUIPanel.scaleFactor < DRAG_THRESHOLD)
                 {
-                    RaycastHit hit;
                     if (TapRaycast(touch.position, out hit))
                     {
                         CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
