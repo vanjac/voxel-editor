@@ -76,7 +76,7 @@ class StoredPropertiesObject : PropertiesObject
                 {
                     GUILayout.BeginHorizontal();
                     PropertyGUIs.AlignedLabel(property);
-                    if (GUILayout.Button("different"))
+                    if (GUILayout.Button("different", GUIStyleSet.instance.buttonSmall))
                     {
                         // set all properties to one value
                         property.setter(firstProperty.getter());
