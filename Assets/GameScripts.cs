@@ -74,8 +74,8 @@ public class GameScripts
         PulseSensor.objectType,
         RandomPulseSensor.objectType,
         DelaySensor.objectType,
-        MotionSensor.objectType,
         TapSensor.objectType,
+        MotionSensor.objectType,
         InRangeSensor.objectType,
         InCameraSensor.objectType,
         CheckScoreSensor.objectType
