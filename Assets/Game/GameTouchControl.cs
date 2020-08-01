@@ -55,7 +55,7 @@ public class GameTouchControl : MonoBehaviour
                 lookTouchStart = touch.position;
 
                 RaycastHit hit;
-                if (Physics.Raycast(cam.ScreenPointToRay(touch.position), out hit))
+                if (TapRaycast(touch.position, out hit))
                 {
                     TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
                     if (hitTapComponent != null)
@@ -89,7 +89,7 @@ public class GameTouchControl : MonoBehaviour
                     && (touch.position - lookTouchStart).magnitude / GUIPanel.scaleFactor < DRAG_THRESHOLD)
                 {
                     RaycastHit hit;
-                    if (Physics.Raycast(cam.ScreenPointToRay(touch.position), out hit))
+                    if (TapRaycast(touch.position, out hit))
                     {
                         CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
                         if (hitCarryable != null && hitCarryable.enabled)
@@ -116,5 +116,12 @@ public class GameTouchControl : MonoBehaviour
             hAxis.Update(0);
             vAxis.Update(0);
         }
+    }
+
+    private bool TapRaycast(Vector2 touchPosition, out RaycastHit hit)
+    {
+        return Physics.Raycast(cam.ScreenPointToRay(touchPosition), out hit,
+            Mathf.Infinity, Physics.DefaultRaycastLayers,
+            QueryTriggerInteraction.Ignore);
     }
 }
