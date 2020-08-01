@@ -16,6 +16,12 @@ public class PropertyGUIs
         style.padding.right = 0;
         return style;
     });
+    private static readonly System.Lazy<GUIStyle> headerLabelStyle = new System.Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.label);
+        style.padding.bottom = 0;
+        return style;
+    });
     private static readonly System.Lazy<GUIStyle> inlineLabelStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(alignedLabelStyle.Value);
@@ -134,7 +140,7 @@ public class PropertyGUIs
 
     public static void FloatRange(Property property)
     {
-        GUILayout.Label(property.name + ":");
+        GUILayout.Label(property.name + ":", headerLabelStyle.Value);
         GUILayout.BeginHorizontal();
         var range = ((float, float))property.value;
         Property wrapper1 = new Property(
