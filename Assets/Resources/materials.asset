@@ -1274,16 +1274,6 @@ MonoBehaviour:
     parent: 
     sound: 0
   - isDirectory: 0
-    name: hipp8
-    path: Skies/hipp8
-    parent: Skies
-    sound: 0
-  - isDirectory: 0
-    name: hipp8_preview
-    path: Skies/hipp8_preview
-    parent: Skies
-    sound: 0
-  - isDirectory: 0
     name: sky5X1
     path: Skies/sky5X1
     parent: Skies
@@ -1316,5 +1306,10 @@ MonoBehaviour:
   - isDirectory: 0
     name: sky_procedural_preview
     path: Skies/sky_procedural_preview
+    parent: Skies
+    sound: 0
+  - isDirectory: 0
+    name: starmap
+    path: Skies/starmap
     parent: Skies
     sound: 0
