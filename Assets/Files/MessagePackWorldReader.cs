@@ -162,7 +162,7 @@ public class MessagePackWorldReader : WorldFileReader
         }
     }
 
-    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool alpha)
+    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool overlay)
     {
         if (matDict.ContainsKey(FileKeys.MATERIAL_NAME))
         {
@@ -182,9 +182,9 @@ public class MessagePackWorldReader : WorldFileReader
             {
                 Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
                 if (matDict.ContainsKey(FileKeys.MATERIAL_ALPHA))
-                    alpha = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
-                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
-                mat.color = color;
+                    overlay = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
+                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, overlay);
+                ResourcesDirectory.SetCustomMaterialColor(mat, color);
                 return mat;
             }
             else

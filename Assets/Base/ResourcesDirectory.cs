@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 // Remember that Unity resource paths always use forward slashes
 public class ResourcesDirectory
@@ -69,7 +70,7 @@ public class ResourcesDirectory
         return MaterialSound.GENERIC;
     }
 
-    public static Material MakeCustomMaterial(ColorMode colorMode, bool transparent = false)
+    public static Material MakeCustomMaterial(ColorMode colorMode, bool overlay = false)
     {
         Material material = null;
         switch (colorMode)
@@ -90,10 +91,7 @@ public class ResourcesDirectory
                 material.SetFloat("_Metallic", 1.0f);
                 break;
             case ColorMode.UNLIT:
-                if (transparent)
-                    material = new Material(Shader.Find("Unlit/UnlitColorTransparent"));
-                else
-                    material = new Material(Shader.Find("Unlit/Color"));
+                material = new Material(Shader.Find("Unlit/Color"));
                 break;
             case ColorMode.GLASS:
                 material = new Material(Shader.Find("Standard"));
@@ -109,22 +107,56 @@ public class ResourcesDirectory
         }
         material.name = "Custom:" + colorMode.ToString() + ":" + System.Guid.NewGuid();
 
-        if (transparent)
+        if (overlay)
+            material.renderQueue = (int)RenderQueue.GeometryLast;
+        else
+            material.renderQueue = (int)RenderQueue.Geometry;
+
+        return material;
+    }
+
+    public static void SetCustomMaterialColor(Material material, Color color)
+    {
+        material.color = color;
+        bool transparent = color.a < 1;
+        string shader = material.shader.name;
+
+        if (shader == "Standard")
         {
-            material.renderQueue = 3000;
-            if (material.shader.name == "Standard")
+            // http://answers.unity.com/answers/1265884/view.html
+            if (transparent)
             {
-                material.SetFloat("_Mode", 3); // transparent
-                // http://answers.unity.com/answers/1265884/view.html
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                material.SetFloat("_Mode", 3);  // transparent
+                material.SetOverrideTag("RenderType", "Transparent");
                 material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 material.SetInt("_ZWrite", 0);
-                material.DisableKeyword("_ALPHATEST_ON");
-                material.DisableKeyword("_ALPHABLEND_ON");
                 material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
             }
+            else
+            {
+                material.SetFloat("_Mode", 0);  // opaque
+                material.SetOverrideTag("RenderType", "");
+                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                material.SetInt("_ZWrite", 1);
+                material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            }
         }
-        return material;
+        else if (transparent && shader == "Unlit/Color")
+        {
+            material.shader = Shader.Find("Unlit/UnlitColorTransparent");
+        }
+        else if (!transparent && shader == "Unlit/UnlitColorTransparent")
+        {
+            material.shader = Shader.Find("Unlit/Color");
+        }
+
+        if (GetCustomMaterialIsOverlay(material))
+        {
+            if (transparent)
+                material.renderQueue = (int)RenderQueue.Transparent;
+            else
+                material.renderQueue = (int)RenderQueue.GeometryLast;
+        }
     }
 
     public static bool IsCustomMaterial(Material material)
@@ -138,8 +170,8 @@ public class ResourcesDirectory
         return (ColorMode)System.Enum.Parse(typeof(ColorMode), name);
     }
 
-    public static bool GetCustomMaterialIsTransparent(Material material)
+    public static bool GetCustomMaterialIsOverlay(Material material)
     {
-        return material.renderQueue > 2000;
+        return material.renderQueue > (int)RenderQueue.Geometry;
     }
 }

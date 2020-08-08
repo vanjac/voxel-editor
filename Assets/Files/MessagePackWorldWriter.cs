@@ -109,15 +109,15 @@ public class MessagePackWorldWriter
         materialsList.Add(new MessagePackObject(WriteMaterial(material, false)));
     }
 
-    private static MessagePackObjectDictionary WriteMaterial(Material material, bool specifyAlphaMode)
+    private static MessagePackObjectDictionary WriteMaterial(Material material, bool specifyOverlay)
     {
         var materialDict = new MessagePackObjectDictionary();
         if (ResourcesDirectory.IsCustomMaterial(material))
         {
             materialDict[FileKeys.MATERIAL_MODE] = ResourcesDirectory.GetCustomMaterialColorMode(material).ToString();
             materialDict[FileKeys.MATERIAL_COLOR] = WriteColor(material.color);
-            if (specifyAlphaMode)
-                materialDict[FileKeys.MATERIAL_ALPHA] = ResourcesDirectory.GetCustomMaterialIsTransparent(material);
+            if (specifyOverlay)
+                materialDict[FileKeys.MATERIAL_ALPHA] = ResourcesDirectory.GetCustomMaterialIsOverlay(material);
         }
         else
         {

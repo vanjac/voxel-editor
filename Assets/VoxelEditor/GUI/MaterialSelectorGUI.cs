@@ -131,9 +131,9 @@ public class MaterialSelectorGUI : GUIPanel
         {
             highlightMaterial = ResourcesDirectory.MakeCustomMaterial(colorMode, allowAlpha);
             if (allowAlpha)
-                highlightMaterial.color = new Color(0, 0, 1, 0.25f);
+                ResourcesDirectory.SetCustomMaterialColor(highlightMaterial, new Color(0, 0, 1, 0.25f));
             else
-                highlightMaterial.color = Color.red;
+                ResourcesDirectory.SetCustomMaterialColor(highlightMaterial, Color.red);
             if (handler != null)
                 handler(highlightMaterial);
         }
@@ -160,7 +160,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (newMode != colorMode)
         {
             Material newMat = ResourcesDirectory.MakeCustomMaterial(newMode, allowAlpha);
-            newMat.color = highlightMaterial.color;
+            ResourcesDirectory.SetCustomMaterialColor(newMat, highlightMaterial.color);
             highlightMaterial = newMat;
             colorMode = newMode;
             if (handler != null)
@@ -174,7 +174,7 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker.includeAlpha = allowAlpha;
             colorPicker.handler = (Color c) =>
             {
-                highlightMaterial.color = c;
+                ResourcesDirectory.SetCustomMaterialColor(highlightMaterial, c);
                 if (handler != null)
                     handler(highlightMaterial);
             };

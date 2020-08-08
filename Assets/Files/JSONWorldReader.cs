@@ -189,11 +189,11 @@ public class JSONWorldReader : WorldFileReader
             if (matObject["color"] != null)
             {
                 Color color = ReadColor(matObject["color"].AsArray);
-                bool alpha = color.a != 1;
+                bool overlay = color.a != 1;
                 if (matObject["alpha"] != null)
-                    alpha = matObject["alpha"].AsBool; // new with version 4
-                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
-                mat.color = color;
+                    overlay = matObject["alpha"].AsBool; // new with version 4
+                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, overlay);
+                ResourcesDirectory.SetCustomMaterialColor(mat, color);
                 return mat;
             }
             else

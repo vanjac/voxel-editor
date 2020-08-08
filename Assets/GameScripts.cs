@@ -59,7 +59,8 @@ public class GameScripts
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
                 substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
+                ResourcesDirectory.SetCustomMaterialColor(
+                    substance.defaultPaint.overlay, new Color(1, 1, 1, 0.25f));
                 return substance;
             })
     };
@@ -164,7 +165,7 @@ public class GameScripts
             () => {
                 var ball = new BallObject();
                 Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                lightMat.color = new Color(1, 1, 1, 0.25f);
+                ResourcesDirectory.SetCustomMaterialColor(lightMat, new Color(1, 1, 1, 0.25f));
                 PropertiesObjectType.SetProperty(ball, "mat", lightMat);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
@@ -177,7 +178,7 @@ public class GameScripts
             () => {
                 var ball = new BallObject();
                 Material neuronMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                neuronMat.color = new Color(.09f, .38f, .87f, .25f);
+                ResourcesDirectory.SetCustomMaterialColor(neuronMat, new Color(.09f, .38f, .87f, .25f));
                 PropertiesObjectType.SetProperty(ball, "mat", neuronMat);
 
                 ball.sensor = new InputThresholdSensor();
