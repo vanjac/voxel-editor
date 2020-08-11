@@ -1313,3 +1313,8 @@ MonoBehaviour:
     path: Skies/starmap
     parent: Skies
     sound: 0
+  - isDirectory: 0
+    name: starmap_preview
+    path: Skies/starmap_preview
+    parent: Skies
+    sound: 0
