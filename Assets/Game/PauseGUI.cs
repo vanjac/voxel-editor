@@ -22,7 +22,11 @@ public class HUDCounter
             negativeChange = value < lastValue;
         }
         lastValue = value;
+        Display();
+    }
 
+    public void Display()
+    {
         Color baseColor = GUI.color;
         if (Time.time - changeTime < 1.0)
         {
@@ -31,7 +35,7 @@ public class HUDCounter
             else
                 GUI.color *= Color.Lerp(Color.green, Color.white, Time.time - changeTime);
         }
-        ActionBarGUI.ActionBarLabel(text + value);
+        ActionBarGUI.ActionBarLabel(text + lastValue);
         GUI.color = baseColor;
     }
 }
@@ -98,6 +102,7 @@ public class PauseGUI : GUIPanel
         else if (wasAlive)
         {
             ActionBarGUI.ActionBarLabel("you died :(");
+            scoreCounter.Display();
         }
 
         //ActionBarGUI.ActionBarLabel((int)(1.0f / Time.smoothDeltaTime) + " FPS");

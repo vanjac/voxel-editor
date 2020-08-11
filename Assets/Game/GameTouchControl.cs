@@ -83,7 +83,7 @@ public class GameTouchControl : MonoBehaviour
                 setAxes = true;
                 hAxis.Update(touch.deltaPosition.x * 150f / cam.pixelHeight);
                 vAxis.Update(touch.deltaPosition.y * 150f / cam.pixelHeight);
-                if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary
+                if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                     && touchedTapComponent != null)
                 {
                     // check for early cancel (tap left component)
