@@ -89,16 +89,6 @@ MonoBehaviour:
     parent: Materials/Bricks+Blocks
     sound: 1
   - isDirectory: 1
-    name: Ceiling
-    path: Materials/Ceiling
-    parent: Materials
-    sound: 0
-  - isDirectory: 0
-    name: Ceiling_Gypsum_001_SD
-    path: Materials/Ceiling/Ceiling_Gypsum_001_SD
-    parent: Materials/Ceiling
-    sound: 3
-  - isDirectory: 1
     name: Concrete
     path: Materials/Concrete
     parent: Materials
