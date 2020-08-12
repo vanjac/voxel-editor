@@ -1405,7 +1405,7 @@ public class VoxelComponent : MonoBehaviour
         int[] surroundingEdges = new int[4];
         int surroundingEdgeI = 0;
 
-        int triangleCount = 6;
+        int triangleCount = 0;
         bool noInnerQuad = false;
         // for each pair of edge vertices
         foreach (int edgeI in Voxel.FaceSurroundingEdges(faceNum))
@@ -1421,8 +1421,8 @@ public class VoxelComponent : MonoBehaviour
             if (voxel.edges[edgeA].hasBevel && voxel.edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL
                 && voxel.EdgeIsConvex(edgeA))
             {
-                noInnerQuad = true; // quad would be convex which might cause problems
-                triangleCount -= 6;
+                if (!voxel.edges[edgeB].hasBevel && !voxel.edges[edgeC].hasBevel)
+                    noInnerQuad = true; // quad would be convex which might cause problems
             }
 
             if (vertices[i].bevelProfile_count != 0)
@@ -1442,6 +1442,9 @@ public class VoxelComponent : MonoBehaviour
             if (vertices[i].hEdgeC.cap_i != -1)
                 triangleCount += 3 * (vertices[i].hEdgeC.cap_count - 2);
         }
+
+        if (!noInnerQuad)
+            triangleCount += 6;
 
         var triangles = new int[triangleCount];
         triangleCount = 0;
