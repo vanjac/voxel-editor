@@ -47,6 +47,15 @@ public struct Property
         props.AddRange(props2);
         return props;
     }
+
+    public static IEnumerable<Property> JoinIterateProperties(
+        IEnumerable<Property> props1, IEnumerable<Property> props2)
+    {
+        foreach (Property p in props1)
+            yield return p;
+        foreach (Property p in props2)
+            yield return p;
+    }
 }
 
 
@@ -203,6 +212,7 @@ public interface PropertiesObject
 {
     PropertiesObjectType ObjectType();
     ICollection<Property> Properties();
+    ICollection<Property> DeprecatedProperties();
 }
 
 public abstract class Entity : PropertiesObject
@@ -244,6 +254,11 @@ public abstract class Entity : PropertiesObject
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
         };
+    }
+
+    public virtual ICollection<Property> DeprecatedProperties()
+    {
+        return System.Array.Empty<Property>();
     }
 
     // storeComponent: whether the "component" variable should be set
@@ -527,6 +542,11 @@ public abstract class EntityBehavior : PropertiesObject
         };
     }
 
+    public virtual ICollection<Property> DeprecatedProperties()
+    {
+        return System.Array.Empty<Property>();
+    }
+
     public abstract Behaviour MakeComponent(GameObject gameObject);
 }
 
@@ -651,6 +671,11 @@ public abstract class Sensor : PropertiesObject
     public virtual ICollection<Property> Properties()
     {
         return new Property[] { };
+    }
+
+    public virtual ICollection<Property> DeprecatedProperties()
+    {
+        return System.Array.Empty<Property>();
     }
 
     public abstract SensorComponent MakeComponent(GameObject gameObject);

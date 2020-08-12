@@ -263,7 +263,8 @@ public class MessagePackWorldReader : WorldFileReader
 
                 bool foundProp = false;
                 Property prop = new Property(null, null, null, null, null);
-                foreach (Property checkProp in obj.Properties())
+                foreach (Property checkProp in Property.JoinIterateProperties(
+                    obj.Properties(), obj.DeprecatedProperties()))
                 {
                     if (checkProp.id == id)
                     {

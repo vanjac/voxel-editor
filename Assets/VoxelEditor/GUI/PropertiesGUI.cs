@@ -103,6 +103,11 @@ class StoredPropertiesObject : PropertiesObject
     {
         return properties;
     }
+
+    public ICollection<Property> DeprecatedProperties()
+    {
+        return System.Array.Empty<Property>();
+    }
 }
 
 class StoredEntityBehavior : StoredPropertiesObject

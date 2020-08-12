@@ -19,6 +19,7 @@ public class PropertyGUIs
     private static readonly System.Lazy<GUIStyle> headerLabelStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
+        style.padding.top = 0;
         style.padding.bottom = 0;
         return style;
     });
