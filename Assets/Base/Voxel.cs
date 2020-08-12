@@ -1251,7 +1251,8 @@ public class VoxelComponent : MonoBehaviour
             if (hEdge.reverseCap != null)
             {
                 // found all this with trial and error sorry in advance
-                if (hEdge.reverseCap.Value.bevelSizeFloat < beveledEdge.bevelSizeFloat)
+                VoxelEdge reverseEdge = hEdge.reverseCap.Value;
+                if (reverseEdge.hasBevel && reverseEdge.bevelSizeFloat < beveledEdge.bevelSizeFloat)
                     hEdge.reverseCap = beveledEdge;
                 if (bHasBevel && cHasBevel)  // joined
                 {
