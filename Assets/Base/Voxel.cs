@@ -1301,7 +1301,7 @@ public class VoxelComponent : MonoBehaviour
             vertexPos[(axis + 1) % 3] = bHasBevel ? (1 - squarePos.x * 2) : 0;
             vertexPos[(axis + 2) % 3] = cHasBevel ? (1 - squarePos.y * 2) : 0;
             capNormal = Vector3FromArray(vertexPos);
-            if (concave ^ (hEdge.reverseCap != null))
+            if (concave ^ (hEdge.reverseCap != null && hEdge.reverseCap.Value.hasBevel))
                 capNormal = -capNormal;
             normals[hEdge.cap_i] = capNormal;
             if (hEdge.reverseCap != null)
