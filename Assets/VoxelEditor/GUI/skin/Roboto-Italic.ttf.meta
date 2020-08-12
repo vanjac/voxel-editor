@@ -11,7 +11,9 @@ TrueTypeFontImporter:
   fontName: Roboto
   fontNames:
   - Roboto
+  - Segoe UI Symbol
   fallbackFontReferences:
+  - {fileID: 12800000, guid: a2c85ff749adf294488faa3f0b579bf3, type: 3}
   - {fileID: 12800000, guid: 1a1eb4cbb55e4ee4b99498cb8243daa9, type: 3}
   - {fileID: 12800000, guid: 7520657f27b79e144b14015465e1c7a7, type: 3}
   customCharacters: 

@@ -1,21 +1,17 @@
 fileFormatVersion: 2
-guid: 7520657f27b79e144b14015465e1c7a7
+guid: a2c85ff749adf294488faa3f0b579bf3
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
-  fontSize: 39
+  fontSize: 16
   forceTextureCase: -2
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Roboto
+  fontName: Segoe UI Symbol
   fontNames:
-  - Roboto
   - Segoe UI Symbol
-  fallbackFontReferences:
-  - {fileID: 12800000, guid: a2c85ff749adf294488faa3f0b579bf3, type: 3}
-  - {fileID: 12800000, guid: 1a1eb4cbb55e4ee4b99498cb8243daa9, type: 3}
-  - {fileID: 12800000, guid: 2c71cfec8513c594195e1534fb2a6885, type: 3}
+  fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
