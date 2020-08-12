@@ -7,14 +7,13 @@ public class HurtHealBehavior : EntityBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Hurt/Heal", "Lose or gain health; below zero health, object will die",
         "Properties:\n•  \"Amount\": Change in health. Positive heals, negative hurts.\n"
-        + "•  \"Rate\": Seconds between successive hurt/heals. 0 means health will only change once when behavior is enabled.\n"
-        + "•  \"Min health\"/\"Max health\": Health will only change if it's within this range, and will never go outside this range.",
+        + "•  \"Rate\": Seconds between successive hurt/heals. 0 means health will only change once when behavior is activated.\n"
+        + "•  \"Keep within\": Health will only change if it's within this range, and will never go outside this range.",
         "heart", typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private float amount = -30;
     private float rate = 0;
-    private float minHealth = 0;
-    private float maxHealth = 9999;
+    private (float, float) healthRange = (0, 9999);
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -33,13 +32,24 @@ public class HurtHealBehavior : EntityBehavior
                 () => rate,
                 v => rate = (float)v,
                 PropertyGUIs.Time),
+            new Property("ran", "Keep within",
+                () => healthRange,
+                v => healthRange = ((float, float))v,
+                PropertyGUIs.FloatRange)
+        });
+    }
+
+    public override ICollection<Property> DeprecatedProperties()
+    {
+        return Property.JoinProperties(base.Properties(), new Property[]
+        {
             new Property("min", "Min health",
-                () => minHealth,
-                v => minHealth = (float)v,
+                () => healthRange.Item1,
+                v => healthRange.Item1 = (float)v,
                 PropertyGUIs.Float),
             new Property("max", "Max health",
-                () => maxHealth,
-                v => maxHealth = (float)v,
+                () => healthRange.Item2,
+                v => healthRange.Item2 = (float)v,
                 PropertyGUIs.Float)
         });
     }
@@ -49,8 +59,8 @@ public class HurtHealBehavior : EntityBehavior
         HurtHealComponent component = gameObject.AddComponent<HurtHealComponent>();
         component.amount = amount;
         component.rate = rate;
-        component.minHealth = minHealth;
-        component.maxHealth = maxHealth;
+        component.minHealth = healthRange.Item1;
+        component.maxHealth = healthRange.Item2;
         return component;
     }
 }

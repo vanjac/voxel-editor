@@ -21,7 +21,6 @@ public class MaterialSelectorGUI : GUIPanel
     private const float CATEGORY_BUTTON_HEIGHT = 110;
     private const string BACK_BUTTON = "Back";
     private const string PREVIEW_SUFFIX = "_preview";
-    private const string PREVIEW_SUFFIX_EXT = PREVIEW_SUFFIX + ".mat";
     private static readonly string[] COLOR_MODE_NAMES = new string[]
     {
         "Matte", "Glossy", "Metal", "Unlit", "Glass", "Add", "Multiply"
@@ -132,9 +131,9 @@ public class MaterialSelectorGUI : GUIPanel
         {
             highlightMaterial = ResourcesDirectory.MakeCustomMaterial(colorMode, allowAlpha);
             if (allowAlpha)
-                highlightMaterial.color = new Color(0, 0, 1, 0.25f);
+                ResourcesDirectory.SetCustomMaterialColor(highlightMaterial, new Color(0, 0, 1, 0.25f));
             else
-                highlightMaterial.color = Color.red;
+                ResourcesDirectory.SetCustomMaterialColor(highlightMaterial, Color.red);
             if (handler != null)
                 handler(highlightMaterial);
         }
@@ -161,7 +160,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (newMode != colorMode)
         {
             Material newMat = ResourcesDirectory.MakeCustomMaterial(newMode, allowAlpha);
-            newMat.color = highlightMaterial.color;
+            ResourcesDirectory.SetCustomMaterialColor(newMat, highlightMaterial.color);
             highlightMaterial = newMat;
             colorMode = newMode;
             if (handler != null)
@@ -175,7 +174,7 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker.includeAlpha = allowAlpha;
             colorPicker.handler = (Color c) =>
             {
-                highlightMaterial.color = c;
+                ResourcesDirectory.SetCustomMaterialColor(highlightMaterial, c);
                 if (handler != null)
                     handler(highlightMaterial);
             };
@@ -223,7 +222,10 @@ public class MaterialSelectorGUI : GUIPanel
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
             Material material = materials[i];
             bool selected;
-            if (material == highlightMaterial)
+            if (material == highlightMaterial
+                || (material != null && highlightMaterial != null
+                    && material.name.EndsWith(PREVIEW_SUFFIX)
+                    && material.name == highlightMaterial.name + PREVIEW_SUFFIX))
                 // highlight the button
                 selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
             else
@@ -247,33 +249,19 @@ public class MaterialSelectorGUI : GUIPanel
         if (materialDirectory != rootDirectory)
             materialSubDirectories.Add(BACK_BUTTON);
         materials = new List<Material>();
-        foreach (string dirEntry in ResourcesDirectory.dirList)
+        foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
-            if (dirEntry.Length <= 2)
+            if (dirEntry.parent != materialDirectory)
                 continue;
-            string newDirEntry = dirEntry.Substring(2);
-            int slash = newDirEntry.LastIndexOf("/");
-            if (slash != -1)
-            {
-                if (newDirEntry.Substring(0, slash) != materialDirectory)
-                    continue;
-            }
+            if (dirEntry.name.StartsWith("$"))
+                continue; // special alternate materials for game
+            if (dirEntry.isDirectory)
+                materialSubDirectories.Add(dirEntry.name);
             else
             {
-                if (materialDirectory != "")
-                    continue;
-            }
-
-            string fileName = newDirEntry.Substring(slash + 1);
-            if (fileName.StartsWith("$"))
-                continue; // special alternate materials for game
-            if (!fileName.Contains("."))
-                materialSubDirectories.Add(fileName);
-            else if (fileName.EndsWith(".mat"))
-            {
-                if (fileName.EndsWith(PREVIEW_SUFFIX_EXT))
+                if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))
                     materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
-                materials.Add(ResourcesDirectory.GetMaterial(newDirEntry));
+                materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
             }
         }
 
@@ -306,9 +294,8 @@ public class MaterialSelectorGUI : GUIPanel
         {
             if (material != null && material.name.EndsWith(PREVIEW_SUFFIX))
             {
-                string newPath = materialDirectory + "/"
-                    + material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
-                material = ResourcesDirectory.GetMaterial(newPath);
+                string newName = material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
+                material = ResourcesDirectory.FindMaterial(newName, true);
             }
             handler(material);
         }

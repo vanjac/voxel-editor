@@ -6,10 +6,14 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class GameTouchControl : MonoBehaviour
 {
+    private const float DRAG_THRESHOLD = 64;
+    private const float CARRY_DISTANCE = 3;
     private Camera cam;
     private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
+    private Vector2 lookTouchStart;
     private TapComponent touchedTapComponent;
+    private CarryableComponent carriedComponent;
     public Joystick joystick;
 
     void OnEnable()
@@ -37,6 +41,7 @@ public class GameTouchControl : MonoBehaviour
         }
         if (cam == null)
             return; // sometimes null for a few cycles
+        RaycastHit hit;
         bool setAxes = false;
         for (int i = 0; i < Input.touchCount; i++)
         {
@@ -46,17 +51,20 @@ public class GameTouchControl : MonoBehaviour
                 && GUIPanel.PanelContainingPoint(touch.position) == null)
             {
                 if (touchedTapComponent != null)
+                {
                     touchedTapComponent.TapEnd();
+                    touchedTapComponent = null;
+                }
                 lookTouchId = touch.fingerId;
+                lookTouchStart = touch.position;
 
-                RaycastHit hit;
-                if (Physics.Raycast(cam.ScreenPointToRay(touch.position), out hit))
+                if (TapRaycast(touch.position, out hit))
                 {
                     TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
-                    if (hitTapComponent != null)
+                    if (hitTapComponent != null && hit.distance <= hitTapComponent.maxDistance)
                     {
                         touchedTapComponent = hitTapComponent;
-                        touchedTapComponent.TapStart(PlayerComponent.instance, hit.distance);
+                        touchedTapComponent.TapStart(PlayerComponent.instance);
                     }
                 }
             }
@@ -75,12 +83,53 @@ public class GameTouchControl : MonoBehaviour
                 setAxes = true;
                 hAxis.Update(touch.deltaPosition.x * 150f / cam.pixelHeight);
                 vAxis.Update(touch.deltaPosition.y * 150f / cam.pixelHeight);
+                if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+                    && touchedTapComponent != null)
+                {
+                    // check for early cancel (tap left component)
+                    if (TapRaycast(touch.position, out hit))
+                    {
+                        TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
+                        if (hitTapComponent != touchedTapComponent || hit.distance > touchedTapComponent.maxDistance)
+                        {
+                            touchedTapComponent.TapEnd();
+                            touchedTapComponent = null;
+                        }
+                    }
+                    else
+                    {
+                        touchedTapComponent.TapEnd();
+                        touchedTapComponent = null;
+                    }
+                }
                 if (touch.phase == TouchPhase.Ended && touchedTapComponent != null)
                 {
                     touchedTapComponent.TapEnd();
                     touchedTapComponent = null;
                 }
-            }
+                if (touch.phase == TouchPhase.Ended
+                    && (touch.position - lookTouchStart).magnitude / GUIPanel.scaleFactor < DRAG_THRESHOLD)
+                {
+                    if (TapRaycast(touch.position, out hit))
+                    {
+                        CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
+                        if (hitCarryable != null && hitCarryable.enabled)
+                        {
+                            if (hitCarryable.IsCarried())
+                            {
+                                hitCarryable.Throw(PlayerComponent.instance);
+                            }
+                            else if (hit.distance <= CARRY_DISTANCE)
+                            {
+                                if (carriedComponent != null && carriedComponent.IsCarried())
+                                    carriedComponent.Drop();
+                                hitCarryable.Carry(PlayerComponent.instance);
+                                carriedComponent = hitCarryable;
+                            }
+                        }
+                    }
+                }
+            }  // end if touch.fingerId == lookTouchId
         }
         if (!setAxes)
         {
@@ -88,5 +137,12 @@ public class GameTouchControl : MonoBehaviour
             hAxis.Update(0);
             vAxis.Update(0);
         }
+    }
+
+    private bool TapRaycast(Vector2 touchPosition, out RaycastHit hit)
+    {
+        return Physics.Raycast(cam.ScreenPointToRay(touchPosition), out hit,
+            Mathf.Infinity, Physics.DefaultRaycastLayers,
+            QueryTriggerInteraction.Ignore);
     }
 }

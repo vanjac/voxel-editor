@@ -140,6 +140,8 @@ public abstract class GUIPanel : MonoBehaviour
         {
             scroll += scrollVelocity * Time.deltaTime;
             scrollVelocity *= .92f;
+            if (scroll.y < 0)
+                scroll.y = 0;  // fix scroll bar disappearing
         }
 
         if (title != "")

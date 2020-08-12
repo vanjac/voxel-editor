@@ -109,4 +109,9 @@ public class WorldProperties : PropertiesObject
                 PropertyGUIs.Color)
         };
     }
+
+    public ICollection<Property> DeprecatedProperties()
+    {
+        return System.Array.Empty<Property>();
+    }
 }

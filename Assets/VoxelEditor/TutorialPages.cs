@@ -10,8 +10,8 @@ public class Tutorials
             "Welcome! This is a brief tutorial that will guide you through the app. "
             + "You can access this tutorial and others at any time. Press the right arrow to continue."),
         () => new SimpleTutorialPage(
-            "Right now you are looking at the interior of a room. Two walls are hidden so you can see inside. "
-            + "The green person marks the player location."),
+            "Right now you're looking at the interior of a room. Two walls are hidden so you can see inside. "
+            + "The player is standing in the center."),
         () => new TutorialIntroNavigation(),
         () => new TutorialIntroSelectFace(),
         () => new TutorialIntroPull(),
@@ -25,7 +25,10 @@ public class Tutorials
             "These buttons appear at the top of the screen, based on context.",
             "Tutorials/toolbar_buttons", width:1536, height:798),
         () => new SimpleTutorialPage(
-            "Good luck! You can access more tutorials by choosing Help in the menu.")
+            "That's enough to get started! You can access more tutorials by choosing Help in the menu."),
+        () => new SimpleTutorialPage(
+            "Also check out the video tutorials on YouTube and the subreddit. "
+            + "There are links in the main menu.")
     };
 
     public static TutorialPageFactory[] PAINT_TUTORIAL = new TutorialPageFactory[]
@@ -142,9 +145,11 @@ public class Tutorials
             "Here are three floors with an elevator connecting them. "
             + "Your task is to make the elevator move when you press the buttons."),
         () => new SimpleTutorialPage(
+            "(This tutorial will not check if you completed each step correctly. Good luck!)"),
+        () => new SimpleTutorialPage(
             "We’ll start by making the Up button on the first floor work. <i>Give it a Tap sensor.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Now give the elevator a Toggle sensor, and connect the On input to the Up button.</i>"),
+            "<i>Now select the elevator, give it a Toggle sensor, and connect the On input to the Up button.</i>"),
         () => new SimpleTutorialPage(
             "<i>Finally, use a Move behavior to make the elevator go up only when its sensor is On.</i>"),
         () => new SimpleTutorialPage(
@@ -155,26 +160,24 @@ public class Tutorials
             "The elevator needs to stop when it reaches the next floor. There are multiple ways to do this. "
             + "One way is to make it turn off after 5 seconds..."),
         () => new SimpleTutorialPage(
-            "<i>Find the hidden room near the elevator shaft.</i> "
-            + "This room will never be seen in the game, so it's a good place to hide extra logic components."),
-        () => new SimpleTutorialPage(
-            "<i>Select the green ball. Give it a Delay sensor. "
-            + "Connect the input to the elevator and change the On time to 5.</i>"),
-        () => new SimpleTutorialPage(
-            "<i>Now select the elevator, and connect its Off input to the green ball.</i>"),
+            "<i>Replace the elevator's sensor with Pulse. "
+            + "Change the On time to 5, and connect the input to the Up button.</i>"),
         () => new SimpleTutorialPage(
             "<i>Play your game.</i> The elevator should stop on the second floor. Why does it do this?"),
         () => new SimpleTutorialPage(
             "We have one functioning button, but there are still three more. <i>Give them all Tap sensors.</i> "
             + "We'll make the second Up button work next..."),
         () => new SimpleTutorialPage(
-            "The elevator’s Toggle sensor only allows one input, but we have two Up buttons."
+            "The elevator’s Pulse sensor only allows one input, but we have two Up buttons."
             + " We need to merge them into a single input..."),
+        () => new SimpleTutorialPage(
+            "<i>Find the hidden room near the elevator shaft.</i> "
+            + "This room will never be seen in the game, so it's a good place to hide extra logic components."),
         () => new SimpleTutorialPage(
             "<i>In the hidden room, select the Up arrow cube. "
             + "Give it a Threshold sensor, and connect two inputs to both of the Up buttons.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Now select the elevator. Change its On input to the Up arrow cube in the hidden room.</i>"),
+            "<i>Now select the elevator. Change the sensor input to the Up arrow cube in the hidden room.</i>"),
         () => new SimpleTutorialPage(
             "<i>Play your game.</i> Both Up arrows should function correctly. Why does this work?"),
         () => new SimpleTutorialPage(
@@ -182,21 +185,22 @@ public class Tutorials
             + "going up, going down, and stopped. But sensors can only be On/Off..."),
         () => new SimpleTutorialPage(
             "To solve this, we use Targeted Behaviors. "
-            + "Remember that these behaviors use their host object to turn on/off, but act upon a Target object."),
+            + "Remember these behaviors use their host object to turn on/off, but act on a Target object."),
         () => new SimpleTutorialPage(
             "<i>First, connect the hidden Down arrow cube to the two Down buttons, just like the Up arrow cube.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Next, select the blue ball. Give it a Toggle sensor and connect the On input to the Down arrow cube.</i>"),
+            "<i>Next, select the red ball. Give it a Pulse sensor with On time = 5, and connect the input to the Down arrow cube.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Now tap Add Behavior. In the behavior menu, tap the \"Target\" button and select the elevator as the target. "
-            + "Then select the Move behavior.</i>"),
+            "<i>Now tap Add Behavior. In the behavior menu, tap \"Target\" and select the elevator as the target. "
+            + "Then choose the Move behavior.</i>"),
         () => new SimpleTutorialPage(
             "<i>Make the move behavior go Down only when the sensor is On.</i> "
-            + "The sensor of the blue ball will turn it on/off, but the Elevator will move!"),
+            + "The sensor of the red ball will turn it on/off, but the Elevator will move!"),
         () => new SimpleTutorialPage(
-            "<i>Play the game and try the Down button.</i> The elevator should go down, but not stop when it gets to the bottom."),
+            "<i>Play the game and try the Down buttons.</i> The elevator should go down and stop at each floor. You're done!"),
         () => new SimpleTutorialPage(
-            "The last step is to stop the elevator after going down one floor. See if you can figure out how, using the red ball.")
+            "How could you improve this elevator? Add more floors? Make it go faster? "
+            + "Add sliding doors? See what you can come up with!")
     };
 
     public static TutorialPageFactory[] ADVANCED_GAME_LOGIC_TUTORIAL_2 = new TutorialPageFactory[]

@@ -2,6 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class HUDCounter
+{
+    private readonly string text;
+    private int lastValue = -1;
+    private float changeTime = -10f;
+    private bool negativeChange;
+
+    public HUDCounter(string text)
+    {
+        this.text = text;
+    }
+
+    public void Update(int value)
+    {
+        if (lastValue != -1 && lastValue != value)
+        {
+            changeTime = Time.time;
+            negativeChange = value < lastValue;
+        }
+        lastValue = value;
+        Display();
+    }
+
+    public void Display()
+    {
+        Color baseColor = GUI.color;
+        if (Time.time - changeTime < 1.0)
+        {
+            if (negativeChange)
+                GUI.color *= Color.Lerp(Color.red, Color.white, Time.time - changeTime);
+            else
+                GUI.color *= Color.Lerp(Color.green, Color.white, Time.time - changeTime);
+        }
+        ActionBarGUI.ActionBarLabel(text + lastValue);
+        GUI.color = baseColor;
+    }
+}
+
 // based on MenuOverflowGUI
 public class PauseGUI : GUIPanel
 {
@@ -12,9 +50,8 @@ public class PauseGUI : GUIPanel
     private bool paused = false;
     private bool wasAlive = false;
 
-    private float lastHealth = 100f;
-    bool hurt; // hurt animation if true, heal if false
-    private float healthChangeTime = -10f;
+    private HUDCounter healthCounter;
+    private HUDCounter scoreCounter;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -29,6 +66,8 @@ public class PauseGUI : GUIPanel
     void Start()
     {
         GUIPanel.topPanel = this;
+        healthCounter = new HUDCounter("Health: ");
+        scoreCounter = new HUDCounter("Score: ");
     }
 
     public override void OnEnable()
@@ -56,27 +95,14 @@ public class PauseGUI : GUIPanel
         if (player != null)
         {
             wasAlive = true;
-            if (player.health != lastHealth)
-            {
-                healthChangeTime = Time.time;
-                hurt = player.health < lastHealth;
-                lastHealth = player.health;
-            }
 
-            Color baseColor = GUI.color;
-            if (Time.time - healthChangeTime < 1.0)
-            {
-                if (hurt)
-                    GUI.color *= Color.Lerp(Color.red, Color.white, Time.time - healthChangeTime);
-                else
-                    GUI.color *= Color.Lerp(Color.green, Color.white, Time.time - healthChangeTime);
-            }
-            ActionBarGUI.ActionBarLabel("Health: " + (int)(player.health));
-            GUI.color = baseColor;
+            healthCounter.Update((int)player.health);
+            scoreCounter.Update(player.score);
         }
         else if (wasAlive)
         {
             ActionBarGUI.ActionBarLabel("you died :(");
+            scoreCounter.Display();
         }
 
         //ActionBarGUI.ActionBarLabel((int)(1.0f / Time.smoothDeltaTime) + " FPS");

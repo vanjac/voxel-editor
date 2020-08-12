@@ -11,9 +11,9 @@ public class SoundBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Sound", "Play a sound",
-        "•  One-shot mode plays the entire sound every time the sensor turns on. "
+        "•  One-shot mode plays the entire sound every time the behavior is active. "
         + "Multiple copies can play at once. Fades have no effect.\n"
-        + "•  In Background mode the sound is always playing, but muted when the sensor is off.\n\n"
+        + "•  In Background mode the sound is always playing, but muted when the behavior is inactive.\n\n"
         + "Supported formats: MP3, WAV, OGG, AIF, XM, IT",
         "volume-high", typeof(SoundBehavior));
 
@@ -61,6 +61,7 @@ public class SoundBehavior : EntityBehavior
         component.volume = volume / 100.0f;
         component.fadeIn = fadeIn;
         component.fadeOut = fadeOut;
+        component.spatial = false;
         component.Init();
         return component;
     }
@@ -92,8 +93,10 @@ public class SoundPlayer : AudioPlayer
 public class SoundComponent : BehaviorComponent
 {
     public EmbeddedData soundData;
-    public float volume, fadeIn, fadeOut;
+    public float volume, fadeIn, fadeOut, minDistance, maxDistance;
+    public bool spatial;
     public PlayMode playMode;
+    public SpatialSoundMode spatialMode;
 
     private AudioSource audioSource;
     private bool fadingIn, fadingOut;
@@ -103,6 +106,12 @@ public class SoundComponent : BehaviorComponent
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.volume = 0;
         audioSource.loop = playMode == PlayMode.LOOP || playMode == PlayMode.BKGND;
+        audioSource.spatialBlend = spatial ? 1.0f : 0.0f;
+        if (spatial)
+        {
+            audioSource.minDistance = minDistance;
+            audioSource.spread = spatialMode == SpatialSoundMode.AMBIENT ? 180 : 0;
+        }
         audioSource.playOnAwake = false;
 
         if (soundData.bytes.Length == 0)
@@ -149,8 +158,14 @@ public class SoundComponent : BehaviorComponent
         if (playMode == PlayMode.BKGND)
             audioSource.Play();
 
+        Transform listener = GameObject.FindObjectOfType<AudioListener>().transform;
         while (true)
         {
+            if (spatial)
+            {
+                float sqrDist = (this.transform.position - listener.position).sqrMagnitude;
+                audioSource.mute = sqrDist > (maxDistance * maxDistance);
+            }
             if (fadingIn)
             {
                 if (fadeIn == 0)

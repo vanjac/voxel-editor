@@ -162,7 +162,7 @@ public class MessagePackWorldReader : WorldFileReader
         }
     }
 
-    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool alpha)
+    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool overlay)
     {
         if (matDict.ContainsKey(FileKeys.MATERIAL_NAME))
         {
@@ -182,9 +182,9 @@ public class MessagePackWorldReader : WorldFileReader
             {
                 Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
                 if (matDict.ContainsKey(FileKeys.MATERIAL_ALPHA))
-                    alpha = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
-                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
-                mat.color = color;
+                    overlay = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
+                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, overlay);
+                ResourcesDirectory.SetCustomMaterialColor(mat, color);
                 return mat;
             }
             else
@@ -263,7 +263,8 @@ public class MessagePackWorldReader : WorldFileReader
 
                 bool foundProp = false;
                 Property prop = new Property(null, null, null, null, null);
-                foreach (Property checkProp in obj.Properties())
+                foreach (Property checkProp in Property.JoinIterateProperties(
+                    obj.Properties(), obj.DeprecatedProperties()))
                 {
                     if (checkProp.id == id)
                     {

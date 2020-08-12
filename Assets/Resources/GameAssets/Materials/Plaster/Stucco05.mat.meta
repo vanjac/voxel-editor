@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 31ecbad05cc756b479ffb475836a2e1a
-timeCreated: 1529095659
-licenseType: Free
+labels:
+- Sound_plaster
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 2100000

@@ -28,7 +28,7 @@ public class InputThresholdSensor : Sensor
         }
     }
 
-    public int threshold = 1;
+    private int threshold = 1;
     private Input[] inputs = new Input[0];
 
     public override PropertiesObjectType ObjectType()

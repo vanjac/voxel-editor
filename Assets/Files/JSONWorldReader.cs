@@ -189,11 +189,11 @@ public class JSONWorldReader : WorldFileReader
             if (matObject["color"] != null)
             {
                 Color color = ReadColor(matObject["color"].AsArray);
-                bool alpha = color.a != 1;
+                bool overlay = color.a != 1;
                 if (matObject["alpha"] != null)
-                    alpha = matObject["alpha"].AsBool; // new with version 4
-                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, alpha);
-                mat.color = color;
+                    overlay = matObject["alpha"].AsBool; // new with version 4
+                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, overlay);
+                ResourcesDirectory.SetCustomMaterialColor(mat, color);
                 return mat;
             }
             else
@@ -280,7 +280,8 @@ public class JSONWorldReader : WorldFileReader
 
                 bool foundProp = false;
                 Property prop = new Property(null, null, null, null, null);
-                foreach (Property checkProp in obj.Properties())
+                foreach (Property checkProp in Property.JoinIterateProperties(
+                    obj.Properties(), obj.DeprecatedProperties()))
                 {
                     if (checkProp.name == name)
                     {

@@ -12,12 +12,21 @@ If you have any questions, feedback, or suggestions, please send me an email:
 
 SOURCES:
 
-Materials from Poliigon.com, FreePBR.com, 3dtextures.me, spiralgraphics.biz (Genetica)
-Skies from Sky5X One (Unity Asset Store)
-Space spheremap from NASA 3D Resources
-Icons from materialdesignicons.com
-Roboto font, used for UI: https://fonts.google.com/specimen/Roboto
-Cooper Black font, used for character overlays
+Images:
+    Materials from Poliigon.com, FreePBR.com, 3dtextures.me, spiralgraphics.biz (Genetica)
+    Skies from Sky5X One (Unity Asset Store)
+    Space spheremap from NASA
+    Icons from materialdesignicons.com
+
+Fonts:
+    Roboto
+    Designed by Christian Robertson. From Google.
+
+    Segoe UI Symbol
+    © 2018 Microsoft Corporation. All Rights Reserved.
+
+    Cooper Black
+    Designed by Oswald Bruce Cooper. From Adobe Originals.
 
 Assets from Unity Standard Assets:
     Water (Basic)

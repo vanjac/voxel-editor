@@ -17,7 +17,7 @@ public class BallObject : ObjectEntity
     public BallObject()
     {
         material = ResourcesDirectory.MakeCustomMaterial(ColorMode.MATTE, true);
-        material.color = Color.red;
+        ResourcesDirectory.SetCustomMaterialColor(material, Color.red);
     }
 
     public override PropertiesObjectType ObjectType()

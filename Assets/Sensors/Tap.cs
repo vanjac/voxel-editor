@@ -5,8 +5,8 @@ using UnityEngine;
 public class TapSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Tap", "Detect user tapping the object",
-        "Object doesn't have to be visible or solid to detect a tap.\n\n"
+        "Tap", "Detect player tapping the object",
+        "Object has to be solid to detect a tap, but it doesn't have to be visible.\n\n"
         + "Activator: the player",
         "gesture-tap", typeof(TapSensor));
 
@@ -42,13 +42,10 @@ public class TapComponent : SensorComponent
     private EntityComponent player;
 
     // called by GameTouchControl
-    public void TapStart(EntityComponent player, float distance)
+    public void TapStart(EntityComponent player)
     {
-        if (distance <= maxDistance)
-        {
-            this.player = player;
-            AddActivator(player);
-        }
+        this.player = player;
+        AddActivator(player);
     }
 
     // called by GameTouchControl

@@ -79,10 +79,17 @@ public class ActionBarGUI : TopPanelGUI
         }
     }
 
-    protected void EditGUI()
+    protected void EditGUI(string message = null)
     {
         if (!voxelArray.FacesAreSelected())
+        {
+            if (message != null)
+            {
+                GUILayout.FlexibleSpace();
+                ActionBarLabel(message);
+            }
             return;
+        }
 
         TutorialGUI.TutorialHighlight("paint");
         if (ActionBarButton(GUIIconSet.instance.paint))
@@ -131,6 +138,8 @@ public class ActionBarGUI : TopPanelGUI
             moveCount = Mathf.Abs(((MoveAxis)touchListener.movingAxis).moveCount);
         if (moveCount != 0)
             ActionBarLabel(moveCount.ToString());
+        else if (message != null)
+            ActionBarLabel(message);
         else
             ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
     }
@@ -158,8 +167,14 @@ public class ActionBarGUI : TopPanelGUI
                 selectMenu.depth = 1;
                 selectMenu.items = new OverflowMenuGUI.MenuItem[]
                 {
+                    new OverflowMenuGUI.MenuItem("Draw", GUIIconSet.instance.draw, () => {
+                        DrawSelectInterface();
+                    }),
                     new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
                         SelectByPaintInterface();
+                    }),
+                    new OverflowMenuGUI.MenuItem("Fill Paint", GUIIconSet.instance.fill, () => {
+                        FillPaintInterface();
                     }),
                     new OverflowMenuGUI.MenuItem("With Tag", GUIIconSet.instance.entityTag, () => {
                         SelectByTagInterface();
@@ -257,5 +272,25 @@ public class ActionBarGUI : TopPanelGUI
                 return;
             voxelArray.SelectAllWithPaint(paint);
         };
+    }
+
+    private void FillPaintInterface()
+    {
+        FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
+        facePicker.voxelArray = voxelArray;
+        facePicker.message = "Tap to fill paint...";
+        facePicker.onlyFaces = true;
+        facePicker.clearStoredSelection = false;
+        facePicker.pickAction = () =>
+        {
+            voxelArray.FillSelectPaint();
+        };
+    }
+
+    private void DrawSelectInterface()
+    {
+        DrawSelectGUI drawSelect= gameObject.AddComponent<DrawSelectGUI>();
+        drawSelect.voxelArray = voxelArray;
+        drawSelect.touchListener = touchListener;
     }
 }

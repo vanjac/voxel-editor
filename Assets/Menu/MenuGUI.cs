@@ -133,15 +133,30 @@ public class MenuGUI : GUIPanel
     {
         if (name.Length == 0)
             return;
+        if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+        {
+            DialogGUI.ShowMessageDialog(gameObject,
+                "That name contains a special character which is not allowed.");
+            return;
+        }
         string path = WorldFiles.GetNewWorldPath(name);
         if (File.Exists(path))
         {
             DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
             return;
         }
-        using (FileStream fileStream = File.Create(path))
+        try
         {
-            fileStream.Write(template.bytes, 0, template.bytes.Length);
+            using (FileStream fileStream = File.Create(path))
+            {
+                fileStream.Write(template.bytes, 0, template.bytes.Length);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            DialogGUI.ShowMessageDialog(gameObject, "Error creating world file");
+            Debug.LogError(ex);
+            return;
         }
         UpdateWorldList();
 

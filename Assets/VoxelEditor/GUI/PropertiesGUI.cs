@@ -76,7 +76,7 @@ class StoredPropertiesObject : PropertiesObject
                 {
                     GUILayout.BeginHorizontal();
                     PropertyGUIs.AlignedLabel(property);
-                    if (GUILayout.Button("different"))
+                    if (GUILayout.Button("different", GUIStyleSet.instance.buttonSmall))
                     {
                         // set all properties to one value
                         property.setter(firstProperty.getter());
@@ -102,6 +102,11 @@ class StoredPropertiesObject : PropertiesObject
     public ICollection<Property> Properties()
     {
         return properties;
+    }
+
+    public ICollection<Property> DeprecatedProperties()
+    {
+        return System.Array.Empty<Property>();
     }
 }
 
@@ -351,8 +356,6 @@ public class PropertiesGUI : LeftPanelGUI
                 {
                     Substance clone = (Substance)(singleSelectedEntity.Clone());
                     clone.defaultPaint = voxelArray.GetSelectedPaint();
-                    clone.defaultPaint.addSelected = false;
-                    clone.defaultPaint.storedSelected = false;
                     voxelArray.substanceToCreate = clone;
                     var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
                     createGUI.voxelArray = voxelArray;

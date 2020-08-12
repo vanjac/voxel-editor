@@ -44,6 +44,11 @@ public class InCameraComponent : SensorComponent
 
     void Update()
     {
+        if (PlayerComponent.instance == null)
+        {
+            ClearActivators();
+            return;
+        }
         bool inRange = (PlayerComponent.instance.transform.position
             - transform.position).magnitude <= maxDistance;
         if (visible > 0 && inRange)

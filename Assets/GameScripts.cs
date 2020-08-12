@@ -34,7 +34,7 @@ public class GameScripts
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new WaterBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("Overlays/water/WaterBasicDaytime");
+                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("WaterBasicDaytime", true);
                 return substance;
             }),
         new PropertiesObjectType("Trigger",
@@ -46,7 +46,7 @@ public class GameScripts
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.GetMaterial("Overlays/Invisible");
+                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("Invisible", true);
                 return substance;
             }),
         new PropertiesObjectType("Glass",
@@ -59,7 +59,8 @@ public class GameScripts
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
                 substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
+                ResourcesDirectory.SetCustomMaterialColor(
+                    substance.defaultPaint.overlay, new Color(1, 1, 1, 0.25f));
                 return substance;
             })
     };
@@ -72,11 +73,13 @@ public class GameScripts
         InputThresholdSensor.objectType,
         ToggleSensor.objectType,
         PulseSensor.objectType,
+        RandomPulseSensor.objectType,
         DelaySensor.objectType,
-        MotionSensor.objectType,
         TapSensor.objectType,
+        MotionSensor.objectType,
         InRangeSensor.objectType,
-        InCameraSensor.objectType
+        InCameraSensor.objectType,
+        CheckScoreSensor.objectType
     };
 
     public static BehaviorType[] behaviors = new BehaviorType[]
@@ -91,13 +94,16 @@ public class GameScripts
 
         HurtHealBehavior.objectType,
         CloneBehavior.objectType,
+        ScoreBehavior.objectType,
 
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
+        CarryableBehavior.objectType,
         WaterBehavior.objectType,
         ForceBehavior.objectType,
 
-        SoundBehavior.objectType
+        SoundBehavior.objectType,
+        Sound3DBehavior.objectType
     };
 
     public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics", "Sound" };
@@ -120,17 +126,20 @@ public class GameScripts
         {
             HurtHealBehavior.objectType,
             CloneBehavior.objectType,
+            ScoreBehavior.objectType,
         },
         new BehaviorType[]
         {
             SolidBehavior.objectType,
             PhysicsBehavior.objectType,
+            CarryableBehavior.objectType,
             WaterBehavior.objectType,
             ForceBehavior.objectType
         },
         new BehaviorType[]
         {
-            SoundBehavior.objectType
+            SoundBehavior.objectType,
+            Sound3DBehavior.objectType
         }
     };
 
@@ -156,7 +165,7 @@ public class GameScripts
             () => {
                 var ball = new BallObject();
                 Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                lightMat.color = new Color(1, 1, 1, 0.25f);
+                ResourcesDirectory.SetCustomMaterialColor(lightMat, new Color(1, 1, 1, 0.25f));
                 PropertiesObjectType.SetProperty(ball, "mat", lightMat);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
@@ -169,7 +178,7 @@ public class GameScripts
             () => {
                 var ball = new BallObject();
                 Material neuronMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                neuronMat.color = new Color(.09f, .38f, .87f, .25f);
+                ResourcesDirectory.SetCustomMaterialColor(neuronMat, new Color(.09f, .38f, .87f, .25f));
                 PropertiesObjectType.SetProperty(ball, "mat", neuronMat);
 
                 ball.sensor = new InputThresholdSensor();
@@ -181,6 +190,7 @@ public class GameScripts
                 PropertiesObjectType.SetProperty(light, "col", new Color(.09f, .38f, .87f));
                 PropertiesObjectType.SetProperty(light, "siz", 2.0f);
                 PropertiesObjectType.SetProperty(light, "int", 3.0f);
+                PropertiesObjectType.SetProperty(light, "hal", true);
                 ball.behaviors.Add(light);
 
                 return ball;

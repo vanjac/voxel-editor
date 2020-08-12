@@ -13,6 +13,7 @@ public class EntityPickerGUI : ActionBarGUI
 
     public override void OnEnable()
     {
+        // copied from CreateSubstanceGUI
         base.OnEnable();
         stealFocus = true;
         GetComponent<PropertiesGUI>().normallyOpen = false; // hide properties panel
@@ -20,6 +21,7 @@ public class EntityPickerGUI : ActionBarGUI
 
     public override void OnDisable()
     {
+        // copied from CreateSubstanceGUI
         base.OnDisable();
         GetComponent<PropertiesGUI>().normallyOpen = true; // show properties panel
     }

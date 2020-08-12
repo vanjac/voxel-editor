@@ -35,6 +35,7 @@ public class PlayerObject : ObjectEntity
 public class PlayerComponent : DynamicEntityComponent
 {
     public static PlayerComponent instance;
+    public int score = 0;
 
     void Awake()
     {
