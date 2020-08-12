@@ -882,8 +882,7 @@ public class VoxelArrayEditor : VoxelArray
         bool temporarilyBlockPushingANewSubstance = false;
 
         // reuse arrays for each face
-        VoxelEdge[] movingEdges = new VoxelEdge[4];
-        var bevelsToUpdate = new HashSet<VoxelEdgeReference>();
+        bool[] movingBevels = new bool[4];
 
         for (int i = 0; i < selectedThings.Count; i++)
         {
@@ -946,10 +945,11 @@ public class VoxelArrayEditor : VoxelArray
             VoxelFace movingFace = oldVoxel.faces[faceI];
             movingFace.addSelected = false;
             Substance movingSubstance = oldVoxel.substance;
+            Voxel.BevelType movingBevelType = oldVoxel.bevelType;
             for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
             {
                 int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                movingEdges[faceEdgeNum++] = oldVoxel.edges[edgeI];
+                movingBevels[faceEdgeNum] = oldVoxel.edges[edgeI].hasBevel;
             }
 
             bool blocked = false; // is movement blocked?
@@ -957,11 +957,7 @@ public class VoxelArrayEditor : VoxelArray
 
             if (pushing)
             {
-                for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                {
-                    int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                    AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
-                }
+                // all bevels will be deleted when voxel is cleared
                 for (int sideNum = 0; sideNum < 4; sideNum++)
                 {
                     int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
@@ -981,8 +977,8 @@ public class VoxelArrayEditor : VoxelArray
                             sideVoxel.faces[oppositeSideFaceI].addSelected = false;
                             foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
                             {
-                                sideVoxel.edges[edgeI] = adjacentSideVoxel.edges[edgeI];
-                                bevelsToUpdate.Add(new VoxelEdgeReference(sideVoxel, edgeI));
+                                BevelEdge(new VoxelEdgeReference(sideVoxel, edgeI), adjacentSideVoxel.edges[edgeI].hasBevel,
+                                    adjacentSideVoxel.bevelType);
                             }
                         }
                         else
@@ -991,25 +987,12 @@ public class VoxelArrayEditor : VoxelArray
                         }
                         voxelsToUpdate.Add(sideVoxel);
                     }
-                    else
-                    {
-                        // side will be deleted when voxel is cleared but we'll remove/update the bevels now
-                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
-                        {
-                            AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
-                        }
-                    }
+                    // otherwise, side will be deleted when voxel is cleared
                 }
 
                 if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
                 {
                     blocked = true;
-                    // make sure any concave edges are cleared
-                    for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                    {
-                        int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
-                        AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
-                    }
                 }
                 oldVoxel.Clear();
                 if (substanceToCreate != null && !temporarilyBlockPushingANewSubstance)
@@ -1026,7 +1009,7 @@ public class VoxelArrayEditor : VoxelArray
                 for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                 {
                     int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                    AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
+                    BevelEdge(new VoxelEdgeReference(oldVoxel, edgeI), false);
                 }
                 if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
                 {
@@ -1052,8 +1035,8 @@ public class VoxelArrayEditor : VoxelArray
                             newVoxel.faces[sideFaceI].addSelected = false;
                             foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
                             {
-                                newVoxel.edges[edgeI] = oldVoxel.edges[edgeI];
-                                bevelsToUpdate.Add(new VoxelEdgeReference(newVoxel, edgeI));
+                                BevelEdge(new VoxelEdgeReference(newVoxel, edgeI), oldVoxel.edges[edgeI].hasBevel,
+                                    oldVoxel.bevelType);
                             }
                         }
                         else
@@ -1062,9 +1045,10 @@ public class VoxelArrayEditor : VoxelArray
                     else
                     {
                         // delete side
-                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
+                        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                         {
-                            AdjustClearEdge(new VoxelEdgeReference(sideVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
+                            int edgeI = Voxel.FaceSurroundingEdge(oppositeSideFaceI, faceEdgeNum);
+                            BevelEdge(new VoxelEdgeReference(sideVoxel, edgeI), false);
                         }
                         sideVoxel.faces[oppositeSideFaceI].Clear();
                         voxelsToUpdate.Add(sideVoxel);
@@ -1081,7 +1065,7 @@ public class VoxelArrayEditor : VoxelArray
                         {
                             int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
                             // clear any bevels on the face that will be deleted
-                            AdjustClearEdge(new VoxelEdgeReference(blockingVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
+                            BevelEdge(new VoxelEdgeReference(blockingVoxel, edgeI), false);
                         }
                         blockingVoxel.faces[oppositeFaceI].Clear();
                         voxelsToUpdate.Add(blockingVoxel);
@@ -1109,13 +1093,10 @@ public class VoxelArrayEditor : VoxelArray
                     for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                     {
                         int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                        var edgeRef = new VoxelEdgeReference(newVoxel, edgeI);
-                        newVoxel.edges[edgeI] = movingEdges[faceEdgeNum];
                         // if the face was pushed/pulled to be coplanar with surrounding faces,
-                        // UpdateBevel will automatically catch this, and clear the bevel along with the
-                        // surrounding face's bevel (with alsoBevelOppositeFlatEdge=true)
-                        UpdateBevel(edgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
-                            dontUpdateThisVoxel: true, alsoBevelOppositeFlatEdge: true);
+                        // UpdateBevel will automatically catch this
+                        BevelEdge(new VoxelEdgeReference(newVoxel, edgeI), movingBevels[faceEdgeNum],
+                            movingBevelType);
                     }
                 }
             }
@@ -1126,13 +1107,6 @@ public class VoxelArrayEditor : VoxelArray
                 if (pulling && substanceToCreate == null)
                     newVoxel.substance = movingSubstance;
             }
-
-            foreach (VoxelEdgeReference edgeRef in bevelsToUpdate)
-            {
-                UpdateBevel(edgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
-                    dontUpdateThisVoxel: true, alsoBevelOppositeFlatEdge: true);
-            }
-            bevelsToUpdate.Clear();
 
             if (newSubstanceBlock != null)
             {
@@ -1164,25 +1138,7 @@ public class VoxelArrayEditor : VoxelArray
             substanceToCreate = null;
 
         AutoSetMoveAxesEnabled();
-    } // end Adjust()
-
-    // fix for an issue when clearing concave edges on a face that will be deleted
-    private void AdjustClearEdge(VoxelEdgeReference edgeRef,
-            HashSet<VoxelEdgeReference> bevelsToUpdate, HashSet<Voxel> voxelsToUpdate)
-    {
-        edgeRef.voxel.edges[edgeRef.edgeI].Clear();
-        bevelsToUpdate.Add(edgeRef);
-        if (GetEdgeType(edgeRef) == EdgeType.CONCAVE)
-        {
-            // the face might be deleted later, so UpdateBevel won't know to update the other halves
-            var oppEdgeRef = OpposingEdgeRef(edgeRef);
-            if (oppEdgeRef.voxel != null)
-            {
-                bevelsToUpdate.Add(oppEdgeRef);
-                voxelsToUpdate.Add(oppEdgeRef.voxel);
-            }
-        }
-    }
+    } // end SingleAdjust()
 
     private Voxel CreateSubstanceBlock(Vector3Int position, Substance substance, VoxelFace faceTemplate)
     {
@@ -1272,119 +1228,37 @@ public class VoxelArrayEditor : VoxelArray
 
     public void BevelSelectedEdges(Voxel.BevelType bevelType, bool concave)
     {
-        var voxelsToUpdate = new HashSet<Voxel>();
         foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
         {
             if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
                 continue;
-            if (bevelType == Voxel.BevelType.NONE)
-                edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = false;
-            else
-            {
-                edgeRef.voxel.bevelType = bevelType;
+            if (bevelType != Voxel.BevelType.NONE)
                 edgeRef.voxel.concaveBevel = concave;
-                edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = true;
-            }
-            UpdateBevel(edgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true, dontUpdateThisVoxel: false);
+            BevelEdge(edgeRef, bevelType != Voxel.BevelType.NONE, bevelType);
+            VoxelModified(edgeRef.voxel);
         }
-        foreach (Voxel voxel in voxelsToUpdate)
-            VoxelModified(voxel);
     }
 
-    // Call this function after an edgeRef's bevel settings have been set. It will:
-    //   - Clear the bevel if the edge is empty or flat
-    //   - Update the caps on the edge and adjacent edges
-    //   - Add all modified voxels to voxelsToUpdate (except given voxel with dontUpdateThisVoxel=true)
-    //   - Optionally repeat all of this for the other "half" of the edge
-    private void UpdateBevel(VoxelEdgeReference edgeRef, HashSet<Voxel> voxelsToUpdate, bool alsoBevelOppositeConcaveEdge,
-        bool dontUpdateThisVoxel, bool alsoBevelOppositeFlatEdge = false, EdgeType? type = null)
+    private void BevelEdge(VoxelEdgeReference edgeRef, bool bevel,
+        Voxel.BevelType bevelType = Voxel.BevelType.NONE)
     {
         Voxel voxel = edgeRef.voxel;
-        int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
-        var minFaceDir = Voxel.DirectionForFaceI(minFaceI).ToInt();
-        Voxel minVoxel = VoxelArray.VoxelAtAdjacent(voxel.position + minFaceDir, voxel);
-        Voxel maxVoxel = VoxelArray.VoxelAtAdjacent(voxel.position - minFaceDir, voxel);
-        var minEdgeRef = new VoxelEdgeReference(minVoxel, edgeRef.edgeI);
-        var maxEdgeRef = new VoxelEdgeReference(maxVoxel, edgeRef.edgeI);
-
-        if (type == null)
-            type = GetEdgeType(edgeRef);
-
-        if (type == EdgeType.EMPTY || type == EdgeType.FLAT)
+        if (!bevel || !voxel.EdgeIsConvex(edgeRef.edgeI))
         {
-            voxel.edges[edgeRef.edgeI].Clear();
+            voxel.edges[edgeRef.edgeI].hasBevel = false;
         }
-
-        // update adjacent edges if they are beveled (for caps)
-        // TODO this often won't be necessary
-        if (minVoxel != null && minEdgeRef.edge.hasBevel)
+        else
         {
-            voxelsToUpdate.Add(minVoxel);
-            if (!minVoxel.EdgeIsConvex(minEdgeRef.edgeI))
-            {
-                // probably concave, unless the bevel hasn't been cleared yet
-                var oppMinEdgeRef = OpposingEdgeRef(minEdgeRef);
-                if (oppMinEdgeRef.voxel != null && oppMinEdgeRef.edge.hasBevel)
-                    voxelsToUpdate.Add(oppMinEdgeRef.voxel);
-            }
-        }
-        if (maxVoxel != null && maxEdgeRef.edge.hasBevel)
-        {
-            voxelsToUpdate.Add(maxVoxel);
-            if (!maxVoxel.EdgeIsConvex(maxEdgeRef.edgeI))
-            {
-                // probably concave, unless the bevel hasn't been cleared yet
-                var oppMaxEdgeRef = OpposingEdgeRef(maxEdgeRef);
-                if (oppMaxEdgeRef.voxel != null && oppMaxEdgeRef.edge.hasBevel)
-                    voxelsToUpdate.Add(oppMaxEdgeRef.voxel);
-            }
-        }
-
-        if (edgeRef.edge.hasBevel && EdgeIsCorner(type.Value))
-        {
+            voxel.edges[edgeRef.edgeI].hasBevel = true;
+            if (bevelType != Voxel.BevelType.NONE)
+                voxel.bevelType = bevelType; 
             // don't allow full convex bevels to overlap with other bevels
             foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
             {
-                if (voxel.EdgeIsEmpty(unconnectedEdgeI))
-                    continue;
-                var unconnectedEdgeRef = new VoxelEdgeReference(voxel, unconnectedEdgeI);
-                if (unconnectedEdgeRef.edge.hasBevel)
-                {
-                    if (type == EdgeType.CONVEX || voxel.EdgeIsConvex(unconnectedEdgeI))
-                    {
-                        // full convex bevel overlaps with another bevel! this won't work!
-                        voxel.edges[unconnectedEdgeI].hasBevel = false;
-                        UpdateBevel(unconnectedEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
-                            dontUpdateThisVoxel: true);
-                    }
-                }
+                if (voxel.EdgeIsConvex(unconnectedEdgeI))
+                    voxel.edges[unconnectedEdgeI].hasBevel = false;
             }
         }
-
-        if (alsoBevelOppositeConcaveEdge && type == EdgeType.CONCAVE)
-        {
-            var oppEdgeRef = OpposingEdgeRef(edgeRef);
-            if (oppEdgeRef.voxel != null)
-            {
-                oppEdgeRef.voxel.bevelType = edgeRef.voxel.bevelType;
-                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].hasBevel = edgeRef.edge.hasBevel;
-                UpdateBevel(oppEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
-                    dontUpdateThisVoxel: false, type: type);
-            }
-        }
-        else if (alsoBevelOppositeFlatEdge && type == EdgeType.FLAT)
-        {
-            var oppEdgeRef = OpposingFlatEdgeRef(edgeRef);
-            if (oppEdgeRef.voxel != null)
-            {
-                oppEdgeRef.voxel.bevelType = edgeRef.voxel.bevelType;
-                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].hasBevel = edgeRef.edge.hasBevel;
-                UpdateBevel(oppEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
-                    dontUpdateThisVoxel: false, type: type);
-            }
-        }
-        if (!dontUpdateThisVoxel)
-            voxelsToUpdate.Add(voxel);
     }
 
     // return null voxel if edge doesn't exist or substances don't match
