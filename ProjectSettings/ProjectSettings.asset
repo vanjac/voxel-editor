@@ -173,7 +173,7 @@ PlayerSettings:
     Android: com.vantjac.voxel
     iPhone: com.vantjac.voxel
   buildNumber:
-    iPhone: 2
+    iPhone: 3
   AndroidBundleVersionCode: 28
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
@@ -644,7 +644,7 @@ PlayerSettings:
   monoEnv: 
   splashScreenBackgroundSourceLandscape: {fileID: 0}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
-  blurSplashScreenBackground: 1
+  blurSplashScreenBackground: 0
   spritePackerPolicy: 
   webGLMemorySize: 256
   webGLExceptionSupport: 1
@@ -668,7 +668,8 @@ PlayerSettings:
     17: MOBILE_INPUT
     20: MOBILE_INPUT
     22: MOBILE_INPUT
-  platformArchitecture: {}
+  platformArchitecture:
+    iPhone: 1
   scriptingBackend:
     Android: 1
   il2cppCompilerConfiguration: {}
