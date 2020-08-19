@@ -183,14 +183,19 @@ public class EditorFile : MonoBehaviour
             }
             else
             {
+                System.IO.Stream stream = null;
                 try
                 {
-                    importWorldHandler(ShareMap.GetImportStream());
+                    stream = ShareMap.GetImportStream();
+                    importWorldHandler(stream);
                 }
                 catch (System.Exception e)
                 {
                     DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "An error occurred while reading the file.");
                     Debug.LogError(e);
+                    if (stream != null)
+                        stream.Close();
+                    ShareMap.ClearFileWaitingToImport();
                 }
             }
         }

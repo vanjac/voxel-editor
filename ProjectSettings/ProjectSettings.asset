@@ -173,7 +173,7 @@ PlayerSettings:
     Android: com.vantjac.voxel
     iPhone: com.vantjac.voxel
   buildNumber:
-    iPhone: 2
+    iPhone: 3
   AndroidBundleVersionCode: 28
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
@@ -210,7 +210,7 @@ PlayerSettings:
   tvOSTopShelfImageLayers2x: []
   tvOSTopShelfImageWideLayers: []
   tvOSTopShelfImageWideLayers2x: []
-  iOSLaunchScreenType: 3
+  iOSLaunchScreenType: 0
   iOSLaunchScreenPortrait: {fileID: 0}
   iOSLaunchScreenLandscape: {fileID: 0}
   iOSLaunchScreenBackgroundColor:
@@ -219,7 +219,7 @@ PlayerSettings:
   iOSLaunchScreenFillPct: 100
   iOSLaunchScreenSize: 1
   iOSLaunchScreenCustomXibPath: 
-  iOSLaunchScreeniPadType: 3
+  iOSLaunchScreeniPadType: 0
   iOSLaunchScreeniPadImage: {fileID: 0}
   iOSLaunchScreeniPadBackgroundColor:
     serializedVersion: 2
@@ -593,6 +593,7 @@ PlayerSettings:
   ps4ShareFilePath: 
   ps4ShareOverlayImagePath: 
   ps4PrivacyGuardImagePath: 
+  ps4ExtraSceSysFile: 
   ps4NPtitleDatPath: 
   ps4RemotePlayKeyAssignment: -1
   ps4RemotePlayKeyMappingDir: 
@@ -635,13 +636,15 @@ PlayerSettings:
   ps4disableAutoHideSplash: 0
   ps4videoRecordingFeaturesUsed: 0
   ps4contentSearchFeaturesUsed: 0
+  ps4CompatibilityPS5: 0
+  ps4GPU800MHz: 1
   ps4attribEyeToEyeDistanceSettingVR: 0
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
   splashScreenBackgroundSourceLandscape: {fileID: 0}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
-  blurSplashScreenBackground: 1
+  blurSplashScreenBackground: 0
   spritePackerPolicy: 
   webGLMemorySize: 256
   webGLExceptionSupport: 1
@@ -665,7 +668,8 @@ PlayerSettings:
     17: MOBILE_INPUT
     20: MOBILE_INPUT
     22: MOBILE_INPUT
-  platformArchitecture: {}
+  platformArchitecture:
+    iPhone: 1
   scriptingBackend:
     Android: 1
   il2cppCompilerConfiguration: {}

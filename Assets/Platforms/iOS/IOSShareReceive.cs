@@ -57,7 +57,7 @@ public class IOSShareReceive
         string oldFilePath = GetFileToImport();
         if (oldFilePath == null)
             throw new System.Exception("No file waiting to import!");
-        return File.Open(oldFilePath, FileMode.Open);
+        return File.Open(oldFilePath, FileMode.Open, FileAccess.Read);
     }
 }
 
