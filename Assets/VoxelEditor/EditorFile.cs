@@ -80,6 +80,14 @@ public class EditorFile : MonoBehaviour
                     + "N-Space has been updated with a new behavior for sound effects and music. Try it out!\n\n"
                     + "Also, check the main menu for links to video tutorials and a subreddit.");
             }
+            else if (CompareVersions(lastVersion, "1.3.2") == -1)
+            {
+                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!\n\n"
+                    + "3 new behaviors: Carryable, 3D Sound, and Score\n"
+                    + "2 new sensors: Random Pulse, and Check Score\n"
+                    + "There are now built-in sound effects for walking on different surfaces\n\n"
+                    + "... and many more improvements!");
+            }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
 
