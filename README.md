@@ -29,7 +29,7 @@ N-Space has built-in documentation and tutorials, which you can access through t
 
 ## Building the app yourself
 
-The app has been tested with Unity 2018.4.X on Android and iOS. There is little platform-specific code (only for importing/exporting files). Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
+The app has been tested with Unity 2019.4.X on Android and iOS. There is little platform-specific code (only for importing/exporting files). Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
 This repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), [3dtextures](3dtextures.me), and [Genetica](http://spiralgraphics.biz/genetica.htm). You can purchase/download them yourself - look in the folders inside `Assets/GameAssets` for a list of `.meta` files which correspond to the missing textures. It is also possible to test N-Space without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
 
@@ -44,25 +44,20 @@ The app has four scenes:
 
 These notes are mostly for me, but you can read them too.
 
-- Install latest release of Unity 2018, with build tools for Android/iOS.
+- Install latest release of Unity 2019, with build tools for Android/iOS.
 - Install Blender
 - Clone repo. **Don't open in Unity yet!!**
-- Optional: Download/copy textures from Poliigon, FreePBR, and Genetica (see above)
+- Optional: Download/copy textures from Poliigon, FreePBR, 3dtextures, and Genetica (see above)
 - Open project in Unity, and switch platform to Android
 - Open Player settings and browse for the keystore location.
 - Open Project Settings > Editor and switch Unity Remote device to Android
-
-### For each build
-
-- Enter keystore password
-- Change Device Filter
 
 ## More info
 
 [MIT License](https://github.com/vanjac/voxel-editor/blob/master/LICENSE.txt)
 
-See [credits.txt](https://github.com/vanjac/voxel-editor/blob/master/Assets/Menu/credits.txt) for sources of some assets.
+See [credits.txt](https://github.com/vanjac/voxel-editor/blob/master/Assets/Menu/credits.txt) for sources of assets and libraries.
 
 ## Contact me:
 
-vantjac.dev@gmail.com
+vantjac [dot] dev [at] gmail [dot] com
