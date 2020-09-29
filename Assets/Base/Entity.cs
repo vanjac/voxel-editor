@@ -805,6 +805,7 @@ public abstract class DynamicEntityComponent : EntityComponent
     public static readonly Vector3 KILL_LOCATION = new Vector3(9999, 9999, 9999);
 
     public float health;
+    public bool isCharacter = false;
     private Vector3 lastRigidbodyPosition;
     private Vector3 cumulativeRigidbodyTranslate;
     private Quaternion lastRigidbodyRotation;

@@ -6,7 +6,7 @@ public class MoveBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Move", "Move in a direction or toward an object",
-        "If both Solid and Physics behaviors are active, object will not be able to pass through other objects. "
+        "If both Solid and Physics/Character behaviors are active, object will not be able to pass through other objects. "
         + "Increase the Density property of the Physics behavior to increase the object's pushing strength. Gravity has no effect while Move is active.",
         "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
