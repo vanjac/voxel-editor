@@ -461,6 +461,11 @@ public class PropertyGUIs
         _TargetCustom(property, allowObjectTarget: false, allowVertical: false);
     }
 
+    public static void Target6Directions(Property property)
+    {
+        _TargetCustom(property, allowObjectTarget: false);
+    }
+
     public static void TargetDirectionFilter(Property property)
     {
         var target = (Target)property.value;
