@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBehavior : PhysicsBehavior
+public class CharacterBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Character",
@@ -12,6 +12,8 @@ public class CharacterBehavior : PhysicsBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
+    protected float density = 2.0f;
+
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
@@ -19,13 +21,13 @@ public class CharacterBehavior : PhysicsBehavior
 
     public override ICollection<Property> Properties()
     {
-        var properties = new List<Property>();
-        foreach (var p in base.Properties())
+        return Property.JoinProperties(base.Properties(), new Property[]
         {
-            if (p.id != "gra")
-                properties.Add(p);
-        }
-        return properties;
+            new Property("den", "Density",
+                () => density,
+                v => density = (float)v,
+                PropertyGUIs.Float)
+        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)
