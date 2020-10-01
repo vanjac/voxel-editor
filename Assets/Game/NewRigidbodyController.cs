@@ -207,7 +207,11 @@ public class NewRigidbodyController : MonoBehaviour
             foreach (MotionComponent motionComponent in hitInfo.transform.GetComponents<MotionComponent>())
             {
                 if (motionComponent.enabled)
+                {
                     move += motionComponent.GetTranslateFixed();
+                    Vector3 relPos = transform.position - motionComponent.transform.position;
+                    move += (motionComponent.GetRotateFixed() * relPos) - relPos;
+                }
             }
             move.y = 0;
             if (move != Vector3.zero)
