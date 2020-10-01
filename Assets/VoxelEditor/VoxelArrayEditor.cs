@@ -942,8 +942,7 @@ public class VoxelArrayEditor : VoxelArray
                 continue;
             }
 
-            VoxelFace movingFace = oldVoxel.faces[faceI];
-            movingFace.addSelected = false;
+            VoxelFace movingFace = oldVoxel.faces[faceI].PaintOnly();
             Substance movingSubstance = oldVoxel.substance;
             Voxel.BevelType movingBevelType = oldVoxel.bevelType;
             for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
@@ -996,21 +995,20 @@ public class VoxelArrayEditor : VoxelArray
                 }
                 oldVoxel.Clear();
                 if (substanceToCreate != null && !temporarilyBlockPushingANewSubstance)
-                    newSubstanceBlock = CreateSubstanceBlock(oldPos, substanceToCreate, movingFace);
+                {
+                    BuildBlock(oldVoxel, substanceToCreate, movingFace);
+                    newSubstanceBlock = oldVoxel;
+                }
             }
             else if (pulling && substanceToCreate != null)
             {
-                newSubstanceBlock = CreateSubstanceBlock(newPos, substanceToCreate, movingFace);
+                BuildBlock(newVoxel, substanceToCreate, movingFace);
+                newSubstanceBlock = newVoxel;
                 oldVoxel.faces[faceI].addSelected = false;
                 blocked = true;
             }
             else if (pulling)
             {
-                for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                {
-                    int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                    BevelEdge(new VoxelEdgeReference(oldVoxel, edgeI), false);
-                }
                 if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
                 {
                     // blocked by object
@@ -1045,12 +1043,7 @@ public class VoxelArrayEditor : VoxelArray
                     else
                     {
                         // delete side
-                        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                        {
-                            int edgeI = Voxel.FaceSurroundingEdge(oppositeSideFaceI, faceEdgeNum);
-                            BevelEdge(new VoxelEdgeReference(sideVoxel, edgeI), false);
-                        }
-                        sideVoxel.faces[oppositeSideFaceI].Clear();
+                        ClearFaceAndBevels(sideVoxel, oppositeSideFaceI);
                         voxelsToUpdate.Add(sideVoxel);
                     }
                 }
@@ -1061,17 +1054,11 @@ public class VoxelArrayEditor : VoxelArray
                     if (movingSubstance == blockingVoxel.substance)
                     {
                         blocked = true;
-                        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                        {
-                            int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
-                            // clear any bevels on the face that will be deleted
-                            BevelEdge(new VoxelEdgeReference(blockingVoxel, edgeI), false);
-                        }
-                        blockingVoxel.faces[oppositeFaceI].Clear();
+                        ClearFaceAndBevels(blockingVoxel, oppositeFaceI);
                         voxelsToUpdate.Add(blockingVoxel);
                     }
                 }
-                oldVoxel.faces[faceI].Clear();
+                ClearFaceAndBevels(oldVoxel, faceI);
             }
             else // sliding
             {
@@ -1140,21 +1127,21 @@ public class VoxelArrayEditor : VoxelArray
         AutoSetMoveAxesEnabled();
     } // end SingleAdjust()
 
-    private Voxel CreateSubstanceBlock(Vector3Int position, Substance substance, VoxelFace faceTemplate)
+    private void BuildBlock(Voxel voxel, Substance substance, VoxelFace faceTemplate)
     {
-        if (!substance.defaultPaint.IsEmpty())
+        if (substance != null && !substance.defaultPaint.IsEmpty())
             faceTemplate = substance.defaultPaint;
-        Voxel voxel = VoxelAt(position, true);
         if (!voxel.IsEmpty())
         {
             if (voxel.substance == substance)
-                return voxel;
-            return null; // doesn't work
+                return;  // already done
+            CarveBlock(voxel, faceTemplate);  // carve then build
         }
         voxel.substance = substance;
         for (int faceI = 0; faceI < 6; faceI++)
         {
-            Voxel adjacentVoxel = VoxelArray.VoxelAtAdjacent(position + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
+            Voxel adjacentVoxel = VoxelArray.VoxelAtAdjacent(
+                voxel.position + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
             if (adjacentVoxel == null || adjacentVoxel.substance != substance)
             {
                 // create boundary
@@ -1163,11 +1150,38 @@ public class VoxelArrayEditor : VoxelArray
             else
             {
                 // remove boundary
-                adjacentVoxel.faces[Voxel.OppositeFaceI(faceI)].Clear();
-                voxel.faces[faceI].Clear();
+                ClearFaceAndBevels(adjacentVoxel, Voxel.OppositeFaceI(faceI));
+                ClearFaceAndBevels(voxel, faceI);
             }
         }
-        return voxel;
+    }
+
+    private void CarveBlock(Voxel voxel, VoxelFace faceTemplate)
+    {
+        if (voxel.IsEmpty())
+            return;  // already done
+        voxel.Clear();
+        for (int faceI = 0; faceI < 6; faceI++)
+        {
+            int oppositeFaceI = Voxel.OppositeFaceI(faceI);
+            Voxel adjacentVoxel = VoxelArray.VoxelAtAdjacent(
+                voxel.position + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
+            if (adjacentVoxel != null && adjacentVoxel.faces[oppositeFaceI].IsEmpty())
+            {
+                // create boundary
+                adjacentVoxel.faces[oppositeFaceI] = faceTemplate;
+            }
+        }
+    }
+
+    private void ClearFaceAndBevels(Voxel voxel, int faceI)
+    {
+        voxel.faces[faceI].Clear();
+        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
+        {
+            int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
+            BevelEdge(new VoxelEdgeReference(voxel, edgeI), false);
+        }
     }
 
     private IEnumerable<int> FaceSurroundingEdgesAlongAxis(int faceI, int axis)
