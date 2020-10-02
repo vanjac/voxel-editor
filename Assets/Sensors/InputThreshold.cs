@@ -93,6 +93,7 @@ public class InputThresholdSensor : Sensor
             EntityReferencePropertyManager.Next(e);
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
             GUILayout.BeginVertical(GUI.skin.box);
+            GUI.color = baseColor;
             GUILayout.BeginHorizontal();
             GUILayout.Label(EntityReferencePropertyManager.GetName() + " ");
             GUILayout.FlexibleSpace();
@@ -110,7 +111,6 @@ public class InputThresholdSensor : Sensor
             }
             GUILayout.EndVertical();
         }
-        GUI.color = baseColor;
         if (inputToDelete != -1)
         {
             Input[] newInputs = new Input[inputs.Length - 1];

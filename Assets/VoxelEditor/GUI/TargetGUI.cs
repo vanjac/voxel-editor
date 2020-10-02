@@ -8,7 +8,7 @@ public class TargetGUI : GUIPanel
 
     public TargetHandler handler;
     public VoxelArrayEditor voxelArray;
-    public bool allowObjectTarget = true, allowNullTarget = false;
+    public bool allowObjectTarget = true, allowNullTarget = false, allowVertical = true;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -89,19 +89,22 @@ public class TargetGUI : GUIPanel
         }
         GUILayout.EndVertical();
 
-        GUI.color = baseColor * Color.green;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Up"))
+        if (allowVertical)
         {
-            handler(new Target(3));
-            Destroy(this);
+            GUI.color = baseColor * Color.green;
+            GUILayout.BeginVertical();
+            if (GUILayout.Button("Up"))
+            {
+                handler(new Target(3));
+                Destroy(this);
+            }
+            if (GUILayout.Button("Down"))
+            {
+                handler(new Target(2));
+                Destroy(this);
+            }
+            GUILayout.EndVertical();
         }
-        if (GUILayout.Button("Down"))
-        {
-            handler(new Target(2));
-            Destroy(this);
-        }
-        GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
         GUI.color = baseColor;

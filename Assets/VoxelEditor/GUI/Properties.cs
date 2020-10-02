@@ -61,6 +61,18 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
+    public static void DoubleToggle(Property property)
+    {
+        string[] names = property.name.Split('|');
+        var values = ((bool, bool))property.value;
+        var buttonStyle = GUIStyleSet.instance.buttonTab;
+        GUILayout.BeginHorizontal();
+        values.Item1 ^= GUIUtils.HighlightedButton(names[0], buttonStyle, values.Item1);
+        values.Item2 ^= GUIUtils.HighlightedButton(names[1], buttonStyle, values.Item2);
+        property.value = values;
+        GUILayout.EndHorizontal();
+    }
+
     public static void Enum(Property property)
     {
         System.Enum e = (System.Enum)property.value;
@@ -406,7 +418,8 @@ public class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static void Target(Property property)
+    public static void _TargetCustom(Property property,
+        bool allowObjectTarget=true, bool allowVertical=true)
     {
         var target = (Target)property.value;
         string targetString = target.ToString();
@@ -426,6 +439,8 @@ public class PropertyGUIs
             TargetGUI targetGUI = GUIManager.guiGameObject.AddComponent<TargetGUI>();
             targetGUI.title = property.name;
             targetGUI.voxelArray = VoxelArrayEditor.instance;
+            targetGUI.allowObjectTarget = allowObjectTarget;
+            targetGUI.allowVertical = allowVertical;
             targetGUI.handler = (Target newTarget) =>
             {
                 property.value = newTarget;
@@ -434,6 +449,21 @@ public class PropertyGUIs
         GUILayout.EndHorizontal();
 
         GUI.color = baseColor;
+    }
+
+    public static void Target(Property property)
+    {
+        _TargetCustom(property);
+    }
+
+    public static void Target4Directions(Property property)
+    {
+        _TargetCustom(property, allowObjectTarget: false, allowVertical: false);
+    }
+
+    public static void Target6Directions(Property property)
+    {
+        _TargetCustom(property, allowObjectTarget: false);
     }
 
     public static void TargetDirectionFilter(Property property)

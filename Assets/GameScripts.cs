@@ -86,6 +86,7 @@ public class GameScripts
     {
         MoveBehavior.objectType,
         SpinBehavior.objectType,
+        FaceTowardBehavior.objectType,
         TeleportBehavior.objectType,
         MoveWithBehavior.objectType,
 
@@ -98,6 +99,7 @@ public class GameScripts
 
         SolidBehavior.objectType,
         PhysicsBehavior.objectType,
+        CharacterBehavior.objectType,
         CarryableBehavior.objectType,
         WaterBehavior.objectType,
         ForceBehavior.objectType,
@@ -114,6 +116,7 @@ public class GameScripts
         {
             MoveBehavior.objectType,
             SpinBehavior.objectType,
+            FaceTowardBehavior.objectType,
             TeleportBehavior.objectType,
             MoveWithBehavior.objectType
         },
@@ -132,6 +135,7 @@ public class GameScripts
         {
             SolidBehavior.objectType,
             PhysicsBehavior.objectType,
+            CharacterBehavior.objectType,
             CarryableBehavior.objectType,
             WaterBehavior.objectType,
             ForceBehavior.objectType

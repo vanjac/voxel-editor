@@ -12,6 +12,7 @@ public class SpinBehavior : EntityBehavior
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
     private float speed = 50;
+    private Target axis = new Target(3);  // up
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -25,7 +26,11 @@ public class SpinBehavior : EntityBehavior
             new Property("vel", "Speed",
                 () => speed,
                 v => speed = (float)v,
-                PropertyGUIs.Float)
+                PropertyGUIs.Float),
+            new Property("axi", "Axis",
+                () => axis,
+                v => axis = (Target)v,
+                PropertyGUIs.Target6Directions)
         });
     }
 
@@ -33,6 +38,7 @@ public class SpinBehavior : EntityBehavior
     {
         SpinComponent spin = gameObject.AddComponent<SpinComponent>();
         spin.speed = speed;
+        spin.axis = axis;
         return spin;
     }
 }
@@ -40,9 +46,10 @@ public class SpinBehavior : EntityBehavior
 public class SpinComponent : MotionComponent
 {
     public float speed;
+    public Target axis;
 
     public override Quaternion GetRotateFixed()
     {
-        return Quaternion.AngleAxis(speed * Time.fixedDeltaTime, Vector3.up);
+        return Quaternion.AngleAxis(speed * Time.fixedDeltaTime, axis.DirectionFrom(transform.position));
     }
 }

@@ -12,7 +12,7 @@ public class PhysicsBehavior : EntityBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
-    private float density = 0.5f;
+    protected float density = 0.5f;
     private bool gravity = true;
 
     public override BehaviorType BehaviorObjectType()
@@ -37,7 +37,7 @@ public class PhysicsBehavior : EntityBehavior
 
     public override Behaviour MakeComponent(GameObject gameObject)
     {
-        PhysicsComponent component = gameObject.AddComponent<PhysicsComponent>();
+        var component = gameObject.AddComponent<PhysicsComponent>();
         component.density = density;
         component.gravity = gravity;
         return component;
