@@ -952,16 +952,20 @@ public class VoxelArrayEditor : VoxelArray
                 BuildBlock(newVoxel, movingSubstance, adjustDirFaceI, movingFace, voxelsToUpdate);
                 if (substanceToCreate != null)
                     createdSubstance = true;
-            }  // otherwise sliding, do nothing
+            }
+            else  // sliding
+            {
+                if (!newVoxel.faces[faceI].IsEmpty() && newVoxel.substance == movingSubstance)
+                {
+                    newVoxel.faces[faceI] = movingFace;
+                }
+            }
 
             // in case it wasn't deleted
             oldVoxel.faces[faceI].addSelected = false;
 
             if (!newVoxel.faces[faceI].IsEmpty() && newVoxel.substance == movingSubstance)
             {
-                // move the face
-                if (substanceToCreate == null)
-                    newVoxel.faces[faceI] = movingFace;
                 newVoxel.faces[faceI].addSelected = true;
                 selectedThings[i] = new VoxelFaceReference(newVoxel, faceI);
                 if (pushing || pulling)
