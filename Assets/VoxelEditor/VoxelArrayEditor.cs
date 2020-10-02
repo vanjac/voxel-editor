@@ -987,47 +987,16 @@ public class VoxelArrayEditor : VoxelArray
                     continue;
                 }
 
-                for (int sideNum = 0; sideNum < 4; sideNum++)
-                {
-                    int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
-                    int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
-                    Voxel sideVoxel = VoxelArray.VoxelAtAdjacent(newPos + Voxel.DirectionForFaceI(sideFaceI).ToInt(), newVoxel);
-                    if (sideVoxel == null || sideVoxel.faces[oppositeSideFaceI].IsEmpty() || movingSubstance != sideVoxel.substance)
-                    {
-                        // add side
-                        // if possible, the new side should have the properties of the adjacent side
-                        if (!oldVoxel.faces[sideFaceI].IsEmpty())
-                        {
-                            newVoxel.faces[sideFaceI] = oldVoxel.faces[sideFaceI];
-                            newVoxel.faces[sideFaceI].addSelected = false;
-                            foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
-                            {
-                                BevelEdge(new VoxelEdgeReference(newVoxel, edgeI), oldVoxel.edges[edgeI].hasBevel,
-                                    oldVoxel.bevelType);
-                            }
-                        }
-                        else
-                            newVoxel.faces[sideFaceI] = movingFace;
-                    }
-                    else
-                    {
-                        // delete side
-                        ClearFaceAndBevels(sideVoxel, oppositeSideFaceI);
-                        voxelsToUpdate.Add(sideVoxel);
-                    }
-                }
-
                 Voxel blockingVoxel = VoxelArray.VoxelAtAdjacent(newPos + adjustDirection, newVoxel);
                 if (blockingVoxel != null && !blockingVoxel.faces[oppositeFaceI].IsEmpty())
                 {
                     if (movingSubstance == blockingVoxel.substance)
                     {
                         blocked = true;
-                        ClearFaceAndBevels(blockingVoxel, oppositeFaceI);
-                        voxelsToUpdate.Add(blockingVoxel);
                     }
                 }
-                ClearFaceAndBevels(oldVoxel, faceI);
+                
+                BuildBlock(newVoxel, movingSubstance, adjustDirFaceI, movingFace, voxelsToUpdate);
             }
             else // sliding
             {
@@ -1102,7 +1071,7 @@ public class VoxelArrayEditor : VoxelArray
         HashSet<Voxel> voxelsToUpdate)
     {
         if (substance != null && !substance.defaultPaint.IsEmpty())
-            faceTemplate = substance.defaultPaint;
+            faceTemplate = substance.defaultPaint;  // TODO
         if (!voxel.IsEmpty())
         {
             if (voxel.substance == substance)
@@ -1110,20 +1079,44 @@ public class VoxelArrayEditor : VoxelArray
             CarveBlock(voxel, adjustDirFaceI, faceTemplate, voxelsToUpdate);  // carve then build
         }
         voxel.substance = substance;
+
+        Vector3Int adjustDirection = Voxel.DirectionForFaceI(adjustDirFaceI).ToInt();
+        int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
+        Voxel adjacentVoxel = null;  // same as "oldVoxel"
+        if (adjustDirection != Vector3Int.zero)
+            adjacentVoxel = VoxelArray.VoxelAtAdjacent(voxel.position - adjustDirection, voxel);
+        if (adjacentVoxel != null && adjacentVoxel.substance != substance)
+            adjacentVoxel = null;
+
         for (int faceI = 0; faceI < 6; faceI++)
         {
-            Voxel adjacentVoxel = VoxelArray.VoxelAtAdjacent(
+            int oppositeFaceI = Voxel.OppositeFaceI(faceI);
+            Voxel sideVoxel = VoxelArray.VoxelAtAdjacent(
                 voxel.position + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
-            if (adjacentVoxel == null || adjacentVoxel.substance != substance)
+            if (sideVoxel == null || sideVoxel.faces[oppositeFaceI].IsEmpty()
+                || sideVoxel.substance != substance)
             {
                 // create boundary
-                voxel.faces[faceI] = faceTemplate;
+                // if possible, the new side should have the properties of the adjacent side
+                if (adjacentVoxel != null && !adjacentVoxel.faces[faceI].IsEmpty())
+                {
+                    voxel.faces[faceI] = adjacentVoxel.faces[faceI].PaintOnly();
+                    foreach (int edgeI in FaceSurroundingEdgesAlongAxis(faceI, adjustAxis))
+                    {
+                        BevelEdge(new VoxelEdgeReference(voxel, edgeI),
+                            adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
+                    }
+                }
+                else
+                {
+                    voxel.faces[faceI] = faceTemplate;
+                }
             }
             else
             {
                 // remove boundary
-                ClearFaceAndBevels(adjacentVoxel, Voxel.OppositeFaceI(faceI));
-                voxelsToUpdate.Add(adjacentVoxel);
+                ClearFaceAndBevels(sideVoxel, Voxel.OppositeFaceI(faceI));
+                voxelsToUpdate.Add(sideVoxel);
                 ClearFaceAndBevels(voxel, faceI);
             }
         }
@@ -1156,6 +1149,7 @@ public class VoxelArrayEditor : VoxelArray
                 sideVoxel.faces[oppositeFaceI] = adjacentVoxel.faces[oppositeFaceI].PaintOnly();
                 foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeFaceI, adjustAxis))
                 {
+                    // TODO: this are the old concave bevels
                     BevelEdge(new VoxelEdgeReference(sideVoxel, edgeI),
                         adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
                 }
