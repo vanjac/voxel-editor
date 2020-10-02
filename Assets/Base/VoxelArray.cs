@@ -293,31 +293,6 @@ public class VoxelArray : MonoBehaviour
             Debug.Log("This object wasn't in the voxel array!");
     }
 
-    // return success
-    public bool MoveObject(ObjectEntity obj, Vector3Int newPosition)
-    {
-        if (newPosition == obj.position)
-            return true;
-
-        Voxel newObjVoxel = VoxelAt(newPosition, true);
-        if (newObjVoxel.objectEntity != null)
-            return false;
-        newObjVoxel.objectEntity = obj;
-        // not necessary to call VoxelModified
-
-        Voxel oldObjVoxel = VoxelAt(obj.position, false);
-        if (oldObjVoxel != null)
-        {
-            oldObjVoxel.objectEntity = null;
-            VoxelModified(oldObjVoxel);
-        }
-        else
-            Debug.Log("This object wasn't in the voxel array!");
-        obj.position = newPosition;
-        ObjectModified(obj);
-        return true;
-    }
-
     public IEnumerable<ObjectEntity> IterateObjects()
     {
         foreach (ObjectEntity obj in objects)

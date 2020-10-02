@@ -889,18 +889,7 @@ public class VoxelArrayEditor : VoxelArray
             if (thing is ObjectMarker)
             {
                 var obj = ((ObjectMarker)thing).objectEntity;
-                Vector3Int objNewPos = obj.position + adjustDirection;
-                MoveObject(obj, objNewPos);
-
-                Voxel objNewVoxel = VoxelAt(objNewPos, false);
-                if (objNewVoxel != null && objNewVoxel.substance == null
-                    && !objNewVoxel.faces[oppositeAdjustDirFaceI].IsEmpty()
-                    && !objNewVoxel.faces[oppositeAdjustDirFaceI].addSelected)
-                {
-                    // carve a hole for the object if it's being pushed into a wall
-                    objNewVoxel.faces[oppositeAdjustDirFaceI].addSelected = true;
-                    selectedThings.Insert(i + 1, new VoxelFaceReference(objNewVoxel, oppositeAdjustDirFaceI));
-                }
+                PushObject(obj, adjustDirFaceI, voxelsToUpdate);
                 continue;
             }
             else if (!(thing is VoxelFaceReference))
@@ -943,10 +932,7 @@ public class VoxelArrayEditor : VoxelArray
                 if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
                 {
                     // blocked by object
-                    oldVoxel.faces[faceI].addSelected = false;
-                    selectedThings[i] = new VoxelFaceReference(null, -1);
-                    voxelsToUpdate.Add(oldVoxel);
-                    continue;
+                    PushObject(newVoxel.objectEntity, adjustDirFaceI, voxelsToUpdate);
                 }
                 
                 BuildBlock(newVoxel, movingSubstance, adjustDirFaceI, movingFace, voxelsToUpdate);
@@ -970,6 +956,7 @@ public class VoxelArrayEditor : VoxelArray
                 selectedThings[i] = new VoxelFaceReference(newVoxel, faceI);
                 if (pushing || pulling)
                 {
+                    // TODO: move to carve/build
                     for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                     {
                         int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
@@ -1014,7 +1001,7 @@ public class VoxelArrayEditor : VoxelArray
         AutoSetMoveAxesEnabled();
     } // end SingleAdjust()
 
-    // doesn't add voxel or adjacent to voxelsToUpdate
+    // TODO: doesn't add voxel or adjacent to voxelsToUpdate
     private void BuildBlock(Voxel voxel, Substance substance,
         int adjustDirFaceI, VoxelFace faceTemplate,
         HashSet<Voxel> voxelsToUpdate)
@@ -1138,6 +1125,42 @@ public class VoxelArrayEditor : VoxelArray
             if (Voxel.EdgeIAxis(edgeI) == axis)
                 yield return edgeI;
         }
+    }
+
+
+    // return success
+    public bool PushObject(ObjectEntity obj, int adjustDirFaceI, HashSet<Voxel> voxelsToUpdate)
+    {
+        Vector3Int adjustDirection = Voxel.DirectionForFaceI(adjustDirFaceI).ToInt();
+        int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
+
+        Vector3Int newPosition = obj.position + adjustDirection;
+        Voxel newObjVoxel = VoxelAt(newPosition, true);
+        // push walls and other objects out of the way
+        if (newObjVoxel.objectEntity != null)
+        {
+            PushObject(newObjVoxel.objectEntity, adjustDirFaceI, voxelsToUpdate);
+        }
+        else if (newObjVoxel.substance == null
+            && !newObjVoxel.faces[oppositeAdjustDirFaceI].IsEmpty())
+        {
+            // carve a hole for the object if it's being pushed into a wall
+            CarveBlock(newObjVoxel, adjustDirFaceI, newObjVoxel.faces[oppositeAdjustDirFaceI], voxelsToUpdate);
+        }
+        newObjVoxel.objectEntity = obj;
+        // not necessary to add to voxelsToUpdate
+
+        Voxel oldObjVoxel = VoxelAt(obj.position, false);
+        if (oldObjVoxel != null)
+        {
+            oldObjVoxel.objectEntity = null;
+            voxelsToUpdate.Add(oldObjVoxel);
+        }
+        else
+            Debug.Log("This object wasn't in the voxel array!");
+        obj.position = newPosition;
+        ObjectModified(obj);
+        return true;
     }
 
     public void RotateObjects(float amount)
