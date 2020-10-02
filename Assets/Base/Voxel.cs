@@ -396,6 +396,16 @@ public class Voxel
         return n % 4;
     }
 
+    public int FirstNonEmptyFace()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (!faces[i].IsEmpty())
+                return i;
+        }
+        return -1;
+    }
+
     public bool IsEmpty()
     {
         if (substance != null)
