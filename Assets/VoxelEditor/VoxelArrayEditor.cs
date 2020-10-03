@@ -839,6 +839,7 @@ public class VoxelArrayEditor : VoxelArray
         bool negativeAdjustAxis = adjustDirFaceI % 2 == 0;
 
         // sort selectedThings in order along the adjustDirection vector
+        // TODO: need to sort every time? is order maintained?
         selectedThings.Sort(delegate (Selectable a, Selectable b)
         {
             // positive means A is greater than B
@@ -1001,7 +1002,7 @@ public class VoxelArrayEditor : VoxelArray
         AutoSetMoveAxesEnabled();
     } // end SingleAdjust()
 
-    // TODO: doesn't add voxel or adjacent to voxelsToUpdate
+    // doesn't add given voxel to voxelsToUpdate
     private void BuildBlock(Voxel voxel, Substance substance,
         int adjustDirFaceI, VoxelFace faceTemplate,
         HashSet<Voxel> voxelsToUpdate)
@@ -1065,7 +1066,7 @@ public class VoxelArrayEditor : VoxelArray
         }
     }
 
-    // doesn't add voxel to voxelsToUpdate
+    // doesn't add given voxel to voxelsToUpdate
     private void CarveBlock(Voxel voxel, int adjustDirFaceI,
         VoxelFace faceTemplate, HashSet<Voxel> voxelsToUpdate)
     {
@@ -1092,7 +1093,6 @@ public class VoxelArrayEditor : VoxelArray
                 sideVoxel.faces[oppositeFaceI] = adjacentVoxel.faces[oppositeFaceI].PaintOnly();
                 foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeFaceI, adjustAxis))
                 {
-                    // TODO: this are the old concave bevels
                     BevelEdge(new VoxelEdgeReference(sideVoxel, edgeI),
                         adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
                 }
