@@ -909,7 +909,6 @@ public class VoxelArrayEditor : VoxelArray
             Substance movingSubstance = oldVoxel.substance;
             if (substanceToCreate != null)
                 movingSubstance = substanceToCreate;
-            Voxel.BevelType movingBevelType = oldVoxel.bevelType;
 
             if (pushing)
             {
