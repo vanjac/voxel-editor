@@ -829,6 +829,7 @@ public class VoxelArrayEditor : VoxelArray
 
     private void SingleAdjust(Vector3Int adjustDirection, HashSet<Voxel> voxelsToUpdate)
     {
+        // TODO: only once per adjust
         MergeStoredSelected();
         // now we can safely look only the addSelected property and the selectedThings list
         // and ignore the storedSelected property and the storedSelectedThings list
@@ -881,9 +882,6 @@ public class VoxelArrayEditor : VoxelArray
 
         bool createdSubstance = false;
 
-        // reuse arrays for each face
-        bool[] movingBevels = new bool[4];
-
         for (int i = 0; i < selectedThings.Count; i++)
         {
             Selectable thing = selectedThings[i];
@@ -912,11 +910,6 @@ public class VoxelArrayEditor : VoxelArray
             if (substanceToCreate != null)
                 movingSubstance = substanceToCreate;
             Voxel.BevelType movingBevelType = oldVoxel.bevelType;
-            for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-            {
-                int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                movingBevels[faceEdgeNum] = oldVoxel.edges[edgeI].hasBevel;
-            }
 
             if (pushing)
             {
@@ -955,18 +948,6 @@ public class VoxelArrayEditor : VoxelArray
             {
                 newVoxel.faces[faceI].addSelected = true;
                 selectedThings[i] = new VoxelFaceReference(newVoxel, faceI);
-                if (pushing || pulling)
-                {
-                    // TODO: move to carve/build
-                    for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                    {
-                        int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                        // if the face was pushed/pulled to be coplanar with surrounding faces,
-                        // UpdateBevel will automatically catch this
-                        BevelEdge(new VoxelEdgeReference(newVoxel, edgeI), movingBevels[faceEdgeNum],
-                            movingBevelType);
-                    }
-                }
             }
             else if (pushing && substanceToCreate != null)
             {
@@ -999,6 +980,7 @@ public class VoxelArrayEditor : VoxelArray
             substanceToCreate = null;
         }
 
+        // TODO: only once per adjust
         AutoSetMoveAxesEnabled();
     } // end SingleAdjust()
 
@@ -1019,19 +1001,20 @@ public class VoxelArrayEditor : VoxelArray
                 carveTemplate = voxel.faces[voxel.FirstNonEmptyFace()];  // TODO??
             CarveBlock(voxel, adjustDirFaceI, carveTemplate, voxelsToUpdate);  // carve then build
         }
+        // voxel is definitely empty now
 
         voxel.substance = substance;
         if (substance != null && !substance.defaultPaint.IsEmpty())
             faceTemplate = substance.defaultPaint;  // TODO
 
         Vector3Int adjustDirection = Voxel.DirectionForFaceI(adjustDirFaceI).ToInt();
-        int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
         Voxel adjacentVoxel = null;  // same as "oldVoxel"
         if (adjustDirection != Vector3Int.zero)
             adjacentVoxel = VoxelArray.VoxelAtAdjacent(voxel.position - adjustDirection, voxel);
         if (adjacentVoxel != null && adjacentVoxel.substance != substance)
             adjacentVoxel = null;
 
+        Voxel[] clearVoxels = new Voxel[6];  // TODO don't allocate?
         for (int faceI = 0; faceI < 6; faceI++)
         {
             int oppositeFaceI = Voxel.OppositeFaceI(faceI);
@@ -1045,8 +1028,9 @@ public class VoxelArrayEditor : VoxelArray
                 if (adjacentVoxel != null && !adjacentVoxel.faces[faceI].IsEmpty())
                 {
                     voxel.faces[faceI] = adjacentVoxel.faces[faceI].PaintOnly();
-                    foreach (int edgeI in FaceSurroundingEdgesAlongAxis(faceI, adjustAxis))
+                    for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                     {
+                        int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
                         BevelEdge(new VoxelEdgeReference(voxel, edgeI),
                             adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
                     }
@@ -1055,14 +1039,22 @@ public class VoxelArrayEditor : VoxelArray
                 {
                     voxel.faces[faceI] = faceTemplate;
                 }
+                clearVoxels[oppositeFaceI] = null;
             }
-            else
+            else  // face is filled with same substance
             {
-                // remove boundary
-                ClearFaceAndBevels(sideVoxel, Voxel.OppositeFaceI(faceI));
+                // remove boundary later
+                clearVoxels[oppositeFaceI] = sideVoxel;
                 voxelsToUpdate.Add(sideVoxel);
-                ClearFaceAndBevels(voxel, faceI);
             }
+        }
+
+        // clear faces only after adding faces
+        // because the bevels from these faces might be used
+        for (int i = 0; i < 6; i++)
+        {
+            if (clearVoxels[i] != null)
+                ClearFaceAndBevels(clearVoxels[i], i);
         }
     }
 
@@ -1073,7 +1065,7 @@ public class VoxelArrayEditor : VoxelArray
         if (voxel.IsEmpty())
             return;  // already done
         Vector3Int adjustDirection = Voxel.DirectionForFaceI(adjustDirFaceI).ToInt();
-        int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
+
         for (int faceI = 0; faceI < 6; faceI++)
         {
             if (!voxel.faces[faceI].IsEmpty())
@@ -1091,8 +1083,9 @@ public class VoxelArrayEditor : VoxelArray
                 && adjacentVoxel.substance == voxel.substance)
             {
                 sideVoxel.faces[oppositeFaceI] = adjacentVoxel.faces[oppositeFaceI].PaintOnly();
-                foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeFaceI, adjustAxis))
+                for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                 {
+                    int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
                     BevelEdge(new VoxelEdgeReference(sideVoxel, edgeI),
                         adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
                 }
@@ -1116,17 +1109,6 @@ public class VoxelArrayEditor : VoxelArray
             BevelEdge(new VoxelEdgeReference(voxel, edgeI), false);
         }
     }
-
-    private IEnumerable<int> FaceSurroundingEdgesAlongAxis(int faceI, int axis)
-    {
-        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-        {
-            int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-            if (Voxel.EdgeIAxis(edgeI) == axis)
-                yield return edgeI;
-        }
-    }
-
 
     // return success
     public bool PushObject(ObjectEntity obj, int adjustDirFaceI, HashSet<Voxel> voxelsToUpdate)
@@ -1256,28 +1238,6 @@ public class VoxelArrayEditor : VoxelArray
             opposingVoxel = null;
         int opposingEdgeI = Voxel.EdgeIAxis(edgeRef.edgeI) * 4 + ((edgeRef.edgeI + 2) % 4);
         return new VoxelEdgeReference(opposingVoxel, opposingEdgeI);
-    }
-
-    private VoxelEdgeReference OpposingFlatEdgeRef(VoxelEdgeReference edgeRef)
-    {
-        // find voxel next to this one
-        int faceA, faceB;
-        Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
-        int emptyFace = edgeRef.voxel.faces[faceA].IsEmpty() ? faceA : faceB;
-        int notEmptyFace = emptyFace == faceA ? faceB : faceA;
-        Voxel adjacentVoxel = VoxelArray.VoxelAtAdjacent(edgeRef.voxel.position
-            + Voxel.DirectionForFaceI(emptyFace).ToInt(), edgeRef.voxel);
-        if (adjacentVoxel != null && adjacentVoxel.substance == edgeRef.voxel.substance)
-        {
-            // find edge on adjacentVoxel connected to edgeRef
-            foreach (int otherEdgeI in FaceSurroundingEdgesAlongAxis(notEmptyFace,
-                Voxel.EdgeIAxis(edgeRef.edgeI)))
-            {
-                if (otherEdgeI != edgeRef.edgeI)
-                    return new VoxelEdgeReference(adjacentVoxel, otherEdgeI);
-            }
-        }
-        return new VoxelEdgeReference(null, -1);
     }
 
     public int GetSelectedFaceNormal()

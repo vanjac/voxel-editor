@@ -961,6 +961,8 @@ public class VoxelComponent : MonoBehaviour
     }
 
 
+    // TODO this might actually be bad
+    // https://stackoverflow.com/q/30205997
     private static float[] vertexPos = new float[3]; // reusable
     private static float[] vertexUVPos = new float[3];
     private void GenerateFaceVertices(Voxel voxel, int faceNum, FaceVertices faceVerts,
