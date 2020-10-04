@@ -819,21 +819,24 @@ public class VoxelArrayEditor : VoxelArray
 
     public void Adjust(Vector3Int adjustDirection, int count)
     {
+        MergeStoredSelected();
+        // now we can safely look only the addSelected property and the selectedThings list
+        // and ignore the storedSelected property and the storedSelectedThings list
+
         var voxelsToUpdate = new HashSet<Voxel>();
         for (int i = 0; i < count; i++)
             SingleAdjust(adjustDirection, voxelsToUpdate);
         foreach (Voxel voxel in voxelsToUpdate)
             if (voxel != null)
                 VoxelModified(voxel);
+
+        selectionChanged = true;
+        AutoSetMoveAxesEnabled();
     }
 
+    // only called by Adjust()
     private void SingleAdjust(Vector3Int adjustDirection, HashSet<Voxel> voxelsToUpdate)
     {
-        // TODO: only once per adjust
-        MergeStoredSelected();
-        // now we can safely look only the addSelected property and the selectedThings list
-        // and ignore the storedSelected property and the storedSelectedThings list
-
         int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
         int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
         int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
@@ -971,16 +974,12 @@ public class VoxelArrayEditor : VoxelArray
                     && ((VoxelFaceReference)thing).voxel == null)
                 selectedThings.RemoveAt(i);
         }
-        selectionChanged = true;
 
         if (substanceToCreate != null && createdSubstance)
         {
             substanceToCreate.defaultPaint.Clear();
             substanceToCreate = null;
         }
-
-        // TODO: only once per adjust
-        AutoSetMoveAxesEnabled();
     } // end SingleAdjust()
 
     // doesn't add given voxel to voxelsToUpdate
