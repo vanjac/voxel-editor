@@ -1062,12 +1062,22 @@ public class VoxelArrayEditor : VoxelArray
 
         for (int faceI = 0; faceI < 6; faceI++)
         {
+            Voxel sideVoxel = null;
             if (!voxel.faces[faceI].IsEmpty())
+            {
+                sideVoxel = VoxelAtAdjacent(voxel.position
+                    + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
+                if (sideVoxel == null || sideVoxel.IsEmpty())
                 continue;  // don't create boundary
+            }
+            // if the face is empty, need to create a barrier even if the voxel doesn't exist
 
             int oppositeFaceI = Voxel.OppositeFaceI(faceI);
-            Voxel sideVoxel = VoxelAt(
-                voxel.position + Voxel.DirectionForFaceI(faceI).ToInt(), true);
+            if (sideVoxel == null)
+                sideVoxel = VoxelAt(voxel.position
+                    + Voxel.DirectionForFaceI(faceI).ToInt(), true);
+            if (sideVoxel.substance != voxel.substance || !sideVoxel.faces[oppositeFaceI].IsEmpty())
+                continue;
 
             // if possible, the new side should have the properties of the adjacent side
             Voxel adjacentVoxel = null;
