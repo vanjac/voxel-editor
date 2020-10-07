@@ -1015,47 +1015,41 @@ public class VoxelArrayEditor : VoxelArray
         if (adjacentVoxel != null && adjacentVoxel.substance != substance)
             adjacentVoxel = null;
 
-        Voxel[] clearVoxels = new Voxel[6];  // TODO don't allocate?
+        // first create boundaries on all 6 sides
+        for (int faceI = 0; faceI < 6; faceI++)
+        {
+            // if possible, the new side should have the properties of the adjacent side
+            if (adjacentVoxel != null && !adjacentVoxel.faces[faceI].IsEmpty())
+            {
+                voxel.faces[faceI] = adjacentVoxel.faces[faceI].PaintOnly();
+                for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
+                {
+                    int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
+                    BevelEdge(new VoxelEdgeReference(voxel, edgeI),
+                        adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
+                }
+            }
+            else
+            {
+                voxel.faces[faceI] = faceTemplate;
+            }
+        }
+
+        // then remove the boundaries that don't actually have to be there
+        // this is done in two steps so we don't delete a face before paints/bevels have been copied
         for (int faceI = 0; faceI < 6; faceI++)
         {
             int oppositeFaceI = Voxel.OppositeFaceI(faceI);
             Voxel sideVoxel = VoxelArray.VoxelAtAdjacent(
                 voxel.position + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
-            if (sideVoxel == null || sideVoxel.faces[oppositeFaceI].IsEmpty()
-                || sideVoxel.substance != substance)
-            {
-                // create boundary
-                // if possible, the new side should have the properties of the adjacent side
-                if (adjacentVoxel != null && !adjacentVoxel.faces[faceI].IsEmpty())
-                {
-                    voxel.faces[faceI] = adjacentVoxel.faces[faceI].PaintOnly();
-                    for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                    {
-                        int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                        BevelEdge(new VoxelEdgeReference(voxel, edgeI),
-                            adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
-                    }
-                }
-                else
-                {
-                    voxel.faces[faceI] = faceTemplate;
-                }
-                clearVoxels[oppositeFaceI] = null;
-            }
-            else  // face is filled with same substance
+            if (sideVoxel != null && !sideVoxel.faces[oppositeFaceI].IsEmpty()
+                && sideVoxel.substance == substance)
             {
                 // remove boundary later
-                clearVoxels[oppositeFaceI] = sideVoxel;
+                ClearFaceAndBevels(voxel, faceI);
+                ClearFaceAndBevels(sideVoxel, oppositeFaceI);
                 voxelsToUpdate.Add(sideVoxel);
             }
-        }
-
-        // clear faces only after adding faces
-        // because the bevels from these faces might be used
-        for (int i = 0; i < 6; i++)
-        {
-            if (clearVoxels[i] != null)
-                ClearFaceAndBevels(clearVoxels[i], i);
         }
     }
 
