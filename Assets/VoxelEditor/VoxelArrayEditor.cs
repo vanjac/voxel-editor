@@ -994,8 +994,6 @@ public class VoxelArrayEditor : VoxelArray
     {
         if (!voxel.IsEmpty())
         {
-            if (voxel.substance == substance)
-                return;  // already done
             VoxelFace carveTemplate;
             int opposite = Voxel.OppositeFaceI(adjustDirFaceI);
             if (adjustDirFaceI >= 0 && !voxel.faces[opposite].IsEmpty())
