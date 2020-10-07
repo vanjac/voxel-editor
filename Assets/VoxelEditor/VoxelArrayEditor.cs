@@ -1027,12 +1027,11 @@ public class VoxelArrayEditor : VoxelArray
         // copy all the edges
         if (adjacentVoxel != null)
         {
+            // this doesn't need to use BevelEdge
+            voxel.bevelType = adjacentVoxel.bevelType;
             for (int edgeI = 0; edgeI < 12; edgeI++)
-            {
-                BevelEdge(new VoxelEdgeReference(voxel, edgeI),
-                    adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
+                voxel.edges[edgeI].hasBevel = adjacentVoxel.edges[edgeI].hasBevel;
             }
-        }
 
         // then remove the boundaries that don't actually have to be there
         // this is done in two steps so we don't delete a face before paints/bevels have been copied
