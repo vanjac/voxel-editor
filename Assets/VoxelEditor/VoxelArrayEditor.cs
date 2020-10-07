@@ -233,7 +233,6 @@ public class VoxelArrayEditor : VoxelArray
 
     public void TouchDown(Selectable thing)
     {
-        DisableMoveAxes();
         if (thing == null)
         {
             ClearSelection();
@@ -261,7 +260,6 @@ public class VoxelArrayEditor : VoxelArray
                 SetMoveAxes(thing.bounds.center);
                 selectMode = SelectMode.DRAW_SELECT;
             }
-            return;
         }
         else
         {
@@ -275,6 +273,7 @@ public class VoxelArrayEditor : VoxelArray
             SelectThing(thing);
             SetMoveAxes(selectionBounds.center);
         }
+        DisableMoveAxes();
     }
 
     // called by TouchListener
