@@ -396,10 +396,9 @@ public class Voxel
         return n % 4;
     }
 
-    public bool FaceIsSealed(int faceI)
+    // doesn't check if empty
+    public bool FaceIsSquare(int faceI)
     {
-        if (faces[faceI].IsEmpty())
-            return false;
         if (bevelType == BevelType.NONE)
             return true;
         for (int cornerI = 0; cornerI < 4; cornerI++)
@@ -407,6 +406,14 @@ public class Voxel
             if (edges[OrthogonalEdge(faceI, cornerI)].hasBevel)
                 return false;
         }
+        return true;
+    }
+
+    // doesn't check if empty
+    public bool FaceIsFlat(int faceI)
+    {
+        if (bevelType == BevelType.NONE)
+            return true;
         for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
         {
             if (edges[FaceSurroundingEdge(faceI, faceEdgeNum)].hasBevel)
