@@ -1020,18 +1020,18 @@ public class VoxelArrayEditor : VoxelArray
         {
             // if possible, the new side should have the properties of the adjacent side
             if (adjacentVoxel != null && !adjacentVoxel.faces[faceI].IsEmpty())
-            {
                 voxel.faces[faceI] = adjacentVoxel.faces[faceI].PaintOnly();
-                for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
-                {
-                    int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-                    BevelEdge(new VoxelEdgeReference(voxel, edgeI),
-                        adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
-                }
-            }
             else
-            {
                 voxel.faces[faceI] = faceTemplate;
+        }
+
+        // copy all the edges
+        if (adjacentVoxel != null)
+        {
+            for (int edgeI = 0; edgeI < 12; edgeI++)
+            {
+                BevelEdge(new VoxelEdgeReference(voxel, edgeI),
+                    adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
             }
         }
 
