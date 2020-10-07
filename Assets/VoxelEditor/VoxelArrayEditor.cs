@@ -265,10 +265,15 @@ public class VoxelArrayEditor : VoxelArray
         }
         else
         {
+            ClearSelection();
             selectMode = thing is VoxelEdgeReference ? SelectMode.BOX_EDGES : SelectMode.BOX;
             boxSelectStartBounds = thing.bounds;
             selectionBounds = boxSelectStartBounds;
-            UpdateBoxSelection();
+            // don't actually call this, only select the tapped thing
+            // avoid issues when tapping things with overlapping bounds
+            //UpdateBoxSelection();
+            SelectThing(thing);
+            SetMoveAxes(selectionBounds.center);
         }
     }
 
