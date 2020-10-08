@@ -90,6 +90,10 @@ public class WorldProperties : PropertiesObject
                     UpdateSky();
                 },
                 PropertyGUIs.Slider(0, 360)),
+            new Property("sha", "Shadows",
+                () => RenderSettings.sun.shadowStrength,
+                v => RenderSettings.sun.shadowStrength = (float)v,
+                PropertyGUIs.Slider(0, 1)),
             new Property("fdn", "Fog density",
                 () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
                 v => {
