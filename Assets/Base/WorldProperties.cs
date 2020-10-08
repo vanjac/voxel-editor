@@ -41,6 +41,11 @@ public class WorldProperties : PropertiesObject
             sky.SetFloat(Shader.PropertyToID("_Rotation"), baseRotation - yaw + 180);
         }
 
+        UpdateEnvironment();
+    }
+
+    private void UpdateEnvironment()
+    {
         DynamicGI.UpdateEnvironment(); // update ambient lighting
         GameObject.Find("ReflectionProbe").GetComponent<ReflectionProbe>().RenderProbe();
     }
@@ -70,7 +75,7 @@ public class WorldProperties : PropertiesObject
             new Property("spi", "Sun pitch",
                 () => {
                     float value = RenderSettings.sun.transform.rotation.eulerAngles.x;
-                    if (value > 270)
+                    if (value >= 270)
                         value -= 360;
                     return value;
                 },
@@ -78,6 +83,8 @@ public class WorldProperties : PropertiesObject
                     Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
                     eulerAngles.x = (float)v;
                     RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
+
+                    UpdateEnvironment();
                 },
                 PropertyGUIs.Slider(-90, 90)),
             new Property("sya", "Sun yaw",
