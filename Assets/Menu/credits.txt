@@ -1,4 +1,4 @@
-Developed by Jacob van't Hoog.
+Developed by j.
 
 Thank you for trying N-Space! This is a work in progress -- I will continue to make improvements and add more features.
 
