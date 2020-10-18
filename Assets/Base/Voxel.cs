@@ -6,6 +6,7 @@ public struct VoxelFace
 {
     public static VoxelFace EMPTY_FACE = new VoxelFace();
 
+    public bool cap;  // shouldn't be set if face is empty
     public Material material;
     public Material overlay;
     public byte orientation;
@@ -16,8 +17,14 @@ public struct VoxelFace
         return material == null && overlay == null;
     }
 
+    public bool IsReal()
+    {
+        return !IsEmpty() && !cap;
+    }
+
     public void Clear()
     {
+        cap = false;
         material = null;
         overlay = null;
         orientation = 0;
@@ -28,6 +35,7 @@ public struct VoxelFace
     public VoxelFace PaintOnly()
     {
         VoxelFace paintOnly = this;
+        paintOnly.cap = false;
         paintOnly.addSelected = false;
         paintOnly.storedSelected = false;
         return paintOnly;
@@ -371,14 +379,14 @@ public class Voxel
     {
         int faceA, faceB;
         EdgeFaces(edgeI, out faceA, out faceB);
-        return faces[faceA].IsEmpty() && faces[faceB].IsEmpty();
+        return !faces[faceA].IsReal() && !faces[faceB].IsReal();
     }
 
     public bool EdgeIsConvex(int edgeI)
     {
         int faceA, faceB;
         EdgeFaces(edgeI, out faceA, out faceB);
-        return !faces[faceA].IsEmpty() && !faces[faceB].IsEmpty();
+        return faces[faceA].IsReal() && faces[faceB].IsReal();
     }
 
     public int FaceTransformedEdgeNum(int faceNum, int faceEdgeNum)
@@ -396,7 +404,7 @@ public class Voxel
         return n % 4;
     }
 
-    // doesn't check if empty
+    // doesn't matter if empty
     public bool FaceIsSquare(int faceI)
     {
         if (bevelType == BevelType.NONE)
@@ -409,11 +417,12 @@ public class Voxel
         return true;
     }
 
-    // doesn't check if empty
     public bool FaceIsFlat(int faceI)
     {
         if (bevelType == BevelType.NONE)
             return true;
+        if (!faces[faceI].IsReal())
+            return true;  // no bevels
         for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
         {
             if (edges[FaceSurroundingEdge(faceI, faceEdgeNum)].hasBevel)
@@ -422,11 +431,11 @@ public class Voxel
         return true;
     }
 
-    public int FirstNonEmptyFace()
+    public int FirstRealFace()
     {
         for (int i = 0; i < 6; i++)
         {
-            if (!faces[i].IsEmpty())
+            if (faces[i].IsReal())
                 return i;
         }
         return -1;
@@ -1353,6 +1362,11 @@ public class VoxelComponent : MonoBehaviour
                 yield return mat;
             foreach (var mat in IteratePaintMaterials(voxel, facesEnabled, true))
                 yield return mat;
+            // for debugging caps
+            //bool[] capFaces = new bool[6];
+            //for (int i = 0; i < 6; i++)
+            //    capFaces[i] = voxel.faces[i].cap;
+            //yield return new VoxelMaterialInfo(highlightMaterials[15], capFaces);
         }
     }
 

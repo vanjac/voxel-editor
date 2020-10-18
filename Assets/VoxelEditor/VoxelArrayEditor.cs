@@ -912,6 +912,15 @@ public class VoxelArrayEditor : VoxelArray
             bool pushing = adjustDirFaceI == oppositeFaceI;
             bool pulling = adjustDirFaceI == faceI;
 
+            if (!oldVoxel.faces[faceI].IsReal())
+            {
+                // cap
+                oldVoxel.faces[faceI].addSelected = false;
+                selectedThings[i] = new VoxelFaceReference(null, -1);
+                voxelsToUpdate.Add(oldVoxel);
+                continue;
+            }
+
             VoxelFace movingFace = oldVoxel.faces[faceI].PaintOnly();
             Substance movingSubstance = oldVoxel.substance;
             if (substanceToCreate != null)
@@ -941,7 +950,7 @@ public class VoxelArrayEditor : VoxelArray
             }
             else  // sliding
             {
-                if (!newVoxel.faces[faceI].IsEmpty() && newVoxel.substance == movingSubstance)
+                if (newVoxel.faces[faceI].IsReal() && newVoxel.substance == movingSubstance)
                 {
                     newVoxel.faces[faceI] = movingFace;
                 }
@@ -950,7 +959,7 @@ public class VoxelArrayEditor : VoxelArray
             // in case it wasn't deleted
             oldVoxel.faces[faceI].addSelected = false;
 
-            if (!newVoxel.faces[faceI].IsEmpty() && newVoxel.substance == movingSubstance)
+            if (newVoxel.faces[faceI].IsReal() && newVoxel.substance == movingSubstance)
             {
                 newVoxel.faces[faceI].addSelected = true;
                 selectedThings[i] = new VoxelFaceReference(newVoxel, faceI);
@@ -995,10 +1004,10 @@ public class VoxelArrayEditor : VoxelArray
         {
             VoxelFace carveTemplate;
             int opposite = Voxel.OppositeFaceI(adjustDirFaceI);
-            if (adjustDirFaceI >= 0 && !voxel.faces[opposite].IsEmpty())
+            if (adjustDirFaceI >= 0 && voxel.faces[opposite].IsReal())
                 carveTemplate = voxel.faces[opposite];
             else
-                carveTemplate = voxel.faces[voxel.FirstNonEmptyFace()];  // TODO??
+                carveTemplate = voxel.faces[voxel.FirstRealFace()];  // TODO??
             CarveBlock(voxel, adjustDirFaceI, carveTemplate, voxelsToUpdate);  // carve then build
         }
         // voxel is definitely empty now
@@ -1018,7 +1027,7 @@ public class VoxelArrayEditor : VoxelArray
         for (int faceI = 0; faceI < 6; faceI++)
         {
             // if possible, the new side should have the properties of the adjacent side
-            if (adjacentVoxel != null && !adjacentVoxel.faces[faceI].IsEmpty())
+            if (adjacentVoxel != null && adjacentVoxel.faces[faceI].IsReal())
                 voxel.faces[faceI] = adjacentVoxel.faces[faceI].PaintOnly();
             else
                 voxel.faces[faceI] = faceTemplate;
@@ -1027,11 +1036,11 @@ public class VoxelArrayEditor : VoxelArray
         // copy all the edges
         if (adjacentVoxel != null)
         {
-            // this doesn't need to use BevelEdge
+            // caps will be updated later
             voxel.bevelType = adjacentVoxel.bevelType;
             for (int edgeI = 0; edgeI < 12; edgeI++)
                 voxel.edges[edgeI].hasBevel = adjacentVoxel.edges[edgeI].hasBevel;
-            }
+        }
 
         // then remove the boundaries that don't actually have to be there
         // this is done in two steps so we don't delete a face before paints/bevels have been copied
@@ -1040,13 +1049,21 @@ public class VoxelArrayEditor : VoxelArray
             int oppositeFaceI = Voxel.OppositeFaceI(faceI);
             Voxel sideVoxel = VoxelArray.VoxelAtAdjacent(
                 voxel.position + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
-            if (sideVoxel != null && !sideVoxel.faces[oppositeFaceI].IsEmpty()
+            if (sideVoxel != null && sideVoxel.faces[oppositeFaceI].IsReal()
                 && sideVoxel.substance == substance)
             {
-                // remove boundary later
-                ClearFaceAndBevels(voxel, faceI);
-                ClearFaceAndBevels(sideVoxel, oppositeFaceI);
-                voxelsToUpdate.Add(sideVoxel);
+                (bool capA, bool capB) = BevelCaps(voxel, sideVoxel, faceI, oppositeFaceI);
+                if (capA)
+                    voxel.faces[faceI].cap = true;
+                else
+                    ClearFaceAndBevels(voxel, faceI, voxelsToUpdate);
+                if (capB)
+                    sideVoxel.faces[oppositeFaceI].cap = true;
+                else
+                {
+                    ClearFaceAndBevels(sideVoxel, oppositeFaceI, voxelsToUpdate);
+                    voxelsToUpdate.Add(sideVoxel);
+                }
             }
         }
     }
@@ -1062,12 +1079,12 @@ public class VoxelArrayEditor : VoxelArray
         for (int faceI = 0; faceI < 6; faceI++)
         {
             Voxel sideVoxel = null;
-            if (!voxel.faces[faceI].IsEmpty())
+            if (voxel.faces[faceI].IsReal())
             {
                 sideVoxel = VoxelAtAdjacent(voxel.position
                     + Voxel.DirectionForFaceI(faceI).ToInt(), voxel);
                 if (sideVoxel == null || sideVoxel.IsEmpty())
-                continue;  // don't create boundary
+                    continue;  // don't create boundary
             }
             // if the face is empty, need to create a barrier even if the voxel doesn't exist
 
@@ -1075,22 +1092,23 @@ public class VoxelArrayEditor : VoxelArray
             if (sideVoxel == null)
                 sideVoxel = VoxelAt(voxel.position
                     + Voxel.DirectionForFaceI(faceI).ToInt(), true);
-            if (sideVoxel.substance != voxel.substance || !sideVoxel.faces[oppositeFaceI].IsEmpty())
+            if (sideVoxel.substance != voxel.substance || sideVoxel.faces[oppositeFaceI].IsReal())
                 continue;
 
             // if possible, the new side should have the properties of the adjacent side
             Voxel adjacentVoxel = null;
             if (adjustDirection != Vector3Int.zero)
                 adjacentVoxel = VoxelArray.VoxelAtAdjacent(sideVoxel.position - adjustDirection, sideVoxel);
-            if (adjacentVoxel != null && !adjacentVoxel.faces[oppositeFaceI].IsEmpty()
+            if (adjacentVoxel != null && adjacentVoxel.faces[oppositeFaceI].IsReal()
                 && adjacentVoxel.substance == voxel.substance)
             {
                 sideVoxel.faces[oppositeFaceI] = adjacentVoxel.faces[oppositeFaceI].PaintOnly();
+                sideVoxel.bevelType = adjacentVoxel.bevelType;
                 for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                 {
                     int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
-                    BevelEdge(new VoxelEdgeReference(sideVoxel, edgeI),
-                        adjacentVoxel.edges[edgeI].hasBevel, adjacentVoxel.bevelType);
+                    sideVoxel.edges[edgeI].hasBevel = adjacentVoxel.edges[edgeI].hasBevel;
+                    UpdateBevelResolveConflicts(new VoxelEdgeReference(sideVoxel, edgeI), voxelsToUpdate);
                 }
             }
             else
@@ -1103,14 +1121,21 @@ public class VoxelArrayEditor : VoxelArray
         voxel.Clear();
     }
 
-    private void ClearFaceAndBevels(Voxel voxel, int faceI)
+    // updates caps!!
+    // voxelsToUpdate = null to update immediately
+    // TODO??
+    private void ClearFaceAndBevels(Voxel voxel, int faceI, HashSet<Voxel> voxelsToUpdate)
     {
-        voxel.faces[faceI].Clear();
         for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
         {
             int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
-            BevelEdge(new VoxelEdgeReference(voxel, edgeI), false);
+            if (voxel.edges[edgeI].hasBevel)
+            {
+                voxel.edges[edgeI].hasBevel = false;
+                UpdateCapsEdge(new VoxelEdgeReference(voxel, edgeI), voxelsToUpdate);
+            }
         }
+        voxel.faces[faceI].Clear();
     }
 
     // return success
@@ -1127,7 +1152,7 @@ public class VoxelArrayEditor : VoxelArray
             PushObject(newObjVoxel.objectEntity, adjustDirFaceI, voxelsToUpdate);
         }
         else if (newObjVoxel.substance == null
-            && !newObjVoxel.faces[oppositeAdjustDirFaceI].IsEmpty())
+            && newObjVoxel.faces[oppositeAdjustDirFaceI].IsReal())
         {
             // carve a hole for the object if it's being pushed into a wall
             CarveBlock(newObjVoxel, adjustDirFaceI, newObjVoxel.faces[oppositeAdjustDirFaceI], voxelsToUpdate);
@@ -1201,32 +1226,135 @@ public class VoxelArrayEditor : VoxelArray
             if (edgeRef.voxel.EdgeIsEmpty(edgeRef.edgeI))
                 continue;
             if (bevelType != Voxel.BevelType.NONE)
+            {
                 edgeRef.voxel.concaveBevel = concave;
-            BevelEdge(edgeRef, bevelType != Voxel.BevelType.NONE, bevelType);
+                edgeRef.voxel.bevelType = bevelType;
+                edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = true;
+            }
+            else
+            {
+                edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = false;
+            }
+            UpdateBevelResolveConflicts(edgeRef);
             VoxelModified(edgeRef.voxel);
         }
     }
 
-    private void BevelEdge(VoxelEdgeReference edgeRef, bool bevel,
-        Voxel.BevelType bevelType = Voxel.BevelType.NONE)
+    // updates caps
+    // doesn't add given voxel to voxelsToUpdate
+    // use voxelsToUpdate = null to update immediately
+    private void UpdateBevelResolveConflicts(VoxelEdgeReference edgeRef,
+        HashSet<Voxel> voxelsToUpdate = null)
     {
         Voxel voxel = edgeRef.voxel;
-        if (!bevel || !voxel.EdgeIsConvex(edgeRef.edgeI))
-        {
+        if (voxel.bevelType == Voxel.BevelType.NONE)
             voxel.edges[edgeRef.edgeI].hasBevel = false;
-        }
-        else
+        UpdateCapsEdge(edgeRef, voxelsToUpdate);
+
+        if (!edgeRef.edge.hasBevel)
+            return;
+
+        // don't allow full convex bevels to overlap with other bevels
+        foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
         {
-            voxel.edges[edgeRef.edgeI].hasBevel = true;
-            if (bevelType != Voxel.BevelType.NONE)
-                voxel.bevelType = bevelType; 
-            // don't allow full convex bevels to overlap with other bevels
-            foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
-            {
-                if (voxel.EdgeIsConvex(unconnectedEdgeI))
-                    voxel.edges[unconnectedEdgeI].hasBevel = false;
-            }
+            voxel.edges[unconnectedEdgeI].hasBevel = false;  // doesn't matter if convex or not
+            UpdateCapsEdge(edgeRef, voxelsToUpdate);
         }
+    }
+
+    // helper for UpdateBevelResolveConflicts
+    // clears bevel if edge is not convex
+    private void UpdateCapsEdge(VoxelEdgeReference edgeRef, HashSet<Voxel> voxelsToUpdate = null)
+    {
+        if (!edgeRef.voxel.EdgeIsConvex(edgeRef.edgeI))
+        {
+            edgeRef.voxel.edges[edgeRef.edgeI].hasBevel = false;
+            return;
+        }
+
+        int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
+        int maxFaceI = minFaceI + 1;
+
+        UpdateCapsCorner(edgeRef, minFaceI, maxFaceI, voxelsToUpdate);
+        UpdateCapsCorner(edgeRef, maxFaceI, minFaceI, voxelsToUpdate);
+    }
+
+    // helper for UpdateCapsEdge
+    // very similar code to BuildBlock. coincidence??
+    private void UpdateCapsCorner(VoxelEdgeReference edgeRef,
+        int faceI, int oppositeFaceI, HashSet<Voxel> voxelsToUpdate)
+    {
+        Voxel voxel = edgeRef.voxel;
+        // TODO: are these rules too restrictive? is there a case (besides in BuildBlock)
+        // where a real face could be transformed into a cap? compare to CarveBlock.
+        if (voxel.faces[faceI].IsReal())
+            return;
+        Voxel sideVoxel = VoxelAt(voxel.position
+                + Voxel.DirectionForFaceI(faceI).ToInt(), true);
+        if (sideVoxel.substance != voxel.substance
+                || sideVoxel.faces[oppositeFaceI].IsReal())
+            return;
+
+        (bool capA, bool capB) = BevelCaps(voxel, sideVoxel, faceI, oppositeFaceI);
+        SetCap(voxel, faceI, capA, edgeRef, voxelsToUpdate);
+        if (SetCap(sideVoxel, oppositeFaceI, capB, edgeRef, voxelsToUpdate))
+        {
+            if (voxelsToUpdate != null)
+                voxelsToUpdate.Add(sideVoxel);
+            else
+                VoxelModified(sideVoxel);
+        }
+    }
+
+    // helper for UpdateCapsCorner
+    // return true if modified
+    // doesn't add voxel to voxelsToUpdate
+    private bool SetCap(Voxel voxel, int faceI, bool cap, VoxelEdgeReference edgeRef,
+        HashSet<Voxel> voxelsToUpdate)
+    {
+        if (!cap && voxel.faces[faceI].cap)
+        {
+            ClearFaceAndBevels(voxel, faceI, voxelsToUpdate);
+            return true;
+        }
+        else if (cap && voxel.faces[faceI].IsEmpty())
+        {
+            // pick a face, either works bc edgeRef is convex
+            Voxel.EdgeFaces(edgeRef.edgeI, out int faceA, out _);
+            voxel.faces[faceI] = edgeRef.voxel.faces[faceA].PaintOnly();
+            voxel.faces[faceI].cap = true;
+            return true;
+        }
+        return false;
+    }
+
+    // TODO: what if faces are empty? seems to work fine...
+    private (bool, bool) BevelCaps(Voxel voxelA, Voxel voxelB, int faceA, int faceB)
+    {
+        if (!voxelA.FaceIsFlat(faceA) || !voxelB.FaceIsFlat(faceB))
+        {
+            return (false, false);
+        }
+
+        bool capA = !voxelB.FaceIsSquare(faceB);
+        bool capB = !voxelA.FaceIsSquare(faceA);
+
+        if (capA && capB && voxelA.bevelType == voxelB.bevelType)
+        {
+            // check if bevels of orthogonal edges at each corner match
+            for (int cornerI = 0; cornerI < 4; cornerI++)
+            {
+                int edgeI = Voxel.OrthogonalEdge(faceA, cornerI);  // same for both faces
+                if (voxelA.edges[edgeI].hasBevel != voxelB.edges[edgeI].hasBevel)
+                {
+                    // they don't match
+                    return (true, true);
+                }
+            }
+            // they do match
+            return (false, false);
+        }
+        return (capA, capB);
     }
 
     // return null voxel if edge doesn't exist or substances don't match
@@ -1276,7 +1404,7 @@ public class VoxelArrayEditor : VoxelArray
         while (true)
         {
             Voxel voxel = VoxelAt(createPosition.ToInt(), false);
-            if (voxel != null && voxel.substance == null && !voxel.faces[Voxel.OppositeFaceI(faceNormal)].IsEmpty())
+            if (voxel != null && voxel.substance == null && voxel.faces[Voxel.OppositeFaceI(faceNormal)].IsReal())
                 return false; // blocked by wall. no room to create object
             if (voxel == null || voxel.objectEntity == null)
                 break;
