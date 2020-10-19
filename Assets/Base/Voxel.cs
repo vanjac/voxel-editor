@@ -960,7 +960,8 @@ public class VoxelComponent : MonoBehaviour
             {
                 // no face plane
                 vertices.facePlane_count = 0;
-                break;
+                if (!voxel.concaveBevel)
+                    break;  // faces on concave voxels can have both bevels and bevel profiles
             }
             int edgeA = Voxel.OrthogonalEdge(faceNum, i);
             if (voxel.edges[edgeA].hasBevel)
@@ -969,6 +970,23 @@ public class VoxelComponent : MonoBehaviour
                 vertices.bevelProfileCorner = i;
                 // -1 for the overlapping middle vertex, but +1 for the opposite corner (fan origin)
                 vertices.facePlane_count = BevelTypeArray(voxel).Length * 2;
+                if (voxel.concaveBevel)
+                    break;
+            }
+        }
+        if (voxel.concaveBevel)
+        {
+            // TODO: it would be faster to check this first
+            int oppositeFaceNum = Voxel.OppositeFaceI(faceNum);
+            for (int i = 0; i < 4; i++)
+            {
+                if (voxel.edges[Voxel.FaceSurroundingEdge(oppositeFaceNum, i)].hasBevel)
+                {
+                    // default quad
+                    vertices.facePlane_count = 4;
+                    vertices.bevelProfileCorner = -1;
+                    break;
+                }
             }
         }
         vertices.count += vertices.facePlane_count;
@@ -1051,9 +1069,6 @@ public class VoxelComponent : MonoBehaviour
                     Vector2 squarePos = SQUARE_LOOP[i];
                     vertexPos[(axis + 1) % 3] = squarePos.x;
                     vertexPos[(axis + 2) % 3] = squarePos.y;
-                    // DON'T use MakeConcave here
-                    // concave voxels shouldn't actually have any default quads
-                    // but this makes them easier to work with for testing
                     vertices[faceVerts.facePlane_i + i] = Vector3FromArray(vertexPos) + positionOffset;
                 }
             }
@@ -1062,16 +1077,10 @@ public class VoxelComponent : MonoBehaviour
                 // bevel profile
                 // start with triangle fan origin (opposite corner)
                 Vector2 squarePos;
-                if (voxel.concaveBevel)
-                {
-                    squarePos = SQUARE_LOOP[faceVerts.bevelProfileCorner];
-                    normal = -normal;
-                }
-                else
-                    squarePos = SQUARE_LOOP[(faceVerts.bevelProfileCorner + 2) % 4];
+                squarePos = SQUARE_LOOP[(faceVerts.bevelProfileCorner + 2) % 4];
                 vertexPos[(axis + 1) % 3] = squarePos.x;
                 vertexPos[(axis + 2) % 3] = squarePos.y;
-                vertices[faceVerts.facePlane_i] = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
+                vertices[faceVerts.facePlane_i] = Vector3FromArray(vertexPos) + positionOffset;
 
                 // then bevel vertices
                 squarePos = SQUARE_LOOP[faceVerts.bevelProfileCorner];
@@ -1079,17 +1088,19 @@ public class VoxelComponent : MonoBehaviour
                 for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
                 {
                     Vector2 bevelVector = bevelArray[bevelI];
+                    if (voxel.concaveBevel)
+                        bevelVector = new Vector2(1.0f - bevelVector.y, 1.0f - bevelVector.x);
                     if (faceVerts.bevelProfileCorner % 2 == 1) // reverse direction
                         bevelVector = new Vector2(bevelVector.y, bevelVector.x);
                     vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, bevelVector.x);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, bevelVector.y);
-                    vertices[faceVerts.facePlane_i + bevelI + 1] = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
+                    vertices[faceVerts.facePlane_i + bevelI + 1] = Vector3FromArray(vertexPos) + positionOffset;
 
                     vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, bevelVector.y); // x/y are swapped
                     vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, bevelVector.x);
                     // last iteration vertices will overlap
                     vertices[faceVerts.facePlane_i + faceVerts.facePlane_count - 1 - bevelI]
-                        = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
+                        = Vector3FromArray(vertexPos) + positionOffset;
                 }
             }
 
@@ -1165,7 +1176,10 @@ public class VoxelComponent : MonoBehaviour
                     vertexPos[edgeAxis] = ApplyBevel(vertexPos[edgeAxis], bevelVector.x);
                     vertexUVPos[edgeAxis] = vertexPos[edgeAxis];
                 }
-                vertices[bevelVertex] = MakeConcave(Vector3FromArray(vertexPos), voxel) + positionOffset;
+                Vector3 vert = Vector3FromArray(vertexPos);
+                if (voxel.concaveBevel)
+                    vert = Vector3.one - vert;
+                vertices[bevelVertex] = vert + positionOffset;
                 uvs[bevelVertex] = CalcUV(voxel, Vector3FromArray(vertexUVPos) + voxel.position, positiveU_xyz, positiveV_xyz);
                 tangents[bevelVertex] = tangent; // TODO
 
@@ -1220,14 +1234,6 @@ public class VoxelComponent : MonoBehaviour
         return new Vector2(
             vector.x * positiveU_xyz.x + vector.y * positiveU_xyz.y + vector.z * positiveU_xyz.z,
             vector.x * positiveV_xyz.x + vector.y * positiveV_xyz.y + vector.z * positiveV_xyz.z);
-    }
-
-    private static Vector3 MakeConcave(Vector3 v, Voxel voxel)
-    {
-        if (voxel.concaveBevel)
-            return Vector3.one - v;
-        else
-            return v;
     }
 
 
