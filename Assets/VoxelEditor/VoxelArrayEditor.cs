@@ -1052,18 +1052,20 @@ public class VoxelArrayEditor : VoxelArray
             if (sideVoxel != null && sideVoxel.faces[oppositeFaceI].IsReal()
                 && sideVoxel.substance == substance)
             {
+                // the face will either be deleted or capped, either way shouldn't have bevels
+                ClearSurroundingBevels(voxel, faceI, voxelsToUpdate);
+                ClearSurroundingBevels(sideVoxel, oppositeFaceI, voxelsToUpdate);
+                voxelsToUpdate.Add(sideVoxel);
+
                 (bool capA, bool capB) = BevelCaps(voxel, sideVoxel, faceI, oppositeFaceI);
                 if (capA)
                     voxel.faces[faceI].cap = true;
                 else
-                    ClearFaceAndBevels(voxel, faceI, voxelsToUpdate);
+                    voxel.faces[faceI].Clear();  // already cleared bevels
                 if (capB)
                     sideVoxel.faces[oppositeFaceI].cap = true;
                 else
-                {
-                    ClearFaceAndBevels(sideVoxel, oppositeFaceI, voxelsToUpdate);
-                    voxelsToUpdate.Add(sideVoxel);
-                }
+                    sideVoxel.faces[oppositeFaceI].Clear();
             }
         }
     }
@@ -1126,6 +1128,12 @@ public class VoxelArrayEditor : VoxelArray
     // TODO??
     private void ClearFaceAndBevels(Voxel voxel, int faceI, HashSet<Voxel> voxelsToUpdate)
     {
+        ClearSurroundingBevels(voxel, faceI, voxelsToUpdate);
+        voxel.faces[faceI].Clear();
+    }
+
+    private void ClearSurroundingBevels(Voxel voxel, int faceI, HashSet<Voxel> voxelsToUpdate)
+    {
         for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
         {
             int edgeI = Voxel.FaceSurroundingEdge(faceI, faceEdgeNum);
@@ -1135,7 +1143,6 @@ public class VoxelArrayEditor : VoxelArray
                 UpdateCapsEdge(new VoxelEdgeReference(voxel, edgeI), voxelsToUpdate);
             }
         }
-        voxel.faces[faceI].Clear();
     }
 
     // return success
@@ -1333,6 +1340,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         if (!voxelA.FaceIsFlat(faceA) || !voxelB.FaceIsFlat(faceB))
         {
+            // TODO?
             return (false, false);
         }
 
