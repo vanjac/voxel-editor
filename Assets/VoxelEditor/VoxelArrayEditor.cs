@@ -1208,6 +1208,7 @@ public class VoxelArrayEditor : VoxelArray
                 faceRef.voxel.faces[faceRef.faceI].material = paint.material;
             faceRef.voxel.faces[faceRef.faceI].overlay = paint.overlay;
             faceRef.voxel.faces[faceRef.faceI].orientation = paint.orientation;
+            faceRef.voxel.faces[faceRef.faceI].scale = paint.scale;
             VoxelModified(faceRef.voxel);
         }
     }

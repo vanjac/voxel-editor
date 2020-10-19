@@ -357,6 +357,8 @@ public class MessagePackWorldReader : WorldFileReader
             voxel.faces[faceI].orientation = faceList[3].AsByte();
         if (faceList.Count >= 5)
             voxel.faces[faceI].cap = faceList[4].AsBoolean();  // TODO
+        if (faceList.Count >= 6)
+            voxel.faces[faceI].scale = faceList[5].AsSByte();
     }
 
     private void ReadEdge(MessagePackObject edgeObj, Voxel voxel)

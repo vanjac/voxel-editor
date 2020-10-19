@@ -66,6 +66,11 @@ public class PaintGUI : GUIPanel
             Orient(3);
         if (GUILayout.Button(GUIIconSet.instance.rotateRight, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(1);
+        if (GUILayout.Button(GUIIconSet.instance.scaleUp, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
+        {
+            paint.scale++;
+            handler(paint);
+        }
         TutorialGUI.ClearHighlight();
         GUILayout.FlexibleSpace();
 
@@ -96,6 +101,11 @@ public class PaintGUI : GUIPanel
             Orient(5);
         if (GUILayout.Button(GUIIconSet.instance.flipVertical, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(7);
+        if (GUILayout.Button(GUIIconSet.instance.scaleDown, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
+        {
+            paint.scale--;
+            handler(paint);
+        }
         TutorialGUI.ClearHighlight();
         int oldSelectedLayer = selectedLayer;
         TutorialGUI.TutorialHighlight("paint layer");
@@ -169,6 +179,7 @@ public class PaintGUI : GUIPanel
     private void DrawPaint(VoxelFace paint, Rect rect)
     {
         float rotation = VoxelFace.GetOrientationRotation(paint.orientation) * 90;
+        float paintScale = paint.GetScaleFactor();
         Vector2 scaleFactor = Vector2.one;
         if (VoxelFace.GetOrientationMirror(paint.orientation))
         {
@@ -177,8 +188,8 @@ public class PaintGUI : GUIPanel
         }
         Matrix4x4 baseMatrix = GUI.matrix;
         RotateAboutPoint(rect.center, rotation, scaleFactor);
-        MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false);
-        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true);
+        MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false, paintScale);
+        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true, paintScale);
         GUI.matrix = baseMatrix;
     }
 

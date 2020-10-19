@@ -244,6 +244,7 @@ MonoBehaviour:
   unsavedChanges: 0
   selectionChanged: 0
   selectMode: 0
+  drawSelect: 0
   boxSelectStartBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -741,6 +742,8 @@ MonoBehaviour:
     import: {fileID: 2800000, guid: 10566212bae5b46968b736b518c502eb, type: 3}
     fill: {fileID: 2800000, guid: 89445942d3294e84caeb98591980d3a7, type: 3}
     draw: {fileID: 2800000, guid: addd569b17e6bd04fb21b6224a0d7705, type: 3}
+    scaleUp: {fileID: 2800000, guid: 8257f7c3f4a67dd42a4946b5fcffb654, type: 3}
+    scaleDown: {fileID: 2800000, guid: c9dac3079f037cd48adbfe56ab2bf18a, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}

@@ -10,6 +10,7 @@ public struct VoxelFace
     public Material material;
     public Material overlay;
     public byte orientation;
+    public sbyte scale;
     public bool addSelected, storedSelected;
 
     public bool IsEmpty()
@@ -28,6 +29,7 @@ public struct VoxelFace
         material = null;
         overlay = null;
         orientation = 0;
+        scale = 0;
         addSelected = false;
         storedSelected = false;
     }
@@ -49,7 +51,7 @@ public struct VoxelFace
     public static bool operator ==(VoxelFace s1, VoxelFace s2)
     {
         return s1.material == s2.material && s1.overlay == s2.overlay
-            && s1.orientation == s2.orientation;
+            && s1.orientation == s2.orientation && s1.scale == s2.scale;
     }
     public static bool operator !=(VoxelFace s1, VoxelFace s2)
     {
@@ -61,6 +63,7 @@ public struct VoxelFace
         int result = material.GetHashCode();
         result = 37 * result + overlay.GetHashCode();
         result = 37 * result + (int)orientation;
+        result = 37 * result + (int)scale;
         return result;
     }
 
@@ -80,6 +83,14 @@ public struct VoxelFace
             rotation += 4;
         rotation %= 4;
         return (byte)(rotation + (mirror ? 4 : 0));
+    }
+
+    public float GetScaleFactor()
+    {
+        if (scale <= 0)
+            return 1 << (-scale);
+        else
+            return (256 >> (int)scale) / 256.0f;
     }
 
     public MaterialSound GetSound()
@@ -1011,6 +1022,7 @@ public class VoxelComponent : MonoBehaviour
         int axis = Voxel.FaceIAxis(faceNum);
         int rotation = VoxelFace.GetOrientationRotation(face.orientation);
         bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
+        float scaleFactor = face.GetScaleFactor();
 
         // ST space is always upright
         Vector3 positiveS_xyz = POSITIVE_S_XYZ[faceNum]; // positive S in XYZ space
@@ -1024,8 +1036,8 @@ public class VoxelComponent : MonoBehaviour
             vRot = uRot + 3;
         else
             vRot = uRot + 1;
-        Vector2 positiveU_st = POSITIVE_U_ST[uRot % 4];
-        Vector2 positiveV_st = POSITIVE_U_ST[vRot % 4];
+        Vector2 positiveU_st = POSITIVE_U_ST[uRot % 4] * scaleFactor;
+        Vector2 positiveV_st = POSITIVE_U_ST[vRot % 4] * scaleFactor;
 
         Vector3 positiveU_xyz = positiveS_xyz * positiveU_st.x
             + positiveT_xyz * positiveU_st.y;

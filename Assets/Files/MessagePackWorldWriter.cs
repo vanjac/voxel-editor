@@ -279,9 +279,11 @@ public class MessagePackWorldWriter
             faceList.Add(-1);
         faceList.Add(face.orientation);
         faceList.Add(face.cap);
+        faceList.Add(face.scale);
 
         StripDataList(faceList, new bool[] {
-            false, face.material == null, face.overlay == null, face.orientation == 0, !face.cap });
+            false, face.material == null, face.overlay == null, face.orientation == 0,
+            !face.cap, face.scale == 0 });
         return new MessagePackObject(faceList);
     }
 

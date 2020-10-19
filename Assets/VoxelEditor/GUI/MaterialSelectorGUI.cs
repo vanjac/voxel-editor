@@ -303,7 +303,7 @@ public class MaterialSelectorGUI : GUIPanel
             Destroy(this);
     }
 
-    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
+    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha, float scale = 1.0f)
     {
         if (mat == null)
             return;
@@ -341,6 +341,7 @@ public class MaterialSelectorGUI : GUIPanel
             GUI.color = baseColor;
             return;
         }
+        texCoords.max *= scale;
         GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
         GUI.color = baseColor;
     }
