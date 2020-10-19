@@ -1038,6 +1038,7 @@ public class VoxelArrayEditor : VoxelArray
         {
             // caps will be updated later
             voxel.bevelType = adjacentVoxel.bevelType;
+            voxel.concaveBevel = adjacentVoxel.concaveBevel;
             for (int edgeI = 0; edgeI < 12; edgeI++)
                 voxel.edges[edgeI].hasBevel = adjacentVoxel.edges[edgeI].hasBevel;
         }
@@ -1106,6 +1107,7 @@ public class VoxelArrayEditor : VoxelArray
             {
                 sideVoxel.faces[oppositeFaceI] = adjacentVoxel.faces[oppositeFaceI].PaintOnly();
                 sideVoxel.bevelType = adjacentVoxel.bevelType;
+                sideVoxel.concaveBevel = adjacentVoxel.concaveBevel;
                 for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
                 {
                     int edgeI = Voxel.FaceSurroundingEdge(oppositeFaceI, faceEdgeNum);
@@ -1347,7 +1349,8 @@ public class VoxelArrayEditor : VoxelArray
         bool capA = !voxelB.FaceIsSquare(faceB);
         bool capB = !voxelA.FaceIsSquare(faceA);
 
-        if (capA && capB && voxelA.bevelType == voxelB.bevelType)
+        if (capA && capB && voxelA.bevelType == voxelB.bevelType
+            && voxelA.concaveBevel == voxelB.concaveBevel)
         {
             // check if bevels of orthogonal edges at each corner match
             for (int cornerI = 0; cornerI < 4; cornerI++)
