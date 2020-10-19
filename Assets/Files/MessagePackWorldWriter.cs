@@ -7,8 +7,8 @@ using System.Xml.Serialization;
 
 public class MessagePackWorldWriter
 {
-    public const int VERSION = 9;
-    private const int FILE_MIN_READER_VERSION = 8;
+    public const int VERSION = 10;
+    private const int FILE_MIN_READER_VERSION = 10;
 
     public static void Write(string filePath, Transform cameraPivot, VoxelArray voxelArray)
     {
@@ -278,9 +278,10 @@ public class MessagePackWorldWriter
         else
             faceList.Add(-1);
         faceList.Add(face.orientation);
+        faceList.Add(face.cap);
 
         StripDataList(faceList, new bool[] {
-            false, face.material == null, face.overlay == null, face.orientation == 0 });
+            false, face.material == null, face.overlay == null, face.orientation == 0, !face.cap });
         return new MessagePackObject(faceList);
     }
 
