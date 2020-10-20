@@ -338,6 +338,9 @@ public class MessagePackWorldReader : WorldFileReader
         if (voxelList.Count >= 4)
             foreach (var edgeObj in voxelList[3].AsList())
                 ReadEdge(edgeObj, voxel);
+        
+        if (voxelList.Count >= 5)
+            voxel.concaveBevel = voxelList[4].AsBoolean();
 
         voxel.UpdateVoxel();
     }

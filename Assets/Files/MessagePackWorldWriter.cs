@@ -259,8 +259,11 @@ public class MessagePackWorldWriter
         }
         voxelList.Add(new MessagePackObject(edgesList));
 
+        voxelList.Add(voxel.concaveBevel);
+
         StripDataList(voxelList,
-            new bool[] { false, facesList.Count == 0, voxel.substance == null, edgesList.Count == 0 });
+            new bool[] { false, facesList.Count == 0, voxel.substance == null, edgesList.Count == 0,
+            !voxel.concaveBevel });
         return new MessagePackObject(voxelList);
     }
 
