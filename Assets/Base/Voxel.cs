@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -1146,16 +1146,36 @@ public class VoxelComponent : MonoBehaviour
 
         Vector2[] bevelArray = BevelTypeArray(voxel);
         int bevelVertex = edgeVerts.bevel_i;
+        Vector3? sphereOrigin = null;
         for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
         {
             float uvCoord = (float)bevelI / (float)(bevelArray.Length - 1);
             for (int j = 0; j < 2; j++)
             {
-                Vector2 bevelVector = bevelArray[bevelI];
-                vertexPos[faceAxis] = ApplyBevel(faceNum % 2, bevelVector.x);
+                vertexPos[faceAxis] = faceNum % 2;
                 vertexPos[(faceAxis + 1) % 3] = squarePos[j].x;
                 vertexPos[(faceAxis + 2) % 3] = squarePos[j].y;
+
+                Vector2 bevelVector = bevelArray[bevelI];
+                if (voxel.bevelType == Voxel.BevelType.CURVE && voxel.edges[edgeI].hasBevel
+                    && voxel.edges[adjEdgeI[j]].hasBevel && voxel.edges[edgeA[j]].hasBevel)
+                {
+                    // 3 curved bevels joined at corner
+                    float maxExtent = bevelArray[bevelArray.Length - 1].x;  // x and y should be equal
+                    // jank sphere
+                    // why tf is this the Euler–Mascheroni constant
+                    float targetExtent = 0.57721f;  // 1/3 works for flat bevels
+                    bevelVector.y *= targetExtent / maxExtent;
+                    bevelVector.x = (bevelVector.x - 1) * (1 - targetExtent) / (1 - maxExtent) + 1;
+                    sphereOrigin = Vector3FromArray(vertexPos);
+                    if (!voxel.concaveBevel)
+                        sphereOrigin = Vector3.one - sphereOrigin;
+                    sphereOrigin += positionOffset;
+                }
+
+                vertexPos[faceAxis] = ApplyBevel(vertexPos[faceAxis], bevelVector.x);
                 System.Array.Copy(vertexPos, vertexUVPos, 3);
+
                 if (voxel.edges[edgeI].hasBevel)
                 {
                     vertexPos[orthAxis] = ApplyBevel(vertexPos[orthAxis], bevelVector.y);
@@ -1200,6 +1220,8 @@ public class VoxelComponent : MonoBehaviour
 
         // add normals for each bevel vertex
         Vector2[] bevelNormalArray = BevelTypeNormalArray(voxel);
+        if (sphereOrigin == null)
+        {
         for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
         {
             Vector2 normalVector = bevelNormalArray[bevelI];
@@ -1213,6 +1235,16 @@ public class VoxelComponent : MonoBehaviour
             Vector3 normal = Vector3FromArray(vertexPos);
             normals[edgeVerts.bevel_i + bevelI * 2] = normal;
             normals[edgeVerts.bevel_i + bevelI * 2 + 1] = normal;
+        }
+    }
+        else  // sphere
+        {
+            for (int i = edgeVerts.bevel_i; i < bevelVertex; i++)
+            {
+                normals[i] = vertices[i] - sphereOrigin.Value;
+                if (voxel.concaveBevel)
+                    normals[i] = -normals[i];
+            }
         }
     }
 
