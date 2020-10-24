@@ -1340,32 +1340,15 @@ public class VoxelArrayEditor : VoxelArray
     // TODO: what if faces are empty? seems to work fine...
     private (bool, bool) BevelCaps(Voxel voxelA, Voxel voxelB, int faceA, int faceB)
     {
-        if (!voxelA.FaceIsFlat(faceA) || !voxelB.FaceIsFlat(faceB))
-        {
-            // TODO?
-            return (false, false);
-        }
+        Voxel.FaceProfile profileA = voxelA.GetFaceProfile(faceA);
+        Voxel.FaceProfile profileB = voxelB.GetFaceProfile(faceB);
 
-        bool capA = !voxelB.FaceIsSquare(faceB);
-        bool capB = !voxelA.FaceIsSquare(faceA);
-
-        if (capA && capB && voxelA.bevelType == voxelB.bevelType
-            && voxelA.concaveBevel == voxelB.concaveBevel)
-        {
-            // check if bevels of orthogonal edges at each corner match
-            for (int cornerI = 0; cornerI < 4; cornerI++)
-            {
-                int edgeI = Voxel.OrthogonalEdge(faceA, cornerI);  // same for both faces
-                if (voxelA.edges[edgeI].hasBevel != voxelB.edges[edgeI].hasBevel)
-                {
-                    // they don't match
-                    return (true, true);
-                }
-            }
-            // they do match
+        if (!profileA.isFlat || !profileB.isFlat)
+            return (false, false);  // TODO?
+        if (profileA.Matches(profileB))
             return (false, false);
-        }
-        return (capA, capB);
+        return (profileB.bevelType != Voxel.BevelType.NONE,
+                profileA.bevelType != Voxel.BevelType.NONE);  // reversed!
     }
 
     // return null voxel if edge doesn't exist or substances don't match

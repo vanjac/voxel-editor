@@ -272,6 +272,30 @@ public class Voxel
     }
 
 
+    // describes the part of the face coplanar with the side of the voxel
+    public struct FaceProfile
+    {
+        public bool isFlat;  // if false, face has no profile
+        public BevelType bevelType;  // NONE if not beveled
+        public bool concaveBevel;
+        public int beveledEdge;  // -1 if not beveled
+        public int beveledCorner;  // same but as a corner 0-3 of the face
+
+        public bool Matches(FaceProfile other)
+        {
+            if (isFlat != other.isFlat)
+                return false;
+            if (!isFlat)
+                return true;
+            if (bevelType != other.bevelType)
+                return false;
+            if (bevelType == BevelType.NONE)
+                return true;
+            return beveledEdge == other.beveledEdge && concaveBevel == other.concaveBevel;
+        }
+    }
+
+
     public Vector3Int position;
     // see "Voxel Diagram.skp" for a diagram of face/edge numbers
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
@@ -404,31 +428,51 @@ public class Voxel
         return n % 4;
     }
 
-    // doesn't matter if empty
-    public bool FaceIsSquare(int faceI)
+    // doesn't check if face is empty, only checks bevels
+    public FaceProfile GetFaceProfile(int faceI)
     {
-        if (bevelType == BevelType.NONE)
-            return true;
-        for (int cornerI = 0; cornerI < 4; cornerI++)
-        {
-            if (edges[OrthogonalEdge(faceI, cornerI)].hasBevel)
-                return false;
-        }
-        return true;
-    }
+        // default quad
+        FaceProfile profile = new FaceProfile {
+            isFlat = true, bevelType = BevelType.NONE, concaveBevel = false,
+            beveledEdge = -1, beveledCorner = -1 };
 
-    public bool FaceIsFlat(int faceI)
-    {
         if (bevelType == BevelType.NONE)
-            return true;
-        if (!faces[faceI].IsReal())
-            return true;  // no bevels
-        for (int faceEdgeNum = 0; faceEdgeNum < 4; faceEdgeNum++)
+            return profile;
+
+        if (concaveBevel)
         {
-            if (edges[FaceSurroundingEdge(faceI, faceEdgeNum)].hasBevel)
-                return false;
+            int oppositeFaceI = Voxel.OppositeFaceI(faceI);
+            for (int i = 0; i < 4; i++)
+            {
+                if (edges[Voxel.FaceSurroundingEdge(oppositeFaceI, i)].hasBevel)
+                    return profile;  // default quad
+            }
         }
-        return true;
+
+        for (int i = 0; i < 4; i++)  // iterate both corners and edges
+        {
+            if (edges[Voxel.FaceSurroundingEdge(faceI, i)].hasBevel)
+            {
+                // no profile
+                profile = new FaceProfile {
+                    isFlat = false, bevelType = BevelType.NONE, concaveBevel = false,
+                    beveledEdge = -1, beveledCorner = -1 };
+                if (!concaveBevel)
+                    return profile;  // faces on concave voxels can have both bevels and bevel profiles
+            }
+            int edgeA = Voxel.OrthogonalEdge(faceI, i);
+            if (edges[edgeA].hasBevel)
+            {
+                // bevel profile
+                profile = new FaceProfile {
+                    isFlat = true, bevelType = bevelType, concaveBevel = concaveBevel,
+                    beveledEdge = edgeA, beveledCorner = i };
+                if (concaveBevel)
+                    return profile;
+            }
+        }
+
+        return profile;
     }
 
     public int FirstRealFace()
@@ -953,40 +997,17 @@ public class VoxelComponent : MonoBehaviour
 
         // determine face plane
         vertices.facePlane_i = vertexI;
-        vertices.facePlane_count = 4;  // default quad
-        for (int i = 0; i < 4; i++)  // iterate both corners and edges
+        Voxel.FaceProfile profile = voxel.GetFaceProfile(faceNum);
+        if (profile.isFlat)
         {
-            if (voxel.edges[Voxel.FaceSurroundingEdge(faceNum, i)].hasBevel)
+            if (profile.bevelType == Voxel.BevelType.NONE)
             {
-                // no face plane
-                vertices.facePlane_count = 0;
-                if (!voxel.concaveBevel)
-                    break;  // faces on concave voxels can have both bevels and bevel profiles
+                vertices.facePlane_count = 4;  // default quad
             }
-            int edgeA = Voxel.OrthogonalEdge(faceNum, i);
-            if (voxel.edges[edgeA].hasBevel)
+            else
             {
-                // bevel profile, could be overriden later in loop
-                vertices.bevelProfileCorner = i;
-                // -1 for the overlapping middle vertex, but +1 for the opposite corner (fan origin)
                 vertices.facePlane_count = BevelTypeArray(voxel).Length * 2;
-                if (voxel.concaveBevel)
-                    break;
-            }
-        }
-        if (voxel.concaveBevel)
-        {
-            // TODO: it would be faster to check this first
-            int oppositeFaceNum = Voxel.OppositeFaceI(faceNum);
-            for (int i = 0; i < 4; i++)
-            {
-                if (voxel.edges[Voxel.FaceSurroundingEdge(oppositeFaceNum, i)].hasBevel)
-                {
-                    // default quad
-                    vertices.facePlane_count = 4;
-                    vertices.bevelProfileCorner = -1;
-                    break;
-                }
+                vertices.bevelProfileCorner = profile.beveledCorner;
             }
         }
         vertices.count += vertices.facePlane_count;
@@ -1222,21 +1243,21 @@ public class VoxelComponent : MonoBehaviour
         Vector2[] bevelNormalArray = BevelTypeNormalArray(voxel);
         if (sphereOrigin == null)
         {
-        for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
-        {
-            Vector2 normalVector = bevelNormalArray[bevelI];
-            vertexPos[faceAxis] = normalVector.x * ((faceNum % 2) * 2 - 1);
-            // shouldn't matter which square pos we use
-            // along only the edge axis they will be identical
-            vertexPos[(faceAxis + 1) % 3] = squarePos[0].x;
-            vertexPos[(faceAxis + 2) % 3] = squarePos[0].y;
-            vertexPos[orthAxis] = normalVector.y * (vertexPos[orthAxis] * 2 - 1);
-            vertexPos[edgeAxis] = 0;
-            Vector3 normal = Vector3FromArray(vertexPos);
-            normals[edgeVerts.bevel_i + bevelI * 2] = normal;
-            normals[edgeVerts.bevel_i + bevelI * 2 + 1] = normal;
+            for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
+            {
+                Vector2 normalVector = bevelNormalArray[bevelI];
+                vertexPos[faceAxis] = normalVector.x * ((faceNum % 2) * 2 - 1);
+                // shouldn't matter which square pos we use
+                // along only the edge axis they will be identical
+                vertexPos[(faceAxis + 1) % 3] = squarePos[0].x;
+                vertexPos[(faceAxis + 2) % 3] = squarePos[0].y;
+                vertexPos[orthAxis] = normalVector.y * (vertexPos[orthAxis] * 2 - 1);
+                vertexPos[edgeAxis] = 0;
+                Vector3 normal = Vector3FromArray(vertexPos);
+                normals[edgeVerts.bevel_i + bevelI * 2] = normal;
+                normals[edgeVerts.bevel_i + bevelI * 2 + 1] = normal;
+            }
         }
-    }
         else  // sphere
         {
             for (int i = edgeVerts.bevel_i; i < bevelVertex; i++)
