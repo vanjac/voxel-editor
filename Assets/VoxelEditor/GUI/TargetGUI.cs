@@ -45,14 +45,12 @@ public class TargetGUI : GUIPanel
             Destroy(this);
         }
         GUILayout.EndHorizontal();
+        GUILayout.Box("", GUIStyle.none, GUILayout.Height(16));  // fix weird layout issue
         GUILayout.EndVertical();
 
-        GUILayout.BeginVertical();
-        GUILayout.Label("North:");
-        GUILayout.Box("", GUIStyle.none, GUILayout.Width(150), GUILayout.Height(150));
+        GUILayout.Box("", GUIStyle.none, GUILayout.Width(200), GUILayout.Height(200));
         float compassRotation = -Camera.main.transform.parent.rotation.eulerAngles.y;
         DrawCompass(GUILayoutUtility.GetLastRect(), compassRotation);
-        GUILayout.EndVertical();
         GUILayout.EndHorizontal();
     }
 
@@ -61,28 +59,28 @@ public class TargetGUI : GUIPanel
         Color baseColor = GUI.color;
         GUILayout.BeginHorizontal();
 
-        GUI.color = baseColor * Color.blue;
+        GUI.color = baseColor * new Color(0.2f, 0.2f, 1);
         GUILayout.BeginVertical();
-        if (GUILayout.Button("North"))
+        if (GUILayout.Button("North", GUIStyleSet.instance.buttonSmall))
         {
             handler(new Target(Target.NORTH));
             Destroy(this);
         }
-        if (GUILayout.Button("South"))
+        if (GUILayout.Button("South", GUIStyleSet.instance.buttonSmall))
         {
             handler(new Target(Target.SOUTH));
             Destroy(this);
         }
         GUILayout.EndVertical();
 
-        GUI.color = baseColor * Color.red;
+        GUI.color = baseColor * new Color(1, 0.2f, 0.2f);
         GUILayout.BeginVertical();
-        if (GUILayout.Button("East"))
+        if (GUILayout.Button("East", GUIStyleSet.instance.buttonSmall))
         {
             handler(new Target(Target.EAST));
             Destroy(this);
         }
-        if (GUILayout.Button("West"))
+        if (GUILayout.Button("West", GUIStyleSet.instance.buttonSmall))
         {
             handler(new Target(Target.WEST));
             Destroy(this);
@@ -91,14 +89,14 @@ public class TargetGUI : GUIPanel
 
         if (allowVertical)
         {
-            GUI.color = baseColor * Color.green;
+            GUI.color = baseColor * new Color(0.2f, 1, 0.2f);
             GUILayout.BeginVertical();
-            if (GUILayout.Button("Up"))
+            if (GUILayout.Button("Up", GUIStyleSet.instance.buttonSmall))
             {
                 handler(new Target(Target.UP));
                 Destroy(this);
             }
-            if (GUILayout.Button("Down"))
+            if (GUILayout.Button("Down", GUIStyleSet.instance.buttonSmall))
             {
                 handler(new Target(Target.DOWN));
                 Destroy(this);
@@ -114,7 +112,7 @@ public class TargetGUI : GUIPanel
     {
         Matrix4x4 baseMatrix = GUI.matrix;
         RotateAboutPoint(rect.center, rotation, Vector2.one);
-        GUI.DrawTexture(rect, GUIIconSet.instance.compass);
+        GUI.DrawTexture(rect, GUIIconSet.instance.compassLarge);
         GUI.matrix = baseMatrix;
     }
 }

@@ -244,6 +244,7 @@ MonoBehaviour:
   unsavedChanges: 0
   selectionChanged: 0
   selectMode: 0
+  drawSelect: 0
   boxSelectStartBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -719,7 +720,6 @@ MonoBehaviour:
     rotateRight: {fileID: 2800000, guid: 1198250b3cf1af44b9d7b2a93a2cc8ec, type: 3}
     flipHorizontal: {fileID: 2800000, guid: db8bba60595744c44b0eea385cd24bd3, type: 3}
     flipVertical: {fileID: 2800000, guid: 7aedd43693e19f248b02170e9ff4fb29, type: 3}
-    compass: {fileID: 2800000, guid: 9df09c8922504d646866e3fcf3089863, type: 3}
     about: {fileID: 0}
     select: {fileID: 2800000, guid: a81e8a94ba6da284ca1a45f2694326e5, type: 3}
     entityTag: {fileID: 2800000, guid: 1c7271f3875d8ce4d98afe91ddc3eb6e, type: 3}
@@ -745,6 +745,7 @@ MonoBehaviour:
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}
     helpLarge: {fileID: 0}
+    compassLarge: {fileID: 2800000, guid: f2c752916f63df84d858483d55a07dea, type: 3}
     bevelIcons:
       quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
       half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}
