@@ -65,12 +65,12 @@ public class TargetGUI : GUIPanel
         GUILayout.BeginVertical();
         if (GUILayout.Button("North"))
         {
-            handler(new Target(5));
+            handler(new Target(Target.NORTH));
             Destroy(this);
         }
         if (GUILayout.Button("South"))
         {
-            handler(new Target(4));
+            handler(new Target(Target.SOUTH));
             Destroy(this);
         }
         GUILayout.EndVertical();
@@ -79,12 +79,12 @@ public class TargetGUI : GUIPanel
         GUILayout.BeginVertical();
         if (GUILayout.Button("East"))
         {
-            handler(new Target(1));
+            handler(new Target(Target.EAST));
             Destroy(this);
         }
         if (GUILayout.Button("West"))
         {
-            handler(new Target(0));
+            handler(new Target(Target.WEST));
             Destroy(this);
         }
         GUILayout.EndVertical();
@@ -95,12 +95,12 @@ public class TargetGUI : GUIPanel
             GUILayout.BeginVertical();
             if (GUILayout.Button("Up"))
             {
-                handler(new Target(3));
+                handler(new Target(Target.UP));
                 Destroy(this);
             }
             if (GUILayout.Button("Down"))
             {
-                handler(new Target(2));
+                handler(new Target(Target.DOWN));
                 Destroy(this);
             }
             GUILayout.EndVertical();

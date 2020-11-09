@@ -11,8 +11,8 @@ public class FaceTowardBehavior : EntityBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
-    private Target target = new Target(0);
-    private Target front = new Target(5);  // North
+    private Target target = new Target(Target.EAST);
+    private Target front = new Target(Target.NORTH);
     private float speed = 50;
     private bool yaw = true, pitch = false;
 

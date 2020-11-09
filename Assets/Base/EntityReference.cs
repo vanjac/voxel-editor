@@ -124,13 +124,21 @@ public class EntityReference
 
 public struct Target
 {
+    public const sbyte WEST = 0;
+    public const sbyte EAST = 1;
+    public const sbyte DOWN = 2;
+    public const sbyte UP = 3;
+    public const sbyte SOUTH = 4;
+    public const sbyte NORTH = 5;
+    public const sbyte NO_DIRECTION = -1;
+
     public EntityReference entityRef;
     public sbyte direction;
 
     public Target(Entity entity)
     {
         entityRef = new EntityReference(entity);
-        direction = -1;
+        direction = NO_DIRECTION;
     }
 
     public Target(sbyte direction)
@@ -143,13 +151,13 @@ public struct Target
     {
         if (entityRef.entity != null)
         {
-            direction = -1; // older versions had default direction as 0
+            direction = NO_DIRECTION; // older versions had default direction as 0
             EntityComponent c = entityRef.component;
             if (c != null)
                 return (c.transform.position - point).normalized;
             return Vector3.zero;
         }
-        else if (direction == -1)
+        else if (direction == NO_DIRECTION)
             return Vector3.zero;
         else
             return Voxel.DirectionForFaceI(direction);
@@ -164,7 +172,7 @@ public struct Target
                 return (c.transform.position - point).magnitude;
             return 0.0f;
         }
-        else if (direction == -1)
+        else if (direction == NO_DIRECTION)
             return 0.0f;
         else
             return float.PositiveInfinity;
@@ -185,17 +193,17 @@ public struct Target
         else
             switch (direction)
             {
-                case 0:
+                case WEST:
                     return "West";
-                case 1:
+                case EAST:
                     return "East";
-                case 2:
+                case DOWN:
                     return "Down";
-                case 3:
+                case UP:
                     return "Up";
-                case 4:
+                case SOUTH:
                     return "South";
-                case 5:
+                case NORTH:
                     return "North";
                 default:
                     return "None";

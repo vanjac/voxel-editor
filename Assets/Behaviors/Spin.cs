@@ -12,7 +12,7 @@ public class SpinBehavior : EntityBehavior
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
     private float speed = 50;
-    private Target axis = new Target(3);  // up
+    private Target axis = new Target(Target.UP);
 
     public override BehaviorType BehaviorObjectType()
     {

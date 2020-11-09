@@ -22,7 +22,7 @@ public class ForceBehavior : EntityBehavior
     private bool ignoreMass = false;
     private bool stopObjectFirst = false;
     private float strength = 10;
-    private Target target = new Target(3); // up
+    private Target target = new Target(Target.UP);
 
     public override BehaviorType BehaviorObjectType()
     {

@@ -10,7 +10,7 @@ public class MoveBehavior : EntityBehavior
         + "Increase the Density property of the Physics behavior to increase the object's pushing strength. Gravity has no effect while Move is active.",
         "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private Target target = new Target(0);
+    private Target target = new Target(Target.NORTH);
     private float speed = 1;
 
     public override BehaviorType BehaviorObjectType()

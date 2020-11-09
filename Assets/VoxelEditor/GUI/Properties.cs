@@ -471,7 +471,7 @@ public class PropertyGUIs
         var target = (Target)property.value;
         string targetString = target.ToString();
 
-        if (target.entityRef.entity == null && target.direction == -1)
+        if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
             targetString = "Any";
 
         GUILayout.BeginHorizontal();
