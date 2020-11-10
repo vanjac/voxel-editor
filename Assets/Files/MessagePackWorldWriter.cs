@@ -7,8 +7,8 @@ using System.Xml.Serialization;
 
 public class MessagePackWorldWriter
 {
-    public const int VERSION = 9;
-    private const int FILE_MIN_READER_VERSION = 8;
+    public const int VERSION = 10;
+    private const int FILE_MIN_READER_VERSION = 10;
 
     public static void Write(string filePath, Transform cameraPivot, VoxelArray voxelArray)
     {

@@ -32,7 +32,7 @@ public class FaceTowardBehavior : EntityBehavior
             new Property("dir", "Toward",
                 () => target,
                 v => target = (Target)v,
-                PropertyGUIs.Target),
+                PropertyGUIs.TargetWorldOnly),
             new Property("fro", "Front",
                 () => front,
                 v => front = (Target)v,
@@ -64,8 +64,8 @@ public class FaceTowardComponent : MotionComponent
 
     public override Quaternion GetRotateFixed()
     {
-        Vector3 direction = target.DirectionFrom(transform.position);
-        Vector3 frontDirection = front.DirectionFrom(transform.position);
+        Vector3 direction = target.DirectionFrom(transform);
+        Vector3 frontDirection = front.DirectionFrom(transform);
         float maxAngle = speed * Time.fixedDeltaTime;
 
         Vector3 currentEuler = transform.rotation.eulerAngles;

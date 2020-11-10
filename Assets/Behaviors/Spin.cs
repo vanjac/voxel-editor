@@ -30,7 +30,7 @@ public class SpinBehavior : EntityBehavior
             new Property("axi", "Axis",
                 () => axis,
                 v => axis = (Target)v,
-                PropertyGUIs.Target6Directions)
+                PropertyGUIs.TargetNoObject)
         });
     }
 
@@ -50,6 +50,6 @@ public class SpinComponent : MotionComponent
 
     public override Quaternion GetRotateFixed()
     {
-        return Quaternion.AngleAxis(speed * Time.fixedDeltaTime, axis.DirectionFrom(transform.position));
+        return Quaternion.AngleAxis(speed * Time.fixedDeltaTime, axis.DirectionFrom(transform));
     }
 }

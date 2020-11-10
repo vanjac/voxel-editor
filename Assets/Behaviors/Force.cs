@@ -103,7 +103,7 @@ public class ForceComponent : BehaviorComponent
             rigidBody.velocity = Vector3.zero;
         if ((forceMode == ForceMode.Impulse || forceMode == ForceMode.VelocityChange) && rigidBody != null)
         {
-            rigidBody.AddForce(target.DirectionFrom(transform.position) * strength, forceMode);
+            rigidBody.AddForce(target.DirectionFrom(transform) * strength, forceMode);
             if (player != null)
                 player.disableGroundCheck = true;
         }
@@ -113,7 +113,7 @@ public class ForceComponent : BehaviorComponent
     {
         if ((forceMode == ForceMode.Force || forceMode == ForceMode.Acceleration) && rigidBody != null)
         {
-            rigidBody.AddForce(target.DirectionFrom(transform.position) * strength, forceMode);
+            rigidBody.AddForce(target.DirectionFrom(transform) * strength, forceMode);
             if (player != null)
                 player.disableGroundCheck = true;
         }

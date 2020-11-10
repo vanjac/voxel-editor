@@ -49,8 +49,8 @@ public class MoveComponent : MotionComponent
 
     public override Vector3 GetTranslateFixed()
     {
-        Vector3 direction = target.DirectionFrom(transform.position);
-        float distance = target.DistanceFrom(transform.position);
+        Vector3 direction = target.DirectionFrom(transform);
+        float distance = target.DistanceFrom(transform);
         float magnitude = speed * Time.fixedDeltaTime;
         if (magnitude > distance)
             magnitude = distance;

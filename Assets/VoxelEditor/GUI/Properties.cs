@@ -419,7 +419,7 @@ public class PropertyGUIs
     }
 
     public static void _TargetCustom(Property property,
-        bool allowObjectTarget=true, bool allowVertical=true)
+        bool allowObjectTarget=true, bool allowVertical=true, bool alwaysWorld=false)
     {
         var target = (Target)property.value;
         string targetString = target.ToString();
@@ -441,6 +441,7 @@ public class PropertyGUIs
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.allowObjectTarget = allowObjectTarget;
             targetGUI.allowVertical = allowVertical;
+            targetGUI.alwaysWorld = alwaysWorld;
             targetGUI.handler = (Target newTarget) =>
             {
                 property.value = newTarget;
@@ -456,12 +457,17 @@ public class PropertyGUIs
         _TargetCustom(property);
     }
 
-    public static void Target4Directions(Property property)
+    public static void TargetWorldOnly(Property property)
     {
-        _TargetCustom(property, allowObjectTarget: false, allowVertical: false);
+        _TargetCustom(property, alwaysWorld: true);
     }
 
-    public static void Target6Directions(Property property)
+    public static void Target4Directions(Property property)
+    {
+        _TargetCustom(property, allowObjectTarget: false, allowVertical: false, alwaysWorld: true);
+    }
+
+    public static void TargetNoObject(Property property)
     {
         _TargetCustom(property, allowObjectTarget: false);
     }

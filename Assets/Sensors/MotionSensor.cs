@@ -60,7 +60,7 @@ public class MotionSensorComponent : SensorComponent
         {
             bool aboveVel = rigidbody.velocity.magnitude >= minVelocity;
             bool aboveAngVel = Mathf.Rad2Deg * rigidbody.angularVelocity.magnitude >= minAngularVelocity;
-            bool matchesDirection = direction.MatchesDirection(transform.position, rigidbody.velocity);
+            bool matchesDirection = direction.MatchesDirection(transform, rigidbody.velocity);
             if (aboveVel && aboveAngVel && matchesDirection)
                 AddActivator(null);
             else

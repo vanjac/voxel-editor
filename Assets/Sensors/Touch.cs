@@ -70,7 +70,7 @@ public class TouchComponent : SensorComponent
         EntityComponent entity = EntityComponent.FindEntityComponent(c);
         if (entity != null && entity != ignoreEntity
             && filter.EntityMatches(entity) && relativeVelocity.magnitude >= minVelocity
-            && direction.MatchesDirection(entity.transform.position, relativeVelocity)
+            && direction.MatchesDirection(entity.transform, relativeVelocity)
             && !rejectedColliders.Contains(c))
         {
             touchingColliders.Add(c);
