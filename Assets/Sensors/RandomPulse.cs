@@ -8,7 +8,7 @@ public class RandomPulseSensor : Sensor
         "Rand. Pulse", "Turns on and off in a random pattern",
         "Alternates on/off using random times selected within the range."
         + " Useful for unpredictable behavior, flickering lights, etc.",
-        "chart-histogram", typeof(RandomPulseSensor));
+        "progress-question", typeof(RandomPulseSensor));
     
     private (float, float) offTimeRange = (1, 5);
     private (float, float) onTimeRange = (1, 5);
