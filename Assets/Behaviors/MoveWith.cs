@@ -8,9 +8,7 @@ public class MoveWithBehavior : EntityBehavior
         "Move With", "Follow the motion of another object.",
         "BUG: This behavior will block Move behaviors from working.",
         "move-resize-variant", typeof(MoveWithBehavior),
-        BehaviorType.AndRule(
-            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private EntityReference target = new EntityReference(null);
     private bool followRotation = true;
