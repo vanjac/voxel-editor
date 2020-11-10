@@ -9,7 +9,7 @@ public class TargetGUI : GUIPanel
     public TargetHandler handler;
     public VoxelArrayEditor voxelArray;
     public bool allowObjectTarget = true, allowNullTarget = false, allowVertical = true;
-    public bool alwaysWorld = false;
+    public bool alwaysWorld = false, allowRandom = true;
 
     private int localState = 0;
 
@@ -47,6 +47,11 @@ public class TargetGUI : GUIPanel
         if (allowNullTarget && GUILayout.Button("Any"))
         {
             handler(new Target(null));
+            Destroy(this);
+        }
+        if (allowRandom && GUILayout.Button("Random"))
+        {
+            handler(new Target(Target.RANDOM));  // don't check local state
             Destroy(this);
         }
         GUILayout.EndHorizontal();

@@ -99,6 +99,7 @@ public class ForceComponent : BehaviorComponent
 
     public override void BehaviorEnabled()
     {
+        target.PickRandom();
         if (stopObjectFirst && rigidBody != null)
             rigidBody.velocity = Vector3.zero;
         if ((forceMode == ForceMode.Impulse || forceMode == ForceMode.VelocityChange) && rigidBody != null)

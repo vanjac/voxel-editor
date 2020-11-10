@@ -62,6 +62,12 @@ public class FaceTowardComponent : MotionComponent
     public float speed;
     public bool yaw, pitch;
 
+    public override void BehaviorEnabled()
+    {
+        target.PickRandom();  // front will not be random
+        base.BehaviorEnabled();
+    }
+
     public override Quaternion GetRotateFixed()
     {
         Vector3 direction = target.DirectionFrom(transform);

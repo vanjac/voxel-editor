@@ -30,7 +30,7 @@ public class SpinBehavior : EntityBehavior
             new Property("axi", "Axis",
                 () => axis,
                 v => axis = (Target)v,
-                PropertyGUIs.TargetNoObject)
+                PropertyGUIs.TargetStatic)
         });
     }
 
@@ -46,7 +46,7 @@ public class SpinBehavior : EntityBehavior
 public class SpinComponent : MotionComponent
 {
     public float speed;
-    public Target axis;
+    public Target axis;  // not random
 
     public override Quaternion GetRotateFixed()
     {

@@ -419,7 +419,8 @@ public class PropertyGUIs
     }
 
     public static void _TargetCustom(Property property,
-        bool allowObjectTarget=true, bool allowVertical=true, bool alwaysWorld=false)
+        bool allowObjectTarget=true, bool allowVertical=true, bool alwaysWorld=false,
+        bool allowRandom=true)
     {
         var target = (Target)property.value;
         string targetString = target.ToString();
@@ -442,6 +443,7 @@ public class PropertyGUIs
             targetGUI.allowObjectTarget = allowObjectTarget;
             targetGUI.allowVertical = allowVertical;
             targetGUI.alwaysWorld = alwaysWorld;
+            targetGUI.allowRandom = allowRandom;
             targetGUI.handler = (Target newTarget) =>
             {
                 property.value = newTarget;
@@ -464,12 +466,13 @@ public class PropertyGUIs
 
     public static void Target4Directions(Property property)
     {
-        _TargetCustom(property, allowObjectTarget: false, allowVertical: false, alwaysWorld: true);
+        _TargetCustom(property, allowObjectTarget: false, allowVertical: false,
+            alwaysWorld: true, allowRandom: false);
     }
 
-    public static void TargetNoObject(Property property)
+    public static void TargetStatic(Property property)
     {
-        _TargetCustom(property, allowObjectTarget: false);
+        _TargetCustom(property, allowObjectTarget: false, allowRandom: false);
     }
 
     public static void TargetDirectionFilter(Property property)
@@ -489,6 +492,7 @@ public class PropertyGUIs
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.allowNullTarget = true;
             targetGUI.allowObjectTarget = false;
+            targetGUI.allowRandom = false;
             targetGUI.handler = (Target newTarget) =>
             {
                 property.value = newTarget;

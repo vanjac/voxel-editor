@@ -47,6 +47,12 @@ public class MoveComponent : MotionComponent
     public Target target;
     public float speed;
 
+    public override void BehaviorEnabled()
+    {
+        target.PickRandom();
+        base.BehaviorEnabled();
+    }
+
     public override Vector3 GetTranslateFixed()
     {
         Vector3 direction = target.DirectionFrom(transform);

@@ -130,22 +130,36 @@ public struct Target
     public const sbyte UP = 3;
     public const sbyte SOUTH = 4;
     public const sbyte NORTH = 5;
+    public const sbyte RANDOM = 6;
     public const sbyte LOCAL_BIT = 8;
     public const sbyte NO_DIRECTION = -1;
 
     public EntityReference entityRef;
     public sbyte direction;
 
+    [XmlIgnore]
+    private Vector3 randomDirection;
+
     public Target(Entity entity)
     {
         entityRef = new EntityReference(entity);
         direction = NO_DIRECTION;
+        randomDirection = Vector3.zero;
     }
 
     public Target(sbyte direction)
     {
         entityRef = new EntityReference(null);
         this.direction = direction;
+        randomDirection = Vector3.zero;
+    }
+
+    public void PickRandom()
+    {
+        if (direction != RANDOM)
+            return;
+        float angle = UnityEngine.Random.Range(0.0f, 2 * Mathf.PI);
+        randomDirection = new Vector3(Mathf.Cos(angle), 0.0f, Mathf.Sin(angle));
     }
 
     public Vector3 DirectionFrom(Transform transform)
@@ -160,6 +174,8 @@ public struct Target
         }
         else if (direction == NO_DIRECTION)
             return Vector3.zero;
+        else if (direction == RANDOM)
+            return randomDirection;
         else if ((direction & LOCAL_BIT) != 0)
             return transform.TransformDirection(Voxel.DirectionForFaceI(direction & ~LOCAL_BIT));
         else
@@ -215,6 +231,9 @@ public struct Target
                     break;
                 case NORTH:
                     dirStr = "North";
+                    break;
+                case RANDOM:
+                    dirStr = "Random";
                     break;
             }
             if ((direction & LOCAL_BIT) != 0)
