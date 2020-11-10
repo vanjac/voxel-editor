@@ -69,17 +69,43 @@ public class GameScripts
     {
         PropertiesObjectType.NONE,
         //TestSensor.objectType,
+
         TouchSensor.objectType,
-        InputThresholdSensor.objectType,
-        ToggleSensor.objectType,
-        PulseSensor.objectType,
-        RandomPulseSensor.objectType,
-        DelaySensor.objectType,
         TapSensor.objectType,
         MotionSensor.objectType,
         InRangeSensor.objectType,
         InCameraSensor.objectType,
-        CheckScoreSensor.objectType
+        CheckScoreSensor.objectType,
+
+        InputThresholdSensor.objectType,
+        ToggleSensor.objectType,
+        PulseSensor.objectType,
+        RandomPulseSensor.objectType,
+        DelaySensor.objectType
+    };
+
+    public static string[] sensorTabNames = new string[] { "Detect", "Logic" };
+
+    public static PropertiesObjectType[][] sensorTabs = new PropertiesObjectType[][]
+    {
+        new PropertiesObjectType[]
+        {
+            PropertiesObjectType.NONE,
+            TouchSensor.objectType,
+            TapSensor.objectType,
+            MotionSensor.objectType,
+            InRangeSensor.objectType,
+            InCameraSensor.objectType,
+            CheckScoreSensor.objectType,
+        },
+        new PropertiesObjectType[]
+        {
+            InputThresholdSensor.objectType,
+            ToggleSensor.objectType,
+            PulseSensor.objectType,
+            RandomPulseSensor.objectType,
+            DelaySensor.objectType
+        }
     };
 
     public static BehaviorType[] behaviors = new BehaviorType[]

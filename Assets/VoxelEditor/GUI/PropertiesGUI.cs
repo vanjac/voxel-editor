@@ -380,7 +380,8 @@ public class PropertiesGUI : LeftPanelGUI
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.title = "Change Sensor";
-            sensorMenu.categories = new PropertiesObjectType[][] { GameScripts.sensors };
+            sensorMenu.categoryNames = GameScripts.sensorTabNames;
+            sensorMenu.categories = GameScripts.sensorTabs;
             sensorMenu.handler = (PropertiesObjectType type) =>
             {
                 foreach (Entity entity in selectedEntities)
