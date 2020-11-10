@@ -6,6 +6,7 @@ public class FilterGUI : GUIPanel
 {
     public delegate void FilterHandler(ActivatedSensor.Filter filter);
 
+    public ActivatedSensor.Filter current;
     public FilterHandler handler;
     public VoxelArrayEditor voxelArray;
 
@@ -61,9 +62,14 @@ public class FilterGUI : GUIPanel
         {
             TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
             picker.title = "Filter by tag";
-            picker.handler = (byte tag) =>
+            picker.multiple = true;
+            if (current is ActivatedSensor.MultipleTagFilter)
+                picker.multiSelection = (current as ActivatedSensor.MultipleTagFilter).tagBits;
+            else if (current is ActivatedSensor.TagFilter)
+                picker.multiSelection = (byte)(1 << (current as ActivatedSensor.TagFilter).tag);
+            picker.handler = (byte tagBits) =>
             {
-                handler(new ActivatedSensor.TagFilter(tag));
+                handler(new ActivatedSensor.MultipleTagFilter(tagBits));
             };
             Destroy(this);
         }

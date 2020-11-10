@@ -33,6 +33,12 @@ public class PaintGUI : GUIPanel
             safeRect.width * .7f, safeRect.height * .9f);
     }
 
+    public override void OnEnable()
+    {
+        showCloseButton = true;
+        base.OnEnable();
+    }
+
     void Start()
     {
         if (paint.material == null && paint.overlay != null)
@@ -87,8 +93,6 @@ public class PaintGUI : GUIPanel
         }
 
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Done"))
-            Destroy(this);
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");

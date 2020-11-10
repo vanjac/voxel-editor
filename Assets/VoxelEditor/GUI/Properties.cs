@@ -184,6 +184,7 @@ public class PropertyGUIs
         {
             TagPickerGUI picker = GUIManager.guiGameObject.AddComponent<TagPickerGUI>();
             picker.title = "Change " + property.name;
+            picker.multiSelection = (byte)(1 << (byte)property.value);
             picker.handler = (byte tag) =>
             {
                 property.value = tag;
@@ -344,6 +345,7 @@ public class PropertyGUIs
             FilterGUI filterGUI = GUIManager.guiGameObject.AddComponent<FilterGUI>();
             filterGUI.title = property.name + " by...";
             filterGUI.voxelArray = VoxelArrayEditor.instance;
+            filterGUI.current = filter;
             filterGUI.handler = (ActivatedSensor.Filter newFilter) =>
             {
                 property.value = newFilter;

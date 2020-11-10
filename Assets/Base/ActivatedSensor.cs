@@ -112,6 +112,7 @@ public abstract class ActivatedSensor : Sensor
         }
     }
 
+    // for maps before version 10
     public class TagFilter : Filter
     {
         public byte tag;
@@ -133,6 +134,47 @@ public abstract class ActivatedSensor : Sensor
         public override string ToString()
         {
             return "With tag " + Entity.TagToString(tag);
+        }
+    }
+
+    public class MultipleTagFilter : Filter
+    {
+        public byte tagBits;  // bitfield
+
+        public MultipleTagFilter() { } // deserialization
+
+        public MultipleTagFilter(byte tagBits)
+        {
+            this.tagBits = tagBits;
+        }
+
+        public bool EntityMatches(EntityComponent entityComponent)
+        {
+            if (entityComponent == null)
+                return false;
+            return ((1 << entityComponent.entity.tag) & tagBits) != 0;
+        }
+
+        public override string ToString()
+        {
+            if (tagBits == 0)
+                return "Nothing";
+            else if (tagBits == 255)
+                return "Anything";
+            string str = "";
+            int count = 0;
+            for (byte i = 0; i < 8; i++)
+            {
+                if ((tagBits & (1 << i)) != 0)
+                {
+                    str += Entity.TagToString(i);
+                    count++;
+                }
+            }
+            if (count == 1)
+                return "With tag " + str;
+            else
+                return "Tags " + str;
         }
     }
 

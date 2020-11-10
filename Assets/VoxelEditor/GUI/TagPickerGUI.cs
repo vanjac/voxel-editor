@@ -6,21 +6,8 @@ public class TagPickerGUI : GUIPanel
 {
     public delegate void TagHandler(byte tag);
     public TagHandler handler;
-
-    private string[] tags;
-    private static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
-    {
-        var style = new GUIStyle(GUI.skin.button);
-        style.fontSize = GUI.skin.font.fontSize * 2;
-        return style;
-    });
-
-    void Start()
-    {
-        tags = new string[Entity.NUM_TAGS];
-        for (byte i = 0; i < Entity.NUM_TAGS; i++)
-            tags[i] = Entity.TagToString(i);
-    }
+    public bool multiple;
+    public byte multiSelection;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -28,12 +15,43 @@ public class TagPickerGUI : GUIPanel
             GUIPanel.topPanel.panelRect.yMax, 960, 540);
     }
 
+    void Start()
+    {
+        // must be in Start bc multiple is not known on enable
+        showCloseButton = multiple;
+    }
+
+    void OnDestroy()
+    {
+        if (multiple)
+            handler(multiSelection);
+    }
+
     public override void WindowGUI()
     {
-        int selection = GUILayout.SelectionGrid(-1, tags, 4, buttonStyle.Value, GUILayout.ExpandHeight(true));
-        if (selection != -1)
+        GUILayout.BeginHorizontal();
+        for (byte i = 0; i < 4; i++)
+            TagButton(i);
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+        for (byte i = 4; i < 8; i++)
+            TagButton(i);
+        GUILayout.EndHorizontal();
+    }
+
+    private void TagButton(byte tag)
+    {
+        byte bit = (byte)(1 << tag);
+        if (!GUIUtils.HighlightedButton(GUIIconSet.instance.tagIcons[tag],
+                highlight: (multiSelection & bit) != 0, options: GUILayout.ExpandHeight(true)))
+            return;
+        if (multiple)
         {
-            handler((byte)selection);
+            multiSelection ^= bit;
+        }
+        else
+        {
+            handler(tag);
             Destroy(this);
         }
     }

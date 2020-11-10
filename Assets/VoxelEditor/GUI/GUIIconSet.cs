@@ -21,6 +21,8 @@ public struct GUIIconSet
     public Texture reddit, youTube, gitHub, undo, import, fill, draw;
     public Texture indoorLarge, floatingLarge, newWorldLarge, helpLarge, compassLarge;
 
+    public Texture[] tagIcons;
+
     [System.Serializable]
     public struct BevelIconSet
     {

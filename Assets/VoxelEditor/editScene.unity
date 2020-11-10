@@ -746,6 +746,15 @@ MonoBehaviour:
     newWorldLarge: {fileID: 0}
     helpLarge: {fileID: 0}
     compassLarge: {fileID: 2800000, guid: f2c752916f63df84d858483d55a07dea, type: 3}
+    tagIcons:
+    - {fileID: 2800000, guid: 93f1ba19171b85c428ae0c1342580115, type: 3}
+    - {fileID: 2800000, guid: 28031886181f6c74da581772139a1efc, type: 3}
+    - {fileID: 2800000, guid: b2611dfa8c6539e4a850f63307ca97ca, type: 3}
+    - {fileID: 2800000, guid: 0ef64c307a87b7141b62ed885fe9f3f3, type: 3}
+    - {fileID: 2800000, guid: 8bc7a7df6b171ea40a6eccad78e0a0e7, type: 3}
+    - {fileID: 2800000, guid: eea18c8052e452b4e9a64afa97eae349, type: 3}
+    - {fileID: 2800000, guid: 4aef6dd4730d79846ad4add53701e121, type: 3}
+    - {fileID: 2800000, guid: 376258ccc6083a940b4c85a435b15002, type: 3}
     bevelIcons:
       quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
       half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}

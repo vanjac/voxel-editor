@@ -19,6 +19,7 @@ public abstract class GUIPanel : MonoBehaviour
     public static GUIPanel leftPanel, topPanel;
 
     public string title = "";
+    protected bool showCloseButton = false;
 
     public Vector2 scroll = Vector2.zero;
     protected Vector2 scrollVelocity = Vector2.zero;
@@ -144,9 +145,13 @@ public abstract class GUIPanel : MonoBehaviour
                 scroll.y = 0;  // fix scroll bar disappearing
         }
 
-        if (title != "")
+        if (title != "" || showCloseButton)
         {
+            GUILayout.BeginHorizontal();
             GUILayout.Label(title, GUIUtils.LABEL_HORIZ_CENTERED.Value);
+            if (showCloseButton && GUILayout.Button("Done", GUILayout.ExpandWidth(false)))
+                Destroy(this);
+            GUILayout.EndHorizontal();
         }
 
         WindowGUI();
