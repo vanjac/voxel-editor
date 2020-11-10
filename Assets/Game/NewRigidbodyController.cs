@@ -37,7 +37,6 @@ public class NewRigidbodyController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
         footstepSoundPlayer = GetComponent<FootstepSounds>();
-        mouseLook.Init(transform, cam.transform);
     }
 
     void Update()

@@ -7,9 +7,7 @@ public class SpinBehavior : EntityBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Spin", "Rotate continuously", "Speed is in degrees per second.",
         "format-rotate-90", typeof(SpinBehavior),
-        BehaviorType.AndRule(
-            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private float speed = 50;
     private Target axis = new Target(Target.UP);

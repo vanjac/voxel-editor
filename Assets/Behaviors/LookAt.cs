@@ -7,9 +7,7 @@ public class LookAtBehavior : EntityBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Look At", "Point in a direction or towards an object",
         "compass", typeof(LookAtBehavior),
-        BehaviorType.AndRule(
-            BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private Target target = new Target(Target.EAST);
     private Target front = new Target(Target.NORTH);
