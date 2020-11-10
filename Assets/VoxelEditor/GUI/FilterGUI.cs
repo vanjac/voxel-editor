@@ -10,15 +10,23 @@ public class FilterGUI : GUIPanel
     public FilterHandler handler;
     public VoxelArrayEditor voxelArray;
 
+    private static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        style.alignment = TextAnchor.MiddleLeft;
+        return style;
+    });
+
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(GUIPanel.leftPanel.panelRect.xMax,
-            GUIPanel.topPanel.panelRect.yMax, 576, 0);
+            GUIPanel.topPanel.panelRect.yMax, 500, 0);
     }
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button("Specific object"))
+        if (GUILayout.Button(new GUIContent("    Specific object", GUIIconSet.instance.singleObject),
+            buttonStyle.Value))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = voxelArray;
@@ -35,7 +43,8 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button("Object type"))
+        if (GUILayout.Button(new GUIContent("    Object type", GUIIconSet.instance.objectType),
+            buttonStyle.Value))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Filter by object type";
@@ -46,10 +55,11 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button("Active behavior type"))
+        if (GUILayout.Button(new GUIContent("    Active behavior", GUIIconSet.instance.behavior),
+            buttonStyle.Value))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
-            picker.title = "Filter by behavior type";
+            picker.title = "Filter by active behavior";
             picker.categoryNames = GameScripts.behaviorTabNames;
             picker.categories = GameScripts.behaviorTabs;
             picker.handler = (PropertiesObjectType type) =>
@@ -58,7 +68,8 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button("Tags"))
+        if (GUILayout.Button(new GUIContent("    Tags", GUIIconSet.instance.entityTag),
+            buttonStyle.Value))
         {
             TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
             picker.title = "Filter by tags";
