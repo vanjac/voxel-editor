@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 5400000}
   - component: {fileID: 13600000}
   - component: {fileID: 114102167072676840}
-  - component: {fileID: 114776810368877598}
+  - component: {fileID: 2597397773986149255}
   - component: {fileID: 2758383152309724093}
   m_Layer: 0
   m_Name: Player
@@ -232,7 +232,7 @@ MonoBehaviour:
     lockCursor: 0
   cam: {fileID: 2000000}
   disableGroundCheck: 0
---- !u!114 &114776810368877598
+--- !u!114 &2597397773986149255
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15223c0d2e21fa6479f1a93f9fb061e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 22ccf33a1a7e281409e67578f540640e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   density: 3
