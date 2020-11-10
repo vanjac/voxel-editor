@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FaceTowardBehavior : EntityBehavior
+public class LookAtBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Look At", "Point in a direction or towards an object",
-        "compass", typeof(FaceTowardBehavior),
+        "compass", typeof(LookAtBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
@@ -46,7 +46,7 @@ public class FaceTowardBehavior : EntityBehavior
 
     public override Behaviour MakeComponent(GameObject gameObject)
     {
-        var component = gameObject.AddComponent<FaceTowardComponent>();
+        var component = gameObject.AddComponent<LookAtComponent>();
         component.target = target;
         component.front = front;
         component.speed = speed;
@@ -56,7 +56,7 @@ public class FaceTowardBehavior : EntityBehavior
     }
 }
 
-public class FaceTowardComponent : MotionComponent
+public class LookAtComponent : MotionComponent
 {
     public Target target, front;
     public float speed;

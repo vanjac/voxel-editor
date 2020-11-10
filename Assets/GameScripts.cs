@@ -86,7 +86,7 @@ public class GameScripts
     {
         MoveBehavior.objectType,
         SpinBehavior.objectType,
-        FaceTowardBehavior.objectType,
+        LookAtBehavior.objectType,
         TeleportBehavior.objectType,
         MoveWithBehavior.objectType,
 
@@ -116,7 +116,7 @@ public class GameScripts
         {
             MoveBehavior.objectType,
             SpinBehavior.objectType,
-            FaceTowardBehavior.objectType,
+            LookAtBehavior.objectType,
             TeleportBehavior.objectType,
             MoveWithBehavior.objectType
         },
