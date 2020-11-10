@@ -23,6 +23,12 @@ public class ColorPickerGUI : GUIPanel
             GUIPanel.topPanel.panelRect.yMax, 1080, 0);
     }
 
+    public override void OnEnable()
+    {
+        showCloseButton = true;
+        base.OnEnable();
+    }
+
     public void SetColor(Color c)
     {
         color = c;
