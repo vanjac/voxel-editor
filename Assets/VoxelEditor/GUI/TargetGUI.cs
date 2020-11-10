@@ -22,10 +22,28 @@ public class TargetGUI : GUIPanel
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
+
         GUILayout.BeginVertical();
         if (!alwaysWorld)
             localState = GUILayout.SelectionGrid(localState, new string[] {"World", "Local"}, 2);
         DirectionButtons();
+        GUILayout.Space(16);  // fix weird layout issue
+        GUILayout.EndVertical();
+
+        GUILayout.Space(8);  // padding
+
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        GUILayout.Space(8);  // additional padding
+        GUILayout.Box("", GUIStyle.none, GUILayout.Width(200), GUILayout.Height(200));
+        float compassRotation = -Camera.main.transform.parent.rotation.eulerAngles.y;
+        DrawCompass(GUILayoutUtility.GetLastRect(), compassRotation);
+        GUILayout.Space(8);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+
+        GUILayout.EndHorizontal();
+
         GUILayout.BeginHorizontal();
         if (allowObjectTarget && GUILayout.Button("Pick object"))
         {
@@ -54,15 +72,6 @@ public class TargetGUI : GUIPanel
             handler(new Target(Target.RANDOM));  // don't check local state
             Destroy(this);
         }
-        GUILayout.EndHorizontal();
-        GUILayout.Box("", GUIStyle.none, GUILayout.Height(16));  // fix weird layout issue
-        GUILayout.EndVertical();
-
-        GUILayout.Box("", GUIStyle.none, GUILayout.Width(8));  // padding
-        GUILayout.Box("", GUIStyle.none, GUILayout.Width(200), GUILayout.Height(200));
-        float compassRotation = -Camera.main.transform.parent.rotation.eulerAngles.y;
-        DrawCompass(GUILayoutUtility.GetLastRect(), compassRotation);
-        GUILayout.Box("", GUIStyle.none, GUILayout.Width(8));  // padding
         GUILayout.EndHorizontal();
     }
 
