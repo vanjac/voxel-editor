@@ -45,8 +45,9 @@ public abstract class ObjectEntity : DynamicEntity
             return;
         highlight = c;
         if (highlightMaterial == null)
-            highlightMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, false);
-        ResourcesDirectory.SetCustomMaterialColor(highlightMaterial, highlight);
+            highlightMaterial = ResourcesDirectory.InstantiateMaterial(
+                ResourcesDirectory.FindMaterial("UNLIT", true));
+        highlightMaterial.color = highlight;
         if (marker != null)
             marker.UpdateMarker();
     }

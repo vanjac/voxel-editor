@@ -24,6 +24,36 @@ MonoBehaviour:
     parent: Materials
     sound: 0
   - isDirectory: 1
+    name: _Basic_
+    path: Materials/_Basic_
+    parent: Materials
+    sound: 0
+  - isDirectory: 0
+    name: GLASS
+    path: Materials/_Basic_/GLASS
+    parent: Materials/_Basic_
+    sound: 15
+  - isDirectory: 0
+    name: GLOSSY
+    path: Materials/_Basic_/GLOSSY
+    parent: Materials/_Basic_
+    sound: 10
+  - isDirectory: 0
+    name: MATTE
+    path: Materials/_Basic_/MATTE
+    parent: Materials/_Basic_
+    sound: 0
+  - isDirectory: 0
+    name: METAL
+    path: Materials/_Basic_/METAL
+    parent: Materials/_Basic_
+    sound: 9
+  - isDirectory: 0
+    name: UNLIT
+    path: Materials/_Basic_/UNLIT
+    parent: Materials/_Basic_
+    sound: 0
+  - isDirectory: 1
     name: Asphalt
     path: Materials/Asphalt
     parent: Materials
@@ -637,6 +667,46 @@ MonoBehaviour:
     name: $Invisible
     path: Overlays/$Invisible
     parent: Overlays
+    sound: 0
+  - isDirectory: 1
+    name: _Basic Overlays_
+    path: Overlays/_Basic Overlays_
+    parent: Overlays
+    sound: 0
+  - isDirectory: 0
+    name: ADD_overlay
+    path: Overlays/_Basic Overlays_/ADD_overlay
+    parent: Overlays/_Basic Overlays_
+    sound: 0
+  - isDirectory: 0
+    name: GLASS_overlay
+    path: Overlays/_Basic Overlays_/GLASS_overlay
+    parent: Overlays/_Basic Overlays_
+    sound: 15
+  - isDirectory: 0
+    name: GLOSSY_overlay
+    path: Overlays/_Basic Overlays_/GLOSSY_overlay
+    parent: Overlays/_Basic Overlays_
+    sound: 10
+  - isDirectory: 0
+    name: MATTE_overlay
+    path: Overlays/_Basic Overlays_/MATTE_overlay
+    parent: Overlays/_Basic Overlays_
+    sound: 0
+  - isDirectory: 0
+    name: METAL_overlay
+    path: Overlays/_Basic Overlays_/METAL_overlay
+    parent: Overlays/_Basic Overlays_
+    sound: 9
+  - isDirectory: 0
+    name: MULTIPLY_overlay
+    path: Overlays/_Basic Overlays_/MULTIPLY_overlay
+    parent: Overlays/_Basic Overlays_
+    sound: 0
+  - isDirectory: 0
+    name: UNLIT_overlay
+    path: Overlays/_Basic Overlays_/UNLIT_overlay
+    parent: Overlays/_Basic Overlays_
     sound: 0
   - isDirectory: 1
     name: Fencing
@@ -1296,6 +1366,11 @@ MonoBehaviour:
   - isDirectory: 0
     name: sky_procedural_preview
     path: Skies/sky_procedural_preview
+    parent: Skies
+    sound: 0
+  - isDirectory: 0
+    name: sky_unlit
+    path: Skies/sky_unlit
     parent: Skies
     sound: 0
   - isDirectory: 0

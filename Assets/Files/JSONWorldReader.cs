@@ -172,33 +172,26 @@ public class JSONWorldReader : WorldFileReader
 
     private Material ReadMaterial(JSONObject matObject)
     {
+        string name;
+        Color color = Color.white;
+        bool setColor = false;
+
         if (matObject["name"] != null)
         {
-            string name = matObject["name"];
-            Material mat = ResourcesDirectory.FindMaterial(name, editor);
-            if (mat == null)
-            {
-                warnings.Add("Unrecognized material: " + name);
-                return ReadWorldFile.missingMaterial;
-            }
-            return mat;
+            name = matObject["name"];
         }
         else if (matObject["mode"] != null)
         {
-            ColorMode mode = (ColorMode)System.Enum.Parse(typeof(ColorMode), matObject["mode"]);
+            name = matObject["mode"];
             if (matObject["color"] != null)
             {
-                Color color = ReadColor(matObject["color"].AsArray);
+                color = ReadColor(matObject["color"].AsArray);
+                setColor = true;
                 bool overlay = color.a != 1;
                 if (matObject["alpha"] != null)
                     overlay = matObject["alpha"].AsBool; // new with version 4
-                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, overlay);
-                ResourcesDirectory.SetCustomMaterialColor(mat, color);
-                return mat;
-            }
-            else
-            {
-                return ResourcesDirectory.MakeCustomMaterial(mode);
+                if (overlay)
+                    name += "_overlay";
             }
         }
         else
@@ -206,6 +199,19 @@ public class JSONWorldReader : WorldFileReader
             warnings.Add("Error reading material");
             return ReadWorldFile.missingMaterial;
         }
+
+        Material mat = ResourcesDirectory.FindMaterial(name, editor);
+        if (mat == null)
+        {
+            warnings.Add("Unrecognized material: " + name);
+            return ReadWorldFile.missingMaterial;
+        }
+        if (setColor)
+        {
+            mat = ResourcesDirectory.InstantiateMaterial(mat);
+            mat.color = color;
+        }
+        return mat;
     }
 
     private void ReadObjectEntity(JSONObject entityObject, ObjectEntity objectEntity)

@@ -87,8 +87,9 @@ public class ReadWorldFile
     {
         if (missingMaterial == null)
         {
-            missingMaterial = ResourcesDirectory.MakeCustomMaterial(ColorMode.UNLIT, true);
-            ResourcesDirectory.SetCustomMaterialColor(missingMaterial, Color.magenta);
+            missingMaterial = ResourcesDirectory.InstantiateMaterial(
+                ResourcesDirectory.FindMaterial("UNLIT_overlay", true));
+            missingMaterial.color = Color.magenta;
         }
 
         try

@@ -164,39 +164,38 @@ public class MessagePackWorldReader : WorldFileReader
 
     private Material ReadMaterial(MessagePackObjectDictionary matDict, bool overlay)
     {
+        string name;
+
         if (matDict.ContainsKey(FileKeys.MATERIAL_NAME))
         {
-            string name = matDict[FileKeys.MATERIAL_NAME].AsString();
-            Material mat = ResourcesDirectory.FindMaterial(name, editor);
-            if (mat == null)
-            {
-                warnings.Add("Unrecognized material: " + name);
-                return ReadWorldFile.missingMaterial;
-            }
-            return mat;
+            name = matDict[FileKeys.MATERIAL_NAME].AsString();
         }
-        else if (matDict.ContainsKey(FileKeys.MATERIAL_MODE))
+        else if (matDict.ContainsKey(FileKeys.MATERIAL_MODE))  // version 9 and earlier
         {
-            ColorMode mode = (ColorMode)System.Enum.Parse(typeof(ColorMode), matDict[FileKeys.MATERIAL_MODE].AsString());
-            if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
-            {
-                Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
-                if (matDict.ContainsKey(FileKeys.MATERIAL_ALPHA))
-                    overlay = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
-                Material mat = ResourcesDirectory.MakeCustomMaterial(mode, overlay);
-                ResourcesDirectory.SetCustomMaterialColor(mat, color);
-                return mat;
-            }
-            else
-            {
-                return ResourcesDirectory.MakeCustomMaterial(mode);
-            }
+            name = matDict[FileKeys.MATERIAL_MODE].AsString();
+            if (matDict.ContainsKey(FileKeys.MATERIAL_ALPHA))
+                overlay = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
+            if (overlay)
+                name += "_overlay";
         }
         else
         {
             warnings.Add("Error reading material");
             return ReadWorldFile.missingMaterial;
         }
+
+        Material mat = ResourcesDirectory.FindMaterial(name, editor);
+        if (mat == null)
+        {
+            warnings.Add("Unrecognized material: " + name);
+            return ReadWorldFile.missingMaterial;
+        }
+        if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
+        {
+            mat = ResourcesDirectory.InstantiateMaterial(mat);
+            mat.color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
+        }
+        return mat;
     }
 
     private void ReadObjectEntity(MessagePackObjectDictionary entityDict, ObjectEntity objectEntity)

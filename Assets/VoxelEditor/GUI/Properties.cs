@@ -356,9 +356,7 @@ public class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory, bool allowAlpha = false,
-        MaterialSelectorGUI.ColorModeSet colorModeSet = MaterialSelectorGUI.ColorModeSet.DEFAULT,
-        bool colorOnly = false)
+    public static PropertyGUI Material(string materialDirectory, bool allowAlpha = false)
     {
         return (Property property) =>
         {
@@ -379,8 +377,6 @@ public class PropertyGUIs
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
                 materialSelector.allowAlpha = allowAlpha;
-                materialSelector.colorModeSet = colorModeSet;
-                materialSelector.colorOnly = colorOnly;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.setter(mat); // skip equality check, it could be the same material with a different color

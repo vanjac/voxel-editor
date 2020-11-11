@@ -16,8 +16,9 @@ public class BallObject : ObjectEntity
 
     public BallObject()
     {
-        material = ResourcesDirectory.MakeCustomMaterial(ColorMode.MATTE, true);
-        ResourcesDirectory.SetCustomMaterialColor(material, Color.red);
+        material = ResourcesDirectory.InstantiateMaterial(
+            ResourcesDirectory.FindMaterial("MATTE_overlay", true));
+        material.color = Color.red;
     }
 
     public override PropertiesObjectType ObjectType()
@@ -40,8 +41,7 @@ public class BallObject : ObjectEntity
                         marker.UpdateMarker();
                     }
                 },
-                PropertyGUIs.Material("Materials", true,
-                    MaterialSelectorGUI.ColorModeSet.OBJECT, true))
+                PropertyGUIs.Material("Overlays", true))
         });
     }
 

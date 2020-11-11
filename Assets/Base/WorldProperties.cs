@@ -24,7 +24,7 @@ public class WorldProperties : PropertiesObject
     public void SetSky(Material sky)
     {
         // instantiating material allows modifying the Rotation property without modifying asset
-        var skyInstance = Material.Instantiate<Material>(sky);
+        var skyInstance = ResourcesDirectory.InstantiateMaterial(sky);
         skyInstance.name = sky.name; // sky will be saved correctly
         RenderSettings.skybox = skyInstance;
         UpdateSky();
@@ -59,7 +59,7 @@ public class WorldProperties : PropertiesObject
                 v => {
                     SetSky((Material)v);
                 },
-                PropertyGUIs.Material("Skies", false, MaterialSelectorGUI.ColorModeSet.UNLIT_ONLY)),
+                PropertyGUIs.Material("Skies", false)),
             new Property("amb", "Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,

@@ -42,11 +42,12 @@ public class MessagePackWorldWriter
         world[FileKeys.WORLD_CAMERA] = new MessagePackObject(WriteCamera(cameraPivot));
 
         var materialsList = new List<MessagePackObject>();
-        var foundMaterials = new List<string>();
+        // map to indices in materials list
+        var foundMaterials = new Dictionary<Material, int>();
         var overlaysList = new List<MessagePackObject>();
-        var foundOverlays = new List<string>();
+        var foundOverlays = new Dictionary<Material, int>();
         var substancesList = new List<MessagePackObject>();
-        var foundSubstances = new List<Substance>();
+        var foundSubstances = new Dictionary<Substance, int>();
 
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
@@ -55,9 +56,9 @@ public class MessagePackWorldWriter
                 AddMaterial(face.material, foundMaterials, materialsList);
                 AddMaterial(face.overlay, foundOverlays, overlaysList);
             }
-            if (voxel.substance != null && !foundSubstances.Contains(voxel.substance))
+            if (voxel.substance != null && !foundSubstances.ContainsKey(voxel.substance))
             {
-                foundSubstances.Add(voxel.substance);
+                foundSubstances[voxel.substance] = substancesList.Count;
                 substancesList.Add(new MessagePackObject(WriteEntity(voxel.substance, false)));
             }
         }
@@ -98,31 +99,23 @@ public class MessagePackWorldWriter
         return camera;
     }
 
-    private static void AddMaterial(Material material, List<string> foundMaterials, List<MessagePackObject> materialsList)
+    private static void AddMaterial(Material material, Dictionary<Material, int> foundMaterials,
+        List<MessagePackObject> materialsList)
     {
         if (material == null)
             return;
-        string name = material.name;
-        if (foundMaterials.Contains(name))
+        if (foundMaterials.ContainsKey(material))
             return;
-        foundMaterials.Add(name);
-        materialsList.Add(new MessagePackObject(WriteMaterial(material, false)));
+        foundMaterials[material] = materialsList.Count;
+        materialsList.Add(new MessagePackObject(WriteMaterial(material)));
     }
 
-    private static MessagePackObjectDictionary WriteMaterial(Material material, bool specifyOverlay)
+    private static MessagePackObjectDictionary WriteMaterial(Material material)
     {
         var materialDict = new MessagePackObjectDictionary();
-        if (ResourcesDirectory.IsCustomMaterial(material))
-        {
-            materialDict[FileKeys.MATERIAL_MODE] = ResourcesDirectory.GetCustomMaterialColorMode(material).ToString();
+        materialDict[FileKeys.MATERIAL_NAME] = material.name;
+        if (material.HasProperty("_Color"))
             materialDict[FileKeys.MATERIAL_COLOR] = WriteColor(material.color);
-            if (specifyOverlay)
-                materialDict[FileKeys.MATERIAL_ALPHA] = ResourcesDirectory.GetCustomMaterialIsOverlay(material);
-        }
-        else
-        {
-            materialDict[FileKeys.MATERIAL_NAME] = material.name;
-        }
         return materialDict;
     }
 
@@ -181,7 +174,7 @@ public class MessagePackWorldWriter
 
             if (valueType == typeof(Material))
             {
-                propList.Add(new MessagePackObject(WriteMaterial((Material)value, true)));
+                propList.Add(new MessagePackObject(WriteMaterial((Material)value)));
             }
             else if (valueType == typeof(EmbeddedData))
             {
@@ -229,7 +222,8 @@ public class MessagePackWorldWriter
     }
 
     private static MessagePackObject WriteVoxel(Voxel voxel,
-        List<string> materials, List<string> overlays, List<Substance> substances)
+        Dictionary<Material, int> materials, Dictionary<Material, int> overlays,
+        Dictionary<Substance, int> substances)
     {
         var voxelList = new List<MessagePackObject>();
         voxelList.Add(WriteIntVector3(voxel.position));
@@ -245,7 +239,7 @@ public class MessagePackWorldWriter
         voxelList.Add(new MessagePackObject(facesList));
 
         if (voxel.substance != null)
-            voxelList.Add(substances.IndexOf(voxel.substance));
+            voxelList.Add(substances[voxel.substance]);
         else
             voxelList.Add(-1);
 
@@ -265,16 +259,16 @@ public class MessagePackWorldWriter
     }
 
     private static MessagePackObject WriteFace(VoxelFace face, int faceI,
-        List<string> materials, List<string> overlays)
+        Dictionary<Material, int> materials, Dictionary<Material, int> overlays)
     {
         var faceList = new List<MessagePackObject>();
         faceList.Add(faceI);
         if (face.material != null)
-            faceList.Add(materials.IndexOf(face.material.name));
+            faceList.Add(materials[face.material]);
         else
             faceList.Add(-1);
         if (face.overlay != null)
-            faceList.Add(overlays.IndexOf(face.overlay.name));
+            faceList.Add(overlays[face.overlay]);
         else
             faceList.Add(-1);
         faceList.Add(face.orientation);

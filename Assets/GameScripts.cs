@@ -58,9 +58,9 @@ public class GameScripts
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                ResourcesDirectory.SetCustomMaterialColor(
-                    substance.defaultPaint.overlay, new Color(1, 1, 1, 0.25f));
+                substance.defaultPaint.overlay = ResourcesDirectory.InstantiateMaterial(
+                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
+                substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
                 return substance;
             })
     };
@@ -194,8 +194,9 @@ public class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                Material lightMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                ResourcesDirectory.SetCustomMaterialColor(lightMat, new Color(1, 1, 1, 0.25f));
+                Material lightMat = ResourcesDirectory.InstantiateMaterial(
+                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
+                lightMat.color = new Color(1, 1, 1, 0.25f);
                 PropertiesObjectType.SetProperty(ball, "mat", lightMat);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
@@ -207,8 +208,9 @@ public class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                Material neuronMat = ResourcesDirectory.MakeCustomMaterial(ColorMode.GLASS, true);
-                ResourcesDirectory.SetCustomMaterialColor(neuronMat, new Color(.09f, .38f, .87f, .25f));
+                Material neuronMat = ResourcesDirectory.InstantiateMaterial(
+                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
+                neuronMat.color = new Color(.09f, .38f, .87f, .25f);
                 PropertiesObjectType.SetProperty(ball, "mat", neuronMat);
 
                 ball.sensor = new InputThresholdSensor();

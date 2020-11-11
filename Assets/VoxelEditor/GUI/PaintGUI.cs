@@ -128,7 +128,6 @@ public class PaintGUI : GUIPanel
         materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
         materialSelector.enabled = false;
         materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
-        materialSelector.closeOnSelect = false;
         if (selectedLayer == 0)
         {
             materialSelector.rootDirectory = "Materials";
