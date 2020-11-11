@@ -1293,6 +1293,11 @@ MonoBehaviour:
     path: Overlays/Text Symbols/c125
     parent: Overlays/Text Symbols
     sound: 0
+  - isDirectory: 0
+    name: c126
+    path: Overlays/Text Symbols/c126
+    parent: Overlays/Text Symbols
+    sound: 0
   - isDirectory: 1
     name: Water
     path: Overlays/Water
