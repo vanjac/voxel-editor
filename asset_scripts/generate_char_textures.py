@@ -9,5 +9,5 @@ for char_i in range(33, 126):
 </svg>
     """.format(cgi.escape(chr(char_i)))
     with wand.image.Image(blob=svg.encode('utf-8'), format='svg') as img:
-        filename = 'Assets/GameAssets/Characters/c' + str(char_i).zfill(3) + '.png'
+        filename = '../Assets/GameAssets/Characters/c' + str(char_i).zfill(3) + '.png'
         img.save(filename=filename)
