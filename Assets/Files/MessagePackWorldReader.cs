@@ -190,7 +190,7 @@ public class MessagePackWorldReader : WorldFileReader
             warnings.Add("Unrecognized material: " + name);
             return ReadWorldFile.missingMaterial;
         }
-        if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
+        if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR) && mat.HasProperty("_Color"))
         {
             mat = ResourcesDirectory.InstantiateMaterial(mat);
             mat.color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
