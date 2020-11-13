@@ -113,9 +113,18 @@ public class MaterialSelectorGUI : GUIPanel
         }
         if (colorPicker == null)
         {
+            Vector3 colorScale = Vector3.one;
+            if (ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
+                colorScale = ResourcesDirectory.materialInfos[highlightMaterial.name].colorScale;
+            Color startColor = highlightMaterial.color;
+
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
-            colorPicker.SetColor(highlightMaterial.color);
+            colorPicker.SetColor(new Color(
+                startColor.r / colorScale.x,
+                startColor.g / colorScale.y,
+                startColor.b / colorScale.z,
+                startColor.a));
             colorPicker.includeAlpha = allowAlpha;
             colorPicker.handler = (Color c) =>
             {
@@ -124,7 +133,9 @@ public class MaterialSelectorGUI : GUIPanel
                     highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
                     instance = true;
                 }
-                highlightMaterial.color = c;
+                // don't believe what they tell you, color values can go above 1.0
+                highlightMaterial.color = new Color(
+                    c.r * colorScale.x, c.g * colorScale.y, c.b * colorScale.z, c.a);
                 if (handler != null)
                     handler(highlightMaterial);
             };
