@@ -72,7 +72,7 @@ MonoBehaviour:
     path: Materials/Asphalt/CityStreetAsphaltGenericClean001
     parent: Materials/Asphalt
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 2.273, y: 2.273, z: 2.273}
   - isDirectory: 1
     name: Bricks+Blocks
     path: Materials/Bricks+Blocks
@@ -84,61 +84,61 @@ MonoBehaviour:
     path: Materials/Bricks+Blocks/Bricks01
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 1.167, y: 1.421, z: 1.736}
   - isDirectory: 0
     name: Bricks03
     path: Materials/Bricks+Blocks/Bricks03
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 1.549, y: 1.549, z: 1.549}
   - isDirectory: 0
     name: BricksOld01
     path: Materials/Bricks+Blocks/BricksOld01
     parent: Materials/Bricks+Blocks
     sound: 2
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 1.461, y: 1.461, z: 1.461}
   - isDirectory: 0
     name: CityStreetSidewalk013
     path: Materials/Bricks+Blocks/CityStreetSidewalk013
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 1.417, y: 2.027, z: 2.389}
   - isDirectory: 0
     name: Cobblestone19
     path: Materials/Bricks+Blocks/Cobblestone19
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 1.553, y: 1.553, z: 1.553}
   - isDirectory: 0
     name: dungeon-stone1
     path: Materials/Bricks+Blocks/dungeon-stone1
     parent: Materials/Bricks+Blocks
     sound: 2
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 2.396, y: 2.396, z: 2.396}
   - isDirectory: 0
     name: harshbricks
     path: Materials/Bricks+Blocks/harshbricks
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 1.476, y: 1.67, z: 2.013}
   - isDirectory: 0
     name: octostone
     path: Materials/Bricks+Blocks/octostone
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 2.063, y: 2.063, z: 2.063}
   - isDirectory: 0
     name: redbricks2b
     path: Materials/Bricks+Blocks/redbricks2b
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 1.272, y: 1.591, z: 1.624}
   - isDirectory: 0
     name: tiledstone1
     path: Materials/Bricks+Blocks/tiledstone1
     parent: Materials/Bricks+Blocks
     sound: 1
-    colorScale: {x: 1, y: 1, z: 1}
+    colorScale: {x: 2.393, y: 2.393, z: 2.393}
   - isDirectory: 1
     name: Concrete
     path: Materials/Concrete

@@ -12,4 +12,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea699ec51dfad843862bf666a427587, type: 3}
   m_Name: materials_override
   m_EditorClassIdentifier: 
-  materials: []
+  materials:
+  - isDirectory: 0
+    name: CityStreetAsphaltGenericClean001
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 2.273, y: 2.273, z: 2.273}
+  - isDirectory: 0
+    name: Bricks01
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 1.167, y: 1.421, z: 1.736}
+  - isDirectory: 0
+    name: Bricks03
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 1.549, y: 1.549, z: 1.549}
+  - isDirectory: 0
+    name: BricksOld01
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 1.461, y: 1.461, z: 1.461}
+  - isDirectory: 0
+    name: CityStreetSidewalk013
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 1.417, y: 2.027, z: 2.389}
+  - isDirectory: 0
+    name: Cobblestone19
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 1.553, y: 1.553, z: 1.553}
+  - isDirectory: 0
+    name: dungeon-stone1
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 2.396, y: 2.396, z: 2.396}
+  - isDirectory: 0
+    name: harshbricks
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 1.476, y: 1.67, z: 2.013}
+  - isDirectory: 0
+    name: octostone
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 2.063, y: 2.063, z: 2.063}
+  - isDirectory: 0
+    name: redbricks2b
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 1.272, y: 1.591, z: 1.624}
+  - isDirectory: 0
+    name: tiledstone1
+    path: 
+    parent: 
+    sound: 0
+    colorScale: {x: 2.393, y: 2.393, z: 2.393}
