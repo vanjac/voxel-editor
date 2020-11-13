@@ -18,9 +18,11 @@ public struct MaterialInfo
     public string path;
     public string parent; // parent directory
     public MaterialSound sound;
+    public Vector3 colorScale;  // xyz -> rgb
 }
 
 [System.Serializable]
+[CreateAssetMenu(fileName = "materials", menuName = "ScriptableObjects/N-Space Material Database")]
 public class MaterialDatabase : ScriptableObject
 {
     public List<MaterialInfo> materials = new List<MaterialInfo>();

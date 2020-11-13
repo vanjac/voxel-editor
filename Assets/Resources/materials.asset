@@ -18,1373 +18,1648 @@ MonoBehaviour:
     path: Materials
     parent: 
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: $Sky
     path: Materials/$Sky
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: _Basic_
     path: Materials/_Basic_
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GLASS
     path: Materials/_Basic_/GLASS
     parent: Materials/_Basic_
     sound: 15
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GLOSSY
     path: Materials/_Basic_/GLOSSY
     parent: Materials/_Basic_
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MATTE
     path: Materials/_Basic_/MATTE
     parent: Materials/_Basic_
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: METAL
     path: Materials/_Basic_/METAL
     parent: Materials/_Basic_
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: UNLIT
     path: Materials/_Basic_/UNLIT
     parent: Materials/_Basic_
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Asphalt
     path: Materials/Asphalt
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: CityStreetAsphaltGenericClean001
     path: Materials/Asphalt/CityStreetAsphaltGenericClean001
     parent: Materials/Asphalt
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Bricks+Blocks
     path: Materials/Bricks+Blocks
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Bricks01
     path: Materials/Bricks+Blocks/Bricks01
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Bricks03
     path: Materials/Bricks+Blocks/Bricks03
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: BricksOld01
     path: Materials/Bricks+Blocks/BricksOld01
     parent: Materials/Bricks+Blocks
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: CityStreetSidewalk013
     path: Materials/Bricks+Blocks/CityStreetSidewalk013
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Cobblestone19
     path: Materials/Bricks+Blocks/Cobblestone19
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: dungeon-stone1
     path: Materials/Bricks+Blocks/dungeon-stone1
     parent: Materials/Bricks+Blocks
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: harshbricks
     path: Materials/Bricks+Blocks/harshbricks
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: octostone
     path: Materials/Bricks+Blocks/octostone
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: redbricks2b
     path: Materials/Bricks+Blocks/redbricks2b
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: tiledstone1
     path: Materials/Bricks+Blocks/tiledstone1
     parent: Materials/Bricks+Blocks
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Concrete
     path: Materials/Concrete
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Concrete07
     path: Materials/Concrete/Concrete07
     parent: Materials/Concrete
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Concrete18
     path: Materials/Concrete/Concrete18
     parent: Materials/Concrete
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: ConcretePlatesStudded002
     path: Materials/Concrete/ConcretePlatesStudded002
     parent: Materials/Concrete
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: patchy_cement1
     path: Materials/Concrete/patchy_cement1
     parent: Materials/Concrete
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: pockedconcrete1
     path: Materials/Concrete/pockedconcrete1
     parent: Materials/Concrete
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Fabric
     path: Materials/Fabric
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: FabricCanvas001
     path: Materials/Fabric/FabricCanvas001
     parent: Materials/Fabric
     sound: 4
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: FabricCarpet001
     path: Materials/Fabric/FabricCarpet001
     parent: Materials/Fabric
     sound: 4
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: FabricWeaveRug001
     path: Materials/Fabric/FabricWeaveRug001
     parent: Materials/Fabric
     sound: 4
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: InteriorDesignRugSquarePatches001
     path: Materials/Fabric/InteriorDesignRugSquarePatches001
     parent: Materials/Fabric
     sound: 4
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Ground
     path: Materials/Ground
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: dry-dirt2
     path: Materials/Ground/dry-dirt2
     parent: Materials/Ground
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: grass1
     path: Materials/Ground/grass1
     parent: Materials/Ground
     sound: 6
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GrassShort001
     path: Materials/Ground/GrassShort001
     parent: Materials/Ground
     sound: 6
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundClay008
     path: Materials/Ground/GroundClay008
     parent: Materials/Ground
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundForest002
     path: Materials/Ground/GroundForest002
     parent: Materials/Ground
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundForest003
     path: Materials/Ground/GroundForest003
     parent: Materials/Ground
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundGrassFieldGreenPatchy001
     path: Materials/Ground/GroundGrassFieldGreenPatchy001
     parent: Materials/Ground
     sound: 6
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundGravel009
     path: Materials/Ground/GroundGravel009
     parent: Materials/Ground
     sound: 7
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundMulch001
     path: Materials/Ground/GroundMulch001
     parent: Materials/Ground
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundPebbles001
     path: Materials/Ground/GroundPebbles001
     parent: Materials/Ground
     sound: 7
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundPebbles004
     path: Materials/Ground/GroundPebbles004
     parent: Materials/Ground
     sound: 7
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundSandDesertFlat001
     path: Materials/Ground/GroundSandDesertFlat001
     parent: Materials/Ground
     sound: 8
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundSandDesertRippled001
     path: Materials/Ground/GroundSandDesertRippled001
     parent: Materials/Ground
     sound: 8
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GroundSandDesertRippled001_preview
     path: Materials/Ground/GroundSandDesertRippled001_preview
     parent: Materials/Ground
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sandydrysoil
     path: Materials/Ground/sandydrysoil
     parent: Materials/Ground
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sandyground1
     path: Materials/Ground/sandyground1
     parent: Materials/Ground
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Metal
     path: Materials/Metal
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalBumpsRusted001
     path: Materials/Metal/MetalBumpsRusted001
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalCorrugatedGarageDoor001
     path: Materials/Metal/MetalCorrugatedGarageDoor001
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalCorrugatedGarageDoor001_preview
     path: Materials/Metal/MetalCorrugatedGarageDoor001_preview
     parent: Materials/Metal
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalGrime010
     path: Materials/Metal/MetalGrime010
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalGrime011
     path: Materials/Metal/MetalGrime011
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalPanelSquareRivets001
     path: Materials/Metal/MetalPanelSquareRivets001
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalSiding001
     path: Materials/Metal/MetalSiding001
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MetalSiding002
     path: Materials/Metal/MetalSiding002
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: PanelGeneric004
     path: Materials/Metal/PanelGeneric004
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: rust-coated
     path: Materials/Metal/rust-coated
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: rust-panel
     path: Materials/Metal/rust-panel
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: SteelFloorDiamond001
     path: Materials/Metal/SteelFloorDiamond001
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: streakedmetal
     path: Materials/Metal/streakedmetal
     parent: Materials/Metal
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Patterns
     path: Materials/Patterns
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: InteriorDesignPatternArrows004
     path: Materials/Patterns/InteriorDesignPatternArrows004
     parent: Materials/Patterns
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: InteriorDesignPatternBeanstalk001
     path: Materials/Patterns/InteriorDesignPatternBeanstalk001
     parent: Materials/Patterns
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: InteriorDesignPatternDiamonds005
     path: Materials/Patterns/InteriorDesignPatternDiamonds005
     parent: Materials/Patterns
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: InteriorDesignPatternGeometricStepping002
     path: Materials/Patterns/InteriorDesignPatternGeometricStepping002
     parent: Materials/Patterns
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: InteriorDesignPatternMoroccanTrellis001
     path: Materials/Patterns/InteriorDesignPatternMoroccanTrellis001
     parent: Materials/Patterns
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: TilePattern
     path: Materials/Patterns/TilePattern
     parent: Materials/Patterns
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Plaster
     path: Materials/Plaster
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Plaster31
     path: Materials/Plaster/Plaster31
     parent: Materials/Plaster
     sound: 3
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Plaster35
     path: Materials/Plaster/Plaster35
     parent: Materials/Plaster
     sound: 3
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Stucco05
     path: Materials/Plaster/Stucco05
     parent: Materials/Plaster
     sound: 3
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Rock
     path: Materials/Rock
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: blackrock
     path: Materials/Rock/blackrock
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: CliffGreyChunky008
     path: Materials/Rock/CliffGreyChunky008
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: graniterockface1
     path: Materials/Rock/graniterockface1
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: limestone-rock
     path: Materials/Rock/limestone-rock
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: QuartzPolishedWhite001
     path: Materials/Rock/QuartzPolishedWhite001
     parent: Materials/Rock
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RockGrey009
     path: Materials/Rock/RockGrey009
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sandstonecliff
     path: Materials/Rock/sandstonecliff
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: slipperystonework
     path: Materials/Rock/slipperystonework
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: waterwornstone1
     path: Materials/Rock/waterwornstone1
     parent: Materials/Rock
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Roof
     path: Materials/Roof
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RoofShingles001
     path: Materials/Roof/RoofShingles001
     parent: Materials/Roof
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RoofShinglesOld001
     path: Materials/Roof/RoofShinglesOld001
     parent: Materials/Roof
     sound: 1
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RoofThatched001
     path: Materials/Roof/RoofThatched001
     parent: Materials/Roof
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RoofTilesClay002
     path: Materials/Roof/RoofTilesClay002
     parent: Materials/Roof
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RoofTilesClay003
     path: Materials/Roof/RoofTilesClay003
     parent: Materials/Roof
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Sky
     path: Materials/Sky
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Snow+Ice
     path: Materials/Snow+Ice
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: IceFine001
     path: Materials/Snow+Ice/IceFine001
     parent: Materials/Snow+Ice
     sound: 12
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: SnowFine003
     path: Materials/Snow+Ice/SnowFine003
     parent: Materials/Snow+Ice
     sound: 11
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: SnowIceDirty002
     path: Materials/Snow+Ice/SnowIceDirty002
     parent: Materials/Snow+Ice
     sound: 12
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Tile
     path: Materials/Tile
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: bathroomtile2
     path: Materials/Tile/bathroomtile2
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: darktiles1
     path: Materials/Tile/darktiles1
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Marble065
     path: Materials/Tile/Marble065
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: tile4b
     path: Materials/Tile/tile4b
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Tiles27
     path: Materials/Tile/Tiles27
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Tiles40
     path: Materials/Tile/Tiles40
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Tiles043
     path: Materials/Tile/Tiles043
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: TilesRectangularMirrorColoredGrunge001
     path: Materials/Tile/TilesRectangularMirrorColoredGrunge001
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: TilesRectangularSubway001
     path: Materials/Tile/TilesRectangularSubway001
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: TilesSquareGraphiteSlate001
     path: Materials/Tile/TilesSquareGraphiteSlate001
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: TilesSquarePoolMixed001
     path: Materials/Tile/TilesSquarePoolMixed001
     parent: Materials/Tile
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Vegetation
     path: Materials/Vegetation
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: bark1
     path: Materials/Vegetation/bark1
     parent: Materials/Vegetation
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: BarkBirch002
     path: Materials/Vegetation/BarkBirch002
     parent: Materials/Vegetation
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: branches_twisted
     path: Materials/Vegetation/branches_twisted
     parent: Materials/Vegetation
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Bumpy Textured Leaves
     path: Materials/Vegetation/Bumpy Textured Leaves
     parent: Materials/Vegetation
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: leaf-fall1
     path: Materials/Vegetation/leaf-fall1
     parent: Materials/Vegetation
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Lush Leafy Bush
     path: Materials/Vegetation/Lush Leafy Bush
     parent: Materials/Vegetation
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: mossy-ground1
     path: Materials/Vegetation/mossy-ground1
     parent: Materials/Vegetation
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RockMossyFull001
     path: Materials/Vegetation/RockMossyFull001
     parent: Materials/Vegetation
     sound: 2
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: RockMossyFull004
     path: Materials/Vegetation/RockMossyFull004
     parent: Materials/Vegetation
     sound: 5
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Wood
     path: Materials/Wood
     parent: Materials
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: bamboo-wood-semigloss
     path: Materials/Wood/bamboo-wood-semigloss
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: oakfloor
     path: Materials/Wood/oakfloor
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: plywood
     path: Materials/Wood/plywood
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sculptedfloorboards1
     path: Materials/Wood/sculptedfloorboards1
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WoodFlooring064
     path: Materials/Wood/WoodFlooring064
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WoodFlooring066
     path: Materials/Wood/WoodFlooring066
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WoodLogSidingRough001
     path: Materials/Wood/WoodLogSidingRough001
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WoodPlanks26
     path: Materials/Wood/WoodPlanks26
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WoodPlanksWorn01
     path: Materials/Wood/WoodPlanksWorn01
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WoodWallCabin002
     path: Materials/Wood/WoodWallCabin002
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: wornpaintedwoodsiding
     path: Materials/Wood/wornpaintedwoodsiding
     parent: Materials/Wood
     sound: 13
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Overlays
     path: Overlays
     parent: 
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: $Invisible
     path: Overlays/$Invisible
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: _Basic Overlays_
     path: Overlays/_Basic Overlays_
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: ADD_overlay
     path: Overlays/_Basic Overlays_/ADD_overlay
     parent: Overlays/_Basic Overlays_
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GLASS_overlay
     path: Overlays/_Basic Overlays_/GLASS_overlay
     parent: Overlays/_Basic Overlays_
     sound: 15
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GLOSSY_overlay
     path: Overlays/_Basic Overlays_/GLOSSY_overlay
     parent: Overlays/_Basic Overlays_
     sound: 10
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MATTE_overlay
     path: Overlays/_Basic Overlays_/MATTE_overlay
     parent: Overlays/_Basic Overlays_
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: METAL_overlay
     path: Overlays/_Basic Overlays_/METAL_overlay
     parent: Overlays/_Basic Overlays_
     sound: 9
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: MULTIPLY_overlay
     path: Overlays/_Basic Overlays_/MULTIPLY_overlay
     parent: Overlays/_Basic Overlays_
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: UNLIT_overlay
     path: Overlays/_Basic Overlays_/UNLIT_overlay
     parent: Overlays/_Basic Overlays_
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Fencing
     path: Overlays/Fencing
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: FenceChainLink001
     path: Overlays/Fencing/FenceChainLink001
     parent: Overlays/Fencing
     sound: 17
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Glass
     path: Overlays/Glass
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Glass_Blocks_001_SD
     path: Overlays/Glass/Glass_Blocks_001_SD
     parent: Overlays/Glass
     sound: 15
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Grates
     path: Overlays/Grates
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GrateInterwovenFloor001
     path: Overlays/Grates/GrateInterwovenFloor001
     parent: Overlays/Grates
     sound: 14
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: GrateMetal001
     path: Overlays/Grates/GrateMetal001
     parent: Overlays/Grates
     sound: 14
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: Invisible
     path: Overlays/Invisible
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Symbols
     path: Overlays/Symbols
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: alert-outline
     path: Overlays/Symbols/alert-outline
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: arrow-up-thick
     path: Overlays/Symbols/arrow-up-thick
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: biohazard
     path: Overlays/Symbols/biohazard
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: bullseye
     path: Overlays/Symbols/bullseye
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: cancel
     path: Overlays/Symbols/cancel
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: check
     path: Overlays/Symbols/check
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: close
     path: Overlays/Symbols/close
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: exit-run
     path: Overlays/Symbols/exit-run
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: heart
     path: Overlays/Symbols/heart
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: radioactive
     path: Overlays/Symbols/radioactive
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: target
     path: Overlays/Symbols/target
     parent: Overlays/Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Text Caps
     path: Overlays/Text Caps
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c065
     path: Overlays/Text Caps/c065
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c066
     path: Overlays/Text Caps/c066
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c067
     path: Overlays/Text Caps/c067
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c068
     path: Overlays/Text Caps/c068
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c069
     path: Overlays/Text Caps/c069
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c070
     path: Overlays/Text Caps/c070
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c071
     path: Overlays/Text Caps/c071
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c072
     path: Overlays/Text Caps/c072
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c073
     path: Overlays/Text Caps/c073
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c074
     path: Overlays/Text Caps/c074
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c075
     path: Overlays/Text Caps/c075
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c076
     path: Overlays/Text Caps/c076
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c077
     path: Overlays/Text Caps/c077
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c078
     path: Overlays/Text Caps/c078
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c079
     path: Overlays/Text Caps/c079
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c080
     path: Overlays/Text Caps/c080
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c081
     path: Overlays/Text Caps/c081
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c082
     path: Overlays/Text Caps/c082
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c083
     path: Overlays/Text Caps/c083
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c084
     path: Overlays/Text Caps/c084
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c085
     path: Overlays/Text Caps/c085
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c086
     path: Overlays/Text Caps/c086
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c087
     path: Overlays/Text Caps/c087
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c088
     path: Overlays/Text Caps/c088
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c089
     path: Overlays/Text Caps/c089
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c090
     path: Overlays/Text Caps/c090
     parent: Overlays/Text Caps
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Text Lower
     path: Overlays/Text Lower
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c097
     path: Overlays/Text Lower/c097
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c098
     path: Overlays/Text Lower/c098
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c099
     path: Overlays/Text Lower/c099
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c100
     path: Overlays/Text Lower/c100
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c101
     path: Overlays/Text Lower/c101
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c102
     path: Overlays/Text Lower/c102
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c103
     path: Overlays/Text Lower/c103
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c104
     path: Overlays/Text Lower/c104
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c105
     path: Overlays/Text Lower/c105
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c106
     path: Overlays/Text Lower/c106
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c107
     path: Overlays/Text Lower/c107
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c108
     path: Overlays/Text Lower/c108
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c109
     path: Overlays/Text Lower/c109
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c110
     path: Overlays/Text Lower/c110
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c111
     path: Overlays/Text Lower/c111
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c112
     path: Overlays/Text Lower/c112
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c113
     path: Overlays/Text Lower/c113
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c114
     path: Overlays/Text Lower/c114
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c115
     path: Overlays/Text Lower/c115
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c116
     path: Overlays/Text Lower/c116
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c117
     path: Overlays/Text Lower/c117
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c118
     path: Overlays/Text Lower/c118
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c119
     path: Overlays/Text Lower/c119
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c120
     path: Overlays/Text Lower/c120
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c121
     path: Overlays/Text Lower/c121
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c122
     path: Overlays/Text Lower/c122
     parent: Overlays/Text Lower
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Text Numbers
     path: Overlays/Text Numbers
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c048
     path: Overlays/Text Numbers/c048
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c049
     path: Overlays/Text Numbers/c049
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c050
     path: Overlays/Text Numbers/c050
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c051
     path: Overlays/Text Numbers/c051
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c052
     path: Overlays/Text Numbers/c052
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c053
     path: Overlays/Text Numbers/c053
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c054
     path: Overlays/Text Numbers/c054
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c055
     path: Overlays/Text Numbers/c055
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c056
     path: Overlays/Text Numbers/c056
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c057
     path: Overlays/Text Numbers/c057
     parent: Overlays/Text Numbers
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Text Symbols
     path: Overlays/Text Symbols
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c033
     path: Overlays/Text Symbols/c033
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c034
     path: Overlays/Text Symbols/c034
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c035
     path: Overlays/Text Symbols/c035
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c036
     path: Overlays/Text Symbols/c036
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c037
     path: Overlays/Text Symbols/c037
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c038
     path: Overlays/Text Symbols/c038
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c039
     path: Overlays/Text Symbols/c039
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c040
     path: Overlays/Text Symbols/c040
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c041
     path: Overlays/Text Symbols/c041
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c042
     path: Overlays/Text Symbols/c042
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c043
     path: Overlays/Text Symbols/c043
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c044
     path: Overlays/Text Symbols/c044
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c045
     path: Overlays/Text Symbols/c045
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c046
     path: Overlays/Text Symbols/c046
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c047
     path: Overlays/Text Symbols/c047
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c058
     path: Overlays/Text Symbols/c058
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c059
     path: Overlays/Text Symbols/c059
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c060
     path: Overlays/Text Symbols/c060
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c061
     path: Overlays/Text Symbols/c061
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c062
     path: Overlays/Text Symbols/c062
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c063
     path: Overlays/Text Symbols/c063
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c064
     path: Overlays/Text Symbols/c064
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c091
     path: Overlays/Text Symbols/c091
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c092
     path: Overlays/Text Symbols/c092
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c093
     path: Overlays/Text Symbols/c093
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c094
     path: Overlays/Text Symbols/c094
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c095
     path: Overlays/Text Symbols/c095
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c096
     path: Overlays/Text Symbols/c096
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c123
     path: Overlays/Text Symbols/c123
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c124
     path: Overlays/Text Symbols/c124
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c125
     path: Overlays/Text Symbols/c125
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: c126
     path: Overlays/Text Symbols/c126
     parent: Overlays/Text Symbols
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Water
     path: Overlays/Water
     parent: Overlays
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WaterBasicDaytime
     path: Overlays/Water/WaterBasicDaytime
     parent: Overlays/Water
     sound: 16
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WaterBasicDaytime_preview
     path: Overlays/Water/WaterBasicDaytime_preview
     parent: Overlays/Water
     sound: 16
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WaterBasicNighttime
     path: Overlays/Water/WaterBasicNighttime
     parent: Overlays/Water
     sound: 16
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WaterBasicNighttime_preview
     path: Overlays/Water/WaterBasicNighttime_preview
     parent: Overlays/Water
     sound: 16
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WaterDropletsLargeComplex003
     path: Overlays/Water/WaterDropletsLargeComplex003
     parent: Overlays/Water
     sound: 16
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: WaterDropletsLargeComplex003_preview
     path: Overlays/Water/WaterDropletsLargeComplex003_preview
     parent: Overlays/Water
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 1
     name: Skies
     path: Skies
     parent: 
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky5X1
     path: Skies/sky5X1
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky5X2
     path: Skies/sky5X2
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky5X3
     path: Skies/sky5X3
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky5X4
     path: Skies/sky5X4
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky5X5
     path: Skies/sky5X5
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky_procedural
     path: Skies/sky_procedural
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky_procedural_preview
     path: Skies/sky_procedural_preview
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: sky_unlit
     path: Skies/sky_unlit
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: starmap
     path: Skies/starmap
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
   - isDirectory: 0
     name: starmap_preview
     path: Skies/starmap_preview
     parent: Skies
     sound: 0
+    colorScale: {x: 1, y: 1, z: 1}
