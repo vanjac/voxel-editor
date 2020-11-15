@@ -14,68 +14,614 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   materials:
   - isDirectory: 0
-    name: CityStreetAsphaltGenericClean001
+    name: BarkBirch002
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 2.273, y: 2.273, z: 2.273}
+    whitePoint: {r: 0.84705883, g: 0.84705883, b: 0.85882354, a: 1}
   - isDirectory: 0
     name: Bricks01
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 1.167, y: 1.421, z: 1.736}
+    whitePoint: {r: 0.99215686, g: 0.8901961, b: 0.8784314, a: 1}
   - isDirectory: 0
     name: Bricks03
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 1.549, y: 1.549, z: 1.549}
+    whitePoint: {r: 0.88235295, g: 0.87058824, b: 0.85882354, a: 1}
   - isDirectory: 0
     name: BricksOld01
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 1.461, y: 1.461, z: 1.461}
+    whitePoint: {r: 0.8235294, g: 0.83137256, b: 0.8509804, a: 1}
+  - isDirectory: 0
+    name: CityStreetAsphaltGenericClean001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8235294, g: 0.8117647, b: 0.79607844, a: 1}
   - isDirectory: 0
     name: CityStreetSidewalk013
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 1.417, y: 2.027, z: 2.389}
+    whitePoint: {r: 0.7294118, g: 0.5019608, b: 0.44313726, a: 1}
+  - isDirectory: 0
+    name: CliffGreyChunky008
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9137255, g: 0.91764706, b: 0.9254902, a: 1}
   - isDirectory: 0
     name: Cobblestone19
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 1.553, y: 1.553, z: 1.553}
+    whitePoint: {r: 0.8509804, g: 0.84313726, b: 0.84705883, a: 1}
+  - isDirectory: 0
+    name: Concrete07
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.91764706, g: 0.91764706, b: 0.9254902, a: 1}
+  - isDirectory: 0
+    name: Concrete18
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8980392, g: 0.8901961, b: 0.8666667, a: 1}
+  - isDirectory: 0
+    name: ConcretePlatesStudded002
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.6901961, g: 0.6901961, b: 0.6901961, a: 1}
+  - isDirectory: 0
+    name: FabricCanvas001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.63529414, g: 0.23137255, b: 0.23529412, a: 1}
+  - isDirectory: 0
+    name: FabricCarpet001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.99607843, g: 0.8392157, b: 0.76862746, a: 1}
+  - isDirectory: 0
+    name: FabricWeaveRug001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7137255, g: 0.6627451, b: 0.6901961, a: 1}
+  - isDirectory: 0
+    name: FenceChainLink001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.4745098, g: 0.4745098, b: 0.4745098, a: 1}
+  - isDirectory: 0
+    name: GrassShort001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.69803923, g: 0.7254902, b: 0.5294118, a: 1}
+  - isDirectory: 0
+    name: GrateInterwovenFloor001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.24313726, g: 0.24313726, b: 0.24313726, a: 1}
+  - isDirectory: 0
+    name: GrateMetal001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.28235295, g: 0.28235295, b: 0.28235295, a: 1}
+  - isDirectory: 0
+    name: GroundClay008
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8156863, g: 0.6509804, b: 0.4862745, a: 1}
+  - isDirectory: 0
+    name: GroundForest002
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9411765, g: 0.85882354, b: 0.83137256, a: 1}
+  - isDirectory: 0
+    name: GroundForest003
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8, g: 0.77254903, b: 0.6901961, a: 1}
+  - isDirectory: 0
+    name: GroundGrassFieldGreenPatchy001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.5686275, g: 0.5647059, b: 0.33333334, a: 1}
+  - isDirectory: 0
+    name: GroundGravel009
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.92156863, g: 0.9137255, b: 0.92156863, a: 1}
+  - isDirectory: 0
+    name: GroundMulch001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.72156864, g: 0.654902, b: 0.60784316, a: 1}
+  - isDirectory: 0
+    name: GroundPebbles001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9411765, g: 0.9490196, b: 0.95686275, a: 1}
+  - isDirectory: 0
+    name: GroundPebbles004
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.41960785, g: 0.41960785, b: 0.39215687, a: 1}
+  - isDirectory: 0
+    name: GroundSandDesertFlat001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8, g: 0.7058824, b: 0.60784316, a: 1}
+  - isDirectory: 0
+    name: GroundSandDesertRippled001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8, g: 0.7058824, b: 0.60784316, a: 1}
+  - isDirectory: 0
+    name: IceFine001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9529412, g: 0.9529412, b: 0.9529412, a: 1}
+  - isDirectory: 0
+    name: InteriorDesignRugSquarePatches001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.83137256, g: 0.7764706, b: 0.7294118, a: 1}
+  - isDirectory: 0
+    name: Marble065
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.93333334, g: 0.93333334, b: 0.93333334, a: 1}
+  - isDirectory: 0
+    name: MetalBumpsRusted001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.6431373, g: 0.47058824, b: 0.5137255, a: 1}
+  - isDirectory: 0
+    name: MetalCorrugatedGarageDoor001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+  - isDirectory: 0
+    name: MetalGrime010
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.88235295, g: 0.8901961, b: 0.87058824, a: 1}
+  - isDirectory: 0
+    name: MetalGrime011
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.84705883, g: 0.84313726, b: 0.80784315, a: 1}
+  - isDirectory: 0
+    name: MetalPanelSquareRivets001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.62352943, g: 0.627451, b: 0.63529414, a: 1}
+  - isDirectory: 0
+    name: MetalSiding001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.47843137, g: 0.45490196, b: 0.42352942, a: 1}
+  - isDirectory: 0
+    name: MetalSiding002
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.92941177, g: 0.8235294, b: 0.7882353, a: 1}
+  - isDirectory: 0
+    name: PanelGeneric004
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.16470589, g: 0.16470589, b: 0.16470589, a: 1}
+  - isDirectory: 0
+    name: Plaster31
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9490196, g: 0.9490196, b: 0.9529412, a: 1}
+  - isDirectory: 0
+    name: Plaster35
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8, g: 0.8, b: 0.7921569, a: 1}
+  - isDirectory: 0
+    name: QuartzPolishedWhite001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+  - isDirectory: 0
+    name: RockGrey009
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7764706, g: 0.7764706, b: 0.8, a: 1}
+  - isDirectory: 0
+    name: RockMossyFull001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7529412, g: 0.8392157, b: 0.72156864, a: 1}
+  - isDirectory: 0
+    name: RockMossyFull004
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.78431374, g: 0.7882353, b: 0.5176471, a: 1}
+  - isDirectory: 0
+    name: RoofShingles001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.50980395, g: 0.58431375, b: 0.63529414, a: 1}
+  - isDirectory: 0
+    name: RoofShinglesOld001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.6784314, g: 0.6745098, b: 0.67058825, a: 1}
+  - isDirectory: 0
+    name: RoofThatched001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.84313726, g: 0.8509804, b: 0.8666667, a: 1}
+  - isDirectory: 0
+    name: RoofTilesClay002
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8627451, g: 0.6156863, b: 0.6, a: 1}
+  - isDirectory: 0
+    name: RoofTilesClay003
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8784314, g: 0.6862745, b: 0.6039216, a: 1}
+  - isDirectory: 0
+    name: SnowFine003
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.91764706, g: 0.9254902, b: 0.9529412, a: 1}
+  - isDirectory: 0
+    name: SnowIceDirty002
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8, g: 0.8039216, b: 0.84705883, a: 1}
+  - isDirectory: 0
+    name: SteelFloorDiamond001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.23137255, g: 0.23137255, b: 0.23137255, a: 1}
+  - isDirectory: 0
+    name: Stucco05
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.85490197, g: 0.85882354, b: 0.8784314, a: 1}
+  - isDirectory: 0
+    name: Tiles27
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.84313726, g: 0.8509804, b: 0.9019608, a: 1}
+  - isDirectory: 0
+    name: Tiles40
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.5568628, g: 0.67058825, b: 0.73333335, a: 0}
+  - isDirectory: 0
+    name: Tiles043
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7019608, g: 0.69411767, b: 0.6745098, a: 1}
+  - isDirectory: 0
+    name: TilesRectangularMirrorColoredGrunge001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.54901963, g: 0.54901963, b: 0.5529412, a: 1}
+  - isDirectory: 0
+    name: TilesRectangularSubway001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.80784315, g: 0.8, b: 0.8039216, a: 1}
+  - isDirectory: 0
+    name: TilesSquareGraphiteSlate001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.6, g: 0.60784316, b: 0.6156863, a: 1}
+  - isDirectory: 0
+    name: TilesSquarePoolMixed001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8117647, g: 0.8, b: 0.8117647, a: 1}
+  - isDirectory: 0
+    name: WoodFlooring064
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7882353, g: 0.68235296, b: 0.42745098, a: 1}
+  - isDirectory: 0
+    name: WoodFlooring066
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.654902, g: 0.4509804, b: 0.23137255, a: 1}
+  - isDirectory: 0
+    name: WoodLogSidingRough001
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.74509805, g: 0.7372549, b: 0.7254902, a: 1}
+  - isDirectory: 0
+    name: WoodPlanks26
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.99607843, g: 0.6313726, b: 0.4, a: 1}
+  - isDirectory: 0
+    name: WoodPlanksWorn01
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9843137, g: 0.85882354, b: 0.7607843, a: 1}
+  - isDirectory: 0
+    name: WoodWallCabin002
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.79607844, g: 0.76862746, b: 0.7372549, a: 1}
+  - isDirectory: 0
+    name: bamboo-wood-semigloss
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.84313726, g: 0.72156864, b: 0.54509807, a: 1}
+  - isDirectory: 0
+    name: bark1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7176471, g: 0.6745098, b: 0.63529414, a: 1}
+  - isDirectory: 0
+    name: bathroomtile2
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.5176471, g: 0.43529412, b: 0.4509804, a: 1}
+  - isDirectory: 0
+    name: blackrock
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.70980394, g: 0.7019608, b: 0.7058824, a: 1}
+  - isDirectory: 0
+    name: branches_twisted
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.84705883, g: 0.8784314, b: 0.8901961, a: 1}
+  - isDirectory: 0
+    name: darktiles1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.5372549, g: 0.52156866, b: 0.3137255, a: 1}
+  - isDirectory: 0
+    name: dry-dirt2
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7254902, g: 0.65882355, b: 0.52156866, a: 1}
   - isDirectory: 0
     name: dungeon-stone1
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 2.396, y: 2.396, z: 2.396}
+    whitePoint: {r: 0.65882355, g: 0.65882355, b: 0.6117647, a: 1}
+  - isDirectory: 0
+    name: graniterockface1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.47843137, g: 0.39607844, b: 0.30588236, a: 1}
+  - isDirectory: 0
+    name: grass1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8235294, g: 0.94509804, b: 0.7607843, a: 1}
   - isDirectory: 0
     name: harshbricks
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 1.476, y: 1.67, z: 2.013}
+    whitePoint: {r: 0.9490196, g: 0.9137255, b: 0.8745098, a: 1}
+  - isDirectory: 0
+    name: leaf-fall1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.73333335, g: 0.60784316, b: 0.53333336, a: 1}
+  - isDirectory: 0
+    name: limestone-rock
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9254902, g: 0.85490197, b: 0.8, a: 1}
+  - isDirectory: 0
+    name: mossy-ground1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8475, g: 0.8358, b: 0.5142, a: 1}
+  - isDirectory: 0
+    name: oakfloor
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.3764706, g: 0.21568628, b: 0.16470589, a: 1}
   - isDirectory: 0
     name: octostone
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 2.063, y: 2.063, z: 2.063}
+    whitePoint: {r: 0.6509804, g: 0.60784316, b: 0.5372549, a: 1}
+  - isDirectory: 0
+    name: patchy_cement1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.87058824, g: 0.8666667, b: 0.8666667, a: 1}
+  - isDirectory: 0
+    name: plywood
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.69411767, g: 0.62352943, b: 0.54509807, a: 1}
+  - isDirectory: 0
+    name: pockedconcrete1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8352941, g: 0.7607843, b: 0.6745098, a: 1}
   - isDirectory: 0
     name: redbricks2b
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 1.272, y: 1.591, z: 1.624}
+    whitePoint: {r: 0.8901961, g: 0.8980392, b: 0.9019608, a: 1}
+  - isDirectory: 0
+    name: rust-coated
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.88235295, g: 0.64705884, b: 0.5568628, a: 1}
+  - isDirectory: 0
+    name: rust-panel
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7882353, g: 0.5058824, b: 0.4117647, a: 1}
+  - isDirectory: 0
+    name: sandstonecliff
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.99607843, g: 0.7921569, b: 0.5372549, a: 1}
+  - isDirectory: 0
+    name: sandydrysoil
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.78431374, g: 0.69803923, b: 0.6, a: 1}
+  - isDirectory: 0
+    name: sandyground1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8509804, g: 0.8156863, b: 0.70980394, a: 1}
+  - isDirectory: 0
+    name: sculptedfloorboards1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.60784316, g: 0.5921569, b: 0.6039216, a: 1}
+  - isDirectory: 0
+    name: slipperystonework
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.41568628, g: 0.3529412, b: 0.18431373, a: 1}
+  - isDirectory: 0
+    name: streakedmetal
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8156863, g: 0.8156863, b: 0.8156863, a: 1}
+  - isDirectory: 0
+    name: tile4b
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.6392157, g: 0.60784316, b: 0.58431375, a: 1}
   - isDirectory: 0
     name: tiledstone1
     path: 
     parent: 
     sound: 0
-    colorScale: {x: 2.393, y: 2.393, z: 2.393}
+    whitePoint: {r: 0.3647059, g: 0.3529412, b: 0.23921569, a: 1}
+  - isDirectory: 0
+    name: waterwornstone1
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.3882353, g: 0.3372549, b: 0.25882354, a: 1}
+  - isDirectory: 0
+    name: wornpaintedwoodsiding
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7137255, g: 0.7764706, b: 0.7490196, a: 1}
+  - isDirectory: 0
+    name: Glass_Blocks_001_SD
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.9137255, g: 0.9372549, b: 0.91764706, a: 1}
+  - isDirectory: 0
+    name: Bumpy Textured Leaves
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.8156863, g: 0.99607843, b: 0.5058824, a: 1}
+  - isDirectory: 0
+    name: Lush Leafy Bush
+    path: 
+    parent: 
+    sound: 0
+    whitePoint: {r: 0.7764706, g: 0.9607843, b: 0.6784314, a: 1}

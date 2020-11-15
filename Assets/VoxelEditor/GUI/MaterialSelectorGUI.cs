@@ -115,8 +115,11 @@ public class MaterialSelectorGUI : GUIPanel
         {
             Color whitePoint = Color.white;
             if (ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
+            {
                 whitePoint = ResourcesDirectory.materialInfos[highlightMaterial.name].whitePoint;
-            whitePoint.a = 1.0f;  // to be safe
+                whitePoint *= 0.75f;
+                whitePoint.a = 1.0f;
+            }
 
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
