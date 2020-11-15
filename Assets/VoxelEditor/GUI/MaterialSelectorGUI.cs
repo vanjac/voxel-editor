@@ -117,7 +117,6 @@ public class MaterialSelectorGUI : GUIPanel
             if (ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
             {
                 whitePoint = ResourcesDirectory.materialInfos[highlightMaterial.name].whitePoint;
-                whitePoint *= 0.75f;
                 whitePoint.a = 1.0f;
             }
 

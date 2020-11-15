@@ -48,7 +48,7 @@ public class UpdateMaterialDatabase
             {
                 MaterialInfo mat_override = mat_override_maybe.Value;
                 if (mat_override.whitePoint != Color.clear)
-                    info.whitePoint = mat_override.whitePoint;
+                    info.whitePoint = mat_override.whitePoint * 0.8f;
             }
 
             database.materials.Add(info);
