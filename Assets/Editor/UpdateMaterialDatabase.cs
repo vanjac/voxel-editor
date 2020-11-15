@@ -41,14 +41,14 @@ public class UpdateMaterialDatabase
                     }
                 }
             }
-            info.colorScale = Vector3.one;
+            info.whitePoint = Color.white;
 
             MaterialInfo? mat_override_maybe = SearchDatabase(data_override, info.name);
             if (mat_override_maybe != null)
             {
                 MaterialInfo mat_override = mat_override_maybe.Value;
-                if (mat_override.colorScale != Vector3.zero)
-                    info.colorScale = mat_override.colorScale;
+                if (mat_override.whitePoint != Color.clear)
+                    info.whitePoint = mat_override.whitePoint;
             }
 
             database.materials.Add(info);

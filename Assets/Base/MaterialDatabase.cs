@@ -18,7 +18,7 @@ public struct MaterialInfo
     public string path;
     public string parent; // parent directory
     public MaterialSound sound;
-    public Vector3 colorScale;  // xyz -> rgb
+    public Color whitePoint;
 }
 
 [System.Serializable]

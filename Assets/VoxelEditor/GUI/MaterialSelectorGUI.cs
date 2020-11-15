@@ -113,18 +113,14 @@ public class MaterialSelectorGUI : GUIPanel
         }
         if (colorPicker == null)
         {
-            Vector3 colorScale = Vector3.one;
+            Color whitePoint = Color.white;
             if (ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
-                colorScale = ResourcesDirectory.materialInfos[highlightMaterial.name].colorScale;
-            Color startColor = highlightMaterial.color;
+                whitePoint = ResourcesDirectory.materialInfos[highlightMaterial.name].whitePoint;
+            whitePoint.a = 1.0f;  // to be safe
 
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
-            colorPicker.SetColor(new Color(
-                startColor.r / colorScale.x,
-                startColor.g / colorScale.y,
-                startColor.b / colorScale.z,
-                startColor.a));
+            colorPicker.SetColor(highlightMaterial.color * whitePoint);
             colorPicker.includeAlpha = allowAlpha;
             colorPicker.handler = (Color c) =>
             {
@@ -135,7 +131,7 @@ public class MaterialSelectorGUI : GUIPanel
                 }
                 // don't believe what they tell you, color values can go above 1.0
                 highlightMaterial.color = new Color(
-                    c.r * colorScale.x, c.g * colorScale.y, c.b * colorScale.z, c.a);
+                    c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a);
                 if (handler != null)
                     handler(highlightMaterial);
             };
