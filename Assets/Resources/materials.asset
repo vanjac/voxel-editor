@@ -222,7 +222,7 @@ MonoBehaviour:
     path: Materials/Ground/grass1
     parent: Materials/Ground
     sound: 6
-    whitePoint: {r: 0.65882355, g: 0.7560784, b: 0.6086275, a: 0.8}
+    whitePoint: {r: 0.49052405, g: 0.72800004, b: 0.5099894, a: 0.8}
   - isDirectory: 0
     name: GrassShort001
     path: Materials/Ground/GrassShort001
@@ -594,7 +594,7 @@ MonoBehaviour:
     path: Materials/Tile/bathroomtile2
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.41411766, g: 0.3482353, b: 0.36078432, a: 0.8}
+    whitePoint: {r: 0.43073684, g: 0.4785965, b: 0.49600002, a: 0.8}
   - isDirectory: 0
     name: darktiles1
     path: Materials/Tile/darktiles1
@@ -648,13 +648,13 @@ MonoBehaviour:
     path: Materials/Tile/TilesSquareGraphiteSlate001
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.48000002, g: 0.48627454, b: 0.49254903, a: 0.8}
+    whitePoint: {r: 0.28862748, g: 0.28862748, b: 0.28862748, a: 0.8}
   - isDirectory: 0
     name: TilesSquarePoolMixed001
     path: Materials/Tile/TilesSquarePoolMixed001
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.6494118, g: 0.64000005, b: 0.6494118, a: 0.8}
+    whitePoint: {r: 0.56, g: 0.7247059, b: 0.8, a: 0.8}
   - isDirectory: 1
     name: Vegetation
     path: Materials/Vegetation
@@ -732,7 +732,7 @@ MonoBehaviour:
     path: Materials/Wood/oakfloor
     parent: Materials/Wood
     sound: 13
-    whitePoint: {r: 0.38274512, g: 0.25103578, b: 0.2105098, a: 0.8}
+    whitePoint: {r: 0.32000002, g: 0.26039216, b: 0.2447059, a: 0.8}
   - isDirectory: 0
     name: plywood
     path: Materials/Wood/plywood
@@ -768,7 +768,7 @@ MonoBehaviour:
     path: Materials/Wood/WoodPlanks26
     parent: Materials/Wood
     sound: 13
-    whitePoint: {r: 0.7968628, g: 0.50509804, b: 0.32000002, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.46909094, b: 0.1781818, a: 0.8}
   - isDirectory: 0
     name: WoodPlanksWorn01
     path: Materials/Wood/WoodPlanksWorn01

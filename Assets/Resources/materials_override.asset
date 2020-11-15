@@ -372,13 +372,13 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.6, g: 0.60784316, b: 0.6156863, a: 1}
+    whitePoint: {r: 0.36078432, g: 0.36078432, b: 0.36078432, a: 1}
   - isDirectory: 0
     name: TilesSquarePoolMixed001
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.8117647, g: 0.8, b: 0.8117647, a: 1}
+    whitePoint: {r: 0.7, g: 0.90588236, b: 1, a: 1}
   - isDirectory: 0
     name: WoodFlooring064
     path: 
@@ -402,7 +402,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.99607843, g: 0.6313726, b: 0.4, a: 1}
+    whitePoint: {r: 1, g: 0.5863637, b: 0.22272724, a: 1}
   - isDirectory: 0
     name: WoodPlanksWorn01
     path: 
@@ -432,7 +432,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.5176471, g: 0.43529412, b: 0.4509804, a: 1}
+    whitePoint: {r: 0.53842103, g: 0.5982456, b: 0.62, a: 1}
   - isDirectory: 0
     name: blackrock
     path: 
@@ -474,7 +474,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.8235294, g: 0.94509804, b: 0.7607843, a: 1}
+    whitePoint: {r: 0.61315507, g: 0.91, b: 0.6374867, a: 1}
   - isDirectory: 0
     name: harshbricks
     path: 
@@ -504,7 +504,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.47843137, g: 0.3137947, b: 0.26313725, a: 1}
+    whitePoint: {r: 0.4, g: 0.3254902, b: 0.30588236, a: 1}
   - isDirectory: 0
     name: octostone
     path: 
