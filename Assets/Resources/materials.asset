@@ -72,7 +72,7 @@ MonoBehaviour:
     path: Materials/Asphalt/CityStreetAsphaltGenericClean001
     parent: Materials/Asphalt
     sound: 1
-    whitePoint: {r: 0.65882355, g: 0.6494118, b: 0.63686275, a: 0.8}
+    whitePoint: {r: 0.44000003, g: 0.4337143, b: 0.42533335, a: 0.8}
   - isDirectory: 1
     name: Bricks+Blocks
     path: Materials/Bricks+Blocks
@@ -150,7 +150,7 @@ MonoBehaviour:
     path: Materials/Concrete/Concrete07
     parent: Materials/Concrete
     sound: 1
-    whitePoint: {r: 0.7341177, g: 0.7341177, b: 0.74039215, a: 0.8}
+    whitePoint: {r: 0.79322034, g: 0.79322034, b: 0.8, a: 0.8}
   - isDirectory: 0
     name: Concrete18
     path: Materials/Concrete/Concrete18
@@ -162,13 +162,13 @@ MonoBehaviour:
     path: Materials/Concrete/ConcretePlatesStudded002
     parent: Materials/Concrete
     sound: 1
-    whitePoint: {r: 0.55215687, g: 0.55215687, b: 0.55215687, a: 0.8}
+    whitePoint: {r: 0.688, g: 0.688, b: 0.688, a: 0.8}
   - isDirectory: 0
     name: patchy_cement1
     path: Materials/Concrete/patchy_cement1
     parent: Materials/Concrete
     sound: 1
-    whitePoint: {r: 0.6964706, g: 0.6933333, b: 0.6933333, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.79639643, b: 0.79639643, a: 0.8}
   - isDirectory: 0
     name: pockedconcrete1
     path: Materials/Concrete/pockedconcrete1
@@ -282,13 +282,13 @@ MonoBehaviour:
     path: Materials/Ground/GroundSandDesertFlat001
     parent: Materials/Ground
     sound: 8
-    whitePoint: {r: 0.64000005, g: 0.5647059, b: 0.48627454, a: 0.8}
+    whitePoint: {r: 0.76235294, g: 0.6713726, b: 0.5803922, a: 0.8}
   - isDirectory: 0
     name: GroundSandDesertRippled001
     path: Materials/Ground/GroundSandDesertRippled001
     parent: Materials/Ground
     sound: 8
-    whitePoint: {r: 0.64000005, g: 0.5647059, b: 0.48627454, a: 0.8}
+    whitePoint: {r: 0.76235294, g: 0.6713726, b: 0.5803922, a: 0.8}
   - isDirectory: 0
     name: GroundSandDesertRippled001_preview
     path: Materials/Ground/GroundSandDesertRippled001_preview
@@ -366,7 +366,7 @@ MonoBehaviour:
     path: Materials/Metal/PanelGeneric004
     parent: Materials/Metal
     sound: 9
-    whitePoint: {r: 0.13176471, g: 0.13176471, b: 0.13176471, a: 0.8}
+    whitePoint: {r: 0.16000001, g: 0.16000001, b: 0.16000001, a: 0.8}
   - isDirectory: 0
     name: rust-coated
     path: Materials/Metal/rust-coated
@@ -444,19 +444,19 @@ MonoBehaviour:
     path: Materials/Plaster/Plaster31
     parent: Materials/Plaster
     sound: 3
-    whitePoint: {r: 0.7592157, g: 0.7592157, b: 0.76235294, a: 0.8}
+    whitePoint: {r: 0.7967078, g: 0.7967078, b: 0.8, a: 0.8}
   - isDirectory: 0
     name: Plaster35
     path: Materials/Plaster/Plaster35
     parent: Materials/Plaster
     sound: 3
-    whitePoint: {r: 0.64000005, g: 0.64000005, b: 0.6337255, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.8, b: 0.7921569, a: 0.8}
   - isDirectory: 0
     name: Stucco05
     path: Materials/Plaster/Stucco05
     parent: Materials/Plaster
     sound: 3
-    whitePoint: {r: 0.6839216, g: 0.68705887, b: 0.70274514, a: 0.8}
+    whitePoint: {r: 0.7785714, g: 0.7821429, b: 0.8, a: 0.8}
   - isDirectory: 1
     name: Rock
     path: Materials/Rock
@@ -492,7 +492,7 @@ MonoBehaviour:
     path: Materials/Rock/QuartzPolishedWhite001
     parent: Materials/Rock
     sound: 10
-    whitePoint: {r: 0.6933333, g: 0.6933333, b: 0.6933333, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.8, b: 0.8, a: 0.8}
   - isDirectory: 0
     name: RockGrey009
     path: Materials/Rock/RockGrey009
@@ -546,7 +546,7 @@ MonoBehaviour:
     path: Materials/Roof/RoofTilesClay002
     parent: Materials/Roof
     sound: 10
-    whitePoint: {r: 0.6901961, g: 0.49254903, b: 0.48000002, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.57090914, b: 0.5563637, a: 0.8}
   - isDirectory: 0
     name: RoofTilesClay003
     path: Materials/Roof/RoofTilesClay003
@@ -576,7 +576,7 @@ MonoBehaviour:
     path: Materials/Snow+Ice/SnowFine003
     parent: Materials/Snow+Ice
     sound: 11
-    whitePoint: {r: 0.7341177, g: 0.74039215, b: 0.76235294, a: 0.8}
+    whitePoint: {r: 0.7703704, g: 0.77695477, b: 0.8, a: 0.8}
   - isDirectory: 0
     name: SnowIceDirty002
     path: Materials/Snow+Ice/SnowIceDirty002
@@ -606,7 +606,7 @@ MonoBehaviour:
     path: Materials/Tile/Marble065
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.74666667, g: 0.74666667, b: 0.74666667, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.8, b: 0.8, a: 0.8}
   - isDirectory: 0
     name: tile4b
     path: Materials/Tile/tile4b
@@ -618,13 +618,13 @@ MonoBehaviour:
     path: Materials/Tile/Tiles27
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.6745098, g: 0.68078434, b: 0.72156864, a: 0.8}
+    whitePoint: {r: 0.7478261, g: 0.7547826, b: 0.8, a: 0.8}
   - isDirectory: 0
     name: Tiles40
     path: Materials/Tile/Tiles40
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.4454902, g: 0.5364706, b: 0.5866667, a: 0}
+    whitePoint: {r: 0.5528129, g: 0.6657113, b: 0.72800004, a: 0}
   - isDirectory: 0
     name: Tiles043
     path: Materials/Tile/Tiles043
@@ -636,13 +636,13 @@ MonoBehaviour:
     path: Materials/Tile/TilesRectangularMirrorColoredGrunge001
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.43921572, g: 0.43921572, b: 0.44235298, a: 0.8}
+    whitePoint: {r: 0.54808515, g: 0.54808515, b: 0.552, a: 0.8}
   - isDirectory: 0
     name: TilesRectangularSubway001
     path: Materials/Tile/TilesRectangularSubway001
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.6462745, g: 0.64000005, b: 0.6431373, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.792233, b: 0.79611653, a: 0.8}
   - isDirectory: 0
     name: TilesSquareGraphiteSlate001
     path: Materials/Tile/TilesSquareGraphiteSlate001
@@ -732,7 +732,7 @@ MonoBehaviour:
     path: Materials/Wood/oakfloor
     parent: Materials/Wood
     sound: 13
-    whitePoint: {r: 0.3011765, g: 0.17254902, b: 0.13176471, a: 0.8}
+    whitePoint: {r: 0.38274512, g: 0.25103578, b: 0.2105098, a: 0.8}
   - isDirectory: 0
     name: plywood
     path: Materials/Wood/plywood
