@@ -24,7 +24,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.99215686, g: 0.8901961, b: 0.8784314, a: 1}
+    whitePoint: {r: 1, g: 0.7692308, b: 0.64, a: 1}
   - isDirectory: 0
     name: Bricks03
     path: 
@@ -240,7 +240,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.92941177, g: 0.8235294, b: 0.7882353, a: 1}
+    whitePoint: {r: 0.65, g: 0.65, b: 0.65, a: 1}
   - isDirectory: 0
     name: PanelGeneric004
     path: 
@@ -468,19 +468,19 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.47843137, g: 0.39607844, b: 0.30588236, a: 1}
+    whitePoint: {r: 0.38, g: 0.31459016, b: 0.24295083, a: 1}
   - isDirectory: 0
     name: grass1
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.61315507, g: 0.91, b: 0.6374867, a: 1}
+    whitePoint: {r: 0.5379311, g: 0.8, b: 0.56206894, a: 1}
   - isDirectory: 0
     name: harshbricks
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.9490196, g: 0.9137255, b: 0.8745098, a: 1}
+    whitePoint: {r: 0.8, g: 0.63652176, b: 0.4556522, a: 1}
   - isDirectory: 0
     name: leaf-fall1
     path: 
@@ -534,7 +534,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.8901961, g: 0.8980392, b: 0.9019608, a: 1}
+    whitePoint: {r: 1, g: 0.83732057, b: 0.7416268, a: 1}
   - isDirectory: 0
     name: rust-coated
     path: 
@@ -576,7 +576,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.41568628, g: 0.3529412, b: 0.18431373, a: 1}
+    whitePoint: {r: 0.36, g: 0.24800001, b: 0.16800001, a: 1}
   - isDirectory: 0
     name: streakedmetal
     path: 

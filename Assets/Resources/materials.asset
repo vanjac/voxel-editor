@@ -84,7 +84,7 @@ MonoBehaviour:
     path: Materials/Bricks+Blocks/Bricks01
     parent: Materials/Bricks+Blocks
     sound: 1
-    whitePoint: {r: 0.7937255, g: 0.7121569, b: 0.70274514, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.61538464, b: 0.512, a: 0.8}
   - isDirectory: 0
     name: Bricks03
     path: Materials/Bricks+Blocks/Bricks03
@@ -120,7 +120,7 @@ MonoBehaviour:
     path: Materials/Bricks+Blocks/harshbricks
     parent: Materials/Bricks+Blocks
     sound: 1
-    whitePoint: {r: 0.7592157, g: 0.7309804, b: 0.69960785, a: 0.8}
+    whitePoint: {r: 0.64000005, g: 0.50921744, b: 0.36452177, a: 0.8}
   - isDirectory: 0
     name: octostone
     path: Materials/Bricks+Blocks/octostone
@@ -132,7 +132,7 @@ MonoBehaviour:
     path: Materials/Bricks+Blocks/redbricks2b
     parent: Materials/Bricks+Blocks
     sound: 1
-    whitePoint: {r: 0.7121569, g: 0.7184314, b: 0.72156864, a: 0.8}
+    whitePoint: {r: 0.8, g: 0.6698565, b: 0.5933015, a: 0.8}
   - isDirectory: 0
     name: tiledstone1
     path: Materials/Bricks+Blocks/tiledstone1
@@ -222,7 +222,7 @@ MonoBehaviour:
     path: Materials/Ground/grass1
     parent: Materials/Ground
     sound: 6
-    whitePoint: {r: 0.49052405, g: 0.72800004, b: 0.5099894, a: 0.8}
+    whitePoint: {r: 0.43034488, g: 0.64000005, b: 0.44965515, a: 0.8}
   - isDirectory: 0
     name: GrassShort001
     path: Materials/Ground/GrassShort001
@@ -360,7 +360,7 @@ MonoBehaviour:
     path: Materials/Metal/MetalSiding002
     parent: Materials/Metal
     sound: 9
-    whitePoint: {r: 0.74352944, g: 0.65882355, b: 0.63058823, a: 0.8}
+    whitePoint: {r: 0.52, g: 0.52, b: 0.52, a: 0.8}
   - isDirectory: 0
     name: PanelGeneric004
     path: Materials/Metal/PanelGeneric004
@@ -480,7 +480,7 @@ MonoBehaviour:
     path: Materials/Rock/graniterockface1
     parent: Materials/Rock
     sound: 2
-    whitePoint: {r: 0.38274512, g: 0.31686276, b: 0.2447059, a: 0.8}
+    whitePoint: {r: 0.304, g: 0.25167212, b: 0.19436066, a: 0.8}
   - isDirectory: 0
     name: limestone-rock
     path: Materials/Rock/limestone-rock
@@ -510,7 +510,7 @@ MonoBehaviour:
     path: Materials/Rock/slipperystonework
     parent: Materials/Rock
     sound: 2
-    whitePoint: {r: 0.33254904, g: 0.28235295, b: 0.14745098, a: 0.8}
+    whitePoint: {r: 0.28800002, g: 0.1984, b: 0.13440001, a: 0.8}
   - isDirectory: 0
     name: waterwornstone1
     path: Materials/Rock/waterwornstone1
