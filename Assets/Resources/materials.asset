@@ -624,7 +624,7 @@ MonoBehaviour:
     path: Materials/Tile/Tiles40
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.5528129, g: 0.6657113, b: 0.72800004, a: 0}
+    whitePoint: {r: 0.49000007, g: 0.6333334, b: 0.68, a: 0}
   - isDirectory: 0
     name: Tiles043
     path: Materials/Tile/Tiles043
@@ -648,7 +648,7 @@ MonoBehaviour:
     path: Materials/Tile/TilesSquareGraphiteSlate001
     parent: Materials/Tile
     sound: 10
-    whitePoint: {r: 0.28862748, g: 0.28862748, b: 0.28862748, a: 0.8}
+    whitePoint: {r: 0.29347825, g: 0.30130434, b: 0.35999998, a: 0.8}
   - isDirectory: 0
     name: TilesSquarePoolMixed001
     path: Materials/Tile/TilesSquarePoolMixed001
@@ -702,19 +702,19 @@ MonoBehaviour:
     path: Materials/Vegetation/mossy-ground1
     parent: Materials/Vegetation
     sound: 5
-    whitePoint: {r: 0.67800003, g: 0.66864, b: 0.41136, a: 0.8}
+    whitePoint: {r: 0.3258427, g: 0.4, b: 0.13483146, a: 0.8}
   - isDirectory: 0
     name: RockMossyFull001
     path: Materials/Vegetation/RockMossyFull001
     parent: Materials/Vegetation
     sound: 2
-    whitePoint: {r: 0.602353, g: 0.6713726, b: 0.57725495, a: 0.8}
+    whitePoint: {r: 0.49156627, g: 0.6, b: 0.4481928, a: 0.8}
   - isDirectory: 0
     name: RockMossyFull004
     path: Materials/Vegetation/RockMossyFull004
     parent: Materials/Vegetation
     sound: 5
-    whitePoint: {r: 0.627451, g: 0.63058823, b: 0.41411766, a: 0.8}
+    whitePoint: {r: 0.61050695, g: 0.64000005, b: 0.2683871, a: 0.8}
   - isDirectory: 1
     name: Wood
     path: Materials/Wood

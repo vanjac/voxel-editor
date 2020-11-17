@@ -276,13 +276,13 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.7529412, g: 0.8392157, b: 0.72156864, a: 1}
+    whitePoint: {r: 0.61445785, g: 0.75, b: 0.560241, a: 1}
   - isDirectory: 0
     name: RockMossyFull004
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.78431374, g: 0.7882353, b: 0.5176471, a: 1}
+    whitePoint: {r: 0.7631337, g: 0.8, b: 0.33548388, a: 1}
   - isDirectory: 0
     name: RoofShingles001
     path: 
@@ -348,7 +348,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.6910161, g: 0.8321391, b: 0.91, a: 0}
+    whitePoint: {r: 0.6125001, g: 0.7916667, b: 0.85, a: 0}
   - isDirectory: 0
     name: Tiles043
     path: 
@@ -372,7 +372,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.36078432, g: 0.36078432, b: 0.36078432, a: 1}
+    whitePoint: {r: 0.3668478, g: 0.37663043, b: 0.45, a: 1}
   - isDirectory: 0
     name: TilesSquarePoolMixed001
     path: 
@@ -498,7 +498,7 @@ MonoBehaviour:
     path: 
     parent: 
     sound: 0
-    whitePoint: {r: 0.8475, g: 0.8358, b: 0.5142, a: 1}
+    whitePoint: {r: 0.40730336, g: 0.5, b: 0.16853932, a: 1}
   - isDirectory: 0
     name: oakfloor
     path: 
