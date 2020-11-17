@@ -468,7 +468,7 @@ MonoBehaviour:
     path: Materials/Rock/blackrock
     parent: Materials/Rock
     sound: 2
-    whitePoint: {r: 0.56784314, g: 0.5615687, b: 0.5647059, a: 0.8}
+    whitePoint: {r: 0.488, g: 0.48260775, b: 0.48530388, a: 0.8}
   - isDirectory: 0
     name: CliffGreyChunky008
     path: Materials/Rock/CliffGreyChunky008
@@ -666,7 +666,7 @@ MonoBehaviour:
     path: Materials/Vegetation/bark1
     parent: Materials/Vegetation
     sound: 13
-    whitePoint: {r: 0.57411766, g: 0.5396079, b: 0.50823534, a: 0.8}
+    whitePoint: {r: 0.44000003, g: 0.41349396, b: 0.38963857, a: 0.8}
   - isDirectory: 0
     name: BarkBirch002
     path: Materials/Vegetation/BarkBirch002
@@ -678,25 +678,25 @@ MonoBehaviour:
     path: Materials/Vegetation/branches_twisted
     parent: Materials/Vegetation
     sound: 5
-    whitePoint: {r: 0.67764705, g: 0.70274514, b: 0.7121569, a: 0.8}
+    whitePoint: {r: 0.57016575, g: 0.59337014, b: 0.6, a: 0.8}
   - isDirectory: 0
     name: Bumpy Textured Leaves
     path: Materials/Vegetation/Bumpy Textured Leaves
     parent: Materials/Vegetation
     sound: 5
-    whitePoint: {r: 0.652549, g: 0.7968628, b: 0.4047059, a: 0.8}
+    whitePoint: {r: 0.51257485, g: 0.8, b: 0.12934132, a: 0.8}
   - isDirectory: 0
     name: leaf-fall1
     path: Materials/Vegetation/leaf-fall1
     parent: Materials/Vegetation
     sound: 5
-    whitePoint: {r: 0.5866667, g: 0.48627454, b: 0.4266667, a: 0.8}
+    whitePoint: {r: 0.56, g: 0.3959596, b: 0.33939394, a: 0.8}
   - isDirectory: 0
     name: Lush Leafy Bush
     path: Materials/Vegetation/Lush Leafy Bush
     parent: Materials/Vegetation
     sound: 5
-    whitePoint: {r: 0.6211765, g: 0.76862746, b: 0.5427451, a: 0.8}
+    whitePoint: {r: 0.4439024, g: 0.8, b: 0.29756093, a: 0.8}
   - isDirectory: 0
     name: mossy-ground1
     path: Materials/Vegetation/mossy-ground1
