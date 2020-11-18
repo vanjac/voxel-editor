@@ -290,12 +290,6 @@ MonoBehaviour:
     sound: 8
     whitePoint: {r: 0.76235294, g: 0.6713726, b: 0.5803922, a: 0.8}
   - isDirectory: 0
-    name: GroundSandDesertRippled001_preview
-    path: Materials/Ground/GroundSandDesertRippled001_preview
-    parent: Materials/Ground
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
     name: sandydrysoil
     path: Materials/Ground/sandydrysoil
     parent: Materials/Ground
@@ -325,12 +319,6 @@ MonoBehaviour:
     parent: Materials/Metal
     sound: 9
     whitePoint: {r: 0.5427451, g: 0.5427451, b: 0.5427451, a: 0.8}
-  - isDirectory: 0
-    name: MetalCorrugatedGarageDoor001_preview
-    path: Materials/Metal/MetalCorrugatedGarageDoor001_preview
-    parent: Materials/Metal
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: MetalGrime010
     path: Materials/Metal/MetalGrime010
@@ -1568,20 +1556,8 @@ MonoBehaviour:
     sound: 16
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
-    name: WaterBasicDaytime_preview
-    path: Overlays/Water/WaterBasicDaytime_preview
-    parent: Overlays/Water
-    sound: 16
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
     name: WaterBasicNighttime
     path: Overlays/Water/WaterBasicNighttime
-    parent: Overlays/Water
-    sound: 16
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: WaterBasicNighttime_preview
-    path: Overlays/Water/WaterBasicNighttime_preview
     parent: Overlays/Water
     sound: 16
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
@@ -1590,12 +1566,6 @@ MonoBehaviour:
     path: Overlays/Water/WaterDropletsLargeComplex003
     parent: Overlays/Water
     sound: 16
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: WaterDropletsLargeComplex003_preview
-    path: Overlays/Water/WaterDropletsLargeComplex003_preview
-    parent: Overlays/Water
-    sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
     name: Skies

@@ -10,7 +10,8 @@ public enum ColorMode
 
 public class MaterialSelectorGUI : GUIPanel
 {
-    private static Texture2D whiteTexture;
+    private static RenderTexture previewTexture;
+    private static Material previewMaterial;
     private const int NUM_COLUMNS = 4;
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
@@ -261,41 +262,61 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (mat == null)
             return;
-        if (whiteTexture == null)
-        {
-            whiteTexture = new Texture2D(1, 1);
-            whiteTexture.SetPixel(0, 0, Color.white);
-            whiteTexture.Apply();
-        }
-        Rect texCoords = new Rect(Vector2.zero, Vector2.one);
-        Texture texture = whiteTexture;
-        if (mat.HasProperty("_MainTex") && mat.mainTexture != null)
-        {
-            texture = mat.mainTexture;
-            texCoords = new Rect(Vector2.zero, mat.mainTextureScale);
-        }
-        else if (mat.HasProperty("_ColorControl"))
-            // water shader
-            texture = mat.GetTexture("_ColorControl");
-        else if (mat.HasProperty("_FrontTex"))
-            // skybox
-            texture = mat.GetTexture("_FrontTex");
+        if (previewTexture == null)
+            previewTexture = new RenderTexture(256, 256, 0, RenderTextureFormat.ARGB32);
+        if (!previewTexture.IsCreated())
+            previewTexture.Create();
+        if (previewMaterial == null)
+            previewMaterial = new Material(Shader.Find("Unlit/MaterialPreview"));  // TODO make sure shader is included
 
-        Color baseColor = GUI.color;
-        if (mat.HasProperty("_Color"))
+        RenderTexture prevActive = RenderTexture.active;
+        RenderTexture.active = previewTexture;
+
+        GL.PushMatrix();
+        GL.LoadOrtho();
+        GL.Clear(false, true, Color.clear);
+
+        previewMaterial.CopyPropertiesFromMaterial(mat);
+        if (!mat.HasProperty("_Color"))
         {
-            if (GUI.color.a > 1)
-                // fixes transparent colors becoming opaque while scrolling
-                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
-            GUI.color *= mat.color;
+            if (mat.HasProperty("_horizonColor"))
+            {
+                // water
+                previewMaterial.SetColor("_Color", mat.GetColor("_horizonColor"));
+                previewMaterial.mainTextureScale = Vector2.one * mat.GetFloat("_WaveScale");
+            }
+            else
+                previewMaterial.color = Color.white;
         }
-        else if (texture == whiteTexture)
+        else
         {
-            // no color or texture
-            GUI.color = baseColor;
-            return;
+            if (previewMaterial.color == Color.clear)
+                previewMaterial.color = new Color(0.5f, 0.5f, 0.5f, 0.8f);  // fix water droplets
         }
-        GUI.DrawTextureWithTexCoords(rect, texture, texCoords, alpha);
-        GUI.color = baseColor;
+        if (!mat.HasProperty("_BumpMap"))
+            previewMaterial.SetTexture("_BumpMap", Texture2D.normalTexture);
+        if (!mat.HasProperty("_MainTex"))
+        {
+            if (mat.HasProperty("_FrontTex"))  // skybox
+                previewMaterial.mainTexture = mat.GetTexture("_FrontTex");
+            else
+                previewMaterial.mainTexture = Texture2D.whiteTexture;
+        }
+        previewMaterial.SetPass(0);
+
+        GL.Begin(GL.QUADS);
+        GL.TexCoord2(0, 0);
+        GL.Vertex3(0, 0, 0);
+        GL.TexCoord2(0, 1);
+        GL.Vertex3(0, 1, 0);
+        GL.TexCoord2(1, 1);
+        GL.Vertex3(1, 1, 0);
+        GL.TexCoord2(1, 0);
+        GL.Vertex3(1, 0, 0);
+        GL.End();
+
+        GL.PopMatrix();
+        RenderTexture.active = prevActive;
+        GUI.DrawTexture(rect, previewTexture);
     }
 }
