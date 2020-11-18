@@ -278,21 +278,9 @@ public class MaterialSelectorGUI : GUIPanel
 
         previewMaterial.CopyPropertiesFromMaterial(mat);
         if (!mat.HasProperty("_Color"))
-        {
-            if (mat.HasProperty("_horizonColor"))
-            {
-                // water
-                previewMaterial.SetColor("_Color", mat.GetColor("_horizonColor"));
-                previewMaterial.mainTextureScale = Vector2.one * mat.GetFloat("_WaveScale");
-            }
-            else
-                previewMaterial.color = Color.white;
-        }
-        else
-        {
-            if (mat.color.a == 0.0f)
-                previewMaterial.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.8f);
-        }
+            previewMaterial.color = Color.white;
+        else if (mat.color.a == 0.0f)
+            previewMaterial.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.8f);
         if (!mat.HasProperty("_BumpMap"))
             previewMaterial.SetTexture("_BumpMap", Texture2D.normalTexture);
         if (!mat.HasProperty("_MainTex"))
@@ -302,6 +290,8 @@ public class MaterialSelectorGUI : GUIPanel
             else
                 previewMaterial.mainTexture = Texture2D.whiteTexture;
         }
+        if (mat.HasProperty("_WaveScale"))  // water
+            previewMaterial.mainTextureScale = Vector2.one * mat.GetFloat("_WaveScale");
         previewMaterial.SetPass(0);
 
         GL.Begin(GL.QUADS);
