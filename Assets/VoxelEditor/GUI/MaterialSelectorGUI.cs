@@ -290,8 +290,8 @@ public class MaterialSelectorGUI : GUIPanel
         }
         else
         {
-            if (previewMaterial.color == Color.clear)
-                previewMaterial.color = new Color(0.5f, 0.5f, 0.5f, 0.8f);  // fix water droplets
+            if (mat.color.a == 0.0f)
+                previewMaterial.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.8f);
         }
         if (!mat.HasProperty("_BumpMap"))
             previewMaterial.SetTexture("_BumpMap", Texture2D.normalTexture);
