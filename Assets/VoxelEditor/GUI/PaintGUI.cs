@@ -152,6 +152,7 @@ public class PaintGUI : GUIPanel
             materialSelector.highlightMaterial = paint.overlay;
         }
         materialSelector.Start(); // not enabled so wouldn't be called normally
+        scroll = Vector2.zero;
     }
 
     private void Orient(byte change)
@@ -188,7 +189,6 @@ public class PaintGUI : GUIPanel
 
     public void TutorialShowSky()
     {
-        scrollVelocity = new Vector2(0, 3000);
         selectedLayer = 0;
         paint.material = ResourcesDirectory.FindMaterial("Sky", true);
         handler(paint);
