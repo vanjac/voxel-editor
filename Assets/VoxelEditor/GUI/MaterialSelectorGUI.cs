@@ -76,7 +76,13 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.EndHorizontal();
 
         if (tab == 1)
-            ColorTab();
+        {
+            if (!ColorTab() && colorPicker != null)
+            {
+                Destroy(colorPicker);
+                colorPicker = null;
+            }
+        }
         else if (colorPicker != null)
         {
             Destroy(colorPicker);
@@ -90,20 +96,18 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
-    private void ColorTab()
+    private bool ColorTab()
     {
-        if (highlightMaterial == null || !highlightMaterial.HasProperty("_Color"))
+        if (highlightMaterial == null)
         {
-            if (highlightMaterial == null)
-                GUILayout.Label("No texture selected");
-            else
-                GUILayout.Label("Can't change color of this texture");
-            if (colorPicker != null)
-            {
-                Destroy(colorPicker);
-                colorPicker = null;
-            }
-            return;
+            GUILayout.Label("No texture selected");
+            return false;
+        }
+        string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
+        if (colorProp == null)
+        {
+            GUILayout.Label("Can't change color of this texture");
+            return false;
         }
         if (colorPicker == null)
         {
@@ -116,7 +120,7 @@ public class MaterialSelectorGUI : GUIPanel
 
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
-            colorPicker.SetColor(highlightMaterial.color * whitePoint);
+            colorPicker.SetColor(highlightMaterial.GetColor(colorProp) * whitePoint);
             colorPicker.includeAlpha = allowAlpha;
             colorPicker.handler = (Color c) =>
             {
@@ -126,13 +130,14 @@ public class MaterialSelectorGUI : GUIPanel
                     instance = true;
                 }
                 // don't believe what they tell you, color values can go above 1.0
-                highlightMaterial.color = new Color(
-                    c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a);
+                highlightMaterial.SetColor(colorProp, new Color(
+                    c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a));
                 if (handler != null)
                     handler(highlightMaterial);
             };
         }
         colorPicker.WindowGUI();
+        return true;
     }
 
     private void TextureTab()
@@ -250,16 +255,25 @@ public class MaterialSelectorGUI : GUIPanel
         GL.Clear(false, true, Color.clear);
 
         previewMaterial.CopyPropertiesFromMaterial(mat);
-        if (!mat.HasProperty("_Color"))
+        string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
+        if (colorProp == null)
             previewMaterial.color = Color.white;
-        else if (mat.color.a == 0.0f)
-            previewMaterial.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.8f);
+        else
+        {
+            Color color = mat.GetColor(colorProp);
+            if (color.a == 0.0f)
+                color = new Color(color.r, color.g, color.b, 0.8f);
+            previewMaterial.color = color;
+        }
         if (!mat.HasProperty("_BumpMap"))
             previewMaterial.SetTexture("_BumpMap", Texture2D.normalTexture);
         if (!mat.HasProperty("_MainTex"))
         {
-            if (mat.HasProperty("_FrontTex"))  // skybox
+            if (mat.HasProperty("_FrontTex"))  // 6-sided skybox
+            {
                 previewMaterial.mainTexture = mat.GetTexture("_FrontTex");
+                previewMaterial.color *= 2;
+            }
             else
                 previewMaterial.mainTexture = Texture2D.whiteTexture;
         }

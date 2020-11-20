@@ -206,10 +206,14 @@ public class JSONWorldReader : WorldFileReader
             warnings.Add("Unrecognized material: " + name);
             return ReadWorldFile.missingMaterial;
         }
-        if (setColor && mat.HasProperty("_Color"))
+        if (setColor)
         {
-            mat = ResourcesDirectory.InstantiateMaterial(mat);
-            mat.color = color;
+            string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
+            if (colorProp != null)
+            {
+                mat = ResourcesDirectory.InstantiateMaterial(mat);
+                mat.SetColor(colorProp, color);
+            }
         }
         return mat;
     }

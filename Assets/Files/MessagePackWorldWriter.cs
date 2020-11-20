@@ -114,8 +114,9 @@ public class MessagePackWorldWriter
     {
         var materialDict = new MessagePackObjectDictionary();
         materialDict[FileKeys.MATERIAL_NAME] = material.name;
-        if (material.HasProperty("_Color"))
-            materialDict[FileKeys.MATERIAL_COLOR] = WriteColor(material.color);
+        string colorProp = ResourcesDirectory.MaterialColorProperty(material);
+        if (colorProp != null)
+            materialDict[FileKeys.MATERIAL_COLOR] = WriteColor(material.GetColor(colorProp));
         return materialDict;
     }
 

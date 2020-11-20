@@ -50,6 +50,18 @@ public class ResourcesDirectory
         return mat;
     }
 
+    public static string MaterialColorProperty(Material mat)
+    {
+        if (mat.HasProperty("_Color"))
+            return "_Color";
+        else if (mat.HasProperty("_Tint"))  // skybox
+            return "_Tint";
+        else if (mat.HasProperty("_SkyTint"))  // procedural skybox
+            return "_SkyTint";
+        else
+            return null;
+    }
+
     public static MaterialSound GetMaterialSound(Material material)
     {
         if (material == null)
