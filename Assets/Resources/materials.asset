@@ -14,6 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   materials:
   - isDirectory: 1
+    name: Hidden
+    path: Hidden
+    parent: 
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: GLASS
+    path: Hidden/GLASS
+    parent: Hidden
+    sound: 15
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: GLOSSY_overlay
+    path: Hidden/GLOSSY_overlay
+    parent: Hidden
+    sound: 10
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: METAL_overlay
+    path: Hidden/METAL_overlay
+    parent: Hidden
+    sound: 9
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 1
     name: Materials
     path: Materials
     parent: 
@@ -23,42 +47,6 @@ MonoBehaviour:
     name: $Sky
     path: Materials/$Sky
     parent: Materials
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 1
-    name: _Basic_
-    path: Materials/_Basic_
-    parent: Materials
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: GLASS
-    path: Materials/_Basic_/GLASS
-    parent: Materials/_Basic_
-    sound: 15
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: GLOSSY
-    path: Materials/_Basic_/GLOSSY
-    parent: Materials/_Basic_
-    sound: 10
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: MATTE
-    path: Materials/_Basic_/MATTE
-    parent: Materials/_Basic_
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: METAL
-    path: Materials/_Basic_/METAL
-    parent: Materials/_Basic_
-    sound: 9
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: UNLIT
-    path: Materials/_Basic_/UNLIT
-    parent: Materials/_Basic_
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
@@ -205,6 +193,18 @@ MonoBehaviour:
     parent: Materials/Fabric
     sound: 4
     whitePoint: {r: 0.6650981, g: 0.6211765, b: 0.5835294, a: 0.8}
+  - isDirectory: 0
+    name: GLOSSY
+    path: Materials/GLOSSY
+    parent: Materials
+    sound: 10
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: GLOSSY_preview
+    path: Materials/GLOSSY_preview
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
     name: Ground
     path: Materials/Ground
@@ -301,6 +301,18 @@ MonoBehaviour:
     parent: Materials/Ground
     sound: 5
     whitePoint: {r: 0.68078434, g: 0.652549, b: 0.56784314, a: 0.8}
+  - isDirectory: 0
+    name: MATTE
+    path: Materials/MATTE
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: MATTE_preview
+    path: Materials/MATTE_preview
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
     name: Metal
     path: Materials/Metal
@@ -379,6 +391,18 @@ MonoBehaviour:
     parent: Materials/Metal
     sound: 9
     whitePoint: {r: 0.652549, g: 0.652549, b: 0.652549, a: 0.8}
+  - isDirectory: 0
+    name: METAL
+    path: Materials/METAL
+    parent: Materials
+    sound: 9
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: METAL_preview
+    path: Materials/METAL_preview
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
     name: Patterns
     path: Materials/Patterns
@@ -643,6 +667,18 @@ MonoBehaviour:
     parent: Materials/Tile
     sound: 10
     whitePoint: {r: 0.56, g: 0.7247059, b: 0.8, a: 0.8}
+  - isDirectory: 0
+    name: UNLIT
+    path: Materials/UNLIT
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: UNLIT_preview
+    path: Materials/UNLIT_preview
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
     name: Vegetation
     path: Materials/Vegetation
@@ -787,52 +823,16 @@ MonoBehaviour:
     parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 1
-    name: _Basic Overlays_
-    path: Overlays/_Basic Overlays_
+  - isDirectory: 0
+    name: ADD_overlay
+    path: Overlays/ADD_overlay
     parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
-    name: ADD_overlay
-    path: Overlays/_Basic Overlays_/ADD_overlay
-    parent: Overlays/_Basic Overlays_
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: GLASS_overlay
-    path: Overlays/_Basic Overlays_/GLASS_overlay
-    parent: Overlays/_Basic Overlays_
-    sound: 15
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: GLOSSY_overlay
-    path: Overlays/_Basic Overlays_/GLOSSY_overlay
-    parent: Overlays/_Basic Overlays_
-    sound: 10
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: MATTE_overlay
-    path: Overlays/_Basic Overlays_/MATTE_overlay
-    parent: Overlays/_Basic Overlays_
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: METAL_overlay
-    path: Overlays/_Basic Overlays_/METAL_overlay
-    parent: Overlays/_Basic Overlays_
-    sound: 9
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: MULTIPLY_overlay
-    path: Overlays/_Basic Overlays_/MULTIPLY_overlay
-    parent: Overlays/_Basic Overlays_
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: UNLIT_overlay
-    path: Overlays/_Basic Overlays_/UNLIT_overlay
-    parent: Overlays/_Basic Overlays_
+    name: ADD_overlay_preview
+    path: Overlays/ADD_overlay_preview
+    parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
@@ -859,6 +859,18 @@ MonoBehaviour:
     parent: Overlays/Glass
     sound: 15
     whitePoint: {r: 0.7309804, g: 0.74980396, b: 0.7341177, a: 0.8}
+  - isDirectory: 0
+    name: GLASS_overlay
+    path: Overlays/GLASS_overlay
+    parent: Overlays
+    sound: 15
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: GLASS_overlay_preview
+    path: Overlays/GLASS_overlay_preview
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
     name: Grates
     path: Overlays/Grates
@@ -880,6 +892,30 @@ MonoBehaviour:
   - isDirectory: 0
     name: Invisible
     path: Overlays/Invisible
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: MATTE_overlay
+    path: Overlays/MATTE_overlay
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: MATTE_overlay_preview
+    path: Overlays/MATTE_overlay_preview
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: MULTIPLY_overlay
+    path: Overlays/MULTIPLY_overlay
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: MULTIPLY_overlay_preview
+    path: Overlays/MULTIPLY_overlay_preview
     parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
@@ -1541,6 +1577,18 @@ MonoBehaviour:
     name: c126
     path: Overlays/Text Symbols/c126
     parent: Overlays/Text Symbols
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: UNLIT_overlay
+    path: Overlays/UNLIT_overlay
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: UNLIT_overlay_preview
+    path: Overlays/UNLIT_overlay_preview
+    parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
