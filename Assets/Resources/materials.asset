@@ -62,69 +62,69 @@ MonoBehaviour:
     sound: 1
     whitePoint: {r: 0.44000003, g: 0.4337143, b: 0.42533335, a: 0.8}
   - isDirectory: 1
-    name: Bricks+Blocks
-    path: Materials/Bricks+Blocks
+    name: Bricks
+    path: Materials/Bricks
     parent: Materials
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: Bricks01
-    path: Materials/Bricks+Blocks/Bricks01
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/Bricks01
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.8, g: 0.61538464, b: 0.512, a: 0.8}
   - isDirectory: 0
     name: Bricks03
-    path: Materials/Bricks+Blocks/Bricks03
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/Bricks03
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.7058824, g: 0.6964706, b: 0.68705887, a: 0.8}
   - isDirectory: 0
     name: BricksOld01
-    path: Materials/Bricks+Blocks/BricksOld01
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/BricksOld01
+    parent: Materials/Bricks
     sound: 2
     whitePoint: {r: 0.65882355, g: 0.6650981, b: 0.68078434, a: 0.8}
   - isDirectory: 0
     name: CityStreetSidewalk013
-    path: Materials/Bricks+Blocks/CityStreetSidewalk013
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/CityStreetSidewalk013
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.5835294, g: 0.40156865, b: 0.3545098, a: 0.8}
   - isDirectory: 0
     name: Cobblestone19
-    path: Materials/Bricks+Blocks/Cobblestone19
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/Cobblestone19
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.68078434, g: 0.6745098, b: 0.67764705, a: 0.8}
   - isDirectory: 0
     name: dungeon-stone1
-    path: Materials/Bricks+Blocks/dungeon-stone1
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/dungeon-stone1
+    parent: Materials/Bricks
     sound: 2
     whitePoint: {r: 0.52705884, g: 0.52705884, b: 0.4894118, a: 0.8}
   - isDirectory: 0
     name: harshbricks
-    path: Materials/Bricks+Blocks/harshbricks
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/harshbricks
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.64000005, g: 0.50921744, b: 0.36452177, a: 0.8}
   - isDirectory: 0
     name: octostone
-    path: Materials/Bricks+Blocks/octostone
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/octostone
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.5207843, g: 0.48627454, b: 0.42980394, a: 0.8}
   - isDirectory: 0
     name: redbricks2b
-    path: Materials/Bricks+Blocks/redbricks2b
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/redbricks2b
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.8, g: 0.6698565, b: 0.5933015, a: 0.8}
   - isDirectory: 0
     name: tiledstone1
-    path: Materials/Bricks+Blocks/tiledstone1
-    parent: Materials/Bricks+Blocks
+    path: Materials/Bricks/tiledstone1
+    parent: Materials/Bricks
     sound: 1
     whitePoint: {r: 0.2917647, g: 0.28235295, b: 0.19137256, a: 0.8}
   - isDirectory: 1
@@ -920,6 +920,72 @@ MonoBehaviour:
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
+    name: Numbers
+    path: Overlays/Numbers
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c048
+    path: Overlays/Numbers/c048
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c049
+    path: Overlays/Numbers/c049
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c050
+    path: Overlays/Numbers/c050
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c051
+    path: Overlays/Numbers/c051
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c052
+    path: Overlays/Numbers/c052
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c053
+    path: Overlays/Numbers/c053
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c054
+    path: Overlays/Numbers/c054
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c055
+    path: Overlays/Numbers/c055
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c056
+    path: Overlays/Numbers/c056
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: c057
+    path: Overlays/Numbers/c057
+    parent: Overlays/Numbers
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 1
     name: Symbols
     path: Overlays/Symbols
     parent: Overlays
@@ -1316,267 +1382,201 @@ MonoBehaviour:
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
-    name: Text Numbers
-    path: Overlays/Text Numbers
-    parent: Overlays
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c048
-    path: Overlays/Text Numbers/c048
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c049
-    path: Overlays/Text Numbers/c049
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c050
-    path: Overlays/Text Numbers/c050
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c051
-    path: Overlays/Text Numbers/c051
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c052
-    path: Overlays/Text Numbers/c052
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c053
-    path: Overlays/Text Numbers/c053
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c054
-    path: Overlays/Text Numbers/c054
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c055
-    path: Overlays/Text Numbers/c055
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c056
-    path: Overlays/Text Numbers/c056
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 0
-    name: c057
-    path: Overlays/Text Numbers/c057
-    parent: Overlays/Text Numbers
-    sound: 0
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-  - isDirectory: 1
-    name: Text Symbols
-    path: Overlays/Text Symbols
+    name: Text Special
+    path: Overlays/Text Special
     parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c033
-    path: Overlays/Text Symbols/c033
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c033
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c034
-    path: Overlays/Text Symbols/c034
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c034
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c035
-    path: Overlays/Text Symbols/c035
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c035
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c036
-    path: Overlays/Text Symbols/c036
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c036
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c037
-    path: Overlays/Text Symbols/c037
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c037
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c038
-    path: Overlays/Text Symbols/c038
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c038
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c039
-    path: Overlays/Text Symbols/c039
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c039
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c040
-    path: Overlays/Text Symbols/c040
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c040
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c041
-    path: Overlays/Text Symbols/c041
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c041
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c042
-    path: Overlays/Text Symbols/c042
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c042
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c043
-    path: Overlays/Text Symbols/c043
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c043
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c044
-    path: Overlays/Text Symbols/c044
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c044
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c045
-    path: Overlays/Text Symbols/c045
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c045
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c046
-    path: Overlays/Text Symbols/c046
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c046
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c047
-    path: Overlays/Text Symbols/c047
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c047
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c058
-    path: Overlays/Text Symbols/c058
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c058
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c059
-    path: Overlays/Text Symbols/c059
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c059
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c060
-    path: Overlays/Text Symbols/c060
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c060
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c061
-    path: Overlays/Text Symbols/c061
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c061
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c062
-    path: Overlays/Text Symbols/c062
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c062
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c063
-    path: Overlays/Text Symbols/c063
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c063
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c064
-    path: Overlays/Text Symbols/c064
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c064
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c091
-    path: Overlays/Text Symbols/c091
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c091
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c092
-    path: Overlays/Text Symbols/c092
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c092
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c093
-    path: Overlays/Text Symbols/c093
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c093
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c094
-    path: Overlays/Text Symbols/c094
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c094
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c095
-    path: Overlays/Text Symbols/c095
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c095
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c096
-    path: Overlays/Text Symbols/c096
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c096
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c123
-    path: Overlays/Text Symbols/c123
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c123
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c124
-    path: Overlays/Text Symbols/c124
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c124
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c125
-    path: Overlays/Text Symbols/c125
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c125
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
     name: c126
-    path: Overlays/Text Symbols/c126
-    parent: Overlays/Text Symbols
+    path: Overlays/Text Special/c126
+    parent: Overlays/Text Special
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
