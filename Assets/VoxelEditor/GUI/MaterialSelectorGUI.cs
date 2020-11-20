@@ -102,9 +102,9 @@ public class MaterialSelectorGUI : GUIPanel
         if (highlightMaterial == null || !highlightMaterial.HasProperty("_Color"))
         {
             if (highlightMaterial == null)
-                GUILayout.Label("No material selected");
+                GUILayout.Label("No texture selected");
             else
-                GUILayout.Label("Can't change color");
+                GUILayout.Label("Can't change color of this texture");
             if (colorPicker != null)
             {
                 Destroy(colorPicker);
