@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -29,16 +29,16 @@ public class MaterialSelectorGUI : GUIPanel
     private int tab;
     private string materialDirectory;
     private List<Material> materials;
-    private List<string> materialSubDirectories;
+    private string[] materialSubDirectories;
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
     private bool instance;
 
     private static readonly System.Lazy<GUIStyle> directoryButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUI.skin.button);
-        style.padding.left = 16;
-        style.padding.right = 16;
+        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        style.padding.left = 0;
+        style.padding.right = 0;
         return style;
     });
 
@@ -88,8 +88,8 @@ public class MaterialSelectorGUI : GUIPanel
         else
         {
             scrollVelocity = Vector2.zero;
-            }
         }
+    }
 
     private void ColorTab()
     {
@@ -183,30 +183,24 @@ public class MaterialSelectorGUI : GUIPanel
             DrawMaterialTexture(material, textureRect, allowAlpha);
         }
 
-        GUILayout.Space(12);
-
-        for (int i = 0; i < materialSubDirectories.Count; i++)
+        if (materialSubDirectories.Length > 0)
         {
-            if (i % NUM_COLUMNS == 0)
-                rowRect = GUILayoutUtility.GetRect(0, 999999,
-                    CATEGORY_BUTTON_HEIGHT, CATEGORY_BUTTON_HEIGHT,
-                    GUILayout.ExpandWidth(true));
-            Rect buttonRect = rowRect;
-            buttonRect.width = rowRect.width / NUM_COLUMNS;
-            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
-            string subDir = materialSubDirectories[i];
-            if (GUI.Button(buttonRect, subDir, directoryButtonStyle.Value))
+            GUILayout.Label("Categories:");
+            int selectDir = GUILayout.SelectionGrid(-1, materialSubDirectories, NUM_COLUMNS,
+                directoryButtonStyle.Value);
+            if (selectDir != -1)
             {
                 scroll = new Vector2(0, 0);
-                MaterialDirectorySelected(materialSubDirectories[i]);
+                MaterialDirectorySelected(materialSubDirectories[selectDir]);
             }
         }
+
         GUILayout.EndScrollView();
     }
 
     void UpdateMaterialDirectory()
     {
-        materialSubDirectories = new List<string>();
+        var materialDirectoriesList = new List<string>();
         materials = new List<Material>();
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
@@ -215,7 +209,7 @@ public class MaterialSelectorGUI : GUIPanel
             if (dirEntry.name.StartsWith("$"))
                 continue; // special alternate materials for game
             if (dirEntry.isDirectory)
-                materialSubDirectories.Add(dirEntry.name);
+                materialDirectoriesList.Add(dirEntry.name);
             else
             {
                 if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))
@@ -223,6 +217,7 @@ public class MaterialSelectorGUI : GUIPanel
                 materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
             }
         }
+        materialSubDirectories = materialDirectoriesList.ToArray();
 
         AssetManager.UnusedAssets();
     }
