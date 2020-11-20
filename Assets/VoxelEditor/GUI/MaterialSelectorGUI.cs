@@ -27,14 +27,14 @@ public class MaterialSelectorGUI : GUIPanel
     public Material highlightMaterial = null; // the current selected material
 
     private int tab;
-    private string materialDirectory;
+    private string selectedCategory;
     private List<Material> materials;
-    private string[] materialSubDirectories;
+    private string[] categories;
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
     private bool instance;
 
-    private static readonly System.Lazy<GUIStyle> directoryButtonStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
         style.padding.left = 0;
@@ -50,8 +50,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     public void Start()
     {
-        materialDirectory = rootDirectory;
-        UpdateMaterialDirectory();
+        CategorySelected("");
         instance = false;
     }
 
@@ -142,18 +141,11 @@ public class MaterialSelectorGUI : GUIPanel
             return;
         scroll = GUILayout.BeginScrollView(scroll);
 
-        if (materialDirectory != rootDirectory)
-        {
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
-            {
-                if (materialDirectory.Length != 0)
-                    materialDirectory = materialDirectory.Substring(0, materialDirectory.LastIndexOf("/"));
-                UpdateMaterialDirectory();
-            }
-        }
+        if (selectedCategory != "" && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+            CategorySelected("");
 
         Rect rowRect = new Rect();
-        int materialColumns = materialDirectory == rootDirectory ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
+        int materialColumns = selectedCategory == "" ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
         string highlightName = "", previewName = "";
         if (highlightMaterial != null)
         {
@@ -183,33 +175,37 @@ public class MaterialSelectorGUI : GUIPanel
             DrawMaterialTexture(material, textureRect, allowAlpha);
         }
 
-        if (materialSubDirectories.Length > 0)
+        if (categories.Length > 0)
         {
             GUILayout.Label("Categories:");
-            int selectDir = GUILayout.SelectionGrid(-1, materialSubDirectories, NUM_COLUMNS,
-                directoryButtonStyle.Value);
+            int selectDir = GUILayout.SelectionGrid(-1, categories, NUM_COLUMNS,
+                categoryButtonStyle.Value);
             if (selectDir != -1)
-            {
-                scroll = new Vector2(0, 0);
-                MaterialDirectorySelected(materialSubDirectories[selectDir]);
-            }
+                CategorySelected(categories[selectDir]);
         }
 
         GUILayout.EndScrollView();
     }
 
-    void UpdateMaterialDirectory()
+    private void CategorySelected(string category)
     {
-        var materialDirectoriesList = new List<string>();
+        selectedCategory = category;
+        scroll = Vector2.zero;
+
+        string currentDirectory = rootDirectory;
+        if (category != "")
+            currentDirectory += "/" + category;
+
+        var categoriesList = new List<string>();
         materials = new List<Material>();
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
-            if (dirEntry.parent != materialDirectory)
+            if (dirEntry.parent != currentDirectory)
                 continue;
             if (dirEntry.name.StartsWith("$"))
                 continue; // special alternate materials for game
             if (dirEntry.isDirectory)
-                materialDirectoriesList.Add(dirEntry.name);
+                categoriesList.Add(dirEntry.name);
             else
             {
                 if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))
@@ -217,18 +213,9 @@ public class MaterialSelectorGUI : GUIPanel
                 materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
             }
         }
-        materialSubDirectories = materialDirectoriesList.ToArray();
+        categories = categoriesList.ToArray();
 
         AssetManager.UnusedAssets();
-    }
-
-    private void MaterialDirectorySelected(string name)
-    {
-        if (materialDirectory.Length == 0)
-            materialDirectory = name;
-        else
-            materialDirectory += "/" + name;
-        UpdateMaterialDirectory();
     }
 
     private void MaterialSelected(Material material)
