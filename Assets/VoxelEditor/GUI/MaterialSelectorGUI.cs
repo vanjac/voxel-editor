@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -87,15 +87,9 @@ public class MaterialSelectorGUI : GUIPanel
             TextureTab();
         else
         {
-            scroll = Vector2.zero;
             scrollVelocity = Vector2.zero;
-            if (materialDirectory != rootDirectory)
-            {
-                materialDirectory = rootDirectory;
-                UpdateMaterialDirectory();
             }
         }
-    }
 
     private void ColorTab()
     {
