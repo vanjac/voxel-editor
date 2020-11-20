@@ -13,9 +13,9 @@ public class MaterialSelectorGUI : GUIPanel
     private static RenderTexture previewTexture;
     private static Material previewMaterial;
     private const int NUM_COLUMNS = 4;
+    private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
-    private const string BACK_BUTTON = "Back";
     private const string PREVIEW_SUFFIX = "_preview";
 
     public delegate void MaterialSelectHandler(Material material);
@@ -147,29 +147,19 @@ public class MaterialSelectorGUI : GUIPanel
         if (materials == null)
             return;
         scroll = GUILayout.BeginScrollView(scroll);
-        Rect rowRect = new Rect();
-        for (int i = 0; i < materialSubDirectories.Count; i++)
+
+        if (materialDirectory != rootDirectory)
         {
-            if (i % NUM_COLUMNS == 0)
-                rowRect = GUILayoutUtility.GetRect(0, 999999,
-                    CATEGORY_BUTTON_HEIGHT, CATEGORY_BUTTON_HEIGHT,
-                    GUILayout.ExpandWidth(true));
-            Rect buttonRect = rowRect;
-            buttonRect.width = rowRect.width / NUM_COLUMNS;
-            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
-            string subDir = materialSubDirectories[i];
-            bool selected;
-            if (subDir == BACK_BUTTON)
-                // highlight the button
-                selected = !GUI.Toggle(buttonRect, true, subDir, directoryButtonStyle.Value);
-            else
-                selected = GUI.Button(buttonRect, subDir, directoryButtonStyle.Value);
-            if (selected)
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
             {
-                scroll = new Vector2(0, 0);
-                MaterialDirectorySelected(materialSubDirectories[i]);
+                if (materialDirectory.Length != 0)
+                    materialDirectory = materialDirectory.Substring(0, materialDirectory.LastIndexOf("/"));
+                UpdateMaterialDirectory();
             }
         }
+
+        Rect rowRect = new Rect();
+        int materialColumns = materialDirectory == rootDirectory ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
         string highlightName = "", previewName = "";
         if (highlightMaterial != null)
         {
@@ -178,11 +168,11 @@ public class MaterialSelectorGUI : GUIPanel
         }
         for (int i = 0; i < materials.Count; i++)
         {
-            if (i % NUM_COLUMNS == 0)
-                rowRect = GUILayoutUtility.GetAspectRect(NUM_COLUMNS);
+            if (i % materialColumns == 0)
+                rowRect = GUILayoutUtility.GetAspectRect(materialColumns);
             Rect buttonRect = rowRect;
             buttonRect.width = buttonRect.height;
-            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
+            buttonRect.x = buttonRect.width * (i % materialColumns);
             Rect textureRect = new Rect(
                 buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
@@ -198,14 +188,31 @@ public class MaterialSelectorGUI : GUIPanel
                 MaterialSelected(material);
             DrawMaterialTexture(material, textureRect, allowAlpha);
         }
+
+        GUILayout.Space(12);
+
+        for (int i = 0; i < materialSubDirectories.Count; i++)
+        {
+            if (i % NUM_COLUMNS == 0)
+                rowRect = GUILayoutUtility.GetRect(0, 999999,
+                    CATEGORY_BUTTON_HEIGHT, CATEGORY_BUTTON_HEIGHT,
+                    GUILayout.ExpandWidth(true));
+            Rect buttonRect = rowRect;
+            buttonRect.width = rowRect.width / NUM_COLUMNS;
+            buttonRect.x = buttonRect.width * (i % NUM_COLUMNS);
+            string subDir = materialSubDirectories[i];
+            if (GUI.Button(buttonRect, subDir, directoryButtonStyle.Value))
+            {
+                scroll = new Vector2(0, 0);
+                MaterialDirectorySelected(materialSubDirectories[i]);
+            }
+        }
         GUILayout.EndScrollView();
     }
 
     void UpdateMaterialDirectory()
     {
         materialSubDirectories = new List<string>();
-        if (materialDirectory != rootDirectory)
-            materialSubDirectories.Add(BACK_BUTTON);
         materials = new List<Material>();
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
@@ -228,21 +235,11 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void MaterialDirectorySelected(string name)
     {
-        if (name == BACK_BUTTON)
-        {
-            if (materialDirectory.Length != 0)
-                materialDirectory = materialDirectory.Substring(0, materialDirectory.LastIndexOf("/"));
-            UpdateMaterialDirectory();
-            return;
-        }
+        if (materialDirectory.Length == 0)
+            materialDirectory = name;
         else
-        {
-            if (materialDirectory.Length == 0)
-                materialDirectory = name;
-            else
-                materialDirectory += "/" + name;
-            UpdateMaterialDirectory();
-        }
+            materialDirectory += "/" + name;
+        UpdateMaterialDirectory();
     }
 
     private void MaterialSelected(Material material)
