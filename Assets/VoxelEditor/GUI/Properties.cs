@@ -374,6 +374,7 @@ public class PropertyGUIs
                 MaterialSelectorGUI materialSelector
                     = GUIManager.guiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = "Change " + property.name;
+                materialSelector.voxelArray = VoxelArrayEditor.instance;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
                 materialSelector.allowAlpha = allowAlpha;

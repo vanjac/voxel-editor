@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public enum ColorMode
-{
-    MATTE, GLOSSY, METAL, UNLIT, GLASS, ADD, MULTIPLY
-}
-
 public class MaterialSelectorGUI : GUIPanel
 {
     private static RenderTexture previewTexture;
@@ -17,6 +12,7 @@ public class MaterialSelectorGUI : GUIPanel
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
     private const string PREVIEW_SUFFIX = "_preview";
+    private const string CUSTOM_CATEGORY = "CUSTOM";
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -25,6 +21,7 @@ public class MaterialSelectorGUI : GUIPanel
     public bool allowAlpha = false;
     public bool allowNullMaterial = false;
     public Material highlightMaterial = null; // the current selected material
+    public VoxelArrayEditor voxelArray;
 
     private int tab;
     private string selectedCategory;
@@ -39,6 +36,14 @@ public class MaterialSelectorGUI : GUIPanel
         var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
         style.padding.left = 0;
         style.padding.right = 0;
+        return style;
+    });
+
+    private static readonly System.Lazy<GUIStyle> categoryLabelStyle = new System.Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUIStyleSet.instance.labelTitle);
+        style.alignment = TextAnchor.MiddleCenter;
+        style.fixedHeight = GUIStyleSet.instance.buttonLarge.fixedHeight;
         return style;
     });
 
@@ -146,8 +151,24 @@ public class MaterialSelectorGUI : GUIPanel
             return;
         scroll = GUILayout.BeginScrollView(scroll);
 
-        if (selectedCategory != "" && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
-            CategorySelected("");
+        if (selectedCategory != "")
+        {
+            GUILayout.BeginHorizontal();
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+                CategorySelected("");
+            if (selectedCategory == CUSTOM_CATEGORY)
+            {
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
+                    ImportTexture();
+                if (materials.Count > 0)
+                {
+                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw)) { }
+                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete)) { }
+                }
+            }
+            GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
+            GUILayout.EndHorizontal();
+        }
 
         Rect rowRect = new Rect();
         int materialColumns = selectedCategory == "" ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
@@ -197,11 +218,24 @@ public class MaterialSelectorGUI : GUIPanel
         selectedCategory = category;
         scroll = Vector2.zero;
 
+        if (category == CUSTOM_CATEGORY)
+        {
+            categories = new string[0];
+            if (rootDirectory == "Materials")
+                materials = voxelArray.customMaterials;
+            else
+                materials = voxelArray.customOverlays;
+            AssetManager.UnusedAssets();
+            return;
+        }
+
         string currentDirectory = rootDirectory;
         if (category != "")
             currentDirectory += "/" + category;
 
         var categoriesList = new List<string>();
+        if (category == "" && (rootDirectory == "Materials" || rootDirectory == "Overlays"))
+            categoriesList.Add(CUSTOM_CATEGORY);
         materials = new List<Material>();
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
@@ -234,6 +268,29 @@ public class MaterialSelectorGUI : GUIPanel
         instance = false;
         if (handler != null)
             handler(material);
+    }
+
+    private void ImportTexture()
+    {
+        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) => {
+            if (path == null)
+                return;
+            Texture2D texture = NativeGallery.LoadImageAtPath(path, markTextureNonReadable: false);
+            if (texture == null)
+            {
+                DialogGUI.ShowMessageDialog(gameObject, "Error importing image");
+                return;
+            }
+            Debug.Log("Dimensions: " + texture.width + ", " + texture.height);
+            Material baseMat = Resources.Load<Material>("GameAssets/Materials/MATTE");
+            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat);
+            customTex.texture = texture;
+            materials.Add(customTex.material);
+            voxelArray.unsavedChanges = true;
+        }, "Select a texture image");
+
+        if (permission != NativeGallery.Permission.Granted)
+            DialogGUI.ShowMessageDialog(gameObject, "Please grant N-Space permission to access your photo gallery.");
     }
 
     public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)

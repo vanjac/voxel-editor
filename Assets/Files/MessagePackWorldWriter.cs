@@ -41,6 +41,16 @@ public class MessagePackWorldWriter
 
         world[FileKeys.WORLD_CAMERA] = new MessagePackObject(WriteCamera(cameraPivot));
 
+        var customMaterialsList = new List<MessagePackObject>();
+        foreach (Material mat in voxelArray.customMaterials)
+            customMaterialsList.Add(new MessagePackObject(WriteCustomTexture(mat)));
+        world[FileKeys.WORLD_CUSTOM_MATERIALS] = new MessagePackObject(customMaterialsList);
+
+        var customOverlaysList = new List<MessagePackObject>();
+        foreach (Material mat in voxelArray.customOverlays)
+            customOverlaysList.Add(new MessagePackObject(WriteCustomTexture(mat)));
+        world[FileKeys.WORLD_CUSTOM_OVERLAYS] = new MessagePackObject(customOverlaysList);
+
         var materialsList = new List<MessagePackObject>();
         // map to indices in materials list
         var foundMaterials = new Dictionary<Material, int>();
@@ -99,6 +109,18 @@ public class MessagePackWorldWriter
         return camera;
     }
 
+    private static MessagePackObjectDictionary WriteCustomTexture(Material material)
+    {
+        var materialDict = WriteMaterial(material);
+        CustomTexture customTex = new CustomTexture(material);
+        materialDict[FileKeys.CUSTOM_TEXTURE_BASE] = customTex.baseName;
+        materialDict[FileKeys.CUSTOM_TEXTURE_SCALE] = WriteVector2(customTex.scale);
+        Texture2D texture = customTex.texture;
+        materialDict[FileKeys.CUSTOM_TEXTURE_DATA] = ImageConversion.EncodeToPNG(texture);
+        materialDict[FileKeys.CUSTOM_TEXTURE_FILTER] = texture.filterMode.ToString();
+        return materialDict;
+    }
+
     private static void AddMaterial(Material material, Dictionary<Material, int> foundMaterials,
         List<MessagePackObject> materialsList)
     {
@@ -123,7 +145,7 @@ public class MessagePackWorldWriter
     private static MessagePackObjectDictionary WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
     {
         var entityDict = WriteEntity(objectEntity, includeName);
-        entityDict[FileKeys.OBJECT_POSITION] = WriteIntVector3(objectEntity.position);
+        entityDict[FileKeys.OBJECT_POSITION] = WriteVector3Int(objectEntity.position);
         entityDict[FileKeys.OBJECT_ROTATION] = objectEntity.rotation;
 
         return entityDict;
@@ -227,7 +249,7 @@ public class MessagePackWorldWriter
         Dictionary<Substance, int> substances)
     {
         var voxelList = new List<MessagePackObject>();
-        voxelList.Add(WriteIntVector3(voxel.position));
+        voxelList.Add(WriteVector3Int(voxel.position));
 
         var facesList = new List<MessagePackObject>();
         for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
@@ -298,6 +320,14 @@ public class MessagePackWorldWriter
         }
     }
 
+    private static MessagePackObject WriteVector2(Vector2 v)
+    {
+        var l = new List<MessagePackObject>();
+        l.Add(v.x);
+        l.Add(v.y);
+        return new MessagePackObject(l);
+    }
+
     private static MessagePackObject WriteVector3(Vector3 v)
     {
         var l = new List<MessagePackObject>();
@@ -312,12 +342,12 @@ public class MessagePackWorldWriter
         return WriteVector3(v.eulerAngles);
     }
 
-    private static MessagePackObject WriteIntVector3(Vector3 v)
+    private static MessagePackObject WriteVector3Int(Vector3Int v)
     {
         var l = new List<MessagePackObject>();
-        l.Add((int)(Mathf.RoundToInt(v.x)));
-        l.Add((int)(Mathf.RoundToInt(v.y)));
-        l.Add((int)(Mathf.RoundToInt(v.z)));
+        l.Add(v.x);
+        l.Add(v.y);
+        l.Add(v.z);
         return new MessagePackObject(l);
     }
 

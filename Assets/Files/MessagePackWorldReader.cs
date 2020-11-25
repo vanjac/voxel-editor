@@ -82,18 +82,36 @@ public class MessagePackWorldReader : WorldFileReader
         if (editor && cameraPivot != null && world.ContainsKey(FileKeys.WORLD_CAMERA))
             ReadCamera(world[FileKeys.WORLD_CAMERA].AsDictionary(), cameraPivot);
 
+        var customMaterialNames = new Dictionary<string, Material>();
+        voxelArray.customMaterials = new List<Material>();
+        if (world.ContainsKey(FileKeys.WORLD_CUSTOM_MATERIALS))
+        {
+            foreach (var texObj in world[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
+                voxelArray.customMaterials.Add(
+                    ReadCustomTexture(texObj.AsDictionary(), customMaterialNames));
+        }
+
+        var customOverlayNames = new Dictionary<string, Material>();
+        voxelArray.customOverlays = new List<Material>();
+        if (world.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAYS))
+        {
+            foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
+                voxelArray.customOverlays.Add(
+                    ReadCustomTexture(texObj.AsDictionary(), customOverlayNames));
+        }
+
         var materials = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_MATERIALS))
         {
             foreach (var matObj in world[FileKeys.WORLD_MATERIALS].AsList())
-                materials.Add(ReadMaterial(matObj.AsDictionary(), false));
+                materials.Add(ReadMaterial(matObj.AsDictionary(), false, customMaterialNames));
         }
 
         var overlays = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_OVERLAYS))
         {
             foreach (var matObj in world[FileKeys.WORLD_OVERLAYS].AsList())
-                overlays.Add(ReadMaterial(matObj.AsDictionary(), true));
+                overlays.Add(ReadMaterial(matObj.AsDictionary(), true, customOverlayNames));
         }
 
         var substances = new List<Substance>();
@@ -162,7 +180,63 @@ public class MessagePackWorldReader : WorldFileReader
         }
     }
 
-    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool overlay)
+    private Material ReadCustomTexture(MessagePackObjectDictionary texDict,
+        Dictionary<string, Material> customTextureNames)
+    {
+        CustomTexture customTex;
+        if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_BASE))
+        {
+            string baseName = texDict[FileKeys.CUSTOM_TEXTURE_BASE].AsString();
+            Material baseMat = ResourcesDirectory.FindMaterial(baseName, editor);
+            if (baseMat == null)
+            {
+                warnings.Add("Unrecognized material: " + baseName);
+                return ReadWorldFile.missingMaterial;
+            }
+            customTex = CustomTexture.FromBaseMaterial(baseMat);
+        }
+        else
+        {
+            warnings.Add("Error reading custom texture");
+            return ReadWorldFile.missingMaterial;
+        }
+
+        if (texDict.ContainsKey(FileKeys.MATERIAL_NAME))
+        {
+            customTex.material.name = texDict[FileKeys.MATERIAL_NAME].AsString();
+            customTextureNames[customTex.material.name] = customTex.material;
+        }
+        if (texDict.ContainsKey(FileKeys.MATERIAL_COLOR))
+        {
+            string colorProp = ResourcesDirectory.MaterialColorProperty(customTex.material);
+            if (colorProp != null)
+                customTex.material.SetColor(colorProp, ReadColor(texDict[FileKeys.MATERIAL_COLOR]));
+        }
+
+        if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_DATA))
+        {
+            Texture2D tex = new Texture2D(2, 2);
+            if (ImageConversion.LoadImage(tex, texDict[FileKeys.CUSTOM_TEXTURE_DATA].AsBinary()))
+            {
+                if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_FILTER))
+                    tex.filterMode = (FilterMode)System.Enum.Parse(typeof(FilterMode),
+                        texDict[FileKeys.CUSTOM_TEXTURE_FILTER].AsString());
+                customTex.texture = tex;
+            }
+            else
+            {
+                warnings.Add("Error reading custom texture data");
+            }
+        }
+
+        if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_SCALE))
+            customTex.scale = ReadVector2(texDict[FileKeys.CUSTOM_TEXTURE_SCALE]);
+
+        return customTex.material;
+    }
+
+    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool overlay,
+        Dictionary<string, Material> customTextureNames)
     {
         string name;
 
@@ -184,7 +258,11 @@ public class MessagePackWorldReader : WorldFileReader
             return ReadWorldFile.missingMaterial;
         }
 
-        Material mat = ResourcesDirectory.FindMaterial(name, editor);
+        Material mat;
+        if (customTextureNames != null && customTextureNames.ContainsKey(name))
+            mat = customTextureNames[name];
+        else
+            mat = ResourcesDirectory.FindMaterial(name, editor);
         if (mat == null)
         {
             warnings.Add("Unrecognized material: " + name);
@@ -195,8 +273,12 @@ public class MessagePackWorldReader : WorldFileReader
             string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
             if (colorProp != null)
             {
-                mat = ResourcesDirectory.InstantiateMaterial(mat);
-                mat.SetColor(colorProp, ReadColor(matDict[FileKeys.MATERIAL_COLOR]));
+                Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
+                if (color != mat.GetColor(colorProp))
+                {
+                    mat = ResourcesDirectory.InstantiateMaterial(mat);
+                    mat.SetColor(colorProp, color);
+                }
             }
         }
         return mat;
@@ -291,7 +373,7 @@ public class MessagePackWorldReader : WorldFileReader
                 if (propType == typeof(Material))
                 {
                     // skip equality check
-                    prop.setter(ReadMaterial(propList[1].AsDictionary(), true));
+                    prop.setter(ReadMaterial(propList[1].AsDictionary(), true, null));
                 }
                 else if (propType == typeof(EmbeddedData))
                 {
@@ -368,6 +450,12 @@ public class MessagePackWorldReader : WorldFileReader
         int edgeI = edgeList[0].AsInt32();
         if (edgeList.Count >= 2)
             voxel.edges[edgeI].bevel = edgeList[1].AsByte();
+    }
+
+    private Vector2 ReadVector2(MessagePackObject o)
+    {
+        var l = o.AsList();
+        return new Vector2(l[0].AsSingle(), l[1].AsSingle());
     }
 
     private Vector3 ReadVector3(MessagePackObject o)

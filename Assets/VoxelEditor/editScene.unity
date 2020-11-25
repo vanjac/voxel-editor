@@ -220,6 +220,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  customMaterials: []
+  customOverlays: []
   axes: {fileID: 609989223}
   rotateAxis: {fileID: 1097770323}
   selectedMaterial: {fileID: 2100000, guid: 5a6edb76e3146d841bc94e18b9c90efe, type: 2}
@@ -726,7 +728,7 @@ MonoBehaviour:
     target: {fileID: 2800000, guid: e32c2e24ffccfe246a44f3cef0fdec0a, type: 3}
     rename: {fileID: 0}
     copy: {fileID: 0}
-    delete: {fileID: 0}
+    delete: {fileID: 2800000, guid: a91481f4c06fdb946817fd08f059dd99, type: 3}
     share: {fileID: 0}
     bevel: {fileID: 2800000, guid: a2196131ae0adc94db6a16177538d05f, type: 3}
     no: {fileID: 2800000, guid: b7365fd42b2f6e1479b471b1498cca62, type: 3}
@@ -744,6 +746,7 @@ MonoBehaviour:
     singleObject: {fileID: 2800000, guid: 349e92702e1695d44b22fbda80fa138c, type: 3}
     objectType: {fileID: 2800000, guid: 907e5b067b45f74459c17473d688d0bd, type: 3}
     behavior: {fileID: 2800000, guid: 0feee20dbbdb00749b74d19e8bf252ef, type: 3}
+    newTexture: {fileID: 2800000, guid: 71c2ad987d352b14db16de1a32f9be32, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}

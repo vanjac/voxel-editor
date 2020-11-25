@@ -15,6 +15,7 @@ public class PaintGUI : GUIPanel
 
     public PaintHandler handler;
     public VoxelFace paint;
+    public VoxelArrayEditor voxelArray;
 
     private int selectedLayer = 0;
     private MaterialSelectorGUI materialSelector;
@@ -127,6 +128,7 @@ public class PaintGUI : GUIPanel
             Destroy(materialSelector);
         materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
         materialSelector.enabled = false;
+        materialSelector.voxelArray = voxelArray;
         materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
         if (selectedLayer == 0)
         {

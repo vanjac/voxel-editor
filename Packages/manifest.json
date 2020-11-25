@@ -2,8 +2,10 @@
   "dependencies": {
     "com.unity.ide.vscode": "1.2.3",
     "com.unity.ugui": "1.0.0",
+    "com.yasirkula.nativegallery": "https://github.com/yasirkula/UnityNativeGallery.git",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.imageconversion": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",
     "com.unity.modules.physics": "1.0.0",
     "com.unity.modules.ui": "1.0.0",
