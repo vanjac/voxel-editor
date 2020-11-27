@@ -43,13 +43,15 @@ public class MessagePackWorldWriter
 
         var customMaterialsList = new List<MessagePackObject>();
         foreach (Material mat in voxelArray.customMaterials)
-            customMaterialsList.Add(new MessagePackObject(WriteCustomTexture(mat)));
-        world[FileKeys.WORLD_CUSTOM_MATERIALS] = new MessagePackObject(customMaterialsList);
+            customMaterialsList.Add(new MessagePackObject(WriteCustomTexture(mat, false)));
+        if (customMaterialsList.Count != 0)
+            world[FileKeys.WORLD_CUSTOM_MATERIALS] = new MessagePackObject(customMaterialsList);
 
         var customOverlaysList = new List<MessagePackObject>();
         foreach (Material mat in voxelArray.customOverlays)
-            customOverlaysList.Add(new MessagePackObject(WriteCustomTexture(mat)));
-        world[FileKeys.WORLD_CUSTOM_OVERLAYS] = new MessagePackObject(customOverlaysList);
+            customOverlaysList.Add(new MessagePackObject(WriteCustomTexture(mat, true)));
+        if (customOverlaysList.Count != 0)
+            world[FileKeys.WORLD_CUSTOM_OVERLAYS] = new MessagePackObject(customOverlaysList);
 
         var materialsList = new List<MessagePackObject>();
         // map to indices in materials list
@@ -109,15 +111,11 @@ public class MessagePackWorldWriter
         return camera;
     }
 
-    private static MessagePackObjectDictionary WriteCustomTexture(Material material)
+    private static MessagePackObjectDictionary WriteCustomTexture(Material material, bool overlay)
     {
-        var materialDict = WriteMaterial(material);
-        CustomTexture customTex = new CustomTexture(material);
-        materialDict[FileKeys.CUSTOM_TEXTURE_BASE] = customTex.baseName;
-        materialDict[FileKeys.CUSTOM_TEXTURE_SCALE] = WriteVector2(customTex.scale);
-        Texture2D texture = customTex.texture;
-        materialDict[FileKeys.CUSTOM_TEXTURE_DATA] = ImageConversion.EncodeToPNG(texture);
-        materialDict[FileKeys.CUSTOM_TEXTURE_FILTER] = texture.filterMode.ToString();
+        CustomTexture customTex = new CustomTexture(material, overlay);
+        var materialDict = WritePropertiesObject(customTex, false);
+        materialDict[FileKeys.CUSTOM_MATERIAL_NAME] = material.name;
         return materialDict;
     }
 
@@ -207,6 +205,10 @@ public class MessagePackWorldWriter
                 dataList.Add(embeddedData.type.ToString());
                 dataList.Add(embeddedData.bytes);
                 propList.Add(new MessagePackObject(dataList));
+            }
+            else if (valueType == typeof(Texture2D))
+            {
+                propList.Add(ImageConversion.EncodeToPNG((Texture2D)value));
             }
             else // not a special type
             {

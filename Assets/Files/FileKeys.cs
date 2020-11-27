@@ -29,12 +29,6 @@ public class FileKeys
     public const string MATERIAL_ALPHA = "a";   // obselete since version 10
     public const string MATERIAL_NAME = "n";
 
-    // CUSTOM_MATERIAL is type of MATERIAL
-    public const string CUSTOM_TEXTURE_BASE = "b";
-    public const string CUSTOM_TEXTURE_DATA = "t";
-    public const string CUSTOM_TEXTURE_FILTER = "f";
-    public const string CUSTOM_TEXTURE_SCALE = "s";
-
     public const string PROPOBJ_NAME = "n";
     public const string PROPOBJ_PROPERTIES = "p";
 
@@ -46,4 +40,7 @@ public class FileKeys
     // OBJECT is type of ENTITY
     public const string OBJECT_POSITION = "a";
     public const string OBJECT_ROTATION = "r";
+
+    // CUSTOM_MATERIAL is type of ENTITY
+    public const string CUSTOM_MATERIAL_NAME = "N";
 }

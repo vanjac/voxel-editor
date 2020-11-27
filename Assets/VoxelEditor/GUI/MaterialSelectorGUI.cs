@@ -108,6 +108,11 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.Label("No texture selected");
             return false;
         }
+        if (CustomTexture.IsCustomTexture(highlightMaterial))
+        {
+            GUILayout.Label("Can't change color of custom texture");
+            return false;
+        }
         string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
         if (colorProp == null)
         {
@@ -160,9 +165,10 @@ public class MaterialSelectorGUI : GUIPanel
             {
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
                     ImportTexture();
-                if (materials.Count > 0)
+                if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
                 {
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw)) { }
+                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
+                        EditCustomTexture(new CustomTexture(highlightMaterial, allowAlpha));
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete)) { }
                 }
             }
@@ -221,10 +227,10 @@ public class MaterialSelectorGUI : GUIPanel
         if (category == CUSTOM_CATEGORY)
         {
             categories = new string[0];
-            if (rootDirectory == "Materials")
-                materials = voxelArray.customMaterials;
-            else
+            if (rootDirectory == "Overlays")
                 materials = voxelArray.customOverlays;
+            else
+                materials = voxelArray.customMaterials;
             AssetManager.UnusedAssets();
             return;
         }
@@ -282,15 +288,29 @@ public class MaterialSelectorGUI : GUIPanel
                 return;
             }
             Debug.Log("Dimensions: " + texture.width + ", " + texture.height);
-            Material baseMat = Resources.Load<Material>("GameAssets/Materials/MATTE");
-            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat);
+            Material baseMat = Resources.Load<Material>(
+                allowAlpha ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE");
+            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, allowAlpha);
             customTex.texture = texture;
             materials.Add(customTex.material);
             voxelArray.unsavedChanges = true;
+            handler(customTex.material);
+            EditCustomTexture(customTex);
         }, "Select a texture image");
 
         if (permission != NativeGallery.Permission.Granted)
             DialogGUI.ShowMessageDialog(gameObject, "Please grant N-Space permission to access your photo gallery.");
+    }
+
+    private void EditCustomTexture(CustomTexture customTex)
+    {
+        PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
+        if (propsGUI != null)
+        {
+            propsGUI.specialSelection = customTex;
+            propsGUI.normallyOpen = true;
+            Destroy(this);
+        }
     }
 
     public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)

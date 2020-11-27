@@ -120,6 +120,10 @@ public class PaintGUI : GUIPanel
             materialSelector.WindowGUI();
             scroll = materialSelector.scroll;
         }
+        else
+        {
+            Destroy(this);
+        }
     }
 
     private void UpdateMaterialSelector()

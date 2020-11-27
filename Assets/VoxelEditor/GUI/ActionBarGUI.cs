@@ -159,7 +159,7 @@ public class ActionBarGUI : TopPanelGUI
                 PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
                 if (propsGUI != null)
                 {
-                    propsGUI.worldSelected = true;
+                    propsGUI.specialSelection = voxelArray.world;
                     propsGUI.normallyOpen = true;
                 }
             }),

@@ -158,7 +158,8 @@ public class PropertiesGUI : LeftPanelGUI
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
     public bool normallyOpen = true;
-    public bool worldSelected = false;
+    // for selecting "hidden" objects like world properties and custom textures
+    public PropertiesObject specialSelection = null;
     public bool freezeUpdates = false;
 
     List<Entity> selectedEntities = new List<Entity>();
@@ -205,7 +206,7 @@ public class PropertiesGUI : LeftPanelGUI
 
         if (voxelArray.selectionChanged && !freezeUpdates)
         {
-            worldSelected = false;
+            specialSelection = null;
             voxelArray.selectionChanged = false;
             scroll = Vector2.zero;
             scrollVelocity = Vector2.zero;
@@ -215,10 +216,10 @@ public class PropertiesGUI : LeftPanelGUI
 
         bool propertiesDisplayed = false;
 
-        if (worldSelected)
+        if (specialSelection != null)
         {
             GUILayout.BeginVertical(GUI.skin.box);
-            PropertiesObjectGUI(voxelArray.world);
+            PropertiesObjectGUI(specialSelection);
             GUILayout.EndVertical();
             propertiesDisplayed = true;
             EntityReferencePropertyManager.Reset(null);

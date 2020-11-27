@@ -151,7 +151,7 @@ public class PropertyGUIs
         Float(property);
     }
 
-    public static void FloatRange(Property property)
+    public static void FloatPair(Property property, string separator)
     {
         GUILayout.Label(property.name + ":", headerLabelStyle.Value);
         GUILayout.BeginHorizontal();
@@ -163,7 +163,7 @@ public class PropertyGUIs
             v => property.value = ((float)v, range.Item2),
             PropertyGUIs.Empty);
         Float(wrapper1);
-        GUILayout.Label("to", inlineLabelStyle.Value, GUILayout.ExpandWidth(false));
+        GUILayout.Label(separator, inlineLabelStyle.Value, GUILayout.ExpandWidth(false));
         Property wrapper2 = new Property(
             property.id + "2",
             "",
@@ -172,6 +172,16 @@ public class PropertyGUIs
             PropertyGUIs.Empty);
         Float(wrapper2);
         GUILayout.EndHorizontal();
+    }
+
+    public static void FloatRange(Property property)
+    {
+        FloatPair(property, "to");
+    }
+
+    public static void FloatDimensions(Property property)
+    {
+        FloatPair(property, "x");
     }
 
     public static void Tag(Property property)
@@ -387,6 +397,24 @@ public class PropertyGUIs
                 textureRect, allowAlpha);
             GUILayout.EndHorizontal();
         };
+    }
+
+    public static void Texture(Property property)
+    {
+        GUILayout.BeginHorizontal();
+        AlignedLabel(property);
+        GUILayout.FlexibleSpace();
+        // copied from Material()
+        // TODO: magic numbers
+        RectOffset tagFieldStyleMargin = tagFieldStyle.Value.margin;
+        Rect buttonRect = GUILayoutUtility.GetRect(150, 150);
+        Rect textureRect = new Rect(
+            buttonRect.xMin + 20, buttonRect.yMin + 20,
+            buttonRect.width - 20 * 2, buttonRect.height - 20 * 2);
+        if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
+        { /* TODO */ }
+        GUI.DrawTexture(textureRect, (Texture2D)property.value);
+        GUILayout.EndHorizontal();
     }
 
     public static PropertyGUI Slider(float minValue, float maxValue)

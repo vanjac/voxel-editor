@@ -88,7 +88,7 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
                 voxelArray.customMaterials.Add(
-                    ReadCustomTexture(texObj.AsDictionary(), customMaterialNames));
+                    ReadCustomTexture(texObj.AsDictionary(), customMaterialNames, false));
         }
 
         var customOverlayNames = new Dictionary<string, Material>();
@@ -97,7 +97,7 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
                 voxelArray.customOverlays.Add(
-                    ReadCustomTexture(texObj.AsDictionary(), customOverlayNames));
+                    ReadCustomTexture(texObj.AsDictionary(), customOverlayNames, true));
         }
 
         var materials = new List<Material>();
@@ -181,58 +181,18 @@ public class MessagePackWorldReader : WorldFileReader
     }
 
     private Material ReadCustomTexture(MessagePackObjectDictionary texDict,
-        Dictionary<string, Material> customTextureNames)
+        Dictionary<string, Material> customTextureNames, bool overlay)
     {
-        CustomTexture customTex;
-        if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_BASE))
+        CustomTexture customTex = new CustomTexture(
+            new Material(Shader.Find("Unlit/UnlitTransparentNoFog")), overlay);
+        ReadPropertiesObject(texDict, customTex);
+        Material mat = customTex.material;
+        if (texDict.ContainsKey(FileKeys.CUSTOM_MATERIAL_NAME))
         {
-            string baseName = texDict[FileKeys.CUSTOM_TEXTURE_BASE].AsString();
-            Material baseMat = ResourcesDirectory.FindMaterial(baseName, editor);
-            if (baseMat == null)
-            {
-                warnings.Add("Unrecognized material: " + baseName);
-                return ReadWorldFile.missingMaterial;
-            }
-            customTex = CustomTexture.FromBaseMaterial(baseMat);
+            mat.name = texDict[FileKeys.CUSTOM_MATERIAL_NAME].AsString();
+            customTextureNames[mat.name] = mat;
         }
-        else
-        {
-            warnings.Add("Error reading custom texture");
-            return ReadWorldFile.missingMaterial;
-        }
-
-        if (texDict.ContainsKey(FileKeys.MATERIAL_NAME))
-        {
-            customTex.material.name = texDict[FileKeys.MATERIAL_NAME].AsString();
-            customTextureNames[customTex.material.name] = customTex.material;
-        }
-        if (texDict.ContainsKey(FileKeys.MATERIAL_COLOR))
-        {
-            string colorProp = ResourcesDirectory.MaterialColorProperty(customTex.material);
-            if (colorProp != null)
-                customTex.material.SetColor(colorProp, ReadColor(texDict[FileKeys.MATERIAL_COLOR]));
-        }
-
-        if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_DATA))
-        {
-            Texture2D tex = new Texture2D(2, 2);
-            if (ImageConversion.LoadImage(tex, texDict[FileKeys.CUSTOM_TEXTURE_DATA].AsBinary()))
-            {
-                if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_FILTER))
-                    tex.filterMode = (FilterMode)System.Enum.Parse(typeof(FilterMode),
-                        texDict[FileKeys.CUSTOM_TEXTURE_FILTER].AsString());
-                customTex.texture = tex;
-            }
-            else
-            {
-                warnings.Add("Error reading custom texture data");
-            }
-        }
-
-        if (texDict.ContainsKey(FileKeys.CUSTOM_TEXTURE_SCALE))
-            customTex.scale = ReadVector2(texDict[FileKeys.CUSTOM_TEXTURE_SCALE]);
-
-        return customTex.material;
+        return mat;
     }
 
     private Material ReadMaterial(MessagePackObjectDictionary matDict, bool overlay,
@@ -374,6 +334,13 @@ public class MessagePackWorldReader : WorldFileReader
                 {
                     // skip equality check
                     prop.setter(ReadMaterial(propList[1].AsDictionary(), true, null));
+                }
+                else if (propType == typeof(Texture2D))
+                {
+                    Texture2D tex = new Texture2D(2, 2);
+                    if (!ImageConversion.LoadImage(tex, propList[1].AsBinary()))
+                        warnings.Add("Error reading texture data");
+                    prop.setter(tex);
                 }
                 else if (propType == typeof(EmbeddedData))
                 {
