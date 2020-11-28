@@ -219,7 +219,8 @@ public class MessagePackWorldReader : WorldFileReader
         }
 
         Material mat;
-        if (customTextureNames != null && customTextureNames.ContainsKey(name))
+        bool isCustom = customTextureNames != null && customTextureNames.ContainsKey(name);
+        if (isCustom)
             mat = customTextureNames[name];
         else
             mat = ResourcesDirectory.FindMaterial(name, editor);
@@ -228,8 +229,9 @@ public class MessagePackWorldReader : WorldFileReader
             warnings.Add("Unrecognized material: " + name);
             return ReadWorldFile.missingMaterial;
         }
-        if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
+        if (!isCustom && matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
         {
+            // custom textures can't have colors
             string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
             if (colorProp != null)
             {
