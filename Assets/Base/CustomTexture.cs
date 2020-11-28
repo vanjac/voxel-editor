@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,7 +55,7 @@ public class CustomTexture : PropertiesObject
         }
     }
 
-    protected Material baseMat
+    public Material baseMat
     {
         get
         {

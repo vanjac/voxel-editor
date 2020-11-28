@@ -169,7 +169,14 @@ public class MaterialSelectorGUI : GUIPanel
                 {
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
                         EditCustomTexture(new CustomTexture(highlightMaterial, allowAlpha));
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete)) { }
+                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
+                    {
+                        var dialog = gameObject.AddComponent<DialogGUI>();
+                        dialog.message = "Are you sure you want to delete this custom texture?";
+                        dialog.yesButtonText = "Yes";
+                        dialog.noButtonText = "No";
+                        dialog.yesButtonHandler = () => DeleteCustomTexture();
+                    }
                 }
             }
             GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
@@ -292,9 +299,11 @@ public class MaterialSelectorGUI : GUIPanel
                 allowAlpha ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE");
             CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, allowAlpha);
             customTex.texture = texture;
+
             materials.Add(customTex.material);
             voxelArray.unsavedChanges = true;
-            handler(customTex.material);
+
+            MaterialSelected(customTex.material);
             EditCustomTexture(customTex);
         }, "Select a texture image");
 
@@ -311,6 +320,16 @@ public class MaterialSelectorGUI : GUIPanel
             propsGUI.normallyOpen = true;
             Destroy(this);
         }
+    }
+
+    private void DeleteCustomTexture()
+    {
+        CustomTexture customTex = new CustomTexture(highlightMaterial, allowAlpha);
+        voxelArray.ReplaceMaterial(highlightMaterial, customTex.baseMat);
+        if (!materials.Remove(highlightMaterial))
+            Debug.LogError("Error removing material");
+        MaterialSelected(customTex.baseMat);
+        voxelArray.unsavedChanges = true;
     }
 
     public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)

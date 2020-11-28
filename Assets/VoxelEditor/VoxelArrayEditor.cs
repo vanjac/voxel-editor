@@ -791,7 +791,7 @@ public class VoxelArrayEditor : VoxelArray
         foreach (Voxel voxel in IterateVoxels())
         {
             for (int faceI = 0; faceI < 6; faceI++)
-                if (voxel.faces[faceI].Equals(paint))
+                if (voxel.faces[faceI].PaintOnly().Equals(paint))
                     SelectFace(voxel, faceI);
         }
         AutoSetMoveAxesEnabled();
@@ -1251,6 +1251,21 @@ public class VoxelArrayEditor : VoxelArray
             faceRef.voxel.faces[faceRef.faceI].overlay = paint.overlay;
             faceRef.voxel.faces[faceRef.faceI].orientation = paint.orientation;
             VoxelModified(faceRef.voxel);
+        }
+    }
+
+    public void ReplaceMaterial(Material oldMat, Material newMat)
+    {
+        foreach (Voxel voxel in IterateVoxels())
+        {
+            for (int faceI = 0; faceI < 6; faceI++)
+            {
+                if (voxel.faces[faceI].material == oldMat)
+                    voxel.faces[faceI].material = newMat;
+                if (voxel.faces[faceI].overlay == oldMat)
+                    voxel.faces[faceI].overlay = newMat;
+                VoxelModified(voxel);
+            }
         }
     }
 
