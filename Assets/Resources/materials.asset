@@ -1028,6 +1028,30 @@ MonoBehaviour:
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 0
+    name: circle-large
+    path: Overlays/Symbols/circle-large
+    parent: Overlays/Symbols
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: circle-medium
+    path: Overlays/Symbols/circle-medium
+    parent: Overlays/Symbols
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: circle-small
+    path: Overlays/Symbols/circle-small
+    parent: Overlays/Symbols
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: circle2-outline
+    path: Overlays/Symbols/circle2-outline
+    parent: Overlays/Symbols
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
     name: close
     path: Overlays/Symbols/close
     parent: Overlays/Symbols
@@ -1054,6 +1078,12 @@ MonoBehaviour:
   - isDirectory: 0
     name: target
     path: Overlays/Symbols/target
+    parent: Overlays/Symbols
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: triangle
+    path: Overlays/Symbols/triangle
     parent: Overlays/Symbols
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
