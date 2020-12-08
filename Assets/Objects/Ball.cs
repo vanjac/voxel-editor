@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,10 +9,6 @@ public class BallObject : ObjectEntity
 
     private Material material;
 
-    // make sure CreatePrimitive works: https://docs.unity3d.com/ScriptReference/GameObject.CreatePrimitive.html
-    private MeshFilter fixEverything1;
-    private MeshRenderer fixEverything2;
-    private SphereCollider fixEverything3;
 
     public BallObject()
     {
@@ -47,10 +43,7 @@ public class BallObject : ObjectEntity
 
     private GameObject ObjectTemplate(VoxelArray voxelArray)
     {
-        GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        obj.name = "Ball";
-        obj.GetComponent<MeshRenderer>().materials = new Material[] { material };
-        return obj;
+        return GameObject.Instantiate(Resources.Load<GameObject>("ObjectPrefabs/Ball"));
     }
 
     protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray)
