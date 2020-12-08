@@ -185,7 +185,7 @@ public class MessagePackWorldReader : WorldFileReader
         Dictionary<string, Material> customTextureNames, bool overlay)
     {
         CustomTexture customTex = new CustomTexture(
-            new Material(Shader.Find("Unlit/UnlitTransparentNoFog")), overlay);
+            new Material(ReadWorldFile.MissingMaterial(overlay).shader), overlay);
         ReadPropertiesObject(texDict, customTex);
         Material mat = customTex.material;
         if (texDict.ContainsKey(FileKeys.CUSTOM_MATERIAL_NAME))
@@ -218,7 +218,7 @@ public class MessagePackWorldReader : WorldFileReader
         else
         {
             warnings.Add("Error reading material");
-            return ReadWorldFile.missingMaterial;
+            return ReadWorldFile.MissingMaterial(forceOverlay);
         }
 
         Material mat;
@@ -230,7 +230,7 @@ public class MessagePackWorldReader : WorldFileReader
         if (mat == null)
         {
             warnings.Add("Unrecognized material: " + name);
-            return ReadWorldFile.missingMaterial;
+            return ReadWorldFile.MissingMaterial(forceOverlay);
         }
         if (!isCustom && matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
         {

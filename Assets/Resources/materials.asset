@@ -37,6 +37,18 @@ MonoBehaviour:
     parent: Hidden
     sound: 9
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: MISSING
+    path: Hidden/MISSING
+    parent: Hidden
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+  - isDirectory: 0
+    name: MISSING_overlay
+    path: Hidden/MISSING_overlay
+    parent: Hidden
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
   - isDirectory: 1
     name: Materials
     path: Materials

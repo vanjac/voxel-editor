@@ -131,7 +131,7 @@ public class JSONWorldReader : WorldFileReader
         if (fileWriterVersion <= 2 && world["sky"] != null)
         {
             Material sky = materials[world["sky"].AsInt];
-            if (sky != ReadWorldFile.missingMaterial) // default skybox is null
+            if (sky != ReadWorldFile.MissingMaterial(false)) // default skybox is null
                 voxelArray.world.SetSky(sky);
         }
         if (world["map"] != null)
@@ -202,14 +202,14 @@ public class JSONWorldReader : WorldFileReader
         else
         {
             warnings.Add("Error reading material");
-            return ReadWorldFile.missingMaterial;
+            return ReadWorldFile.MissingMaterial(false);
         }
 
         Material mat = ResourcesDirectory.FindMaterial(name, editor);
         if (mat == null)
         {
             warnings.Add("Unrecognized material: " + name);
-            return ReadWorldFile.missingMaterial;
+            return ReadWorldFile.MissingMaterial(false);
         }
         if (setColor)
         {

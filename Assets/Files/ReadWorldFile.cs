@@ -28,7 +28,7 @@ public interface WorldFileReader
 
 public class ReadWorldFile
 {
-    public static Material missingMaterial;
+    private static Material missingMaterial, missingOverlay;
 
     // return warnings
     public static List<string> Read(Stream stream, Transform cameraPivot, VoxelArray voxelArray, bool editor)
@@ -102,13 +102,6 @@ public class ReadWorldFile
     private static List<string> BuildWorld(WorldFileReader reader,
         Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
-        if (missingMaterial == null)
-        {
-            missingMaterial = ResourcesDirectory.InstantiateMaterial(
-                ResourcesDirectory.FindMaterial("UNLIT_overlay", true));
-            missingMaterial.color = Color.magenta;
-        }
-
         try
         {
             return reader.BuildWorld(cameraPivot, voxelArray, editor);
@@ -121,6 +114,18 @@ public class ReadWorldFile
         {
             throw new MapReadException("An error occurred while reading the file", e);
         }
+    }
+
+    public static Material MissingMaterial(bool overlay)
+    {
+        if (missingMaterial == null)
+        {
+            missingMaterial = ResourcesDirectory.InstantiateMaterial(
+                ResourcesDirectory.FindMaterial("MISSING", true));
+            missingOverlay = ResourcesDirectory.InstantiateMaterial(
+                ResourcesDirectory.FindMaterial("MISSING_overlay", true));
+        }
+        return overlay ? missingOverlay : missingMaterial;
     }
 
     private static WorldFileReader GetReaderForStream(Stream stream)
