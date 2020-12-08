@@ -103,7 +103,7 @@ public class CustomTexture : PropertiesObject
         if (material != null && IsCustomTexture(material))
         {
             string baseName = GetBaseMaterialName();
-            _baseMat = ResourcesDirectory.FindMaterial(baseName, false);
+            _baseMat = ResourcesDirectory.FindMaterial(baseName, true);
             string colorProp = ResourcesDirectory.MaterialColorProperty(_baseMat);
             // copied from MessagePackWorldReader
             Color color = _material.GetColor(colorProp);
