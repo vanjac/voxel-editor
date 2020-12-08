@@ -196,7 +196,7 @@ public class MessagePackWorldReader : WorldFileReader
         return mat;
     }
 
-    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool overlay,
+    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool forceOverlay,
         Dictionary<string, Material> customTextureNames)
     {
         string name;
@@ -208,9 +208,11 @@ public class MessagePackWorldReader : WorldFileReader
         else if (matDict.ContainsKey(FileKeys.MATERIAL_MODE))  // version 9 and earlier
         {
             name = matDict[FileKeys.MATERIAL_MODE].AsString();
-            if (matDict.ContainsKey(FileKeys.MATERIAL_ALPHA))
-                overlay = matDict[FileKeys.MATERIAL_ALPHA].AsBoolean();
-            if (overlay)
+            // ignore MATERIAL_ALPHA key, it's usually wrong
+            if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
+                if (ReadColor(matDict[FileKeys.MATERIAL_COLOR]).a < 1)
+                    forceOverlay = true;
+            if (forceOverlay)
                 name += "_overlay";
         }
         else
@@ -340,7 +342,7 @@ public class MessagePackWorldReader : WorldFileReader
                 if (propType == typeof(Material))
                 {
                     // skip equality check
-                    prop.setter(ReadMaterial(propList[1].AsDictionary(), true, null));
+                    prop.setter(ReadMaterial(propList[1].AsDictionary(), false, null));
                 }
                 else if (propType == typeof(Texture2D))
                 {
