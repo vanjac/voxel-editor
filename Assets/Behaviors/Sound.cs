@@ -161,7 +161,7 @@ public class SoundComponent : BehaviorComponent
         Transform listener = GameObject.FindObjectOfType<AudioListener>().transform;
         while (true)
         {
-            if (spatial)
+            if (spatial && listener != null)
             {
                 float sqrDist = (this.transform.position - listener.position).sqrMagnitude;
                 audioSource.mute = sqrDist > (maxDistance * maxDistance);
