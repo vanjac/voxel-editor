@@ -1130,7 +1130,7 @@ public class Tutorials
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is BallObject)
                 {
-                    Material mat = (Material)PropertiesObjectType.GetProperty(e, "mat");
+                    Material mat = ((BallObject)e).paint.material;
                     Color matColor = mat.color;
                     if (prevColor.Equals(Color.clear))
                         prevColor = mat.color;

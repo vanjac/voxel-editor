@@ -344,6 +344,7 @@ public class PropertiesGUI : LeftPanelGUI
                 if (singleSelectedEntity is ObjectEntity)
                 {
                     ObjectEntity clone = (ObjectEntity)(singleSelectedEntity.Clone());
+                    clone.paint = ((ObjectEntity)singleSelectedEntity).paint.PaintOnly();
                     var pickerGUI = gameObject.AddComponent<FacePickerGUI>();
                     pickerGUI.voxelArray = voxelArray;
                     pickerGUI.message = "Tap to place clone";

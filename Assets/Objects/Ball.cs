@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,14 +7,11 @@ public class BallObject : ObjectEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Ball", "A sphere with a custom material", "circle-outline", typeof(BallObject));
 
-    private Material material;
-
-
     public BallObject()
     {
-        material = ResourcesDirectory.InstantiateMaterial(
-            ResourcesDirectory.FindMaterial("MATTE_overlay", true));
-        material.color = Color.red;
+        paint.material = ResourcesDirectory.InstantiateMaterial(
+            ResourcesDirectory.FindMaterial("MATTE", true));
+        paint.material.color = Color.red;
     }
 
     public override PropertiesObjectType ObjectType()
@@ -22,20 +19,27 @@ public class BallObject : ObjectEntity
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override ICollection<Property> DeprecatedProperties()
     {
-        return Property.JoinProperties(base.Properties(), new Property[]
+        return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
             new Property("mat", "Material",
-                () => material,
+                () => paint.material == null ? paint.overlay : paint.material,
                 v =>
                 {
-                    material = (Material)v;
-                    if (marker != null)
+                    var mat = (Material)v;
+                    if (mat.renderQueue >= (int)UnityEngine.Rendering.RenderQueue.AlphaTest)
                     {
-                        marker.storedMaterials[0] = material;
-                        marker.UpdateMarker();
+                        paint.overlay = mat;
+                        paint.material = null;
                     }
+                    else
+                    {
+                        paint.material = mat;
+                        paint.overlay = null;
+                    }
+                    if (marker != null)
+                        marker.UpdateMarker();
                 },
                 PropertyGUIs.Material("Overlays", true))
         });

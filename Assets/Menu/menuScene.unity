@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.31331286, g: 0.20789284, b: 0.39743063, a: 1}
+  m_IndirectSpecularColor: {r: 0.31331336, g: 0.20789301, b: 0.3974297, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 10
+    serializedVersion: 12
     m_Resolution: 2
     m_BakeResolution: 40
     m_AtlasSize: 1024
@@ -62,6 +62,7 @@ LightmapSettings:
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
     m_CompAOExponentDirect: 0
+    m_ExtractAmbientOcclusion: 0
     m_Padding: 2
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
@@ -76,10 +77,16 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
+    m_PVREnvironmentSampleCount: 500
+    m_PVREnvironmentReferencePointCount: 2048
+    m_PVRFilteringMode: 2
+    m_PVRDenoiserTypeDirect: 0
+    m_PVRDenoiserTypeIndirect: 0
+    m_PVRDenoiserTypeAO: 0
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVRFilteringMode: 1
+    m_PVREnvironmentMIS: 0
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -87,7 +94,9 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
+    m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -147,6 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 
   scroll: {x: 0, y: 0}
+  scrollVelocity: {x: 0, y: 0}
   panelRect:
     serializedVersion: 2
     x: 0
@@ -179,9 +189,10 @@ Camera:
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -237,6 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 
   scroll: {x: 0, y: 0}
+  scrollVelocity: {x: 0, y: 0}
   panelRect:
     serializedVersion: 2
     x: 0
@@ -276,7 +288,6 @@ MonoBehaviour:
     rotateRight: {fileID: 0}
     flipHorizontal: {fileID: 0}
     flipVertical: {fileID: 0}
-    compass: {fileID: 0}
     about: {fileID: 2800000, guid: c51491f24aa308c478dce23ffe9b3f15, type: 3}
     select: {fileID: 0}
     entityTag: {fileID: 0}
@@ -296,10 +307,19 @@ MonoBehaviour:
     gitHub: {fileID: 2800000, guid: 076587c5b9ee64ac982f8ffa94e05e66, type: 3}
     undo: {fileID: 0}
     import: {fileID: 0}
+    fill: {fileID: 0}
+    draw: {fileID: 0}
+    singleObject: {fileID: 0}
+    objectType: {fileID: 0}
+    behavior: {fileID: 0}
+    newTexture: {fileID: 0}
+    worldImport: {fileID: 0}
     indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
     floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
     newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}
     helpLarge: {fileID: 2800000, guid: 0bb4905118ec61d46ac168a97c9d37df, type: 3}
+    compassLarge: {fileID: 0}
+    tagIcons: []
     bevelIcons:
       quarter: {fileID: 0}
       half: {fileID: 0}

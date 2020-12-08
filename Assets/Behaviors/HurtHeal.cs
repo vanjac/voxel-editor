@@ -41,7 +41,7 @@ public class HurtHealBehavior : EntityBehavior
 
     public override ICollection<Property> DeprecatedProperties()
     {
-        return Property.JoinProperties(base.Properties(), new Property[]
+        return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
             new Property("min", "Min health",
                 () => healthRange.Item1,

@@ -81,7 +81,7 @@ public class ActionBarGUI : TopPanelGUI
 
     protected void EditGUI(string message = null)
     {
-        if (!voxelArray.FacesAreSelected())
+        if (!voxelArray.SomethingIsSelected())
         {
             if (message != null)
             {
@@ -90,6 +90,7 @@ public class ActionBarGUI : TopPanelGUI
             }
             return;
         }
+        bool facesSelected = voxelArray.FacesAreSelected();
 
         TutorialGUI.TutorialHighlight("paint");
         if (ActionBarButton(GUIIconSet.instance.paint))
@@ -106,7 +107,7 @@ public class ActionBarGUI : TopPanelGUI
         TutorialGUI.ClearHighlight();
 
         TutorialGUI.TutorialHighlight("create object");
-        if (ActionBarButton(GUIIconSet.instance.create))
+        if (facesSelected && ActionBarButton(GUIIconSet.instance.create))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Create";
@@ -141,7 +142,7 @@ public class ActionBarGUI : TopPanelGUI
             ActionBarLabel(moveCount.ToString());
         else if (message != null)
             ActionBarLabel(message);
-        else
+        else if (facesSelected)
             ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
     }
 
@@ -263,7 +264,6 @@ public class ActionBarGUI : TopPanelGUI
         FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
         facePicker.voxelArray = voxelArray;
         facePicker.message = "Tap to pick paint...";
-        facePicker.onlyFaces = true;
         facePicker.clearStoredSelection = false;
         facePicker.pickAction = () =>
         {
@@ -280,7 +280,7 @@ public class ActionBarGUI : TopPanelGUI
         FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
         facePicker.voxelArray = voxelArray;
         facePicker.message = "Tap to fill paint...";
-        facePicker.onlyFaces = true;
+        facePicker.onlyFaces = true;  // filling object doesn't make sense
         facePicker.clearStoredSelection = false;
         facePicker.pickAction = () =>
         {

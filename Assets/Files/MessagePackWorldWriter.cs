@@ -74,6 +74,11 @@ public class MessagePackWorldWriter
                 substancesList.Add(new MessagePackObject(WriteEntity(voxel.substance, false)));
             }
         }
+        foreach (ObjectEntity obj in voxelArray.IterateObjects())
+        {
+            AddMaterial(obj.paint.material, foundMaterials, materialsList);
+            AddMaterial(obj.paint.overlay, foundOverlays, overlaysList);
+        }
 
         world[FileKeys.WORLD_MATERIALS] = new MessagePackObject(materialsList);
         world[FileKeys.WORLD_OVERLAYS] = new MessagePackObject(overlaysList);
@@ -95,7 +100,7 @@ public class MessagePackWorldWriter
 
         var objectsList = new List<MessagePackObject>();
         foreach (ObjectEntity obj in voxelArray.IterateObjects())
-            objectsList.Add(new MessagePackObject(WriteObjectEntity(obj, true)));
+            objectsList.Add(new MessagePackObject(WriteObjectEntity(obj, foundMaterials, foundOverlays)));
         if (objectsList.Count != 0)
             world[FileKeys.WORLD_OBJECTS] = new MessagePackObject(objectsList);
 
@@ -141,11 +146,13 @@ public class MessagePackWorldWriter
         return materialDict;
     }
 
-    private static MessagePackObjectDictionary WriteObjectEntity(ObjectEntity objectEntity, bool includeName)
+    private static MessagePackObjectDictionary WriteObjectEntity(ObjectEntity objectEntity,
+        Dictionary<Material, int> materials, Dictionary<Material, int> overlays)
     {
-        var entityDict = WriteEntity(objectEntity, includeName);
+        var entityDict = WriteEntity(objectEntity, true);
         entityDict[FileKeys.OBJECT_POSITION] = WriteVector3Int(objectEntity.position);
         entityDict[FileKeys.OBJECT_ROTATION] = objectEntity.rotation;
+        entityDict[FileKeys.OBJECT_PAINT] = WriteFace(objectEntity.paint, 0, materials, overlays);
 
         return entityDict;
     }

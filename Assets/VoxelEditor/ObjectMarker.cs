@@ -6,8 +6,28 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 {
     public ObjectEntity objectEntity; // set when created
 
-    public bool addSelected { get; set; }
-    public bool storedSelected { get; set; }
+    public bool addSelected
+    {
+        get
+        {
+            return objectEntity.paint.addSelected;
+        }
+        set
+        {
+            objectEntity.paint.addSelected = value;
+        }
+    }
+    public bool storedSelected
+    {
+        get
+        {
+            return objectEntity.paint.storedSelected;
+        }
+        set
+        {
+            objectEntity.paint.storedSelected = value;
+        }
+    }
     public bool selected
     {
         get
@@ -25,15 +45,8 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         }
     }
 
-    public Material[] storedMaterials;
-
     public void Start()
     {
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            storedMaterials = (Material[])renderer.materials.Clone();
-        }
         UpdateMarker();
     }
 
@@ -51,40 +64,34 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     private void UpdateMaterials()
     {
-        if (storedMaterials == null)
-            // storedMaterials hasn't been initialized yet, so we wouldn't be able to return to normal state
-            return;
         Renderer renderer = GetComponent<Renderer>();
-        if (renderer != null)
+        if (renderer == null || objectEntity == null)
+            return;
+        List<Material> materials = new List<Material>();
+        if (objectEntity.highlight != Color.clear && !selected)
         {
-            if (selected)
+            materials.Add(objectEntity.highlightMaterial);
+            gameObject.layer = 0; // default
+        }
+        else if (objectEntity != null && objectEntity.xRay)
+        {
+            materials.Add(VoxelComponent.xRayMaterial);
+            gameObject.layer = 8; // XRay layer
+        }
+        else
+        {
+            if (objectEntity.paint.material != null)
             {
-                SetAllMaterials(renderer, VoxelComponent.selectedMaterial);
-                gameObject.layer = 10; // SelectedObject layer, because selected material makes it transparent
-            }
-            else if (objectEntity != null && objectEntity.highlight != Color.clear)
-            {
-                SetAllMaterials(renderer, objectEntity.highlightMaterial);
+                materials.Add(objectEntity.paint.material);
                 gameObject.layer = 0; // default
-            }
-            else if (objectEntity != null && objectEntity.xRay)
-            {
-                SetAllMaterials(renderer, VoxelComponent.xRayMaterial);
-                gameObject.layer = 8; // XRay layer
             }
             else
-            {
-                renderer.materials = storedMaterials;
-                gameObject.layer = 0; // default
-            }
+                gameObject.layer = 10; // TransparentObject
+            if (objectEntity.paint.overlay != null)
+                materials.Add(objectEntity.paint.overlay);
         }
-    }
-
-    private void SetAllMaterials(Renderer renderer, Material mat)
-    {
-        Material[] newMaterials = new Material[renderer.materials.Length];
-        for (int i = 0; i < newMaterials.Length; i++)
-            newMaterials[i] = mat;
-        renderer.materials = newMaterials;
+        if (selected)
+            materials.Add(VoxelComponent.selectedMaterial);
+        renderer.materials = materials.ToArray();
     }
 }

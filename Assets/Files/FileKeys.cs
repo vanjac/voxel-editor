@@ -40,6 +40,7 @@ public class FileKeys
     // OBJECT is type of ENTITY
     public const string OBJECT_POSITION = "a";
     public const string OBJECT_ROTATION = "r";
+    public const string OBJECT_PAINT = "f";
 
     // CUSTOM_MATERIAL is type of ENTITY
     public const string CUSTOM_MATERIAL_NAME = "N";

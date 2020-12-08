@@ -794,6 +794,11 @@ public class VoxelArrayEditor : VoxelArray
                 if (voxel.faces[faceI].PaintOnly().Equals(paint))
                     SelectFace(voxel, faceI);
         }
+        foreach (ObjectEntity obj in IterateObjects())
+        {
+            if (obj.paint.PaintOnly().Equals(paint))
+                SelectThing(obj.marker);
+        }
         AutoSetMoveAxesEnabled();
     }
 
@@ -1234,10 +1239,13 @@ public class VoxelArrayEditor : VoxelArray
     public VoxelFace GetSelectedPaint()
     {
         // because of the order of IterateSelected, add selected faces will be preferred
-        foreach (var faceRef in IterateSelected<VoxelFaceReference>())
+
+        foreach (Selectable thing in IterateSelected())
         {
-            VoxelFace face = faceRef.face.PaintOnly();
-            return face;
+            if (thing is VoxelFaceReference)
+                return ((VoxelFaceReference)thing).face.PaintOnly();
+            else if (thing is ObjectMarker)
+                return ((ObjectMarker)thing).objectEntity.paint.PaintOnly();
         }
         return new VoxelFace();
     }
@@ -1251,6 +1259,13 @@ public class VoxelArrayEditor : VoxelArray
             faceRef.voxel.faces[faceRef.faceI].overlay = paint.overlay;
             faceRef.voxel.faces[faceRef.faceI].orientation = paint.orientation;
             VoxelModified(faceRef.voxel);
+        }
+        foreach (var obj in IterateSelected<ObjectMarker>())
+        {
+            obj.objectEntity.paint.material = paint.material;
+            obj.objectEntity.paint.overlay = paint.overlay;
+            obj.objectEntity.paint.orientation = paint.orientation;
+            ObjectModified(obj.objectEntity);
         }
     }
 
@@ -1266,6 +1281,14 @@ public class VoxelArrayEditor : VoxelArray
                     voxel.faces[faceI].overlay = newMat;
                 VoxelModified(voxel);
             }
+        }
+        foreach (ObjectEntity obj in IterateObjects())
+        {
+            if (obj.paint.material == oldMat)
+                obj.paint.material = newMat;
+            if (obj.paint.overlay == oldMat)
+                obj.paint.overlay = newMat;
+            ObjectModified(obj);
         }
     }
 

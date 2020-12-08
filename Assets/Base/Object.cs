@@ -10,6 +10,7 @@ public abstract class ObjectEntity : DynamicEntity
     public ObjectMarker marker;
     public Vector3Int position;
     public float rotation;
+    public VoxelFace paint;
     public Color highlight = Color.clear;
     public Material highlightMaterial;
 
@@ -70,6 +71,16 @@ public abstract class ObjectEntity : DynamicEntity
         c.health = health;
         if (storeComponent)
             component = c;
+        Renderer renderer = c.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            List<Material> materials = new List<Material>();
+            if (paint.material != null)
+                materials.Add(paint.material);
+            if (paint.overlay != null)
+                materials.Add(paint.overlay);
+            renderer.materials = materials.ToArray();
+        }
         return c;
     }
 

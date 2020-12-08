@@ -14,7 +14,7 @@ public class TouchListener : MonoBehaviour
     private const float MAX_ZOOM = 20.0f;
     private const float MIN_ZOOM = .05f;
     private const int NO_XRAY_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
-    private const int NO_TRANSPARENT_MASK = NO_XRAY_MASK & ~(1 << 10); // everything but XRay and SelectedObject
+    private const int NO_TRANSPARENT_MASK = NO_XRAY_MASK & ~(1 << 10); // everything but XRay and TransparentObject
 
     public enum TouchOperation
     {
@@ -90,7 +90,7 @@ public class TouchListener : MonoBehaviour
                 }
 
                 if ((hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
-                    || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10))) // xray or SelectedObject layer
+                    || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10))) // xray or TransparentObject layer
                 {
                     // allow moving axes through xray substances
                     RaycastHit newHit;

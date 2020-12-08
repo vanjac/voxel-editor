@@ -72,6 +72,7 @@ public class MessagePackWorldReader : WorldFileReader
         {
             throw new MapReadException("This world file requires a newer version of the app");
         }
+        Debug.Log("Saved with writer version " + worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32());
     }
 
     private void ReadWorld(MessagePackObjectDictionary world, Transform cameraPivot, VoxelArray voxelArray)
@@ -147,7 +148,7 @@ public class MessagePackWorldReader : WorldFileReader
                     continue;
                 }
                 ObjectEntity obj = (ObjectEntity)objType.Create();
-                ReadObjectEntity(objDict, obj);
+                ReadObjectEntity(objDict, obj, materials, overlays);
                 voxelArray.AddObject(obj);
             }
         }
@@ -246,13 +247,17 @@ public class MessagePackWorldReader : WorldFileReader
         return mat;
     }
 
-    private void ReadObjectEntity(MessagePackObjectDictionary entityDict, ObjectEntity objectEntity)
+    private void ReadObjectEntity(MessagePackObjectDictionary entityDict, ObjectEntity objectEntity,
+        List<Material> materials, List<Material> overlays)
     {
         ReadEntity(entityDict, objectEntity);
         if (entityDict.ContainsKey(FileKeys.OBJECT_POSITION))
             objectEntity.position = ReadVector3Int(entityDict[FileKeys.OBJECT_POSITION]);
         if (entityDict.ContainsKey(FileKeys.OBJECT_ROTATION))
             objectEntity.rotation = entityDict[FileKeys.OBJECT_ROTATION].AsSingle();
+        if (entityDict.ContainsKey(FileKeys.OBJECT_PAINT))
+            objectEntity.paint = ReadFace(entityDict[FileKeys.OBJECT_PAINT], out int _,
+                materials, overlays);
     }
 
     private void ReadEntity(MessagePackObjectDictionary entityDict, Entity entity)
@@ -382,7 +387,9 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (var faceObj in voxelList[1].AsList())
             {
-                ReadFace(faceObj, voxel, materials, overlays);
+                VoxelFace face = ReadFace(faceObj, out int faceI, materials, overlays);
+                if (faceI != -1)
+                    voxel.faces[faceI] = face;
             }
         }
 
@@ -396,19 +403,22 @@ public class MessagePackWorldReader : WorldFileReader
         voxel.UpdateVoxel();
     }
 
-    private void ReadFace(MessagePackObject faceObj, Voxel voxel,
+    private VoxelFace ReadFace(MessagePackObject faceObj, out int faceI,
         List<Material> materials, List<Material> overlays)
     {
+        VoxelFace face = new VoxelFace();
         var faceList = faceObj.AsList();
-        if (faceList.Count == 0)
-            return;
-        int faceI = faceList[0].AsInt32();
+        if (faceList.Count >= 1)
+            faceI = faceList[0].AsInt32();
+        else
+            faceI = -1;
         if (faceList.Count >= 2 && faceList[1].AsInt32() != -1)
-            voxel.faces[faceI].material = materials[faceList[1].AsInt32()];
+            face.material = materials[faceList[1].AsInt32()];
         if (faceList.Count >= 3 && faceList[2].AsInt32() != -1)
-            voxel.faces[faceI].overlay = overlays[faceList[2].AsInt32()];
+            face.overlay = overlays[faceList[2].AsInt32()];
         if (faceList.Count >= 4)
-            voxel.faces[faceI].orientation = faceList[3].AsByte();
+            face.orientation = faceList[3].AsByte();
+        return face;
     }
 
     private void ReadEdge(MessagePackObject edgeObj, Voxel voxel)

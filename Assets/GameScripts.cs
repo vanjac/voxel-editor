@@ -194,10 +194,10 @@ public class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                Material lightMat = ResourcesDirectory.InstantiateMaterial(
+                ball.paint.material = null;
+                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
                     ResourcesDirectory.FindMaterial("GLASS_overlay", true));
-                lightMat.color = new Color(1, 1, 1, 0.25f);
-                PropertiesObjectType.SetProperty(ball, "mat", lightMat);
+                ball.paint.overlay.color = new Color(1, 1, 1, 0.25f);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
                 return ball;
@@ -208,10 +208,10 @@ public class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                Material neuronMat = ResourcesDirectory.InstantiateMaterial(
+                ball.paint.material = null;
+                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
                     ResourcesDirectory.FindMaterial("GLASS_overlay", true));
-                neuronMat.color = new Color(.09f, .38f, .87f, .25f);
-                PropertiesObjectType.SetProperty(ball, "mat", neuronMat);
+                ball.paint.overlay.color = new Color(.09f, .38f, .87f, .25f);
 
                 ball.sensor = new InputThresholdSensor();
                 ball.behaviors.Add(new VisibleBehavior());
