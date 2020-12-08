@@ -517,6 +517,12 @@ public class MessagePackWorldReader : WorldFileReader
             foreach (var subObj in worldDict[FileKeys.WORLD_OBJECTS].AsList())
                 foreach (var propObj in IterateEntityPropObjects(subObj.AsDictionary()))
                     yield return propObj;
+        if (worldDict.ContainsKey(FileKeys.WORLD_CUSTOM_MATERIALS))
+            foreach (var matObj in worldDict[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
+                yield return matObj.AsDictionary();
+        if (worldDict.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAYS))
+            foreach (var matObj in worldDict[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
+                yield return matObj.AsDictionary();
     }
 
     private IEnumerable<MessagePackObjectDictionary> IterateEntityPropObjects(MessagePackObjectDictionary entityDict)
@@ -528,5 +534,38 @@ public class MessagePackWorldReader : WorldFileReader
         if (entityDict.ContainsKey(FileKeys.ENTITY_BEHAVIORS))
             foreach (var behaviorObj in entityDict[FileKeys.ENTITY_BEHAVIORS].AsList())
                 yield return behaviorObj.AsDictionary();
+    }
+
+    public List<Material> FindCustomTextures(bool overlay)
+    {
+        // copied from FindEmbeddedData
+        MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
+        CheckWorldValid(worldDict);
+
+        List<Material> texList = new List<Material>();
+        try
+        {
+            foreach (var tex in IterateCustomTextures(worldDict, overlay))
+                texList.Add(tex);
+        }
+        catch (MapReadException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new MapReadException("Error reading world file", e);
+        }
+        return texList;
+    }
+
+    private IEnumerable<Material> IterateCustomTextures(
+        MessagePackObjectDictionary worldDict, bool overlay)
+    {
+        string key = overlay ? FileKeys.WORLD_CUSTOM_OVERLAYS : FileKeys.WORLD_CUSTOM_MATERIALS;
+        var names = new Dictionary<string, Material>();
+        if (worldDict.ContainsKey(key))
+            foreach (var matObj in worldDict[key].AsList())
+                yield return ReadCustomTexture(matObj.AsDictionary(), names, overlay);
     }
 }

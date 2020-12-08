@@ -117,8 +117,10 @@ public class PaintGUI : GUIPanel
         if (materialSelector != null)
         {
             materialSelector.scroll = scroll;
+            materialSelector.scrollVelocity = scrollVelocity;
             materialSelector.WindowGUI();
             scroll = materialSelector.scroll;
+            scrollVelocity = materialSelector.scrollVelocity;
         }
         else
         {

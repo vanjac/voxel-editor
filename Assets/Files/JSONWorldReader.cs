@@ -47,6 +47,11 @@ public class JSONWorldReader : WorldFileReader
         return new List<EmbeddedData>();
     }
 
+    public List<Material> FindCustomTextures(bool overlay)
+    {
+        return new List<Material>();
+    }
+
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {

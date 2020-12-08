@@ -596,7 +596,6 @@ MonoBehaviour:
     height: 0
   voxelArray: {fileID: 213926859}
   normallyOpen: 1
-  worldSelected: 0
   freezeUpdates: 0
 --- !u!4 &878046149
 Transform:
@@ -727,7 +726,7 @@ MonoBehaviour:
     entityTag: {fileID: 2800000, guid: 1c7271f3875d8ce4d98afe91ddc3eb6e, type: 3}
     target: {fileID: 2800000, guid: e32c2e24ffccfe246a44f3cef0fdec0a, type: 3}
     rename: {fileID: 0}
-    copy: {fileID: 0}
+    copy: {fileID: 2800000, guid: ef8570bda8643ab4e84246dbd0191475, type: 3}
     delete: {fileID: 2800000, guid: a91481f4c06fdb946817fd08f059dd99, type: 3}
     share: {fileID: 0}
     bevel: {fileID: 2800000, guid: a2196131ae0adc94db6a16177538d05f, type: 3}
@@ -747,6 +746,7 @@ MonoBehaviour:
     objectType: {fileID: 2800000, guid: 907e5b067b45f74459c17473d688d0bd, type: 3}
     behavior: {fileID: 2800000, guid: 0feee20dbbdb00749b74d19e8bf252ef, type: 3}
     newTexture: {fileID: 2800000, guid: 71c2ad987d352b14db16de1a32f9be32, type: 3}
+    worldImport: {fileID: 2800000, guid: 603a037b5c4ce2947bffab8fbac2db34, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}

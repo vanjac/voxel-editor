@@ -13,6 +13,7 @@ public class MaterialSelectorGUI : GUIPanel
     private const float CATEGORY_BUTTON_HEIGHT = 110;
     private const string PREVIEW_SUFFIX = "_preview";
     private const string CUSTOM_CATEGORY = "CUSTOM";
+    private const string WORLD_LIST_CATEGORY = "Import from world...";
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -25,6 +26,8 @@ public class MaterialSelectorGUI : GUIPanel
 
     private int tab;
     private string selectedCategory;
+    private bool importFromWorld;
+    private string importMessage = null;
     private List<Material> materials;
     private string[] categories;
     private ColorPickerGUI colorPicker;
@@ -160,13 +163,17 @@ public class MaterialSelectorGUI : GUIPanel
         {
             GUILayout.BeginHorizontal();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
-                CategorySelected("");
+                BackButton();
             if (selectedCategory == CUSTOM_CATEGORY)
             {
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
-                    ImportTexture();
+                    ImportTextureFromPhotos();
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
+                    CategorySelected(WORLD_LIST_CATEGORY);
                 if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
                 {
+                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
+                        DuplicateCustomTexture();
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
                         EditCustomTexture(new CustomTexture(highlightMaterial, allowAlpha));
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
@@ -182,6 +189,9 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
             GUILayout.EndHorizontal();
         }
+
+        if (importFromWorld && (importMessage != null))
+            GUILayout.Label(importMessage);
 
         Rect rowRect = new Rect();
         int materialColumns = selectedCategory == "" ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
@@ -216,8 +226,10 @@ public class MaterialSelectorGUI : GUIPanel
 
         if (categories.Length > 0)
         {
-            GUILayout.Label("Categories:");
-            int selectDir = GUILayout.SelectionGrid(-1, categories, NUM_COLUMNS,
+            if (materials.Count != 0)
+                GUILayout.Label("Categories:");
+            int selectDir = GUILayout.SelectionGrid(-1, categories,
+                selectedCategory == WORLD_LIST_CATEGORY ? 1 : NUM_COLUMNS,
                 categoryButtonStyle.Value);
             if (selectDir != -1)
                 CategorySelected(categories[selectDir]);
@@ -226,10 +238,26 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
+    private void BackButton()
+    {
+        if (importFromWorld)
+        {
+            CategorySelected(WORLD_LIST_CATEGORY);
+            importFromWorld = false;
+        }
+        else if (selectedCategory == WORLD_LIST_CATEGORY)
+            CategorySelected(CUSTOM_CATEGORY);
+        else
+            CategorySelected("");
+    }
+
     private void CategorySelected(string category)
     {
+        if (selectedCategory == WORLD_LIST_CATEGORY && category != CUSTOM_CATEGORY)
+            importFromWorld = true;
         selectedCategory = category;
         scroll = Vector2.zero;
+        scrollVelocity = Vector2.zero;
 
         if (category == CUSTOM_CATEGORY)
         {
@@ -239,6 +267,23 @@ public class MaterialSelectorGUI : GUIPanel
             else
                 materials = voxelArray.customMaterials;
             AssetManager.UnusedAssets();
+            return;
+        }
+        else if (category == WORLD_LIST_CATEGORY)
+        {
+            materials = new List<Material>();
+            var worldNames = new List<string>();
+            WorldFiles.ListWorlds(new List<string>(), worldNames);
+            categories = worldNames.ToArray();
+            AssetManager.UnusedAssets();
+            return;
+        }
+        else if (importFromWorld)
+        {
+            categories = new string[0];
+            materials = new List<Material>();
+            // TODO :(
+            StartCoroutine(LoadWorldCoroutine(WorldFiles.GetNewWorldPath(category)));
             return;
         }
 
@@ -278,12 +323,20 @@ public class MaterialSelectorGUI : GUIPanel
             material = ResourcesDirectory.FindMaterial(newName, true);
         }
         highlightMaterial = material;
+        if (importFromWorld)
+        {
+            // jank
+            importFromWorld = false;
+            CategorySelected(CUSTOM_CATEGORY);
+            DuplicateCustomTexture();  // add to custom textures, will call MaterialSelected again
+            return;  // don't call handler
+        }
         instance = false;
         if (handler != null)
             handler(material);
     }
 
-    private void ImportTexture()
+    private void ImportTextureFromPhotos()
     {
         NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) => {
             if (path == null)
@@ -322,6 +375,15 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
+    private void DuplicateCustomTexture()
+    {
+        Material newMat = CustomTexture.Clone(highlightMaterial);
+        materials.Add(newMat);
+        MaterialSelected(newMat);
+        voxelArray.unsavedChanges = true;
+        scrollVelocity = new Vector2(0, 1000 * materials.Count);
+    }
+
     private void DeleteCustomTexture()
     {
         CustomTexture customTex = new CustomTexture(highlightMaterial, allowAlpha);
@@ -330,6 +392,27 @@ public class MaterialSelectorGUI : GUIPanel
             Debug.LogError("Error removing material");
         MaterialSelected(customTex.baseMat);
         voxelArray.unsavedChanges = true;
+    }
+
+    private IEnumerator LoadWorldCoroutine(string path)
+    {
+        // copied from DataImportGUI
+        importMessage = "Loading...";
+        yield return null;
+        yield return null;
+        try
+        {
+            materials = ReadWorldFile.ReadCustomTextures(path, allowAlpha);
+            if (materials.Count == 0)
+                importMessage = "World contains no custom textures for " + (allowAlpha ? "overlays." : "materials.");
+            else
+                importMessage = null;
+        }
+        catch (MapReadException e)
+        {
+            importMessage = e.Message;
+            Debug.LogError(e.InnerException);
+        }
     }
 
     public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)

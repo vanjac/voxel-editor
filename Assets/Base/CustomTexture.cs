@@ -166,4 +166,19 @@ public class CustomTexture : PropertiesObject
     {
         return material.name.StartsWith("Custom:");
     }
+
+    public static Material Clone(Material material)
+    {
+        Material newMat = Material.Instantiate(material);
+        Debug.Log("old name: " + material.name);
+        var nameParts = material.name.Split(':');
+        if (nameParts.Length < 3)
+        {
+            Debug.LogError("Bad material name!");
+            return newMat;
+        }
+        newMat.name = nameParts[0] + ":" + nameParts[1] + ":" + System.Guid.NewGuid();
+        Debug.Log("new name: " + newMat.name);
+        return newMat;
+    }
 }

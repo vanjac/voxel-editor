@@ -22,7 +22,7 @@ public abstract class GUIPanel : MonoBehaviour
     protected bool showCloseButton = false;
 
     public Vector2 scroll = Vector2.zero;
-    protected Vector2 scrollVelocity = Vector2.zero;
+    public Vector2 scrollVelocity = Vector2.zero;
 
     protected Vector2 touchStartPos = Vector2.zero;
     protected bool panelSlide, horizontalSlide, verticalSlide;

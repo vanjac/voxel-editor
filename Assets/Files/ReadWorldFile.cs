@@ -23,6 +23,7 @@ public interface WorldFileReader
     // return warnings
     List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor);
     List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type);
+    List<Material> FindCustomTextures(bool overlay);
 }
 
 public class ReadWorldFile
@@ -62,6 +63,22 @@ public class ReadWorldFile
     {
         WorldFileReader reader = ReadStream(stream);
         return reader.FindEmbeddedData(type);
+    }
+
+    public static List<Material> ReadCustomTextures(string filePath, bool overlay)
+    {
+        // TODO: copied from ReadEmbeddedData
+        WorldFileReader reader;
+        try
+        {
+            using (FileStream stream = File.Open(filePath, FileMode.Open))
+                reader = ReadStream(stream);
+        }
+        catch (System.Exception e)
+        {
+            throw new MapReadException("Error opening file", e);
+        }
+        return reader.FindCustomTextures(overlay);
     }
 
     private static WorldFileReader ReadStream(Stream stream)
