@@ -82,7 +82,8 @@ public class TouchListener : MonoBehaviour
                 }
                 else if (hitObject.tag == "ObjectMarker")
                 {
-                    hitMarker = hitObject.GetComponent<ObjectMarker>();
+                    if (selectType != VoxelElement.EDGES)
+                        hitMarker = hitObject.GetComponent<ObjectMarker>();
                 }
                 else if (hitObject.tag == "MoveAxis")
                 {
