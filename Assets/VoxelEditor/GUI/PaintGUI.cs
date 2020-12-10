@@ -150,7 +150,7 @@ public class PaintGUI : GUIPanel
         else
         {
             materialSelector.rootDirectory = "Overlays";
-            materialSelector.allowAlpha = true;
+            materialSelector.isOverlay = true;
             materialSelector.handler = (Material mat) =>
             {
                 if (mat != null || paint.material != null)

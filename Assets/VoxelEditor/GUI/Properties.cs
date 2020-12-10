@@ -366,7 +366,8 @@ public class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory, bool allowAlpha = false)
+    public static PropertyGUI Material(string materialDirectory, bool isOverlay = false,
+        bool ignoreWhitePoint = false)
     {
         return (Property property) =>
         {
@@ -387,14 +388,15 @@ public class PropertyGUIs
                 materialSelector.voxelArray = VoxelArrayEditor.instance;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
-                materialSelector.allowAlpha = allowAlpha;
+                materialSelector.isOverlay = isOverlay;
+                materialSelector.ignoreWhitePoint = ignoreWhitePoint;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.setter(mat); // skip equality check, it could be the same material with a different color
                 };
             }
             MaterialSelectorGUI.DrawMaterialTexture((Material)property.value,
-                textureRect, allowAlpha);
+                textureRect, isOverlay);
             GUILayout.EndHorizontal();
         };
     }

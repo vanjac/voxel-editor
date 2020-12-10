@@ -19,8 +19,9 @@ public class MaterialSelectorGUI : GUIPanel
 
     public MaterialSelectHandler handler;
     public string rootDirectory = "Materials";
-    public bool allowAlpha = false;
+    public bool isOverlay = false;
     public bool allowNullMaterial = false;
+    public bool ignoreWhitePoint = false;
     public Material highlightMaterial = null; // the current selected material
     public VoxelArrayEditor voxelArray;
 
@@ -125,7 +126,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (colorPicker == null)
         {
             Color whitePoint = Color.white;
-            if (ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
+            if (!ignoreWhitePoint && ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
             {
                 whitePoint = ResourcesDirectory.materialInfos[highlightMaterial.name].whitePoint;
                 whitePoint.a = 1.0f;
@@ -134,7 +135,7 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
             colorPicker.SetColor(highlightMaterial.GetColor(colorProp) * whitePoint);
-            colorPicker.includeAlpha = allowAlpha;
+            colorPicker.includeAlpha = isOverlay;
             colorPicker.handler = (Color c) =>
             {
                 if (!instance)
@@ -175,7 +176,7 @@ public class MaterialSelectorGUI : GUIPanel
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
                         DuplicateCustomTexture();
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
-                        EditCustomTexture(new CustomTexture(highlightMaterial, allowAlpha));
+                        EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
                     {
                         var dialog = gameObject.AddComponent<DialogGUI>();
@@ -221,7 +222,7 @@ public class MaterialSelectorGUI : GUIPanel
                 selected = GUI.Button(buttonRect, "");
             if (selected)
                 MaterialSelected(material);
-            DrawMaterialTexture(material, textureRect, allowAlpha);
+            DrawMaterialTexture(material, textureRect, isOverlay);
         }
 
         if (categories.Length > 0)
@@ -343,8 +344,8 @@ public class MaterialSelectorGUI : GUIPanel
                 return;
 
             Material baseMat = Resources.Load<Material>(
-                allowAlpha ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE");
-            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, allowAlpha);
+                isOverlay ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE");
+            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, isOverlay);
             customTex.texture = texture;
 
             materials.Add(customTex.material);
@@ -377,7 +378,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void DeleteCustomTexture()
     {
-        CustomTexture customTex = new CustomTexture(highlightMaterial, allowAlpha);
+        CustomTexture customTex = new CustomTexture(highlightMaterial, isOverlay);
         voxelArray.ReplaceMaterial(highlightMaterial, customTex.baseMat);
         if (!materials.Remove(highlightMaterial))
             Debug.LogError("Error removing material");
@@ -393,9 +394,9 @@ public class MaterialSelectorGUI : GUIPanel
         yield return null;
         try
         {
-            materials = ReadWorldFile.ReadCustomTextures(path, allowAlpha);
+            materials = ReadWorldFile.ReadCustomTextures(path, isOverlay);
             if (materials.Count == 0)
-                importMessage = "World contains no custom textures for " + (allowAlpha ? "overlays." : "materials.");
+                importMessage = "World contains no custom textures for " + (isOverlay ? "overlays." : "materials.");
             else
                 importMessage = null;
         }
