@@ -98,11 +98,11 @@ public class CustomTexture : PropertiesObject
 
     public CustomTexture(Material material, bool isOverlay)
     {
-        this._material = material;
+        _material = material;
         this.isOverlay = isOverlay;
-        if (material != null && IsCustomTexture(material))
+        if (_material != null && IsCustomTexture(_material))
         {
-            string baseName = GetBaseMaterialName();
+            string baseName = GetBaseMaterialName(_material);
             _baseMat = ResourcesDirectory.FindMaterial(baseName, true);
             string colorProp = ResourcesDirectory.MaterialColorProperty(_baseMat);
             // copied from MessagePackWorldReader
@@ -114,7 +114,7 @@ public class CustomTexture : PropertiesObject
             }
         }
         else
-            _baseMat = material;  // probably temporary
+            _baseMat = _material;  // probably temporary
     }
 
     public static CustomTexture FromBaseMaterial(Material baseMat, bool overlay)
@@ -157,14 +157,14 @@ public class CustomTexture : PropertiesObject
         return System.Array.Empty<Property>();
     }
 
-    private string GetBaseMaterialName()
-    {
-        return _material.name.Split(':')[1];
-    }
-
     public static bool IsCustomTexture(Material material)
     {
         return material.name.StartsWith("Custom:");
+    }
+
+    public static string GetBaseMaterialName(Material material)
+    {
+        return material.name.Split(':')[1];
     }
 
     public static Material Clone(Material material)
