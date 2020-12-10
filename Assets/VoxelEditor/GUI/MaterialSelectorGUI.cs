@@ -338,16 +338,10 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void ImportTextureFromPhotos()
     {
-        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) => {
-            if (path == null)
-                return;
-            Texture2D texture = NativeGallery.LoadImageAtPath(path, markTextureNonReadable: false);
+        NativeGalleryWrapper.ImportTexture((Texture2D texture) => {
             if (texture == null)
-            {
-                DialogGUI.ShowMessageDialog(gameObject, "Error importing image");
                 return;
-            }
-            Debug.Log("Dimensions: " + texture.width + ", " + texture.height);
+
             Material baseMat = Resources.Load<Material>(
                 allowAlpha ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE");
             CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, allowAlpha);
@@ -358,10 +352,7 @@ public class MaterialSelectorGUI : GUIPanel
 
             MaterialSelected(customTex.material);
             EditCustomTexture(customTex);
-        }, "Select a texture image");
-
-        if (permission != NativeGallery.Permission.Granted)
-            DialogGUI.ShowMessageDialog(gameObject, "Please grant N-Space permission to access your photo gallery.");
+        });
     }
 
     private void EditCustomTexture(CustomTexture customTex)

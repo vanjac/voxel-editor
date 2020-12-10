@@ -412,7 +412,12 @@ public class PropertyGUIs
             buttonRect.xMin + 20, buttonRect.yMin + 20,
             buttonRect.width - 20 * 2, buttonRect.height - 20 * 2);
         if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
-        { /* TODO */ }
+        {
+            NativeGalleryWrapper.ImportTexture((Texture2D newTexture) => {
+                if (newTexture != null)
+                    property.setter(newTexture);  // skip equality check
+            });
+        }
         GUI.DrawTexture(textureRect, (Texture2D)property.value);
         GUILayout.EndHorizontal();
     }
