@@ -18,8 +18,8 @@ public class HelpGUI : GUIPanel
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return GUIUtils.HorizCenterRect(safeRect.center.x,
-            safeRect.yMin + safeRect.height * .1f, 576, 0);
+        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
+            576, safeRect.height * .8f);
     }
 
     public void Start()
@@ -31,35 +31,37 @@ public class HelpGUI : GUIPanel
     {
         tab = GUILayout.SelectionGrid(tab,
             new string[] { "Tutorials", "Demo Worlds" }, 2, GUIStyleSet.instance.buttonTab);
+        scroll = GUILayout.BeginScrollView(scroll);
         if (tab == 0)
             TutorialsTab();
         if (tab == 1)
             DemoWorldsTab();
+        GUILayout.EndScrollView();
     }
 
     private void TutorialsTab()
     {
-        if (GUILayout.Button("Introduction"))
+        if (HelpButton("Introduction"))
             StartTutorial(Tutorials.INTRO_TUTORIAL, "Introduction", forceIndoor: true);
-        if (GUILayout.Button("Painting"))
+        if (HelpButton("Painting"))
             StartTutorial(Tutorials.PAINT_TUTORIAL, "Painting");
-        if (GUILayout.Button("Bevels"))
+        if (HelpButton("Bevels"))
             StartTutorial(Tutorials.BEVEL_TUTORIAL, "Bevels");
-        if (GUILayout.Button("Substances"))
+        if (HelpButton("Substances"))
             StartTutorial(Tutorials.SUBSTANCE_TUTORIAL, "Substances", forceIndoor: true);
-        if (GUILayout.Button("Objects"))
+        if (HelpButton("Objects"))
             StartTutorial(Tutorials.OBJECT_TUTORIAL, "Objects");
-        if (GUILayout.Button("Tips and Shortcuts"))
+        if (HelpButton("Tips and Shortcuts"))
         {
             LargeMessageGUI.ShowLargeMessageDialog(gameObject, Tutorials.TIPS_AND_SHORTCUTS_TUTORIAL);
             Destroy(this);
         }
-        if (GUILayout.Button("Advanced game logic 1"))
+        if (HelpButton("Advanced Game Logic 1"))
         {
             StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1);
             OpenDemoWorld("Tutorial - Advanced game logic 1", "Tutorials/advanced_game_logic_1");
         }
-        if (GUILayout.Button("Advanced game logic 2"))
+        if (HelpButton("Advanced Game Logic 2"))
             StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2, "Advanced game logic 2", forceIndoor: true);
     }
 
@@ -67,13 +69,18 @@ public class HelpGUI : GUIPanel
     {
         for (int i = 0; i < DEMO_WORLD_NAMES.Length; i++)
         {
-            if (GUILayout.Button(DEMO_WORLD_NAMES[i]))
+            if (HelpButton(DEMO_WORLD_NAMES[i]))
             {
                 OpenDemoWorld("Demo - " + DEMO_WORLD_NAMES[i],
                     "Demos/" + DEMO_WORLD_FILES[i]);
                 Destroy(this);
             }
         }
+    }
+
+    private bool HelpButton(string text)
+    {
+        return GUILayout.Button(text, GUIStyleSet.instance.buttonLarge);
     }
 
     private void StartTutorial(TutorialPageFactory[] tutorial, string worldName = null,
