@@ -8,7 +8,7 @@ public class CarryableBehavior : EntityBehavior
         "Carryable", "Allow the player to pick up and drop/throw the object",
         "Tap to pick up the object, tap again to throw."
         + " Increasing the throw angle causes the object to be thrown with an arc.\n\n"
-        + "Requires physics",
+        + "Requires Physics",
         "coffee", typeof(CarryableBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
