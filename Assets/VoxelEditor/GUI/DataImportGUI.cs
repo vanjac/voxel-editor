@@ -71,7 +71,7 @@ public class DataImportGUI : GUIPanel
             GUILayout.FlexibleSpace();
             if (GUILayout.Button(GUIUtils.MenuContent("Import file", GUIIconSet.instance.import),
                     GUIStyleSet.instance.buttonLarge))
-                ShareMap.OpenFileManager();
+                NativeGalleryWrapper.ImportAudioStream(ImportWorldHandler);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.Label("Or import from a world...");
