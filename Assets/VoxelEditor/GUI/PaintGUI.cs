@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PaintGUI : GUIPanel
 {
-    private const int PREVIEW_SIZE = 250;
-    private const int NUM_RECENT_PAINTS = 4;
-    private const int RECENT_PREVIEW_SIZE = 95;
-    private const int RECENT_MARGIN = 15;
+    private const int PREVIEW_SIZE = 224;
+    private const int NUM_RECENT_PAINTS = 5;
+    private const int RECENT_PREVIEW_SIZE = 96;
+    private const int RECENT_MARGIN = 12;
 
     private static List<VoxelFace> recentPaints = new List<VoxelFace>(); // most recent first
 
@@ -19,14 +19,6 @@ public class PaintGUI : GUIPanel
 
     private int selectedLayer = 0;
     private MaterialSelectorGUI materialSelector;
-
-    private static readonly System.Lazy<GUIStyle> previewBoxStyle = new System.Lazy<GUIStyle>(() =>
-    {
-        var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
-        style.normal.background = null;
-        style.active.background = null;
-        return style;
-    });
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -76,22 +68,25 @@ public class PaintGUI : GUIPanel
         TutorialGUI.ClearHighlight();
         GUILayout.FlexibleSpace();
 
+        GUILayout.BeginScrollView(Vector2.zero, GUIStyle.none);  // recent paints won't expand window
+        GUILayout.BeginHorizontal();
         foreach (VoxelFace recentPaint in recentPaints)
         {
-            GUILayout.Box("", previewBoxStyle.Value,
-                GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE));
-            Rect buttonRect = GUILayoutUtility.GetLastRect();
-            Rect paintRect = new Rect(
-                buttonRect.xMin + RECENT_MARGIN, buttonRect.yMin + RECENT_MARGIN,
-                buttonRect.width - RECENT_MARGIN * 2, buttonRect.height - RECENT_MARGIN * 2);
-            if (GUI.Button(buttonRect, ""))
+            if (GUILayout.Button(" ", GUIStyleSet.instance.buttonSmall,
+                GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE)))
             {
                 paint = recentPaint;
                 handler(paint);
                 UpdateMaterialSelector();
             }
+            Rect buttonRect = GUILayoutUtility.GetLastRect();
+            Rect paintRect = new Rect(
+                buttonRect.xMin + RECENT_MARGIN, buttonRect.yMin + RECENT_MARGIN,
+                buttonRect.width - RECENT_MARGIN * 2, buttonRect.height - RECENT_MARGIN * 2);
             DrawPaint(recentPaint, paintRect);
         }
+        GUILayout.EndHorizontal();
+        GUILayout.EndScrollView();
 
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
