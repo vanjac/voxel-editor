@@ -25,7 +25,7 @@ public class FilterGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button(new GUIContent("    Specific object", GUIIconSet.instance.singleObject),
+        if (GUILayout.Button(GUIUtils.MenuContent("Specific object", GUIIconSet.instance.singleObject),
             buttonStyle.Value))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
@@ -43,7 +43,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(new GUIContent("    Object type", GUIIconSet.instance.objectType),
+        if (GUILayout.Button(GUIUtils.MenuContent("Object type", GUIIconSet.instance.objectType),
             buttonStyle.Value))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
@@ -55,7 +55,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(new GUIContent("    Active behavior", GUIIconSet.instance.behavior),
+        if (GUILayout.Button(GUIUtils.MenuContent("Active behavior", GUIIconSet.instance.behavior),
             buttonStyle.Value))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
@@ -68,7 +68,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(new GUIContent("    Tags", GUIIconSet.instance.entityTag),
+        if (GUILayout.Button(GUIUtils.MenuContent("Tags", GUIIconSet.instance.entityTag),
             buttonStyle.Value))
         {
             TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();

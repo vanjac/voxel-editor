@@ -45,7 +45,7 @@ public class TargetGUI : GUIPanel
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        if (allowObjectTarget && GUILayout.Button("Pick object"))
+        if (allowObjectTarget && GUILayout.Button("Pick object..."))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = voxelArray;

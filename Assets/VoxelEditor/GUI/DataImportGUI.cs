@@ -69,7 +69,8 @@ public class DataImportGUI : GUIPanel
             scroll = GUILayout.BeginScrollView(scroll);
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Choose a file to open in N-Space", GUIStyleSet.instance.buttonLarge))
+            if (GUILayout.Button(GUIUtils.MenuContent("Import file", GUIIconSet.instance.import),
+                    GUIStyleSet.instance.buttonLarge))
                 ShareMap.OpenFileManager();
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
