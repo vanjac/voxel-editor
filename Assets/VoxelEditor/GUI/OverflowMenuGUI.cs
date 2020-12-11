@@ -24,6 +24,13 @@ public class OverflowMenuGUI : GUIPanel
     public int depth = 0;
     private int selected = -1;
 
+    public static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        style.alignment = TextAnchor.MiddleLeft;
+        return style;
+    });
+
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return new Rect(safeRect.xMax - 432 * (depth + 1),
@@ -46,7 +53,8 @@ public class OverflowMenuGUI : GUIPanel
         int i = 0;
         foreach (MenuItem item in items)
         {
-            if (MenuButton(item.text, item.icon, i == selected))
+            if (GUIUtils.HighlightedButton(GUIUtils.MenuContent(item.text, item.icon),
+                buttonStyle.Value, i == selected))
             {
                 item.action();
                 if (!item.stayOpen)
@@ -62,14 +70,5 @@ public class OverflowMenuGUI : GUIPanel
             }
             i++;
         }
-    }
-
-    private bool MenuButton(string name, Texture icon, bool highlight)
-    {
-        bool pressed = GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, highlight);
-        Rect iconRect = GUILayoutUtility.GetLastRect();
-        iconRect.width = iconRect.height;
-        GUI.Label(iconRect, icon, GUIUtils.LABEL_CENTERED.Value);
-        return pressed;
     }
 }
