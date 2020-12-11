@@ -11,7 +11,7 @@ public class CharacterBehavior : EntityBehavior
         + "Objects will have gravity but will not be able to tip over. "
         + "When used with the Move behavior, objects will fall to the ground "
         + "instead of floating.\n\n"
-        + "Density affects the mass of the object, proportional to its volume.",
+        + "<b>Density</b> affects the mass of the object, proportional to its volume.",
         "human", typeof(CharacterBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),

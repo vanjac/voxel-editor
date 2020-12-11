@@ -6,7 +6,7 @@ public class TapSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Tap", "Detect player tapping the object",
-        "Object has to be solid to detect a tap, but it doesn't have to be visible.\n\n"
+        "Object has to be Solid to detect a tap, but it doesn't have to be Visible.\n\n"
         + "Activator: the player",
         "gesture-tap", typeof(TapSensor));
 

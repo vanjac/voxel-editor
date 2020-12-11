@@ -10,9 +10,9 @@ public class CloneBehavior : TeleportBehavior
         + "The clone will start with the original health of the object. "
         + "Sensors which filter for a specific object will also activate for any of its clones.\n\n"
         // based on TeleportBehavior:
-        + "Properties:\n•  \"To\": Target location for clone\n"
-        + "•  \"Relative to\": Optional origin location. "
-        + "If specified, the clone will move from the original object by the difference between the target location and origin.",
+        + "•  <b>To:</b> Target location for clone\n"
+        + "•  <b>Relative to:</b> Optional origin location. "
+        + "If specified, the clone will be displaced from the original object by the difference between the target and origin.",
         "content-copy", typeof(CloneBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),

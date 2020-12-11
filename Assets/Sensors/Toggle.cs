@@ -7,7 +7,7 @@ public class ToggleSensor : Sensor
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Toggle", "One input switches it on, one input switches it off",
         "If both inputs turn on simultaneously, the sensor toggles between on/off.\n\n"
-        + "Activators: the activators of the On input, frozen when it is first turned on",
+        + "Activators: the activators of the <b>On input</b>, frozen when it is first turned on",
         "toggle-switch", typeof(ToggleSensor));
 
     private EntityReference offInput = new EntityReference(null);

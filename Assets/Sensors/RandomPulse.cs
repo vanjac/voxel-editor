@@ -6,7 +6,7 @@ public class RandomPulseSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Rand. Pulse", "Turns on and off in a random pattern",
-        "Alternates on/off using random times selected within the range."
+        "Alternates on/off using random times selected within the ranges."
         + " Useful for unpredictable behavior, flickering lights, etc.",
         "progress-question", typeof(RandomPulseSensor));
     

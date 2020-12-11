@@ -6,9 +6,9 @@ public class TouchSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Touch", "Active when touching or intersecting another object",
-        "Properties:\n•  \"Filter\": The specific object or category of object which will activate the sensor.\n"
-        + "•  \"Min velocity\": The threshold for the relative velocity of the object when it enters the sensor.\n"
-        + "•  \"Direction\": The incoming direction of the object to activate the sensor.\n\n"
+        "•  <b>Filter:</b> The object or types of object which activate the sensor.\n"
+        + "•  <b>Min velocity:</b> Object must enter with this relative velocity to activate.\n"
+        + "•  <b>Direction:</b> Object must enter in this direction to activate.\n\n"
         + "Activators: all colliding objects matching the filter\n\n"
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));

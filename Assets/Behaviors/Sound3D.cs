@@ -11,11 +11,11 @@ public class Sound3DBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "3D Sound", "Play a sound in 3D space",
-        "•  In Point mode, stereo panning will be used to make the sound seem to emit from the object.\n"
-        + "•  In Ambient mode the sound will seem to surround the player.\n"
-        + "•  \"Fade distance\": Beyond this range the sound will fade with distance. Within the range it's at full volume. "
+        "•  In <b>Point</b> mode, stereo panning will be used to make the sound seem to emit from the object.\n"
+        + "•  In <b>Ambient</b> mode the sound will seem to surround the player.\n"
+        + "•  <b>Fade distance:</b> Beyond this range the sound will fade with distance. Within the range it's at full volume. "
         + "Higher values increase the volume outside fade distance.\n"
-        + "•  \"Max distance\": Sound will be inaudible past this distance.\n\n"
+        + "•  <b>Max distance:</b> Sound will be inaudible past this distance.\n\n"
         + "See Sound behavior for additional documentation.",
         "headphones", typeof(Sound3DBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 

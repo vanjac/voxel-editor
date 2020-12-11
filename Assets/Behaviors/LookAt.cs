@@ -6,10 +6,10 @@ public class LookAtBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Look At", "Point in a direction or towards an object",
-        "•  \"Speed\" is the maximum angular velocity in degrees per second.\n"
-        + "•  \"Front\" is the side of the object which will be pointed towards the Target.\n"
-        + "•  \"Yaw\" enables left-right rotation.\n"
-        + "•  \"Pitch\" enables up-down rotation. Both can be used at once.\n",
+        "•  <b>Speed</b> is the maximum angular velocity in degrees per second.\n"
+        + "•  <b>Front</b> is the side of the object which will be pointed towards the target.\n"
+        + "•  <b>Yaw</b> enables left-right rotation.\n"
+        + "•  <b>Pitch</b> enables up-down rotation. Both can be used at once.",
         "compass", typeof(LookAtBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 

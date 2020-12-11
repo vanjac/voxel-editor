@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveWithBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Move With", "Follow the motion of another object.",
+        "Move With", "Follow the motion of another object",
         "BUG: This behavior will block Move behaviors from working.",
         "move-resize-variant", typeof(MoveWithBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));

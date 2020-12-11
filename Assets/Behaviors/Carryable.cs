@@ -7,7 +7,7 @@ public class CarryableBehavior : EntityBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Carryable", "Allow the player to pick up and drop/throw the object",
         "Tap to pick up the object, tap again to throw."
-        + " Increasing the throw angle causes the object to be thrown with an arc.\n\n"
+        + " Increasing the <b>Throw angle</b> causes the object to be thrown with an arc.\n\n"
         + "Requires Physics",
         "coffee", typeof(CarryableBehavior),
         BehaviorType.AndRule(

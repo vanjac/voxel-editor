@@ -11,11 +11,11 @@ public class ForceBehavior : EntityBehavior
 
     public static new BehaviorType objectType = new BehaviorType(
         "Force", "An instant or continuous force toward a target",
-        "Only works for objects with the Physics behavior.\n\n"
-        + "•  \"Impulse\" mode will cause an impulse to applied once the instant the behavior is active.\n"
-        + "•  \"Continuous\" mode will cause the force to be continuously applied while the behavior is active.\n"
-        + "•  If \"Ignore mass\" is set, the force will be scaled to compensate for the mass of the object.\n"
-        + "•  If \"Stop object first\" is set, any existing motion will be stopped before applying the force.",
+        "Only works for objects with a Physics behavior.\n\n"
+        + "•  <b>Impulse</b> mode will cause an instant impulse to be applied when the behavior activates.\n"
+        + "•  <b>Continuous</b> mode will cause the force to be continuously applied while the behavior is active.\n"
+        + "•  <b>Ignore mass</b> scales the force to compensate for the mass of the object.\n"
+        + "•  <b>Stop object first</b> will stop any existing motion before applying the force.",
         "rocket", typeof(ForceBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;

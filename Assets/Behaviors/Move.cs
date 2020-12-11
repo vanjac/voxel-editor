@@ -8,7 +8,7 @@ public class MoveBehavior : EntityBehavior
         "Move", "Move in a direction or toward an object",
         "When used with Solid and Physics behaviors, object will not be able to pass through other objects.\n"
         + "When used with Solid and Character behaviors, object will additionally be affected by gravity.\n"
-        + "Increase the Density property of the Physics/Character behavior to increase the object's pushing strength.",
+        + "Increase the <b>Density</b> of the Physics/Character behavior to increase the object's pushing strength.",
         "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
     private Target target = new Target(Target.NORTH);

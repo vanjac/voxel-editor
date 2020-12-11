@@ -6,10 +6,10 @@ public class DelaySensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Delay", "Adds a delay to an input turning on or off",
-        "If the input has been on for longer than the \"On time\", sensor will turn on. "
-        + "If the input has been off for longer than the \"Off time\", sensor will turn off. "
-        + "If the input cycles on/off faster than the on/off time, nothing happens.\n\n"
-        + "Activators: the activators of the input, added and removed with a delay",
+        "If the <b>Input</b> has been on for longer than the <b>On time</b>, sensor will turn on. "
+        + "If the Input has been off for longer than the <b>Off time</b>, sensor will turn off. "
+        + "If the Input cycles on/off faster than the on/off time, nothing happens.\n\n"
+        + "Activators: the activators of the Input, added and removed with a delay",
         "timer", typeof(DelaySensor));
 
     private EntityReference input = new EntityReference(null);

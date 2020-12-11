@@ -6,8 +6,8 @@ public class MotionSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Motion", "Detect when moving above a minimum velocity",
-        "Turns on when the object is both moving faster than the minimum velocity in the given direction, "
-        + "and rotating about any axis faster than the minimum angular velocity (degrees per second).",
+        "Turns on when the object is both moving faster than the <b>Minimum velocity</b> in the given direction, "
+        + "and rotating about any axis faster than the <b>Minimum angular velocity</b> (degrees per second).",
         "speedometer", typeof(MotionSensor));
 
     private float minVelocity = 1;

@@ -7,11 +7,11 @@ public class InputThresholdSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Threshold", "Active when a certain threshold of other objects are active",
-        "The values of all of the inputs are continuously added up. "
-        + "If an Input is on and set to \"Positive\", the total is incremented by one. "
-        + "If an Input is on and set to \"Negative\", the total is decremented by one. "
-        + "The sensor turns on if the total is greater than or equal to the threshold.\n\n"
-        + "Activators: the combined activators of all positive inputs minus the activators of negative inputs",
+        "Adds up the values of all the <b>Inputs</b>. "
+        + "If an Input is on and set to <b>Positive</b>, this adds 1 to the total. "
+        + "If an Input is on and set to <b>Negative</b>, this subtracts 1 from the total. "
+        + "The sensor turns on if the total is at or above the <b>Threshold</b>.\n\n"
+        + "Activators: the combined activators of all Positive inputs minus the activators of Negative inputs",
         "altimeter", typeof(InputThresholdSensor));
 
     // public so it can be serialized
