@@ -314,6 +314,7 @@ MonoBehaviour:
     behavior: {fileID: 0}
     newTexture: {fileID: 0}
     worldImport: {fileID: 0}
+    newItem: {fileID: 2800000, guid: 828387e3304c7904191add38dad558f7, type: 3}
     indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
     floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
     newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}

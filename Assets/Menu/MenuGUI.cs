@@ -80,7 +80,8 @@ public class MenuGUI : GUIPanel
         }
         else
         {
-            if (GUIUtils.HighlightedButton("New", GUIStyleSet.instance.buttonLarge))
+            if (GUIUtils.HighlightedButton(GUIUtils.MenuContent("New World", GUIIconSet.instance.newItem),
+                    GUIStyleSet.instance.buttonLarge))
                 AskNewWorldTemplate();
             scroll = GUILayout.BeginScrollView(scroll);
             for (int i = 0; i < worldPaths.Count; i++)
