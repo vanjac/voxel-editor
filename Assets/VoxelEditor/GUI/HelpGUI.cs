@@ -29,8 +29,14 @@ public class HelpGUI : GUIPanel
 
     public override void WindowGUI()
     {
+        int oldTab = tab;
         tab = GUILayout.SelectionGrid(tab,
             new string[] { "Tutorials", "Demo Worlds" }, 2, GUIStyleSet.instance.buttonTab);
+        if (oldTab != tab)
+        {
+            scroll = Vector2.zero;
+            scrollVelocity = Vector2.zero;
+        }
         scroll = GUILayout.BeginScrollView(scroll);
         if (tab == 0)
             TutorialsTab();

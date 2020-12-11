@@ -160,6 +160,7 @@ public class PaintGUI : GUIPanel
         }
         materialSelector.Start(); // not enabled so wouldn't be called normally
         scroll = Vector2.zero;
+        scrollVelocity = Vector2.zero;
     }
 
     private void Orient(byte change)
