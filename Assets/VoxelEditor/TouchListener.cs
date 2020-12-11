@@ -253,7 +253,7 @@ public class TouchListener : MonoBehaviour
             if (currentTouchOperation != TouchOperation.CAMERA)
                 return;
 
-            Vector2 move = new Vector2(0, 0);
+            Vector2 move = Vector2.zero;
             for (int i = 0; i < 3; i++)
                 move += Input.GetTouch(i).deltaPosition;
             move *= 4.0f;

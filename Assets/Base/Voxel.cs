@@ -454,7 +454,7 @@ public class Voxel
     public Bounds GetEdgeBounds(int edgeI)
     {
         Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
-        Vector3 size = new Vector3(0, 0, 0);
+        Vector3 size = Vector3.zero;
         if (edgeI >= 0 && edgeI < 4)
             size = new Vector3(1, 0, 0);
         else if (edgeI >= 4 && edgeI < 8)
