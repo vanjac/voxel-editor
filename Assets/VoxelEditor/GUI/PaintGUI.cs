@@ -64,11 +64,10 @@ public class PaintGUI : GUIPanel
         TutorialGUI.TutorialHighlight("paint transform");
         if (GUILayout.Button(GUIIconSet.instance.rotateLeft, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(3);
-        // scroll view prevents recent paints from expand window
-        // it's important that one button is outside the scroll view to set the correct height
-        // and that one button is always inside the scroll view or weird buggy behavior happens
-        GUILayout.BeginScrollView(Vector2.zero, GUIStyle.none, GUILayout.ExpandHeight(false));
-        GUILayout.BeginHorizontal();
+        // BeginHorizontalClipped prevents recent paints from expanding window
+        // it's important that one button is outside the view to set the correct height
+        // and that one button is always inside the view or weird buggy behavior happens
+        GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
         if (GUILayout.Button(GUIIconSet.instance.rotateRight, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(1);
         TutorialGUI.ClearHighlight();
@@ -91,8 +90,7 @@ public class PaintGUI : GUIPanel
         }
         GUILayout.FlexibleSpace();
 
-        GUILayout.EndHorizontal();
-        GUILayout.EndScrollView();
+        GUIUtils.EndHorizontalClipped();
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();

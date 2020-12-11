@@ -96,4 +96,30 @@ public class GUIUtils
         Rect buttonRect = GUILayoutUtility.GetLastRect();
         return GUI.Button(buttonRect, "", GUIStyle.none);
     }
+
+    // clipped areas have problems if they're empty, or if they're the only
+    // widget in a group
+
+    public static void BeginVerticalClipped(params GUILayoutOption[] options)
+    {
+        GUILayout.BeginScrollView(Vector2.zero, false, false,
+            GUIStyle.none, GUIStyle.none, GUIStyle.none, options);
+    }
+
+    public static void EndVerticalClipped()
+    {
+        GUILayout.EndScrollView();
+    }
+
+    public static void BeginHorizontalClipped(params GUILayoutOption[] options)
+    {
+        BeginVerticalClipped(options);
+        GUILayout.BeginHorizontal();
+    }
+
+    public static void EndHorizontalClipped()
+    {
+        GUILayout.EndHorizontal();
+        GUILayout.EndScrollView();
+    }
 }

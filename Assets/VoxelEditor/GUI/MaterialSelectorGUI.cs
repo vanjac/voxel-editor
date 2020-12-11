@@ -165,6 +165,8 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.BeginHorizontal();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
                 BackButton();
+            // prevent from expanding window
+            GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
             if (selectedCategory == CUSTOM_CATEGORY)
             {
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
@@ -188,6 +190,7 @@ public class MaterialSelectorGUI : GUIPanel
                 }
             }
             GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
+            GUIUtils.EndHorizontalClipped();
             GUILayout.EndHorizontal();
         }
 

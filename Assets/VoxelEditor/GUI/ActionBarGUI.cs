@@ -36,8 +36,7 @@ public class ActionBarGUI : TopPanelGUI
     {
         GUILayout.BeginHorizontal();
         // overflow menu will not be cut off if the buttons can't fit
-        GUILayout.BeginScrollView(Vector2.zero, GUIStyle.none);
-        GUILayout.BeginHorizontal();
+        GUIUtils.BeginHorizontalClipped();
 
         if (ActionBarButton(GUIIconSet.instance.close))
             editorFile.Close();
@@ -50,8 +49,7 @@ public class ActionBarGUI : TopPanelGUI
         if (ActionBarButton(GUIIconSet.instance.play))
             editorFile.Play();
 
-        GUILayout.EndHorizontal();
-        GUILayout.EndScrollView();
+        GUIUtils.EndHorizontalClipped();
 
         TutorialGUI.TutorialHighlight("bevel");
         if (ActionBarButton(GUIIconSet.instance.overflow))

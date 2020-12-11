@@ -20,8 +20,7 @@ public class DrawSelectGUI : ActionBarGUI
     {
         GUILayout.BeginHorizontal();
         // done button will not be cut off if the buttons can't fit
-        GUILayout.BeginScrollView(Vector2.zero, GUIStyle.none);
-        GUILayout.BeginHorizontal();
+        GUIUtils.BeginHorizontalClipped();
         // no stored selection
         if (voxelArray.SomethingIsSelected())
         {
@@ -33,8 +32,7 @@ public class DrawSelectGUI : ActionBarGUI
         }
         EditGUI("Tap and drag to select");
         GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-        GUILayout.EndScrollView();
+        GUIUtils.EndHorizontalClipped();
         if (HighlightedActionBarButton(GUIIconSet.instance.done))
             Destroy(this);
         GUILayout.EndHorizontal();
