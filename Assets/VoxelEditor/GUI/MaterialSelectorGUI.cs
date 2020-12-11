@@ -27,7 +27,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     private int tab;
     private string selectedCategory;
-    private bool importFromWorld;
+    private bool importFromWorld, loadingWorld;
     private string importMessage = null;
     private List<Material> materials;
     private string[] categories;
@@ -158,6 +158,11 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (materials == null)
             return;
+        if (loadingWorld)
+        {
+            GUILayout.Label("Loading world...");
+            return;
+        }
         scroll = GUILayout.BeginScrollView(scroll);
 
         if (selectedCategory != "")
@@ -392,7 +397,8 @@ public class MaterialSelectorGUI : GUIPanel
     private IEnumerator LoadWorldCoroutine(string path)
     {
         // copied from DataImportGUI
-        importMessage = "Loading...";
+        loadingWorld = true;
+        importMessage = null;
         yield return null;
         yield return null;
         try
@@ -400,13 +406,15 @@ public class MaterialSelectorGUI : GUIPanel
             materials = ReadWorldFile.ReadCustomTextures(path, isOverlay);
             if (materials.Count == 0)
                 importMessage = "World contains no custom textures for " + (isOverlay ? "overlays." : "materials.");
-            else
-                importMessage = null;
         }
         catch (MapReadException e)
         {
             importMessage = e.Message;
             Debug.LogError(e.InnerException);
+        }
+        finally
+        {
+            loadingWorld = false;
         }
     }
 
