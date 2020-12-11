@@ -59,17 +59,21 @@ public class PaintGUI : GUIPanel
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(PREVIEW_SIZE), GUILayout.Height(PREVIEW_SIZE));
         DrawPaint(paint, GUILayoutUtility.GetLastRect());
         GUILayout.BeginVertical();
+
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
         if (GUILayout.Button(GUIIconSet.instance.rotateLeft, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(3);
+        // scroll view prevents recent paints from expand window
+        // it's important that one button is outside the scroll view to set the correct height
+        // and that one button is always inside the scroll view or weird buggy behavior happens
+        GUILayout.BeginScrollView(Vector2.zero, GUIStyle.none, GUILayout.ExpandHeight(false));
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button(GUIIconSet.instance.rotateRight, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(1);
         TutorialGUI.ClearHighlight();
-        GUILayout.FlexibleSpace();
 
-        GUILayout.BeginScrollView(Vector2.zero, GUIStyle.none);  // recent paints won't expand window
-        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
         foreach (VoxelFace recentPaint in recentPaints)
         {
             if (GUILayout.Button(" ", GUIStyleSet.instance.buttonSmall,
@@ -85,11 +89,12 @@ public class PaintGUI : GUIPanel
                 buttonRect.width - RECENT_MARGIN * 2, buttonRect.height - RECENT_MARGIN * 2);
             DrawPaint(recentPaint, paintRect);
         }
+        GUILayout.FlexibleSpace();
+
         GUILayout.EndHorizontal();
         GUILayout.EndScrollView();
-
-        GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
         if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
@@ -106,6 +111,7 @@ public class PaintGUI : GUIPanel
         if (oldSelectedLayer != selectedLayer)
             UpdateMaterialSelector();
         GUILayout.EndHorizontal();
+
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
 
