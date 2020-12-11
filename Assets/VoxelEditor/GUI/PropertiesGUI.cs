@@ -339,7 +339,7 @@ public class PropertiesGUI : LeftPanelGUI
         if (singleSelectedEntity != null && !(singleSelectedEntity is PlayerObject))
         {
             GUILayout.BeginHorizontal();
-            if (GUIUtils.HighlightedButton("Clone"))
+            if (GUILayout.Button("Clone"))
             {
                 if (singleSelectedEntity is ObjectEntity)
                 {
@@ -363,7 +363,7 @@ public class PropertiesGUI : LeftPanelGUI
                     createGUI.voxelArray = voxelArray;
                 }
             }
-            if (GUIUtils.HighlightedButton("Delete"))
+            if (GUILayout.Button("Delete"))
             {
                 DeleteButton();
             }
@@ -371,7 +371,7 @@ public class PropertiesGUI : LeftPanelGUI
         }
         if (selectedEntities.Count > 1)
         {
-            if (GUIUtils.HighlightedButton("Delete"))
+            if (GUILayout.Button("Delete"))
             {
                 DeleteButton();
             }

@@ -43,7 +43,7 @@ public class MaterialSelectorGUI : GUIPanel
         return style;
     });
 
-    private static readonly System.Lazy<GUIStyle> categoryLabelStyle = new System.Lazy<GUIStyle>(() =>
+    public static readonly System.Lazy<GUIStyle> categoryLabelStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUIStyleSet.instance.labelTitle);
         style.alignment = TextAnchor.MiddleCenter;

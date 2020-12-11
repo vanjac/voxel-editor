@@ -18,6 +18,7 @@ public class DataImportGUI : GUIPanel
     private List<string> worldPaths = new List<string>();
     private List<string> worldNames = new List<string>();
     private bool worldSelected, loadingWorld;
+    private string selectedWorldName;
     private string errorMessage = null;
     private List<EmbeddedData> dataList;
     private AudioPlayer playingAudio;
@@ -81,6 +82,7 @@ public class DataImportGUI : GUIPanel
                 if (GUILayout.Button(name, GUIStyleSet.instance.buttonLarge))
                 {
                     worldSelected = true;
+                    selectedWorldName = name;
                     StartCoroutine(LoadWorldCoroutine(path));
                     scroll = Vector2.zero;
                     scrollVelocity = Vector2.zero;
@@ -90,7 +92,8 @@ public class DataImportGUI : GUIPanel
         }
         else // world is selected
         {
-            if (GUIUtils.HighlightedButton("Back to world list", GUIStyleSet.instance.buttonLarge))
+            GUILayout.BeginHorizontal();
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
             {
                 worldSelected = false;
                 dataList = null;
@@ -98,6 +101,8 @@ public class DataImportGUI : GUIPanel
                 scrollVelocity = Vector2.zero;
                 StopPlayer();
             }
+            GUILayout.Label(selectedWorldName, MaterialSelectorGUI.categoryLabelStyle.Value);
+            GUILayout.EndHorizontal();
             if (dataList != null && dataList.Count > 0)
             {
                 scroll = GUILayout.BeginScrollView(scroll);
