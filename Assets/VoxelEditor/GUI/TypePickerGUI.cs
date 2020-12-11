@@ -11,6 +11,7 @@ public class TypePickerGUI : GUIPanel
     public string[] categoryNames = new string[0];
 
     private int selectedCategory;
+    private PropertiesObjectType showHelp;
 
     private static readonly System.Lazy<GUIStyle> descriptionStyle = new System.Lazy<GUIStyle>(() =>
     {
@@ -53,21 +54,31 @@ public class TypePickerGUI : GUIPanel
         for (int i = 0; i < categoryItems.Length; i++)
         {
             PropertiesObjectType item = categoryItems[i];
-            GUIUtils.BeginButtonHorizontal(item.fullName);
+            GUIUtils.BeginButtonVertical(item.fullName);
+            GUILayout.BeginHorizontal();
             GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label(item.fullName, GUIStyleSet.instance.labelTitle);
             if (item.longDescription != ""
-                && GUILayout.Button(GUIIconSet.instance.helpCircle, helpIconStyle.Value, GUILayout.ExpandWidth(false)))
+                && GUILayout.Button(GUIIconSet.instance.helpCircle, helpIconStyle.Value,
+                    GUILayout.ExpandWidth(false)))
             {
-                var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
-                typeInfo.type = item;
+                if (showHelp == item)
+                    showHelp = null;
+                else
+                    showHelp = item;
             }
             GUILayout.EndHorizontal();
             GUILayout.Label("<i>" + item.description + "</i>", descriptionStyle.Value);
             GUILayout.EndVertical();
-            if (GUIUtils.EndButtonHorizontal(item.fullName))
+            GUILayout.EndHorizontal();
+            if (showHelp == item)
+            {
+                GUILayout.Space(16);
+                GUILayout.Label(item.longDescription, descriptionStyle.Value);
+            }
+            if (GUIUtils.EndButtonVertical(item.fullName))
             {
                 handler(item);
                 Destroy(this);

@@ -22,9 +22,14 @@ public class TypeInfoGUI : GUIPanel
         if (GUILayout.Button("Done", GUILayout.ExpandWidth(false)))
             Destroy(this);
         GUILayout.EndHorizontal();
-        GUILayout.Label(type.description, GUIUtils.LABEL_WORD_WRAPPED.Value);
+        GUILayout.Label("<i>" + type.description + "</i>", GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
-        GUILayout.Label("<i>" + type.longDescription + "</i>", GUIUtils.LABEL_WORD_WRAPPED.Value);
+        if (type.longDescription != "")
+        {
+            GUILayout.BeginVertical(GUI.skin.box);
+            GUILayout.Label(type.longDescription, GUIUtils.LABEL_WORD_WRAPPED.Value);
+            GUILayout.EndVertical();
+        }
     }
 }
