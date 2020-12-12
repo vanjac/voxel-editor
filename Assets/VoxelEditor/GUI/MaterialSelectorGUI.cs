@@ -271,7 +271,6 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (!instance)
         {
-            Debug.Log("instantiate");
             highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
             instance = true;
         }

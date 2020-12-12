@@ -250,15 +250,9 @@ public class MessagePackWorldReader : WorldFileReader
                 if (setColor || setStyle)
                     mat = ResourcesDirectory.InstantiateMaterial(mat);
                 if (setColor)
-                {
-                    Debug.Log(name + " set color " + colorProp + " = " + color);
                     mat.SetColor(colorProp, color);
-                }
                 if (setStyle)
-                {
-                    Debug.Log(name + " set style " + colorStyle);
                     ResourcesDirectory.SetMaterialColorStyle(mat, colorStyle);
-                }
             }
         }
         return mat;
