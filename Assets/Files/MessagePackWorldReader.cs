@@ -245,7 +245,7 @@ public class MessagePackWorldReader : WorldFileReader
                 if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR_STYLE))
                     Enum.TryParse(matDict[FileKeys.MATERIAL_COLOR_STYLE].AsString(), out colorStyle);
                 bool setStyle = colorStyle == ResourcesDirectory.ColorStyle.PAINT
-                    && mat.mainTexture != null;
+                    && ResourcesDirectory.GetMaterialColorStyle(mat) != ResourcesDirectory.ColorStyle.PAINT;
 
                 if (setColor || setStyle)
                     mat = ResourcesDirectory.InstantiateMaterial(mat);

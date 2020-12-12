@@ -87,6 +87,8 @@ public class ResourcesDirectory
 
     public static ColorStyle GetMaterialColorStyle(Material material)
     {
+        if (!material.HasProperty("_MainTex"))
+            return ColorStyle.PAINT;
         return material.mainTexture == null ? ColorStyle.PAINT : ColorStyle.TINT;
     }
 
