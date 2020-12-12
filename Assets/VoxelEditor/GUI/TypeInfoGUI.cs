@@ -8,8 +8,8 @@ public class TypeInfoGUI : GUIPanel
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return GUIUtils.HorizCenterRect(safeRect.center.x,
-            safeRect.yMin + safeRect.height * .2f, 960, 0);
+        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+            GUIPanel.topPanel.panelRect.yMax, 960, 0);
     }
 
     public override void WindowGUI()

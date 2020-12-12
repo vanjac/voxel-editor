@@ -74,7 +74,7 @@ public class MaterialSelectorGUI : GUIPanel
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
-            safeRect.width * .5f, safeRect.height * .8f);
+            safeRect.width * .5f, safeRect.height * .8f, maxWidth: 1280);
     }
 
     public override void WindowGUI()

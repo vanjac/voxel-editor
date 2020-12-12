@@ -25,13 +25,23 @@ public class GUIUtils
         return style;
     });
 
-    public static Rect CenterRect(float centerX, float centerY, float width, float height)
+    public static Rect CenterRect(float centerX, float centerY, float width, float height,
+        float maxWidth = -1, float maxHeight = -1)
     {
+        if (maxWidth != -1 && width > maxWidth)
+            width = maxWidth;
+        if (maxHeight != -1 && height > maxHeight)
+            height = maxHeight;
         return new Rect(centerX - width / 2, centerY - height / 2, width, height);
     }
 
-    public static Rect HorizCenterRect(float centerX, float y, float width, float height)
+    public static Rect HorizCenterRect(float centerX, float y, float width, float height,
+        float maxWidth = -1, float maxHeight = -1)
     {
+        if (maxWidth != -1 && width > maxWidth)
+            width = maxWidth;
+        if (maxHeight != -1 && height > maxHeight)
+            height = maxHeight;
         return new Rect(centerX - width / 2, y, width, height);
     }
 

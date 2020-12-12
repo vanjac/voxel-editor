@@ -15,18 +15,10 @@ public class MenuGUI : GUIPanel
 
     private GUIContent[] startOptions;
 
-    // copied from TemplatePickerGUI
-    private static readonly System.Lazy<GUIStyle> startButtonStyle = new System.Lazy<GUIStyle>(() =>
-    {
-        var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
-        style.imagePosition = ImagePosition.ImageAbove;
-        return style;
-    });
-
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        return new Rect(safeRect.xMin + safeRect.width * .2f, safeRect.yMin,
-            safeRect.width * .6f, safeRect.height);
+        return GUIUtils.HorizCenterRect(safeRect.center.x, safeRect.yMin,
+            safeRect.width * .6f, safeRect.height, maxWidth: 1360);
     }
 
     public override GUIStyle GetStyle()
@@ -62,7 +54,8 @@ public class MenuGUI : GUIPanel
             // copied from TemplatePickerGUI
             GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(900), GUILayout.Height(480));
             GUILayout.Label("Welcome to N-Space\nFollowing the tutorial is recommended!", GUIUtils.LABEL_HORIZ_CENTERED.Value);
-            int selection = GUILayout.SelectionGrid(-1, startOptions, 2, startButtonStyle.Value, GUILayout.ExpandHeight(true));
+            int selection = GUILayout.SelectionGrid(-1, startOptions, 2,
+                TemplatePickerGUI.buttonStyle.Value, GUILayout.ExpandHeight(true));
             if (selection == 0)
             {
                 TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, null, null, null);
@@ -91,8 +84,10 @@ public class MenuGUI : GUIPanel
                 bool selected = worldOverflowMenu != null && path == selectedWorldPath;
 
                 GUILayout.BeginHorizontal();
+                GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
                 if (GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, selected))
                     OpenWorld(path, Scenes.EDITOR);
+                GUIUtils.EndHorizontalClipped();
                 if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUIStyleSet.instance.buttonLarge,
                         selected, GUILayout.ExpandWidth(false)))
                     CreateWorldOverflowMenu(path);

@@ -60,7 +60,7 @@ public class GUIManager : MonoBehaviour
     void Update()
     {
         float scaledScreenHeight;
-        if (targetHeightOverride != 0)
+        if (targetHeightOverride > 500)  // values too small make unity freeze
             scaledScreenHeight = targetHeightOverride;
         else if (Application.isEditor || Screen.dpi <= 0)
             scaledScreenHeight = MIN_TARGET_HEIGHT;

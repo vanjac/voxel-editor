@@ -7,7 +7,7 @@ public class TemplatePickerGUI : GUIPanel
     private GUIContent[] options;
     public System.Action<int> handler;
 
-    private static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
+    public static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
         style.imagePosition = ImagePosition.ImageAbove;

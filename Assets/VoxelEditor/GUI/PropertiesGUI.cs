@@ -553,11 +553,11 @@ public class NewBehaviorGUI : GUIPanel
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        if (entityPicker != null)
+        if (entityPicker != null || typePicker == null)
             // move panel offscreen
             return new Rect(screenRect.width, screenRect.height, 960, safeRect.height * .8f);
         else
-            return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 960, safeRect.height * .8f);
+            return typePicker.GetRect(safeRect, screenRect);
     }
 
     void Start()

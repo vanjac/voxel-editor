@@ -19,7 +19,7 @@ public class HelpGUI : GUIPanel
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
         return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
-            576, safeRect.height * .8f);
+            576, safeRect.height * .8f, maxHeight: 1280);
     }
 
     public void Start()
