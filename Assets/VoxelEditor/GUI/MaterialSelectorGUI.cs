@@ -255,8 +255,6 @@ public class MaterialSelectorGUI : GUIPanel
 
         if (categories.Length > 0)
         {
-            if (materials.Count != 0)
-                GUILayout.Label("Categories:");
             int selectDir = GUILayout.SelectionGrid(-1, categories,
                 selectedCategory == WORLD_LIST_CATEGORY ? 1 : NUM_COLUMNS,
                 categoryButtonStyle.Value);
