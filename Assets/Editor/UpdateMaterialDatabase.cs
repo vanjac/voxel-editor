@@ -42,6 +42,10 @@ public class UpdateMaterialDatabase
                 }
             }
             info.whitePoint = Color.white;
+            // color styles don't work for cutout overlays
+            info.supportsColorStyles = material == null ? false
+                : material.mainTexture != null
+                && material.renderQueue != (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
 
             MaterialInfo? mat_override_maybe = SearchDatabase(data_override, info.name);
             if (mat_override_maybe != null)

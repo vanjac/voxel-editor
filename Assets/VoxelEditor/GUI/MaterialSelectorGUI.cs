@@ -21,7 +21,7 @@ public class MaterialSelectorGUI : GUIPanel
     public string rootDirectory = "Materials";
     public bool isOverlay = false;
     public bool allowNullMaterial = false;
-    public bool ignoreWhitePoint = false;
+    public bool customTextureBase = false;
     public Material highlightMaterial = null; // the current selected material
     public VoxelArrayEditor voxelArray;
 
@@ -34,6 +34,9 @@ public class MaterialSelectorGUI : GUIPanel
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
     private bool instance;
+    private Color whitePoint;  // white point only applies in TINT style
+    private bool showColorStyle;
+    private ResourcesDirectory.ColorStyle colorStyle;
 
     private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
@@ -125,32 +128,49 @@ public class MaterialSelectorGUI : GUIPanel
         }
         if (colorPicker == null)
         {
-            Color whitePoint = Color.white;
-            if (!ignoreWhitePoint && ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
+            whitePoint = Color.white;
+            showColorStyle = false;
+            colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
+            if (!customTextureBase && ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
             {
-                whitePoint = ResourcesDirectory.materialInfos[highlightMaterial.name].whitePoint;
+                var info = ResourcesDirectory.materialInfos[highlightMaterial.name];
+                whitePoint = info.whitePoint;
                 whitePoint.a = 1.0f;
+                showColorStyle = info.supportsColorStyles;
+                colorStyle = ResourcesDirectory.GetMaterialColorStyle(highlightMaterial);
             }
 
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
-            colorPicker.SetColor(highlightMaterial.GetColor(colorProp) * whitePoint);
+            Color currentColor = highlightMaterial.GetColor(colorProp);
+            if (colorStyle == ResourcesDirectory.ColorStyle.TINT)
+                currentColor *= whitePoint;
+            colorPicker.SetColor(currentColor);
             colorPicker.includeAlpha = isOverlay;
             colorPicker.handler = (Color c) =>
             {
-                if (!instance)
-                {
-                    highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
-                    instance = true;
-                }
+                MakeInstance();
                 // don't believe what they tell you, color values can go above 1.0
-                highlightMaterial.SetColor(colorProp, new Color(
-                    c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a));
+                if (colorStyle == ResourcesDirectory.ColorStyle.TINT)
+                    c = new Color(c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a);
+                highlightMaterial.SetColor(colorProp, c);
                 if (handler != null)
                     handler(highlightMaterial);
             };
         }
         colorPicker.WindowGUI();
+        if (showColorStyle)
+        {
+            var newStyle = (ResourcesDirectory.ColorStyle)GUILayout.SelectionGrid((int)colorStyle,
+                new string[] {"Tint", "Paint"}, 2);
+            if (newStyle != colorStyle)
+            {
+                colorStyle = newStyle;
+                MakeInstance();
+                ResourcesDirectory.SetMaterialColorStyle(highlightMaterial, newStyle);
+                colorPicker.CallHandler();  // update white point and call material handler also
+            }
+        }
         return true;
     }
 
@@ -247,6 +267,16 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
+    private void MakeInstance()
+    {
+        if (!instance)
+        {
+            Debug.Log("instantiate");
+            highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
+            instance = true;
+        }
+    }
+
     private void BackButton()
     {
         if (importFromWorld)
@@ -301,7 +331,8 @@ public class MaterialSelectorGUI : GUIPanel
             currentDirectory += "/" + category;
 
         var categoriesList = new List<string>();
-        if (category == "" && (rootDirectory == "Materials" || rootDirectory == "Overlays"))
+        if (!customTextureBase && category == ""
+                && (rootDirectory == "Materials" || rootDirectory == "Overlays"))
             categoriesList.Add(CUSTOM_CATEGORY);
         materials = new List<Material>();
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)

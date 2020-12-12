@@ -7,6 +7,11 @@ using UnityEngine.Rendering;
 // Remember that Unity resource paths always use forward slashes
 public class ResourcesDirectory
 {
+    public enum ColorStyle
+    {
+        TINT, PAINT
+    }
+
     // map name to info
     private static Dictionary<string, MaterialInfo> _materialInfos = null;
     public static Dictionary<string, MaterialInfo> materialInfos
@@ -78,5 +83,18 @@ public class ResourcesDirectory
         if (materialInfos.TryGetValue(name, out info))
             return info.sound;
         return MaterialSound.GENERIC;
+    }
+
+    public static ColorStyle GetMaterialColorStyle(Material material)
+    {
+        return material.mainTexture == null ? ColorStyle.PAINT : ColorStyle.TINT;
+    }
+
+    public static void SetMaterialColorStyle(Material material, ColorStyle style)
+    {
+        if (style == ColorStyle.PAINT)
+            material.mainTexture = null;
+        else if (style == ColorStyle.TINT)
+            material.mainTexture = FindMaterial(material.name, true).mainTexture;
     }
 }

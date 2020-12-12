@@ -367,7 +367,7 @@ public class PropertyGUIs
     }
 
     public static PropertyGUI Material(string materialDirectory, bool isOverlay = false,
-        bool ignoreWhitePoint = false)
+        bool customTextureBase = false)
     {
         return (Property property) =>
         {
@@ -389,7 +389,7 @@ public class PropertyGUIs
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
                 materialSelector.isOverlay = isOverlay;
-                materialSelector.ignoreWhitePoint = ignoreWhitePoint;
+                materialSelector.customTextureBase = customTextureBase;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.setter(mat); // skip equality check, it could be the same material with a different color

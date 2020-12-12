@@ -239,10 +239,25 @@ public class MessagePackWorldReader : WorldFileReader
             if (colorProp != null)
             {
                 Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
-                if (color != mat.GetColor(colorProp))
-                {
+                bool setColor = color != mat.GetColor(colorProp);
+
+                var colorStyle = ResourcesDirectory.ColorStyle.TINT;
+                if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR_STYLE))
+                    Enum.TryParse(matDict[FileKeys.MATERIAL_COLOR_STYLE].AsString(), out colorStyle);
+                bool setStyle = colorStyle == ResourcesDirectory.ColorStyle.PAINT
+                    && mat.mainTexture != null;
+
+                if (setColor || setStyle)
                     mat = ResourcesDirectory.InstantiateMaterial(mat);
+                if (setColor)
+                {
+                    Debug.Log(name + " set color " + colorProp + " = " + color);
                     mat.SetColor(colorProp, color);
+                }
+                if (setStyle)
+                {
+                    Debug.Log(name + " set style " + colorStyle);
+                    ResourcesDirectory.SetMaterialColorStyle(mat, colorStyle);
                 }
             }
         }

@@ -28,6 +28,7 @@ public class FileKeys
     public const string MATERIAL_COLOR = "c";
     //public const string MATERIAL_ALPHA = "a";   // obselete since version 10
     public const string MATERIAL_NAME = "n";
+    public const string MATERIAL_COLOR_STYLE = "s";
 
     public const string PROPOBJ_NAME = "n";
     public const string PROPOBJ_PROPERTIES = "p";

@@ -36,6 +36,12 @@ public class ColorPickerGUI : GUIPanel
         UpdateTexture();
     }
 
+    public void CallHandler()
+    {
+        if (handler != null)
+            handler(color);
+    }
+
     private void UpdateTexture()
     {
         if (colorTexture == null)
@@ -117,8 +123,7 @@ public class ColorPickerGUI : GUIPanel
             Color newColor = Color.HSVToRGB(hue, saturation, value);
             newColor.a = color.a;
             color = newColor;
-            if (handler != null)
-                handler(color);
+            CallHandler();
             UpdateTexture();
         }
 

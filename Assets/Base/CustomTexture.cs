@@ -136,7 +136,7 @@ public class CustomTexture : PropertiesObject
             new Property("bas", "Base",
                 () => baseMat,
                 v => baseMat = (Material)v,
-                PropertyGUIs.Material(isOverlay ? "Overlays" : "Materials", isOverlay, ignoreWhitePoint: true)),
+                PropertyGUIs.Material(isOverlay ? "Overlays" : "Materials", isOverlay, customTextureBase: true)),
             new Property("tex", "Texture",
                 () => texture,
                 v => texture = (Texture2D)v,
