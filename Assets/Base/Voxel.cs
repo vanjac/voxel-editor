@@ -1308,12 +1308,36 @@ public class VoxelComponent : MonoBehaviour
                 normals[hEdge.cap_i + hEdge.cap_count - 1] = capNormal;
         }
 
+        // 3 curved bevels joined at corner
+        bool isSphereCorner = !concave
+                && voxel.edges[edgeA].bevelType == VoxelEdge.BevelType.CURVE
+                && voxel.edges[edgeB].bevelType == VoxelEdge.BevelType.CURVE
+                && voxel.edges[edgeC].bevelType == VoxelEdge.BevelType.CURVE;
+        bool isFullSphereCorner = isSphereCorner
+                && voxel.edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL
+                && voxel.edges[edgeB].bevelSize == VoxelEdge.BevelSize.FULL
+                && voxel.edges[edgeC].bevelSize == VoxelEdge.BevelSize.FULL;
+        Vector3 sphereOrigin = Vector3.zero;
+        if (isSphereCorner)
+        {
+            vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, 0);
+            vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, beveledEdge, 0);
+            vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, beveledEdge, 0);
+            sphereOrigin = Vector3FromArray(vertexPos);
+            sphereOrigin += positionOffset;
+        }
+
         Vector2[] bevelArray = beveledEdge.bevelTypeArray;
         float lastY = bevelArray[bevelArray.Length - 1].y;
+        if (isFullSphereCorner)
+            lastY = FixSphereCornerBevel(new Vector2(0, lastY), bevelArray).y;
         int bevelVertex = hEdge.bevel_i;
         for (int bevelI = 0; bevelI < bevelArray.Length; bevelI++)
         {
             Vector2 bevelVector = bevelArray[bevelI];
+            if (isFullSphereCorner)
+                bevelVector = FixSphereCornerBevel(bevelVector, bevelArray);
+
             float xCoord = bevelVector.x;
             float yCoord;
             if (concave)
@@ -1367,18 +1391,30 @@ public class VoxelComponent : MonoBehaviour
 
         // add normals for each bevel vertex
         Vector2[] bevelNormalArray = beveledEdge.bevelTypeNormalArray;
-        for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
+        if (!isSphereCorner)
         {
-            Vector2 normalVector = bevelNormalArray[bevelI];
-            vertexPos[axis] = normalVector.x * ((faceNum % 2) * 2 - 1);
-            vertexPos[(axis + 1) % 3] = isEdgeC ? normalVector.y * (squarePos.x * 2 - 1) : 0;
-            vertexPos[(axis + 2) % 3] = isEdgeB ? normalVector.y * (squarePos.y * 2 - 1) : 0;
-            if (concave)
+            for (int bevelI = 0; bevelI < bevelNormalArray.Length; bevelI++)
             {
-                vertexPos[(axis + 1) % 3] *= -1;
-                vertexPos[(axis + 2) % 3] *= -1;
+                Vector2 normalVector = bevelNormalArray[bevelI];
+                vertexPos[axis] = normalVector.x * ((faceNum % 2) * 2 - 1);
+                vertexPos[(axis + 1) % 3] = isEdgeC ? normalVector.y * (squarePos.x * 2 - 1) : 0;
+                vertexPos[(axis + 2) % 3] = isEdgeB ? normalVector.y * (squarePos.y * 2 - 1) : 0;
+                if (concave)
+                {
+                    vertexPos[(axis + 1) % 3] *= -1;
+                    vertexPos[(axis + 2) % 3] *= -1;
+                }
+                normals[hEdge.bevel_i + bevelI] = Vector3FromArray(vertexPos);
             }
-            normals[hEdge.bevel_i + bevelI] = Vector3FromArray(vertexPos);
+        }
+        else  // sphere
+        {
+            for (int i = hEdge.bevel_i; i < bevelVertex; i++)
+            {
+                normals[i] = vertices[i] - sphereOrigin;
+                if (concave)
+                    normals[i] = -normals[i];
+            }
         }
     }
 
@@ -1710,6 +1746,17 @@ public class VoxelComponent : MonoBehaviour
             return other + 1;
         else
             return other;
+    }
+
+    private static Vector2 FixSphereCornerBevel(Vector2 bevelVector, Vector2[] bevelArray)
+    {
+        float maxExtent = bevelArray[bevelArray.Length - 1].x;  // x and y should be equal
+        // jank sphere
+        // why tf is this the Euler–Mascheroni constant
+        float targetExtent = 0.57721f;  // 1/3 works for flat bevels
+        bevelVector.y *= targetExtent / maxExtent;
+        bevelVector.x = (bevelVector.x - 1) * (1 - targetExtent) / (1 - maxExtent) + 1;
+        return bevelVector;
     }
 
     private static float ApplyBevel(float coord, VoxelEdge edge, float bevelCoord = 0.0f)
