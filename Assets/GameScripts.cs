@@ -203,7 +203,7 @@ public class GameScripts
                 return ball;
             }),
         new PropertiesObjectType("Neuron",
-            "Logic component, glows when on.",
+            "Logic component, glows when on",
             "thought-bubble",
             typeof(BallObject),
             () => {
