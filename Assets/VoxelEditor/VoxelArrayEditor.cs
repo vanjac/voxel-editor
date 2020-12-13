@@ -356,15 +356,13 @@ public class VoxelArrayEditor : VoxelArray
     // called by TouchListener
     public void TripleTouch(Voxel voxel, int elementI, VoxelElement elementType)
     {
-        if (voxel == null)
+        if (voxel == null || elementType != VoxelElement.FACES)
             return;
         if (voxel.substance == null)
         {
-            if (elementType == VoxelElement.FACES)
-            {
-                ClearSelection();
-                FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), stayOnPlane: false);
-            }
+            ClearSelection();
+            FaceSelectFloodFill(new VoxelFaceReference(voxel, elementI), stayOnPlane: false);
+
         }
         else
         {
