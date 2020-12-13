@@ -37,7 +37,7 @@ public class Tutorials
         () => new TutorialPaintPage(
             "You can use the Paint panel to paint the selected faces with <i>materials</i> and <i>overlays</i>."),
         () => new TutorialPaintPage(
-            "Choose any of the categories in the list to browse textures. Or switch to the Color tab to paint a solid color.",
+            "Choose any of the categories to browse for a texture. Then switch to the Color tab to change its color.",
             highlight: "material type"),
         () => new TutorialPaintPage(
             "A paint is composed of two parts: an opaque material and a transparent overlay. "
@@ -109,7 +109,7 @@ public class Tutorials
         () => new TutorialObjectPage(
             "You have just created a ball Object. "
             + "Like substances, you can give Objects behaviors and sensors to add interactivity."),
-        () => new TutorialObjectColor(),
+        () => new TutorialObjectPaint(),
         () => new TutorialObjectAddBehavior(),
         () => new TutorialObjectFollowPlayer(),
         () => new SimpleTutorialPage(
@@ -135,9 +135,10 @@ public class Tutorials
 •  Triple tap a face to select <i>all</i> faces connected to it. The selection will be bounded by already-selected faces.
 •  Triple tap a substance to select the entire substance.
 •  Check the ""X-ray"" box of a substance to make it transparent in the editor only. This lets you see behind it and zoom through it.
-•  The paint panel keeps shortcuts for the four most recent paints. To ""copy"" a paint to another face, select the origin face, open and close the paint panel, then select the destination faces and use the recent paint shortcut.
+•  The paint panel keeps shortcuts for the five most recent paints. To ""copy"" a paint to another face, select the source face, open and close the paint panel, then select the destination faces and use the recent paint shortcut.
 •  Sliding faces sideways along a wall moves their paints, leaving a trail behind them.
-";
+•  Check the ""Select"" section in the menu for useful shortcuts to select faces and objects.
+•  You can select multiple objects/substances to edit all of their properties at once.";
 
     public static TutorialPageFactory[] ADVANCED_GAME_LOGIC_TUTORIAL_1 = new TutorialPageFactory[]
     {
@@ -853,7 +854,7 @@ public class Tutorials
     private class TutorialSubstanceEditDirection : TutorialSubstancePage
     {
         public TutorialSubstanceEditDirection()
-            : base("The Move behavior will make this substance move West at a constant speed. "
+            : base("The Move behavior will make this substance move North at a constant speed. "
             + "<i>Tap the direction to edit it.</i>")
         { }
 
@@ -879,7 +880,7 @@ public class Tutorials
         private bool panelWasOpen;
 
         public TutorialSubstanceSetDirection()
-            : base("<i>Make it move toward the other side of the pit (look at the compass arrow for guidance)</i>") { }
+            : base("<i>Make it move toward the other side of the pit (look at the compass rose for guidance)</i>") { }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1000,7 +1001,7 @@ public class Tutorials
     {
         public TutorialSubstanceAddSensor()
             : base("A substance's On/Off state is controlled by a Sensor. "
-            + "<i>Give the platform a Pulse sensor.</i> This will make it cycle on/off repeatedly.",
+            + "<i>Give the platform a Pulse sensor. (under the Logic tab)</i> This will make it cycle on/off repeatedly.",
             highlight: "change sensor")
         { }
 
@@ -1116,12 +1117,12 @@ public class Tutorials
     }
 
 
-    private class TutorialObjectColor : TutorialObjectPage
+    private class TutorialObjectPaint : TutorialObjectPage
     {
-        private Color prevColor = Color.clear;
+        private Material prevMat = null;
 
-        public TutorialObjectColor()
-            : base("<i>Try changing the color of the ball.</i> (you will need to deselect it to see the effects)") { }
+        public TutorialObjectPaint()
+            : base("<i>Try painting the ball.</i>", highlight: "paint") { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1131,10 +1132,9 @@ public class Tutorials
                 if (e is BallObject)
                 {
                     Material mat = ((BallObject)e).paint.material;
-                    Color matColor = mat.color;
-                    if (prevColor.Equals(Color.clear))
-                        prevColor = mat.color;
-                    else if (!prevColor.Equals(mat.color))
+                    if (prevMat == null)
+                        prevMat = mat;
+                    else if (prevMat != mat)
                         return TutorialAction.NEXT;
                 }
             return TutorialAction.NONE;
@@ -1357,8 +1357,8 @@ public class Tutorials
     private class TutorialObjectAddPhysicsBehavior : TutorialObjectPage
     {
         public TutorialObjectAddPhysicsBehavior()
-            : base("If you build some obstacles, you'll notice that the ball can move through walls. "
-            + "<i>Add a Physics behavior to fix this.</i> (it's in a different tab)")
+            : base("If you build some obstacles, you'll notice that the ball can float and move through walls. "
+            + "<i>Add a Character behavior to fix this. (check the Physics tab)</i>")
         { }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
