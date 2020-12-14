@@ -1145,6 +1145,32 @@ public class VoxelComponent : MonoBehaviour
         Vector4 tangent = new Vector4(positiveU_xyz.x, positiveU_xyz.y, positiveU_xyz.z,
             mirrored ? 1 : -1);
 
+        // use half bevels on all four edges to carve out a smaller block
+        // move the face plane to fix the convex hull
+        float collapsePlane = 0.0f;
+        foreach (int edgeI in Voxel.FaceSurroundingEdges(faceNum))
+        {
+            var edge = voxel.edges[edgeI];
+            var bevelType = edge.bevelType;
+            if (edge.bevelSize == VoxelEdge.BevelSize.HALF
+                && (bevelType == VoxelEdge.BevelType.SQUARE
+                || bevelType == VoxelEdge.BevelType.STAIR_2
+                || bevelType == VoxelEdge.BevelType.STAIR_4)
+                && voxel.EdgeIsConvex(edgeI))
+            {
+                float bevelCollapse = edge.bevelTypeArray[1].x;
+                if (bevelCollapse > collapsePlane)
+                    collapsePlane = bevelCollapse;
+            }
+            else
+            {
+                collapsePlane = 1.0f;
+                break;
+            }
+        }
+        //if (collapsePlane != 1.0f)
+        //    Debug.Log("collapse " + collapsePlane);
+
         // example for faceNum = 4 (z min)
         // 0 bottom left
         // 1 bottom right (+X)
@@ -1159,7 +1185,8 @@ public class VoxelComponent : MonoBehaviour
             bool concaveC = voxel.faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
             bool concaveA = concaveB || concaveC;
 
-            vertexPos[axis] = faceNum % 2; // will stay for all planar vertices
+            // will stay for all planar vertices
+            vertexPos[axis] = ((faceNum % 2) - 0.5f) * collapsePlane + 0.5f;
             Vector2 squarePos = SQUARE_LOOP[i];
 
             // set the innerQuad vertex
@@ -1219,14 +1246,14 @@ public class VoxelComponent : MonoBehaviour
             {
                 GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeB], corner.hEdgeB, false,
                     concaveB, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
-                    edgeA, edgeB, edgeC,
+                    collapsePlane, edgeA, edgeB, edgeC,
                     vertices, uvs, normals, tangents);
             }
             if (corner.hEdgeC.bevel_i != -1)
             {
                 GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeC], corner.hEdgeC, true,
                     concaveC, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
-                    edgeA, edgeB, edgeC,
+                    collapsePlane, edgeA, edgeB, edgeC,
                     vertices, uvs, normals, tangents);
             }
         } // end for each corner
@@ -1234,7 +1261,7 @@ public class VoxelComponent : MonoBehaviour
 
     private static void GenerateBevelVertices(Voxel voxel, int faceNum, VoxelEdge beveledEdge, FaceHalfEdgeVertices hEdge, bool isEdgeC,
         bool concave, int axis, Vector2 squarePos, Vector3 positionOffset, Vector4 tangent, Vector3 positiveU_xyz, Vector3 positiveV_xyz,
-        int edgeA, int edgeB, int edgeC,
+        float collapsePlane, int edgeA, int edgeB, int edgeC,
         Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
     {
         bool isEdgeB = !isEdgeC;
@@ -1343,6 +1370,8 @@ public class VoxelComponent : MonoBehaviour
             if (concave)
                 xCoord = 2 - xCoord;
             vertexPos[axis] = ApplyBevel(faceNum % 2, beveledEdge, xCoord);
+            if (bevelI == 0)
+                vertexPos[axis] = (vertexPos[axis] - 0.5f) * collapsePlane + 0.5f;
             if (concave)
                 xCoord = 1; // concave bevels aren't joined
             if (concave && isEdgeB)
