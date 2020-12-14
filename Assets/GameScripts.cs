@@ -188,8 +188,20 @@ public class GameScripts
             ball.behaviors.Add(new SolidBehavior());
             return ball;
         }),
+        new PropertiesObjectType("Empty",
+            "Invisible ball object",
+            "scan-helper",
+            typeof(BallObject),
+            () => {
+                var ball = new BallObject();
+                ball.paint.material = null;
+                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
+                    ResourcesDirectory.FindMaterial("MATTE_overlay", true));
+                ball.paint.overlay.color = new Color(1, 0, 0, 0.5f);
+                return ball;
+            }),
         new PropertiesObjectType("Light",
-            "",
+            "Light source centered at a point",
             "lightbulb-on",
             typeof(BallObject),
             () => {
@@ -200,31 +212,6 @@ public class GameScripts
                 ball.paint.overlay.color = new Color(1, 1, 1, 0.25f);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
-                return ball;
-            }),
-        new PropertiesObjectType("Neuron",
-            "Logic component, glows when on",
-            "thought-bubble",
-            typeof(BallObject),
-            () => {
-                var ball = new BallObject();
-                ball.paint.material = null;
-                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
-                ball.paint.overlay.color = new Color(.09f, .38f, .87f, .25f);
-
-                ball.sensor = new InputThresholdSensor();
-                ball.behaviors.Add(new VisibleBehavior());
-                ball.behaviors.Add(new SolidBehavior());
-
-                var light = new LightBehavior();
-                light.condition = EntityBehavior.Condition.ON;
-                PropertiesObjectType.SetProperty(light, "col", new Color(.09f, .38f, .87f));
-                PropertiesObjectType.SetProperty(light, "siz", 2.0f);
-                PropertiesObjectType.SetProperty(light, "int", 3.0f);
-                PropertiesObjectType.SetProperty(light, "hal", true);
-                ball.behaviors.Add(light);
-
                 return ball;
             })
     };
