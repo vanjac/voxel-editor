@@ -36,15 +36,19 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Object type", GUIIconSet.instance.objectType),
+        if (GUILayout.Button(GUIUtils.MenuContent("Tags", GUIIconSet.instance.entityTag),
             OverflowMenuGUI.buttonStyle.Value))
         {
-            TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
-            picker.title = "Filter by object type";
-            picker.categories = new PropertiesObjectType[][] { GameScripts.entityFilterTypes };
-            picker.handler = (PropertiesObjectType type) =>
+            TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
+            picker.title = "Filter by tags";
+            picker.multiple = true;
+            if (current is ActivatedSensor.MultipleTagFilter)
+                picker.multiSelection = (current as ActivatedSensor.MultipleTagFilter).tagBits;
+            else if (current is ActivatedSensor.TagFilter)
+                picker.multiSelection = (byte)(1 << (current as ActivatedSensor.TagFilter).tag);
+            picker.handler = (byte tagBits) =>
             {
-                handler(new ActivatedSensor.EntityTypeFilter(type));
+                handler(new ActivatedSensor.MultipleTagFilter(tagBits));
             };
             Destroy(this);
         }
@@ -61,20 +65,10 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Tags", GUIIconSet.instance.entityTag),
+        if (GUILayout.Button(GUIUtils.MenuContent("Anything", GUIIconSet.instance.objectType),
             OverflowMenuGUI.buttonStyle.Value))
         {
-            TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
-            picker.title = "Filter by tags";
-            picker.multiple = true;
-            if (current is ActivatedSensor.MultipleTagFilter)
-                picker.multiSelection = (current as ActivatedSensor.MultipleTagFilter).tagBits;
-            else if (current is ActivatedSensor.TagFilter)
-                picker.multiSelection = (byte)(1 << (current as ActivatedSensor.TagFilter).tag);
-            picker.handler = (byte tagBits) =>
-            {
-                handler(new ActivatedSensor.MultipleTagFilter(tagBits));
-            };
+            handler(new ActivatedSensor.EntityTypeFilter(Entity.objectType));
             Destroy(this);
         }
     }
