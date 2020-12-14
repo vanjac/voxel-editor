@@ -802,6 +802,7 @@ public abstract class DynamicEntity : Entity
 
 public abstract class DynamicEntityComponent : EntityComponent
 {
+    // TODO: this is really awful
     public static readonly Vector3 KILL_LOCATION = new Vector3(9999, 9999, 9999);
 
     public float health;

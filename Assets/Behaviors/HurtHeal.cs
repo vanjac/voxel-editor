@@ -13,7 +13,7 @@ public class HurtHealBehavior : EntityBehavior
 
     private float amount = -30;
     private float rate = 0;
-    private (float, float) healthRange = (0, 9999);
+    private (float, float) healthRange = (0, 200);
 
     public override BehaviorType BehaviorObjectType()
     {

@@ -11,7 +11,7 @@ public class InCameraSensor : Sensor
         + "Activator: the player",
         "eye", typeof(InCameraSensor));
 
-    private float maxDistance = 9999;
+    private float maxDistance = 100;
 
     public override PropertiesObjectType ObjectType()
     {
