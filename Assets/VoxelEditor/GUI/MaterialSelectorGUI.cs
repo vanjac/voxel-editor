@@ -472,7 +472,7 @@ public class MaterialSelectorGUI : GUIPanel
         {
             Color color = mat.GetColor(colorProp);
             if (color.a == 0.0f)
-                color = new Color(color.r, color.g, color.b, 0.8f);
+                color = new Color(color.r, color.g, color.b, 0.6f);
             previewMaterial.color = color;
         }
         if (!mat.HasProperty("_BumpMap"))

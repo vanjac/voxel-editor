@@ -12,7 +12,7 @@
         LOD 100
 
 		ZWrite Off
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend One OneMinusSrcAlpha   // Premultiplied transparency
 
         Pass
         {
