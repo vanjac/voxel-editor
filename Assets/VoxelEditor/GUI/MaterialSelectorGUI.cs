@@ -269,6 +269,7 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (!instance)
         {
+            //Debug.Log("instantiate");
             highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
             instance = true;
         }
@@ -375,9 +376,13 @@ public class MaterialSelectorGUI : GUIPanel
             string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
             if (colorProp != null)
             {
-                MakeInstance();
-                float prevAlpha = highlightMaterial.GetColor(colorProp).a;
-                highlightMaterial.SetColor(colorProp, new Color(1, 1, 1, prevAlpha));
+                Color prevColor = highlightMaterial.GetColor(colorProp);
+                Color newColor = new Color(1, 1, 1, prevColor.a);
+                if (newColor != prevColor)
+                {
+                    MakeInstance();
+                    highlightMaterial.SetColor(colorProp, newColor);
+                }
             }
         }
         if (handler != null)
