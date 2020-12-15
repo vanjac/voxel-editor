@@ -24,7 +24,11 @@ public static class NativeGalleryWrapper
 
     public static void ImportAudioStream(System.Action<Stream> callback)
     {
-#if UNITY_ANDROID && !UNITY_EDITOR
+// TODO: get this to work with Android eventually
+// right now it can't open files unless they are in a .nomedia folder (doesn't have read permission)
+// and the files it can open have names obscured.
+//#if UNITY_ANDROID && !UNITY_EDITOR
+#if false
         CheckPermission(NativeGallery.GetAudioFromGallery((path) => {
             if (path == null)
             {

@@ -179,6 +179,8 @@ public class DataImportGUI : GUIPanel
 
     private void ImportWorldHandler(System.IO.Stream stream)
     {
+        if (stream == null)
+            return;
         StopPlayer();
         dataList = null;
         worldSelected = true;
