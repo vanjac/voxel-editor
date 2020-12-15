@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -369,8 +369,19 @@ public class MaterialSelectorGUI : GUIPanel
             return;  // don't call handler
         }
         instance = false;
+        if (customTextureBase && highlightMaterial != null)
+        {
+            // reset color to white
+            string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
+            if (colorProp != null)
+            {
+                MakeInstance();
+                float prevAlpha = highlightMaterial.GetColor(colorProp).a;
+                highlightMaterial.SetColor(colorProp, new Color(1, 1, 1, prevAlpha));
+            }
+        }
         if (handler != null)
-            handler(material);
+            handler(highlightMaterial);
     }
 
     private void ImportTextureFromPhotos()
