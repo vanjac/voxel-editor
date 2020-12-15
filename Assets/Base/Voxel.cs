@@ -504,9 +504,9 @@ public class Voxel
             n += 3;
         if (faceNum == 5)
             n += 1;
-        n += VoxelFace.GetOrientationRotation(faces[faceNum].orientation);
         if (VoxelFace.GetOrientationMirror(faces[faceNum].orientation))
-            n = 3 - (n % 4);
+            n = 5 - (n % 4);
+        n += VoxelFace.GetOrientationRotation(faces[faceNum].orientation);
         return n % 4;
     }
 
@@ -1119,16 +1119,15 @@ public class VoxelComponent : MonoBehaviour
         Vector3 positionOffset = voxel.position - transform.position;
         int axis = Voxel.FaceIAxis(faceNum);
         Vector3 normal = Voxel.DirectionForFaceI(faceNum);
-        int rotation = VoxelFace.GetOrientationRotation(face.orientation);
         bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
 
         // ST space is always upright
         Vector3 positiveS_xyz = POSITIVE_S_XYZ[faceNum]; // positive S in XYZ space
         Vector3 positiveT_xyz = POSITIVE_T_XYZ[faceNum];
 
-        int uRot = rotation;
+        int uRot = VoxelFace.GetOrientationRotation(face.orientation);
         if (mirrored)
-            uRot += 3;
+            uRot = 5 - uRot;
         int vRot;
         if (!mirrored)
             vRot = uRot + 3;
