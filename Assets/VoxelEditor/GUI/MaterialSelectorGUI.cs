@@ -384,6 +384,9 @@ public class MaterialSelectorGUI : GUIPanel
             CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, isOverlay);
             customTex.texture = texture;
 
+            // we won't be using customTex again so it's ok to set color directly
+            // instead of thru baseMat
+            customTex.material.color = new Color(1, 1, 1, customTex.material.color.a);
             materials.Add(customTex.material);
             voxelArray.unsavedChanges = true;
 
