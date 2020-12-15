@@ -63,16 +63,14 @@ public class EditorFile : MonoBehaviour
         if (PlayerPrefs.HasKey("last_editScene_version"))
         {
             string lastVersion = PlayerPrefs.GetString("last_editScene_version");
-            if (CompareVersions(lastVersion, "1.2.0") == -1)
+            if (CompareVersions(lastVersion, "1.3.3") == -1)
             {
-                var dialog = guiGameObject.AddComponent<DialogGUI>();
-                dialog.message = "N-Space has been updated with the ability to bevel edges! Would you like a tutorial?";
-                dialog.yesButtonText = "Yes";
-                dialog.noButtonText = "No";
-                dialog.yesButtonHandler = () =>
-                {
-                    TutorialGUI.StartTutorial(Tutorials.BEVEL_TUTORIAL, guiGameObject, voxelArray, touchListener);
-                };
+                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!\n\n"
+                    + "•  You can now import custom textures from your photos library, "
+                    + "and change the color of any built-in material or overlay.\n"
+                    + "•  Two new behaviors have been added: <b>Character</b> and <b>Look At</b>.\n"
+                    + "•  Move behavior now has an option for \"local\" coordinates, or for choosing a random direction.\n"
+                    + "... and much more! Check out the new Demo Worlds (Character AI, Hovercraft, and Shapes) for examples.");
             }
             else if (CompareVersions(lastVersion, "1.3.0") == -1)
             {
