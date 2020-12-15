@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class IOSShare
+public static class IOSShare
 {
     [DllImport("__Internal")] private static extern void showSocialSharing(string filePath);
 

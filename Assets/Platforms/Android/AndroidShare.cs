@@ -9,7 +9,7 @@ using UnityEngine;
 // and https://stackoverflow.com/a/28694269
 // and https://github.com/ChrisMaire/unity-native-sharing/issues/33#issuecomment-346729881
 
-public class AndroidShare
+public static class AndroidShare
 {
     public static void Share(string filePath)
     {

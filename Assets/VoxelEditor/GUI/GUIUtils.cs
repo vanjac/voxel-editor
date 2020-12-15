@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GUIUtils
+public static class GUIUtils
 {
     public static readonly System.Lazy<GUIStyle> LABEL_WORD_WRAPPED = new System.Lazy<GUIStyle>(() =>
     {

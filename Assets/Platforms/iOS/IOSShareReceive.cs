@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class IOSShareReceive
+public static class IOSShareReceive
 {
     private const string INBOX_PATH1 = "Documents/Inbox"; // from Gmail, etc.
     private const string INBOX_PATH2 = "tmp/com.vantjac.voxel-Inbox"; // from Files

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FileKeys
+public static class FileKeys
 {
     // constants follow name pattern:
     // [containing object type]_[property]

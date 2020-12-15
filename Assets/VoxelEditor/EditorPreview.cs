@@ -7,7 +7,7 @@ public class EditorPreviewBehaviorAttribute : System.Attribute
 
 }
 
-public class EntityPreviewManager
+public static class EntityPreviewManager
 {
     private static List<GameObject> selfPreviewObjects = new List<GameObject>();
     private static List<GameObject> otherPreviewObjects = new List<GameObject>();

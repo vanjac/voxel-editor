@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tutorials
+public static class Tutorials
 {
     public static TutorialPageFactory[] INTRO_TUTORIAL = new TutorialPageFactory[]
     {

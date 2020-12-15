@@ -1,4 +1,4 @@
-﻿public class Scenes
+﻿public static class Scenes
 {
     public const string MENU = "menuScene";
     public const string EDITOR = "editScene";

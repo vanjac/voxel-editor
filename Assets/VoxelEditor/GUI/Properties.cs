@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PropertyGUIs
+public static class PropertyGUIs
 {
     private static TouchScreenKeyboard numberKeyboard = null;
     private delegate void KeyboardHandler(string text);
@@ -415,7 +415,8 @@ public class PropertyGUIs
             buttonRect.width - 20 * 2, buttonRect.height - 20 * 2);
         if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
         {
-            NativeGalleryWrapper.ImportTexture((Texture2D newTexture) => {
+            NativeGalleryWrapper.ImportTexture((Texture2D newTexture) =>
+            {
                 if (newTexture != null)
                     property.setter(newTexture);  // skip equality check
             });
@@ -453,8 +454,8 @@ public class PropertyGUIs
     }
 
     public static void _TargetCustom(Property property,
-        bool allowObjectTarget=true, bool allowVertical=true, bool alwaysWorld=false,
-        bool allowRandom=true)
+        bool allowObjectTarget = true, bool allowVertical = true, bool alwaysWorld = false,
+        bool allowRandom = true)
     {
         var target = (Target)property.value;
         string targetString = target.ToString();

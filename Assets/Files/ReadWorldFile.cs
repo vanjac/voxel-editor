@@ -26,7 +26,7 @@ public interface WorldFileReader
     List<Material> FindCustomTextures(bool overlay);
 }
 
-public class ReadWorldFile
+public static class ReadWorldFile
 {
     private static Material missingMaterial, missingOverlay;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 // Remember that Unity resource paths always use forward slashes
-public class ResourcesDirectory
+public static class ResourcesDirectory
 {
     public enum ColorStyle
     {

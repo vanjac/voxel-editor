@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameScripts
+public static class GameScripts
 {
     public static PropertiesObjectType FindTypeWithName(PropertiesObjectType[] types, string name)
     {
