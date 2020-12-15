@@ -36,7 +36,7 @@ public class PaintGUI : GUIPanel
 
     void Start()
     {
-        if (paint.material == null && paint.overlay != null)
+        if (paint.overlay != null)
             selectedLayer = 1;
         UpdateMaterialSelector();
     }
