@@ -15,7 +15,7 @@ public class LookAtBehavior : EntityBehavior
 
     private Target target = new Target(Target.EAST);
     private Target front = new Target(Target.NORTH);
-    private float speed = 50;
+    private float speed = 120;
     private bool yaw = true, pitch = false;
 
     public override BehaviorType BehaviorObjectType()
