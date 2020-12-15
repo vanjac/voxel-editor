@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -379,14 +379,12 @@ public class MaterialSelectorGUI : GUIPanel
             if (texture == null)
                 return;
 
-            Material baseMat = Resources.Load<Material>(
-                isOverlay ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE");
+            Material baseMat = ResourcesDirectory.InstantiateMaterial(Resources.Load<Material>(
+                isOverlay ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE"));
+            baseMat.color = new Color(1, 1, 1, baseMat.color.a);
             CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, isOverlay);
             customTex.texture = texture;
 
-            // we won't be using customTex again so it's ok to set color directly
-            // instead of thru baseMat
-            customTex.material.color = new Color(1, 1, 1, customTex.material.color.a);
             materials.Add(customTex.material);
             voxelArray.unsavedChanges = true;
 
