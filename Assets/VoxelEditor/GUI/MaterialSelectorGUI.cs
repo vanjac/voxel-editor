@@ -448,6 +448,11 @@ public class MaterialSelectorGUI : GUIPanel
 
     public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
     {
+        DrawMaterialTexture(mat, rect, alpha, Vector2.right, Vector2.up);
+    }
+
+    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha, Vector2 u_vec, Vector2 v_vec)
+    {
         if (mat == null)
             return;
         if (previewTexture == null)
@@ -491,14 +496,19 @@ public class MaterialSelectorGUI : GUIPanel
             previewMaterial.mainTextureScale = Vector2.one * mat.GetFloat("_WaveScale");
         previewMaterial.SetPass(0);
 
+        Vector2 uv;
         GL.Begin(GL.QUADS);
-        GL.TexCoord2(0, 0);
+        uv = (Vector2.one - u_vec - v_vec) / 2;
+        GL.TexCoord2(uv.x, uv.y);
         GL.Vertex3(0, 0, 0);
-        GL.TexCoord2(0, 1);
+        uv = (Vector2.one - u_vec + v_vec) / 2;
+        GL.TexCoord2(uv.x, uv.y);
         GL.Vertex3(0, 1, 0);
-        GL.TexCoord2(1, 1);
+        uv = (Vector2.one + u_vec + v_vec) / 2;
+        GL.TexCoord2(uv.x, uv.y);
         GL.Vertex3(1, 1, 0);
-        GL.TexCoord2(1, 0);
+        uv = (Vector2.one + u_vec - v_vec) / 2;
+        GL.TexCoord2(uv.x, uv.y);
         GL.Vertex3(1, 0, 0);
         GL.End();
 

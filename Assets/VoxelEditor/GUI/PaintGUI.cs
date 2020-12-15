@@ -8,6 +8,8 @@ public class PaintGUI : GUIPanel
     private const int NUM_RECENT_PAINTS = 5;
     private const int RECENT_PREVIEW_SIZE = 96;
     private const int RECENT_MARGIN = 12;
+    private static readonly int[] COARSE_SIN = { 0, 1, 0, -1 };
+    private static readonly int[] COARSE_COS = { 1, 0, -1, 0 };
 
     private static List<VoxelFace> recentPaints = new List<VoxelFace>(); // most recent first
 
@@ -181,18 +183,18 @@ public class PaintGUI : GUIPanel
 
     private void DrawPaint(VoxelFace paint, Rect rect)
     {
-        float rotation = VoxelFace.GetOrientationRotation(paint.orientation) * 90;
-        Vector2 scaleFactor = Vector2.one;
+        int rotation = VoxelFace.GetOrientationRotation(paint.orientation);
+        bool mirror = VoxelFace.GetOrientationMirror(paint.orientation);
+        Vector2 u_vec = new Vector2(COARSE_COS[rotation], COARSE_SIN[rotation]);
+        Vector2 v_vec = new Vector2(-COARSE_SIN[rotation], COARSE_COS[rotation]);
         if (VoxelFace.GetOrientationMirror(paint.orientation))
         {
-            scaleFactor = new Vector2(-1, 1);
-            rotation += 90;
+            var tmp = u_vec;
+            u_vec = v_vec * -1;
+            v_vec = tmp * -1;
         }
-        Matrix4x4 baseMatrix = GUI.matrix;
-        RotateAboutPoint(rect.center, rotation, scaleFactor);
-        MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false);
-        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true);
-        GUI.matrix = baseMatrix;
+        MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false, u_vec, v_vec);
+        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true, u_vec, v_vec);
     }
 
     public void TutorialShowSky()
