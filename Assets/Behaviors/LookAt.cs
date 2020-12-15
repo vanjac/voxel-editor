@@ -85,14 +85,14 @@ public class LookAtComponent : MotionComponent
         {
             deltaEuler.x = Mathf.Clamp(Mathf.DeltaAngle(currentEuler.x, targetEuler.x),
                 -maxAngle, maxAngle);
+            deltaEuler.z = Mathf.Clamp(Mathf.DeltaAngle(currentEuler.z, targetEuler.z),
+                -maxAngle, maxAngle);
         }
         if (yaw)
         {
             deltaEuler.y = Mathf.Clamp(Mathf.DeltaAngle(currentEuler.y, targetEuler.y),
                 -maxAngle, maxAngle);
         }
-        deltaEuler.z = Mathf.Clamp(Mathf.DeltaAngle(currentEuler.z, targetEuler.z),
-            -maxAngle, maxAngle);
         Quaternion delta = Quaternion.Euler(deltaEuler);
 
         return delta;
