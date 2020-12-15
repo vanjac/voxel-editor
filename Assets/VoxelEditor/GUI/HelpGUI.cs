@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class HelpGUI : GUIPanel
 {
     private static readonly string[] DEMO_WORLD_NAMES = new string[]
-    { "Logic", "Conveyor", "Ball Pit", "Ball Launcher", "Impossible Hallway", "Platform Game" };
+    { "Ball Launcher", "Character AI", "Platform Game", "Logic", "Impossible Hallway", "Conveyor", "Ball Pit" };
     private static readonly string[] DEMO_WORLD_FILES = new string[]
-    { "logic", "conveyor", "ball_pit", "launcher", "impossible_hallway", "platforms" };
+    { "launcher", "ai", "platforms", "logic", "impossible_hallway", "conveyor", "ball_pit" };
 
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
