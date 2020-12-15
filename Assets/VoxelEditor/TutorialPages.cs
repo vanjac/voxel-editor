@@ -150,18 +150,18 @@ public class Tutorials
         () => new SimpleTutorialPage(
             "We’ll start by making the Up button on the first floor work. <i>Give it a Tap sensor.</i>"),
         () => new SimpleTutorialPage(
-            "<i>Now select the elevator, give it a Toggle sensor, and connect the On input to the Up button.</i>"),
+            "<i>Now select the elevator, give it a Toggle sensor (Logic tab), and connect the On input to the Up button.</i>"),
         () => new SimpleTutorialPage(
             "<i>Finally, use a Move behavior to make the elevator go up only when its sensor is On.</i>"),
         () => new SimpleTutorialPage(
-            "To learn more about these sensors and behaviors, you can tap their icons in the Properties panel."),
+            "To learn more about these sensors and behaviors, you can tap their icons in the left panel."),
         () => new SimpleTutorialPage(
-            "<i>Play your game.</i> The elevator should move up when you press the button. Why does it do this?"),
+            "<i>Play your game.</i> The elevator should move up when you press the button. Did it work?"),
         () => new SimpleTutorialPage(
             "The elevator needs to stop when it reaches the next floor. There are multiple ways to do this. "
             + "One way is to make it turn off after 5 seconds..."),
         () => new SimpleTutorialPage(
-            "<i>Replace the elevator's sensor with Pulse. "
+            "<i>Replace the elevator's sensor with Pulse (Logic tab). "
             + "Change the On time to 5, and connect the input to the Up button.</i>"),
         () => new SimpleTutorialPage(
             "<i>Play your game.</i> The elevator should stop on the second floor. Why does it do this?"),
