@@ -174,7 +174,7 @@ PlayerSettings:
     iPhone: com.vantjac.voxel
   buildNumber:
     iPhone: 5
-  AndroidBundleVersionCode: 29
+  AndroidBundleVersionCode: 31
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
