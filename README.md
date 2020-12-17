@@ -10,14 +10,15 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 ## Features
 
-- Sculpt indoor/outdoor 3D environments. The interface is designed to allow rapid design and modification.
-- Paint surfaces with a selection of over 100 high quality materials, or import your own from your photos library.
+- Sculpt indoor/outdoor 3D environments. It uses a voxel sculpting interface inspired by the Portal 2 Puzzle Maker, which is easy to use and very efficient for building complex spaces.
+- Paint surfaces with a selection of over 100 built-in materials/overlays, or import your own from your photos library.
 - Use the Bevel tool to create complex shapes including rounded edges and stair steps.
-- Use "substances" to build dynamic worlds with moving objects, water, and physics.
-- Wire components together to respond to game events with a powerful logic system.
+- Use "substances" to build dynamic worlds with moving objects, water, triggers, and physics.
+- Simplified component system similar to Unity, and an extensive logic system for wiring up complex game logic. You can even build very simple "AI."
 - Customize the sky, lighting, and fog.
+- Import your own sound effects / music.
 - Experience your creations from a first person perspective. Make a game or just an interesting environment to explore.
-- Interactive tutorials guide you through the interface and more advanced features of the app.
+- Interactive tutorials and demos guide you through the interface and more advanced features of the app.
 - World files can be sent to/from other apps.
 
 ## Using the app
