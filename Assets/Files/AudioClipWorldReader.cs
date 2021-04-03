@@ -20,11 +20,14 @@ public class AudioClipWorldReader : WorldFileReader
         if (fs == null)
             throw new MapReadException("Can't read audio from this location");
         string path = fs.Name;
+        // TODO is this bad? closing the file so web request can read from it
+        // ReadStream isn't supposed to dispose the stream
         fs.Close();
         Debug.Log("Loading audio from " + path);
 
         // TODO file type
-        UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + path, audioType);
+        UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://"
+            + System.Uri.EscapeUriString(path), audioType);
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         var asyncOp = www.SendWebRequest();
