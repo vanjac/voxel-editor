@@ -108,7 +108,7 @@ public static class AndroidShareReceive
         using (var uri = intent.Call<AndroidJavaObject>("getData"))
         using (var inputStream = GetInputStreamForURI(uri, activity))
         {
-            byte[] buffer = new byte[8192];
+            sbyte[] buffer = new sbyte[8192];
             var bufferPtr = AndroidJNIHelper.ConvertToJNIArray(buffer);
             // get the method id of InputStream.read(byte[] b, int off, int len)
             var readMethodId = AndroidJNIHelper.GetMethodID(inputStream.GetRawClass(), "read", "([BII)I");
@@ -118,13 +118,15 @@ public static class AndroidShareReceive
             args[1].i = 0; // offset
             args[2].i = buffer.Length; // length
 
+            byte[] outBuffer = new byte[8192];
             while (true)
             {
                 int bytesRead = AndroidJNI.CallIntMethod(inputStream.GetRawObject(), readMethodId, args);
                 if (bytesRead <= 0)
                     break;
-                byte[] newBuffer = AndroidJNIHelper.ConvertFromJNIArray<byte[]>(bufferPtr);
-                outputStream.Write(newBuffer, 0, bytesRead);
+                sbyte[] newBuffer = AndroidJNIHelper.ConvertFromJNIArray<sbyte[]>(bufferPtr);
+                Buffer.BlockCopy(newBuffer, 0, outBuffer, 0, bytesRead);  // convert sbytes to bytes
+                outputStream.Write(outBuffer, 0, bytesRead);
             }
             outputStream.Flush();
         }
