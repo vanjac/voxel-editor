@@ -55,6 +55,7 @@ public class ShareMap
 #endif
     }
 
+    // creates a stream; wrap inside "using"!
     public static Stream GetImportStream()
     {
 #if UNITY_IOS || UNITY_EDITOR

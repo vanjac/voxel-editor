@@ -22,6 +22,7 @@ public static class NativeGalleryWrapper
         }, "Select a texture image"));
     }
 
+    // callback MUST dispose the stream when done!
     public static void ImportAudioStream(System.Action<Stream> callback)
     {
 // TODO: get this to work with Android eventually

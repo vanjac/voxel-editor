@@ -146,6 +146,7 @@ public class DataImportGUI : GUIPanel
     }
 
 
+    // disposes stream when done
     private IEnumerator LoadWorldCoroutine(string path = null, System.IO.Stream stream = null)
     {
         loadingWorld = true;
@@ -171,7 +172,7 @@ public class DataImportGUI : GUIPanel
             loadingWorld = false;
             if (stream != null)
             {
-                stream.Close();
+                stream.Dispose();
                 ShareMap.ClearFileWaitingToImport();
             }
         }

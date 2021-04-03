@@ -13,7 +13,7 @@ public class EditorFile : MonoBehaviour
     public Transform cameraPivot;
     public TouchListener touchListener;
 
-    // importWorldHandler MUST close stream and call ShareMap.ClearFileWaitingToImport() when finished
+    // importWorldHandler MUST dispose stream and call ShareMap.ClearFileWaitingToImport() when finished
     public System.Action<System.IO.Stream> importWorldHandler;
 
     void Start()
@@ -192,7 +192,7 @@ public class EditorFile : MonoBehaviour
                     DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "An error occurred while reading the file.");
                     Debug.LogError(e);
                     if (stream != null)
-                        stream.Close();
+                        stream.Dispose();
                     ShareMap.ClearFileWaitingToImport();
                 }
             }

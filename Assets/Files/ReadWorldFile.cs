@@ -30,7 +30,7 @@ public static class ReadWorldFile
 {
     private static Material missingMaterial, missingOverlay;
 
-    // return warnings
+    // return warnings. disposes stream when done!
     public static List<string> Read(Stream stream, Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
         WorldFileReader reader;

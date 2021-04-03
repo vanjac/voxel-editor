@@ -20,6 +20,7 @@ public static class SelectedWorld
         demoWorldAsset = asset;
     }
 
+    // this creates a stream, so make sure to wrap it in a "using" block!
     public static Stream GetLoadStream()
     {
         try {
