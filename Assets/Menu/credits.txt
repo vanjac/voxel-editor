@@ -42,7 +42,7 @@ Libraries:
     Copyright (c) 2012-2017 Markus Göbel (Bunny83)
 
     MessagePack for CLI
-    Copyright (C) 2010-2018 FUJIWARA, Yusuke
+    Copyright (C) 2010-2019 FUJIWARA, Yusuke
 
     Opus audio codec
     Copyright 2001-2011 Xiph.Org, Skype Limited, Octasic,
