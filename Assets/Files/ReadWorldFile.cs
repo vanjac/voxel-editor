@@ -6,9 +6,10 @@ using UnityEngine;
 
 public class MapReadException : Exception
 {
+    private const string MESSAGE_APPEND = "\n\nPlease email me about this!\nvantjac.dev@gmail.com";
     public MapReadException() { }
-    public MapReadException(string message) : base(message) { }
-    public MapReadException(string message, Exception inner) : base(message, inner) { }
+    public MapReadException(string message) : base(message + MESSAGE_APPEND) { }
+    public MapReadException(string message, Exception inner) : base(message + MESSAGE_APPEND, inner) { }
 }
 
 public class InvalidMapFileException : MapReadException
