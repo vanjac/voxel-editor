@@ -32,13 +32,13 @@ RenderSettings:
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 512
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 10
+    serializedVersion: 12
     m_Resolution: 2
     m_BakeResolution: 40
     m_AtlasSize: 1024
@@ -62,6 +62,7 @@ LightmapSettings:
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
     m_CompAOExponentDirect: 0
+    m_ExtractAmbientOcclusion: 0
     m_Padding: 2
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
@@ -76,10 +77,16 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
+    m_PVREnvironmentSampleCount: 500
+    m_PVREnvironmentReferencePointCount: 2048
+    m_PVRFilteringMode: 2
+    m_PVRDenoiserTypeDirect: 0
+    m_PVRDenoiserTypeIndirect: 0
+    m_PVRDenoiserTypeAO: 0
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVRFilteringMode: 1
+    m_PVREnvironmentMIS: 0
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -87,7 +94,9 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
+    m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -142,8 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee22b01a6a33b6240b2850cd39fa1304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voxelPrefab: {fileID: 1695945752962522, guid: 6aaef85e5238dcc4e9250d27386663fb,
-    type: 3}
+  type: 0
+  customMaterials: []
+  customOverlays: []
 --- !u!4 &189311175
 Transform:
   m_ObjectHideFlags: 0
@@ -216,7 +226,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 553249407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
@@ -290,7 +300,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 553249407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_UiScaleMode: 2
@@ -315,6 +325,10 @@ PrefabInstance:
       value: Directional light
       objectReference: {fileID: 0}
     - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -327,6 +341,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8754261
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.40821788
       objectReference: {fileID: 0}
@@ -337,14 +355,6 @@ PrefabInstance:
     - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.10938163
-      objectReference: {fileID: 0}
-    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.8754261
-      objectReference: {fileID: 0}
-    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
@@ -395,6 +405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 
   scroll: {x: 0, y: 0}
+  scrollVelocity: {x: 0, y: 0}
   panelRect:
     serializedVersion: 2
     x: 0
@@ -434,7 +445,6 @@ MonoBehaviour:
     rotateRight: {fileID: 0}
     flipHorizontal: {fileID: 0}
     flipVertical: {fileID: 0}
-    compass: {fileID: 0}
     about: {fileID: 0}
     select: {fileID: 0}
     entityTag: {fileID: 0}
@@ -454,6 +464,20 @@ MonoBehaviour:
     gitHub: {fileID: 0}
     undo: {fileID: 0}
     import: {fileID: 0}
+    fill: {fileID: 0}
+    draw: {fileID: 0}
+    singleObject: {fileID: 0}
+    objectType: {fileID: 0}
+    behavior: {fileID: 0}
+    newTexture: {fileID: 0}
+    worldImport: {fileID: 0}
+    newItem: {fileID: 0}
+    indoorLarge: {fileID: 0}
+    floatingLarge: {fileID: 0}
+    newWorldLarge: {fileID: 0}
+    helpLarge: {fileID: 0}
+    compassLarge: {fileID: 0}
+    tagIcons: []
     bevelIcons:
       quarter: {fileID: 0}
       half: {fileID: 0}
@@ -480,6 +504,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 
   scroll: {x: 0, y: 0}
+  scrollVelocity: {x: 0, y: 0}
   panelRect:
     serializedVersion: 2
     x: 0
@@ -494,6 +519,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -506,6 +535,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -516,14 +549,6 @@ PrefabInstance:
     - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4547650528691534, guid: 55b4745c99361e745bace119196500ad, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55b4745c99361e745bace119196500ad, type: 3}
@@ -582,12 +607,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1322616908}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -681,12 +707,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1457520463}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -699,6 +726,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1457520467
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -751,9 +779,10 @@ Camera:
   m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -847,41 +876,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1944336049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1944336051}
-          m_MethodName: SetDownState
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Jump
-            m_BoolArgument: 0
-          m_CallState: 1
-  - eventID: 3
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1944336051}
-          m_MethodName: SetUpState
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Jump
-            m_BoolArgument: 0
-          m_CallState: 1
-  delegates:
   - eventID: 2
     callback:
       m_PersistentCalls:
@@ -922,12 +920,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1944336049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.416}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -940,6 +939,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1944336054
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1012,19 +1012,23 @@ MonoBehaviour:
   comment: 'I don''t understand why this fixes freezing when the playScene closes.
     Here''s what I know about the issue:
 
-    - Amount of time the app freezes when you press Close is proportional to the number
-    of voxels that are part of a substance
+    - Amount of time the app freezes when
+    you press Close is proportional to the number of voxels that are part of a substance
 
-    - According to the profiler, the freezing is entirely from something called GameObject.Deactivate.
+    -
+    According to the profiler, the freezing is entirely from something called GameObject.Deactivate.
 
-    - I thought I had fixed freezing in 620ec380d3a6deb6c0cf8141329556c59be1f19c.
-    Deleting all Rigidbodies a frame before deleting everything else made things better.
-    I assumed that maybe the process of removing children from a parent rigidbody
-    was slow, because it had to recalculate things.
+    -
+    I thought I had fixed freezing in 620ec380d3a6deb6c0cf8141329556c59be1f19c. Deleting
+    all Rigidbodies a frame before deleting everything else made things better. I
+    assumed that maybe the process of removing children from a parent rigidbody was
+    slow, because it had to recalculate things.
 
-    - BUT it turns out that the freezing was still there, but this time it only happens
-    after the player has died.
+    - BUT it turns out that the
+    freezing was still there, but this time it only happens after the player has
+    died.
 
-    - For some reason the Rigidbody of the player was doing something that no other
-    rigidbody was doing to keep things from freezing. Adding this empty gameobject
-    with only a Rigidbody seems to have fixed things. It doesn''t make any sense.'
+    - For some reason the Rigidbody of the player was doing something
+    that no other rigidbody was doing to keep things from freezing. Adding this empty
+    gameobject with only a Rigidbody seems to have fixed things. It doesn''t make
+    any sense.'

@@ -32,7 +32,7 @@ RenderSettings:
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
@@ -345,6 +345,10 @@ PrefabInstance:
       value: Directional light
       objectReference: {fileID: 0}
     - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -357,6 +361,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8754261
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.40821788
       objectReference: {fileID: 0}
@@ -367,14 +375,6 @@ PrefabInstance:
     - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.10938163
-      objectReference: {fileID: 0}
-    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.8754261
-      objectReference: {fileID: 0}
-    - target: {fileID: 4287412669686336, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 132cee2e1c52c4ead9713413359cb4b7, type: 3}
