@@ -56,19 +56,21 @@ public class FileReceiveGUI : GUIPanel
 
     private void ImportWorld(string name)
     {
-        if (name.Length == 0)
+        if (!WorldFiles.ValidateName(name, out string errorMessage))
         {
-            Destroy(this);
-            return;
-        }
-        string newPath = WorldFiles.GetNewWorldPath(name);
-        if (File.Exists(newPath))
-        {
-            var dialog = DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
-            dialog.yesButtonHandler = DestroyThis;
+            if (errorMessage != null)
+            {
+                var dialog = DialogGUI.ShowMessageDialog(gameObject, errorMessage);
+                dialog.yesButtonHandler = DestroyThis;
+            }
+            else
+            {
+                Destroy(this);
+            }
             return;
         }
 
+        string newPath = WorldFiles.GetNewWorldPath(name);
         try
         {
             ShareMap.ImportSharedFile(newPath);

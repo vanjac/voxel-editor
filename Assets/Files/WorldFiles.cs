@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -46,5 +46,31 @@ public static class WorldFiles
         worldNames.Clear();
         foreach (string path in worldPaths)
             worldNames.Add(Path.GetFileNameWithoutExtension(path));
+    }
+
+    public static bool ValidateName(string name, out string errorMessage)
+    {
+        errorMessage = null;
+        if (name.Length == 0)
+            return false;
+        if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+        {
+            errorMessage = "That name contains a special character which is not allowed.";
+            return false;
+}
+
+        if (name.StartsWith("."))
+        {
+            errorMessage = "Name can't start with a period.";
+            return false;
+        }
+
+        string path = WorldFiles.GetNewWorldPath(name);
+        if (File.Exists(path))
+        {
+            errorMessage = "A world with that name already exists.";
+            return false;
+        }
+        return true;  // you are valid <3
     }
 }

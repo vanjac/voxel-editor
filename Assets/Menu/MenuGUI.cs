@@ -127,20 +127,13 @@ public class MenuGUI : GUIPanel
 
     private void NewWorld(string name, TextAsset template)
     {
-        if (name.Length == 0)
-            return;
-        if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+        if (!WorldFiles.ValidateName(name, out string errorMessage))
         {
-            DialogGUI.ShowMessageDialog(gameObject,
-                "That name contains a special character which is not allowed.");
+            if (errorMessage != null)
+                DialogGUI.ShowMessageDialog(gameObject, errorMessage);
             return;
         }
         string path = WorldFiles.GetNewWorldPath(name);
-        if (File.Exists(path))
-        {
-            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
-            return;
-        }
         try
         {
             using (FileStream fileStream = File.Create(path))
@@ -204,28 +197,26 @@ public class MenuGUI : GUIPanel
 
     private void RenameWorld(string newName)
     {
-        if (newName.Length == 0)
-            return;
-        string newPath = WorldFiles.GetNewWorldPath(newName);
-        if (File.Exists(newPath))
+        if (!WorldFiles.ValidateName(newName, out string errorMessage))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
+            if (errorMessage != null)
+                DialogGUI.ShowMessageDialog(gameObject, errorMessage);
             return;
         }
+        string newPath = WorldFiles.GetNewWorldPath(newName);
         File.Move(selectedWorldPath, newPath);
         UpdateWorldList();
     }
 
     private void CopyWorld(string newName)
     {
-        if (newName.Length == 0)
-            return;
-        string newPath = WorldFiles.GetNewWorldPath(newName);
-        if (File.Exists(newPath))
+        if (!WorldFiles.ValidateName(newName, out string errorMessage))
         {
-            DialogGUI.ShowMessageDialog(gameObject, "A world with that name already exists.");
+            if (errorMessage != null)
+                DialogGUI.ShowMessageDialog(gameObject, errorMessage);
             return;
         }
+        string newPath = WorldFiles.GetNewWorldPath(newName);
         File.Copy(selectedWorldPath, newPath);
         UpdateWorldList();
     }
