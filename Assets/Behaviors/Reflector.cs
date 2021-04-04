@@ -21,7 +21,7 @@ public class ReflectorBehavior : EntityBehavior
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("siz", "Size",
+            new Property("siz", "Range",
                 () => size,
                 v => size = (float)v,
                 PropertyGUIs.Slider(1, 100)),
