@@ -44,10 +44,16 @@ public class WorldProperties : PropertiesObject
         UpdateEnvironment();
     }
 
+    private ReflectionProbe GetReflectionProbe()
+    {
+        // TODO!
+        return GameObject.Find("ReflectionProbe")?.GetComponent<ReflectionProbe>();
+    }
+
     private void UpdateEnvironment()
     {
         DynamicGI.UpdateEnvironment(); // update ambient lighting
-        GameObject.Find("ReflectionProbe").GetComponent<ReflectionProbe>().RenderProbe();
+        GetReflectionProbe().RenderProbe();
     }
 
     public ICollection<Property> Properties()
@@ -100,6 +106,10 @@ public class WorldProperties : PropertiesObject
             new Property("sha", "Shadows",
                 () => RenderSettings.sun.shadowStrength,
                 v => RenderSettings.sun.shadowStrength = (float)v,
+                PropertyGUIs.Slider(0, 1)),
+            new Property("ref", "Reflections",
+                () => GetReflectionProbe().intensity,
+                v => GetReflectionProbe().intensity = (float)v,
                 PropertyGUIs.Slider(0, 1)),
             new Property("fdn", "Fog density",
                 () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
