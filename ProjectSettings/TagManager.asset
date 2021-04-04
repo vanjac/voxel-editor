@@ -9,6 +9,7 @@ TagManager:
   - MoveAxis
   - ObjectMarker
   - DeathCamera
+  - EditorPreview
   layers:
   - Default
   - TransparentFX

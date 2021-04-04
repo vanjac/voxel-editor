@@ -24,6 +24,7 @@ public static class EntityPreviewManager
             if (IsEditorPreviewBehavior(behavior))
             {
                 var previewObj = new GameObject();
+                previewObj.tag = "EditorPreview";
                 if (behavior.targetEntity.entity != null)
                     previewObj.transform.position = behavior.targetEntity.entity.PositionInEditor();
                 else
