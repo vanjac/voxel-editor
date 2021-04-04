@@ -74,6 +74,7 @@ public class TextInputDialogGUI : GUIPanel
     public delegate void CancelHandler();
 
     public TextHandler handler;
+    // TODO not called when touch keyboard not supported
     public CancelHandler cancelHandler;
     public string prompt;
 
@@ -152,7 +153,7 @@ public class LargeMessageGUI : GUIPanel
     public delegate void ButtonHandler();
 
     public string message;
-    public ButtonHandler closeButtonHandler;
+    public ButtonHandler closeHandler;
 
     public static LargeMessageGUI ShowLargeMessageDialog(GameObject gameObject, string message)
     {
@@ -167,6 +168,12 @@ public class LargeMessageGUI : GUIPanel
             safeRect.width * .6f, safeRect.height * .6f, maxWidth: 1280, maxHeight: 800);
     }
 
+    void OnDestroy()
+    {
+        if (closeHandler != null)
+            closeHandler();
+    }
+
     public override void WindowGUI()
     {
         scroll = GUILayout.BeginScrollView(scroll);
@@ -174,10 +181,6 @@ public class LargeMessageGUI : GUIPanel
         GUILayout.FlexibleSpace();
         GUILayout.EndScrollView();
         if (GUILayout.Button("OK"))
-        {
-            if (closeButtonHandler != null)
-                closeButtonHandler();
             Destroy(this);
-        }
     }
 }
