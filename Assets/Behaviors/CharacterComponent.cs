@@ -6,7 +6,7 @@ public class CharacterBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Character",
-        "Move with character physics, including gravity.",
+        "Move with character physics, including gravity",
         "This is an alternative to the Physics behavior. "
         + "Objects will have gravity but will not be able to tip over. "
         + "When used with the Move behavior, objects will fall to the ground "
