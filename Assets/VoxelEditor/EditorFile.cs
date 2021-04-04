@@ -123,30 +123,49 @@ public class EditorFile : MonoBehaviour
             return 0;
     }
 
-    public void Save()
+    public bool Save(bool allowPopups = true)
     {
         if (!voxelArray.unsavedChanges)
         {
             Debug.unityLogger.Log("EditorFile", "No unsaved changes");
-            return;
+            return true;
         }
-        MessagePackWorldWriter.Write(SelectedWorld.GetSavePath(),
-            cameraPivot, voxelArray);
-        voxelArray.unsavedChanges = false;
+        try
+        {
+            MessagePackWorldWriter.Write(WorldFiles.GetTempPath(),
+                cameraPivot, voxelArray);
+            WorldFiles.RestoreTempFile(SelectedWorld.GetSavePath());
+            voxelArray.unsavedChanges = false;
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            if (allowPopups)
+            {
+                string message = "An error occurred while saving the file. "
+                    + "Please send me an email about this, and include a screenshot "
+                    + "of this message. vantjac.dev@gmail.com\n\n"
+                    + e.ToString();
+                var dialog = LargeMessageGUI.ShowLargeMessageDialog(GUIManager.guiGameObject, message);
+                dialog.closeHandler = () => SceneManager.LoadScene(Scenes.MENU);
+                voxelArray.unsavedChanges = false;
+            }
+            return false;
+        }
     }
 
     public void Play()
     {
         Debug.unityLogger.Log("EditorFile", "Play");
-        Save();
-        SceneManager.LoadScene(Scenes.GAME);
+        if (Save())
+            SceneManager.LoadScene(Scenes.GAME);
     }
 
     public void Close()
     {
         Debug.unityLogger.Log("EditorFile", "Close");
-        Save();
-        SceneManager.LoadScene(Scenes.MENU);
+        if (Save())
+            SceneManager.LoadScene(Scenes.MENU);
     }
 
     public void Revert()
@@ -164,20 +183,20 @@ public class EditorFile : MonoBehaviour
     void OnApplicationQuit()
     {
         Debug.unityLogger.Log("EditorFile", "OnApplicationQuit()");
-        Save();
+        Save(allowPopups: false);
     }
 
     void OnApplicationPause(bool pauseStatus)
     {
         Debug.unityLogger.Log("EditorFile", "OnApplicationPause(" + pauseStatus + ")");
         if (pauseStatus)
-            Save();
+            Save(allowPopups: false);
         else if (ShareMap.FileWaitingToImport())
         {
             if (importWorldHandler == null)
             {
-                Save();
-                SceneManager.LoadScene(Scenes.FILE_RECEIVE);
+                if (Save())
+                    SceneManager.LoadScene(Scenes.FILE_RECEIVE);
             }
             else
             {

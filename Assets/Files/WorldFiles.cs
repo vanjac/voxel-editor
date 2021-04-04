@@ -1,10 +1,13 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public static class WorldFiles
 {
+    private const string TEMP_NAME = ".temp";
+    private const string BACKUP_NAME = ".backup";
+
     public static string GetWorldsDirectory()
     {
         return Application.persistentDataPath;
@@ -13,6 +16,22 @@ public static class WorldFiles
     public static string GetNewWorldPath(string name)
     {
         return Path.Combine(GetWorldsDirectory(), name + ".nspace");
+    }
+
+    public static string GetTempPath()
+    {
+        return GetNewWorldPath(TEMP_NAME);
+    }
+
+    public static string GetBackupPath()
+    {
+        return GetNewWorldPath(BACKUP_NAME);
+    }
+
+    // will throw an exception on failure
+    public static void RestoreTempFile(string path)
+    {
+        File.Replace(GetTempPath(), path, GetBackupPath(), true);
     }
 
     public static bool IsWorldFile(string path)
@@ -31,11 +50,12 @@ public static class WorldFiles
         worldPaths.Clear();
         foreach (string path in files)
         {
-            if (WorldFiles.IsWorldFile(path))
+            string name = Path.GetFileNameWithoutExtension(path);
+            if (WorldFiles.IsWorldFile(path) && name != BACKUP_NAME && name != TEMP_NAME)
                 worldPaths.Add(path);
             else if (WorldFiles.IsOldWorldFile(path))
             {
-                string newPath = WorldFiles.GetNewWorldPath(Path.GetFileNameWithoutExtension(path));
+                string newPath = WorldFiles.GetNewWorldPath(name);
                 Debug.Log("Updating " + path + " to " + newPath);
                 File.Move(path, newPath);
                 worldPaths.Add(newPath);
@@ -57,7 +77,7 @@ public static class WorldFiles
         {
             errorMessage = "That name contains a special character which is not allowed.";
             return false;
-}
+        }
 
         if (name.StartsWith("."))
         {

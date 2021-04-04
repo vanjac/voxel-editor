@@ -102,7 +102,10 @@ public class HelpGUI : GUIPanel
     public static void OpenDemoWorld(string name, string templateName)
     {
         if (EditorFile.instance != null)
-            EditorFile.instance.Save();
+        {
+            if (!EditorFile.instance.Save())
+                return;
+        }
 
         TextAsset worldAsset = Resources.Load<TextAsset>(templateName);
         string path = WorldFiles.GetNewWorldPath(name);
