@@ -11,6 +11,7 @@ public class LightBehavior : EntityBehavior
 
     private float size = 10, intensity = 1;
     private Color color = Color.white;
+    private bool shadows = false;
     private bool halo = false;
 
     public override BehaviorType BehaviorObjectType()
@@ -34,6 +35,10 @@ public class LightBehavior : EntityBehavior
                 () => intensity,
                 v => intensity = (float)v,
                 PropertyGUIs.Slider(0, 5)),
+            new Property("sha", "Shadows",
+                () => shadows,
+                v => shadows = (bool)v,
+                PropertyGUIs.Toggle),
             new Property("hal", "Halo?",
                 () => halo,
                 v => halo = (bool)v,
@@ -47,6 +52,7 @@ public class LightBehavior : EntityBehavior
         light.size = size;
         light.color = color;
         light.intensity = intensity;
+        light.shadows = shadows;
         light.halo = halo;
         return light;
     }
@@ -56,6 +62,7 @@ public class LightComponent : BehaviorComponent
 {
     public float size, intensity;
     public Color color;
+    public bool shadows;
     public bool halo;
 
     private Light lightComponent;
@@ -78,10 +85,13 @@ public class LightComponent : BehaviorComponent
         lightComponent.color = color;
         lightComponent.enabled = false;
 
-        lightComponent.shadows = LightShadows.Hard;
-        // fix seams (also done in directional light)
-        lightComponent.shadowBias = 0.0f;
-        lightComponent.shadowNormalBias = 0.0f;
+        if (shadows)
+        {
+            lightComponent.shadows = LightShadows.Hard;
+            // fix seams (also done in directional light)
+            lightComponent.shadowBias = 0.0f;
+            lightComponent.shadowNormalBias = 0.0f;
+        }
 
         base.Start();
     }
