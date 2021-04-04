@@ -130,11 +130,19 @@ public class EditorFile : MonoBehaviour
             Debug.unityLogger.Log("EditorFile", "No unsaved changes");
             return true;
         }
+        string savePath = SelectedWorld.GetSavePath();
         try
         {
-            MessagePackWorldWriter.Write(WorldFiles.GetTempPath(),
-                cameraPivot, voxelArray);
-            WorldFiles.RestoreTempFile(SelectedWorld.GetSavePath());
+            if (System.IO.File.Exists(savePath))
+            {
+                MessagePackWorldWriter.Write(WorldFiles.GetTempPath(),
+                    cameraPivot, voxelArray);
+                WorldFiles.RestoreTempFile(savePath);
+            }
+            else
+            {
+                MessagePackWorldWriter.Write(savePath, cameraPivot, voxelArray);
+            }
             voxelArray.unsavedChanges = false;
             return true;
         }
