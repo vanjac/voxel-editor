@@ -13,7 +13,8 @@ public static class NativeGalleryWrapper
                 callback(null);
                 return;
             }
-            Texture2D texture = NativeGallery.LoadImageAtPath(path, markTextureNonReadable: false);
+            Texture2D texture = NativeGallery.LoadImageAtPath(path,
+                maxSize: 1024, markTextureNonReadable: false);
             if (texture == null)
                 DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "Error importing image");
             else
