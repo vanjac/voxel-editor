@@ -40,7 +40,7 @@ public class EditorFile : MonoBehaviour
         catch (MapReadException e)
         {
             var dialog = guiGameObject.AddComponent<DialogGUI>();
-            dialog.message = e.Message;
+            dialog.message = e.FullMessage;
             dialog.yesButtonText = "Close";
             dialog.yesButtonHandler = () =>
             {

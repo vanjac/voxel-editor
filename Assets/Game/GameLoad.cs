@@ -23,7 +23,7 @@ public class GameLoad : MonoBehaviour
         catch (MapReadException e)
         {
             var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
-            dialog.message = e.Message;
+            dialog.message = e.FullMessage;
             dialog.yesButtonText = "Close";
             dialog.yesButtonHandler = () =>
             {
