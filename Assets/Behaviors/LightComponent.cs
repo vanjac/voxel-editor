@@ -35,7 +35,7 @@ public class LightBehavior : EntityBehavior
                 () => intensity,
                 v => intensity = (float)v,
                 PropertyGUIs.Slider(0, 5)),
-            new Property("sha", "Shadows",
+            new Property("sha", "Shadows?",
                 () => shadows,
                 v => shadows = (bool)v,
                 PropertyGUIs.Toggle),
