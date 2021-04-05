@@ -11,6 +11,7 @@ public class ReflectorBehavior : EntityBehavior
         "mirror", typeof(ReflectorBehavior));
     
     private float size = 35, intensity = 1;
+    private bool realtime;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -28,7 +29,11 @@ public class ReflectorBehavior : EntityBehavior
             new Property("int", "Intensity",
                 () => intensity,
                 v => intensity = (float)v,
-                PropertyGUIs.Slider(0, 1.5f))
+                PropertyGUIs.Slider(0, 1.5f)),
+            new Property("upd", "Real-time?",
+                () => realtime,
+                v => realtime = (bool)v,
+                PropertyGUIs.Toggle)
         });
     }
 
@@ -37,6 +42,7 @@ public class ReflectorBehavior : EntityBehavior
         var component = gameObject.AddComponent<ReflectorComponent>();
         component.size = size;
         component.intensity = intensity;
+        component.realtime = realtime;
         return component;
     }
 }
@@ -44,6 +50,7 @@ public class ReflectorBehavior : EntityBehavior
 public class ReflectorComponent : BehaviorComponent
 {
     public float size, intensity;
+    public bool realtime;
 
     private ReflectionProbe probe;
     private Vector3 prevPos;
@@ -54,7 +61,10 @@ public class ReflectorComponent : BehaviorComponent
         probe.size = Vector3.one * size;
         probe.intensity = intensity;
         probe.mode = ReflectionProbeMode.Realtime;
-        probe.refreshMode = ReflectionProbeRefreshMode.ViaScripting;
+        if (realtime && !CompareTag("EditorPreview"))
+            probe.refreshMode = ReflectionProbeRefreshMode.EveryFrame;
+        else
+            probe.refreshMode = ReflectionProbeRefreshMode.ViaScripting;
         probe.importance = 2;
         probe.enabled = false;
         base.Start();
@@ -63,7 +73,8 @@ public class ReflectorComponent : BehaviorComponent
     public override void BehaviorEnabled()
     {
         probe.enabled = true;
-        probe.RenderProbe();
+        if (probe.refreshMode == ReflectionProbeRefreshMode.ViaScripting)
+            probe.RenderProbe();
         prevPos = transform.position;
     }
 
