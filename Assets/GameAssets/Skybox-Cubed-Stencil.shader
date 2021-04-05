@@ -10,9 +10,21 @@ Properties {
 
 SubShader {
     Tags { "Queue"="Background" "RenderType"="Background" "PreviewType"="Skybox" }
-    Cull Off ZWrite Off
 
     Pass {
+        Cull Off ZWrite Off
+        Stencil {
+            Ref 2
+            Comp always
+            Pass replace
+        }
+    }
+    Pass {
+        Cull Off ZWrite Off ZTest Off
+        Stencil {
+            Ref 2
+            Comp equal
+        }
 
         CGPROGRAM
         #pragma vertex vert
