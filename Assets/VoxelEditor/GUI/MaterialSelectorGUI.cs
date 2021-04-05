@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -502,10 +502,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (!mat.HasProperty("_MainTex"))
         {
             if (mat.HasProperty("_FrontTex"))  // 6-sided skybox
-            {
                 previewMaterial.mainTexture = mat.GetTexture("_FrontTex");
-                previewMaterial.color *= 2;
-            }
             else
                 previewMaterial.mainTexture = Texture2D.whiteTexture;
         }
