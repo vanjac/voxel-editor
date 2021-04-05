@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -223,7 +223,7 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.Label(importMessage);
 
         Rect rowRect = new Rect();
-        int materialColumns = selectedCategory == "" ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
+        int materialColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
         string highlightName = "", previewName = "";
         if (highlightMaterial != null)
         {
