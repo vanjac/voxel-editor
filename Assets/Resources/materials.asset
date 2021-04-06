@@ -1974,6 +1974,20 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
+    name: sky_gray
+    path: Skies/sky_gray
+    parent: Skies
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: sky_gray_preview
+    path: Skies/sky_gray_preview
+    parent: Skies
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
     name: sky_procedural
     path: Skies/sky_procedural
     parent: Skies
