@@ -118,6 +118,7 @@ public static class GameScripts
 
         VisibleBehavior.objectType,
         LightBehavior.objectType,
+        HaloBehavior.objectType,
         ReflectorBehavior.objectType,
 
         HurtHealBehavior.objectType,
@@ -151,6 +152,7 @@ public static class GameScripts
         {
             VisibleBehavior.objectType,
             LightBehavior.objectType,
+            HaloBehavior.objectType,
             ReflectorBehavior.objectType,
         },
         new BehaviorType[]

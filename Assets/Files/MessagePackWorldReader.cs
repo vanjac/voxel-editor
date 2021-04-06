@@ -305,6 +305,19 @@ public class MessagePackWorldReader : WorldFileReader
                 EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
                 ReadPropertiesObject(behaviorDict, newBehavior);
                 entity.behaviors.Add(newBehavior);
+                if (newBehavior is LightBehavior light && light.halo)
+                {
+                    // convert halo from version 10 and earlier
+                    HaloBehavior halo = new HaloBehavior();
+                    if (PropertiesObjectType.GetProperty(light, "siz") is float size)
+                        PropertiesObjectType.SetProperty(halo, "siz", size);
+                    if (PropertiesObjectType.GetProperty(light, "col") is Color color
+                            && PropertiesObjectType.GetProperty(light, "int") is float intensity)
+                        PropertiesObjectType.SetProperty(halo, "col",
+                            color * intensity / HaloComponent.INTENSITY);
+                    entity.behaviors.Add(halo);
+                    light.halo = false;
+                }
             }
         }
 

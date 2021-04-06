@@ -12,7 +12,7 @@ public class LightBehavior : EntityBehavior
     private float size = 10, intensity = 1;
     private Color color = Color.white;
     private bool shadows = false;
-    private bool halo = false;
+    public bool halo = false;  // deprecated
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -38,7 +38,14 @@ public class LightBehavior : EntityBehavior
             new Property("sha", "Shadows?",
                 () => shadows,
                 v => shadows = (bool)v,
-                PropertyGUIs.Toggle),
+                PropertyGUIs.Toggle)
+        });
+    }
+
+    public override ICollection<Property> DeprecatedProperties()
+    {
+        return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
+        {
             new Property("hal", "Halo?",
                 () => halo,
                 v => halo = (bool)v,
@@ -53,7 +60,6 @@ public class LightBehavior : EntityBehavior
         light.color = color;
         light.intensity = intensity;
         light.shadows = shadows;
-        light.halo = halo;
         return light;
     }
 }
@@ -63,23 +69,12 @@ public class LightComponent : BehaviorComponent
     public float size, intensity;
     public Color color;
     public bool shadows;
-    public bool halo;
 
     private Light lightComponent;
 
     public override void Start()
     {
-        if (halo)
-        {
-            // Halos are not exposed through the unity api :(
-            var lightObj = Instantiate(Resources.Load<GameObject>("LightHaloPrefab"));
-            lightObj.transform.SetParent(transform, false);
-            lightComponent = lightObj.GetComponent<Light>();
-        }
-        else
-        {
-            lightComponent = gameObject.AddComponent<Light>();
-        }
+        lightComponent = gameObject.AddComponent<Light>();
         lightComponent.range = size;
         lightComponent.intensity = intensity;
         lightComponent.color = color;
