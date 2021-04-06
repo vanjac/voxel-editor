@@ -62,7 +62,7 @@ SubShader {
 
         // RGB wavelengths
         // .35 (.62=158), .43 (.68=174), .525 (.75=190)
-        static const float3 kDefaultScatteringWavelength = float3(.65, .57, .475);
+        static const float3 kDefaultScatteringWavelength = float3(.62, .62, .62);
         static const float3 kVariableRangeForScatteringWavelength = float3(.15, .15, .15);
 
         #define OUTER_RADIUS 1.025
