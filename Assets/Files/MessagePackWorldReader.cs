@@ -11,6 +11,8 @@ public class MessagePackWorldReader : WorldFileReader
 {
     public const int VERSION = MessagePackWorldWriter.VERSION;
 
+    private int fileWriterVersion;
+
     private MessagePackObject worldObject;
     private List<string> warnings = new List<string>();
     private bool editor;
@@ -72,7 +74,8 @@ public class MessagePackWorldReader : WorldFileReader
         {
             throw new MapReadException("This world file requires a newer version of the app");
         }
-        Debug.Log("Saved with writer version " + worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32());
+        fileWriterVersion = worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32();
+        Debug.Log("Saved with writer version " + fileWriterVersion);
     }
 
     private void ReadWorld(MessagePackObjectDictionary world, Transform cameraPivot, VoxelArray voxelArray)
@@ -127,7 +130,12 @@ public class MessagePackWorldReader : WorldFileReader
         }
 
         if (world.ContainsKey(FileKeys.WORLD_GLOBAL))
+        {
             ReadPropertiesObject(world[FileKeys.WORLD_GLOBAL].AsDictionary(), voxelArray.world);
+            // the new skybox shader makes ambient light for this sky a lot brighter
+            if (fileWriterVersion <= 10 && RenderSettings.skybox.name == "sky5X3")
+                RenderSettings.ambientIntensity *= 0.67f;
+        }
 
         if (world.ContainsKey(FileKeys.WORLD_VOXELS))
         {
