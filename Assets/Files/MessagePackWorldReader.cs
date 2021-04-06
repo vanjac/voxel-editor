@@ -309,6 +309,9 @@ public class MessagePackWorldReader : WorldFileReader
                 {
                     // convert halo from version 10 and earlier
                     HaloBehavior halo = new HaloBehavior();
+                    halo.condition = light.condition;
+                    halo.targetEntity = light.targetEntity;
+                    halo.targetEntityIsActivator = light.targetEntityIsActivator;
                     if (PropertiesObjectType.GetProperty(light, "siz") is float size)
                         PropertiesObjectType.SetProperty(halo, "siz", size);
                     if (PropertiesObjectType.GetProperty(light, "col") is Color color
