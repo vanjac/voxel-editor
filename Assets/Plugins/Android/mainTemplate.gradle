@@ -26,10 +26,10 @@ apply plugin: 'com.android.library'
 **APPLY_PLUGINS**
 
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-	compile "com.android.support:support-compat:27.1.1"
-	compile "com.android.support:support-core-utils:27.1.1"
-	compile "com.android.support:support-media-compat:27.1.1"
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation "com.android.support:support-compat:27.1.1"
+	implementation "com.android.support:support-core-utils:27.1.1"
+	implementation "com.android.support:support-media-compat:27.1.1"
 **DEPS**}
 
 android {
@@ -42,38 +42,25 @@ android {
 	}
 
 	defaultConfig {
-consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
 		minSdkVersion **MINSDKVERSION**
 		targetSdkVersion **TARGETSDKVERSION**
-		
 		ndk {
             abiFilters **ABIFILTERS**
         }
 		versionCode **VERSIONCODE**
 		versionName '**VERSIONNAME**'
+		consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
 	}
 
 	lintOptions {
-		abortOnError false
-	}
+        abortOnError false
+    }
 
-	aaptOptions {
-		noCompress '.unity3d', '.ress', '.resource', '.obb'**STREAMING_ASSETS**
-	}**SIGN**
-
-	buildTypes {
-  		debug {
- 			minifyEnabled **MINIFY_DEBUG**
- 			useProguard **PROGUARD_DEBUG**
- 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt'**USER_PROGUARD**
-  			jniDebuggable true
-  		}
-  		release {
- 			minifyEnabled **MINIFY_RELEASE**
- 			useProguard **PROGUARD_RELEASE**
-  			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt'**USER_PROGUARD****SIGNCONFIG**
-  		}
-	}**PACKAGING_OPTIONS**
-**BUILT_APK_LOCATION**
-    
-}**REPOSITORIES****SOURCE_BUILD_SETUP**
+    aaptOptions {
+        noCompress = ['.ress', '.resource', '.obb'] + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }**PACKAGING_OPTIONS**
+}**REPOSITORIES**
+**IL_CPP_BUILD_SETUP**
+**SOURCE_BUILD_SETUP**
+**EXTERNAL_SOURCES**
