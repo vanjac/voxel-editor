@@ -44,13 +44,14 @@ The app has four scenes:
 
 These notes are mostly for me, but you can read them too.
 
+- iOS: install Xcode
 - Install latest release of Unity 2019, with build tools for Android/iOS.
-- Install Blender
 - Clone repo. **Don't open in Unity yet!!**
 - Optional: Download/copy textures from Poliigon, FreePBR, 3dtextures, and Genetica (see above)
-- Open project in Unity, and switch platform to Android
-- Open Player settings and browse for the keystore location.
+- Open project in Unity, and switch platform to Android/iOS
 - Open Project Settings > Editor and switch Unity Remote device to Android
+- Android: open Player settings and browse for the keystore location.
+- iOS: download certificate from Apple and install, get private key and install
 
 ## More info
 
