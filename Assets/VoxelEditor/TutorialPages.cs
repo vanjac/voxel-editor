@@ -950,7 +950,7 @@ public static class Tutorials
 
         private sbyte GetMoveBehaviorDirection(EntityBehavior behavior)
         {
-            object value = PropertiesObjectType.GetProperty(behavior, "dir");
+            object value = behavior.GetProperty("dir");
             if (value == null)
                 return -1;
             else
@@ -1037,10 +1037,10 @@ public static class Tutorials
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is Substance && e.sensor is PulseSensor)
                 {
-                    float offTime = (float)(PropertiesObjectType.GetProperty(e.sensor, "oft"));
+                    float offTime = (float)(e.sensor.GetProperty("oft"));
                     if (offTime > 1)
                         offTimeSet = true;
-                    float onTime = (float)(PropertiesObjectType.GetProperty(e.sensor, "ont"));
+                    float onTime = (float)(e.sensor.GetProperty("ont"));
                     if (onTime > 1)
                         onTimeSet = true;
                 }
@@ -1187,7 +1187,7 @@ public static class Tutorials
                     foreach (EntityBehavior behavior in e.behaviors)
                         if (behavior is MoveBehavior)
                         {
-                            Target moveTarget = (Target)PropertiesObjectType.GetProperty(behavior, "dir");
+                            Target moveTarget = (Target)behavior.GetProperty("dir");
                             if (moveTarget.entityRef.entity is PlayerObject)
                                 return TutorialAction.NEXT;
                         }
@@ -1238,7 +1238,7 @@ public static class Tutorials
                 if (e is BallObject && e.sensor is TouchSensor)
                 {
                     ActivatedSensor.Filter touchFilter =
-                        (ActivatedSensor.Filter)PropertiesObjectType.GetProperty(e.sensor, "fil");
+                        (ActivatedSensor.Filter)e.sensor.GetProperty("fil");
                     if (touchFilter is ActivatedSensor.EntityFilter
                             && ((ActivatedSensor.EntityFilter)touchFilter).entityRef.entity is PlayerObject)
                         return TutorialAction.NEXT;
@@ -1340,7 +1340,7 @@ public static class Tutorials
                     foreach (EntityBehavior behavior in e.behaviors)
                         if (behavior is HurtHealBehavior)
                         {
-                            float rate = (float)PropertiesObjectType.GetProperty(behavior, "rat");
+                            float rate = (float)behavior.GetProperty("rat");
                             if (rate != 0)
                                 return TutorialAction.NEXT;
                         }

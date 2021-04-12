@@ -124,12 +124,12 @@ public class CustomTexture : PropertiesObject
         return customTex;
     }
 
-    public PropertiesObjectType ObjectType()
+    public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
-    public ICollection<Property> Properties()
+    public override ICollection<Property> Properties()
     {
         return new Property[]
         {
@@ -150,11 +150,6 @@ public class CustomTexture : PropertiesObject
                 v => filter = (CustomFilter)v,
                 PropertyGUIs.Enum)
         };
-    }
-
-    public ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
     }
 
     public static bool IsCustomTexture(Material material)

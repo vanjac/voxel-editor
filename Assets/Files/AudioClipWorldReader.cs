@@ -55,7 +55,7 @@ public class AudioClipWorldReader : WorldFileReader
             if (obj is PlayerObject)
             {
                 var behavior = new SoundBehavior();
-                PropertiesObjectType.SetProperty(behavior, "dat", data);
+                behavior.SetProperty("dat", data);
                 obj.behaviors.Add(behavior);
                 break;
             }

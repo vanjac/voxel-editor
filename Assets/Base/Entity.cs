@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -153,6 +153,37 @@ public class PropertiesObjectType
     {
         return constructor();
     }
+}
+
+public abstract class PropertiesObject
+{
+    public abstract PropertiesObjectType ObjectType();
+    public abstract ICollection<Property> Properties();
+    public virtual ICollection<Property> DeprecatedProperties()
+    {
+        return System.Array.Empty<Property>();
+    }
+
+
+    public object GetProperty(string key)
+    {
+        foreach (Property prop in Properties())
+            if (prop.id == key)
+                return prop.getter();
+        return null;
+    }
+
+    public bool SetProperty(string key, object value)
+    {
+        foreach (Property prop in Properties())
+            if (prop.id == key)
+            {
+                prop.setter(value);
+                return true;
+            }
+        return false;
+    }
+
 
     // assumes both objects are the same type and have the same order of properties
     public static void CopyProperties(PropertiesObject source, PropertiesObject dest,
@@ -187,32 +218,6 @@ public class PropertiesObjectType
         }
         return value;
     }
-
-    public static object GetProperty(PropertiesObject obj, string key)
-    {
-        foreach (Property prop in obj.Properties())
-            if (prop.id == key)
-                return prop.getter();
-        return null;
-    }
-
-    public static bool SetProperty(PropertiesObject obj, string key, object value)
-    {
-        foreach (Property prop in obj.Properties())
-            if (prop.id == key)
-            {
-                prop.setter(value);
-                return true;
-            }
-        return false;
-    }
-}
-
-public interface PropertiesObject
-{
-    PropertiesObjectType ObjectType();
-    ICollection<Property> Properties();
-    ICollection<Property> DeprecatedProperties();
 }
 
 public abstract class Entity : PropertiesObject
@@ -240,12 +245,12 @@ public abstract class Entity : PropertiesObject
         return TagToString(tag) + " " + ObjectType().fullName;
     }
 
-    public virtual PropertiesObjectType ObjectType()
+    public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
-    public virtual ICollection<Property> Properties()
+    public override ICollection<Property> Properties()
     {
         return new Property[]
         {
@@ -254,11 +259,6 @@ public abstract class Entity : PropertiesObject
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
         };
-    }
-
-    public virtual ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
     }
 
     // storeComponent: whether the "component" variable should be set
@@ -272,11 +272,11 @@ public abstract class Entity : PropertiesObject
     public virtual Entity Clone()
     {
         var newEntity = (Entity)(ObjectType().Create());
-        PropertiesObjectType.CopyProperties(this, newEntity, this, newEntity);
+        PropertiesObject.CopyProperties(this, newEntity, this, newEntity);
         if (sensor != null)
         {
             newEntity.sensor = (Sensor)(sensor.ObjectType().Create());
-            PropertiesObjectType.CopyProperties(sensor, newEntity.sensor, this, newEntity);
+            PropertiesObject.CopyProperties(sensor, newEntity.sensor, this, newEntity);
         }
         else
             newEntity.sensor = null; // in case the Object Type had a default sensor
@@ -284,7 +284,7 @@ public abstract class Entity : PropertiesObject
         foreach (var behavior in behaviors)
         {
             var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
-            PropertiesObjectType.CopyProperties(behavior, newBehavior, this, newEntity);
+            PropertiesObject.CopyProperties(behavior, newBehavior, this, newEntity);
             newEntity.behaviors.Add(newBehavior);
         }
         return newEntity;
@@ -485,7 +485,7 @@ public abstract class EntityBehavior : PropertiesObject
     public EntityReference targetEntity = new EntityReference(null); // null for self
     public bool targetEntityIsActivator = false;
 
-    public PropertiesObjectType ObjectType()
+    public override PropertiesObjectType ObjectType()
     {
         return BehaviorObjectType();
     }
@@ -495,7 +495,7 @@ public abstract class EntityBehavior : PropertiesObject
         return objectType;
     }
 
-    public virtual ICollection<Property> Properties()
+    public override ICollection<Property> Properties()
     {
         return new Property[]
         {
@@ -521,7 +521,7 @@ public abstract class EntityBehavior : PropertiesObject
                         foreach (Property _selfProp in this.Properties())
                         {
                             var selfProp = _selfProp;
-                            selfProp.value = PropertiesObjectType.PropertyValueReplaceEntity(
+                            selfProp.value = PropertiesObject.PropertyValueReplaceEntity(
                                 selfProp.value, oldTargetEntity, newTargetEntity);
                         }
                     }
@@ -540,11 +540,6 @@ public abstract class EntityBehavior : PropertiesObject
                         PropertyGUIs.BehaviorCondition(property);
                 })
         };
-    }
-
-    public virtual ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
     }
 
     public abstract Behaviour MakeComponent(GameObject gameObject);
@@ -663,19 +658,14 @@ public abstract class Sensor : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "Sensor", typeof(Sensor));
 
-    public virtual PropertiesObjectType ObjectType()
+    public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
-    public virtual ICollection<Property> Properties()
+    public override ICollection<Property> Properties()
     {
         return new Property[] { };
-    }
-
-    public virtual ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
     }
 
     public abstract SensorComponent MakeComponent(GameObject gameObject);

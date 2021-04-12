@@ -320,12 +320,11 @@ public class MessagePackWorldReader : WorldFileReader
                     halo.condition = light.condition;
                     halo.targetEntity = light.targetEntity;
                     halo.targetEntityIsActivator = light.targetEntityIsActivator;
-                    if (PropertiesObjectType.GetProperty(light, "siz") is float size)
-                        PropertiesObjectType.SetProperty(halo, "siz", size);
-                    if (PropertiesObjectType.GetProperty(light, "col") is Color color
-                            && PropertiesObjectType.GetProperty(light, "int") is float intensity)
-                        PropertiesObjectType.SetProperty(halo, "col",
-                            color * intensity / HaloComponent.INTENSITY);
+                    if (light.GetProperty("siz") is float size)
+                        halo.SetProperty("siz", size);
+                    if (light.GetProperty("col") is Color color
+                            && light.GetProperty("int") is float intensity)
+                        halo.SetProperty("col", color * intensity / HaloComponent.INTENSITY);
                     entity.behaviors.Add(halo);
                     light.halo = false;
                 }

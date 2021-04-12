@@ -16,7 +16,7 @@ public class WorldProperties : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "World", "Properties that affect the entire world", "earth", typeof(WorldProperties));
 
-    public PropertiesObjectType ObjectType()
+    public override PropertiesObjectType ObjectType()
     {
         return objectType;
     }
@@ -56,7 +56,7 @@ public class WorldProperties : PropertiesObject
         GetReflectionProbe().RenderProbe();
     }
 
-    public ICollection<Property> Properties()
+    public override ICollection<Property> Properties()
     {
         return new Property[]
         {
@@ -129,10 +129,5 @@ public class WorldProperties : PropertiesObject
                 v => RenderSettings.fogColor = (Color) v,
                 PropertyGUIs.Color)
         };
-    }
-
-    public ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
     }
 }

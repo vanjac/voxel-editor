@@ -94,19 +94,14 @@ class StoredPropertiesObject : PropertiesObject
         }
     }
 
-    public PropertiesObjectType ObjectType()
+    public override PropertiesObjectType ObjectType()
     {
         return type;
     }
 
-    public ICollection<Property> Properties()
+    public override ICollection<Property> Properties()
     {
         return properties;
-    }
-
-    public ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
     }
 }
 
