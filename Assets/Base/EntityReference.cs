@@ -236,7 +236,7 @@ public struct Target
                     dirStr = "Random";
                     break;
             }
-            if ((direction & LOCAL_BIT) != 0)
+            if ((direction & LOCAL_BIT) != 0 && direction != NO_DIRECTION)
                 return "Local " + dirStr;
             else
                 return dirStr;
