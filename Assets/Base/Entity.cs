@@ -40,15 +40,7 @@ public struct Property
         this.explicitType = explicitType;
     }
 
-    public static ICollection<Property> JoinProperties(
-        ICollection<Property> props1, ICollection<Property> props2)
-    {
-        var props = new List<Property>(props1);
-        props.AddRange(props2);
-        return props;
-    }
-
-    public static IEnumerable<Property> JoinIterateProperties(
+    public static IEnumerable<Property> JoinProperties(
         IEnumerable<Property> props1, IEnumerable<Property> props2)
     {
         foreach (Property p in props1)
@@ -158,8 +150,8 @@ public class PropertiesObjectType
 public abstract class PropertiesObject
 {
     public abstract PropertiesObjectType ObjectType();
-    public abstract ICollection<Property> Properties();
-    public virtual ICollection<Property> DeprecatedProperties()
+    public abstract IEnumerable<Property> Properties();
+    public virtual IEnumerable<Property> DeprecatedProperties()
     {
         return System.Array.Empty<Property>();
     }
@@ -250,7 +242,7 @@ public abstract class Entity : PropertiesObject
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return new Property[]
         {
@@ -510,7 +502,7 @@ public abstract class EntityBehavior : PropertiesObject
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return new Property[]
         {
@@ -672,7 +664,7 @@ public abstract class Sensor : PropertiesObject
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return new Property[] { };
     }
@@ -780,7 +772,7 @@ public abstract class DynamicEntity : Entity
     public bool xRay = false;
     public float health = 100;
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {

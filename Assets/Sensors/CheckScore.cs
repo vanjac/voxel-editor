@@ -21,7 +21,7 @@ public class CheckScoreSensor : Sensor
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return Property.JoinProperties(new Property[]
         {

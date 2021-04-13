@@ -56,7 +56,7 @@ public class WorldProperties : PropertiesObject
         GetReflectionProbe().RenderProbe();
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return new Property[]
         {

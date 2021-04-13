@@ -19,7 +19,7 @@ public class LightBehavior : EntityBehavior
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
@@ -42,7 +42,7 @@ public class LightBehavior : EntityBehavior
         });
     }
 
-    public override ICollection<Property> DeprecatedProperties()
+    public override IEnumerable<Property> DeprecatedProperties()
     {
         return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {

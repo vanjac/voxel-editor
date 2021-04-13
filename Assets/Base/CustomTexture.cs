@@ -129,7 +129,7 @@ public class CustomTexture : PropertiesObject
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return new Property[]
         {

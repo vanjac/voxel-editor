@@ -20,7 +20,7 @@ public class HurtHealBehavior : EntityBehavior
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
@@ -39,7 +39,7 @@ public class HurtHealBehavior : EntityBehavior
         });
     }
 
-    public override ICollection<Property> DeprecatedProperties()
+    public override IEnumerable<Property> DeprecatedProperties()
     {
         return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {

@@ -295,7 +295,7 @@ public class JSONWorldReader : WorldFileReader
 
                 bool foundProp = false;
                 Property prop = new Property(null, null, null, null, null);
-                foreach (Property checkProp in Property.JoinIterateProperties(
+                foreach (Property checkProp in Property.JoinProperties(
                     obj.Properties(), obj.DeprecatedProperties()))
                 {
                     if (checkProp.name == name)

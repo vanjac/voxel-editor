@@ -19,7 +19,7 @@ public class BallObject : ObjectEntity
         return objectType;
     }
 
-    public override ICollection<Property> DeprecatedProperties()
+    public override IEnumerable<Property> DeprecatedProperties()
     {
         return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {

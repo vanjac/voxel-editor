@@ -10,7 +10,7 @@ class StoredPropertiesObject : PropertiesObject
         = new PropertiesObjectType("(different)", null);
 
     private readonly PropertiesObjectType type;
-    private readonly ICollection<Property> properties;
+    private readonly IEnumerable<Property> properties;
 
     public StoredPropertiesObject(PropertiesObject store)
     {
@@ -21,7 +21,8 @@ class StoredPropertiesObject : PropertiesObject
     // merge properties of objects
     public StoredPropertiesObject(PropertiesObject[] objects)
     {
-        properties = new List<Property>();
+        var propList = new List<Property>();
+        properties = propList;
         if (objects.Length == 0)
             return;
         if (objects[0] != null)
@@ -89,7 +90,7 @@ class StoredPropertiesObject : PropertiesObject
                 }
             };
 
-            properties.Add(new Property(
+            propList.Add(new Property(
                 firstProperty.id, firstProperty.name, getter, setter, gui, firstProperty.explicitType));
         }
     }
@@ -99,7 +100,7 @@ class StoredPropertiesObject : PropertiesObject
         return type;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return properties;
     }
@@ -483,8 +484,11 @@ public class PropertiesGUI : LeftPanelGUI
         else
         {
             title = obj.ObjectType().fullName + suffix;
-            if (obj.Properties().Count > 0)
+            foreach (var prop in obj.Properties())
+            {
                 title += ":";
+                break;
+            }
         }
         GUILayout.BeginHorizontal();
         if (obj != null && GUILayout.Button(obj.ObjectType().icon, iconStyle.Value))

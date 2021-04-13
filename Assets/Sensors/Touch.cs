@@ -21,7 +21,7 @@ public class TouchSensor : ActivatedSensor
         return objectType;
     }
 
-    public override ICollection<Property> Properties()
+    public override IEnumerable<Property> Properties()
     {
         return Property.JoinProperties(base.Properties(), new Property[]
         {
