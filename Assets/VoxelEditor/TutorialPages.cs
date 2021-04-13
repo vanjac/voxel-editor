@@ -1368,7 +1368,7 @@ public static class Tutorials
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is BallObject)
                     foreach (EntityBehavior behavior in e.behaviors)
-                        if (behavior is PhysicsBehavior)
+                        if (behavior is CharacterBehavior)
                             return TutorialAction.NEXT;
             return TutorialAction.NONE;
         }
