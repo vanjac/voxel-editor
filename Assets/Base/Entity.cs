@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Reflection;
 using UnityEngine;
 
+// TODO remove
 public delegate object GetProperty();
 public delegate void SetProperty(object value);
 public delegate void PropertyGUI(Property property);
 
+// TODO remove
 public struct Property
 {
     public string id;
@@ -48,6 +51,28 @@ public struct Property
         foreach (Property p in props2)
             yield return p;
     }
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public abstract class NPropAttribute : Attribute
+{
+    public readonly string id;
+    public readonly string name;
+    // TODO remove
+    // use the type of the PropertyInfo instead of the type of its value
+    // this will fix null checks. if the value type is a subclass of the
+    // PropertyType, then store explicitly.
+    public readonly bool explicitType;
+
+    public NPropAttribute(string id, string name, bool explicitType = false)
+    {
+        this.id = id;
+        this.name = name;
+        this.explicitType = explicitType;
+    }
+
+    // TODO replace Property struct with PropertyInfo
+    public abstract void GUI(Property property);
 }
 
 
@@ -150,13 +175,28 @@ public class PropertiesObjectType
 public abstract class PropertiesObject
 {
     public abstract PropertiesObjectType ObjectType();
-    public abstract IEnumerable<Property> Properties();
+    public virtual IEnumerable<Property> Properties()
+    {
+        var type = GetType();
+        foreach (var prop in type.GetProperties())
+        {
+            if (prop.IsDefined(typeof(NPropAttribute), false))
+            {
+                var attr = (NPropAttribute)prop.GetCustomAttribute(typeof(NPropAttribute), false);
+                yield return new Property(attr.id, attr.name,
+                    () => prop.GetMethod.Invoke(this, null),
+                    v => prop.SetMethod.Invoke(this, new object[]{v}),
+                    (p) => attr.GUI(p), attr.explicitType);
+            }
+        }
+    }
     public virtual IEnumerable<Property> DeprecatedProperties()
     {
         return System.Array.Empty<Property>();
     }
 
 
+    // TODO these shouldn't be necessary anymore
     public object GetProperty(string key)
     {
         foreach (Property prop in Properties())
