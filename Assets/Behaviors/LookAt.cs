@@ -13,7 +13,7 @@ public class LookAtBehavior : EntityBehavior
         "compass", typeof(LookAtBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private Target target = new Target(Target.EAST);
+    private Target toward = new Target(Target.EAST);
     private Target front = new Target(Target.NORTH);
     private float speed = 120;
     private bool yaw = true, pitch = false;
@@ -32,8 +32,8 @@ public class LookAtBehavior : EntityBehavior
                 v => speed = (float)v,
                 PropertyGUIs.Float),
             new Property("dir", "Toward",
-                () => target,
-                v => target = (Target)v,
+                () => toward,
+                v => toward = (Target)v,
                 PropertyGUIs.TargetWorldOnly),
             new Property("fro", "Front",
                 () => front,
@@ -49,7 +49,7 @@ public class LookAtBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<LookAtComponent>();
-        component.target = target;
+        component.toward = toward;
         component.front = front;
         component.speed = speed;
         component.yaw = yaw;
@@ -60,19 +60,19 @@ public class LookAtBehavior : EntityBehavior
 
 public class LookAtComponent : MotionComponent
 {
-    public Target target, front;
+    public Target toward, front;
     public float speed;
     public bool yaw, pitch;
 
     public override void BehaviorEnabled()
     {
-        target.PickRandom();  // front will not be random
+        toward.PickRandom();  // front will not be random
         base.BehaviorEnabled();
     }
 
     public override Quaternion GetRotateFixed()
     {
-        Vector3 direction = target.DirectionFrom(transform);
+        Vector3 direction = toward.DirectionFrom(transform);
         Vector3 frontDirection = front.DirectionFrom(transform);
         float maxAngle = speed * Time.fixedDeltaTime;
 

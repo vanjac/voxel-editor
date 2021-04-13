@@ -329,16 +329,17 @@ public abstract class EntityComponent : MonoBehaviour
         sensorWasOn = false;
         foreach (EntityBehavior behavior in entity.behaviors)
         {
-            if (behavior.targetEntityIsActivator)
+            if (behavior.target.targetEntityIsActivator)
             {
                 activatorBehaviors.Add(behavior);
                 continue;
             }
 
             Behaviour c;
-            if (behavior.targetEntity.entity != null)
+            Entity targetEntity = behavior.target.targetEntity.entity;
+            if (targetEntity != null)
             {
-                c = behavior.MakeComponent(behavior.targetEntity.entity.component.gameObject);
+                c = behavior.MakeComponent(targetEntity.component.gameObject);
                 targetedComponents.Add(c);
             }
             else
@@ -470,20 +471,34 @@ public abstract class EntityBehavior : PropertiesObject
     {
         ON = 0, OFF = 1, BOTH = 2
     }
+    // I would rename this and its fields if I could, but it has to be
+    // deserialized from old files.
     public struct BehaviorTargetProperty
     {
-        public EntityReference targetEntity;
+        public EntityReference targetEntity;  // null for self or activator
         public bool targetEntityIsActivator;
+        public BehaviorTargetProperty(int _)
+        {
+            targetEntity = new EntityReference(null);
+            targetEntityIsActivator = false;
+        }
         public BehaviorTargetProperty(EntityReference targetEntity, bool targetEntityIsActivator)
         {
             this.targetEntity = targetEntity;
             this.targetEntityIsActivator = targetEntityIsActivator;
         }
+        // return null for activator
+        public Entity GetEntity(Entity selfEntity)
+        {
+            Entity e = targetEntity.entity;
+            if (e == null && !targetEntityIsActivator)
+                return selfEntity;
+            return e;
+        }
     }
 
     public Condition condition = Condition.BOTH;
-    public EntityReference targetEntity = new EntityReference(null); // null for self
-    public bool targetEntityIsActivator = false;
+    public BehaviorTargetProperty target = new BehaviorTargetProperty(0);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -500,19 +515,14 @@ public abstract class EntityBehavior : PropertiesObject
         return new Property[]
         {
             new Property("tar", "Target",
-                () => new BehaviorTargetProperty(targetEntity, targetEntityIsActivator),
+                () => target,
                 v => {
                     var prop = (BehaviorTargetProperty)v;
 
                     // selfEntity will be null if multiple entities are selected
                     Entity selfEntity = EntityReferencePropertyManager.CurrentEntity();
-
-                    var oldTargetEntity = targetEntity.entity;
-                    var newTargetEntity = prop.targetEntity.entity;
-                    if (oldTargetEntity == null && !targetEntityIsActivator)
-                        oldTargetEntity = selfEntity;
-                    if (newTargetEntity == null && !prop.targetEntityIsActivator)
-                        newTargetEntity = selfEntity;
+                    var oldTargetEntity = target.GetEntity(selfEntity);
+                    var newTargetEntity = prop.GetEntity(selfEntity);
 
                     if (oldTargetEntity != null)
                     {
@@ -526,15 +536,14 @@ public abstract class EntityBehavior : PropertiesObject
                         }
                     }
 
-                    targetEntity = prop.targetEntity;
-                    targetEntityIsActivator = prop.targetEntityIsActivator;
+                    target = prop;
                 },
                 PropertyGUIs.BehaviorTarget),
             new Property("con", "Condition",
                 () => condition,
                 v => condition = (Condition)v,
                 (Property property) => {
-                    if (targetEntityIsActivator)
+                    if (target.targetEntityIsActivator)
                         PropertyGUIs.ActivatorBehaviorCondition(property);
                     else
                         PropertyGUIs.BehaviorCondition(property);

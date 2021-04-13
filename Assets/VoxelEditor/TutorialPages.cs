@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -1276,7 +1276,7 @@ public static class Tutorials
                         if (behavior is HurtHealBehavior)
                         {
                             hasHurtBehavior = true;
-                            if (!(behavior.targetEntity.entity is PlayerObject))
+                            if (!(behavior.target.GetEntity(e) is PlayerObject))
                                 incorrectTarget = true;
                         }
             if (hasHurtBehavior && !incorrectTarget)

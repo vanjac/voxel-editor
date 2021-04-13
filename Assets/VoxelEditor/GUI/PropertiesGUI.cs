@@ -109,13 +109,14 @@ class StoredEntityBehavior : StoredPropertiesObject
 {
     public readonly EntityBehavior[] allBehaviors;
     // true if all behaviors share the same target entity
-    public readonly bool sharedTarget;
+    // activator targets are treated the same as self for this purpose
+    public readonly bool sharedTargetEntity;
 
     public StoredEntityBehavior(EntityBehavior store)
         : base(store)
     {
         allBehaviors = new EntityBehavior[] { store };
-        sharedTarget = true;
+        sharedTargetEntity = true;
     }
 
     public StoredEntityBehavior(EntityBehavior[] behaviors)
@@ -124,13 +125,13 @@ class StoredEntityBehavior : StoredPropertiesObject
         allBehaviors = behaviors;
         if (behaviors.Length != 0)
         {
-            sharedTarget = true;
-            var target = behaviors[0].targetEntity.entity;
+            sharedTargetEntity = true;
+            var target = behaviors[0].target.targetEntity.entity;
             foreach (EntityBehavior behavior in behaviors)
             {
-                if (behavior.targetEntity.entity != target)
+                if (behavior.target.targetEntity.entity != target)
                 {
-                    sharedTarget = false;
+                    sharedTargetEntity = false;
                     break;
                 }
             }
@@ -138,7 +139,7 @@ class StoredEntityBehavior : StoredPropertiesObject
         else
         {
             // don't try to read target of first behavior
-            sharedTarget = false;
+            sharedTargetEntity = false;
         }
     }
 }
@@ -406,7 +407,7 @@ public class PropertiesGUI : LeftPanelGUI
                     EntityBehavior newBehavior = (EntityBehavior)behaviorType.Create();
                     // with multiple selected entities, NewBehaviorGUI doesn't check if behaviors
                     // are valid for the selected entities
-                    if (newBehavior.targetEntity.entity == null && !newBehavior.targetEntityIsActivator
+                    if (newBehavior.target.GetEntity(entity) == entity
                         && !newBehavior.BehaviorObjectType().rule(entity))
                         continue;
                     entity.behaviors.Add(newBehavior);
@@ -425,8 +426,8 @@ public class PropertiesGUI : LeftPanelGUI
         {
             TutorialGUI.TutorialHighlight("behaviors");
             Entity behaviorTarget = null;
-            if (storedBehavior.sharedTarget)
-                behaviorTarget = storedBehavior.allBehaviors[0].targetEntity.entity;
+            if (storedBehavior.sharedTargetEntity)
+                behaviorTarget = storedBehavior.allBehaviors[0].target.targetEntity.entity;
             if (behaviorTarget != null)
             {
                 EntityReferencePropertyManager.Next(behaviorTarget);
@@ -543,8 +544,8 @@ public class NewBehaviorGUI : GUIPanel
 
     private TypePickerGUI typePicker;
     private EntityPickerGUI entityPicker;
-    private Entity targetEntity;
-    private bool targetEntityIsActivator = false;
+    private EntityBehavior.BehaviorTargetProperty target
+        = new EntityBehavior.BehaviorTargetProperty(0);
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -566,10 +567,7 @@ public class NewBehaviorGUI : GUIPanel
                 type, () =>
                 {
                     EntityBehavior behavior = (EntityBehavior)type.Create();
-                    if (targetEntityIsActivator)
-                        behavior.targetEntityIsActivator = true;
-                    else if (targetEntity != null)
-                        behavior.targetEntity = new EntityReference(targetEntity);
+                    behavior.target = target;
                     return behavior;
                 });
             handler(behaviorTypeWithTarget);
@@ -580,7 +578,8 @@ public class NewBehaviorGUI : GUIPanel
 
     private void UpdateBehaviorList()
     {
-        if (targetEntityIsActivator)
+        Entity targetEntity = target.GetEntity(self);
+        if (targetEntity == null)  // activators or null self
         {
             // all behaviors
             typePicker.categories = GameScripts.behaviorTabs;
@@ -592,16 +591,8 @@ public class NewBehaviorGUI : GUIPanel
             var filteredTypes = new List<BehaviorType>();
             foreach (BehaviorType type in GameScripts.behaviorTabs[tabI])
             {
-                if (targetEntity == null)
-                {
-                    if (self == null || type.rule(self))
-                        filteredTypes.Add(type);
-                }
-                else
-                {
-                    if (type.rule(targetEntity))
-                        filteredTypes.Add(type);
-                }
+                if (type.rule(targetEntity))
+                    filteredTypes.Add(type);
             }
             typePicker.categories[tabI] = filteredTypes.ToArray();
         }
@@ -616,17 +607,16 @@ public class NewBehaviorGUI : GUIPanel
     public override void WindowGUI()
     {
         string targetButtonText = "Target:  Self";
-        if (targetEntityIsActivator)
+        if (target.targetEntityIsActivator)
             targetButtonText = "Target:  Activators";
-        else if (targetEntity != null)
-            targetButtonText = "Target:  " + targetEntity.ToString();
+        else if (target.targetEntity.entity != null)
+            targetButtonText = "Target:  " + target.targetEntity.entity.ToString();
         TutorialGUI.TutorialHighlight("behavior target");
         if (GUIUtils.HighlightedButton(targetButtonText))
         {
             entityPicker = PropertyGUIs.BehaviorTargetPicker(gameObject, voxelArray, self, value =>
             {
-                targetEntity = value.targetEntity.entity;
-                targetEntityIsActivator = value.targetEntityIsActivator;
+                target = value;
                 UpdateBehaviorList();
             });
         }

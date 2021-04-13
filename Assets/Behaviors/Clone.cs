@@ -26,7 +26,7 @@ public class CloneBehavior : TeleportBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var clone = gameObject.AddComponent<CloneComponent>();
-        clone.target = target;
+        clone.dest = dest;
         clone.origin = origin;
         return clone;
     }
@@ -34,7 +34,7 @@ public class CloneBehavior : TeleportBehavior
 
 public class CloneComponent : BehaviorComponent
 {
-    public EntityReference target;
+    public EntityReference dest;
     public EntityReference origin;
 
     public override void BehaviorEnabled()
@@ -45,14 +45,14 @@ public class CloneComponent : BehaviorComponent
 
         // based on TeleportComponent
         entityClone.transform.position = transform.position;
-        if (target.component != null)
+        if (dest.component != null)
         {
             Vector3 originPos;
             if (origin.component != null)
                 originPos = origin.component.transform.position;
             else
                 originPos = transform.position;
-            entityClone.transform.position += target.component.transform.position - originPos;
+            entityClone.transform.position += dest.component.transform.position - originPos;
         }
     }
 }

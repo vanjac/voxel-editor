@@ -11,7 +11,7 @@ public class TeleportBehavior : EntityBehavior
         + "the object will be displaced by the difference between the target and origin.",
         "send", typeof(TeleportBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    protected EntityReference target = new EntityReference(null);
+    protected EntityReference dest = new EntityReference(null);
     protected EntityReference origin = new EntityReference(null);
 
     public override BehaviorType BehaviorObjectType()
@@ -24,25 +24,21 @@ public class TeleportBehavior : EntityBehavior
         return Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("loc", "To",
-                () => target,
-                v => target = (EntityReference)v,
+                () => dest,
+                v => dest = (EntityReference)v,
                 PropertyGUIs.EntityReference),
             new Property("rel", "Relative to",
                 () => origin,
                 v => origin = (EntityReference)v,
                 (Property property) => {
                     var reference = (EntityReference)property.value;
-                    if (reference.entity == null)
-                    {
-                        if (targetEntity.entity != null)
-                            property.value = targetEntity;
-                        else if (!targetEntityIsActivator)
-                            // TODO: this is not a good solution
-                            property.value = new EntityReference(
-                                EntityReferencePropertyManager.CurrentEntity());
-                    }
-                    PropertyGUIs._EntityReferenceCustom(property, targetEntityIsActivator,
-                        targetEntityIsActivator ? "Activator" : "None");
+                    // TODO: this is not a good solution
+                    Entity targetEntity = target.GetEntity(
+                        EntityReferencePropertyManager.CurrentEntity());
+                    if (reference.entity == null && targetEntity != null)
+                        property.value = new EntityReference(targetEntity);
+                    PropertyGUIs._EntityReferenceCustom(property, targetEntity == null,
+                        targetEntity == null ? "Activator" : "None");
                 })
         });
     }
@@ -50,7 +46,7 @@ public class TeleportBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         TeleportComponent component = gameObject.AddComponent<TeleportComponent>();
-        component.target = target;
+        component.dest = dest;
         component.origin = origin;
         return component;
     }
@@ -58,18 +54,18 @@ public class TeleportBehavior : EntityBehavior
 
 public class TeleportComponent : BehaviorComponent
 {
-    public EntityReference target;
+    public EntityReference dest;
     public EntityReference origin;
 
     public override void BehaviorEnabled()
     {
-        if (target.component == null)
+        if (dest.component == null)
             return;
         Vector3 originPos;
         if (origin.component != null)
             originPos = origin.component.transform.position;
         else
             originPos = transform.position;
-        transform.position += target.component.transform.position - originPos;
+        transform.position += dest.component.transform.position - originPos;
     }
 }

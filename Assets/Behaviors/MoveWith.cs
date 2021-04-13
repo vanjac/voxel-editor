@@ -10,7 +10,7 @@ public class MoveWithBehavior : EntityBehavior
         "move-resize-variant", typeof(MoveWithBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private EntityReference target = new EntityReference(null);
+    private EntityReference parent = new EntityReference(null);
     private bool followRotation = true;
 
     public override BehaviorType BehaviorObjectType()
@@ -23,8 +23,8 @@ public class MoveWithBehavior : EntityBehavior
         return Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("par", "Parent",
-                () => target,
-                v => target = (EntityReference)v,
+                () => parent,
+                v => parent = (EntityReference)v,
                 PropertyGUIs.EntityReference),
             new Property("fro", "Follow rotation?",
                 () => followRotation,
@@ -36,7 +36,7 @@ public class MoveWithBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         MoveWithComponent component = gameObject.AddComponent<MoveWithComponent>();
-        component.target = target;
+        component.parent = parent;
         component.followRotation = followRotation;
         return component;
     }
@@ -44,7 +44,7 @@ public class MoveWithBehavior : EntityBehavior
 
 public class MoveWithComponent : MotionComponent
 {
-    public EntityReference target;
+    public EntityReference parent;
     public bool followRotation;
 
     private Vector3 positionOffset;
@@ -52,7 +52,7 @@ public class MoveWithComponent : MotionComponent
 
     public override void BehaviorEnabled()
     {
-        if (target.component == null)
+        if (parent.component == null)
         {
             positionOffset = transform.position;
             rotationOffset = transform.rotation;
@@ -61,31 +61,31 @@ public class MoveWithComponent : MotionComponent
         {
             if (followRotation)
             {
-                positionOffset = target.component.transform.InverseTransformPoint(transform.position);
-                rotationOffset = Quaternion.Inverse(target.component.transform.rotation) * transform.rotation;
+                positionOffset = parent.component.transform.InverseTransformPoint(transform.position);
+                rotationOffset = Quaternion.Inverse(parent.component.transform.rotation) * transform.rotation;
             }
             else
             {
-                positionOffset = transform.position - target.component.transform.position;
+                positionOffset = transform.position - parent.component.transform.position;
             }
         }
     }
 
     public override Vector3 GetTranslateFixed()
     {
-        if (target.component == null
-                || target.component.transform.position == DynamicEntityComponent.KILL_LOCATION)
+        if (parent.component == null
+                || parent.component.transform.position == DynamicEntityComponent.KILL_LOCATION)
             return Vector3.zero;
         if (followRotation)
-            return target.component.transform.TransformPoint(positionOffset) - transform.position;
+            return parent.component.transform.TransformPoint(positionOffset) - transform.position;
         else
-            return target.component.transform.position + positionOffset - transform.position;
+            return parent.component.transform.position + positionOffset - transform.position;
     }
 
     public override Quaternion GetRotateFixed()
     {
-        if (!followRotation || target.component == null)
+        if (!followRotation || parent.component == null)
             return Quaternion.identity;
-        return Quaternion.Inverse(transform.rotation) * target.component.transform.rotation * rotationOffset;
+        return Quaternion.Inverse(transform.rotation) * parent.component.transform.rotation * rotationOffset;
     }
 }

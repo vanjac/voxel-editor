@@ -22,7 +22,7 @@ public class ForceBehavior : EntityBehavior
     private bool ignoreMass = false;
     private bool stopObjectFirst = false;
     private float strength = 10;
-    private Target target = new Target(Target.UP);
+    private Target toward = new Target(Target.UP);
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -50,8 +50,8 @@ public class ForceBehavior : EntityBehavior
                 v => strength = (float)v,
                 PropertyGUIs.Float),
             new Property("dir", "Toward",
-                () => target,
-                v => target = (Target)v,
+                () => toward,
+                v => toward = (Target)v,
                 PropertyGUIs.Target)
         });
     }
@@ -75,7 +75,7 @@ public class ForceBehavior : EntityBehavior
         }
         force.stopObjectFirst = stopObjectFirst;
         force.strength = strength;
-        force.target = target;
+        force.toward = toward;
         return force;
     }
 }
@@ -84,7 +84,7 @@ public class ForceComponent : BehaviorComponent
 {
     public ForceMode forceMode;
     public float strength;
-    public Target target;
+    public Target toward;
     public bool stopObjectFirst;
 
     private Rigidbody rigidBody;
@@ -99,12 +99,12 @@ public class ForceComponent : BehaviorComponent
 
     public override void BehaviorEnabled()
     {
-        target.PickRandom();
+        toward.PickRandom();
         if (stopObjectFirst && rigidBody != null)
             rigidBody.velocity = Vector3.zero;
         if ((forceMode == ForceMode.Impulse || forceMode == ForceMode.VelocityChange) && rigidBody != null)
         {
-            rigidBody.AddForce(target.DirectionFrom(transform) * strength, forceMode);
+            rigidBody.AddForce(toward.DirectionFrom(transform) * strength, forceMode);
             if (player != null)
                 player.disableGroundCheck = true;
         }
@@ -114,7 +114,7 @@ public class ForceComponent : BehaviorComponent
     {
         if ((forceMode == ForceMode.Force || forceMode == ForceMode.Acceleration) && rigidBody != null)
         {
-            rigidBody.AddForce(target.DirectionFrom(transform) * strength, forceMode);
+            rigidBody.AddForce(toward.DirectionFrom(transform) * strength, forceMode);
             if (player != null)
                 player.disableGroundCheck = true;
         }

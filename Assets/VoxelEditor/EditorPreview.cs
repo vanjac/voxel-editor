@@ -25,12 +25,13 @@ public static class EntityPreviewManager
             {
                 var previewObj = new GameObject();
                 previewObj.tag = "EditorPreview";
-                if (behavior.targetEntity.entity != null)
-                    previewObj.transform.position = behavior.targetEntity.entity.PositionInEditor();
-                else
+                Entity targetEntity = behavior.target.GetEntity(entity);
+                if (targetEntity != null)
+                    previewObj.transform.position = targetEntity.PositionInEditor();
+                else  // activator
                     previewObj.transform.position = entity.PositionInEditor();
                 behavior.MakeComponent(previewObj);
-                if (behavior.targetEntity.entity == null || behavior.targetEntity.entity == entity)
+                if (targetEntity == null || targetEntity == entity)
                     selfPreviewObjects.Add(previewObj);
                 else
                     otherPreviewObjects.Add(previewObj);
