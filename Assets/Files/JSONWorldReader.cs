@@ -268,9 +268,10 @@ public class JSONWorldReader : WorldFileReader
                 if (fileWriterVersion <= 5 && behaviorObject["target"] != null)
                 {
                     if (behaviorObject["target"] == "activator")
-                        newBehavior.target.targetEntityIsActivator = true;
+                        newBehavior.target = new EntityBehavior.BehaviorTargetProperty(true);
                     else
-                        newBehavior.target.targetEntity = new EntityReference(new System.Guid(behaviorObject["target"]));
+                        newBehavior.target = new EntityBehavior.BehaviorTargetProperty(
+                            new EntityReference(new System.Guid(behaviorObject["target"])));
                 }
                 entity.behaviors.Add(newBehavior);
             }

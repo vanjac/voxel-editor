@@ -469,15 +469,15 @@ public abstract class EntityBehavior : PropertiesObject
     {
         public EntityReference targetEntity;  // null for self or activator
         public bool targetEntityIsActivator;
-        public BehaviorTargetProperty(int _)
+        public BehaviorTargetProperty(bool isActivator)
         {
             targetEntity = new EntityReference(null);
-            targetEntityIsActivator = false;
+            targetEntityIsActivator = isActivator;
         }
-        public BehaviorTargetProperty(EntityReference targetEntity, bool targetEntityIsActivator)
+        public BehaviorTargetProperty(EntityReference entityRef)
         {
-            this.targetEntity = targetEntity;
-            this.targetEntityIsActivator = targetEntityIsActivator;
+            targetEntity = entityRef;
+            targetEntityIsActivator = false;
         }
         // return null for activator
         public Entity GetEntity(Entity selfEntity)
@@ -490,7 +490,7 @@ public abstract class EntityBehavior : PropertiesObject
     }
 
     public Condition condition = Condition.BOTH;
-    public BehaviorTargetProperty target = new BehaviorTargetProperty(0);
+    public BehaviorTargetProperty target = new BehaviorTargetProperty(false);
 
     public override PropertiesObjectType ObjectType()
     {

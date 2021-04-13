@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -270,14 +270,14 @@ public static class PropertyGUIs
             foreach (Entity entity in entities)
             {
                 if (entity == null) // activator
-                    handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), true));
+                    handler(new EntityBehavior.BehaviorTargetProperty(true));
                 else if (entity == self)
-                    handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), false));
+                    handler(new EntityBehavior.BehaviorTargetProperty(false));
                 else
-                    handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(entity), false));
+                    handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(entity)));
                 return;
             }
-            handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), false));
+            handler(new EntityBehavior.BehaviorTargetProperty(false));
         };
         return entityPicker;
     }

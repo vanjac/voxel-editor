@@ -549,7 +549,7 @@ public class NewBehaviorGUI : GUIPanel
     private TypePickerGUI typePicker;
     private EntityPickerGUI entityPicker;
     private EntityBehavior.BehaviorTargetProperty target
-        = new EntityBehavior.BehaviorTargetProperty(0);
+        = new EntityBehavior.BehaviorTargetProperty(false);
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
