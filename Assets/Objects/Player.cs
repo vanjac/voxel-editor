@@ -7,6 +7,8 @@ public class PlayerObject : ObjectEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Player", "The character you control in the game", "human-greeting", typeof(PlayerObject));
 
+    private bool footstepSounds = true;
+
     public PlayerObject()
     {
         paint.material = ResourcesDirectory.InstantiateMaterial(
@@ -17,6 +19,17 @@ public class PlayerObject : ObjectEntity
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
+    }
+
+    public override ICollection<Property> Properties()
+    {
+        return Property.JoinProperties(base.Properties(), new Property[]
+        {
+            new Property("wlk", "Footstep sounds?",
+                () => footstepSounds,
+                v => footstepSounds = (bool)v,
+                PropertyGUIs.Toggle),
+        });
     }
 
     public override Vector3 PositionOffset()
@@ -35,13 +48,16 @@ public class PlayerObject : ObjectEntity
     {
         GameObject playerObject = Resources.Load<GameObject>("ObjectPrefabs/Player");
         playerObject = GameObject.Instantiate(playerObject);
-        return playerObject.AddComponent<PlayerComponent>();
+        var component = playerObject.AddComponent<PlayerComponent>();
+        component.footstepSounds = footstepSounds;
+        return component;
     }
 }
 
 public class PlayerComponent : DynamicEntityComponent
 {
     public static PlayerComponent instance;
+    public bool footstepSounds;
     public int score = 0;
 
     void Awake()
