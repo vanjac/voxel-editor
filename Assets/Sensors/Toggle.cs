@@ -10,32 +10,16 @@ public class ToggleSensor : Sensor
         + "Activators: the activators of the <b>On input</b>, frozen when it is first turned on",
         "toggle-switch", typeof(ToggleSensor));
 
-    private EntityReference offInput = new EntityReference(null);
-    private EntityReference onInput = new EntityReference(null);
-    private bool startOn;
+    [ToggleProp("sta", "Start on?")]
+    public bool startOn { get; set; } = false;
+    [EntityReferenceProp("ofi", "Off input", allowNull: true)]
+    public EntityReference offInput { get; set; } = new EntityReference(null);
+    [EntityReferenceProp("oni", "On input", allowNull: true)]
+    public EntityReference onInput { get; set; } = new EntityReference(null);
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("sta", "Start on?",
-                () => startOn,
-                v => startOn = (bool)v,
-                PropertyGUIs.Toggle),
-            new Property("ofi", "Off input",
-                () => offInput,
-                v => offInput = (EntityReference)v,
-                PropertyGUIs.EntityReferenceWithNull),
-            new Property("oni", "On input",
-                () => onInput,
-                v => onInput = (EntityReference)v,
-                PropertyGUIs.EntityReferenceWithNull)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

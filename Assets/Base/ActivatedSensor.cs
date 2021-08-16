@@ -178,17 +178,6 @@ public abstract class ActivatedSensor : Sensor
         }
     }
 
-    protected Filter filter = new EntityTypeFilter(Entity.objectType);
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("fil", "Filter",
-                () => filter,
-                v => filter = (Filter)v,
-                PropertyGUIs.Filter,
-                true) // explicit type
-        }, base.Properties());
-    }
+    [FilterProp("fil", "Filter")]
+    public Filter filter { get; set; } = new EntityTypeFilter(Entity.objectType);
 }

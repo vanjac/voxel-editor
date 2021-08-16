@@ -10,27 +10,14 @@ public class SpinBehavior : EntityBehavior
         "format-rotate-90", typeof(SpinBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private float speed = 50;
-    private Target axis = new Target(Target.UP);
+    [FloatProp("vel", "Speed")]
+    public float speed { get; set; } = 50;
+    [TargetStaticProp("axi", "Axis")]
+    public Target axis { get; set; } = new Target(Target.UP);
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("vel", "Speed",
-                () => speed,
-                v => speed = (float)v,
-                PropertyGUIs.Float),
-            new Property("axi", "Axis",
-                () => axis,
-                v => axis = (Target)v,
-                PropertyGUIs.TargetStatic)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

@@ -17,22 +17,12 @@ public class CharacterBehavior : EntityBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
-    protected float density = 2.0f;
+    [FloatProp("den", "Density")]
+    public float density { get; set; } = 2.0f;
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("den", "Density",
-                () => density,
-                v => density = (float)v,
-                PropertyGUIs.Float)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

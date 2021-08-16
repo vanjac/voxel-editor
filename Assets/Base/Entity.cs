@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Reflection;
+using System.Linq;  // TODO probably avoid
 using UnityEngine;
 
 // TODO remove
@@ -72,7 +73,7 @@ public abstract class NPropAttribute : Attribute
     }
 
     // TODO replace Property struct with PropertyInfo
-    public abstract void GUI(Property property);
+    public abstract void OnGUI(Property property);
 }
 
 
@@ -178,16 +179,17 @@ public abstract class PropertiesObject
     public virtual IEnumerable<Property> Properties()
     {
         var type = GetType();
-        foreach (var prop in type.GetProperties())
+        // TODO this is apparently not guaranteed to be correct
+        // https://stackoverflow.com/q/9062235
+        foreach (var prop in type.GetProperties()
+            .Where(x => x.IsDefined(typeof(NPropAttribute), false))
+            .OrderBy(x => x.MetadataToken))
         {
-            if (prop.IsDefined(typeof(NPropAttribute), false))
-            {
-                var attr = (NPropAttribute)prop.GetCustomAttribute(typeof(NPropAttribute), false);
-                yield return new Property(attr.id, attr.name,
-                    () => prop.GetMethod.Invoke(this, null),
-                    v => prop.SetMethod.Invoke(this, new object[]{v}),
-                    (p) => attr.GUI(p), attr.explicitType);
-            }
+            var attr = (NPropAttribute)prop.GetCustomAttribute(typeof(NPropAttribute), false);
+            yield return new Property(attr.id, attr.name,
+                () => prop.GetMethod.Invoke(this, null),
+                v => prop.SetMethod.Invoke(this, new object[]{v}),
+                (p) => attr.OnGUI(p), attr.explicitType);
         }
     }
     public virtual IEnumerable<Property> DeprecatedProperties()
@@ -260,7 +262,8 @@ public abstract class Entity : PropertiesObject
     public EntityComponent component;
     public Sensor sensor;
     public List<EntityBehavior> behaviors = new List<EntityBehavior>();
-    public byte tag = 0;
+    [TagProp("tag", "Tag")]
+    public byte tag { get; set; } = 0;
     public const byte NUM_TAGS = 8;
 
     public Guid guid = Guid.Empty; // set by EntityReference
@@ -280,17 +283,6 @@ public abstract class Entity : PropertiesObject
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return new Property[]
-        {
-            new Property("tag", "Tag",
-                () => tag,
-                v => tag = (byte)v,
-                PropertyGUIs.Tag),
-        };
     }
 
     // storeComponent: whether the "component" variable should be set
@@ -529,8 +521,46 @@ public abstract class EntityBehavior : PropertiesObject
         }
     }
 
-    public Condition condition = Condition.BOTH;
-    public BehaviorTargetProperty target = new BehaviorTargetProperty(false);
+    private BehaviorTargetProperty _target = new BehaviorTargetProperty(false);
+    [BehaviorTargetProp("tar", "Target")]
+    public BehaviorTargetProperty target
+    {
+        get => _target;
+        set
+        {
+            // selfEntity will be null if multiple entities are selected
+            Entity selfEntity = EntityReferencePropertyManager.CurrentEntity();
+            var oldTargetEntity = _target.GetEntity(selfEntity);
+            var newTargetEntity = value.GetEntity(selfEntity);
+
+            if (oldTargetEntity != null)
+            {
+                // replace all property values referencing the old target with the new target
+                // the new target could be null
+                foreach (Property _selfProp in this.Properties())
+                {
+                    var selfProp = _selfProp;
+                    selfProp.value = PropertiesObject.PropertyValueReplaceEntity(
+                        selfProp.value, oldTargetEntity, newTargetEntity);
+                }
+            }
+
+            _target = value;
+        }
+    }
+
+    private Condition _condition = Condition.BOTH;
+    [BehaviorConditionProp("con", "Condition")]
+    public Condition condition
+    {
+        get
+        {
+            if (target.targetEntityIsActivator)
+                _condition = Condition.ON;
+            return _condition;
+        }
+        set => _condition = value;
+    }
 
     public override PropertiesObjectType ObjectType()
     {
@@ -540,47 +570,6 @@ public abstract class EntityBehavior : PropertiesObject
     public virtual BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return new Property[]
-        {
-            new Property("tar", "Target",
-                () => target,
-                v => {
-                    var prop = (BehaviorTargetProperty)v;
-
-                    // selfEntity will be null if multiple entities are selected
-                    Entity selfEntity = EntityReferencePropertyManager.CurrentEntity();
-                    var oldTargetEntity = target.GetEntity(selfEntity);
-                    var newTargetEntity = prop.GetEntity(selfEntity);
-
-                    if (oldTargetEntity != null)
-                    {
-                        // replace all property values referencing the old target with the new target
-                        // the new target could be null
-                        foreach (Property _selfProp in this.Properties())
-                        {
-                            var selfProp = _selfProp;
-                            selfProp.value = PropertiesObject.PropertyValueReplaceEntity(
-                                selfProp.value, oldTargetEntity, newTargetEntity);
-                        }
-                    }
-
-                    target = prop;
-                },
-                PropertyGUIs.BehaviorTarget),
-            new Property("con", "Condition",
-                () => condition,
-                v => condition = (Condition)v,
-                (Property property) => {
-                    if (target.targetEntityIsActivator)
-                        PropertyGUIs.ActivatorBehaviorCondition(property);
-                    else
-                        PropertyGUIs.BehaviorCondition(property);
-                })
-        };
     }
 
     public abstract Behaviour MakeComponent(GameObject gameObject);
@@ -704,11 +693,6 @@ public abstract class Sensor : PropertiesObject
         return objectType;
     }
 
-    public override IEnumerable<Property> Properties()
-    {
-        return new Property[] { };
-    }
-
     public abstract SensorComponent MakeComponent(GameObject gameObject);
 }
 
@@ -809,23 +793,15 @@ public abstract class SensorComponent : MonoBehaviour
 public abstract class DynamicEntity : Entity
 {
     // only for editor; makes object transparent allowing you to zoom/select through it
-    public bool xRay = false;
-    public float health = 100;
-
-    public override IEnumerable<Property> Properties()
+    private bool _xRay = false;
+    [ToggleProp("xra", "X-Ray?")]
+    public bool xRay
     {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("xra", "X-Ray?",
-                () => xRay,
-                v => {xRay = (bool)v; UpdateEntityEditor();},
-                PropertyGUIs.Toggle),
-            new Property("hea", "Health",
-                () => health,
-                v => health = (float)v,
-                PropertyGUIs.Float)
-        });
+        get => _xRay;
+        set { _xRay = value; UpdateEntityEditor(); }
     }
+    [FloatProp("hea", "Health")]
+    public float health { get; set; } = 100;
 
     // update the DynamicEntity's appearance in the Editor
     public virtual void UpdateEntityEditor() { }

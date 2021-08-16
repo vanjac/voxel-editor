@@ -11,22 +11,12 @@ public class InCameraSensor : Sensor
         + "Activator: the player",
         "eye", typeof(InCameraSensor));
 
-    private float maxDistance = 100;
+    [FloatProp("dis", "Max distance")]
+    public float maxDistance { get; set; } = 100;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("dis", "Max distance",
-                () => maxDistance,
-                v => maxDistance = (float)v,
-                PropertyGUIs.Float)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

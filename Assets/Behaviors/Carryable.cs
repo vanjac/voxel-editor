@@ -14,27 +14,14 @@ public class CarryableBehavior : EntityBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
     
-    private float throwSpeed = 0;
-    private float throwAngle = 25;
+    [FloatProp("ths", "Throw speed")]
+    public float throwSpeed { get; set; } = 0;
+    [FloatProp("tha", "Throw angle")]
+    public float throwAngle { get; set; } = 25;
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("ths", "Throw speed",
-                () => throwSpeed,
-                v => throwSpeed = (float)v,
-                PropertyGUIs.Float),
-            new Property("tha", "Throw angle",
-                () => throwAngle,
-                v => throwAngle = (float)v,
-                PropertyGUIs.Float),
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

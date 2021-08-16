@@ -8,27 +8,14 @@ public class HaloBehavior : EntityBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Halo", "A glowing effect", "blur", typeof(HaloBehavior));
 
-    private float size = 3;
-    private Color color = Color.white;  // scaled by INTENSITY
+    [SliderProp("siz", "Size", 0.5f, 15)]
+    public float size { get; set; } = 3;
+    [ColorProp("col", "Color")]
+    public Color color { get; set; } = Color.white;  // scaled by INTENSITY
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("siz", "Size",
-                () => size,
-                v => size = (float)v,
-                PropertyGUIs.Slider(0.5f, 15)),
-            new Property("col", "Color",
-                () => color,
-                v => color = (Color)v,
-                PropertyGUIs.Color)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

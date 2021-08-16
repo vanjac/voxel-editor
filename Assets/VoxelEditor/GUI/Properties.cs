@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -558,4 +558,267 @@ public static class PropertyGUIs
             GUILayout.EndHorizontal();
         };
     }
+}
+
+
+public class TextPropAttribute : NPropAttribute
+{
+    public TextPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Text(property);
+    }
+}
+
+public class TogglePropAttribute : NPropAttribute
+{
+    public TogglePropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Toggle(property);
+    }
+}
+
+public class DoubleTogglePropAttribute : NPropAttribute
+{
+    public DoubleTogglePropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.DoubleToggle(property);
+    }
+}
+
+public class EnumPropAttribute : NPropAttribute
+{
+    public EnumPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Enum(property);
+    }
+}
+
+public class FloatPropAttribute : NPropAttribute
+{
+    public FloatPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Float(property);
+    }
+}
+
+public class IntPropAttribute : NPropAttribute
+{
+    public IntPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Int(property);
+    }
+}
+
+public class TimePropAttribute : NPropAttribute
+{
+    public TimePropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Time(property);
+    }
+}
+
+public class SliderPropAttribute : NPropAttribute
+{
+    private float minValue, maxValue;
+    public SliderPropAttribute(string id, string name, float minValue, float maxValue)
+    : base(id, name)
+    {
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Slider(minValue, maxValue)(property);
+    }
+}
+
+public class FloatPairPropAttribute : NPropAttribute
+{
+    private string separator;
+    public FloatPairPropAttribute(string id, string name, string separator)
+    : base(id, name)
+    {
+        this.separator = separator;
+    }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.FloatPair(property, separator);
+    }
+}
+
+public class FloatRangePropAttribute : FloatPairPropAttribute
+{
+    public FloatRangePropAttribute(string id, string name)
+    : base(id, name, "to") { }
+}
+
+public class FloatDimensionsPropAttribute : FloatPairPropAttribute
+{
+    public FloatDimensionsPropAttribute(string id, string name)
+    : base(id, name, "x") { }
+}
+
+public class TagPropAttribute : NPropAttribute
+{
+    public TagPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Tag(property);
+    }
+}
+
+public class ColorPropAttribute : NPropAttribute
+{
+    public ColorPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Color(property);
+    }
+}
+
+public class BehaviorConditionPropAttribute : NPropAttribute
+{
+    public BehaviorConditionPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.BehaviorCondition(property);
+    }
+}
+
+public class BehaviorTargetPropAttribute : NPropAttribute
+{
+    public BehaviorTargetPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.BehaviorTarget(property);
+    }
+}
+
+public class EntityReferencePropAttribute : NPropAttribute
+{
+    private bool allowNull;
+    private string nullName;
+    public EntityReferencePropAttribute(string id, string name,
+        bool allowNull = false, string nullName = "None") : base(id, name)
+    {
+        this.allowNull = allowNull;
+        this.nullName = nullName;
+    }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs._EntityReferenceCustom(property, allowNull, nullName);
+    }
+}
+
+public class FilterPropAttribute : NPropAttribute
+{
+    public FilterPropAttribute(string id, string name)
+    : base(id, name, explicitType: true) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Filter(property);
+    }
+}
+
+public class TargetPropAttribute : NPropAttribute
+{
+    private bool allowObjectTarget, allowVertical, alwaysWorld, allowRandom;
+    public TargetPropAttribute(string id, string name,
+        bool allowObjectTarget = true, bool allowVertical = true, bool alwaysWorld = false,
+        bool allowRandom = true) : base(id, name)
+    {
+        this.allowObjectTarget = allowObjectTarget;
+        this.allowVertical = allowVertical;
+        this.alwaysWorld = alwaysWorld;
+        this.allowRandom = allowRandom;
+    }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs._TargetCustom(property,
+            allowObjectTarget, allowVertical, alwaysWorld, allowRandom);
+    }
+}
+
+public class TargetWorldOnlyPropAttribute : TargetPropAttribute
+{
+    public TargetWorldOnlyPropAttribute(string id, string name)
+    : base(id, name, alwaysWorld: true) { }
+}
+
+public class Target4DirectionsPropAttribute : TargetPropAttribute
+{
+    public Target4DirectionsPropAttribute(string id, string name)
+    : base(id, name, allowObjectTarget: false, allowVertical: false,
+        alwaysWorld: true, allowRandom: false) { }
+}
+
+public class TargetStaticPropAttribute : TargetPropAttribute
+{
+    public TargetStaticPropAttribute(string id, string name)
+    : base(id, name, allowObjectTarget: false, allowRandom: false) { }
+}
+
+public class TargetDirectionFilterPropAttribute : NPropAttribute
+{
+    public TargetDirectionFilterPropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.TargetDirectionFilter(property);
+    }
+}
+
+public class MaterialPropAttribute : NPropAttribute
+{
+    private string materialDirectory;
+    private bool isOverlay;
+    private bool customTextureBase;
+    public MaterialPropAttribute(string id, string name, string materialDirectory,
+        bool isOverlay = false, bool customTextureBase = false) : base(id, name)
+    {
+        this.materialDirectory = materialDirectory;
+        this.isOverlay = isOverlay;
+        this.customTextureBase = customTextureBase;
+    }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Material(materialDirectory, isOverlay, customTextureBase)(property);
+    }
+}
+
+public class TexturePropAttribute : NPropAttribute
+{
+    public TexturePropAttribute(string id, string name) : base(id, name) { }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.Texture(property);
+    }
+}
+
+public class EmbeddedDataPropAttribute : NPropAttribute
+{
+    private EmbeddedDataType type;
+    private AudioPlayerFactory playerFactory;
+    public EmbeddedDataPropAttribute(string id, string name,
+        EmbeddedDataType type, AudioPlayerFactory playerFactory = null) : base(id, name)
+    {
+        this.type = type;
+        this.playerFactory = playerFactory;
+    }
+    public override void OnGUI(Property property)
+    {
+        PropertyGUIs.EmbeddedData(type, playerFactory)(property);
+    }
+}
+
+public class EmbeddedAudioPropAttribute : EmbeddedDataPropAttribute
+{
+    public EmbeddedAudioPropAttribute(string id, string name)
+    : base(id, name, EmbeddedDataType.Audio, SoundPlayer.Factory) { }
 }

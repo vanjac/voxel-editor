@@ -10,31 +10,16 @@ public class ReflectorBehavior : EntityBehavior
         "Reflector", "Put in the middle of a room for more realistic reflections",
         "mirror", typeof(ReflectorBehavior));
     
-    private float size = 35, intensity = 1;
-    private bool realtime;
+    [SliderProp("siz", "Range", 1, 100)]
+    public float size { get; set; } = 35;
+    [SliderProp("int", "Intensity", 0, 1.5f)]
+    public float intensity { get; set; } = 1;
+    [ToggleProp("upd", "Real-time?")]
+    public bool realtime { get; set; } = false;
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("siz", "Range",
-                () => size,
-                v => size = (float)v,
-                PropertyGUIs.Slider(1, 100)),
-            new Property("int", "Intensity",
-                () => intensity,
-                v => intensity = (float)v,
-                PropertyGUIs.Slider(0, 1.5f)),
-            new Property("upd", "Real-time?",
-                () => realtime,
-                v => realtime = (bool)v,
-                PropertyGUIs.Toggle)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

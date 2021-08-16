@@ -13,27 +13,14 @@ public class CheckScoreSensor : Sensor
         ABOVE, BELOW
     }
 
-    private int threshold = 100;
-    private AboveOrBelow compare = AboveOrBelow.ABOVE;
+    [EnumProp("cmp", "Score is")]
+    public AboveOrBelow compare { get; set; } = AboveOrBelow.ABOVE;
+    [IntProp("thr", "Threshold")]
+    public int threshold { get; set; } = 100;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("cmp", "Score is",
-                () => compare,
-                v => compare = (AboveOrBelow)v,
-                PropertyGUIs.Enum),
-            new Property("thr", "Threshold",
-                () => threshold,
-                v => threshold = (int)v,
-                PropertyGUIs.Int)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

@@ -12,36 +12,18 @@ public class DelaySensor : Sensor
         + "Activators: the activators of the Input, added and removed with a delay",
         "timer", typeof(DelaySensor));
 
-    private EntityReference input = new EntityReference(null);
-    private float onTime, offTime;
-    private bool startOn;
+    [EntityReferenceProp("inp", "Input")]
+    public EntityReference input { get; set; } = new EntityReference(null);
+    [TimeProp("oft", "Off time")]
+    public float offTime { get; set; } = 0;
+    [TimeProp("ont", "On time")]
+    public float onTime { get; set; } = 0;
+    [ToggleProp("sta", "Start on?")]
+    public bool startOn { get; set; } = false;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("inp", "Input",
-                () => input,
-                v => input = (EntityReference)v,
-                PropertyGUIs.EntityReference),
-            new Property("oft", "Off time",
-                () => offTime,
-                v => offTime = (float)v,
-                PropertyGUIs.Time),
-            new Property("ont", "On time",
-                () => onTime,
-                v => onTime = (float)v,
-                PropertyGUIs.Time),
-            new Property("sta", "Start on?",
-                () => startOn,
-                v => startOn = (bool)v,
-                PropertyGUIs.Toggle)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

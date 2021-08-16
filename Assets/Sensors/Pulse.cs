@@ -10,37 +10,18 @@ public class PulseSensor : Sensor
         + "When the Input turns off, the pulse completes a full cycle then stops.",
         "pulse", typeof(PulseSensor));
 
-    private bool startOn = true;
-    private float offTime = 1;
-    private float onTime = 1;
-    private EntityReference input = new EntityReference(null);
+    [ToggleProp("sta", "Start on?")]
+    public bool startOn { get; set; } = true;
+    [TimeProp("oft", "Off time")]
+    public float offTime { get; set; } = 1;
+    [TimeProp("ont", "On time")]
+    public float onTime { get; set; } = 1;
+    [EntityReferenceProp("inp", "Input", allowNull: true)]
+    public EntityReference input { get; set; } = new EntityReference(null);
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("sta", "Start on?",
-                () => startOn,
-                v => startOn = (bool)v,
-                PropertyGUIs.Toggle),
-            new Property("oft", "Off time",
-                () => offTime,
-                v => offTime = (float)v,
-                PropertyGUIs.Time),
-            new Property("ont", "On time",
-                () => onTime,
-                v => onTime = (float)v,
-                PropertyGUIs.Time),
-            new Property("inp", "Input",
-                () => input,
-                v => input = (EntityReference)v,
-                PropertyGUIs.EntityReferenceWithNull)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

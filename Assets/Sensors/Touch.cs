@@ -13,27 +13,14 @@ public class TouchSensor : ActivatedSensor
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));
 
-    private float minVelocity = 0;
-    private Target direction = new Target(null);
+    [FloatProp("vel", "Min velocity")]
+    public float minVelocity { get; set; } = 0;
+    [TargetDirectionFilterProp("dir", "Direction")]
+    public Target direction { get; set; } = new Target(null);
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("vel", "Min velocity",
-                () => minVelocity,
-                v => minVelocity = (float)v,
-                PropertyGUIs.Float),
-            new Property("dir", "Direction",
-                () => direction,
-                v => direction = (Target)v,
-                PropertyGUIs.TargetDirectionFilter)
-        });
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

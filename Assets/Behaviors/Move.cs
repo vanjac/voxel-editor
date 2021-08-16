@@ -11,27 +11,14 @@ public class MoveBehavior : EntityBehavior
         + "Increase the <b>Density</b> of the Physics/Character behavior to increase the object's pushing strength.",
         "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private Target toward = new Target(Target.NORTH);
-    private float speed = 1;
+    [FloatProp("vel", "Speed")]
+    public float speed { get; set; } = 1;
+    [TargetProp("dir", "Toward")]
+    public Target toward { get; set; } = new Target(Target.NORTH);
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("vel", "Speed",
-                () => speed,
-                v => speed = (float)v,
-                PropertyGUIs.Float),
-            new Property("dir", "Toward",
-                () => toward,
-                v => toward = (Target)v,
-                PropertyGUIs.Target)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

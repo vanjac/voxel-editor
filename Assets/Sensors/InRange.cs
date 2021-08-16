@@ -9,22 +9,12 @@ public class InRangeSensor : ActivatedSensor
         "Activators: all objects in range",
         "radar", typeof(InRangeSensor));
 
-    private float distance = 5;
+    [FloatProp("dis", "Distance")]
+    public float distance { get; set; } = 5;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("dis", "Distance",
-                () => distance,
-                v => distance = (float)v,
-                PropertyGUIs.Float)
-        });
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

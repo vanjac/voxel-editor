@@ -13,37 +13,18 @@ public class LookAtBehavior : EntityBehavior
         "compass", typeof(LookAtBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private Target toward = new Target(Target.EAST);
-    private Target front = new Target(Target.NORTH);
-    private float speed = 120;
-    private bool yaw = true, pitch = false;
+    [FloatProp("vel", "Speed")]
+    public float speed { get; set; } = 120;
+    [TargetWorldOnlyProp("dir", "Toward")]
+    public Target toward { get; set; } = new Target(Target.EAST);
+    [Target4DirectionsProp("fro", "Front")]
+    public Target front { get; set; } = new Target(Target.NORTH);
+    [DoubleToggleProp("rot", "Yaw|Pitch")]
+    public (bool, bool) yawPitch { get; set; } = (true, false);
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("vel", "Speed",
-                () => speed,
-                v => speed = (float)v,
-                PropertyGUIs.Float),
-            new Property("dir", "Toward",
-                () => toward,
-                v => toward = (Target)v,
-                PropertyGUIs.TargetWorldOnly),
-            new Property("fro", "Front",
-                () => front,
-                v => front = (Target)v,
-                PropertyGUIs.Target4Directions),
-            new Property("rot", "Yaw|Pitch",
-                () => (yaw, pitch),
-                v => (yaw, pitch) = ((bool, bool))v,
-                PropertyGUIs.DoubleToggle)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)
@@ -52,8 +33,8 @@ public class LookAtBehavior : EntityBehavior
         component.toward = toward;
         component.front = front;
         component.speed = speed;
-        component.yaw = yaw;
-        component.pitch = pitch;
+        component.yaw = yawPitch.Item1;
+        component.pitch = yawPitch.Item2;
         return component;
     }
 }

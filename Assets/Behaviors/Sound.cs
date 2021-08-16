@@ -17,40 +17,20 @@ public class SoundBehavior : EntityBehavior
         + "Supported formats: MP3, WAV, OGG, AIF, XM, IT",
         "volume-high", typeof(SoundBehavior));
 
-    private EmbeddedData soundData = new EmbeddedData();
-    private float volume = 50.0f, fadeIn = 0, fadeOut = 0;
-    private PlayMode playMode = PlayMode.ONCE;
+    [EmbeddedAudioProp("dat", "Sound")]
+    public EmbeddedData soundData { get; set; } = new EmbeddedData();
+    [EnumProp("pmo", "Play mode")]
+    public PlayMode playMode { get; set; } = PlayMode.ONCE;
+    [FloatProp("vol", "Volume")]
+    public float volume { get; set; } = 50.0f;
+    [FloatProp("fin", "Fade in")]
+    public float fadeIn { get; set; } = 0;
+    [FloatProp("fou", "Fade out")]
+    public float fadeOut { get; set; } = 0;
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("dat", "Sound",
-                () => soundData,
-                v => soundData = (EmbeddedData)v,
-                PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)),
-            new Property("pmo", "Play mode",
-                () => playMode,
-                v => playMode = (PlayMode)v,
-                PropertyGUIs.Enum),
-            new Property("vol", "Volume",
-                () => volume,
-                v => volume = (float)v,
-                PropertyGUIs.Float),
-            new Property("fin", "Fade in",
-                () => fadeIn,
-                v => fadeIn = (float)v,
-                PropertyGUIs.Float),
-            new Property("fou", "Fade out",
-                () => fadeOut,
-                v => fadeOut = (float)v,
-                PropertyGUIs.Float)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

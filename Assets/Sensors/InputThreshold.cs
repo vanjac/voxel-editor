@@ -28,27 +28,14 @@ public class InputThresholdSensor : Sensor
         }
     }
 
-    private int threshold = 1;
-    private Input[] inputs = new Input[0];
+    [IntProp("thr", "Threshold")]
+    public int threshold { get; set; } = 1;
+    [InputsProp("inp", "Inputs")]
+    public Input[] inputs { get; set; } = new Input[0];
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("thr", "Threshold",
-                () => threshold,
-                v => threshold = (int)v,
-                PropertyGUIs.Int),
-            new Property("inp", "Inputs",
-                () => inputs,
-                v => inputs = (Input[])v,
-                InputsGUI)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)
@@ -59,70 +46,74 @@ public class InputThresholdSensor : Sensor
         return component;
     }
 
-    private void InputsGUI(Property property)
+    private class InputsPropAttribute : NPropAttribute
     {
-        Input[] inputs = (Input[])property.value;
-
-        GUILayout.Label("Inputs:");
-        if (GUILayout.Button("Add Input"))
+        public InputsPropAttribute(string id, string name) : base(id, name) { }
+        public override void OnGUI(Property property)
         {
-            EntityPickerGUI picker = GUIManager.guiGameObject.AddComponent<EntityPickerGUI>();
-            picker.voxelArray = VoxelArrayEditor.instance;
-            picker.handler = (ICollection<Entity> entities) =>
+            Input[] inputs = (Input[])property.value;
+
+            GUILayout.Label("Inputs:");
+            if (GUILayout.Button("Add Input"))
             {
-                Input[] newInputs = new Input[inputs.Length + entities.Count];
-                Array.Copy(inputs, newInputs, inputs.Length);
-                int i = 0;
-                foreach (Entity entity in entities)
+                EntityPickerGUI picker = GUIManager.guiGameObject.AddComponent<EntityPickerGUI>();
+                picker.voxelArray = VoxelArrayEditor.instance;
+                picker.handler = (ICollection<Entity> entities) =>
                 {
-                    newInputs[inputs.Length + i] = new Input(entity);
-                    i++;
-                }
-                property.value = newInputs;
-            };
-        }
-
-        bool copyArray = false;
-        int inputToDelete = -1;
-        Color baseColor = GUI.color;
-        for (int i = 0; i < inputs.Length; i++)
-        {
-            Entity e = inputs[i].entityRef.entity;
-            if (e == null)
-                inputToDelete = i;
-            EntityReferencePropertyManager.Next(e);
-            GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
-            GUILayout.BeginVertical(GUI.skin.box);
-            GUI.color = baseColor;
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(EntityReferencePropertyManager.GetName() + " ");
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("X"))
-                inputToDelete = i;
-            GUILayout.EndHorizontal();
-
-            int negativeNum = inputs[i].negative ? 1 : 0;
-            int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
-                new string[] { "Positive", "Negative" }, 2, GUIStyleSet.instance.buttonTab);
-            if (negativeNum != newNegativeNum)
-            {
-                inputs[i].negative = newNegativeNum == 1;
-                copyArray = true;
+                    Input[] newInputs = new Input[inputs.Length + entities.Count];
+                    Array.Copy(inputs, newInputs, inputs.Length);
+                    int i = 0;
+                    foreach (Entity entity in entities)
+                    {
+                        newInputs[inputs.Length + i] = new Input(entity);
+                        i++;
+                    }
+                    property.value = newInputs;
+                };
             }
-            GUILayout.EndVertical();
-        }
-        if (inputToDelete != -1)
-        {
-            Input[] newInputs = new Input[inputs.Length - 1];
-            Array.Copy(inputs, newInputs, inputToDelete);
-            Array.Copy(inputs, inputToDelete + 1, newInputs, inputToDelete, newInputs.Length - inputToDelete);
-            property.value = newInputs;
-        }
-        else if (copyArray)
-        {
-            Input[] newInputs = new Input[inputs.Length];
-            Array.Copy(inputs, newInputs, inputs.Length);
-            property.value = newInputs; // mark unsaved changes flag
+
+            bool copyArray = false;
+            int inputToDelete = -1;
+            Color baseColor = GUI.color;
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                Entity e = inputs[i].entityRef.entity;
+                if (e == null)
+                    inputToDelete = i;
+                EntityReferencePropertyManager.Next(e);
+                GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
+                GUILayout.BeginVertical(GUI.skin.box);
+                GUI.color = baseColor;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(EntityReferencePropertyManager.GetName() + " ");
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("X"))
+                    inputToDelete = i;
+                GUILayout.EndHorizontal();
+
+                int negativeNum = inputs[i].negative ? 1 : 0;
+                int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
+                    new string[] { "Positive", "Negative" }, 2, GUIStyleSet.instance.buttonTab);
+                if (negativeNum != newNegativeNum)
+                {
+                    inputs[i].negative = newNegativeNum == 1;
+                    copyArray = true;
+                }
+                GUILayout.EndVertical();
+            }
+            if (inputToDelete != -1)
+            {
+                Input[] newInputs = new Input[inputs.Length - 1];
+                Array.Copy(inputs, newInputs, inputToDelete);
+                Array.Copy(inputs, inputToDelete + 1, newInputs, inputToDelete, newInputs.Length - inputToDelete);
+                property.value = newInputs;
+            }
+            else if (copyArray)
+            {
+                Input[] newInputs = new Input[inputs.Length];
+                Array.Copy(inputs, newInputs, inputs.Length);
+                property.value = newInputs; // mark unsaved changes flag
+            }
         }
     }
 }

@@ -10,32 +10,16 @@ public class MotionSensor : Sensor
         + "and rotating about any axis faster than the <b>Minimum angular velocity</b> (degrees per second).",
         "speedometer", typeof(MotionSensor));
 
-    private float minVelocity = 1;
-    private float minAngularVelocity = 0;
-    private Target direction = new Target(null);
+    [FloatProp("vel", "Min velocity")]
+    public float minVelocity { get; set; } = 1;
+    [FloatProp("ang", "Min angular vel.")]
+    public float minAngularVelocity { get; set; } = 0;
+    [TargetDirectionFilterProp("dir", "Direction")]
+    public Target direction { get; set; } = new Target(null);
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("vel", "Min velocity",
-                () => minVelocity,
-                v => minVelocity = (float)v,
-                PropertyGUIs.Float),
-            new Property("ang", "Min angular vel.",
-                () => minAngularVelocity,
-                v => minAngularVelocity = (float)v,
-                PropertyGUIs.Float),
-            new Property("dir", "Direction",
-                () => direction,
-                v => direction = (Target)v,
-                PropertyGUIs.TargetDirectionFilter)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

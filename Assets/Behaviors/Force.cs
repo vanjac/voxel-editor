@@ -18,42 +18,20 @@ public class ForceBehavior : EntityBehavior
         + "•  <b>Stop object first</b> will stop any existing motion before applying the force.",
         "rocket", typeof(ForceBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;
-    private bool ignoreMass = false;
-    private bool stopObjectFirst = false;
-    private float strength = 10;
-    private Target toward = new Target(Target.UP);
+    [EnumProp("fmo", "Mode")]
+    public ForceBehaviorMode mode { get; set; } = ForceBehaviorMode.CONTINUOUS;
+    [ToggleProp("ima", "Ignore mass?")]
+    public bool ignoreMass { get; set; } = false;
+    [ToggleProp("sto", "Stop object first?")]
+    public bool stopObjectFirst { get; set; } = false;
+    [FloatProp("mag", "Strength")]
+    public float strength { get; set; } = 10;
+    [TargetProp("dir", "Toward")]
+    public Target toward { get; set; } = new Target(Target.UP);
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("fmo", "Mode",
-                () => mode,
-                v => mode = (ForceBehaviorMode)v,
-                PropertyGUIs.Enum),
-            new Property("ima", "Ignore mass?",
-                () => ignoreMass,
-                v => ignoreMass = (bool)v,
-                PropertyGUIs.Toggle),
-            new Property("sto", "Stop object first?",
-                () => stopObjectFirst,
-                v => stopObjectFirst = (bool)v,
-                PropertyGUIs.Toggle),
-            new Property("mag", "Strength",
-                () => strength,
-                v => strength = (float)v,
-                PropertyGUIs.Float),
-            new Property("dir", "Toward",
-                () => toward,
-                v => toward = (Target)v,
-                PropertyGUIs.Target)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

@@ -10,27 +10,14 @@ public class RandomPulseSensor : Sensor
         + " Useful for unpredictable behavior, flickering lights, etc.",
         "progress-question", typeof(RandomPulseSensor));
     
-    private (float, float) offTimeRange = (1, 5);
-    private (float, float) onTimeRange = (1, 5);
+    [FloatRangeProp("oft", "Off time")]
+    public (float, float) offTimeRange { get; set; } = (1, 5);
+    [FloatRangeProp("ont", "On time")]
+    public (float, float) onTimeRange { get; set; } = (1, 5);
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("oft", "Off time",
-                () => offTimeRange,
-                v => offTimeRange = ((float, float))v,
-                PropertyGUIs.FloatRange),
-            new Property("ont", "On time",
-                () => onTimeRange,
-                v => onTimeRange = ((float, float))v,
-                PropertyGUIs.FloatRange)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

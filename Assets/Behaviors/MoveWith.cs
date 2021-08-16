@@ -10,27 +10,14 @@ public class MoveWithBehavior : EntityBehavior
         "move-resize-variant", typeof(MoveWithBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private EntityReference parent = new EntityReference(null);
-    private bool followRotation = true;
+    [EntityReferenceProp("par", "Parent")]
+    public EntityReference parent { get; set; } = new EntityReference(null);
+    [ToggleProp("fro", "Follow rotation?")]
+    public bool followRotation { get; set; } = true;
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("par", "Parent",
-                () => parent,
-                v => parent = (EntityReference)v,
-                PropertyGUIs.EntityReference),
-            new Property("fro", "Follow rotation?",
-                () => followRotation,
-                v => followRotation = (bool)v,
-                PropertyGUIs.Toggle)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

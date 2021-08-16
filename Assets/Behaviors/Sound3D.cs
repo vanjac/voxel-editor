@@ -19,42 +19,20 @@ public class Sound3DBehavior : EntityBehavior
         + "See Sound behavior for additional documentation.",
         "headphones", typeof(Sound3DBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private EmbeddedData soundData = new EmbeddedData();
-    private float volume = 50.0f;
-    private (float, float) distanceRange = (1, 30);
-    private PlayMode playMode = PlayMode.ONCE;
-    private SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
+    [EmbeddedAudioProp("dat", "Sound")]
+    public EmbeddedData soundData { get; set; } = new EmbeddedData();
+    [EnumProp("pmo", "Play mode")]
+    public PlayMode playMode { get; set; } = PlayMode.ONCE;
+    [EnumProp("smo", "Spatial mode")]
+    public SpatialSoundMode spatialMode { get; set; } = SpatialSoundMode.POINT;
+    [FloatProp("vol", "Volume")]
+    public float volume { get; set; } = 50.0f;
+    [FloatRangeProp("dis", "Fade distance")]
+    public (float, float) distanceRange { get; set; } = (1, 30);
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("dat", "Sound",
-                () => soundData,
-                v => soundData = (EmbeddedData)v,
-                PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)),
-            new Property("pmo", "Play mode",
-                () => playMode,
-                v => playMode = (PlayMode)v,
-                PropertyGUIs.Enum),
-            new Property("smo", "Spatial mode",
-                () => spatialMode,
-                v => spatialMode = (SpatialSoundMode)v,
-                PropertyGUIs.Enum),
-            new Property("vol", "Volume",
-                () => volume,
-                v => volume = (float)v,
-                PropertyGUIs.Float),
-            new Property("dis", "Fade distance",
-                () => distanceRange,
-                v => distanceRange = ((float, float))v,
-                PropertyGUIs.FloatRange)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

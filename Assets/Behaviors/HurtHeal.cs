@@ -11,32 +11,16 @@ public class HurtHealBehavior : EntityBehavior
         + "•  <b>Keep within</b>: Health will only change if it's within this range, and will never go outside this range.",
         "heart", typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private float amount = -30;
-    private float rate = 0;
-    private (float, float) healthRange = (0, 200);
+    [FloatProp("num", "Amount")]
+    public float amount { get; set; } = -30;
+    [TimeProp("rat", "Rate")]
+    public float rate { get; set; } = 0;
+    [FloatRangeProp("ran", "Keep within")]
+    public (float, float) healthRange { get; set; } = (0, 200);
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("num", "Amount",
-                () => amount,
-                v => amount = (float)v,
-                PropertyGUIs.Float),
-            new Property("rat", "Rate",
-                () => rate,
-                v => rate = (float)v,
-                PropertyGUIs.Time),
-            new Property("ran", "Keep within",
-                () => healthRange,
-                v => healthRange = ((float, float))v,
-                PropertyGUIs.FloatRange)
-        });
     }
 
     public override IEnumerable<Property> DeprecatedProperties()
@@ -45,11 +29,11 @@ public class HurtHealBehavior : EntityBehavior
         {
             new Property("min", "Min health",
                 () => healthRange.Item1,
-                v => healthRange.Item1 = (float)v,
+                v => healthRange = ((float)v, healthRange.Item2),
                 PropertyGUIs.Float),
             new Property("max", "Max health",
                 () => healthRange.Item2,
-                v => healthRange.Item2 = (float)v,
+                v => healthRange = (healthRange.Item1, (float)v),
                 PropertyGUIs.Float)
         });
     }

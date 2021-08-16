@@ -8,22 +8,12 @@ public class ScoreBehavior : EntityBehavior
         "Score", "Add or subtract from the player's score",
         "counter", typeof(ScoreBehavior));
     
-    private int amount = 10;
+    [IntProp("num", "Amount")]
+    public int amount { get; set; } = 10;
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("num", "Amount",
-                () => amount,
-                v => amount = (int)v,
-                PropertyGUIs.Int)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

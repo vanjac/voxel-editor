@@ -10,22 +10,12 @@ public class TapSensor : Sensor
         + "Activator: the player",
         "gesture-tap", typeof(TapSensor));
 
-    private float maxDistance = 3;
+    [FloatProp("dis", "Max distance")]
+    public float maxDistance { get; set; } = 3;
 
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
-        {
-            new Property("dis", "Max distance",
-                () => maxDistance,
-                v => maxDistance = (float)v,
-                PropertyGUIs.Float)
-        }, base.Properties());
     }
 
     public override SensorComponent MakeComponent(GameObject gameObject)

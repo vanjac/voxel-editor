@@ -12,27 +12,14 @@ public class PhysicsBehavior : EntityBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
-    protected float density = 0.5f;
-    private bool gravity = true;
+    [FloatProp("den", "Density")]
+    public float density { get; set; } = 0.5f;
+    [ToggleProp("gra", "Gravity?")]
+    public bool gravity { get; set; } = true;
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("den", "Density",
-                () => density,
-                v => density = (float)v,
-                PropertyGUIs.Float),
-            new Property("gra", "Gravity?",
-                () => gravity,
-                v => gravity = (bool)v,
-                PropertyGUIs.Toggle)
-        });
     }
 
     public override Behaviour MakeComponent(GameObject gameObject)

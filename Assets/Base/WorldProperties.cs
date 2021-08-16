@@ -16,6 +16,96 @@ public class WorldProperties : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "World", "Properties that affect the entire world", "earth", typeof(WorldProperties));
 
+    [MaterialProp("sky", "Sky", "Skies", false)]
+    public Material skybox
+    {
+        get => RenderSettings.skybox;
+        set => SetSky(value);
+    }
+    [SliderProp("amb", "Ambient light intensity", 0, 3)]
+    public float ambientIntensity
+    {
+        get => RenderSettings.ambientIntensity;
+        set => RenderSettings.ambientIntensity = value;
+    }
+    [SliderProp("sin", "Sun intensity", 0, 3)]
+    public float sunIntensity
+    {
+        get => RenderSettings.sun.intensity;
+        set => RenderSettings.sun.intensity = value;
+    }
+    [ColorProp("sco", "Sun color")]
+    public Color sunColor
+    {
+        get => RenderSettings.sun.color;
+        set => RenderSettings.sun.color = value;
+    }
+    [SliderProp("spi", "Sun pitch", -90, 90)]
+    public float sunPitch
+    {
+        get
+        {
+            float value = RenderSettings.sun.transform.rotation.eulerAngles.x;
+            if (value >= 270)
+                value -= 360;
+            return value;
+        }
+        set
+        {
+            Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
+            eulerAngles.x = value;
+            RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
+
+            UpdateEnvironment();
+        }
+    }
+    [SliderProp("sya", "Sun yaw", 0, 360)]
+    public float sunYaw
+    {
+        get => RenderSettings.sun.transform.rotation.eulerAngles.y;
+        set
+        {
+            Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
+            eulerAngles.y = value;
+            RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
+
+            UpdateSky();
+        }
+    }
+    [SliderProp("sha", "Shadows", 0, 1)]
+    public float shadowStrength
+    {
+        get => RenderSettings.sun.shadowStrength;
+        set => RenderSettings.sun.shadowStrength = value;
+    }
+    [SliderProp("ref", "Reflections", 0, 1)]
+    public float reflectionIntensity
+    {
+        get => GetReflectionProbe().intensity;
+        set => GetReflectionProbe().intensity = value;
+    }
+    [SliderProp("fdn", "Fog density", 0, 1)]
+    public float fogDensity
+    {
+        get => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f;
+        set
+        {
+            if (value == 0)
+                RenderSettings.fog = false;
+            else
+            {
+                RenderSettings.fog = true;
+                RenderSettings.fogDensity = value * value;
+            }
+        }
+    }
+    [ColorProp("fco", "Fog color")]
+    public Color fogColor
+    {
+        get => RenderSettings.fogColor;
+        set => RenderSettings.fogColor = value;
+    }
+
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
@@ -54,80 +144,5 @@ public class WorldProperties : PropertiesObject
     {
         DynamicGI.UpdateEnvironment(); // update ambient lighting
         GetReflectionProbe().RenderProbe();
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return new Property[]
-        {
-            new Property("sky", "Sky",
-                () => RenderSettings.skybox,
-                v => {
-                    SetSky((Material)v);
-                },
-                PropertyGUIs.Material("Skies", false)),
-            new Property("amb", "Ambient light intensity",
-                () => RenderSettings.ambientIntensity,
-                v => RenderSettings.ambientIntensity = (float)v,
-                PropertyGUIs.Slider(0, 3)),
-            new Property("sin", "Sun intensity",
-                () => RenderSettings.sun.intensity,
-                v => RenderSettings.sun.intensity = (float)v,
-                PropertyGUIs.Slider(0, 3)),
-            new Property("sco", "Sun color",
-                () => RenderSettings.sun.color,
-                v => RenderSettings.sun.color = (Color)v,
-                PropertyGUIs.Color),
-            new Property("spi", "Sun pitch",
-                () => {
-                    float value = RenderSettings.sun.transform.rotation.eulerAngles.x;
-                    if (value >= 270)
-                        value -= 360;
-                    return value;
-                },
-                v => {
-                    Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
-                    eulerAngles.x = (float)v;
-                    RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
-
-                    UpdateEnvironment();
-                },
-                PropertyGUIs.Slider(-90, 90)),
-            new Property("sya", "Sun yaw",
-                () => RenderSettings.sun.transform.rotation.eulerAngles.y,
-                v => {
-                    Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
-                    eulerAngles.y = (float)v;
-                    RenderSettings.sun.transform.rotation = Quaternion.Euler(eulerAngles);
-
-                    UpdateSky();
-                },
-                PropertyGUIs.Slider(0, 360)),
-            new Property("sha", "Shadows",
-                () => RenderSettings.sun.shadowStrength,
-                v => RenderSettings.sun.shadowStrength = (float)v,
-                PropertyGUIs.Slider(0, 1)),
-            new Property("ref", "Reflections",
-                () => GetReflectionProbe().intensity,
-                v => GetReflectionProbe().intensity = (float)v,
-                PropertyGUIs.Slider(0, 1)),
-            new Property("fdn", "Fog density",
-                () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
-                v => {
-                    float value = (float)v;
-                    if (value == 0)
-                        RenderSettings.fog = false;
-                    else
-                    {
-                        RenderSettings.fog = true;
-                        RenderSettings.fogDensity = value * value;
-                    }
-                },
-                PropertyGUIs.Slider(0, 1)),
-            new Property("fco", "Fog color",
-                () => RenderSettings.fogColor,
-                v => RenderSettings.fogColor = (Color) v,
-                PropertyGUIs.Color)
-        };
     }
 }

@@ -9,37 +9,20 @@ public class LightBehavior : EntityBehavior
         "Light", "A light source at the center of the object",
         "lightbulb-on", typeof(LightBehavior));
 
-    private float size = 10, intensity = 1;
-    private Color color = Color.white;
-    private bool shadows = false;
+    [SliderProp("siz", "Size", 1, 30)]
+    public float size { get; set; } = 10;
+    [ColorProp("col", "Color")]
+    public Color color { get; set; } = Color.white;
+    [SliderProp("int", "Intensity", 0, 5)]
+    public float intensity { get; set; } = 1;
+    [ToggleProp("sha", "Shadows?")]
+    public bool shadows { get; set; } = false;
+
     public bool halo = false;  // deprecated
 
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override IEnumerable<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
-        {
-            new Property("siz", "Size",
-                () => size,
-                v => size = (float)v,
-                PropertyGUIs.Slider(1, 30)),
-            new Property("col", "Color",
-                () => color,
-                v => color = (Color)v,
-                PropertyGUIs.Color),
-            new Property("int", "Intensity",
-                () => intensity,
-                v => intensity = (float)v,
-                PropertyGUIs.Slider(0, 5)),
-            new Property("sha", "Shadows?",
-                () => shadows,
-                v => shadows = (bool)v,
-                PropertyGUIs.Toggle)
-        });
     }
 
     public override IEnumerable<Property> DeprecatedProperties()
