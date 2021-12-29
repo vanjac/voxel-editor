@@ -61,4 +61,4 @@ See [credits.txt](https://github.com/vanjac/voxel-editor/blob/master/Assets/Menu
 
 ## Contact me:
 
-vantjac [dot] dev [at] gmail [dot] com
+chroma [at] chroma [dot] zone

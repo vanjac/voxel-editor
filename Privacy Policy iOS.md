@@ -6,4 +6,4 @@ N-Space does not collect any data on you or your usage of the app. Content creat
 
 Jacob van't Hoog
 
-vantjac.dev@gmail.com
+chroma@chroma.zone

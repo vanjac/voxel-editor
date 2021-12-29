@@ -152,7 +152,7 @@ public class EditorFile : MonoBehaviour
             {
                 string message = "An error occurred while saving the file. "
                     + "Please send me an email about this, and include a screenshot "
-                    + "of this message. vantjac.dev@gmail.com\n\n"
+                    + "of this message. chroma@chroma.zone\n\n"
                     + e.ToString();
                 var dialog = LargeMessageGUI.ShowLargeMessageDialog(GUIManager.guiGameObject, message);
                 dialog.closeHandler = () => SceneManager.LoadScene(Scenes.MENU);

@@ -8,7 +8,7 @@ You can use the other buttons in the menu to access these websites:
 - GitHub, including source code and bug reports
 
 If you have any questions, feedback, or suggestions, please send me an email:
-    vantjac.dev@gmail.com
+    chroma@chroma.zone
 
 SOURCES:
 
