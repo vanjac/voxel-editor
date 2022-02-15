@@ -63,6 +63,8 @@ public class EditorFile : MonoBehaviour
         if (PlayerPrefs.HasKey("last_editScene_version"))
         {
             string lastVersion = PlayerPrefs.GetString("last_editScene_version");
+            if (lastVersion.EndsWith("b"))
+                lastVersion = lastVersion.Substring(0, lastVersion.Length - 1);
             if (CompareVersions(lastVersion, "1.3.3") == -1)
             {
                 LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!\n\n"
