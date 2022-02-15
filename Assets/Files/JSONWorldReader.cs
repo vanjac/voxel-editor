@@ -8,7 +8,8 @@ using System.Xml.Serialization;
 
 public class JSONWorldReader : WorldFileReader
 {
-    public const int VERSION = 7;
+    public const int MAX_VERSION = 7;
+    public const int MIN_VERSION = 3;
 
     private int fileWriterVersion;
 
@@ -62,9 +63,14 @@ public class JSONWorldReader : WorldFileReader
         {
             throw new MapReadException("Invalid world file");
         }
-        if (root["minReaderVersion"].AsInt > VERSION)
+        int minReaderVersion = root["minReaderVersion"].AsInt;
+        if (minReaderVersion < MIN_VERSION)
         {
-            throw new MapReadException("This world file requires a newer version of the app");
+            throw new MapReadException("This file was created with an old (beta) version of the app and can no longer be read.");
+        }
+        else if (minReaderVersion > MAX_VERSION)
+        {
+            throw new MapReadException("Invalid world file");
         }
         fileWriterVersion = root["writerVersion"].AsInt;
 
@@ -128,20 +134,8 @@ public class JSONWorldReader : WorldFileReader
 
         if (world["global"] != null)
             ReadPropertiesObject(world["global"].AsObject, voxelArray.world);
-        if (fileWriterVersion <= 2 && world["sky"] != null)
-        {
-            Material sky = materials[world["sky"].AsInt];
-            if (sky != ReadWorldFile.MissingMaterial(false)) // default skybox is null
-                voxelArray.world.SetSky(sky);
-        }
         if (world["map"] != null)
             ReadMap(world["map"].AsObject, voxelArray, materials, substances);
-        if (fileWriterVersion <= 2 && world["player"] != null)
-        {
-            PlayerObject player = new PlayerObject();
-            ReadObjectEntity(world["player"].AsObject, player);
-            voxelArray.AddObject(player);
-        }
         if (world["objects"] != null)
         {
             foreach (JSONNode objNode in world["objects"].AsArray)
@@ -366,12 +360,6 @@ public class JSONWorldReader : WorldFileReader
             foreach (JSONNode faceNode in voxelObject["f"].AsArray)
             {
                 JSONObject faceObject = faceNode.AsObject;
-                if (fileWriterVersion == 0)
-                {
-                    // faces were oriented differently. Get voxel for each face
-                    int faceI = faceObject["i"].AsInt;
-                    voxel = voxelArray.VoxelAt(position + Voxel.DirectionForFaceI(faceI).ToInt(), true);
-                }
                 ReadFace(faceObject, voxel, materials);
             }
         }
@@ -387,8 +375,6 @@ public class JSONWorldReader : WorldFileReader
         if (faceObject["i"] == null)
             return;
         int faceI = faceObject["i"].AsInt;
-        if (fileWriterVersion == 0)
-            faceI = Voxel.OppositeFaceI(faceI);
         if (faceObject["mat"] != null)
         {
             int matI = faceObject["mat"].AsInt;
