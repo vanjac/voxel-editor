@@ -27,7 +27,7 @@ public static class IOSPostBuild
             var schemesArray = rootDict.CreateArray("LSApplicationQueriesSchemes");
             schemesArray.AddString("shareddocuments");
 
-            // allow the app to open JSON/N-Space files
+            // allow the app to open N-Space files
             // https://developer.apple.com/documentation/uikit/view_controllers/adding_a_document_browser_to_your_app/setting_up_a_document_browser_app
 
             // TODO? https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW37
@@ -46,7 +46,6 @@ public static class IOSPostBuild
             nspaceContentTypesArray.AddString("com.vantjac.nspace");
 
             // built in types
-            AddDocumentType(documentTypesArray, "JSON file", "public.json");
             AddDocumentType(documentTypesArray, "MP3 audio", "public.mp3");
             AddDocumentType(documentTypesArray, "Waveform audio", "com.microsoft.waveform-audio");
             AddDocumentType(documentTypesArray, "AIFF-C audio", "public.aifc-audio");
@@ -91,7 +90,7 @@ public static class IOSPostBuild
         var docTypeDict = documentTypesArray.AddDict();
         docTypeDict.CreateArray("CFBundleTypeIconFiles");
         docTypeDict.SetString("CFBundleTypeName", name);
-        docTypeDict.SetString("LSHandlerRank", "Alternate"); // this app is a secondary viewer of JSON files
+        docTypeDict.SetString("LSHandlerRank", "Alternate"); // this app is a secondary viewer of audio files
         var contentTypesArray = docTypeDict.CreateArray("LSItemContentTypes");
         contentTypesArray.AddString(uti);
     }

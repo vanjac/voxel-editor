@@ -41,7 +41,6 @@
         <data android:scheme="content" />
 
         <!-- Valid mime types -->
-        <data android:mimeType="application/json" />
         <data android:mimeType="application/vnd.vantjac.nspace" />
 
         <!-- Invalid mime types -->
@@ -92,14 +91,6 @@
         <data android:pathPattern="/.*..*..*..*..*..*\\.nspace" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.nspace" />
 
-        <data android:pathPattern="/.*\\.json" />
-        <data android:pathPattern="/.*..*\\.json" />
-        <data android:pathPattern="/.*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
-
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
         <data android:pathPattern=".*\\.wave"/>
@@ -133,14 +124,6 @@
         <data android:pathPattern="/.*..*..*..*..*\\.nspace" />
         <data android:pathPattern="/.*..*..*..*..*..*\\.nspace" />
         <data android:pathPattern="/.*..*..*..*..*..*..*\\.nspace" />
-
-        <data android:pathPattern="/.*\\.json" />
-        <data android:pathPattern="/.*..*\\.json" />
-        <data android:pathPattern="/.*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*..*..*\\.json" />
-        <data android:pathPattern="/.*..*..*..*..*..*..*\\.json" />
 
         <data android:pathPattern=".*\\.mp3"/>
         <data android:pathPattern=".*\\.wav"/>
