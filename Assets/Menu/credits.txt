@@ -35,7 +35,7 @@ Sounds:
 
 Libraries:
     SimpleJSON
-    Copyright (c) 2012-2017 Markus Göbel (Bunny83)
+    Copyright (c) 2012-2019 Markus Göbel (Bunny83)
 
     MessagePack for CLI
     Copyright (C) 2010-2019 FUJIWARA, Yusuke
