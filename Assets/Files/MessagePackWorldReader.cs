@@ -37,6 +37,11 @@ public class MessagePackWorldReader : WorldFileReader
             throw new InvalidMapFileException();
     }
 
+    public void UseMessagePackObject(MessagePackObject obj)
+    {
+        worldObject = obj;
+    }
+
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {

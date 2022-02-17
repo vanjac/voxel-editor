@@ -24,9 +24,9 @@ public static class FileKeys
     public const string CAMERA_ROTATE = "r";
     public const string CAMERA_SCALE = "s";
 
-    public const string MATERIAL_MODE = "m";    // obselete since version 10
+    public const string MATERIAL_MODE = "m";    // obsolete since version 10
     public const string MATERIAL_COLOR = "c";
-    //public const string MATERIAL_ALPHA = "a";   // obselete since version 10
+    public const string MATERIAL_ALPHA = "a";   // obsolete since version 10
     public const string MATERIAL_NAME = "n";
     public const string MATERIAL_COLOR_STYLE = "s";
 
