@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class MaterialSelectorGUI : GUIPanel
 {
-    private static RenderTexture previewTexture;
-    private static Material previewMaterial;
     private const int NUM_COLUMNS = 4;
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
@@ -465,72 +463,36 @@ public class MaterialSelectorGUI : GUIPanel
 
     public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
     {
-        DrawMaterialTexture(mat, rect, alpha, Vector2.right, Vector2.up);
-    }
-
-    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha, Vector2 u_vec, Vector2 v_vec)
-    {
         if (mat == null)
             return;
-        if (previewTexture == null)
-            previewTexture = new RenderTexture(256, 256, 0, RenderTextureFormat.ARGB32);
-        if (!previewTexture.IsCreated())
-            previewTexture.Create();
-        if (previewMaterial == null)
-            previewMaterial = new Material(Shader.Find("Unlit/MaterialPreview"));  // TODO make sure shader is included
-
-        RenderTexture prevActive = RenderTexture.active;
-        RenderTexture.active = previewTexture;
-
-        GL.PushMatrix();
-        GL.LoadOrtho();
-        GL.Clear(false, true, Color.clear);
-
-        previewMaterial.CopyPropertiesFromMaterial(mat);
+        
+        Color baseColor = GUI.color;
+        // fix transparent colors becoming opaque while scrolling
+        if (GUI.color.a > 1)
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
         string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
-        if (colorProp == null)
-            previewMaterial.color = Color.white;
-        else
+        if (colorProp != null)
         {
             Color color = mat.GetColor(colorProp);
             if (color.a == 0.0f)
                 color = new Color(color.r, color.g, color.b, 0.6f);
-            previewMaterial.color = color;
+            GUI.color *= color;
         }
-        if (!mat.HasProperty("_BumpMap"))
-            previewMaterial.SetTexture("_BumpMap", Texture2D.normalTexture);
-        if (!mat.HasProperty("_MainTex"))
+
+        Texture texture = Texture2D.whiteTexture;
+        Vector2 textureScale = Vector2.one;
+        if (mat.HasProperty("_MainTex") && mat.mainTexture != null)
         {
-            if (mat.HasProperty("_FrontTex"))  // 6-sided skybox
-            {
-                previewMaterial.mainTexture = mat.GetTexture("_FrontTex");
-                previewMaterial.color *= 2;
-            }
-            else
-                previewMaterial.mainTexture = Texture2D.whiteTexture;
+            texture = mat.mainTexture;
+            textureScale = mat.mainTextureScale;
         }
-        if (mat.HasProperty("_WaveScale"))  // water
-            previewMaterial.mainTextureScale = Vector2.one * mat.GetFloat("_WaveScale");
-        previewMaterial.SetPass(0);
+        else if (mat.HasProperty("_FrontTex"))  // 6-sided skybox
+        {
+            texture = mat.GetTexture("_FrontTex");
+            GUI.color *= 2;
+        }
 
-        Vector2 uv;
-        GL.Begin(GL.QUADS);
-        uv = (Vector2.one - u_vec - v_vec) / 2;
-        GL.TexCoord2(uv.x, uv.y);
-        GL.Vertex3(0, 0, 0);
-        uv = (Vector2.one - u_vec + v_vec) / 2;
-        GL.TexCoord2(uv.x, uv.y);
-        GL.Vertex3(0, 1, 0);
-        uv = (Vector2.one + u_vec + v_vec) / 2;
-        GL.TexCoord2(uv.x, uv.y);
-        GL.Vertex3(1, 1, 0);
-        uv = (Vector2.one + u_vec - v_vec) / 2;
-        GL.TexCoord2(uv.x, uv.y);
-        GL.Vertex3(1, 0, 0);
-        GL.End();
-
-        GL.PopMatrix();
-        RenderTexture.active = prevActive;
-        GUI.DrawTexture(rect, previewTexture);
+        GUI.DrawTextureWithTexCoords(rect, texture, new Rect(Vector2.zero, textureScale));
+        GUI.color = baseColor;
     }
 }

@@ -183,18 +183,18 @@ public class PaintGUI : GUIPanel
 
     private void DrawPaint(VoxelFace paint, Rect rect)
     {
-        int rotation = VoxelFace.GetOrientationRotation(paint.orientation);
-        bool mirror = VoxelFace.GetOrientationMirror(paint.orientation);
-        Vector2 u_vec = new Vector2(COARSE_COS[rotation], COARSE_SIN[rotation]);
-        Vector2 v_vec = new Vector2(-COARSE_SIN[rotation], COARSE_COS[rotation]);
+        float rotation = VoxelFace.GetOrientationRotation(paint.orientation) * 90;
+        Vector2 scaleFactor = Vector2.one;
         if (VoxelFace.GetOrientationMirror(paint.orientation))
         {
-            var tmp = u_vec;
-            u_vec = v_vec * -1;
-            v_vec = tmp * -1;
+            scaleFactor = new Vector2(-1, 1);
+            rotation += 90;
         }
-        MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false, u_vec, v_vec);
-        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true, u_vec, v_vec);
+        Matrix4x4 baseMatrix = GUI.matrix;
+        RotateAboutPoint(rect.center, rotation, scaleFactor);
+        MaterialSelectorGUI.DrawMaterialTexture(paint.material, rect, false);
+        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true);
+        GUI.matrix = baseMatrix;
     }
 
     public void TutorialShowSky()
