@@ -28,10 +28,31 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
+    name: GLASS_overlay
+    path: Hidden/GLASS_overlay
+    parent: Hidden
+    sound: 15
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: GLOSSY
+    path: Hidden/GLOSSY
+    parent: Hidden
+    sound: 10
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
     name: GLOSSY_overlay
     path: Hidden/GLOSSY_overlay
     parent: Hidden
     sound: 10
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: METAL
+    path: Hidden/METAL
+    parent: Hidden
+    sound: 9
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
@@ -70,95 +91,207 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 1
-    name: Asphalt
-    path: Materials/Asphalt
+    name: Blocks
+    path: Materials/Blocks
     parent: Materials
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: CityStreetAsphaltGenericClean001
-    path: Materials/Asphalt/CityStreetAsphaltGenericClean001
-    parent: Materials/Asphalt
-    sound: 1
-    whitePoint: {r: 0.44000003, g: 0.4337143, b: 0.42533335, a: 0.8}
+    name: Alternating Brick
+    path: Materials/Blocks/Alternating Brick
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Ancient Stone Slabs
+    path: Materials/Blocks/Ancient Stone Slabs
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Bubbly Bricks
+    path: Materials/Blocks/Bubbly Bricks
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Cathedral 1 - Wall
+    path: Materials/Blocks/Cathedral 1 - Wall
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Cathedral 2 - Wall
+    path: Materials/Blocks/Cathedral 2 - Wall
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Chipped Bricks
+    path: Materials/Blocks/Chipped Bricks
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Concrete Blocks
+    path: Materials/Blocks/Concrete Blocks
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Desert Blush Brick
+    path: Materials/Blocks/Desert Blush Brick
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Drippy Bricks
+    path: Materials/Blocks/Drippy Bricks
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Green Brick
+    path: Materials/Blocks/Green Brick
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Mossy Brick
+    path: Materials/Blocks/Mossy Brick
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Park Pavement Center 2
+    path: Materials/Blocks/Park Pavement Center 2
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Red Brick
+    path: Materials/Blocks/Red Brick
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rough Block Wall
+    path: Materials/Blocks/Rough Block Wall
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Sandy Lichen Brick
+    path: Materials/Blocks/Sandy Lichen Brick
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Varied Size Blocks
+    path: Materials/Blocks/Varied Size Blocks
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Wall Brace 4-4
+    path: Materials/Blocks/Wall Brace 4-4
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Weathered Stone Wall
+    path: Materials/Blocks/Weathered Stone Wall
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Wild Pavement
+    path: Materials/Blocks/Wild Pavement
+    parent: Materials/Blocks
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
-    name: Bricks
-    path: Materials/Bricks
+    name: Building
+    path: Materials/Building
     parent: Materials
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: Bricks01
-    path: Materials/Bricks/Bricks01
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.8, g: 0.61538464, b: 0.512, a: 0.8}
+    name: Air Vent
+    path: Materials/Building/Air Vent
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: Bricks03
-    path: Materials/Bricks/Bricks03
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.7058824, g: 0.6964706, b: 0.68705887, a: 0.8}
+    name: Concrete Vent
+    path: Materials/Building/Concrete Vent
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: BricksOld01
-    path: Materials/Bricks/BricksOld01
-    parent: Materials/Bricks
-    sound: 2
-    whitePoint: {r: 0.65882355, g: 0.6650981, b: 0.68078434, a: 0.8}
+    name: Corroded Square Vent
+    path: Materials/Building/Corroded Square Vent
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: CityStreetSidewalk013
-    path: Materials/Bricks/CityStreetSidewalk013
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.5835294, g: 0.40156865, b: 0.3545098, a: 0.8}
+    name: Crusty Metal Grate
+    path: Materials/Building/Crusty Metal Grate
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: Cobblestone19
-    path: Materials/Bricks/Cobblestone19
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.68078434, g: 0.6745098, b: 0.67764705, a: 0.8}
+    name: Old Closed Shutters
+    path: Materials/Building/Old Closed Shutters
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: dungeon-stone1
-    path: Materials/Bricks/dungeon-stone1
-    parent: Materials/Bricks
-    sound: 2
-    whitePoint: {r: 0.52705884, g: 0.52705884, b: 0.4894118, a: 0.8}
+    name: Round Holes
+    path: Materials/Building/Round Holes
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: harshbricks
-    path: Materials/Bricks/harshbricks
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.64000005, g: 0.50921744, b: 0.36452177, a: 0.8}
+    name: Square Vent
+    path: Materials/Building/Square Vent
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: octostone
-    path: Materials/Bricks/octostone
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.5207843, g: 0.48627454, b: 0.42980394, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: redbricks2b
-    path: Materials/Bricks/redbricks2b
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.8, g: 0.6698565, b: 0.5933015, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: tiledstone1
-    path: Materials/Bricks/tiledstone1
-    parent: Materials/Bricks
-    sound: 1
-    whitePoint: {r: 0.2917647, g: 0.28235295, b: 0.19137256, a: 0.8}
+    name: Wall Vent
+    path: Materials/Building/Wall Vent
+    parent: Materials/Building
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
     name: Concrete
@@ -168,200 +301,312 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: Concrete07
-    path: Materials/Concrete/Concrete07
+    name: Asphalt
+    path: Materials/Concrete/Asphalt
     parent: Materials/Concrete
-    sound: 1
-    whitePoint: {r: 0.79322034, g: 0.79322034, b: 0.8, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: Concrete18
-    path: Materials/Concrete/Concrete18
-    parent: Materials/Concrete
-    sound: 1
-    whitePoint: {r: 0.7184314, g: 0.7121569, b: 0.6933333, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: ConcretePlatesStudded002
-    path: Materials/Concrete/ConcretePlatesStudded002
-    parent: Materials/Concrete
-    sound: 1
-    whitePoint: {r: 0.688, g: 0.688, b: 0.688, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: patchy_cement1
-    path: Materials/Concrete/patchy_cement1
-    parent: Materials/Concrete
-    sound: 1
-    whitePoint: {r: 0.8, g: 0.79639643, b: 0.79639643, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: pockedconcrete1
-    path: Materials/Concrete/pockedconcrete1
-    parent: Materials/Concrete
-    sound: 1
-    whitePoint: {r: 0.6682353, g: 0.6086275, b: 0.5396079, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 1
-    name: Fabric
-    path: Materials/Fabric
-    parent: Materials
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
-    supportsColorStyles: 0
-  - isDirectory: 0
-    name: FabricCanvas001
-    path: Materials/Fabric/FabricCanvas001
-    parent: Materials/Fabric
-    sound: 4
-    whitePoint: {r: 0.50823534, g: 0.18509804, b: 0.1882353, a: 0.8}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: FabricCarpet001
-    path: Materials/Fabric/FabricCarpet001
-    parent: Materials/Fabric
-    sound: 4
-    whitePoint: {r: 0.7968628, g: 0.6713726, b: 0.61490196, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: FabricWeaveRug001
-    path: Materials/Fabric/FabricWeaveRug001
-    parent: Materials/Fabric
-    sound: 4
-    whitePoint: {r: 0.5709804, g: 0.53019613, b: 0.55215687, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: InteriorDesignRugSquarePatches001
-    path: Materials/Fabric/InteriorDesignRugSquarePatches001
-    parent: Materials/Fabric
-    sound: 4
-    whitePoint: {r: 0.6650981, g: 0.6211765, b: 0.5835294, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: GLOSSY
-    path: Materials/GLOSSY
-    parent: Materials
-    sound: 10
+    name: Asylum Cell Green
+    path: Materials/Concrete/Asylum Cell Green
+    parent: Materials/Concrete
+    sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
-    supportsColorStyles: 0
+    supportsColorStyles: 1
   - isDirectory: 0
-    name: GLOSSY_preview
-    path: Materials/GLOSSY_preview
-    parent: Materials
+    name: Asylum Cell Orange
+    path: Materials/Concrete/Asylum Cell Orange
+    parent: Materials/Concrete
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Crusty Concrete
+    path: Materials/Concrete/Crusty Concrete
+    parent: Materials/Concrete
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Dirty Concrete
+    path: Materials/Concrete/Dirty Concrete
+    parent: Materials/Concrete
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Muddy Concrete
+    path: Materials/Concrete/Muddy Concrete
+    parent: Materials/Concrete
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Old Concrete
+    path: Materials/Concrete/Old Concrete
+    parent: Materials/Concrete
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Smudged Dirt
+    path: Materials/Concrete/Smudged Dirt
+    parent: Materials/Concrete
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Warning Line 4-4
+    path: Materials/Concrete/Warning Line 4-4
+    parent: Materials/Concrete
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Worn Stucco
+    path: Materials/Concrete/Worn Stucco
+    parent: Materials/Concrete
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
-    name: Ground
-    path: Materials/Ground
+    name: Earth
+    path: Materials/Earth
     parent: Materials
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: dry-dirt2
-    path: Materials/Ground/dry-dirt2
-    parent: Materials/Ground
-    sound: 5
-    whitePoint: {r: 0.5803922, g: 0.52705884, b: 0.41725492, a: 0.8}
+    name: Damp Mud
+    path: Materials/Earth/Damp Mud
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: grass1
-    path: Materials/Ground/grass1
-    parent: Materials/Ground
-    sound: 6
-    whitePoint: {r: 0.43034488, g: 0.64000005, b: 0.44965515, a: 0.8}
+    name: Dark Ground
+    path: Materials/Earth/Dark Ground
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GrassShort001
-    path: Materials/Ground/GrassShort001
-    parent: Materials/Ground
-    sound: 6
-    whitePoint: {r: 0.5584314, g: 0.5803922, b: 0.42352945, a: 0.8}
+    name: Deep Red Earth
+    path: Materials/Earth/Deep Red Earth
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundClay008
-    path: Materials/Ground/GroundClay008
-    parent: Materials/Ground
-    sound: 5
-    whitePoint: {r: 0.652549, g: 0.5207843, b: 0.3890196, a: 0.8}
+    name: Dirt
+    path: Materials/Earth/Dirt
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundForest002
-    path: Materials/Ground/GroundForest002
-    parent: Materials/Ground
-    sound: 5
-    whitePoint: {r: 0.7529412, g: 0.68705887, b: 0.6650981, a: 0.8}
+    name: Dry Cracked Mud
+    path: Materials/Earth/Dry Cracked Mud
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundForest003
-    path: Materials/Ground/GroundForest003
-    parent: Materials/Ground
-    sound: 5
-    whitePoint: {r: 0.64000005, g: 0.61803925, b: 0.55215687, a: 0.8}
+    name: Dry Mud
+    path: Materials/Earth/Dry Mud
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundGrassFieldGreenPatchy001
-    path: Materials/Ground/GroundGrassFieldGreenPatchy001
-    parent: Materials/Ground
-    sound: 6
-    whitePoint: {r: 0.454902, g: 0.45176473, b: 0.26666668, a: 0.8}
+    name: Moss
+    path: Materials/Earth/Moss
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundGravel009
-    path: Materials/Ground/GroundGravel009
-    parent: Materials/Ground
-    sound: 7
-    whitePoint: {r: 0.7372549, g: 0.7309804, b: 0.7372549, a: 0.8}
+    name: Red Earth
+    path: Materials/Earth/Red Earth
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundMulch001
-    path: Materials/Ground/GroundMulch001
-    parent: Materials/Ground
-    sound: 5
-    whitePoint: {r: 0.57725495, g: 0.5239216, b: 0.48627454, a: 0.8}
+    name: Roots In Mud
+    path: Materials/Earth/Roots In Mud
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundPebbles001
-    path: Materials/Ground/GroundPebbles001
-    parent: Materials/Ground
-    sound: 7
-    whitePoint: {r: 0.7529412, g: 0.7592157, b: 0.76549023, a: 0.8}
+    name: Sandy Beach
+    path: Materials/Earth/Sandy Beach
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundPebbles004
-    path: Materials/Ground/GroundPebbles004
-    parent: Materials/Ground
-    sound: 7
-    whitePoint: {r: 0.3356863, g: 0.3356863, b: 0.3137255, a: 0.8}
+    name: Sandy Hillside
+    path: Materials/Earth/Sandy Hillside
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundSandDesertFlat001
-    path: Materials/Ground/GroundSandDesertFlat001
-    parent: Materials/Ground
-    sound: 8
-    whitePoint: {r: 0.76235294, g: 0.6713726, b: 0.5803922, a: 0.8}
+    name: Windswept Sand
+    path: Materials/Earth/Windswept Sand
+    parent: Materials/Earth
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 1
+    name: Finishing
+    path: Materials/Finishing
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: Blue Floral Wallpaper
+    path: Materials/Finishing/Blue Floral Wallpaper
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: GroundSandDesertRippled001
-    path: Materials/Ground/GroundSandDesertRippled001
-    parent: Materials/Ground
-    sound: 8
-    whitePoint: {r: 0.76235294, g: 0.6713726, b: 0.5803922, a: 0.8}
+    name: Bubbly Wallpaper
+    path: Materials/Finishing/Bubbly Wallpaper
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: sandydrysoil
-    path: Materials/Ground/sandydrysoil
-    parent: Materials/Ground
-    sound: 5
-    whitePoint: {r: 0.627451, g: 0.5584314, b: 0.48000002, a: 0.8}
+    name: Chipped Plaster
+    path: Materials/Finishing/Chipped Plaster
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: sandyground1
-    path: Materials/Ground/sandyground1
-    parent: Materials/Ground
-    sound: 5
-    whitePoint: {r: 0.68078434, g: 0.652549, b: 0.56784314, a: 0.8}
+    name: Cracked Plaster
+    path: Materials/Finishing/Cracked Plaster
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Distressed Plaster
+    path: Materials/Finishing/Distressed Plaster
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Embossed Wall
+    path: Materials/Finishing/Embossed Wall
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Green Growth
+    path: Materials/Finishing/Green Growth
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Green Painted Wall
+    path: Materials/Finishing/Green Painted Wall
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Grimy Old Wallpaper
+    path: Materials/Finishing/Grimy Old Wallpaper
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Peeling Wallpaper
+    path: Materials/Finishing/Peeling Wallpaper
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Roof Tiles (new)
+    path: Materials/Finishing/Roof Tiles (new)
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Roof Tiles 3
+    path: Materials/Finishing/Roof Tiles 3
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Roof Tiles
+    path: Materials/Finishing/Roof Tiles
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Ruins
+    path: Materials/Finishing/Ruins
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rusty Metal Shingles
+    path: Materials/Finishing/Rusty Metal Shingles
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Scratched Wallpaper
+    path: Materials/Finishing/Scratched Wallpaper
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Siding
+    path: Materials/Finishing/Siding
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Straw Roof Interior
+    path: Materials/Finishing/Straw Roof Interior
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Straw Roof
+    path: Materials/Finishing/Straw Roof
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Wet Paint 2
+    path: Materials/Finishing/Wet Paint 2
+    parent: Materials/Finishing
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
     name: MATTE
@@ -385,100 +630,310 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: MetalBumpsRusted001
-    path: Materials/Metal/MetalBumpsRusted001
+    name: Absolute Rust
+    path: Materials/Metal/Absolute Rust
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.51450986, g: 0.3764706, b: 0.41098043, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: MetalCorrugatedGarageDoor001
-    path: Materials/Metal/MetalCorrugatedGarageDoor001
+    name: Aluminum Brush
+    path: Materials/Metal/Aluminum Brush
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.5427451, g: 0.5427451, b: 0.5427451, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: MetalGrime010
-    path: Materials/Metal/MetalGrime010
+    name: Aluminum Tubing
+    path: Materials/Metal/Aluminum Tubing
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.7058824, g: 0.7121569, b: 0.6964706, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: MetalGrime011
-    path: Materials/Metal/MetalGrime011
+    name: Blue Tarnish
+    path: Materials/Metal/Blue Tarnish
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.67764705, g: 0.6745098, b: 0.6462745, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: MetalPanelSquareRivets001
-    path: Materials/Metal/MetalPanelSquareRivets001
+    name: Bright Rust
+    path: Materials/Metal/Bright Rust
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.49882355, g: 0.5019608, b: 0.50823534, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: MetalSiding001
-    path: Materials/Metal/MetalSiding001
+    name: Bubble Grip
+    path: Materials/Metal/Bubble Grip
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.38274512, g: 0.36392158, b: 0.33882353, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: MetalSiding002
-    path: Materials/Metal/MetalSiding002
+    name: Completely Rusted
+    path: Materials/Metal/Completely Rusted
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.52, g: 0.52, b: 0.52, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: PanelGeneric004
-    path: Materials/Metal/PanelGeneric004
+    name: Copper Palace
+    path: Materials/Metal/Copper Palace
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.16000001, g: 0.16000001, b: 0.16000001, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: rust-coated
-    path: Materials/Metal/rust-coated
+    name: Copper Tarnish
+    path: Materials/Metal/Copper Tarnish
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.7058824, g: 0.5176471, b: 0.4454902, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: rust-panel
-    path: Materials/Metal/rust-panel
+    name: Corrugated Metal
+    path: Materials/Metal/Corrugated Metal
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.63058823, g: 0.4047059, b: 0.32941177, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: SteelFloorDiamond001
-    path: Materials/Metal/SteelFloorDiamond001
+    name: Dark Metal
+    path: Materials/Metal/Dark Metal
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.18509804, g: 0.18509804, b: 0.18509804, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: streakedmetal
-    path: Materials/Metal/streakedmetal
+    name: Dirty Brushed Metal
+    path: Materials/Metal/Dirty Brushed Metal
     parent: Materials/Metal
-    sound: 9
-    whitePoint: {r: 0.652549, g: 0.652549, b: 0.652549, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: METAL
-    path: Materials/METAL
+    name: Foil
+    path: Materials/Metal/Foil
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Fuel Tank
+    path: Materials/Metal/Fuel Tank
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Gold Comb
+    path: Materials/Metal/Gold Comb
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Heated Metal
+    path: Materials/Metal/Heated Metal
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Heavy Rust
+    path: Materials/Metal/Heavy Rust
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Large Metal Grip
+    path: Materials/Metal/Large Metal Grip
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Loading Dock Reinforcement
+    path: Materials/Metal/Loading Dock Reinforcement
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Metal Mesh
+    path: Materials/Metal/Metal Mesh
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Mothership
+    path: Materials/Metal/Mothership
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Needlepoint Steel
+    path: Materials/Metal/Needlepoint Steel
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Oil Tank
+    path: Materials/Metal/Oil Tank
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Old Dull Metal
+    path: Materials/Metal/Old Dull Metal
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Old Painted Metal
+    path: Materials/Metal/Old Painted Metal
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Pure Corrosion
+    path: Materials/Metal/Pure Corrosion
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Raw Gold
+    path: Materials/Metal/Raw Gold
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Red Light Strip Set 4-4
+    path: Materials/Metal/Red Light Strip Set 4-4
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rusted Iron Grip
+    path: Materials/Metal/Rusted Iron Grip
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rusted Metal
+    path: Materials/Metal/Rusted Metal
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rusty Crate
+    path: Materials/Metal/Rusty Crate
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rusty Panel
+    path: Materials/Metal/Rusty Panel
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Silver Stucco
+    path: Materials/Metal/Silver Stucco
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Small Metal Grip
+    path: Materials/Metal/Small Metal Grip
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Sputnik
+    path: Materials/Metal/Sputnik
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Steel Ocean
+    path: Materials/Metal/Steel Ocean
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Steel Vault
+    path: Materials/Metal/Steel Vault
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Tarnished Metal
+    path: Materials/Metal/Tarnished Metal
+    parent: Materials/Metal
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 1
+    name: Misc
+    path: Materials/Misc
     parent: Materials
-    sound: 9
+    sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: METAL_preview
-    path: Materials/METAL_preview
-    parent: Materials
+    name: Dirty Cardboard
+    path: Materials/Misc/Dirty Cardboard
+    parent: Materials/Misc
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Opal Blue
+    path: Materials/Misc/Opal Blue
+    parent: Materials/Misc
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Opal Pink
+    path: Materials/Misc/Opal Pink
+    parent: Materials/Misc
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Purple Crystal
+    path: Materials/Misc/Purple Crystal
+    parent: Materials/Misc
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Sapphire
+    path: Materials/Misc/Sapphire
+    parent: Materials/Misc
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
@@ -531,33 +986,12 @@ MonoBehaviour:
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
-  - isDirectory: 1
-    name: Plaster
-    path: Materials/Plaster
-    parent: Materials
+  - isDirectory: 0
+    name: Warning Stripes
+    path: Materials/Patterns/Warning Stripes
+    parent: Materials/Patterns
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
-    supportsColorStyles: 0
-  - isDirectory: 0
-    name: Plaster31
-    path: Materials/Plaster/Plaster31
-    parent: Materials/Plaster
-    sound: 3
-    whitePoint: {r: 0.7967078, g: 0.7967078, b: 0.8, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: Plaster35
-    path: Materials/Plaster/Plaster35
-    parent: Materials/Plaster
-    sound: 3
-    whitePoint: {r: 0.8, g: 0.8, b: 0.7921569, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: Stucco05
-    path: Materials/Plaster/Stucco05
-    parent: Materials/Plaster
-    sound: 3
-    whitePoint: {r: 0.7785714, g: 0.7821429, b: 0.8, a: 0.8}
     supportsColorStyles: 1
   - isDirectory: 1
     name: Rock
@@ -567,109 +1001,256 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: blackrock
-    path: Materials/Rock/blackrock
+    name: Aboriginal Canvas
+    path: Materials/Rock/Aboriginal Canvas
     parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.488, g: 0.48260775, b: 0.48530388, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: CliffGreyChunky008
-    path: Materials/Rock/CliffGreyChunky008
-    parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.7309804, g: 0.7341177, b: 0.74039215, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: graniterockface1
-    path: Materials/Rock/graniterockface1
-    parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.304, g: 0.25167212, b: 0.19436066, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: limestone-rock
-    path: Materials/Rock/limestone-rock
-    parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.74039215, g: 0.6839216, b: 0.64000005, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: QuartzPolishedWhite001
-    path: Materials/Rock/QuartzPolishedWhite001
-    parent: Materials/Rock
-    sound: 10
-    whitePoint: {r: 0.8, g: 0.8, b: 0.8, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: RockGrey009
-    path: Materials/Rock/RockGrey009
-    parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.6211765, g: 0.6211765, b: 0.64000005, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: sandstonecliff
-    path: Materials/Rock/sandstonecliff
-    parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.7968628, g: 0.6337255, b: 0.42980394, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: slipperystonework
-    path: Materials/Rock/slipperystonework
-    parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.28800002, g: 0.1984, b: 0.13440001, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: waterwornstone1
-    path: Materials/Rock/waterwornstone1
-    parent: Materials/Rock
-    sound: 2
-    whitePoint: {r: 0.31058824, g: 0.26980394, b: 0.20705883, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 1
-    name: Roof
-    path: Materials/Roof
-    parent: Materials
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
-    supportsColorStyles: 0
-  - isDirectory: 0
-    name: RoofShingles001
-    path: Materials/Roof/RoofShingles001
-    parent: Materials/Roof
-    sound: 1
-    whitePoint: {r: 0.40784317, g: 0.467451, b: 0.50823534, a: 0.8}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: RoofShinglesOld001
-    path: Materials/Roof/RoofShinglesOld001
-    parent: Materials/Roof
-    sound: 1
-    whitePoint: {r: 0.5427451, g: 0.5396079, b: 0.5364706, a: 0.8}
+    name: Ashy Sandstone
+    path: Materials/Rock/Ashy Sandstone
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: RoofThatched001
-    path: Materials/Roof/RoofThatched001
-    parent: Materials/Roof
-    sound: 5
-    whitePoint: {r: 0.6745098, g: 0.68078434, b: 0.6933333, a: 0.8}
+    name: Battered Rose Granite
+    path: Materials/Rock/Battered Rose Granite
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: RoofTilesClay002
-    path: Materials/Roof/RoofTilesClay002
-    parent: Materials/Roof
-    sound: 10
-    whitePoint: {r: 0.8, g: 0.57090914, b: 0.5563637, a: 0.8}
+    name: Bianco Statuario
+    path: Materials/Rock/Bianco Statuario
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: RoofTilesClay003
-    path: Materials/Roof/RoofTilesClay003
-    parent: Materials/Roof
-    sound: 10
-    whitePoint: {r: 0.70274514, g: 0.54901963, b: 0.48313728, a: 0.8}
+    name: Black Marble
+    path: Materials/Rock/Black Marble
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Black Rock
+    path: Materials/Rock/Black Rock
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Blue Crack Marble
+    path: Materials/Rock/Blue Crack Marble
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Blue Quartz
+    path: Materials/Rock/Blue Quartz
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Cracked Gray Rock
+    path: Materials/Rock/Cracked Gray Rock
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Cracked Orange Rock
+    path: Materials/Rock/Cracked Orange Rock
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Crystal Flecks
+    path: Materials/Rock/Crystal Flecks
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Dark Pavement
+    path: Materials/Rock/Dark Pavement
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Dead Caves
+    path: Materials/Rock/Dead Caves
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Dry Well
+    path: Materials/Rock/Dry Well
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Fen Stone
+    path: Materials/Rock/Fen Stone
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Fractured
+    path: Materials/Rock/Fractured
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Green Granite Walkway
+    path: Materials/Rock/Green Granite Walkway
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Green Granite
+    path: Materials/Rock/Green Granite
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Hard Winters
+    path: Materials/Rock/Hard Winters
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Ink Vein Marble
+    path: Materials/Rock/Ink Vein Marble
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Lightning Rock
+    path: Materials/Rock/Lightning Rock
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Marbled Crystal
+    path: Materials/Rock/Marbled Crystal
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Mossy Conglomerate
+    path: Materials/Rock/Mossy Conglomerate
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Mossy Stone
+    path: Materials/Rock/Mossy Stone
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Mother of Pearl
+    path: Materials/Rock/Mother of Pearl
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Muddy Pavement
+    path: Materials/Rock/Muddy Pavement
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Pale Green Stone
+    path: Materials/Rock/Pale Green Stone
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Pink Black Vein
+    path: Materials/Rock/Pink Black Vein
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Pitted Dark Rock
+    path: Materials/Rock/Pitted Dark Rock
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Purple Marble
+    path: Materials/Rock/Purple Marble
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Silvery Blue
+    path: Materials/Rock/Silvery Blue
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Split Rock
+    path: Materials/Rock/Split Rock
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Tepeaca Gris
+    path: Materials/Rock/Tepeaca Gris
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Turquoise
+    path: Materials/Rock/Turquoise
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Vesuvius Gray
+    path: Materials/Rock/Vesuvius Gray
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Weathered Purple Rock
+    path: Materials/Rock/Weathered Purple Rock
+    parent: Materials/Rock
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
     name: Sky
@@ -686,25 +1267,186 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: IceFine001
-    path: Materials/Snow+Ice/IceFine001
+    name: Canadian Arctic
+    path: Materials/Snow+Ice/Canadian Arctic
     parent: Materials/Snow+Ice
-    sound: 12
-    whitePoint: {r: 0.76235294, g: 0.76235294, b: 0.76235294, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: SnowFine003
-    path: Materials/Snow+Ice/SnowFine003
+    name: Chiseled Ice
+    path: Materials/Snow+Ice/Chiseled Ice
     parent: Materials/Snow+Ice
-    sound: 11
-    whitePoint: {r: 0.7703704, g: 0.77695477, b: 0.8, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: SnowIceDirty002
-    path: Materials/Snow+Ice/SnowIceDirty002
+    name: Deep Freeze
+    path: Materials/Snow+Ice/Deep Freeze
     parent: Materials/Snow+Ice
-    sound: 12
-    whitePoint: {r: 0.64000005, g: 0.6431373, b: 0.67764705, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: First Thaw of Spring
+    path: Materials/Snow+Ice/First Thaw of Spring
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Frozen Wall
+    path: Materials/Snow+Ice/Frozen Wall
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Glacier
+    path: Materials/Snow+Ice/Glacier
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Icy Walk
+    path: Materials/Snow+Ice/Icy Walk
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Muddy Ice
+    path: Materials/Snow+Ice/Muddy Ice
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Powder Snow
+    path: Materials/Snow+Ice/Powder Snow
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Slick Ice
+    path: Materials/Snow+Ice/Slick Ice
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Snow
+    path: Materials/Snow+Ice/Snow
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Snowy Field
+    path: Materials/Snow+Ice/Snowy Field
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Snowy Mud
+    path: Materials/Snow+Ice/Snowy Mud
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Windshield 7 AM
+    path: Materials/Snow+Ice/Windshield 7 AM
+    parent: Materials/Snow+Ice
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 1
+    name: Textile
+    path: Materials/Textile
+    parent: Materials
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: Blue Carpet
+    path: Materials/Textile/Blue Carpet
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Blue Draperies
+    path: Materials/Textile/Blue Draperies
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Fancy Carpet
+    path: Materials/Textile/Fancy Carpet
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rubber Mat
+    path: Materials/Textile/Rubber Mat
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Simple Upholstery
+    path: Materials/Textile/Simple Upholstery
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Tan Draperies
+    path: Materials/Textile/Tan Draperies
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Velvet Sofa
+    path: Materials/Textile/Velvet Sofa
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: White Leather Sofa
+    path: Materials/Textile/White Leather Sofa
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Woven Patches
+    path: Materials/Textile/Woven Patches
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Wrecked Rug
+    path: Materials/Textile/Wrecked Rug
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Yarn Weave
+    path: Materials/Textile/Yarn Weave
+    parent: Materials/Textile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
     name: Tile
@@ -714,81 +1456,137 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: bathroomtile2
-    path: Materials/Tile/bathroomtile2
+    name: Ancient Hopscotch
+    path: Materials/Tile/Ancient Hopscotch
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.43073684, g: 0.4785965, b: 0.49600002, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: darktiles1
-    path: Materials/Tile/darktiles1
+    name: Black Herringbone
+    path: Materials/Tile/Black Herringbone
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.42980394, g: 0.41725492, b: 0.2509804, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: Marble065
-    path: Materials/Tile/Marble065
+    name: Blue Glass Blocks
+    path: Materials/Tile/Blue Glass Blocks
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.8, g: 0.8, b: 0.8, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: tile4b
-    path: Materials/Tile/tile4b
+    name: Blue Marble Swirl
+    path: Materials/Tile/Blue Marble Swirl
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.51137257, g: 0.48627454, b: 0.467451, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: Tiles27
-    path: Materials/Tile/Tiles27
+    name: Blue Painted Tiles
+    path: Materials/Tile/Blue Painted Tiles
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.7478261, g: 0.7547826, b: 0.8, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: Tiles40
-    path: Materials/Tile/Tiles40
+    name: Concrete Triangles
+    path: Materials/Tile/Concrete Triangles
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.49000007, g: 0.6333334, b: 0.68, a: 0}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: Tiles043
-    path: Materials/Tile/Tiles043
+    name: Crystal Tiles
+    path: Materials/Tile/Crystal Tiles
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.5615687, g: 0.55529416, b: 0.5396079, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: TilesRectangularMirrorColoredGrunge001
-    path: Materials/Tile/TilesRectangularMirrorColoredGrunge001
+    name: Gray Pebble Tiles
+    path: Materials/Tile/Gray Pebble Tiles
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.54808515, g: 0.54808515, b: 0.552, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: TilesRectangularSubway001
-    path: Materials/Tile/TilesRectangularSubway001
+    name: Green Marble Tile
+    path: Materials/Tile/Green Marble Tile
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.8, g: 0.792233, b: 0.79611653, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: TilesSquareGraphiteSlate001
-    path: Materials/Tile/TilesSquareGraphiteSlate001
+    name: Green Speckled Tile
+    path: Materials/Tile/Green Speckled Tile
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.29347825, g: 0.30130434, b: 0.35999998, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: TilesSquarePoolMixed001
-    path: Materials/Tile/TilesSquarePoolMixed001
+    name: Greenish Marble Diamond
+    path: Materials/Tile/Greenish Marble Diamond
     parent: Materials/Tile
-    sound: 10
-    whitePoint: {r: 0.56, g: 0.7247059, b: 0.8, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Hex Ice Wall
+    path: Materials/Tile/Hex Ice Wall
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Light Marble Tiles
+    path: Materials/Tile/Light Marble Tiles
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Orange Persian
+    path: Materials/Tile/Orange Persian
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Palace Floor
+    path: Materials/Tile/Palace Floor
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Sandy Hopscotch
+    path: Materials/Tile/Sandy Hopscotch
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Scratched Tiles
+    path: Materials/Tile/Scratched Tiles
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Space Tiles
+    path: Materials/Tile/Space Tiles
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Spotted Tiles
+    path: Materials/Tile/Spotted Tiles
+    parent: Materials/Tile
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
     name: UNLIT
@@ -812,67 +1610,116 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: bark1
-    path: Materials/Vegetation/bark1
-    parent: Materials/Vegetation
-    sound: 13
-    whitePoint: {r: 0.44000003, g: 0.41349396, b: 0.38963857, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: BarkBirch002
-    path: Materials/Vegetation/BarkBirch002
-    parent: Materials/Vegetation
-    sound: 13
-    whitePoint: {r: 0.67764705, g: 0.67764705, b: 0.68705887, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: branches_twisted
-    path: Materials/Vegetation/branches_twisted
-    parent: Materials/Vegetation
-    sound: 5
-    whitePoint: {r: 0.57016575, g: 0.59337014, b: 0.6, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
     name: Bumpy Textured Leaves
     path: Materials/Vegetation/Bumpy Textured Leaves
     parent: Materials/Vegetation
-    sound: 5
+    sound: 0
     whitePoint: {r: 0.51257485, g: 0.8, b: 0.12934132, a: 0.8}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: leaf-fall1
-    path: Materials/Vegetation/leaf-fall1
+    name: Dry Brush
+    path: Materials/Vegetation/Dry Brush
     parent: Materials/Vegetation
-    sound: 5
-    whitePoint: {r: 0.56, g: 0.3959596, b: 0.33939394, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Dry Grass 2
+    path: Materials/Vegetation/Dry Grass 2
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Dry Lawn
+    path: Materials/Vegetation/Dry Lawn
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Dry Moss
+    path: Materials/Vegetation/Dry Moss
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Grassy Stone Path
+    path: Materials/Vegetation/Grassy Stone Path
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Grassy Walk Dry
+    path: Materials/Vegetation/Grassy Walk Dry
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Just Add Bison
+    path: Materials/Vegetation/Just Add Bison
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Lawn
+    path: Materials/Vegetation/Lawn
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
     name: Lush Leafy Bush
     path: Materials/Vegetation/Lush Leafy Bush
     parent: Materials/Vegetation
-    sound: 5
+    sound: 0
     whitePoint: {r: 0.4439024, g: 0.8, b: 0.29756093, a: 0.8}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: mossy-ground1
-    path: Materials/Vegetation/mossy-ground1
+    name: Old Pine Needles
+    path: Materials/Vegetation/Old Pine Needles
     parent: Materials/Vegetation
-    sound: 5
-    whitePoint: {r: 0.3258427, g: 0.4, b: 0.13483146, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: RockMossyFull001
-    path: Materials/Vegetation/RockMossyFull001
+    name: Open Square Path Grass
+    path: Materials/Vegetation/Open Square Path Grass
     parent: Materials/Vegetation
-    sound: 2
-    whitePoint: {r: 0.49156627, g: 0.6, b: 0.4481928, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: RockMossyFull004
-    path: Materials/Vegetation/RockMossyFull004
+    name: Overgrown Fence
+    path: Materials/Vegetation/Overgrown Fence
     parent: Materials/Vegetation
-    sound: 5
-    whitePoint: {r: 0.61050695, g: 0.64000005, b: 0.2683871, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Park Pavement Grass
+    path: Materials/Vegetation/Park Pavement Grass
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Weeds and Gravel
+    path: Materials/Vegetation/Weeds and Gravel
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Weedy Lawn
+    path: Materials/Vegetation/Weedy Lawn
+    parent: Materials/Vegetation
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
     name: Wood
@@ -882,81 +1729,200 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: bamboo-wood-semigloss
-    path: Materials/Wood/bamboo-wood-semigloss
+    name: African Ebony Boards
+    path: Materials/Wood/African Ebony Boards
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.6745098, g: 0.57725495, b: 0.43607846, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: oakfloor
-    path: Materials/Wood/oakfloor
+    name: African Ebony
+    path: Materials/Wood/African Ebony
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.32000002, g: 0.26039216, b: 0.2447059, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: plywood
-    path: Materials/Wood/plywood
+    name: Bamboo
+    path: Materials/Wood/Bamboo
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.55529416, g: 0.49882355, b: 0.43607846, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: sculptedfloorboards1
-    path: Materials/Wood/sculptedfloorboards1
+    name: Blue Stained Basketweave
+    path: Materials/Wood/Blue Stained Basketweave
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.48627454, g: 0.47372553, b: 0.48313728, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: WoodFlooring064
-    path: Materials/Wood/WoodFlooring064
+    name: Dark Crisscross Crate
+    path: Materials/Wood/Dark Crisscross Crate
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.63058823, g: 0.5458824, b: 0.3419608, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: WoodFlooring066
-    path: Materials/Wood/WoodFlooring066
+    name: Dark Herringbone
+    path: Materials/Wood/Dark Herringbone
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.5239216, g: 0.36078432, b: 0.18509804, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: WoodLogSidingRough001
-    path: Materials/Wood/WoodLogSidingRough001
+    name: Dark Knotty Wood
+    path: Materials/Wood/Dark Knotty Wood
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.59607846, g: 0.58980393, b: 0.5803922, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: WoodPlanks26
-    path: Materials/Wood/WoodPlanks26
+    name: Dark Mahogany
+    path: Materials/Wood/Dark Mahogany
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.8, g: 0.46909094, b: 0.1781818, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: WoodPlanksWorn01
-    path: Materials/Wood/WoodPlanksWorn01
+    name: Dry Cracked Boards
+    path: Materials/Wood/Dry Cracked Boards
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.78745097, g: 0.68705887, b: 0.6086275, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: WoodWallCabin002
-    path: Materials/Wood/WoodWallCabin002
+    name: Grainy Wood
+    path: Materials/Wood/Grainy Wood
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.63686275, g: 0.61490196, b: 0.58980393, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 0
-    name: wornpaintedwoodsiding
-    path: Materials/Wood/wornpaintedwoodsiding
+    name: Green Siding
+    path: Materials/Wood/Green Siding
     parent: Materials/Wood
-    sound: 13
-    whitePoint: {r: 0.5709804, g: 0.6211765, b: 0.5992157, a: 0.8}
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Gritty Long Boards
+    path: Materials/Wood/Gritty Long Boards
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Mahogany Boards
+    path: Materials/Wood/Mahogany Boards
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Maple Siding
+    path: Materials/Wood/Maple Siding
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Maple
+    path: Materials/Wood/Maple
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Old Faded Wood
+    path: Materials/Wood/Old Faded Wood
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Old Weathered Boards
+    path: Materials/Wood/Old Weathered Boards
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Old Wood Frame 4-4
+    path: Materials/Wood/Old Wood Frame 4-4
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Pink Woven Wood
+    path: Materials/Wood/Pink Woven Wood
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rosewood
+    path: Materials/Wood/Rosewood
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rotten Red Wood
+    path: Materials/Wood/Rotten Red Wood
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rotting Wood
+    path: Materials/Wood/Rotting Wood
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Rough Wood
+    path: Materials/Wood/Rough Wood
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Stained Wood
+    path: Materials/Wood/Stained Wood
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Sun Faded Boards
+    path: Materials/Wood/Sun Faded Boards
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Tree Bark
+    path: Materials/Wood/Tree Bark
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Wood Crate
+    path: Materials/Wood/Wood Crate
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Wrinkled Basketweave
+    path: Materials/Wood/Wrinkled Basketweave
+    parent: Materials/Wood
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
     name: Overlays
@@ -987,18 +1953,53 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
-    name: Fencing
-    path: Overlays/Fencing
+    name: Fluid
+    path: Overlays/Fluid
     parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: FenceChainLink001
-    path: Overlays/Fencing/FenceChainLink001
-    parent: Overlays/Fencing
-    sound: 17
-    whitePoint: {r: 0.37960786, g: 0.37960786, b: 0.37960786, a: 0.8}
+    name: Alien Brain
+    path: Overlays/Fluid/Alien Brain
+    parent: Overlays/Fluid
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Gelatin
+    path: Overlays/Fluid/Gelatin
+    parent: Overlays/Fluid
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Quagmire
+    path: Overlays/Fluid/Quagmire
+    parent: Overlays/Fluid
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Toxic Byproduct
+    path: Overlays/Fluid/Toxic Byproduct
+    parent: Overlays/Fluid
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: WaterBasicDaytime
+    path: Overlays/Fluid/WaterBasicDaytime
+    parent: Overlays/Fluid
+    sound: 16
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: WaterBasicNighttime
+    path: Overlays/Fluid/WaterBasicNighttime
+    parent: Overlays/Fluid
+    sound: 16
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 1
     name: Glass
@@ -1008,47 +2009,33 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: Glass_Blocks_001_SD
-    path: Overlays/Glass/Glass_Blocks_001_SD
+    name: Dusty Broken Windows
+    path: Overlays/Glass/Dusty Broken Windows
     parent: Overlays/Glass
-    sound: 15
-    whitePoint: {r: 0.7309804, g: 0.74980396, b: 0.7341177, a: 0.8}
-    supportsColorStyles: 1
-  - isDirectory: 0
-    name: GLASS_overlay
-    path: Overlays/GLASS_overlay
-    parent: Overlays
-    sound: 15
-    whitePoint: {r: 1, g: 1, b: 1, a: 1}
-    supportsColorStyles: 0
-  - isDirectory: 0
-    name: GLASS_overlay_preview
-    path: Overlays/GLASS_overlay_preview
-    parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
-  - isDirectory: 1
-    name: Grates
-    path: Overlays/Grates
-    parent: Overlays
+  - isDirectory: 0
+    name: Textured Glass
+    path: Overlays/Glass/Textured Glass
+    parent: Overlays/Glass
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
-    supportsColorStyles: 0
+    supportsColorStyles: 1
   - isDirectory: 0
-    name: GrateInterwovenFloor001
-    path: Overlays/Grates/GrateInterwovenFloor001
-    parent: Overlays/Grates
-    sound: 14
-    whitePoint: {r: 0.1945098, g: 0.1945098, b: 0.1945098, a: 0.8}
-    supportsColorStyles: 0
+    name: Warehouse Windows
+    path: Overlays/Glass/Warehouse Windows
+    parent: Overlays/Glass
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
   - isDirectory: 0
-    name: GrateMetal001
-    path: Overlays/Grates/GrateMetal001
-    parent: Overlays/Grates
-    sound: 14
-    whitePoint: {r: 0.22588237, g: 0.22588237, b: 0.22588237, a: 0.8}
-    supportsColorStyles: 0
+    name: Yellow Segmented Window
+    path: Overlays/Glass/Yellow Segmented Window
+    parent: Overlays/Glass
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
   - isDirectory: 0
     name: Invisible
     path: Overlays/Invisible
@@ -1070,6 +2057,41 @@ MonoBehaviour:
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
+  - isDirectory: 1
+    name: Metal_
+    path: Overlays/Metal_
+    parent: Overlays
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: Ancient Grill
+    path: Overlays/Metal_/Ancient Grill
+    parent: Overlays/Metal_
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: Fence 2
+    path: Overlays/Metal_/Fence 2
+    parent: Overlays/Metal_
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: Fence
+    path: Overlays/Metal_/Fence
+    parent: Overlays/Metal_
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: Jailhouse Bars
+    path: Overlays/Metal_/Jailhouse Bars
+    parent: Overlays/Metal_
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
   - isDirectory: 0
     name: MULTIPLY_overlay
     path: Overlays/MULTIPLY_overlay
@@ -1904,31 +2926,52 @@ MonoBehaviour:
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 1
   - isDirectory: 1
-    name: Water
-    path: Overlays/Water
+    name: Vegetation_
+    path: Overlays/Vegetation_
     parent: Overlays
     sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: WaterBasicDaytime
-    path: Overlays/Water/WaterBasicDaytime
-    parent: Overlays/Water
-    sound: 16
+    name: Grass 2
+    path: Overlays/Vegetation_/Grass 2
+    parent: Overlays/Vegetation_
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 0
+    name: Grass
+    path: Overlays/Vegetation_/Grass
+    parent: Overlays/Vegetation_
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 1
+  - isDirectory: 1
+    name: Wood_
+    path: Overlays/Wood_
+    parent: Overlays
+    sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: WaterBasicNighttime
-    path: Overlays/Water/WaterBasicNighttime
-    parent: Overlays/Water
-    sound: 16
+    name: Dark Deck
+    path: Overlays/Wood_/Dark Deck
+    parent: Overlays/Wood_
+    sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 0
-    name: WaterDropletsLargeComplex003
-    path: Overlays/Water/WaterDropletsLargeComplex003
-    parent: Overlays/Water
-    sound: 16
+    name: Garden Fence
+    path: Overlays/Wood_/Garden Fence
+    parent: Overlays/Wood_
+    sound: 0
+    whitePoint: {r: 1, g: 1, b: 1, a: 1}
+    supportsColorStyles: 0
+  - isDirectory: 0
+    name: Picket Fence
+    path: Overlays/Wood_/Picket Fence
+    parent: Overlays/Wood_
+    sound: 0
     whitePoint: {r: 1, g: 1, b: 1, a: 1}
     supportsColorStyles: 0
   - isDirectory: 1
