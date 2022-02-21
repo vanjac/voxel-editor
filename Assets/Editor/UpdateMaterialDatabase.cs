@@ -39,10 +39,6 @@ public class UpdateMaterialDatabase
                     }
                 }
             }
-            // color styles don't work for cutout overlays
-            info.supportsColorStyles = material == null ? false
-                : material.mainTexture != null
-                && material.renderQueue != (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
 
             database.materials.Add(info);
         }

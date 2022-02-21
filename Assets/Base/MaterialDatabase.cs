@@ -18,7 +18,6 @@ public struct MaterialInfo
     public string path;
     public string parent; // parent directory
     public MaterialSound sound;
-    public bool supportsColorStyles;
 }
 
 [System.Serializable]

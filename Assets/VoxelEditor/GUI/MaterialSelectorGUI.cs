@@ -32,8 +32,6 @@ public class MaterialSelectorGUI : GUIPanel
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
     private bool instance;
-    private bool showColorStyle;
-    private ResourcesDirectory.ColorStyle colorStyle;
 
     private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
@@ -125,15 +123,6 @@ public class MaterialSelectorGUI : GUIPanel
         }
         if (colorPicker == null)
         {
-            showColorStyle = false;
-            colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
-            if (!customTextureBase && ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
-            {
-                var info = ResourcesDirectory.materialInfos[highlightMaterial.name];
-                showColorStyle = info.supportsColorStyles;
-                colorStyle = ResourcesDirectory.GetMaterialColorStyle(highlightMaterial);
-            }
-
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
             Color currentColor = highlightMaterial.GetColor(colorProp);
@@ -148,18 +137,6 @@ public class MaterialSelectorGUI : GUIPanel
             };
         }
         colorPicker.WindowGUI();
-        if (showColorStyle)
-        {
-            var newStyle = (ResourcesDirectory.ColorStyle)GUILayout.SelectionGrid((int)colorStyle,
-                new string[] {"Tint", "Paint"}, 2);
-            if (newStyle != colorStyle)
-            {
-                colorStyle = newStyle;
-                MakeInstance();
-                ResourcesDirectory.SetMaterialColorStyle(highlightMaterial, newStyle);
-                colorPicker.CallHandler();  // update white point and call material handler also
-            }
-        }
         return true;
     }
 
