@@ -32,7 +32,6 @@ public class MaterialSelectorGUI : GUIPanel
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
     private bool instance;
-    private Color whitePoint;  // white point only applies in TINT style
     private bool showColorStyle;
     private ResourcesDirectory.ColorStyle colorStyle;
 
@@ -126,14 +125,11 @@ public class MaterialSelectorGUI : GUIPanel
         }
         if (colorPicker == null)
         {
-            whitePoint = Color.white;
             showColorStyle = false;
             colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
             if (!customTextureBase && ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
             {
                 var info = ResourcesDirectory.materialInfos[highlightMaterial.name];
-                whitePoint = info.whitePoint;
-                whitePoint.a = 1.0f;
                 showColorStyle = info.supportsColorStyles;
                 colorStyle = ResourcesDirectory.GetMaterialColorStyle(highlightMaterial);
             }
@@ -141,16 +137,11 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
             Color currentColor = highlightMaterial.GetColor(colorProp);
-            if (colorStyle == ResourcesDirectory.ColorStyle.TINT)
-                currentColor *= whitePoint;
             colorPicker.SetColor(currentColor);
             colorPicker.includeAlpha = isOverlay;
             colorPicker.handler = (Color c) =>
             {
                 MakeInstance();
-                // don't believe what they tell you, color values can go above 1.0
-                if (colorStyle == ResourcesDirectory.ColorStyle.TINT)
-                    c = new Color(c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a);
                 highlightMaterial.SetColor(colorProp, c);
                 if (handler != null)
                     handler(highlightMaterial);
