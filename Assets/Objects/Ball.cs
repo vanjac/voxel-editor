@@ -41,7 +41,7 @@ public class BallObject : ObjectEntity
                     if (marker != null)
                         marker.UpdateMarker();
                 },
-                PropertyGUIs.Material(PaintLayer.OVERLAY, true))
+                PropertyGUIs.Empty)
         });
     }
 

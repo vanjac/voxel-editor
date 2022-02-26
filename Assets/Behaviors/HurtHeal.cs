@@ -46,11 +46,11 @@ public class HurtHealBehavior : EntityBehavior
             new Property("min", "Min health",
                 () => healthRange.Item1,
                 v => healthRange.Item1 = (float)v,
-                PropertyGUIs.Float),
+                PropertyGUIs.Empty),
             new Property("max", "Max health",
                 () => healthRange.Item2,
                 v => healthRange.Item2 = (float)v,
-                PropertyGUIs.Float)
+                PropertyGUIs.Empty)
         });
     }
 

@@ -49,7 +49,7 @@ public class LightBehavior : EntityBehavior
             new Property("hal", "Halo?",
                 () => halo,
                 v => halo = (bool)v,
-                PropertyGUIs.Toggle)
+                PropertyGUIs.Empty)
         });
     }
 
