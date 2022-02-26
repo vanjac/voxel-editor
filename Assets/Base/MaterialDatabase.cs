@@ -16,6 +16,7 @@ public struct MaterialInfo
     public string path;
     public string category;
     public PaintLayer layer;
+    public Texture2D thumbnail;
 }
 
 [System.Serializable]

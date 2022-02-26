@@ -9,7 +9,6 @@ public class MaterialSelectorGUI : GUIPanel
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
-    private const string PREVIEW_SUFFIX = "_preview";
     private const string CUSTOM_CATEGORY = " CUSTOM "; // leading space for sorting order (sorry)
     private const string WORLD_LIST_CATEGORY = "Import from world...";
 
@@ -26,7 +25,8 @@ public class MaterialSelectorGUI : GUIPanel
     private string selectedCategory;
     private bool importFromWorld, loadingWorld;
     private string importMessage = null;
-    private List<Material> materials;
+    private List<Material> materials; // built-in
+    private List<Texture2D> thumbnails;
     private List<CustomTexture> customTextures;
     private string[] categories;
     private ColorPickerGUI colorPicker;
@@ -210,7 +210,7 @@ public class MaterialSelectorGUI : GUIPanel
         int textureI = 0;
         if (allowNullMaterial && selectedCategory == "")
         {
-            if (TextureButton(null, numColumns, textureI++, ref rowRect))
+            if (TextureButton(null, numColumns, textureI++, ref rowRect, GUIIconSet.instance.noLarge))
                 MaterialSelected(null);
         }
         foreach (var tex in customTextures)
@@ -227,10 +227,10 @@ public class MaterialSelectorGUI : GUIPanel
                     CustomTextureSelected(tex);
             }
         }
-        foreach (var mat in materials)
+        for (int i = 0; i < materials.Count; i++)
         {
-            if (TextureButton(mat, numColumns, textureI++, ref rowRect))
-                MaterialSelected(mat);
+            if (TextureButton(materials[i], numColumns, textureI++, ref rowRect, thumbnails[i]))
+                MaterialSelected(materials[i]);
         }
 
         if (categories.Length > 0)
@@ -245,7 +245,8 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
-    private bool TextureButton(Material material, int numColumns, int i, ref Rect rowRect)
+    private bool TextureButton(Material material, int numColumns, int i, ref Rect rowRect,
+                               Texture thumbnail=null)
     {
         if (i % numColumns == 0)
             rowRect = GUILayoutUtility.GetAspectRect(numColumns);
@@ -256,15 +257,14 @@ public class MaterialSelectorGUI : GUIPanel
             buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
             buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
         bool selected;
-        if (material == highlightMaterial || (material != null && highlightMaterial != null &&
-                (material.name == highlightMaterial.name
-                || material.name == highlightMaterial.name + PREVIEW_SUFFIX)))
+        if (material == highlightMaterial || (material != null && highlightMaterial != null
+                && material.name == highlightMaterial.name))
             // highlight the button
             selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
         else
             selected = GUI.Button(buttonRect, "");
-        if (material == null)
-            GUI.DrawTexture(textureRect, GUIIconSet.instance.noLarge);
+        if (thumbnail != null)
+            GUI.DrawTexture(textureRect, thumbnail);
         else
             DrawMaterialTexture(material, textureRect);
         return selected;
@@ -303,6 +303,7 @@ public class MaterialSelectorGUI : GUIPanel
         scrollVelocity = Vector2.zero;
 
         materials = new List<Material>();
+        thumbnails = new List<Texture2D>();
         customTextures = new List<CustomTexture>();
         if (category == CUSTOM_CATEGORY)
         {
@@ -331,21 +332,20 @@ public class MaterialSelectorGUI : GUIPanel
         var categoriesSet = new SortedSet<string>();
         if (category == "" && (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY))
             categoriesSet.Add(CUSTOM_CATEGORY);
-        foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
+        foreach (MaterialInfo info in ResourcesDirectory.materialInfos.Values)
         {
-            if (dirEntry.layer != layer)
+            if (info.layer != layer)
                 continue;
-            if (dirEntry.category != category)
+            if (info.category != category)
             {
                 if (category == "")
-                    categoriesSet.Add(dirEntry.category);
+                    categoriesSet.Add(info.category);
                 continue;
             }
-            if (dirEntry.name.StartsWith("$"))
+            if (info.name.StartsWith("$"))
                 continue; // special alternate materials for game
-            if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))
-                materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
-            materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
+            materials.Add(ResourcesDirectory.LoadMaterial(info));
+            thumbnails.Add(info.thumbnail);
         }
         categories = new string[categoriesSet.Count];
         categoriesSet.CopyTo(categories);
@@ -355,11 +355,6 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void MaterialSelected(Material material)
     {
-        if (material != null && material.name.EndsWith(PREVIEW_SUFFIX))
-        {
-            string newName = material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
-            material = ResourcesDirectory.FindMaterial(newName, true);
-        }
         highlightMaterial = material;
         highlightCustom = null;
         instance = false;

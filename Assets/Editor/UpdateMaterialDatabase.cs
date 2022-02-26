@@ -35,6 +35,8 @@ public class UpdateMaterialDatabase
                 info.layer = PaintLayer.HIDDEN;
             if (info.category == "Materials" || info.category == "Overlays" || info.category == "Skies")
                 info.category = "";
+            string thumbnailPath = "Assets/GameAssets/Thumbnails/" + info.name + ".png";
+            info.thumbnail = AssetDatabase.LoadAssetAtPath<Texture2D>(thumbnailPath);
 
             database.materials.Add(info);
         }
