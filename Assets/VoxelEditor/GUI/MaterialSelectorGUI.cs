@@ -76,8 +76,6 @@ public class MaterialSelectorGUI : GUIPanel
         TutorialGUI.TutorialHighlight("material type");
         tab = GUILayout.SelectionGrid(tab, new string[] { "Texture", "Color" }, 2);
         TutorialGUI.ClearHighlight();
-        if (allowNullMaterial && GUILayout.Button("Clear", GUILayout.ExpandWidth(false)))
-            MaterialSelected(null);
         GUILayout.EndHorizontal();
 
         if (tab == 1)
@@ -201,15 +199,18 @@ public class MaterialSelectorGUI : GUIPanel
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
             Material material = materials[i];
             bool selected;
-            if (material != null && (material.name == highlightName
-                    || material.name == previewName))
+            if (material == highlightMaterial || (material != null &&
+                    (material.name == highlightName || material.name == previewName)))
                 // highlight the button
                 selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
             else
                 selected = GUI.Button(buttonRect, "");
             if (selected)
                 MaterialSelected(material);
-            DrawMaterialTexture(material, textureRect);
+            if (material == null)
+                GUI.DrawTexture(textureRect, GUIIconSet.instance.noLarge);
+            else
+                DrawMaterialTexture(material, textureRect);
         }
 
         if (categories.Length > 0)
@@ -287,6 +288,8 @@ public class MaterialSelectorGUI : GUIPanel
         if (category == "" && (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY))
             categoriesSet.Add(CUSTOM_CATEGORY);
         materials = new List<Material>();
+        if (allowNullMaterial && category == "")
+            materials.Add(null);
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
             if (dirEntry.layer != layer)

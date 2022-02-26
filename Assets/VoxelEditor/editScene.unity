@@ -757,6 +757,7 @@ MonoBehaviour:
     newWorldLarge: {fileID: 0}
     helpLarge: {fileID: 0}
     compassLarge: {fileID: 2800000, guid: f2c752916f63df84d858483d55a07dea, type: 3}
+    noLarge: {fileID: 2800000, guid: 7d4864b67769ad04c886ea66f8e47be1, type: 3}
     tagIcons:
     - {fileID: 2800000, guid: 93f1ba19171b85c428ae0c1342580115, type: 3}
     - {fileID: 2800000, guid: 28031886181f6c74da581772139a1efc, type: 3}
