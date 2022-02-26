@@ -135,8 +135,21 @@ public class MaterialSelectorGUI : GUIPanel
         }
 
         GUILayout.BeginHorizontal();
-        if (selectedCategory != "" && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+
+        bool wasEnabled = GUI.enabled;
+        Color baseColor = GUI.color;
+        if (selectedCategory == "")
+        {
+            if (!GUI.enabled)
+                GUI.color *= new Color(1, 1, 1, 0.5f); // aaaaaaaaa
+            else
+                GUI.enabled = false;
+        }
+        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
             BackButton();
+        GUI.enabled = wasEnabled;
+        GUI.color = baseColor;
+
         if (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY)
         {
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
@@ -165,11 +178,11 @@ public class MaterialSelectorGUI : GUIPanel
         GUIUtils.EndHorizontalClipped();
         if (highlightMaterial != null && !CustomTexture.IsCustomTexture(highlightMaterial))
         {
-            Color baseColor = GUI.backgroundColor;
+            Color baseBGColor = GUI.backgroundColor;
             GUI.backgroundColor *= highlightMaterial.color;
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.paint))
                 tab = 1;
-            GUI.backgroundColor = baseColor;
+            GUI.backgroundColor = baseBGColor;
         }
         GUILayout.EndHorizontal();
 
