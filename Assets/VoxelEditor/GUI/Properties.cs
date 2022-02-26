@@ -433,9 +433,9 @@ public static class PropertyGUIs
 
     public static void Color(Property property)
     {
-        Color baseColor = GUI.color;
+        Color baseColor = GUI.backgroundColor;
         Color valueColor = (Color)property.value;
-        GUI.color = baseColor * valueColor;
+        GUI.backgroundColor *= valueColor;
         if (GUILayout.Button(property.name))
         {
             ColorPickerGUI colorPicker = GUIManager.guiGameObject.AddComponent<ColorPickerGUI>();
@@ -446,7 +446,7 @@ public static class PropertyGUIs
                 property.value = color;
             };
         }
-        GUI.color = baseColor;
+        GUI.backgroundColor = baseColor;
     }
 
     public static void _TargetCustom(Property property,

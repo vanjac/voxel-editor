@@ -21,7 +21,7 @@ public class MaterialSelectorGUI : GUIPanel
     public Material highlightMaterial = null; // the current selected material
     public VoxelArrayEditor voxelArray;
 
-    private int tab;
+    private int tab = 0;
     private string selectedCategory;
     private bool importFromWorld, loadingWorld;
     private string importMessage = null;
@@ -74,7 +74,6 @@ public class MaterialSelectorGUI : GUIPanel
     {
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("material type");
-        tab = GUILayout.SelectionGrid(tab, new string[] { "Texture", "Color" }, 2);
         TutorialGUI.ClearHighlight();
         GUILayout.EndHorizontal();
 
@@ -101,17 +100,11 @@ public class MaterialSelectorGUI : GUIPanel
 
     private bool ColorTab()
     {
-        if (highlightMaterial == null)
-        {
-            GUILayout.Label("No texture selected");
-            return false;
-        }
-        if (CustomTexture.IsCustomTexture(highlightMaterial))
-        {
-            GUILayout.Label("Can't change color of custom texture");
-            // TODO button to edit custom texture
-            return false;
-        }
+        GUILayout.BeginHorizontal();
+        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+            tab = 0;
+        GUILayout.EndHorizontal();
+
         if (colorPicker == null)
         {
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
@@ -140,41 +133,47 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.Label("Loading world...");
             return;
         }
-        scroll = GUILayout.BeginScrollView(scroll);
 
-        if (selectedCategory != "")
+        GUILayout.BeginHorizontal();
+        if (selectedCategory != "" && ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+            BackButton();
+        if (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY)
         {
-            GUILayout.BeginHorizontal();
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
-                BackButton();
-            // prevent from expanding window
-            GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-            if (selectedCategory == CUSTOM_CATEGORY)
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
+                ImportTextureFromPhotos();
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
+                CategorySelected(WORLD_LIST_CATEGORY);
+            if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
             {
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
-                    ImportTextureFromPhotos();
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
-                    CategorySelected(WORLD_LIST_CATEGORY);
-                if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
+                    DuplicateCustomTexture();
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
+                    EditCustomTexture(new CustomTexture(highlightMaterial, layer));
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
                 {
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
-                        DuplicateCustomTexture();
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
-                        EditCustomTexture(new CustomTexture(highlightMaterial, layer));
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
-                    {
-                        var dialog = gameObject.AddComponent<DialogGUI>();
-                        dialog.message = "Are you sure you want to delete this custom texture?";
-                        dialog.yesButtonText = "Yes";
-                        dialog.noButtonText = "No";
-                        dialog.yesButtonHandler = () => DeleteCustomTexture();
-                    }
+                    var dialog = gameObject.AddComponent<DialogGUI>();
+                    dialog.message = "Are you sure you want to delete this custom texture?";
+                    dialog.yesButtonText = "Yes";
+                    dialog.noButtonText = "No";
+                    dialog.yesButtonHandler = () => DeleteCustomTexture();
                 }
             }
-            GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
-            GUIUtils.EndHorizontalClipped();
-            GUILayout.EndHorizontal();
         }
+        // prevent from expanding window
+        GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
+        GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
+        GUIUtils.EndHorizontalClipped();
+        if (highlightMaterial != null && !CustomTexture.IsCustomTexture(highlightMaterial))
+        {
+            Color baseColor = GUI.backgroundColor;
+            GUI.backgroundColor *= highlightMaterial.color;
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.paint))
+                tab = 1;
+            GUI.backgroundColor = baseColor;
+        }
+        GUILayout.EndHorizontal();
+
+        scroll = GUILayout.BeginScrollView(scroll);
 
         if (importFromWorld && (importMessage != null))
             GUILayout.Label(importMessage);
