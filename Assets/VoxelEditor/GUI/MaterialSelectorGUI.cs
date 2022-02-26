@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -9,8 +9,7 @@ public class MaterialSelectorGUI : GUIPanel
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
-    private const string CUSTOM_CATEGORY = " CUSTOM "; // leading space for sorting order (sorry)
-    private const string WORLD_LIST_CATEGORY = "Import from world...";
+    private const string WORLD_LIST = "Import from world...";
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -22,13 +21,19 @@ public class MaterialSelectorGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
 
     private int tab = 0;
-    private string selectedCategory;
-    private bool importFromWorld, loadingWorld;
+    private string selectedWorld = null; // null for current world, WORLD_LIST for list
+    private string selectedCategory = ""; // empty string for root
+    private string destinationCategory = null; // for import operations
+    private bool loadingWorld;
     private string importMessage = null;
+
+    // Objects listed in Textures tab:
     private List<Material> materials; // built-in
     private List<Texture2D> thumbnails;
-    private List<CustomTexture> customTextures;
     private string[] categories;
+    private string[] worlds;
+    private List<CustomTexture> worldCustomTextures; // not filtered by category
+
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
     private bool instance;
@@ -57,6 +62,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     public void Start()
     {
+        OpenCurrentWorld();
         CategorySelected("");
         instance = false;
 
@@ -153,7 +159,7 @@ public class MaterialSelectorGUI : GUIPanel
 
         bool wasEnabled = GUI.enabled;
         Color baseColor = GUI.color;
-        if (selectedCategory == "")
+        if (selectedCategory == "" && selectedWorld == null)
         {
             if (!GUI.enabled)
                 GUI.color *= new Color(1, 1, 1, 0.5f); // aaaaaaaaa
@@ -165,12 +171,15 @@ public class MaterialSelectorGUI : GUIPanel
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
-        if (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY)
+        if ((layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY) && selectedWorld == null)
         {
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
                 ImportTextureFromPhotos();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
-                CategorySelected(WORLD_LIST_CATEGORY);
+            {
+                destinationCategory = selectedCategory;
+                OpenWorldList();
+            }
             if (highlightMaterial != null && ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
                 DuplicateCustomTexture(highlightMaterial);
             if (highlightCustom != null)
@@ -189,7 +198,12 @@ public class MaterialSelectorGUI : GUIPanel
         }
         // prevent from expanding window
         GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-        GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
+        if (selectedCategory != "")
+            GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
+        else if (selectedWorld != null)
+            GUILayout.Label(selectedWorld, categoryLabelStyle.Value);
+        else // need something here (not a flexible space) otherwise clipped region is bugged
+            GUILayout.Label("");
         GUIUtils.EndHorizontalClipped();
         if (highlightMaterial != null && !CustomTexture.IsCustomTexture(highlightMaterial))
         {
@@ -203,25 +217,41 @@ public class MaterialSelectorGUI : GUIPanel
 
         scroll = GUILayout.BeginScrollView(scroll);
 
-        if (importFromWorld && (importMessage != null))
+        if (selectedWorld == WORLD_LIST)
+        {
+            int selected = GUILayout.SelectionGrid(-1, worlds, 1, categoryButtonStyle.Value);
+            if (selected != -1)
+            {
+                WorldSelected(worlds[selected]);
+                CategorySelected("");
+            }
+            GUILayout.EndScrollView();
+            return;
+        }
+
+        if (selectedWorld != null && importMessage != null)
             GUILayout.Label(importMessage);
 
         Rect rowRect = new Rect();
-        int numColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
+        int numColumns = selectedCategory == "" ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
         int textureI = 0;
-        if (allowNullMaterial && selectedCategory == "")
+        if (allowNullMaterial && selectedCategory == "" && selectedWorld == null)
         {
             if (TextureButton(null, numColumns, textureI++, ref rowRect, GUIIconSet.instance.noLarge))
                 MaterialSelected(null);
         }
-        foreach (var tex in customTextures)
+        foreach (var tex in worldCustomTextures)
         {
-            if (TextureButton(tex.material, numColumns, textureI++, ref rowRect))
+            if (tex.category != selectedCategory)
+                continue;
+            if (TextureButton(tex.material, numColumns, textureI++, ref rowRect, null, "Custom"))
             {
-                if (importFromWorld)
+                if (selectedWorld != null)
                 {
-                    importFromWorld = false;
-                    CategorySelected(CUSTOM_CATEGORY);
+                    // import
+                    OpenCurrentWorld();
+                    CategorySelected(destinationCategory);
+                    destinationCategory = null;
                     DuplicateCustomTexture(tex.material);
                 }
                 else
@@ -234,20 +264,19 @@ public class MaterialSelectorGUI : GUIPanel
                 MaterialSelected(materials[i]);
         }
 
-        if (categories.Length > 0)
+        if (selectedCategory == "" && categories.Length > 0)
         {
-            int selectDir = GUILayout.SelectionGrid(-1, categories,
-                selectedCategory == WORLD_LIST_CATEGORY ? 1 : NUM_COLUMNS,
+            int selected = GUILayout.SelectionGrid(-1, categories, NUM_COLUMNS,
                 categoryButtonStyle.Value);
-            if (selectDir != -1)
-                CategorySelected(categories[selectDir]);
+            if (selected != -1)
+                CategorySelected(categories[selected]);
         }
 
         GUILayout.EndScrollView();
     }
 
     private bool TextureButton(Material material, int numColumns, int i, ref Rect rowRect,
-                               Texture thumbnail=null)
+                               Texture thumbnail=null, string label=null)
     {
         if (i % numColumns == 0)
             rowRect = GUILayoutUtility.GetAspectRect(numColumns);
@@ -268,6 +297,12 @@ public class MaterialSelectorGUI : GUIPanel
             GUI.DrawTexture(textureRect, thumbnail);
         else
             DrawMaterialTexture(material, textureRect);
+        if (label != null)
+        {
+            Rect labelRect = new Rect(textureRect.min,
+                GUIStyleSet.instance.buttonSmall.CalcSize(new GUIContent(label)));
+            GUI.Label(labelRect, label, GUIStyleSet.instance.buttonSmall);
+        }
         return selected;
     }
 
@@ -284,72 +319,96 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void BackButton()
     {
-        if (importFromWorld)
+        if (selectedWorld == WORLD_LIST)
         {
-            CategorySelected(WORLD_LIST_CATEGORY);
-            importFromWorld = false;
+            OpenCurrentWorld();
+            CategorySelected(destinationCategory);
+            destinationCategory = null;
         }
-        else if (selectedCategory == WORLD_LIST_CATEGORY)
-            CategorySelected(CUSTOM_CATEGORY);
+        else if (selectedCategory == "" && selectedWorld != null)
+            OpenWorldList();
         else
             CategorySelected("");
     }
 
     private void CategorySelected(string category)
     {
-        if (selectedCategory == WORLD_LIST_CATEGORY && category != CUSTOM_CATEGORY)
-            importFromWorld = true;
         selectedCategory = category;
         scroll = Vector2.zero;
         scrollVelocity = Vector2.zero;
 
-        materials = new List<Material>();
-        thumbnails = new List<Texture2D>();
-        customTextures = new List<CustomTexture>();
-        if (category == CUSTOM_CATEGORY)
+        if (selectedWorld == null)
         {
-            categories = new string[0];
-            foreach (var tex in voxelArray.customTextures[(int)layer])
-                customTextures.Add(tex);
-            AssetManager.UnusedAssets();
-            return;
-        }
-        else if (category == WORLD_LIST_CATEGORY)
-        {
-            var worldNames = new List<string>();
-            WorldFiles.ListWorlds(new List<string>(), worldNames);
-            categories = worldNames.ToArray();
-            AssetManager.UnusedAssets();
-            return;
-        }
-        else if (importFromWorld)
-        {
-            categories = new string[0];
-            // TODO :(
-            StartCoroutine(LoadWorldCoroutine(WorldFiles.GetNewWorldPath(category)));
-            return;
+            materials = new List<Material>();
+            thumbnails = new List<Texture2D>();
+
+            foreach (MaterialInfo info in ResourcesDirectory.materialInfos.Values)
+            {
+                if (info.layer != layer || info.category != category)
+                    continue;
+                materials.Add(ResourcesDirectory.LoadMaterial(info, true));
+                thumbnails.Add(info.thumbnail);
+            }
         }
 
-        var categoriesSet = new SortedSet<string>();
-        if (category == "" && (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY))
-            categoriesSet.Add(CUSTOM_CATEGORY);
+        AssetManager.UnusedAssets();
+    }
+
+    // doesn't reset selected category!
+    private void WorldSelected(string world)
+    {
+        selectedWorld = world;
+
+        materials = new List<Material>();
+        thumbnails = new List<Texture2D>();
+        worldCustomTextures = new List<CustomTexture>();
+        categories = new string[0];
+        StartCoroutine(LoadWorldCoroutine(WorldFiles.GetNewWorldPath(selectedWorld)));
+
+        AssetManager.UnusedAssets();
+    }
+
+    private void OpenCurrentWorld()
+    {
+        selectedWorld = null;
+        worldCustomTextures = voxelArray.customTextures[(int)layer];
+
+        var categoriesSet = GetCustomTextureCategories();
         foreach (MaterialInfo info in ResourcesDirectory.materialInfos.Values)
         {
-            if (info.layer != layer)
-                continue;
-            if (info.category != category)
-            {
-                if (category == "")
-                    categoriesSet.Add(info.category);
-                continue;
-            }
-            materials.Add(ResourcesDirectory.LoadMaterial(info, true));
-            thumbnails.Add(info.thumbnail);
+            if (info.layer == layer && info.category != "")
+                categoriesSet.Add(info.category);
         }
         categories = new string[categoriesSet.Count];
         categoriesSet.CopyTo(categories);
+    }
+
+    // destinationCategory must be set while in other worlds!
+    private void OpenWorldList()
+    {
+        selectedWorld = WORLD_LIST;
+        selectedCategory = "";
+        scroll = Vector2.zero;
+        scrollVelocity = Vector2.zero;
+
+        materials = new List<Material>(); // free up assets
+        thumbnails = new List<Texture2D>();
+        var worldNames = new List<string>();
+        WorldFiles.ListWorlds(new List<string>(), worldNames);
+        worlds = worldNames.ToArray();
 
         AssetManager.UnusedAssets();
+    }
+
+    private SortedSet<string> GetCustomTextureCategories()
+    {
+        var categoriesSet = new SortedSet<string>();
+        foreach (CustomTexture tex in worldCustomTextures)
+        {
+            if (tex.category != "")
+                categoriesSet.Add(tex.category);
+        }
+        return categoriesSet;
     }
 
     private void MaterialSelected(Material material)
@@ -374,13 +433,20 @@ public class MaterialSelectorGUI : GUIPanel
                 return;
             CustomTexture customTex = new CustomTexture(layer);
             customTex.texture = texture;
-
-            voxelArray.customTextures[(int)layer].Add(customTex);
-            voxelArray.unsavedChanges = true;
-
+            AddCustomTexture(customTex);
             CustomTextureSelected(customTex);
             EditCustomTexture(customTex);
         });
+    }
+
+    private void AddCustomTexture(CustomTexture customTex)
+    {
+        if (selectedCategory == "")
+            customTex.category = CustomTexture.DEFAULT_CATEGORY;
+        else
+            customTex.category = selectedCategory;
+        voxelArray.customTextures[(int)layer].Insert(0, customTex); // add to top
+        voxelArray.unsavedChanges = true;
     }
 
     private void EditCustomTexture(CustomTexture customTex)
@@ -397,11 +463,10 @@ public class MaterialSelectorGUI : GUIPanel
     private void DuplicateCustomTexture(Material material)
     {
         CustomTexture newTex = new CustomTexture(Material.Instantiate(material), layer);
-        voxelArray.customTextures[(int)layer].Add(newTex);
+        AddCustomTexture(newTex);
+        CategorySelected(newTex.category);
         CustomTextureSelected(newTex);
-        CategorySelected(CUSTOM_CATEGORY);
         voxelArray.unsavedChanges = true;
-        scrollVelocity = new Vector2(0, 1000 * (materials.Count + customTextures.Count));
     }
 
     private void DeleteCustomTexture()
@@ -414,7 +479,6 @@ public class MaterialSelectorGUI : GUIPanel
         if (!voxelArray.customTextures[(int)layer].Remove(highlightCustom))
             Debug.LogError("Error removing material");
         MaterialSelected(replacement);
-        CategorySelected(CUSTOM_CATEGORY);
         instance = true;
         voxelArray.unsavedChanges = true;
     }
@@ -428,10 +492,13 @@ public class MaterialSelectorGUI : GUIPanel
         yield return null;
         try
         {
-            customTextures = ReadWorldFile.ReadCustomTextures(path, layer);
-            if (customTextures.Count == 0)
+            worldCustomTextures = ReadWorldFile.ReadCustomTextures(path, layer);
+            if (worldCustomTextures.Count == 0)
                 importMessage = "World contains no custom textures for "
                     + (layer == PaintLayer.OVERLAY ? "overlays." : "materials.");
+            var categoriesSet = GetCustomTextureCategories();
+            categories = new string[categoriesSet.Count];
+            categoriesSet.CopyTo(categories);
         }
         catch (MapReadException e)
         {

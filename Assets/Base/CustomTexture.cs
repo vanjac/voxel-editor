@@ -9,6 +9,7 @@ public class CustomTexture : PropertiesObject
         "Custom Texture", "A custom texture image for materials or overlays",
         "image", typeof(CustomTexture));
 
+    public const string DEFAULT_CATEGORY = " CUSTOM "; // leading space for sorting order (sorry)
     private const string CUSTOM_NAME_PREFIX = "Custom:";
     private const string SHADER_NAME_PREFIX = "N-Space/";
     private static readonly string[] SHADER_NAMES = new string[] { "NDiffuse", "NUnlit" };
@@ -31,7 +32,8 @@ public class CustomTexture : PropertiesObject
     }
 
     private Material _material;
-    private PaintLayer layer;
+    public PaintLayer layer;
+    public string category = DEFAULT_CATEGORY; // leading space for sorting order (sorry)
 
     public Material material
     {
@@ -132,6 +134,10 @@ public class CustomTexture : PropertiesObject
     {
         ICollection<Property> properties = new Property[]
         {
+            new Property("cat", "Category",
+                () => category,
+                v => category = (string)v,
+                PropertyGUIs.Text), // TODO menu of existing categories
             new Property("shd", "Shader",
                 () => shader,
                 v => shader = (CustomShader)v,
