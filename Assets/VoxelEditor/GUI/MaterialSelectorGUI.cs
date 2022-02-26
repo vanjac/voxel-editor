@@ -342,9 +342,7 @@ public class MaterialSelectorGUI : GUIPanel
                     categoriesSet.Add(info.category);
                 continue;
             }
-            if (info.name.StartsWith("$"))
-                continue; // special alternate materials for game
-            materials.Add(ResourcesDirectory.LoadMaterial(info));
+            materials.Add(ResourcesDirectory.LoadMaterial(info, true));
             thumbnails.Add(info.thumbnail);
         }
         categories = new string[categoriesSet.Count];

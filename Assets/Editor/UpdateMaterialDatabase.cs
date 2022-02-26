@@ -20,11 +20,21 @@ public class UpdateMaterialDatabase
             MaterialInfo info;
             info.path = Path.ChangeExtension(fullPath.Substring(SEARCH_PATH.Length + 1), null);
             info.name = Path.GetFileName(info.path);
+            if (info.name.StartsWith("$"))
+                continue;
+
+            string gamePath = Path.GetDirectoryName(fullPath) + "/$" + Path.GetFileName(fullPath);
+            if (AssetDatabase.AssetPathToGUID(gamePath) != "")
+                info.gamePath = Path.ChangeExtension(gamePath.Substring(SEARCH_PATH.Length + 1), null);
+            else
+                info.gamePath = null;
+
             if (info.path.Length <= info.name.Length)
                 info.category = "";
             else
                 info.category = Path.GetFileName(
                     info.path.Substring(0, info.path.Length - info.name.Length - 1));
+
             if (info.path.Contains("Materials"))
                 info.layer = PaintLayer.MATERIAL;
             else if (info.path.Contains("Overlays"))
@@ -35,6 +45,7 @@ public class UpdateMaterialDatabase
                 info.layer = PaintLayer.HIDDEN;
             if (info.category == "Materials" || info.category == "Overlays" || info.category == "Skies")
                 info.category = "";
+
             string thumbnailPath = "Assets/GameAssets/Thumbnails/" + info.name + ".png";
             info.thumbnail = AssetDatabase.LoadAssetAtPath<Texture2D>(thumbnailPath);
 

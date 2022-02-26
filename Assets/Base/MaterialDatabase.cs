@@ -13,7 +13,7 @@ public struct MaterialInfo
 {
     public string name;
     // without extension, starting from Assets/Resources/GameAssets/
-    public string path;
+    public string path, gamePath;
     public string category;
     public PaintLayer layer;
     public Texture2D thumbnail;

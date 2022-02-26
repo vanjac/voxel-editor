@@ -32,19 +32,17 @@ public static class ResourcesDirectory
         }
     }
 
-    public static Material LoadMaterial(MaterialInfo info)
+    public static Material LoadMaterial(MaterialInfo info, bool editor)
     {
-        return Resources.Load<Material>("GameAssets/" + info.path);
+        string path = (!editor && info.gamePath != "") ? info.gamePath : info.path;
+        return Resources.Load<Material>("GameAssets/" + path);
     }
 
     public static Material FindMaterial(string name, bool editor)
     {
         MaterialInfo info;
-        // special alternate materials for game
-        if ((!editor) && materialInfos.TryGetValue("$" + name, out info))
-            return LoadMaterial(info);
         if (materialInfos.TryGetValue(name, out info))
-            return LoadMaterial(info);
+            return LoadMaterial(info, editor);
         return null;
     }
 
