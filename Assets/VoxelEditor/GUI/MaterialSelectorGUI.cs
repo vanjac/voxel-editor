@@ -195,14 +195,21 @@ public class MaterialSelectorGUI : GUIPanel
         }
         // prevent from expanding window
         GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-        if (selectedCategory != "")
-            GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
-        else if (selectedWorld != null)
-            GUILayout.Label(selectedWorld, categoryLabelStyle.Value);
-        else // need something here (not a flexible space) otherwise clipped region is bugged
-            GUILayout.Label("");
+        string labelText = "";
+        if (selectedWorld != null)
+        {
+            labelText = selectedWorld;
+            if (selectedCategory != "")
+                labelText += " / " + selectedCategory;
+            if (selectedWorld != WORLD_LIST)
+                labelText += " (import)";
+        }
+        else
+            labelText = selectedCategory;
+        GUILayout.Label(labelText, categoryLabelStyle.Value);
         GUIUtils.EndHorizontalClipped();
-        if (highlightMaterial != null && !CustomTexture.IsCustomTexture(highlightMaterial))
+        if (selectedWorld == null && highlightMaterial != null
+            && !CustomTexture.IsCustomTexture(highlightMaterial))
         {
             Color baseBGColor = GUI.backgroundColor;
             GUI.backgroundColor *= highlightMaterial.color;
