@@ -31,17 +31,9 @@ public class CustomTexture : PropertiesObject
         SMOOTH, PIXEL
     }
 
-    private Material _material;
+    public Material material;
     public PaintLayer layer;
     public string category = DEFAULT_CATEGORY; // leading space for sorting order (sorry)
-
-    public Material material
-    {
-        get
-        {
-            return _material;
-        }
-    }
 
     protected CustomShader shader
     {
@@ -74,55 +66,52 @@ public class CustomTexture : PropertiesObject
         get
         {
             // make sure value is never null!
-            var tex = (Texture2D)_material.mainTexture;
+            var tex = (Texture2D)material.mainTexture;
             if (tex == null)
                 return Texture2D.whiteTexture;
             return tex;
         }
-        set
-        {
-            _material.mainTexture = value;
-        }
+        set => material.mainTexture = value;
     }
 
     protected (float, float) scale
     {
         get
         {
-            Vector2 s = _material.mainTextureScale;
+            Vector2 s = material.mainTextureScale;
             return (s.x == 0 ? 0 : (1.0f / s.x), s.y == 0 ? 0 : (1.0f / s.y));
         }
         set
         {
-            _material.mainTextureScale = new Vector2(
+            material.mainTextureScale = new Vector2(
                 value.Item1 == 0 ? 0 : (1.0f / value.Item1), value.Item2 == 0 ? 0 : (1.0f / value.Item2));
         }
     }
 
     protected CustomFilter filter
     {
-        get
-        {
-            return texture.filterMode == FilterMode.Point ? CustomFilter.PIXEL : CustomFilter.SMOOTH;
-        }
-        set
-        {
-            texture.filterMode = (value == CustomFilter.PIXEL ? FilterMode.Point : FilterMode.Bilinear);
-        }
+        get => texture.filterMode == FilterMode.Point ? CustomFilter.PIXEL : CustomFilter.SMOOTH;
+        set => texture.filterMode = (value == CustomFilter.PIXEL ? FilterMode.Point : FilterMode.Bilinear);
+    }
+
+    protected MaterialSound sound
+    {
+        get => ResourcesDirectory.GetMaterialSound(material);
+        set => material.SetInt("_Sound", (int)value);
     }
 
     public CustomTexture(PaintLayer layer)
     {
         this.layer = layer;
-        _material = new Material(GetShader(CustomShader.MATTE, CustomTransparency.FADE, false));
-        _material.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
+        material = new Material(GetShader(CustomShader.MATTE, CustomTransparency.FADE, false));
+        material.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
     }
 
     public CustomTexture(Material material, PaintLayer layer)
     {
         this.layer = layer;
-        _material = material;
-        _material.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
+        this.material = material;
+        this.material.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
     }
 
     public PropertiesObjectType ObjectType()
@@ -159,8 +148,6 @@ public class CustomTexture : PropertiesObject
         }
         return Property.JoinProperties(properties, new Property[]
         {
-            // TODO: only for overlays!
-            // end overlay section
             new Property("col", "Color",
                 () => color,
                 v => color = (Color)v,
@@ -176,7 +163,11 @@ public class CustomTexture : PropertiesObject
             new Property("flt", "Filter",
                 () => filter,
                 v => filter = (CustomFilter)v,
-                PropertyGUIs.Enum)
+                PropertyGUIs.Enum),
+            new Property("sou", "Sound",
+                () => sound,
+                v => sound = (MaterialSound)v,
+                PropertyGUIs.Enum),
         });
     }
 

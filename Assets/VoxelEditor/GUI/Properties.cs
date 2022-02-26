@@ -78,20 +78,38 @@ public static class PropertyGUIs
         System.Enum e = (System.Enum)property.value;
         var buttonStyle = GUIStyleSet.instance.buttonTab;
         GUILayout.BeginHorizontal();
-        foreach (var enumValue in System.Enum.GetValues(e.GetType()))
+        Array enumValues = System.Enum.GetValues(e.GetType());
+        if (enumValues.Length > 4)
         {
-            string name = enumValue.ToString();
-            // sentence case
-            if (name[0] == '_')
-                name = name.Substring(1).ToLower();
-            else
-                name = Char.ToUpper(name[0]) + name.Substring(1).ToLower();
-            if (enumValue.Equals(e))
-                GUIUtils.HighlightedButton(name, buttonStyle);
-            else if (GUILayout.Button(name, buttonStyle))
-                property.value = enumValue;
+            AlignedLabel(property);
+            if (GUILayout.Button(HumanReadableEnumValue(e), GUI.skin.textField))
+            {
+                var names = new string[enumValues.Length];
+                for (int i = 0; i < enumValues.Length; i++)
+                    names[i] = HumanReadableEnumValue(enumValues.GetValue(i));
+                SimpleMenuGUI menu = GUIManager.guiGameObject.AddComponent<SimpleMenuGUI>();
+                menu.title = property.name;
+                menu.itemNames = names;
+                menu.highlightedIndex = (int)property.value;
+                menu.handler = (int i) => property.value = enumValues.GetValue(i);
+            }
+        }
+        else
+        {
+            foreach (var enumValue in enumValues)
+            {
+                string name = HumanReadableEnumValue(enumValue);
+                if (GUIUtils.HighlightedButton(name, buttonStyle, enumValue.Equals(e)))
+                    property.value = enumValue;
+            }
         }
         GUILayout.EndHorizontal();
+    }
+
+    private static string HumanReadableEnumValue(object value)
+    {
+        string str = value.ToString().Replace('_', ' ').Trim();
+        return Char.ToUpper(str[0]) + str.Substring(1).ToLower();
     }
 
     public static void Float(Property property)
