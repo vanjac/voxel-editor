@@ -1273,21 +1273,27 @@ public class VoxelArrayEditor : VoxelArray
         {
             for (int faceI = 0; faceI < 6; faceI++)
             {
-                if (voxel.faces[faceI].material == oldMat)
-                    voxel.faces[faceI].material = newMat;
-                if (voxel.faces[faceI].overlay == oldMat)
-                    voxel.faces[faceI].overlay = newMat;
-                VoxelModified(voxel);
+                if (ReplaceMaterialSingle(ref voxel.faces[faceI].material, oldMat, newMat)
+                        || ReplaceMaterialSingle(ref voxel.faces[faceI].overlay, oldMat, newMat))
+                    VoxelModified(voxel);
             }
         }
         foreach (ObjectEntity obj in IterateObjects())
         {
-            if (obj.paint.material == oldMat)
-                obj.paint.material = newMat;
-            if (obj.paint.overlay == oldMat)
-                obj.paint.overlay = newMat;
-            ObjectModified(obj);
+            if (ReplaceMaterialSingle(ref obj.paint.material, oldMat, newMat)
+                    || ReplaceMaterialSingle(ref obj.paint.overlay, oldMat, newMat))
+                ObjectModified(obj);
         }
+    }
+
+    private bool ReplaceMaterialSingle(ref Material target, Material oldMat, Material newMat)
+    {
+        if (target == oldMat)
+        {
+            target = newMat;
+            return true;
+        }
+        return false;
     }
 
     public VoxelEdge GetSelectedBevel()

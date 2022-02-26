@@ -25,7 +25,6 @@ public class WorldProperties : PropertiesObject
     {
         // instantiating material allows modifying the Rotation property without modifying asset
         var skyInstance = ResourcesDirectory.InstantiateMaterial(sky);
-        skyInstance.name = sky.name; // sky will be saved correctly
         RenderSettings.skybox = skyInstance;
         UpdateSky();
     }
@@ -65,7 +64,7 @@ public class WorldProperties : PropertiesObject
                 v => {
                     SetSky((Material)v);
                 },
-                PropertyGUIs.Material(PaintLayer.SKY, false)),
+                PropertyGUIs.Material(PaintLayer.SKY)),
             new Property("amb", "Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,

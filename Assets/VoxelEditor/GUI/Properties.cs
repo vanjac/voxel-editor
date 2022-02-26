@@ -366,8 +366,7 @@ public static class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(PaintLayer layer = PaintLayer.MATERIAL,
-        bool customTextureBase = false)
+    public static PropertyGUI Material(PaintLayer layer = PaintLayer.MATERIAL)
     {
         return (Property property) =>
         {
@@ -388,7 +387,6 @@ public static class PropertyGUIs
                 materialSelector.voxelArray = VoxelArrayEditor.instance;
                 materialSelector.highlightMaterial = (Material)property.value;
                 materialSelector.layer = layer;
-                materialSelector.customTextureBase = customTextureBase;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.setter(mat); // skip equality check, it could be the same material with a different color

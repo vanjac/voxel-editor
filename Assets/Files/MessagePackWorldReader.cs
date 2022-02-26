@@ -197,8 +197,7 @@ public class MessagePackWorldReader : WorldFileReader
     private Material ReadCustomTexture(MessagePackObjectDictionary texDict,
         Dictionary<string, Material> customTextureNames, PaintLayer layer)
     {
-        CustomTexture customTex = new CustomTexture(
-            new Material(ReadWorldFile.MissingMaterial(layer).shader), layer);
+        CustomTexture customTex = new CustomTexture(layer);
         ReadPropertiesObject(texDict, customTex);
         Material mat = customTex.material;
         if (texDict.ContainsKey(FileKeys.CUSTOM_MATERIAL_NAME))

@@ -9,12 +9,27 @@ public class CustomTexture : PropertiesObject
         "Custom Texture", "A custom texture image for materials or overlays",
         "image", typeof(CustomTexture));
 
+    private const string SHADER_NAME_PREFIX = "N-Space/";
+    private static readonly string[] SHADER_NAMES = new string[] { "NDiffuse", "NUnlit" };
+    private static readonly string[] TRANSPARENCY_NAMES = new string[] { "-Fade", "-Cutout" };
+    private const string DOUBLE_SIDED_NAME = "-Double";
+
+    public enum CustomShader
+    {
+        MATTE, UNLIT
+    }
+
+    public enum CustomTransparency
+    {
+        FADE, CUTOUT
+    }
+
     public enum CustomFilter
     {
         SMOOTH, PIXEL
     }
 
-    private Material _material, _baseMat;
+    private Material _material;
     private PaintLayer layer;
 
     public Material material
@@ -23,6 +38,32 @@ public class CustomTexture : PropertiesObject
         {
             return _material;
         }
+    }
+
+    protected CustomShader shader
+    {
+        get => material.shader.name.Contains(SHADER_NAMES[(int)CustomShader.UNLIT]) ?
+            CustomShader.UNLIT : CustomShader.MATTE;
+        set => material.shader = GetShader(value, transparency, doubleSided);
+    }
+
+    protected CustomTransparency transparency
+    {
+        get => material.shader.name.Contains(TRANSPARENCY_NAMES[(int)CustomTransparency.CUTOUT]) ?
+            CustomTransparency.CUTOUT : CustomTransparency.FADE;
+        set => material.shader = GetShader(shader, value, doubleSided);
+    }
+
+    protected bool doubleSided
+    {
+        get => material.shader.name.Contains(DOUBLE_SIDED_NAME);
+        set => material.shader = GetShader(shader, transparency, value);
+    }
+
+    public Color color
+    {
+        get => material.color;
+        set => material.color = value;
     }
 
     public Texture2D texture
@@ -55,35 +96,6 @@ public class CustomTexture : PropertiesObject
         }
     }
 
-    public Material baseMat
-    {
-        get
-        {
-            return _baseMat;
-        }
-        set
-        {
-            _baseMat = value;
-            if (_material == null)
-            {
-                _material = new Material(_baseMat);
-            }
-            else
-            {
-                Texture2D oldTexture = texture;
-                (float, float) oldScale = scale;
-
-                _material.shader = value.shader;
-                _material.CopyPropertiesFromMaterial(value);
-
-                texture = oldTexture;
-                scale = oldScale;
-            }
-
-            _material.name = "Custom:" + _baseMat.name + ":" + System.Guid.NewGuid();
-        }
-    }
-
     protected CustomFilter filter
     {
         get
@@ -96,30 +108,17 @@ public class CustomTexture : PropertiesObject
         }
     }
 
+    public CustomTexture(PaintLayer layer)
+    {
+        this.layer = layer;
+        _material = new Material(GetShader(CustomShader.MATTE, CustomTransparency.FADE, false));
+        _material.name = "Custom:" + System.Guid.NewGuid();
+    }
+
     public CustomTexture(Material material, PaintLayer layer)
     {
         _material = material;
         this.layer = layer;
-        if (_material != null && IsCustomTexture(_material))
-        {
-            string baseName = GetBaseMaterialName(_material);
-            _baseMat = ResourcesDirectory.FindMaterial(baseName, true);
-            // copied from MessagePackWorldReader
-            if (_material.color != _baseMat.color)
-            {
-                _baseMat = ResourcesDirectory.InstantiateMaterial(_baseMat);
-                _baseMat.color = _material.color;
-            }
-        }
-        else
-            _baseMat = _material;  // probably temporary
-    }
-
-    public static CustomTexture FromBaseMaterial(Material baseMat, PaintLayer layer)
-    {
-        var customTex = new CustomTexture(null, layer);
-        customTex.baseMat = baseMat;
-        return customTex;
     }
 
     public PropertiesObjectType ObjectType()
@@ -129,12 +128,35 @@ public class CustomTexture : PropertiesObject
 
     public ICollection<Property> Properties()
     {
-        return new Property[]
+        ICollection<Property> properties = new Property[]
         {
-            new Property("bas", "Base",
-                () => baseMat,
-                v => baseMat = (Material)v,
-                PropertyGUIs.Material(layer, customTextureBase: true)),
+            new Property("shd", "Shader",
+                () => shader,
+                v => shader = (CustomShader)v,
+                PropertyGUIs.Enum),
+        };
+        if (layer == PaintLayer.OVERLAY)
+        {
+            properties = Property.JoinProperties(properties, new Property[]
+            {
+                new Property("tra", "Transparency",
+                    () => transparency,
+                    v => transparency = (CustomTransparency)v,
+                    PropertyGUIs.Enum),
+                new Property("dou", "Double sided?",
+                    () => doubleSided,
+                    v => doubleSided = (bool)v,
+                    PropertyGUIs.Toggle),
+            });
+        }
+        return Property.JoinProperties(properties, new Property[]
+        {
+            // TODO: only for overlays!
+            // end overlay section
+            new Property("col", "Color",
+                () => color,
+                v => color = (Color)v,
+                PropertyGUIs.Color),
             new Property("tex", "Texture",
                 () => texture,
                 v => texture = (Texture2D)v,
@@ -147,12 +169,42 @@ public class CustomTexture : PropertiesObject
                 () => filter,
                 v => filter = (CustomFilter)v,
                 PropertyGUIs.Enum)
-        };
+        });
     }
 
     public ICollection<Property> DeprecatedProperties()
     {
-        return System.Array.Empty<Property>();
+        return new Property[]
+        {
+            new Property("bas", "Base",
+                () => material,
+                v =>
+                {
+                    Material baseMat = (Material)v;
+                    if (baseMat != null)
+                    {
+                        CustomTexture copyFrom = new CustomTexture(baseMat, layer);
+                        shader = copyFrom.shader;
+                        transparency = copyFrom.transparency;
+                        // don't copy double-sided, wasn't supported for old-style custom textures
+                        color = copyFrom.color;
+                    }
+                },
+                PropertyGUIs.Empty)
+        };
+    }
+
+    private Shader GetShader(CustomShader shaderType, CustomTransparency transparency,
+        bool doubleSided)
+    {
+        string shaderName = SHADER_NAME_PREFIX + SHADER_NAMES[(int)shaderType];
+        if (layer == PaintLayer.OVERLAY)
+        {
+            shaderName += TRANSPARENCY_NAMES[(int)transparency];
+            if (doubleSided)
+                shaderName += DOUBLE_SIDED_NAME;
+        }
+        return Shader.Find(shaderName);
     }
 
     public static bool IsCustomTexture(Material material)
@@ -160,22 +212,17 @@ public class CustomTexture : PropertiesObject
         return material.name.StartsWith("Custom:");
     }
 
-    public static string GetBaseMaterialName(Material material)
-    {
-        return material.name.Split(':')[1];
-    }
-
     public static Material Clone(Material material)
     {
         Material newMat = Material.Instantiate(material);
         Debug.Log("old name: " + material.name);
         var nameParts = material.name.Split(':');
-        if (nameParts.Length < 3)
+        if (nameParts.Length < 2)
         {
             Debug.LogError("Bad material name!");
             return newMat;
         }
-        newMat.name = nameParts[0] + ":" + nameParts[1] + ":" + System.Guid.NewGuid();
+        newMat.name = nameParts[0] + ":" + System.Guid.NewGuid();
         Debug.Log("new name: " + newMat.name);
         return newMat;
     }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -18,7 +18,6 @@ public class MaterialSelectorGUI : GUIPanel
     public MaterialSelectHandler handler;
     public PaintLayer layer = PaintLayer.MATERIAL;
     public bool allowNullMaterial = false;
-    public bool customTextureBase = false;
     public Material highlightMaterial = null; // the current selected material
     public VoxelArrayEditor voxelArray;
 
@@ -112,6 +111,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (CustomTexture.IsCustomTexture(highlightMaterial))
         {
             GUILayout.Label("Can't change color of custom texture");
+            // TODO button to edit custom texture
             return false;
         }
         if (colorPicker == null)
@@ -284,8 +284,7 @@ public class MaterialSelectorGUI : GUIPanel
         }
 
         var categoriesSet = new SortedSet<string>();
-        if (!customTextureBase && category == ""
-                && (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY))
+        if (category == "" && (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY))
             categoriesSet.Add(CUSTOM_CATEGORY);
         materials = new List<Material>();
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
@@ -327,21 +326,6 @@ public class MaterialSelectorGUI : GUIPanel
             return;  // don't call handler
         }
         instance = false;
-        if (customTextureBase && highlightMaterial != null)
-        {
-            // reset color to white
-            string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
-            if (colorProp != null)
-            {
-                Color prevColor = highlightMaterial.GetColor(colorProp);
-                Color newColor = new Color(1, 1, 1, prevColor.a);
-                if (newColor != prevColor)
-                {
-                    MakeInstance();
-                    highlightMaterial.SetColor(colorProp, newColor);
-                }
-            }
-        }
         if (handler != null)
             handler(highlightMaterial);
     }
@@ -351,11 +335,7 @@ public class MaterialSelectorGUI : GUIPanel
         NativeGalleryWrapper.ImportTexture((Texture2D texture) => {
             if (texture == null)
                 return;
-
-            Material baseMat = ResourcesDirectory.InstantiateMaterial(Resources.Load<Material>(
-                layer == PaintLayer.OVERLAY ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE"));
-            baseMat.color = new Color(1, 1, 1, baseMat.color.a);
-            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, layer);
+            CustomTexture customTex = new CustomTexture(layer);
             customTex.texture = texture;
 
             materials.Add(customTex.material);
@@ -389,10 +369,15 @@ public class MaterialSelectorGUI : GUIPanel
     private void DeleteCustomTexture()
     {
         CustomTexture customTex = new CustomTexture(highlightMaterial, layer);
-        voxelArray.ReplaceMaterial(highlightMaterial, customTex.baseMat);
+        // TODO different shaders
+        Material replacement = ResourcesDirectory.InstantiateMaterial(ResourcesDirectory.FindMaterial(
+                layer == PaintLayer.OVERLAY ? "MATTE_overlay" : "MATTE", true));
+        replacement.color = customTex.color;
+        voxelArray.ReplaceMaterial(highlightMaterial, replacement);
         if (!materials.Remove(highlightMaterial))
             Debug.LogError("Error removing material");
-        MaterialSelected(customTex.baseMat);
+        MaterialSelected(replacement);
+        instance = true;
         voxelArray.unsavedChanges = true;
     }
 
