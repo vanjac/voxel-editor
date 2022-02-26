@@ -219,4 +219,9 @@ public class CustomTexture : PropertiesObject
     {
         return material.name.StartsWith(CUSTOM_NAME_PREFIX);
     }
+
+    public static bool IsSupportedShader(Material material)
+    {
+        return material.shader.name.StartsWith(SHADER_NAME_PREFIX);
+    }
 }

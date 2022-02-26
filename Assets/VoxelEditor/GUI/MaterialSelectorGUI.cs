@@ -176,7 +176,8 @@ public class MaterialSelectorGUI : GUIPanel
                 ImportTextureFromPhotos();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
                 OpenWorldList();
-            if (highlightMaterial != null && ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
+            if (highlightMaterial != null && CustomTexture.IsSupportedShader(highlightMaterial)
+                    && ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
                 CloneCustomTexture(highlightMaterial, CustomDestinationCategory());
             if (highlightCustom != null)
             {
