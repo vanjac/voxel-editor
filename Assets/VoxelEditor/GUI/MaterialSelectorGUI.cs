@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -117,6 +117,7 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.BeginHorizontal();
         if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
             tab = 0;
+        GUILayout.Label("Adjust color", categoryLabelStyle.Value);
         GUILayout.EndHorizontal();
 
         if (colorPicker == null)
@@ -194,7 +195,7 @@ public class MaterialSelectorGUI : GUIPanel
         {
             Color baseBGColor = GUI.backgroundColor;
             GUI.backgroundColor *= highlightMaterial.color;
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.paint))
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.color))
                 tab = 1;
             GUI.backgroundColor = baseBGColor;
         }
