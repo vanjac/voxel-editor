@@ -23,7 +23,6 @@ public class MaterialSelectorGUI : GUIPanel
     private int tab = 0;
     private string selectedWorld = null; // null for current world, WORLD_LIST for list
     private string selectedCategory = ""; // empty string for root
-    private string destinationCategory = null; // for import operations
     private bool loadingWorld;
     private string importMessage = null;
 
@@ -176,12 +175,9 @@ public class MaterialSelectorGUI : GUIPanel
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
                 ImportTextureFromPhotos();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
-            {
-                destinationCategory = selectedCategory;
                 OpenWorldList();
-            }
             if (highlightMaterial != null && ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
-                DuplicateCustomTexture(highlightMaterial);
+                CloneCustomTexture(highlightMaterial, CustomDestinationCategory());
             if (highlightCustom != null)
             {
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
@@ -250,9 +246,7 @@ public class MaterialSelectorGUI : GUIPanel
                 {
                     // import
                     OpenCurrentWorld();
-                    CategorySelected(destinationCategory);
-                    destinationCategory = null;
-                    DuplicateCustomTexture(tex.material);
+                    CloneCustomTexture(tex.material, tex.category);
                 }
                 else
                     CustomTextureSelected(tex);
@@ -322,8 +316,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (selectedWorld == WORLD_LIST)
         {
             OpenCurrentWorld();
-            CategorySelected(destinationCategory);
-            destinationCategory = null;
+            CategorySelected("");
         }
         else if (selectedCategory == "" && selectedWorld != null)
             OpenWorldList();
@@ -383,7 +376,6 @@ public class MaterialSelectorGUI : GUIPanel
         categoriesSet.CopyTo(categories);
     }
 
-    // destinationCategory must be set while in other worlds!
     private void OpenWorldList()
     {
         selectedWorld = WORLD_LIST;
@@ -433,6 +425,7 @@ public class MaterialSelectorGUI : GUIPanel
                 return;
             CustomTexture customTex = new CustomTexture(layer);
             customTex.texture = texture;
+            customTex.category = CustomDestinationCategory();
             AddCustomTexture(customTex);
             CustomTextureSelected(customTex);
             EditCustomTexture(customTex);
@@ -441,12 +434,13 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void AddCustomTexture(CustomTexture customTex)
     {
-        if (selectedCategory == "")
-            customTex.category = CustomTexture.DEFAULT_CATEGORY;
-        else
-            customTex.category = selectedCategory;
         voxelArray.customTextures[(int)layer].Insert(0, customTex); // add to top
         voxelArray.unsavedChanges = true;
+    }
+
+    private string CustomDestinationCategory()
+    {
+        return selectedCategory == "" ? CustomTexture.DEFAULT_CATEGORY : selectedCategory;
     }
 
     private void EditCustomTexture(CustomTexture customTex)
@@ -460,9 +454,10 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
-    private void DuplicateCustomTexture(Material material)
+    private void CloneCustomTexture(Material material, string category)
     {
         CustomTexture newTex = new CustomTexture(Material.Instantiate(material), layer);
+        newTex.category = category;
         AddCustomTexture(newTex);
         CategorySelected(newTex.category);
         CustomTextureSelected(newTex);
