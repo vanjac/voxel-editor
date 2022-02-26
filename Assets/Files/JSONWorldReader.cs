@@ -48,9 +48,9 @@ public class JSONWorldReader : WorldFileReader
         return new List<EmbeddedData>();
     }
 
-    public List<Material> FindCustomTextures(PaintLayer layer)
+    public List<CustomTexture> FindCustomTextures(PaintLayer layer)
     {
-        return new List<Material>();
+        return new List<CustomTexture>();
     }
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)

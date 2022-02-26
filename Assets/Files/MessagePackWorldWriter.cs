@@ -42,14 +42,14 @@ public class MessagePackWorldWriter
         world[FileKeys.WORLD_CAMERA] = new MessagePackObject(WriteCamera(cameraPivot));
 
         var customMaterialsList = new List<MessagePackObject>();
-        foreach (Material mat in voxelArray.customTextures[(int)PaintLayer.MATERIAL])
-            customMaterialsList.Add(new MessagePackObject(WriteCustomTexture(mat, PaintLayer.MATERIAL)));
+        foreach (var tex in voxelArray.customTextures[(int)PaintLayer.MATERIAL])
+            customMaterialsList.Add(new MessagePackObject(WriteCustomTexture(tex, PaintLayer.MATERIAL)));
         if (customMaterialsList.Count != 0)
             world[FileKeys.WORLD_CUSTOM_MATERIALS] = new MessagePackObject(customMaterialsList);
 
         var customOverlaysList = new List<MessagePackObject>();
-        foreach (Material mat in voxelArray.customTextures[(int)PaintLayer.OVERLAY])
-            customOverlaysList.Add(new MessagePackObject(WriteCustomTexture(mat, PaintLayer.OVERLAY)));
+        foreach (var tex in voxelArray.customTextures[(int)PaintLayer.OVERLAY])
+            customOverlaysList.Add(new MessagePackObject(WriteCustomTexture(tex, PaintLayer.OVERLAY)));
         if (customOverlaysList.Count != 0)
             world[FileKeys.WORLD_CUSTOM_OVERLAYS] = new MessagePackObject(customOverlaysList);
 
@@ -116,11 +116,10 @@ public class MessagePackWorldWriter
         return camera;
     }
 
-    private static MessagePackObjectDictionary WriteCustomTexture(Material material, PaintLayer layer)
+    private static MessagePackObjectDictionary WriteCustomTexture(CustomTexture tex, PaintLayer layer)
     {
-        CustomTexture customTex = new CustomTexture(material, layer);
-        var materialDict = WritePropertiesObject(customTex, false);
-        materialDict[FileKeys.CUSTOM_MATERIAL_NAME] = material.name;
+        var materialDict = WritePropertiesObject(tex, false);
+        materialDict[FileKeys.CUSTOM_MATERIAL_NAME] = tex.material.name;
         return materialDict;
     }
 

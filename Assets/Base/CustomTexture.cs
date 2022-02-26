@@ -118,8 +118,9 @@ public class CustomTexture : PropertiesObject
 
     public CustomTexture(Material material, PaintLayer layer)
     {
-        _material = material;
         this.layer = layer;
+        _material = material;
+        _material.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
     }
 
     public PropertiesObjectType ObjectType()
@@ -211,13 +212,5 @@ public class CustomTexture : PropertiesObject
     public static bool IsCustomTexture(Material material)
     {
         return material.name.StartsWith(CUSTOM_NAME_PREFIX);
-    }
-
-    // alternative to ResourcesDirectory.InstantiateMaterial
-    public static Material Clone(Material material)
-    {
-        Material newMat = Material.Instantiate(material);
-        newMat.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
-        return newMat;
     }
 }

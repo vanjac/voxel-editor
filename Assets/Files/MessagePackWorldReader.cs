@@ -91,8 +91,10 @@ public class MessagePackWorldReader : WorldFileReader
         if (editor && cameraPivot != null && world.ContainsKey(FileKeys.WORLD_CAMERA))
             ReadCamera(world[FileKeys.WORLD_CAMERA].AsDictionary(), cameraPivot);
 
+        voxelArray.customTextures = new List<CustomTexture>[]
+            { new List<CustomTexture>(), new List<CustomTexture>() };
+
         var customMaterialNames = new Dictionary<string, Material>();
-        voxelArray.customTextures[(int)PaintLayer.MATERIAL] = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_CUSTOM_MATERIALS))
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
@@ -101,7 +103,6 @@ public class MessagePackWorldReader : WorldFileReader
         }
 
         var customOverlayNames = new Dictionary<string, Material>();
-        voxelArray.customTextures[(int)PaintLayer.OVERLAY] = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAYS))
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
@@ -194,18 +195,17 @@ public class MessagePackWorldReader : WorldFileReader
         }
     }
 
-    private Material ReadCustomTexture(MessagePackObjectDictionary texDict,
+    private CustomTexture ReadCustomTexture(MessagePackObjectDictionary texDict,
         Dictionary<string, Material> customTextureNames, PaintLayer layer)
     {
         CustomTexture customTex = new CustomTexture(layer);
         ReadPropertiesObject(texDict, customTex);
-        Material mat = customTex.material;
         if (texDict.ContainsKey(FileKeys.CUSTOM_MATERIAL_NAME))
         {
-            mat.name = texDict[FileKeys.CUSTOM_MATERIAL_NAME].AsString();
-            customTextureNames[mat.name] = mat;
+            customTex.material.name = texDict[FileKeys.CUSTOM_MATERIAL_NAME].AsString();
+            customTextureNames[customTex.material.name] = customTex.material;
         }
-        return mat;
+        return customTex;
     }
 
     private Material ReadMaterial(MessagePackObjectDictionary matDict,
@@ -577,13 +577,13 @@ public class MessagePackWorldReader : WorldFileReader
                 yield return behaviorObj.AsDictionary();
     }
 
-    public List<Material> FindCustomTextures(PaintLayer layer)
+    public List<CustomTexture> FindCustomTextures(PaintLayer layer)
     {
         // copied from FindEmbeddedData
         MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
         CheckWorldValid(worldDict);
 
-        List<Material> texList = new List<Material>();
+        var texList = new List<CustomTexture>();
         try
         {
             foreach (var tex in IterateCustomTextures(worldDict, layer))
@@ -600,7 +600,7 @@ public class MessagePackWorldReader : WorldFileReader
         return texList;
     }
 
-    private IEnumerable<Material> IterateCustomTextures(
+    private IEnumerable<CustomTexture> IterateCustomTextures(
         MessagePackObjectDictionary worldDict, PaintLayer layer)
     {
         string key = layer == PaintLayer.OVERLAY ? FileKeys.WORLD_CUSTOM_OVERLAYS : FileKeys.WORLD_CUSTOM_MATERIALS;

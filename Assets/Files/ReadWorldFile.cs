@@ -25,7 +25,7 @@ public interface WorldFileReader
     // return warnings
     List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor);
     List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type);
-    List<Material> FindCustomTextures(PaintLayer layer);
+    List<CustomTexture> FindCustomTextures(PaintLayer layer);
 }
 
 public static class ReadWorldFile
@@ -67,7 +67,7 @@ public static class ReadWorldFile
         return reader.FindEmbeddedData(type);
     }
 
-    public static List<Material> ReadCustomTextures(string filePath, PaintLayer layer)
+    public static List<CustomTexture> ReadCustomTextures(string filePath, PaintLayer layer)
     {
         // TODO: copied from ReadEmbeddedData
         WorldFileReader reader;

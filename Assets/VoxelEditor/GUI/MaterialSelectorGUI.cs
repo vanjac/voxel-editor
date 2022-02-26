@@ -19,6 +19,7 @@ public class MaterialSelectorGUI : GUIPanel
     public PaintLayer layer = PaintLayer.MATERIAL;
     public bool allowNullMaterial = false;
     public Material highlightMaterial = null; // the current selected material
+    private CustomTexture highlightCustom = null; // highlightMaterial will also be set
     public VoxelArrayEditor voxelArray;
 
     private int tab = 0;
@@ -26,6 +27,7 @@ public class MaterialSelectorGUI : GUIPanel
     private bool importFromWorld, loadingWorld;
     private string importMessage = null;
     private List<Material> materials;
+    private List<CustomTexture> customTextures;
     private string[] categories;
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
@@ -57,6 +59,18 @@ public class MaterialSelectorGUI : GUIPanel
     {
         CategorySelected("");
         instance = false;
+
+        if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
+        {
+            foreach (var tex in voxelArray.customTextures[(int)layer])
+            {
+                if (tex.material == highlightMaterial)
+                {
+                    highlightCustom = tex;
+                    break;
+                }
+            }
+        }
     }
 
     void OnDestroy()
@@ -157,11 +171,11 @@ public class MaterialSelectorGUI : GUIPanel
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
                 CategorySelected(WORLD_LIST_CATEGORY);
             if (highlightMaterial != null && ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
-                DuplicateCustomTexture();
-            if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
+                DuplicateCustomTexture(highlightMaterial);
+            if (highlightCustom != null)
             {
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
-                    EditCustomTexture(new CustomTexture(highlightMaterial, layer));
+                    EditCustomTexture(highlightCustom);
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
                 {
                     var dialog = gameObject.AddComponent<DialogGUI>();
@@ -192,37 +206,31 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.Label(importMessage);
 
         Rect rowRect = new Rect();
-        int materialColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
-        string highlightName = "", previewName = "";
-        if (highlightMaterial != null)
+        int numColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
+        int textureI = 0;
+        if (allowNullMaterial && selectedCategory == "")
         {
-            highlightName = highlightMaterial.name;
-            previewName = highlightName + PREVIEW_SUFFIX;
+            if (TextureButton(null, numColumns, textureI++, ref rowRect))
+                MaterialSelected(null);
         }
-        for (int i = 0; i < materials.Count; i++)
+        foreach (var tex in customTextures)
         {
-            if (i % materialColumns == 0)
-                rowRect = GUILayoutUtility.GetAspectRect(materialColumns);
-            Rect buttonRect = rowRect;
-            buttonRect.width = buttonRect.height;
-            buttonRect.x = buttonRect.width * (i % materialColumns);
-            Rect textureRect = new Rect(
-                buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
-                buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
-            Material material = materials[i];
-            bool selected;
-            if (material == highlightMaterial || (material != null &&
-                    (material.name == highlightName || material.name == previewName)))
-                // highlight the button
-                selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
-            else
-                selected = GUI.Button(buttonRect, "");
-            if (selected)
-                MaterialSelected(material);
-            if (material == null)
-                GUI.DrawTexture(textureRect, GUIIconSet.instance.noLarge);
-            else
-                DrawMaterialTexture(material, textureRect);
+            if (TextureButton(tex.material, numColumns, textureI++, ref rowRect))
+            {
+                if (importFromWorld)
+                {
+                    importFromWorld = false;
+                    CategorySelected(CUSTOM_CATEGORY);
+                    DuplicateCustomTexture(tex.material);
+                }
+                else
+                    CustomTextureSelected(tex);
+            }
+        }
+        foreach (var mat in materials)
+        {
+            if (TextureButton(mat, numColumns, textureI++, ref rowRect))
+                MaterialSelected(mat);
         }
 
         if (categories.Length > 0)
@@ -237,12 +245,38 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
+    private bool TextureButton(Material material, int numColumns, int i, ref Rect rowRect)
+    {
+        if (i % numColumns == 0)
+            rowRect = GUILayoutUtility.GetAspectRect(numColumns);
+        Rect buttonRect = rowRect;
+        buttonRect.width = buttonRect.height;
+        buttonRect.x = buttonRect.width * (i % numColumns);
+        Rect textureRect = new Rect(
+            buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
+            buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
+        bool selected;
+        if (material == highlightMaterial || (material != null && highlightMaterial != null &&
+                (material.name == highlightMaterial.name
+                || material.name == highlightMaterial.name + PREVIEW_SUFFIX)))
+            // highlight the button
+            selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
+        else
+            selected = GUI.Button(buttonRect, "");
+        if (material == null)
+            GUI.DrawTexture(textureRect, GUIIconSet.instance.noLarge);
+        else
+            DrawMaterialTexture(material, textureRect);
+        return selected;
+    }
+
     private void MakeInstance()
     {
         if (!instance)
         {
             //Debug.Log("instantiate");
             highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
+            highlightCustom = null;
             instance = true;
         }
     }
@@ -268,16 +302,18 @@ public class MaterialSelectorGUI : GUIPanel
         scroll = Vector2.zero;
         scrollVelocity = Vector2.zero;
 
+        materials = new List<Material>();
+        customTextures = new List<CustomTexture>();
         if (category == CUSTOM_CATEGORY)
         {
             categories = new string[0];
-            materials = new List<Material>(voxelArray.customTextures[(int)layer]);
+            foreach (var tex in voxelArray.customTextures[(int)layer])
+                customTextures.Add(tex);
             AssetManager.UnusedAssets();
             return;
         }
         else if (category == WORLD_LIST_CATEGORY)
         {
-            materials = new List<Material>();
             var worldNames = new List<string>();
             WorldFiles.ListWorlds(new List<string>(), worldNames);
             categories = worldNames.ToArray();
@@ -287,7 +323,6 @@ public class MaterialSelectorGUI : GUIPanel
         else if (importFromWorld)
         {
             categories = new string[0];
-            materials = new List<Material>();
             // TODO :(
             StartCoroutine(LoadWorldCoroutine(WorldFiles.GetNewWorldPath(category)));
             return;
@@ -296,9 +331,6 @@ public class MaterialSelectorGUI : GUIPanel
         var categoriesSet = new SortedSet<string>();
         if (category == "" && (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY))
             categoriesSet.Add(CUSTOM_CATEGORY);
-        materials = new List<Material>();
-        if (allowNullMaterial && category == "")
-            materials.Add(null);
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
             if (dirEntry.layer != layer)
@@ -329,17 +361,16 @@ public class MaterialSelectorGUI : GUIPanel
             material = ResourcesDirectory.FindMaterial(newName, true);
         }
         highlightMaterial = material;
-        if (importFromWorld)
-        {
-            // TODO jank, this should really be handled in TextureTab
-            importFromWorld = false;
-            CategorySelected(CUSTOM_CATEGORY);
-            DuplicateCustomTexture();  // add to custom textures, will call MaterialSelected again
-            return;  // don't call handler
-        }
+        highlightCustom = null;
         instance = false;
         if (handler != null)
             handler(highlightMaterial);
+    }
+
+    private void CustomTextureSelected(CustomTexture tex)
+    {
+        MaterialSelected(tex.material);
+        highlightCustom = tex;
     }
 
     private void ImportTextureFromPhotos()
@@ -350,10 +381,10 @@ public class MaterialSelectorGUI : GUIPanel
             CustomTexture customTex = new CustomTexture(layer);
             customTex.texture = texture;
 
-            voxelArray.customTextures[(int)layer].Add(customTex.material);
+            voxelArray.customTextures[(int)layer].Add(customTex);
             voxelArray.unsavedChanges = true;
 
-            MaterialSelected(customTex.material);
+            CustomTextureSelected(customTex);
             EditCustomTexture(customTex);
         });
     }
@@ -369,25 +400,24 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
-    private void DuplicateCustomTexture()
+    private void DuplicateCustomTexture(Material material)
     {
-        Material newMat = CustomTexture.Clone(highlightMaterial);
-        voxelArray.customTextures[(int)layer].Add(newMat);
-        MaterialSelected(newMat);
+        CustomTexture newTex = new CustomTexture(Material.Instantiate(material), layer);
+        voxelArray.customTextures[(int)layer].Add(newTex);
+        CustomTextureSelected(newTex);
         CategorySelected(CUSTOM_CATEGORY);
         voxelArray.unsavedChanges = true;
-        scrollVelocity = new Vector2(0, 1000 * materials.Count);
+        scrollVelocity = new Vector2(0, 1000 * (materials.Count + customTextures.Count));
     }
 
     private void DeleteCustomTexture()
     {
-        CustomTexture customTex = new CustomTexture(highlightMaterial, layer);
         // TODO different shaders
         Material replacement = ResourcesDirectory.InstantiateMaterial(ResourcesDirectory.FindMaterial(
                 layer == PaintLayer.OVERLAY ? "MATTE_overlay" : "MATTE", true));
-        replacement.color = customTex.color;
+        replacement.color = highlightCustom.color;
         voxelArray.ReplaceMaterial(highlightMaterial, replacement);
-        if (!voxelArray.customTextures[(int)layer].Remove(highlightMaterial))
+        if (!voxelArray.customTextures[(int)layer].Remove(highlightCustom))
             Debug.LogError("Error removing material");
         MaterialSelected(replacement);
         CategorySelected(CUSTOM_CATEGORY);
@@ -404,8 +434,8 @@ public class MaterialSelectorGUI : GUIPanel
         yield return null;
         try
         {
-            materials = ReadWorldFile.ReadCustomTextures(path, layer);
-            if (materials.Count == 0)
+            customTextures = ReadWorldFile.ReadCustomTextures(path, layer);
+            if (customTextures.Count == 0)
                 importMessage = "World contains no custom textures for "
                     + (layer == PaintLayer.OVERLAY ? "overlays." : "materials.");
         }
