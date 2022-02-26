@@ -9,6 +9,7 @@ public class CustomTexture : PropertiesObject
         "Custom Texture", "A custom texture image for materials or overlays",
         "image", typeof(CustomTexture));
 
+    private const string CUSTOM_NAME_PREFIX = "Custom:";
     private const string SHADER_NAME_PREFIX = "N-Space/";
     private static readonly string[] SHADER_NAMES = new string[] { "NDiffuse", "NUnlit" };
     private static readonly string[] TRANSPARENCY_NAMES = new string[] { "-Fade", "-Cutout" };
@@ -112,7 +113,7 @@ public class CustomTexture : PropertiesObject
     {
         this.layer = layer;
         _material = new Material(GetShader(CustomShader.MATTE, CustomTransparency.FADE, false));
-        _material.name = "Custom:" + System.Guid.NewGuid();
+        _material.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
     }
 
     public CustomTexture(Material material, PaintLayer layer)
@@ -209,21 +210,14 @@ public class CustomTexture : PropertiesObject
 
     public static bool IsCustomTexture(Material material)
     {
-        return material.name.StartsWith("Custom:");
+        return material.name.StartsWith(CUSTOM_NAME_PREFIX);
     }
 
+    // alternative to ResourcesDirectory.InstantiateMaterial
     public static Material Clone(Material material)
     {
         Material newMat = Material.Instantiate(material);
-        Debug.Log("old name: " + material.name);
-        var nameParts = material.name.Split(':');
-        if (nameParts.Length < 2)
-        {
-            Debug.LogError("Bad material name!");
-            return newMat;
-        }
-        newMat.name = nameParts[0] + ":" + System.Guid.NewGuid();
-        Debug.Log("new name: " + newMat.name);
+        newMat.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
         return newMat;
     }
 }

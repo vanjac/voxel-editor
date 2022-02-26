@@ -42,13 +42,13 @@ public class MessagePackWorldWriter
         world[FileKeys.WORLD_CAMERA] = new MessagePackObject(WriteCamera(cameraPivot));
 
         var customMaterialsList = new List<MessagePackObject>();
-        foreach (Material mat in voxelArray.customMaterials)
+        foreach (Material mat in voxelArray.customTextures[(int)PaintLayer.MATERIAL])
             customMaterialsList.Add(new MessagePackObject(WriteCustomTexture(mat, PaintLayer.MATERIAL)));
         if (customMaterialsList.Count != 0)
             world[FileKeys.WORLD_CUSTOM_MATERIALS] = new MessagePackObject(customMaterialsList);
 
         var customOverlaysList = new List<MessagePackObject>();
-        foreach (Material mat in voxelArray.customOverlays)
+        foreach (Material mat in voxelArray.customTextures[(int)PaintLayer.OVERLAY])
             customOverlaysList.Add(new MessagePackObject(WriteCustomTexture(mat, PaintLayer.OVERLAY)));
         if (customOverlaysList.Count != 0)
             world[FileKeys.WORLD_CUSTOM_OVERLAYS] = new MessagePackObject(customOverlaysList);
@@ -214,7 +214,7 @@ public class MessagePackWorldWriter
             }
             else if (valueType == typeof(Texture2D))
             {
-                propList.Add(ImageConversion.EncodeToPNG((Texture2D)value));
+                propList.Add(WriteTexture((Texture2D)value));
             }
             else // not a special type
             {
@@ -250,6 +250,26 @@ public class MessagePackWorldWriter
         propsDict[FileKeys.PROPOBJ_PROPERTIES] = new MessagePackObject(propertiesList);
 
         return propsDict;
+    }
+
+    private static byte[] WriteTexture(Texture2D texture)
+    {
+        if (!texture.isReadable)
+        {
+            Debug.Log("Rendering built-in texture");
+            // https://stackoverflow.com/a/51317663
+            RenderTexture renderTex = RenderTexture.GetTemporary(texture.width, texture.height, 0,
+                RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+            Graphics.Blit(texture, renderTex);
+            RenderTexture previous = RenderTexture.active;
+            RenderTexture.active = renderTex;
+            texture = new Texture2D(texture.width, texture.height);
+            texture.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
+            texture.Apply();
+            RenderTexture.active = previous;
+            RenderTexture.ReleaseTemporary(renderTex);
+        }
+        return ImageConversion.EncodeToPNG(texture);
     }
 
     private static MessagePackObject WriteVoxel(Voxel voxel,

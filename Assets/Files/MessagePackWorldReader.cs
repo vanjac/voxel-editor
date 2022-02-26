@@ -92,20 +92,20 @@ public class MessagePackWorldReader : WorldFileReader
             ReadCamera(world[FileKeys.WORLD_CAMERA].AsDictionary(), cameraPivot);
 
         var customMaterialNames = new Dictionary<string, Material>();
-        voxelArray.customMaterials = new List<Material>();
+        voxelArray.customTextures[(int)PaintLayer.MATERIAL] = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_CUSTOM_MATERIALS))
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
-                voxelArray.customMaterials.Add(
+                voxelArray.customTextures[(int)PaintLayer.MATERIAL].Add(
                     ReadCustomTexture(texObj.AsDictionary(), customMaterialNames, PaintLayer.MATERIAL));
         }
 
         var customOverlayNames = new Dictionary<string, Material>();
-        voxelArray.customOverlays = new List<Material>();
+        voxelArray.customTextures[(int)PaintLayer.OVERLAY] = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAYS))
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
-                voxelArray.customOverlays.Add(
+                voxelArray.customTextures[(int)PaintLayer.OVERLAY].Add(
                     ReadCustomTexture(texObj.AsDictionary(), customOverlayNames, PaintLayer.OVERLAY));
         }
 

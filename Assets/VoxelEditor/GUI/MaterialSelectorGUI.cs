@@ -156,10 +156,10 @@ public class MaterialSelectorGUI : GUIPanel
                 ImportTextureFromPhotos();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
                 CategorySelected(WORLD_LIST_CATEGORY);
+            if (highlightMaterial != null && ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
+                DuplicateCustomTexture();
             if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
             {
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
-                    DuplicateCustomTexture();
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
                     EditCustomTexture(new CustomTexture(highlightMaterial, layer));
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
@@ -271,10 +271,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (category == CUSTOM_CATEGORY)
         {
             categories = new string[0];
-            if (layer == PaintLayer.OVERLAY)
-                materials = voxelArray.customOverlays;
-            else
-                materials = voxelArray.customMaterials;
+            materials = new List<Material>(voxelArray.customTextures[(int)layer]);
             AssetManager.UnusedAssets();
             return;
         }
@@ -334,7 +331,7 @@ public class MaterialSelectorGUI : GUIPanel
         highlightMaterial = material;
         if (importFromWorld)
         {
-            // jank
+            // TODO jank, this should really be handled in TextureTab
             importFromWorld = false;
             CategorySelected(CUSTOM_CATEGORY);
             DuplicateCustomTexture();  // add to custom textures, will call MaterialSelected again
@@ -353,7 +350,7 @@ public class MaterialSelectorGUI : GUIPanel
             CustomTexture customTex = new CustomTexture(layer);
             customTex.texture = texture;
 
-            materials.Add(customTex.material);
+            voxelArray.customTextures[(int)layer].Add(customTex.material);
             voxelArray.unsavedChanges = true;
 
             MaterialSelected(customTex.material);
@@ -375,8 +372,9 @@ public class MaterialSelectorGUI : GUIPanel
     private void DuplicateCustomTexture()
     {
         Material newMat = CustomTexture.Clone(highlightMaterial);
-        materials.Add(newMat);
+        voxelArray.customTextures[(int)layer].Add(newMat);
         MaterialSelected(newMat);
+        CategorySelected(CUSTOM_CATEGORY);
         voxelArray.unsavedChanges = true;
         scrollVelocity = new Vector2(0, 1000 * materials.Count);
     }
@@ -389,9 +387,10 @@ public class MaterialSelectorGUI : GUIPanel
                 layer == PaintLayer.OVERLAY ? "MATTE_overlay" : "MATTE", true));
         replacement.color = customTex.color;
         voxelArray.ReplaceMaterial(highlightMaterial, replacement);
-        if (!materials.Remove(highlightMaterial))
+        if (!voxelArray.customTextures[(int)layer].Remove(highlightMaterial))
             Debug.LogError("Error removing material");
         MaterialSelected(replacement);
+        CategorySelected(CUSTOM_CATEGORY);
         instance = true;
         voxelArray.unsavedChanges = true;
     }
