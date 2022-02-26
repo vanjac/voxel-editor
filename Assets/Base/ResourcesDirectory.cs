@@ -66,17 +66,8 @@ public static class ResourcesDirectory
     {
         if (material == null)
             return MaterialSound.GENERIC;
-        string name;
-        if (CustomTexture.IsCustomTexture(material))
-            name = CustomTexture.GetBaseMaterialName(material);
-        else
-            name = material.name;
-        MaterialInfo info;
-        // special alternate materials for game
-        if (materialInfos.TryGetValue("$" + name, out info))
-            return info.sound;
-        if (materialInfos.TryGetValue(name, out info))
-            return info.sound;
+        if (material.HasProperty("_Sound"))
+            return (MaterialSound)material.GetInt("_Sound");
         return MaterialSound.GENERIC;
     }
 }

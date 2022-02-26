@@ -17,7 +17,6 @@ public struct MaterialInfo
     // without extension, starting from Assets/Resources/GameAssets/
     public string path;
     public string parent; // parent directory
-    public MaterialSound sound;
 }
 
 [System.Serializable]

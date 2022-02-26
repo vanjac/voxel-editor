@@ -4,6 +4,7 @@
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo", 2D) = "white" {}
+        [Enum(MaterialSound)] _Sound ("Sound", Int) = 0
     }
     SubShader
     {

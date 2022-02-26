@@ -5,6 +5,7 @@
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo", 2D) = "white" {}
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+        [Enum(MaterialSound)] _Sound ("Sound", Int) = 0
     }
     SubShader
     {

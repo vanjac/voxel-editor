@@ -6,7 +6,6 @@ using System.IO;
 public class UpdateMaterialDatabase
 {
     private const string SEARCH_PATH = "Assets/Resources/GameAssets";
-    private const string SOUND_LABEL_PREFIX = "Sound_";
 
     [MenuItem("Tools/Update N-Space material database")]
     public static void UpdateMaterials()
@@ -27,18 +26,6 @@ public class UpdateMaterialDatabase
             else
                 info.parent = info.path.Substring(0, info.path.Length - info.name.Length - 1);
             info.isDirectory = material == null;
-            info.sound = MaterialSound.GENERIC;
-            if (material != null)
-            {
-                foreach (string label in AssetDatabase.GetLabels(material))
-                {
-                    if (label.StartsWith(SOUND_LABEL_PREFIX))
-                    {
-                        string soundName = label.Replace(SOUND_LABEL_PREFIX, "").ToUpper();
-                        info.sound = (MaterialSound)System.Enum.Parse(typeof(MaterialSound), soundName);
-                    }
-                }
-            }
 
             database.materials.Add(info);
         }
