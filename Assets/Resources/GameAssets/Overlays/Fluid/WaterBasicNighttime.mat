@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: WaterBasicNighttime
   m_Shader: {fileID: 4800000, guid: 9dccc8e8f0da4494991c26ef59019551, type: 3}
   m_ShaderKeywords: 
@@ -56,6 +57,7 @@ Material:
     - _BumpStrength: 0.1
     - _Highlight: 33.207546
     - _Shininess: 1
+    - _Sound: 16
     - _WaveScale: 0.07028302
     - _bScale: 0.062924534
     - _bTwirl: 0.05
@@ -64,6 +66,7 @@ Material:
     - BumpParm: {r: 1, g: 1, b: -1, a: -1}
     - WaveSpeed: {r: 9.6877, g: 4.8189816, b: -7.913228, a: 2.8702974}
     - _BumpMap_ST: {r: 1, g: 1, b: 0, a: 0}
+    - _Color: {r: 0.14848554, g: 0.28242925, b: 0.37994966, a: 0.9019608}
     - _ColorControlCube_ST: {r: 1, g: 1, b: 0, a: 0}
     - _ColorControl_ST: {r: 1, g: 1, b: 0, a: 0}
     - _EdgeColor: {r: 0, g: 0.1, b: 0, a: 0.1}
@@ -74,7 +77,6 @@ Material:
     - _RefTex_3: {r: 4.955955, g: -0.18703793, b: -13.38207, a: 20.221354}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 0.4}
     - _WaveSpeed: {r: 1, g: -1, b: -1, a: 1}
-    - _Color: {r: 0.14848554, g: 0.28242925, b: 0.37994966, a: 0.9019608}
     - uvParams: {r: 10, g: 0.02, b: 0.03, a: 0}
     - waveDirX: {r: -2.5, g: 0, b: 7, a: 8}
     - waveDirY: {r: 0, g: 1.5, b: -7, a: 1}
