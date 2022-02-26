@@ -7,7 +7,7 @@ Properties {
     _SunSizeConvergence("Sun Size Convergence", Range(1,10)) = 5
 
     _AtmosphereThickness ("Atmosphere Thickness", Range(0,5)) = 1.0
-    _SkyTint ("Sky Tint", Color) = (.5, .5, .5, 1)
+    [MainColor] _SkyTint ("Sky Tint", Color) = (.5, .5, .5, 1)
     _GroundColor ("Ground", Color) = (.369, .349, .341, 1)
 
     _Exposure("Exposure", Range(0, 8)) = 1.3

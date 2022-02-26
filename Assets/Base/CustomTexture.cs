@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -104,13 +104,11 @@ public class CustomTexture : PropertiesObject
         {
             string baseName = GetBaseMaterialName(_material);
             _baseMat = ResourcesDirectory.FindMaterial(baseName, true);
-            string colorProp = ResourcesDirectory.MaterialColorProperty(_baseMat);
             // copied from MessagePackWorldReader
-            Color color = _material.GetColor(colorProp);
-            if (color != _baseMat.GetColor(colorProp))
+            if (_material.color != _baseMat.color)
             {
                 _baseMat = ResourcesDirectory.InstantiateMaterial(_baseMat);
-                _baseMat.SetColor(colorProp, color);
+                _baseMat.color = _material.color;
             }
         }
         else

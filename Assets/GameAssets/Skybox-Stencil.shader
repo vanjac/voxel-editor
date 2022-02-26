@@ -2,7 +2,7 @@
 
 Shader "Skybox/6 Sided Stencil" {
 Properties {
-    _Tint ("Tint Color", Color) = (.5, .5, .5, .5)
+    [MainColor] _Tint ("Tint Color", Color) = (.5, .5, .5, .5)
     [Gamma] _Exposure ("Exposure", Range(0, 8)) = 1.0
     _Rotation ("Rotation", Range(0, 360)) = 0
     [NoScaleOffset] _FrontTex ("Front [+Z]   (HDR)", 2D) = "grey" {}

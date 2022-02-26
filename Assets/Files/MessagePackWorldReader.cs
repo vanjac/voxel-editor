@@ -248,20 +248,16 @@ public class MessagePackWorldReader : WorldFileReader
         if (!isCustom && matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
         {
             // custom textures can't have colors
-            string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
-            if (colorProp != null)
-            {
-                // TODO if color style = PAINT then replace with solid color matching shader/footsteps
-                // var colorStyle = ResourcesDirectory.ColorStyle.TINT;
-                // if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR_STYLE))
-                //     Enum.TryParse(matDict[FileKeys.MATERIAL_COLOR_STYLE].AsString(), out colorStyle);
+            // TODO if color style = PAINT then replace with solid color matching shader/footsteps
+            // var colorStyle = ResourcesDirectory.ColorStyle.TINT;
+            // if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR_STYLE))
+            //     Enum.TryParse(matDict[FileKeys.MATERIAL_COLOR_STYLE].AsString(), out colorStyle);
 
-                Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
-                if (color != mat.GetColor(colorProp))
-                {
-                    mat = ResourcesDirectory.InstantiateMaterial(mat);
-                    mat.SetColor(colorProp, color);
-                }
+            Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
+            if (color != mat.color)
+            {
+                mat = ResourcesDirectory.InstantiateMaterial(mat);
+                mat.color = color;
             }
         }
         return mat;

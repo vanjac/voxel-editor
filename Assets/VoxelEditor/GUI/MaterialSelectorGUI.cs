@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -114,23 +114,17 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.Label("Can't change color of custom texture");
             return false;
         }
-        string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
-        if (colorProp == null)
-        {
-            GUILayout.Label("Can't change color of this texture");
-            return false;
-        }
         if (colorPicker == null)
         {
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
-            Color currentColor = highlightMaterial.GetColor(colorProp);
+            Color currentColor = highlightMaterial.color;
             colorPicker.SetColor(currentColor);
             colorPicker.includeAlpha = layer == PaintLayer.OVERLAY;
             colorPicker.handler = (Color c) =>
             {
                 MakeInstance();
-                highlightMaterial.SetColor(colorProp, c);
+                highlightMaterial.color = c;
                 if (handler != null)
                     handler(highlightMaterial);
             };
@@ -436,14 +430,11 @@ public class MaterialSelectorGUI : GUIPanel
         // fix transparent colors becoming opaque while scrolling
         if (GUI.color.a > 1)
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
-        string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
-        if (colorProp != null)
-        {
-            Color color = mat.GetColor(colorProp);
-            if (color.a == 0.0f)
-                color = new Color(color.r, color.g, color.b, 0.6f);
-            GUI.color *= color;
-        }
+
+        Color matColor = mat.color;
+        if (matColor.a == 0.0f)
+            matColor = new Color(matColor.r, matColor.g, matColor.b, 0.6f);
+        GUI.color *= matColor;
 
         Texture texture = Texture2D.whiteTexture;
         Vector2 textureScale = Vector2.one;

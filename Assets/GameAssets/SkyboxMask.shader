@@ -1,5 +1,9 @@
 ﻿Shader "FX/SkyboxMask"
 {
+	Properties
+	{
+		[HideInInspector] _Color ("Color", Color) = (1,1,1,1) // ignored
+	}
 	SubShader
 	{
 		// render immediately before skybox
