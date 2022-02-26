@@ -25,7 +25,7 @@ public interface WorldFileReader
     // return warnings
     List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor);
     List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type);
-    List<Material> FindCustomTextures(bool overlay);
+    List<Material> FindCustomTextures(PaintLayer layer);
 }
 
 public static class ReadWorldFile
@@ -67,7 +67,7 @@ public static class ReadWorldFile
         return reader.FindEmbeddedData(type);
     }
 
-    public static List<Material> ReadCustomTextures(string filePath, bool overlay)
+    public static List<Material> ReadCustomTextures(string filePath, PaintLayer layer)
     {
         // TODO: copied from ReadEmbeddedData
         WorldFileReader reader;
@@ -80,7 +80,7 @@ public static class ReadWorldFile
         {
             throw new MapReadException("Error opening file", e);
         }
-        return reader.FindCustomTextures(overlay);
+        return reader.FindCustomTextures(layer);
     }
 
     private static WorldFileReader ReadStream(Stream stream)
@@ -118,7 +118,7 @@ public static class ReadWorldFile
         }
     }
 
-    public static Material MissingMaterial(bool overlay)
+    public static Material MissingMaterial(PaintLayer layer)
     {
         if (missingMaterial == null)
         {
@@ -127,7 +127,7 @@ public static class ReadWorldFile
             missingOverlay = ResourcesDirectory.InstantiateMaterial(
                 ResourcesDirectory.FindMaterial("MISSING_overlay", true));
         }
-        return overlay ? missingOverlay : missingMaterial;
+        return layer == PaintLayer.OVERLAY ? missingOverlay : missingMaterial;
     }
 
     private static WorldFileReader GetReaderForStream(Stream stream)

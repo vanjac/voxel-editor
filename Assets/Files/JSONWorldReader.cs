@@ -48,7 +48,7 @@ public class JSONWorldReader : WorldFileReader
         return new List<EmbeddedData>();
     }
 
-    public List<Material> FindCustomTextures(bool overlay)
+    public List<Material> FindCustomTextures(PaintLayer layer)
     {
         return new List<Material>();
     }

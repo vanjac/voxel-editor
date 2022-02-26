@@ -10,14 +10,13 @@ public class MaterialSelectorGUI : GUIPanel
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
     private const string PREVIEW_SUFFIX = "_preview";
-    private const string CUSTOM_CATEGORY = "CUSTOM";
+    private const string CUSTOM_CATEGORY = " CUSTOM "; // leading space for sorting order (sorry)
     private const string WORLD_LIST_CATEGORY = "Import from world...";
 
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
-    public string rootDirectory = "Materials";
-    public bool isOverlay = false;
+    public PaintLayer layer = PaintLayer.MATERIAL;
     public bool allowNullMaterial = false;
     public bool customTextureBase = false;
     public Material highlightMaterial = null; // the current selected material
@@ -127,7 +126,7 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker.enabled = false;
             Color currentColor = highlightMaterial.GetColor(colorProp);
             colorPicker.SetColor(currentColor);
-            colorPicker.includeAlpha = isOverlay;
+            colorPicker.includeAlpha = layer == PaintLayer.OVERLAY;
             colorPicker.handler = (Color c) =>
             {
                 MakeInstance();
@@ -169,7 +168,7 @@ public class MaterialSelectorGUI : GUIPanel
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
                         DuplicateCustomTexture();
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
-                        EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
+                        EditCustomTexture(new CustomTexture(highlightMaterial, layer));
                     if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
                     {
                         var dialog = gameObject.AddComponent<DialogGUI>();
@@ -216,7 +215,7 @@ public class MaterialSelectorGUI : GUIPanel
                 selected = GUI.Button(buttonRect, "");
             if (selected)
                 MaterialSelected(material);
-            DrawMaterialTexture(material, textureRect, isOverlay);
+            DrawMaterialTexture(material, textureRect);
         }
 
         if (categories.Length > 0)
@@ -265,7 +264,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (category == CUSTOM_CATEGORY)
         {
             categories = new string[0];
-            if (rootDirectory == "Overlays")
+            if (layer == PaintLayer.OVERLAY)
                 materials = voxelArray.customOverlays;
             else
                 materials = voxelArray.customMaterials;
@@ -290,31 +289,29 @@ public class MaterialSelectorGUI : GUIPanel
             return;
         }
 
-        string currentDirectory = rootDirectory;
-        if (category != "")
-            currentDirectory += "/" + category;
-
-        var categoriesList = new List<string>();
+        var categoriesSet = new SortedSet<string>();
         if (!customTextureBase && category == ""
-                && (rootDirectory == "Materials" || rootDirectory == "Overlays"))
-            categoriesList.Add(CUSTOM_CATEGORY);
+                && (layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY))
+            categoriesSet.Add(CUSTOM_CATEGORY);
         materials = new List<Material>();
         foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
         {
-            if (dirEntry.parent != currentDirectory)
+            if (dirEntry.layer != layer)
                 continue;
+            if (dirEntry.category != category)
+            {
+                if (category == "")
+                    categoriesSet.Add(dirEntry.category);
+                continue;
+            }
             if (dirEntry.name.StartsWith("$"))
                 continue; // special alternate materials for game
-            if (dirEntry.isDirectory)
-                categoriesList.Add(dirEntry.name);
-            else
-            {
-                if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))
-                    materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
-                materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
-            }
+            if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))
+                materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
+            materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
         }
-        categories = categoriesList.ToArray();
+        categories = new string[categoriesSet.Count];
+        categoriesSet.CopyTo(categories);
 
         AssetManager.UnusedAssets();
     }
@@ -362,9 +359,9 @@ public class MaterialSelectorGUI : GUIPanel
                 return;
 
             Material baseMat = ResourcesDirectory.InstantiateMaterial(Resources.Load<Material>(
-                isOverlay ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE"));
+                layer == PaintLayer.OVERLAY ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE"));
             baseMat.color = new Color(1, 1, 1, baseMat.color.a);
-            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, isOverlay);
+            CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, layer);
             customTex.texture = texture;
 
             materials.Add(customTex.material);
@@ -397,7 +394,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void DeleteCustomTexture()
     {
-        CustomTexture customTex = new CustomTexture(highlightMaterial, isOverlay);
+        CustomTexture customTex = new CustomTexture(highlightMaterial, layer);
         voxelArray.ReplaceMaterial(highlightMaterial, customTex.baseMat);
         if (!materials.Remove(highlightMaterial))
             Debug.LogError("Error removing material");
@@ -414,9 +411,10 @@ public class MaterialSelectorGUI : GUIPanel
         yield return null;
         try
         {
-            materials = ReadWorldFile.ReadCustomTextures(path, isOverlay);
+            materials = ReadWorldFile.ReadCustomTextures(path, layer);
             if (materials.Count == 0)
-                importMessage = "World contains no custom textures for " + (isOverlay ? "overlays." : "materials.");
+                importMessage = "World contains no custom textures for "
+                    + (layer == PaintLayer.OVERLAY ? "overlays." : "materials.");
         }
         catch (MapReadException e)
         {
@@ -429,7 +427,7 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
-    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
+    public static void DrawMaterialTexture(Material mat, Rect rect)
     {
         if (mat == null)
             return;

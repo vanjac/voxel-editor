@@ -4,6 +4,12 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+public enum MaterialSound
+{
+    GENERIC, CONCRETE, ROCK, PLASTER, FABRIC, DIRT, GRASS, GRAVEL, SAND, METAL,
+    TILE, SNOW, ICE, WOOD, METAL_GRATE, GLASS, WATER, CHAIN_LINK, SWIM
+}
+
 // Remember that Unity resource paths always use forward slashes
 public static class ResourcesDirectory
 {

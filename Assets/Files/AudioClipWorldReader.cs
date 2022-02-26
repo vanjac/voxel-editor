@@ -71,7 +71,7 @@ public class AudioClipWorldReader : WorldFileReader
         return dataList;
     }
 
-    public List<Material> FindCustomTextures(bool overlay)
+    public List<Material> FindCustomTextures(PaintLayer layer)
     {
         return new List<Material>();
     }

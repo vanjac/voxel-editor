@@ -97,7 +97,7 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
                 voxelArray.customMaterials.Add(
-                    ReadCustomTexture(texObj.AsDictionary(), customMaterialNames, false));
+                    ReadCustomTexture(texObj.AsDictionary(), customMaterialNames, PaintLayer.MATERIAL));
         }
 
         var customOverlayNames = new Dictionary<string, Material>();
@@ -106,21 +106,21 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
                 voxelArray.customOverlays.Add(
-                    ReadCustomTexture(texObj.AsDictionary(), customOverlayNames, true));
+                    ReadCustomTexture(texObj.AsDictionary(), customOverlayNames, PaintLayer.OVERLAY));
         }
 
         var materials = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_MATERIALS))
         {
             foreach (var matObj in world[FileKeys.WORLD_MATERIALS].AsList())
-                materials.Add(ReadMaterial(matObj.AsDictionary(), false, customMaterialNames));
+                materials.Add(ReadMaterial(matObj.AsDictionary(), customMaterialNames, PaintLayer.MATERIAL));
         }
 
         var overlays = new List<Material>();
         if (world.ContainsKey(FileKeys.WORLD_OVERLAYS))
         {
             foreach (var matObj in world[FileKeys.WORLD_OVERLAYS].AsList())
-                overlays.Add(ReadMaterial(matObj.AsDictionary(), true, customOverlayNames));
+                overlays.Add(ReadMaterial(matObj.AsDictionary(), customOverlayNames, PaintLayer.OVERLAY));
         }
 
         var substances = new List<Substance>();
@@ -195,10 +195,10 @@ public class MessagePackWorldReader : WorldFileReader
     }
 
     private Material ReadCustomTexture(MessagePackObjectDictionary texDict,
-        Dictionary<string, Material> customTextureNames, bool overlay)
+        Dictionary<string, Material> customTextureNames, PaintLayer layer)
     {
         CustomTexture customTex = new CustomTexture(
-            new Material(ReadWorldFile.MissingMaterial(overlay).shader), overlay);
+            new Material(ReadWorldFile.MissingMaterial(layer).shader), layer);
         ReadPropertiesObject(texDict, customTex);
         Material mat = customTex.material;
         if (texDict.ContainsKey(FileKeys.CUSTOM_MATERIAL_NAME))
@@ -209,8 +209,8 @@ public class MessagePackWorldReader : WorldFileReader
         return mat;
     }
 
-    private Material ReadMaterial(MessagePackObjectDictionary matDict, bool forceOverlay,
-        Dictionary<string, Material> customTextureNames)
+    private Material ReadMaterial(MessagePackObjectDictionary matDict,
+        Dictionary<string, Material> customTextureNames, PaintLayer layer)
     {
         string name;
 
@@ -224,14 +224,14 @@ public class MessagePackWorldReader : WorldFileReader
             // ignore MATERIAL_ALPHA key, it's usually wrong
             if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
                 if (ReadColor(matDict[FileKeys.MATERIAL_COLOR]).a < 1)
-                    forceOverlay = true;
-            if (forceOverlay)
+                    layer = PaintLayer.OVERLAY;
+            if (layer == PaintLayer.OVERLAY)
                 name += "_overlay";
         }
         else
         {
             warnings.Add("Error reading material");
-            return ReadWorldFile.MissingMaterial(forceOverlay);
+            return ReadWorldFile.MissingMaterial(layer);
         }
 
         Material mat;
@@ -243,7 +243,7 @@ public class MessagePackWorldReader : WorldFileReader
         if (mat == null)
         {
             warnings.Add("Unrecognized material: " + name);
-            return ReadWorldFile.MissingMaterial(forceOverlay);
+            return ReadWorldFile.MissingMaterial(layer);
         }
         if (!isCustom && matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
         {
@@ -376,7 +376,7 @@ public class MessagePackWorldReader : WorldFileReader
                 if (propType == typeof(Material))
                 {
                     // skip equality check
-                    prop.setter(ReadMaterial(propList[1].AsDictionary(), false, null));
+                    prop.setter(ReadMaterial(propList[1].AsDictionary(), null, PaintLayer.MATERIAL));
                 }
                 else if (propType == typeof(Texture2D))
                 {
@@ -582,7 +582,7 @@ public class MessagePackWorldReader : WorldFileReader
                 yield return behaviorObj.AsDictionary();
     }
 
-    public List<Material> FindCustomTextures(bool overlay)
+    public List<Material> FindCustomTextures(PaintLayer layer)
     {
         // copied from FindEmbeddedData
         MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
@@ -591,7 +591,7 @@ public class MessagePackWorldReader : WorldFileReader
         List<Material> texList = new List<Material>();
         try
         {
-            foreach (var tex in IterateCustomTextures(worldDict, overlay))
+            foreach (var tex in IterateCustomTextures(worldDict, layer))
                 texList.Add(tex);
         }
         catch (MapReadException e)
@@ -606,12 +606,12 @@ public class MessagePackWorldReader : WorldFileReader
     }
 
     private IEnumerable<Material> IterateCustomTextures(
-        MessagePackObjectDictionary worldDict, bool overlay)
+        MessagePackObjectDictionary worldDict, PaintLayer layer)
     {
-        string key = overlay ? FileKeys.WORLD_CUSTOM_OVERLAYS : FileKeys.WORLD_CUSTOM_MATERIALS;
+        string key = layer == PaintLayer.OVERLAY ? FileKeys.WORLD_CUSTOM_OVERLAYS : FileKeys.WORLD_CUSTOM_MATERIALS;
         var names = new Dictionary<string, Material>();
         if (worldDict.ContainsKey(key))
             foreach (var matObj in worldDict[key].AsList())
-                yield return ReadCustomTexture(matObj.AsDictionary(), names, overlay);
+                yield return ReadCustomTexture(matObj.AsDictionary(), names, layer);
     }
 }

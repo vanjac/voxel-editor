@@ -15,7 +15,7 @@ public class CustomTexture : PropertiesObject
     }
 
     private Material _material, _baseMat;
-    private bool isOverlay;
+    private PaintLayer layer;
 
     public Material material
     {
@@ -96,10 +96,10 @@ public class CustomTexture : PropertiesObject
         }
     }
 
-    public CustomTexture(Material material, bool isOverlay)
+    public CustomTexture(Material material, PaintLayer layer)
     {
         _material = material;
-        this.isOverlay = isOverlay;
+        this.layer = layer;
         if (_material != null && IsCustomTexture(_material))
         {
             string baseName = GetBaseMaterialName(_material);
@@ -117,9 +117,9 @@ public class CustomTexture : PropertiesObject
             _baseMat = _material;  // probably temporary
     }
 
-    public static CustomTexture FromBaseMaterial(Material baseMat, bool overlay)
+    public static CustomTexture FromBaseMaterial(Material baseMat, PaintLayer layer)
     {
-        var customTex = new CustomTexture(null, overlay);
+        var customTex = new CustomTexture(null, layer);
         customTex.baseMat = baseMat;
         return customTex;
     }
@@ -136,7 +136,7 @@ public class CustomTexture : PropertiesObject
             new Property("bas", "Base",
                 () => baseMat,
                 v => baseMat = (Material)v,
-                PropertyGUIs.Material(isOverlay ? "Overlays" : "Materials", isOverlay, customTextureBase: true)),
+                PropertyGUIs.Material(layer, customTextureBase: true)),
             new Property("tex", "Texture",
                 () => texture,
                 v => texture = (Texture2D)v,

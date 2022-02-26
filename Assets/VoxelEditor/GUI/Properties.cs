@@ -366,7 +366,7 @@ public static class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory, bool isOverlay = false,
+    public static PropertyGUI Material(PaintLayer layer = PaintLayer.MATERIAL,
         bool customTextureBase = false)
     {
         return (Property property) =>
@@ -386,17 +386,15 @@ public static class PropertyGUIs
                     = GUIManager.guiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = "Change " + property.name;
                 materialSelector.voxelArray = VoxelArrayEditor.instance;
-                materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
-                materialSelector.isOverlay = isOverlay;
+                materialSelector.layer = layer;
                 materialSelector.customTextureBase = customTextureBase;
                 materialSelector.handler = (Material mat) =>
                 {
                     property.setter(mat); // skip equality check, it could be the same material with a different color
                 };
             }
-            MaterialSelectorGUI.DrawMaterialTexture((Material)property.value,
-                textureRect, isOverlay);
+            MaterialSelectorGUI.DrawMaterialTexture((Material)property.value, textureRect);
             GUILayout.EndHorizontal();
         };
     }

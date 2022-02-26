@@ -2,21 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MaterialSound
+public enum PaintLayer
 {
-    GENERIC, CONCRETE, ROCK, PLASTER, FABRIC, DIRT, GRASS, GRAVEL, SAND, METAL,
-    TILE, SNOW, ICE, WOOD, METAL_GRATE, GLASS, WATER, CHAIN_LINK, SWIM
+    MATERIAL, OVERLAY, SKY, HIDDEN
 }
 
 // could represent a material or a directory!
 [System.Serializable]
 public struct MaterialInfo
 {
-    public bool isDirectory;
     public string name;
     // without extension, starting from Assets/Resources/GameAssets/
     public string path;
-    public string parent; // parent directory
+    public string category;
+    public PaintLayer layer;
 }
 
 [System.Serializable]
