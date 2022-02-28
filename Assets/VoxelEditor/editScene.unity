@@ -747,7 +747,7 @@ MonoBehaviour:
     singleObject: {fileID: 2800000, guid: 349e92702e1695d44b22fbda80fa138c, type: 3}
     objectType: {fileID: 2800000, guid: 907e5b067b45f74459c17473d688d0bd, type: 3}
     behavior: {fileID: 2800000, guid: 0feee20dbbdb00749b74d19e8bf252ef, type: 3}
-    newTexture: {fileID: 2800000, guid: 71c2ad987d352b14db16de1a32f9be32, type: 3}
+    imageImport: {fileID: 2800000, guid: 71c2ad987d352b14db16de1a32f9be32, type: 3}
     worldImport: {fileID: 2800000, guid: 603a037b5c4ce2947bffab8fbac2db34, type: 3}
     newItem: {fileID: 0}
     color: {fileID: 2800000, guid: 3ae1a5f918fe8c34fa7311daff4625c4, type: 3}

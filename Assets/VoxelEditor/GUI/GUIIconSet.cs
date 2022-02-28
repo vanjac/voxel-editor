@@ -18,7 +18,7 @@ public struct GUIIconSet
     public Texture close, x, next, create, applySelection, clearSelection, paint, play, overflow, world, help;
     public Texture helpCircle, done, rotateLeft, rotateRight, flipHorizontal, flipVertical, about, select;
     public Texture entityTag, target, rename, copy, delete, share, bevel, no, pause, restart, editor, playAudio;
-    public Texture reddit, youTube, gitHub, undo, import, fill, draw, singleObject, objectType, behavior, newTexture;
+    public Texture reddit, youTube, gitHub, undo, import, fill, draw, singleObject, objectType, behavior, imageImport;
     public Texture worldImport, newItem, color;
     public Texture indoorLarge, floatingLarge, newWorldLarge, helpLarge, compassLarge, noLarge;
 

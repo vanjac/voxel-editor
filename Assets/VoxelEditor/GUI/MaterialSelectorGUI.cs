@@ -13,6 +13,9 @@ public class MaterialSelectorGUI : GUIPanel
 
     public delegate void MaterialSelectHandler(Material material);
 
+    private enum Page { MATERIALS, COLOR }
+    private Page page = Page.MATERIALS;
+
     public MaterialSelectHandler handler;
     public PaintLayer layer = PaintLayer.BASE;
     public bool allowNullMaterial = false;
@@ -20,13 +23,12 @@ public class MaterialSelectorGUI : GUIPanel
     private CustomMaterial highlightCustom = null; // highlightMaterial will also be set
     public VoxelArrayEditor voxelArray;
 
-    private int tab = 0;
     private string selectedWorld = null; // null for current world, WORLD_LIST for list
     private string selectedCategory = ""; // empty string for root
     private bool loadingWorld;
     private string importMessage = null;
 
-    // Objects listed in Textures tab:
+    // Objects listed in Materials page:
     private List<Material> materials; // built-in
     private List<Texture2D> thumbnails;
     private string[] categories;
@@ -96,9 +98,9 @@ public class MaterialSelectorGUI : GUIPanel
         TutorialGUI.ClearHighlight();
         GUILayout.EndHorizontal();
 
-        if (tab == 1)
+        if (page == Page.COLOR)
         {
-            if (!ColorTab() && colorPicker != null)
+            if (!ColorPage() && colorPicker != null)
             {
                 Destroy(colorPicker);
                 colorPicker = null;
@@ -109,19 +111,17 @@ public class MaterialSelectorGUI : GUIPanel
             Destroy(colorPicker);
             colorPicker = null;
         }
-        if (tab == 0)
-            TextureTab();
+        if (page == Page.MATERIALS)
+            MaterialsPage();
         else
-        {
             scrollVelocity = Vector2.zero;
-        }
     }
 
-    private bool ColorTab()
+    private bool ColorPage()
     {
         GUILayout.BeginHorizontal();
         if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
-            tab = 0;
+            page = Page.MATERIALS;
         GUILayout.Label("Adjust color", categoryLabelStyle.Value);
         GUILayout.EndHorizontal();
 
@@ -144,7 +144,7 @@ public class MaterialSelectorGUI : GUIPanel
         return true;
     }
 
-    private void TextureTab()
+    private void MaterialsPage()
     {
         if (materials == null)
             return;
@@ -172,8 +172,8 @@ public class MaterialSelectorGUI : GUIPanel
 
         if ((layer == PaintLayer.BASE || layer == PaintLayer.OVERLAY) && selectedWorld == null)
         {
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
-                ImportTextureFromPhotos();
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.imageImport))
+                ImportFromPhotos();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
                 OpenWorldList();
             if (highlightMaterial != null && CustomMaterial.IsSupportedShader(highlightMaterial)
@@ -214,7 +214,7 @@ public class MaterialSelectorGUI : GUIPanel
             Color baseBGColor = GUI.backgroundColor;
             GUI.backgroundColor *= highlightMaterial.color;
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.color))
-                tab = 1;
+                page = Page.COLOR;
             GUI.backgroundColor = baseBGColor;
         }
         GUILayout.EndHorizontal();
@@ -238,17 +238,17 @@ public class MaterialSelectorGUI : GUIPanel
 
         Rect rowRect = new Rect();
         int numColumns = selectedCategory == "" ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
-        int textureI = 0;
+        int buttonI = 0;
         if (allowNullMaterial && selectedCategory == "" && selectedWorld == null)
         {
-            if (TextureButton(null, numColumns, textureI++, ref rowRect, GUIIconSet.instance.noLarge))
+            if (MaterialButton(null, numColumns, buttonI++, ref rowRect, GUIIconSet.instance.noLarge))
                 MaterialSelected(null);
         }
         foreach (var mat in worldCustomMaterials)
         {
             if (mat.category != selectedCategory)
                 continue;
-            if (TextureButton(mat.material, numColumns, textureI++, ref rowRect, null, "Custom"))
+            if (MaterialButton(mat.material, numColumns, buttonI++, ref rowRect, null, "Custom"))
             {
                 if (selectedWorld != null)
                 {
@@ -262,7 +262,7 @@ public class MaterialSelectorGUI : GUIPanel
         }
         for (int i = 0; i < materials.Count; i++)
         {
-            if (TextureButton(materials[i], numColumns, textureI++, ref rowRect, thumbnails[i]))
+            if (MaterialButton(materials[i], numColumns, buttonI++, ref rowRect, thumbnails[i]))
                 MaterialSelected(materials[i]);
         }
 
@@ -277,7 +277,7 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.EndScrollView();
     }
 
-    private bool TextureButton(Material material, int numColumns, int i, ref Rect rowRect,
+    private bool MaterialButton(Material material, int numColumns, int i, ref Rect rowRect,
                                Texture thumbnail=null, string label=null)
     {
         if (i % numColumns == 0)
@@ -429,7 +429,7 @@ public class MaterialSelectorGUI : GUIPanel
         highlightCustom = mat;
     }
 
-    private void ImportTextureFromPhotos()
+    private void ImportFromPhotos()
     {
         NativeGalleryWrapper.ImportTexture((Texture2D texture) => {
             if (texture == null)
