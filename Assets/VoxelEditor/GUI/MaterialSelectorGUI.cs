@@ -372,7 +372,10 @@ public class MaterialSelectorGUI : GUIPanel
     private void OpenCurrentWorld()
     {
         selectedWorld = null;
-        worldCustomMaterials = voxelArray.customMaterials[(int)layer];
+        if ((int)layer < voxelArray.customMaterials.Length)
+            worldCustomMaterials = voxelArray.customMaterials[(int)layer];
+        else
+            worldCustomMaterials = new List<CustomMaterial>();
 
         var categoriesSet = GetCustomMaterialCategories();
         foreach (MaterialInfo info in ResourcesDirectory.materialInfos.Values)
