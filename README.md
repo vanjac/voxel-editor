@@ -52,6 +52,7 @@ These notes are mostly for me, but you can read them too.
 - Open Project Settings > Editor and switch Unity Remote device to Android
 - Android: open Player settings and browse for the keystore location.
 - iOS: download certificate from Apple and install, get private key and install
+- Choose *Tools/Update N-Space material database* to generate the material database. This must be done every time built-in materials are modified.
 
 ## More info
 

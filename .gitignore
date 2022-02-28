@@ -86,6 +86,8 @@ iosBuild/
 /Assets/GameAssets/NASA/*.tif
 /Assets/GameAssets/Footsteps/*.wav
 
+/Assets/Resources/materials.asset
+
 *.keystore
 upload_certificate.pem
 *.skb
