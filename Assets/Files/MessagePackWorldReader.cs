@@ -91,23 +91,23 @@ public class MessagePackWorldReader : WorldFileReader
         if (editor && cameraPivot != null && world.ContainsKey(FileKeys.WORLD_CAMERA))
             ReadCamera(world[FileKeys.WORLD_CAMERA].AsDictionary(), cameraPivot);
 
-        voxelArray.customTextures = new List<CustomTexture>[]
-            { new List<CustomTexture>(), new List<CustomTexture>() };
+        voxelArray.customMaterials = new List<CustomMaterial>[]
+            { new List<CustomMaterial>(), new List<CustomMaterial>() };
 
         var customBaseNames = new Dictionary<string, Material>();
         if (world.ContainsKey(FileKeys.WORLD_CUSTOM_BASE_MATERIALS))
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_BASE_MATERIALS].AsList())
-                voxelArray.customTextures[(int)PaintLayer.BASE].Add(
-                    ReadCustomTexture(texObj.AsDictionary(), customBaseNames, PaintLayer.BASE));
+                voxelArray.customMaterials[(int)PaintLayer.BASE].Add(
+                    ReadCustomMaterial(texObj.AsDictionary(), customBaseNames, PaintLayer.BASE));
         }
 
         var customOverlayNames = new Dictionary<string, Material>();
         if (world.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS))
         {
             foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS].AsList())
-                voxelArray.customTextures[(int)PaintLayer.OVERLAY].Add(
-                    ReadCustomTexture(texObj.AsDictionary(), customOverlayNames, PaintLayer.OVERLAY));
+                voxelArray.customMaterials[(int)PaintLayer.OVERLAY].Add(
+                    ReadCustomMaterial(texObj.AsDictionary(), customOverlayNames, PaintLayer.OVERLAY));
         }
 
         var bases = new List<Material>();
@@ -195,21 +195,21 @@ public class MessagePackWorldReader : WorldFileReader
         }
     }
 
-    private CustomTexture ReadCustomTexture(MessagePackObjectDictionary texDict,
-        Dictionary<string, Material> customTextureNames, PaintLayer layer)
+    private CustomMaterial ReadCustomMaterial(MessagePackObjectDictionary texDict,
+        Dictionary<string, Material> customMaterialNames, PaintLayer layer)
     {
-        CustomTexture customTex = new CustomTexture(layer);
-        ReadPropertiesObject(texDict, customTex);
+        CustomMaterial customMat = new CustomMaterial(layer);
+        ReadPropertiesObject(texDict, customMat);
         if (texDict.ContainsKey(FileKeys.CUSTOM_MATERIAL_NAME))
         {
-            customTex.material.name = texDict[FileKeys.CUSTOM_MATERIAL_NAME].AsString();
-            customTextureNames[customTex.material.name] = customTex.material;
+            customMat.material.name = texDict[FileKeys.CUSTOM_MATERIAL_NAME].AsString();
+            customMaterialNames[customMat.material.name] = customMat.material;
         }
-        return customTex;
+        return customMat;
     }
 
     private Material ReadMaterial(MessagePackObjectDictionary matDict,
-        Dictionary<string, Material> customTextureNames, PaintLayer layer)
+        Dictionary<string, Material> customMaterialNames, PaintLayer layer)
     {
         string name;
 
@@ -234,9 +234,9 @@ public class MessagePackWorldReader : WorldFileReader
         }
 
         Material mat;
-        bool isCustom = customTextureNames != null && customTextureNames.ContainsKey(name);
+        bool isCustom = customMaterialNames != null && customMaterialNames.ContainsKey(name);
         if (isCustom)
-            mat = customTextureNames[name];
+            mat = customMaterialNames[name];
         else
             mat = ResourcesDirectory.FindMaterial(name, editor);
         if (mat == null)
@@ -246,7 +246,7 @@ public class MessagePackWorldReader : WorldFileReader
         }
         if (!isCustom && matDict.ContainsKey(FileKeys.MATERIAL_COLOR))
         {
-            // custom textures can't have colors
+            // custom materials can't have colors
             // TODO if color style = PAINT then replace with solid color matching shader/footsteps
             // var colorStyle = ResourcesDirectory.ColorStyle.TINT;
             // if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR_STYLE))
@@ -577,17 +577,17 @@ public class MessagePackWorldReader : WorldFileReader
                 yield return behaviorObj.AsDictionary();
     }
 
-    public List<CustomTexture> FindCustomTextures(PaintLayer layer)
+    public List<CustomMaterial> FindCustomMaterials(PaintLayer layer)
     {
         // copied from FindEmbeddedData
         MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
         CheckWorldValid(worldDict);
 
-        var texList = new List<CustomTexture>();
+        var matList = new List<CustomMaterial>();
         try
         {
-            foreach (var tex in IterateCustomTextures(worldDict, layer))
-                texList.Add(tex);
+            foreach (var mat in IterateCustomMaterials(worldDict, layer))
+                matList.Add(mat);
         }
         catch (MapReadException e)
         {
@@ -597,10 +597,10 @@ public class MessagePackWorldReader : WorldFileReader
         {
             throw new MapReadException("Error reading world file", e);
         }
-        return texList;
+        return matList;
     }
 
-    private IEnumerable<CustomTexture> IterateCustomTextures(
+    private IEnumerable<CustomMaterial> IterateCustomMaterials(
         MessagePackObjectDictionary worldDict, PaintLayer layer)
     {
         string key = layer == PaintLayer.OVERLAY ?
@@ -608,6 +608,6 @@ public class MessagePackWorldReader : WorldFileReader
         var names = new Dictionary<string, Material>();
         if (worldDict.ContainsKey(key))
             foreach (var matObj in worldDict[key].AsList())
-                yield return ReadCustomTexture(matObj.AsDictionary(), names, layer);
+                yield return ReadCustomMaterial(matObj.AsDictionary(), names, layer);
     }
 }

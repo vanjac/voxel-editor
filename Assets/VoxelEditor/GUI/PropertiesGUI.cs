@@ -158,7 +158,7 @@ public class PropertiesGUI : LeftPanelGUI
     private bool slidingPanel = false;
     private bool adjustingSlider = false;
     public bool normallyOpen = true;
-    // for selecting "hidden" objects like world properties and custom textures
+    // for selecting "hidden" objects like world properties and custom materials
     public PropertiesObject specialSelection = null;
     public bool freezeUpdates = false;
 

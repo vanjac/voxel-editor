@@ -49,8 +49,8 @@ public class VoxelArray : MonoBehaviour
     public WorldProperties world = new WorldProperties();
     public WorldType type = WorldType.INDOOR;
     // indexed by PaintLayer
-    public List<CustomTexture>[] customTextures = new List<CustomTexture>[]
-        { new List<CustomTexture>(), new List<CustomTexture>() };
+    public List<CustomMaterial>[] customMaterials = new List<CustomMaterial>[]
+        { new List<CustomMaterial>(), new List<CustomMaterial>() };
     protected OctreeNode rootNode;
     private List<ObjectEntity> objects = new List<ObjectEntity>();
     private VoxelComponent voxelComponent;

@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// wraps a Material, for editing properties of a custom texture
-public class CustomTexture : PropertiesObject
+// wraps a Material for editing properties
+public class CustomMaterial : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Custom Texture", "A custom texture material",
-        "image", typeof(CustomTexture));
+        "Custom Material", "A custom material with a texture",
+        "image", typeof(CustomMaterial));
 
     public const string DEFAULT_CATEGORY = " CUSTOM "; // leading space for sorting order (sorry)
     private const string CUSTOM_NAME_PREFIX = "Custom:";
@@ -100,14 +100,14 @@ public class CustomTexture : PropertiesObject
         set => material.SetInt("_Sound", (int)value);
     }
 
-    public CustomTexture(PaintLayer layer)
+    public CustomMaterial(PaintLayer layer)
     {
         this.layer = layer;
         material = new Material(GetShader(CustomShader.MATTE, CustomTransparency.FADE, false));
         material.name = CUSTOM_NAME_PREFIX + System.Guid.NewGuid();
     }
 
-    public CustomTexture(Material material, PaintLayer layer)
+    public CustomMaterial(Material material, PaintLayer layer)
     {
         this.layer = layer;
         this.material = material;
@@ -182,10 +182,10 @@ public class CustomTexture : PropertiesObject
                     Material baseMat = (Material)v;
                     if (baseMat != null)
                     {
-                        CustomTexture copyFrom = new CustomTexture(baseMat, layer);
+                        CustomMaterial copyFrom = new CustomMaterial(baseMat, layer);
                         shader = copyFrom.shader;
                         transparency = copyFrom.transparency;
-                        // don't copy double-sided, wasn't supported for old-style custom textures
+                        // don't copy double-sided, wasn't supported for old-style custom materials
                         color = copyFrom.color;
                     }
                 },
@@ -206,7 +206,7 @@ public class CustomTexture : PropertiesObject
         return Shader.Find(shaderName);
     }
 
-    public static bool IsCustomTexture(Material material)
+    public static bool IsCustomMaterial(Material material)
     {
         return material.name.StartsWith(CUSTOM_NAME_PREFIX);
     }

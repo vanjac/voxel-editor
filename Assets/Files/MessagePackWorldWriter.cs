@@ -42,14 +42,14 @@ public class MessagePackWorldWriter
         world[FileKeys.WORLD_CAMERA] = new MessagePackObject(WriteCamera(cameraPivot));
 
         var customBasesList = new List<MessagePackObject>();
-        foreach (var tex in voxelArray.customTextures[(int)PaintLayer.BASE])
-            customBasesList.Add(new MessagePackObject(WriteCustomTexture(tex, PaintLayer.BASE)));
+        foreach (var mat in voxelArray.customMaterials[(int)PaintLayer.BASE])
+            customBasesList.Add(new MessagePackObject(WriteCustomMaterial(mat, PaintLayer.BASE)));
         if (customBasesList.Count != 0)
             world[FileKeys.WORLD_CUSTOM_BASE_MATERIALS] = new MessagePackObject(customBasesList);
 
         var customOverlaysList = new List<MessagePackObject>();
-        foreach (var tex in voxelArray.customTextures[(int)PaintLayer.OVERLAY])
-            customOverlaysList.Add(new MessagePackObject(WriteCustomTexture(tex, PaintLayer.OVERLAY)));
+        foreach (var mat in voxelArray.customMaterials[(int)PaintLayer.OVERLAY])
+            customOverlaysList.Add(new MessagePackObject(WriteCustomMaterial(mat, PaintLayer.OVERLAY)));
         if (customOverlaysList.Count != 0)
             world[FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS] = new MessagePackObject(customOverlaysList);
 
@@ -116,10 +116,10 @@ public class MessagePackWorldWriter
         return camera;
     }
 
-    private static MessagePackObjectDictionary WriteCustomTexture(CustomTexture tex, PaintLayer layer)
+    private static MessagePackObjectDictionary WriteCustomMaterial(CustomMaterial mat, PaintLayer layer)
     {
-        var materialDict = WritePropertiesObject(tex, false);
-        materialDict[FileKeys.CUSTOM_MATERIAL_NAME] = tex.material.name;
+        var materialDict = WritePropertiesObject(mat, false);
+        materialDict[FileKeys.CUSTOM_MATERIAL_NAME] = mat.material.name;
         return materialDict;
     }
 
@@ -138,7 +138,7 @@ public class MessagePackWorldWriter
     {
         var materialDict = new MessagePackObjectDictionary();
         materialDict[FileKeys.MATERIAL_NAME] = material.name;
-        if (!CustomTexture.IsCustomTexture(material))
+        if (!CustomMaterial.IsCustomMaterial(material))
             materialDict[FileKeys.MATERIAL_COLOR] = WriteColor(material.color);
         return materialDict;
     }

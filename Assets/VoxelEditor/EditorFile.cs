@@ -68,7 +68,7 @@ public class EditorFile : MonoBehaviour
             if (CompareVersions(lastVersion, "1.3.3") == -1)
             {
                 LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!\n\n"
-                    + "•  You can now import custom textures from your photos library, "
+                    + "•  You can now import custom materials from your photos library, "
                     + "and change the color of any built-in material.\n"
                     + "•  Two new behaviors have been added: <b>Character</b> and <b>Look At</b>.\n"
                     + "•  Move behavior now has an option for \"local\" coordinates, or for choosing a random direction.\n"
