@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum PaintLayer
 {
-    MATERIAL, OVERLAY, SKY, HIDDEN
+    BASE, OVERLAY, SKY, HIDDEN
 }
 
 // could represent a material or a directory!

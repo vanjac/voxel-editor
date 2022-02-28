@@ -198,7 +198,7 @@ public static class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                ball.paint.material = null;
+                ball.paint.baseMat = null;
                 ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
                     ResourcesDirectory.FindMaterial("MATTE_overlay", true));
                 ball.paint.overlay.color = new Color(1, 0, 0, 0.5f);
@@ -210,7 +210,7 @@ public static class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                ball.paint.material = null;
+                ball.paint.baseMat = null;
                 ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
                     ResourcesDirectory.FindMaterial("GLASS_overlay", true));
                 ball.paint.overlay.color = new Color(1, 1, 1, 0.25f);

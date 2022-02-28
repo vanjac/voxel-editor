@@ -30,7 +30,7 @@ public interface WorldFileReader
 
 public static class ReadWorldFile
 {
-    private static Material missingMaterial, missingOverlay;
+    private static Material missingBase, missingOverlay;
 
     // return warnings. disposes stream when done!
     public static List<string> Read(Stream stream, Transform cameraPivot, VoxelArray voxelArray, bool editor)
@@ -120,14 +120,14 @@ public static class ReadWorldFile
 
     public static Material MissingMaterial(PaintLayer layer)
     {
-        if (missingMaterial == null)
+        if (missingBase == null)
         {
-            missingMaterial = ResourcesDirectory.InstantiateMaterial(
+            missingBase = ResourcesDirectory.InstantiateMaterial(
                 ResourcesDirectory.FindMaterial("MISSING", true));
             missingOverlay = ResourcesDirectory.InstantiateMaterial(
                 ResourcesDirectory.FindMaterial("MISSING_overlay", true));
         }
-        return layer == PaintLayer.OVERLAY ? missingOverlay : missingMaterial;
+        return layer == PaintLayer.OVERLAY ? missingOverlay : missingBase;
     }
 
     private static WorldFileReader GetReaderForStream(Stream stream)

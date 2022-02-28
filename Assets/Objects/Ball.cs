@@ -9,9 +9,9 @@ public class BallObject : ObjectEntity
 
     public BallObject()
     {
-        paint.material = ResourcesDirectory.InstantiateMaterial(
+        paint.baseMat = ResourcesDirectory.InstantiateMaterial(
             ResourcesDirectory.FindMaterial("MATTE", true));
-        paint.material.color = Color.red;
+        paint.baseMat.color = Color.red;
     }
 
     public override PropertiesObjectType ObjectType()
@@ -24,18 +24,18 @@ public class BallObject : ObjectEntity
         return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
             new Property("mat", "Material",
-                () => paint.material == null ? paint.overlay : paint.material,
+                () => paint.baseMat == null ? paint.overlay : paint.baseMat,
                 v =>
                 {
                     var mat = (Material)v;
                     if (mat.renderQueue >= (int)UnityEngine.Rendering.RenderQueue.AlphaTest)
                     {
                         paint.overlay = mat;
-                        paint.material = null;
+                        paint.baseMat = null;
                     }
                     else
                     {
-                        paint.material = mat;
+                        paint.baseMat = mat;
                         paint.overlay = null;
                     }
                     if (marker != null)

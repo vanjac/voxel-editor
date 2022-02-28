@@ -14,7 +14,7 @@ public class MaterialSelectorGUI : GUIPanel
     public delegate void MaterialSelectHandler(Material material);
 
     public MaterialSelectHandler handler;
-    public PaintLayer layer = PaintLayer.MATERIAL;
+    public PaintLayer layer = PaintLayer.BASE;
     public bool allowNullMaterial = false;
     public Material highlightMaterial = null; // the current selected material
     private CustomTexture highlightCustom = null; // highlightMaterial will also be set
@@ -170,7 +170,7 @@ public class MaterialSelectorGUI : GUIPanel
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
-        if ((layer == PaintLayer.MATERIAL || layer == PaintLayer.OVERLAY) && selectedWorld == null)
+        if ((layer == PaintLayer.BASE || layer == PaintLayer.OVERLAY) && selectedWorld == null)
         {
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
                 ImportTextureFromPhotos();
@@ -498,7 +498,7 @@ public class MaterialSelectorGUI : GUIPanel
             worldCustomTextures = ReadWorldFile.ReadCustomTextures(path, layer);
             if (worldCustomTextures.Count == 0)
                 importMessage = "World contains no custom textures for "
-                    + (layer == PaintLayer.OVERLAY ? "overlays." : "materials.");
+                    + (layer == PaintLayer.OVERLAY ? "overlay." : "base.");
             var categoriesSet = GetCustomTextureCategories();
             categories = new string[categoriesSet.Count];
             categoriesSet.CopyTo(categories);

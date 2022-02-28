@@ -13,9 +13,9 @@ public class JSONWorldReader : WorldFileReader
     private JSONNode rootNode;
     private List<string> warnings = new List<string>();
     // maps the combined mat+over JSON indices to separate msgpack indices
-    private Dictionary<int, int> materialIndices;
+    private Dictionary<int, int> baseIndices;
     private Dictionary<int, int> overlayIndices = new Dictionary<int, int>();
-    int maxMaterialIndex, maxOverlayIndex;
+    int maxBaseIndex, maxOverlayIndex;
 
     public void ReadStream(Stream stream)
     {
@@ -77,9 +77,9 @@ public class JSONWorldReader : WorldFileReader
 
     public MessagePackObjectDictionary ConvertRoot(JSONObject root)
     {
-        materialIndices = new Dictionary<int, int>();
+        baseIndices = new Dictionary<int, int>();
         overlayIndices = new Dictionary<int, int>();
-        maxMaterialIndex = 0;
+        maxBaseIndex = 0;
         maxOverlayIndex = 0;
 
         if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
@@ -163,21 +163,21 @@ public class JSONWorldReader : WorldFileReader
 
         if (worldObject["materials"] != null)
         {
-            var materials = new MessagePackObject[maxMaterialIndex];
+            var bases = new MessagePackObject[maxBaseIndex];
             var overlays = new MessagePackObject[maxOverlayIndex];
             int i = 0;
             foreach (JSONNode matNode in worldObject["materials"].AsArray)
             {
                 MessagePackObject matObj = new MessagePackObject(
                     ConvertMaterial(matNode.AsObject, false));
-                if (materialIndices.TryGetValue(i, out int materialIndex))
-                    materials[materialIndex] = matObj;
+                if (baseIndices.TryGetValue(i, out int baseIndex))
+                    bases[baseIndex] = matObj;
                 if (overlayIndices.TryGetValue(i, out int overlayIndex))
                     overlays[overlayIndex] = matObj;
                 i++;
             }
-            worldDict[FileKeys.WORLD_MATERIALS] = new MessagePackObject(materials);
-            worldDict[FileKeys.WORLD_OVERLAYS] = new MessagePackObject(overlays);
+            worldDict[FileKeys.WORLD_BASE_MATERIALS] = new MessagePackObject(bases);
+            worldDict[FileKeys.WORLD_OVERLAY_MATERIALS] = new MessagePackObject(overlays);
         }
     }
 
@@ -314,8 +314,8 @@ public class JSONWorldReader : WorldFileReader
         if (faceObject["mat"] != null)
         {
             int mat = faceObject["mat"].AsInt;
-            if (!materialIndices.TryGetValue(mat, out int index))
-                materialIndices[mat] = index = maxMaterialIndex++;
+            if (!baseIndices.TryGetValue(mat, out int index))
+                baseIndices[mat] = index = maxBaseIndex++;
             faceList.Add(index);
         }
         else

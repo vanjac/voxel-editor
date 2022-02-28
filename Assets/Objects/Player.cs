@@ -11,9 +11,9 @@ public class PlayerObject : ObjectEntity
 
     public PlayerObject()
     {
-        paint.material = ResourcesDirectory.InstantiateMaterial(
+        paint.baseMat = ResourcesDirectory.InstantiateMaterial(
             ResourcesDirectory.FindMaterial("GLOSSY", true));
-        paint.material.color = Color.green;
+        paint.baseMat.color = Color.green;
     }
 
     public override PropertiesObjectType ObjectType()

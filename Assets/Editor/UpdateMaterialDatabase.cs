@@ -36,7 +36,7 @@ public class UpdateMaterialDatabase
                     info.path.Substring(0, info.path.Length - info.name.Length - 1));
 
             if (info.path.Contains("Materials"))
-                info.layer = PaintLayer.MATERIAL;
+                info.layer = PaintLayer.BASE;
             else if (info.path.Contains("Overlays"))
                 info.layer = PaintLayer.OVERLAY;
             else if (info.path.Contains("Skies"))

@@ -94,33 +94,33 @@ public class MessagePackWorldReader : WorldFileReader
         voxelArray.customTextures = new List<CustomTexture>[]
             { new List<CustomTexture>(), new List<CustomTexture>() };
 
-        var customMaterialNames = new Dictionary<string, Material>();
-        if (world.ContainsKey(FileKeys.WORLD_CUSTOM_MATERIALS))
+        var customBaseNames = new Dictionary<string, Material>();
+        if (world.ContainsKey(FileKeys.WORLD_CUSTOM_BASE_MATERIALS))
         {
-            foreach (var texObj in world[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
-                voxelArray.customTextures[(int)PaintLayer.MATERIAL].Add(
-                    ReadCustomTexture(texObj.AsDictionary(), customMaterialNames, PaintLayer.MATERIAL));
+            foreach (var texObj in world[FileKeys.WORLD_CUSTOM_BASE_MATERIALS].AsList())
+                voxelArray.customTextures[(int)PaintLayer.BASE].Add(
+                    ReadCustomTexture(texObj.AsDictionary(), customBaseNames, PaintLayer.BASE));
         }
 
         var customOverlayNames = new Dictionary<string, Material>();
-        if (world.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAYS))
+        if (world.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS))
         {
-            foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
+            foreach (var texObj in world[FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS].AsList())
                 voxelArray.customTextures[(int)PaintLayer.OVERLAY].Add(
                     ReadCustomTexture(texObj.AsDictionary(), customOverlayNames, PaintLayer.OVERLAY));
         }
 
-        var materials = new List<Material>();
-        if (world.ContainsKey(FileKeys.WORLD_MATERIALS))
+        var bases = new List<Material>();
+        if (world.ContainsKey(FileKeys.WORLD_BASE_MATERIALS))
         {
-            foreach (var matObj in world[FileKeys.WORLD_MATERIALS].AsList())
-                materials.Add(ReadMaterial(matObj.AsDictionary(), customMaterialNames, PaintLayer.MATERIAL));
+            foreach (var matObj in world[FileKeys.WORLD_BASE_MATERIALS].AsList())
+                bases.Add(ReadMaterial(matObj.AsDictionary(), customBaseNames, PaintLayer.BASE));
         }
 
         var overlays = new List<Material>();
-        if (world.ContainsKey(FileKeys.WORLD_OVERLAYS))
+        if (world.ContainsKey(FileKeys.WORLD_OVERLAY_MATERIALS))
         {
-            foreach (var matObj in world[FileKeys.WORLD_OVERLAYS].AsList())
+            foreach (var matObj in world[FileKeys.WORLD_OVERLAY_MATERIALS].AsList())
                 overlays.Add(ReadMaterial(matObj.AsDictionary(), customOverlayNames, PaintLayer.OVERLAY));
         }
 
@@ -146,7 +146,7 @@ public class MessagePackWorldReader : WorldFileReader
         if (world.ContainsKey(FileKeys.WORLD_VOXELS))
         {
             foreach (var voxelObj in world[FileKeys.WORLD_VOXELS].AsList())
-                ReadVoxel(voxelObj, voxelArray, materials, overlays, substances);
+                ReadVoxel(voxelObj, voxelArray, bases, overlays, substances);
         }
 
         if (world.ContainsKey(FileKeys.WORLD_OBJECTS))
@@ -162,7 +162,7 @@ public class MessagePackWorldReader : WorldFileReader
                     continue;
                 }
                 ObjectEntity obj = (ObjectEntity)objType.Create();
-                ReadObjectEntity(objDict, obj, materials, overlays);
+                ReadObjectEntity(objDict, obj, bases, overlays);
                 voxelArray.AddObject(obj);
             }
         }
@@ -263,7 +263,7 @@ public class MessagePackWorldReader : WorldFileReader
     }
 
     private void ReadObjectEntity(MessagePackObjectDictionary entityDict, ObjectEntity objectEntity,
-        List<Material> materials, List<Material> overlays)
+        List<Material> bases, List<Material> overlays)
     {
         ReadEntity(entityDict, objectEntity);
         if (entityDict.ContainsKey(FileKeys.OBJECT_POSITION))
@@ -272,7 +272,7 @@ public class MessagePackWorldReader : WorldFileReader
             objectEntity.rotation = entityDict[FileKeys.OBJECT_ROTATION].AsSingle();
         if (entityDict.ContainsKey(FileKeys.OBJECT_PAINT))
             objectEntity.paint = ReadFace(entityDict[FileKeys.OBJECT_PAINT], out int _,
-                materials, overlays);
+                bases, overlays);
     }
 
     private void ReadEntity(MessagePackObjectDictionary entityDict, Entity entity)
@@ -371,7 +371,7 @@ public class MessagePackWorldReader : WorldFileReader
                 if (propType == typeof(Material))
                 {
                     // skip equality check
-                    prop.setter(ReadMaterial(propList[1].AsDictionary(), null, PaintLayer.MATERIAL));
+                    prop.setter(ReadMaterial(propList[1].AsDictionary(), null, PaintLayer.BASE));
                 }
                 else if (propType == typeof(Texture2D))
                 {
@@ -404,7 +404,7 @@ public class MessagePackWorldReader : WorldFileReader
     }
 
     private void ReadVoxel(MessagePackObject voxelObj, VoxelArray voxelArray,
-        List<Material> materials, List<Material> overlays, List<Substance> substances)
+        List<Material> bases, List<Material> overlays, List<Substance> substances)
     {
         var voxelList = voxelObj.AsList();
         if (voxelList.Count == 0)
@@ -418,7 +418,7 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (var faceObj in voxelList[1].AsList())
             {
-                VoxelFace face = ReadFace(faceObj, out int faceI, materials, overlays);
+                VoxelFace face = ReadFace(faceObj, out int faceI, bases, overlays);
                 if (faceI != -1)
                     voxel.faces[faceI] = face;
             }
@@ -435,7 +435,7 @@ public class MessagePackWorldReader : WorldFileReader
     }
 
     private VoxelFace ReadFace(MessagePackObject faceObj, out int faceI,
-        List<Material> materials, List<Material> overlays)
+        List<Material> bases, List<Material> overlays)
     {
         VoxelFace face = new VoxelFace();
         var faceList = faceObj.AsList();
@@ -444,7 +444,7 @@ public class MessagePackWorldReader : WorldFileReader
         else
             faceI = -1;
         if (faceList.Count >= 2 && faceList[1].AsInt32() != -1)
-            face.material = materials[faceList[1].AsInt32()];
+            face.baseMat = bases[faceList[1].AsInt32()];
         if (faceList.Count >= 3 && faceList[2].AsInt32() != -1)
             face.overlay = overlays[faceList[2].AsInt32()];
         if (faceList.Count >= 4)
@@ -558,11 +558,11 @@ public class MessagePackWorldReader : WorldFileReader
             foreach (var subObj in worldDict[FileKeys.WORLD_OBJECTS].AsList())
                 foreach (var propObj in IterateEntityPropObjects(subObj.AsDictionary()))
                     yield return propObj;
-        if (worldDict.ContainsKey(FileKeys.WORLD_CUSTOM_MATERIALS))
-            foreach (var matObj in worldDict[FileKeys.WORLD_CUSTOM_MATERIALS].AsList())
+        if (worldDict.ContainsKey(FileKeys.WORLD_CUSTOM_BASE_MATERIALS))
+            foreach (var matObj in worldDict[FileKeys.WORLD_CUSTOM_BASE_MATERIALS].AsList())
                 yield return matObj.AsDictionary();
-        if (worldDict.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAYS))
-            foreach (var matObj in worldDict[FileKeys.WORLD_CUSTOM_OVERLAYS].AsList())
+        if (worldDict.ContainsKey(FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS))
+            foreach (var matObj in worldDict[FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS].AsList())
                 yield return matObj.AsDictionary();
     }
 
@@ -603,7 +603,8 @@ public class MessagePackWorldReader : WorldFileReader
     private IEnumerable<CustomTexture> IterateCustomTextures(
         MessagePackObjectDictionary worldDict, PaintLayer layer)
     {
-        string key = layer == PaintLayer.OVERLAY ? FileKeys.WORLD_CUSTOM_OVERLAYS : FileKeys.WORLD_CUSTOM_MATERIALS;
+        string key = layer == PaintLayer.OVERLAY ?
+            FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS : FileKeys.WORLD_CUSTOM_BASE_MATERIALS;
         var names = new Dictionary<string, Material>();
         if (worldDict.ContainsKey(key))
             foreach (var matObj in worldDict[key].AsList())

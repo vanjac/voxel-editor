@@ -384,7 +384,7 @@ public static class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(PaintLayer layer = PaintLayer.MATERIAL)
+    public static PropertyGUI Material(PaintLayer layer = PaintLayer.BASE)
     {
         return (Property property) =>
         {

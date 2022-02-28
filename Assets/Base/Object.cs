@@ -75,8 +75,8 @@ public abstract class ObjectEntity : DynamicEntity
         if (renderer != null)
         {
             List<Material> materials = new List<Material>();
-            if (paint.material != null)
-                materials.Add(paint.material);
+            if (paint.baseMat != null)
+                materials.Add(paint.baseMat);
             if (paint.overlay != null)
                 materials.Add(paint.overlay);
             renderer.materials = materials.ToArray();

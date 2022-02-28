@@ -1252,15 +1252,15 @@ public class VoxelArrayEditor : VoxelArray
     {
         foreach (var faceRef in IterateSelected<VoxelFaceReference>())
         {
-            if (paint.material != null || faceRef.voxel.substance != null)
-                faceRef.voxel.faces[faceRef.faceI].material = paint.material;
+            if (paint.baseMat != null || faceRef.voxel.substance != null)
+                faceRef.voxel.faces[faceRef.faceI].baseMat = paint.baseMat;
             faceRef.voxel.faces[faceRef.faceI].overlay = paint.overlay;
             faceRef.voxel.faces[faceRef.faceI].orientation = paint.orientation;
             VoxelModified(faceRef.voxel);
         }
         foreach (var obj in IterateSelected<ObjectMarker>())
         {
-            obj.objectEntity.paint.material = paint.material;
+            obj.objectEntity.paint.baseMat = paint.baseMat;
             obj.objectEntity.paint.overlay = paint.overlay;
             obj.objectEntity.paint.orientation = paint.orientation;
             ObjectModified(obj.objectEntity);
@@ -1273,14 +1273,14 @@ public class VoxelArrayEditor : VoxelArray
         {
             for (int faceI = 0; faceI < 6; faceI++)
             {
-                if (ReplaceMaterialSingle(ref voxel.faces[faceI].material, oldMat, newMat)
+                if (ReplaceMaterialSingle(ref voxel.faces[faceI].baseMat, oldMat, newMat)
                         || ReplaceMaterialSingle(ref voxel.faces[faceI].overlay, oldMat, newMat))
                     VoxelModified(voxel);
             }
         }
         foreach (ObjectEntity obj in IterateObjects())
         {
-            if (ReplaceMaterialSingle(ref obj.paint.material, oldMat, newMat)
+            if (ReplaceMaterialSingle(ref obj.paint.baseMat, oldMat, newMat)
                     || ReplaceMaterialSingle(ref obj.paint.overlay, oldMat, newMat))
                 ObjectModified(obj);
         }

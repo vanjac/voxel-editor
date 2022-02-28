@@ -4,19 +4,19 @@ using UnityEngine;
 
 public struct VoxelFace
 {
-    public Material material;
+    public Material baseMat;
     public Material overlay;
     public byte orientation;
     public bool addSelected, storedSelected;
 
     public bool IsEmpty()
     {
-        return material == null && overlay == null;
+        return baseMat == null && overlay == null;
     }
 
     public void Clear()
     {
-        material = null;
+        baseMat = null;
         overlay = null;
         orientation = 0;
         addSelected = false;
@@ -38,7 +38,7 @@ public struct VoxelFace
 
     public static bool operator ==(VoxelFace s1, VoxelFace s2)
     {
-        return s1.material == s2.material && s1.overlay == s2.overlay
+        return s1.baseMat == s2.baseMat && s1.overlay == s2.overlay
             && s1.orientation == s2.orientation;
     }
     public static bool operator !=(VoxelFace s1, VoxelFace s2)
@@ -48,7 +48,7 @@ public struct VoxelFace
 
     public override int GetHashCode()
     {
-        int result = material.GetHashCode();
+        int result = baseMat.GetHashCode();
         result = 37 * result + overlay.GetHashCode();
         result = 37 * result + (int)orientation;
         return result;
@@ -74,7 +74,7 @@ public struct VoxelFace
 
     public MaterialSound GetSound()
     {
-        MaterialSound matSound = ResourcesDirectory.GetMaterialSound(material);
+        MaterialSound matSound = ResourcesDirectory.GetMaterialSound(baseMat);
         MaterialSound overSound = ResourcesDirectory.GetMaterialSound(overlay);
         if (overSound == MaterialSound.GENERIC)
             return matSound;
@@ -1699,7 +1699,7 @@ public class VoxelComponent : MonoBehaviour
             facesEnabled[faceNum] = false;
         }
 
-        if (!xRay) // materials and overlays
+        if (!xRay) // base and overlay
         {
             // facesEnabled is already cleared from above
             foreach (var mat in IteratePaintMaterials(voxel, facesEnabled, false))
@@ -1722,7 +1722,7 @@ public class VoxelComponent : MonoBehaviour
             if (overlay)
                 mat = voxel.faces[i].overlay;
             else
-                mat = voxel.faces[i].material;
+                mat = voxel.faces[i].baseMat;
             if (mat == null)
                 continue;
             facesEnabled[i] = true;
@@ -1732,7 +1732,7 @@ public class VoxelComponent : MonoBehaviour
                 if (overlay)
                     mat2 = voxel.faces[j].overlay;
                 else
-                    mat2 = voxel.faces[j].material;
+                    mat2 = voxel.faces[j].baseMat;
                 if (mat2 == mat)
                 {
                     facesEnabled[j] = true;

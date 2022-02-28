@@ -35,12 +35,12 @@ public static class Tutorials
     {
         () => new TutorialPaintStart(),
         () => new TutorialPaintPage(
-            "You can use the Paint panel to paint the selected faces with <i>materials</i> and <i>overlays</i>."),
+            "You can use the Paint panel to paint the selected faces with <i>materials</i>."),
         () => new TutorialPaintPage(
             "Choose any of the categories to browse for a texture. Then switch to the Color tab to change its color.",
             highlight: "material type"),
         () => new TutorialPaintPage(
-            "A paint is composed of two parts: an opaque material and a transparent overlay. "
+            "A paint is composed of two parts: an opaque base material and a transparent overlay. "
             + "Use the tabs to switch between the two parts.",
             highlight: "paint layer"),
         () => new TutorialPaintPage(
@@ -1131,7 +1131,7 @@ public static class Tutorials
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is BallObject)
                 {
-                    Material mat = ((BallObject)e).paint.material;
+                    Material mat = ((BallObject)e).paint.baseMat;
                     if (prevMat == null)
                         prevMat = mat;
                     else if (prevMat != mat)

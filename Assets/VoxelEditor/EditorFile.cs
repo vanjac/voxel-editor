@@ -69,7 +69,7 @@ public class EditorFile : MonoBehaviour
             {
                 LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!\n\n"
                     + "•  You can now import custom textures from your photos library, "
-                    + "and change the color of any built-in material or overlay.\n"
+                    + "and change the color of any built-in material.\n"
                     + "•  Two new behaviors have been added: <b>Character</b> and <b>Look At</b>.\n"
                     + "•  Move behavior now has an option for \"local\" coordinates, or for choosing a random direction.\n"
                     + "... and much more! Check out the new Demo Worlds (Character AI, Hovercraft, and Shapes) for examples.");

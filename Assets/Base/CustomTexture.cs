@@ -6,7 +6,7 @@ using UnityEngine;
 public class CustomTexture : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Custom Texture", "A custom texture image for materials or overlays",
+        "Custom Texture", "A custom texture material",
         "image", typeof(CustomTexture));
 
     public const string DEFAULT_CATEGORY = " CUSTOM "; // leading space for sorting order (sorry)
