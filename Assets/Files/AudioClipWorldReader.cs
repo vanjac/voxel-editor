@@ -51,7 +51,7 @@ public class AudioClipWorldReader : WorldFileReader
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
-        var warnings = ReadWorldFile.Read(Resources.Load<TextAsset>("Templates/indoor"),
+        var warnings = ReadWorldFile.ReadWorld(Resources.Load<TextAsset>("Templates/indoor"),
             cameraPivot, voxelArray, editor);
         foreach (var obj in voxelArray.IterateObjects())
         {
@@ -74,7 +74,12 @@ public class AudioClipWorldReader : WorldFileReader
         return dataList;
     }
 
-    public List<CustomMaterial> FindCustomMaterials(PaintLayer layer)
+    public List<string> GetCustomMaterialCategories(PaintLayer layer)
+    {
+        return new List<string>();
+    }
+
+    public List<CustomMaterial> FindCustomMaterials(PaintLayer layer, string category)
     {
         return new List<CustomMaterial>();
     }

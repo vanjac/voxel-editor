@@ -9,7 +9,6 @@ public class MaterialSelectorGUI : GUIPanel
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
-    private const string WORLD_LIST = "Import from world...";
 
     public delegate void MaterialSelectHandler(Material material);
 
@@ -23,17 +22,18 @@ public class MaterialSelectorGUI : GUIPanel
     private CustomMaterial highlightCustom = null; // highlightMaterial will also be set
     public VoxelArrayEditor voxelArray;
 
-    private string selectedWorld = null; // null for current world, WORLD_LIST for list
+    private bool importFromWorld = false;
+    private WorldFileReader selectedWorld = null;
+    private string worldName = "";
     private string selectedCategory = ""; // empty string for root
-    private bool loadingWorld;
     private string importMessage = null;
 
     // Objects listed in Materials page:
     private List<Material> materials; // built-in
     private List<Texture2D> thumbnails;
+    private List<CustomMaterial> customMaterials;
     private string[] categories;
     private string[] worlds;
-    private List<CustomMaterial> worldCustomMaterials; // not filtered by category
 
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
@@ -148,17 +148,12 @@ public class MaterialSelectorGUI : GUIPanel
     {
         if (materials == null)
             return;
-        if (loadingWorld)
-        {
-            GUILayout.Label("Loading world...");
-            return;
-        }
 
         GUILayout.BeginHorizontal();
 
         bool wasEnabled = GUI.enabled;
         Color baseColor = GUI.color;
-        if (selectedCategory == "" && selectedWorld == null)
+        if (selectedCategory == "" && !importFromWorld)
         {
             if (!GUI.enabled)
                 GUI.color *= new Color(1, 1, 1, 0.5f); // aaaaaaaaa
@@ -170,7 +165,7 @@ public class MaterialSelectorGUI : GUIPanel
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
-        if ((layer == PaintLayer.BASE || layer == PaintLayer.OVERLAY) && selectedWorld == null)
+        if ((layer == PaintLayer.BASE || layer == PaintLayer.OVERLAY) && !importFromWorld)
         {
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.imageImport))
                 ImportFromPhotos();
@@ -196,19 +191,20 @@ public class MaterialSelectorGUI : GUIPanel
         // prevent from expanding window
         GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
         string labelText = "";
-        if (selectedWorld != null)
+        if (importFromWorld)
         {
-            labelText = selectedWorld;
-            if (selectedCategory != "")
-                labelText += " / " + selectedCategory;
-            if (selectedWorld != WORLD_LIST)
-                labelText += " (import)";
+            if (selectedWorld == null)
+                labelText = "Import from world...";
+            else if (selectedCategory == "")
+                labelText = worldName + " (import)";
+            else
+                labelText = worldName + " / " + selectedCategory + " (import)";
         }
         else
             labelText = selectedCategory;
         GUILayout.Label(labelText, categoryLabelStyle.Value);
         GUIUtils.EndHorizontalClipped();
-        if (selectedWorld == null && highlightMaterial != null
+        if (!importFromWorld && highlightMaterial != null
             && !CustomMaterial.IsCustomMaterial(highlightMaterial))
         {
             Color baseBGColor = GUI.backgroundColor;
@@ -221,7 +217,7 @@ public class MaterialSelectorGUI : GUIPanel
 
         scroll = GUILayout.BeginScrollView(scroll);
 
-        if (selectedWorld == WORLD_LIST)
+        if (importFromWorld && selectedWorld == null)
         {
             int selected = GUILayout.SelectionGrid(-1, worlds, 1, categoryButtonStyle.Value);
             if (selected != -1)
@@ -233,24 +229,25 @@ public class MaterialSelectorGUI : GUIPanel
             return;
         }
 
-        if (selectedWorld != null && importMessage != null)
+        if (importMessage != null)
             GUILayout.Label(importMessage);
+        else if (materials.Count == 0 && customMaterials.Count == 0 && categories.Length == 0)
+            GUILayout.Label("World contains no materials for "
+                + (layer == PaintLayer.OVERLAY ? "overlay." : "base."));
 
         Rect rowRect = new Rect();
         int numColumns = selectedCategory == "" ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
         int buttonI = 0;
-        if (allowNullMaterial && selectedCategory == "" && selectedWorld == null)
+        if (allowNullMaterial && selectedCategory == "" && !importFromWorld)
         {
             if (MaterialButton(null, numColumns, buttonI++, ref rowRect, GUIIconSet.instance.noLarge))
                 MaterialSelected(null);
         }
-        foreach (var mat in worldCustomMaterials)
+        foreach (var mat in customMaterials)
         {
-            if (mat.category != selectedCategory)
-                continue;
             if (MaterialButton(mat.material, numColumns, buttonI++, ref rowRect, null, "Custom"))
             {
-                if (selectedWorld != null)
+                if (importFromWorld)
                 {
                     // import
                     OpenCurrentWorld();
@@ -321,7 +318,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void BackButton()
     {
-        if (selectedWorld == WORLD_LIST)
+        if (importFromWorld && selectedWorld == null)
         {
             OpenCurrentWorld();
             CategorySelected("");
@@ -335,14 +332,26 @@ public class MaterialSelectorGUI : GUIPanel
     private void CategorySelected(string category)
     {
         selectedCategory = category;
+        importMessage = null;
         scroll = Vector2.zero;
         scrollVelocity = Vector2.zero;
 
-        if (selectedWorld == null)
+        materials = new List<Material>();
+        thumbnails = new List<Texture2D>();
+        if (importFromWorld)
         {
-            materials = new List<Material>();
-            thumbnails = new List<Texture2D>();
-
+            try
+            {
+                customMaterials = selectedWorld.FindCustomMaterials(layer, category);
+            }
+            catch (MapReadException e)
+            {
+                importMessage = e.Message;
+                Debug.LogError(e.InnerException);
+            }
+        }
+        else
+        {
             foreach (MaterialInfo info in ResourcesDirectory.materialInfos.Values)
             {
                 if (info.layer != layer || info.category != category)
@@ -350,46 +359,82 @@ public class MaterialSelectorGUI : GUIPanel
                 materials.Add(ResourcesDirectory.LoadMaterial(info, true));
                 thumbnails.Add(info.thumbnail);
             }
+
+            customMaterials = new List<CustomMaterial>();
+            if ((int)layer < voxelArray.customMaterials.Length)
+            {
+                foreach (CustomMaterial mat in voxelArray.customMaterials[(int)layer])
+                {
+                    if (mat.layer == layer && mat.category == category)
+                        customMaterials.Add(mat);
+                }
+            }
         }
 
         AssetManager.UnusedAssets();
     }
 
-    // doesn't reset selected category!
-    private void WorldSelected(string world)
+    // doesn't reset selected category, and doesn't load materials!
+    private void WorldSelected(string name)
     {
-        selectedWorld = world;
+        worldName = name;
+        importFromWorld = true;
+        importMessage = null;
 
         materials = new List<Material>();
         thumbnails = new List<Texture2D>();
-        worldCustomMaterials = new List<CustomMaterial>();
-        categories = new string[0];
-        StartCoroutine(LoadWorldCoroutine(WorldFiles.GetNewWorldPath(selectedWorld)));
+        customMaterials = new List<CustomMaterial>();
+
+        try
+        {
+            selectedWorld = ReadWorldFile.ReadPath(WorldFiles.GetNewWorldPath(name));
+            categories = selectedWorld.GetCustomMaterialCategories(layer).ToArray();
+        }
+        catch (MapReadException e)
+        {
+            importMessage = e.Message;
+            Debug.LogError(e.InnerException);
+            scroll = Vector2.zero;
+            scrollVelocity = Vector2.zero;
+        }
 
         AssetManager.UnusedAssets();
     }
 
     private void OpenCurrentWorld()
     {
+        importFromWorld = false;
         selectedWorld = null;
-        if ((int)layer < voxelArray.customMaterials.Length)
-            worldCustomMaterials = voxelArray.customMaterials[(int)layer];
-        else
-            worldCustomMaterials = new List<CustomMaterial>();
+        importMessage = null;
 
-        var categoriesSet = GetCustomMaterialCategories();
+        materials = new List<Material>();
+        thumbnails = new List<Texture2D>();
+        customMaterials = new List<CustomMaterial>();
+
+        var categoriesSet = new SortedSet<string>();
         foreach (MaterialInfo info in ResourcesDirectory.materialInfos.Values)
         {
             if (info.layer == layer && info.category != "")
                 categoriesSet.Add(info.category);
         }
+        if ((int)layer < voxelArray.customMaterials.Length)
+        {
+            foreach (CustomMaterial mat in voxelArray.customMaterials[(int)layer])
+            {
+                if (mat.category != "")
+                    categoriesSet.Add(mat.category);
+            }
+        }
         categories = new string[categoriesSet.Count];
         categoriesSet.CopyTo(categories);
+
+        AssetManager.UnusedAssets();
     }
 
     private void OpenWorldList()
     {
-        selectedWorld = WORLD_LIST;
+        importFromWorld = true;
+        selectedWorld = null;
         selectedCategory = "";
         scroll = Vector2.zero;
         scrollVelocity = Vector2.zero;
@@ -401,17 +446,6 @@ public class MaterialSelectorGUI : GUIPanel
         worlds = worldNames.ToArray();
 
         AssetManager.UnusedAssets();
-    }
-
-    private SortedSet<string> GetCustomMaterialCategories()
-    {
-        var categoriesSet = new SortedSet<string>();
-        foreach (CustomMaterial mat in worldCustomMaterials)
-        {
-            if (mat.category != "")
-                categoriesSet.Add(mat.category);
-        }
-        return categoriesSet;
     }
 
     private void MaterialSelected(Material material)
@@ -487,34 +521,6 @@ public class MaterialSelectorGUI : GUIPanel
         MaterialSelected(replacement);
         instance = true;
         voxelArray.unsavedChanges = true;
-    }
-
-    private IEnumerator LoadWorldCoroutine(string path)
-    {
-        // copied from DataImportGUI
-        loadingWorld = true;
-        importMessage = null;
-        yield return null;
-        yield return null;
-        try
-        {
-            worldCustomMaterials = ReadWorldFile.ReadCustomMaterials(path, layer);
-            if (worldCustomMaterials.Count == 0)
-                importMessage = "World contains no custom materials for "
-                    + (layer == PaintLayer.OVERLAY ? "overlay." : "base.");
-            var categoriesSet = GetCustomMaterialCategories();
-            categories = new string[categoriesSet.Count];
-            categoriesSet.CopyTo(categories);
-        }
-        catch (MapReadException e)
-        {
-            importMessage = e.Message;
-            Debug.LogError(e.InnerException);
-        }
-        finally
-        {
-            loadingWorld = false;
-        }
     }
 
     public static void DrawMaterialTexture(Material mat, Rect rect)

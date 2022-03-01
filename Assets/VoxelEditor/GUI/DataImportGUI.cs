@@ -156,9 +156,9 @@ public class DataImportGUI : GUIPanel
         try
         {
             if (stream != null)
-                dataList = ReadWorldFile.ReadEmbeddedData(stream, type);
+                dataList = ReadWorldFile.ReadStream(stream).FindEmbeddedData(type);
             else
-                dataList = ReadWorldFile.ReadEmbeddedData(path, type);
+                dataList = ReadWorldFile.ReadPath(path).FindEmbeddedData(type);
             foreach (EmbeddedData data in dataList)
                 Debug.Log(data.name);
         }

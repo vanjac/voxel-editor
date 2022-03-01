@@ -25,7 +25,8 @@ public interface WorldFileReader
     // return warnings
     List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor);
     List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type);
-    List<CustomMaterial> FindCustomMaterials(PaintLayer layer);
+    List<string> GetCustomMaterialCategories(PaintLayer layer);
+    List<CustomMaterial> FindCustomMaterials(PaintLayer layer, string category);
 }
 
 public static class ReadWorldFile
@@ -33,7 +34,7 @@ public static class ReadWorldFile
     private static Material missingBase, missingOverlay;
 
     // return warnings. disposes stream when done!
-    public static List<string> Read(Stream stream, Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    public static List<string> ReadWorld(Stream stream, Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
         WorldFileReader reader;
         using (stream)
@@ -41,49 +42,25 @@ public static class ReadWorldFile
         return BuildWorld(reader, cameraPivot, voxelArray, editor);
     }
 
-    public static List<string> Read(TextAsset asset, Transform cameraPivot, VoxelArray voxelArray, bool editor)
+    public static List<string> ReadWorld(TextAsset asset, Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {
-        return Read(new MemoryStream(asset.bytes), cameraPivot, voxelArray, editor);
+        return ReadWorld(new MemoryStream(asset.bytes), cameraPivot, voxelArray, editor);
     }
 
-    public static List<EmbeddedData> ReadEmbeddedData(string filePath, EmbeddedDataType type)
+    public static WorldFileReader ReadPath(string filePath)
     {
-        WorldFileReader reader;
         try
         {
             using (FileStream stream = File.Open(filePath, FileMode.Open))
-                reader = ReadStream(stream);
+                return ReadStream(stream);
         }
         catch (System.Exception e)
         {
             throw new MapReadException("Error opening file", e);
         }
-        return reader.FindEmbeddedData(type);
     }
 
-    public static List<EmbeddedData> ReadEmbeddedData(Stream stream, EmbeddedDataType type)
-    {
-        WorldFileReader reader = ReadStream(stream);
-        return reader.FindEmbeddedData(type);
-    }
-
-    public static List<CustomMaterial> ReadCustomMaterials(string filePath, PaintLayer layer)
-    {
-        // TODO: copied from ReadEmbeddedData
-        WorldFileReader reader;
-        try
-        {
-            using (FileStream stream = File.Open(filePath, FileMode.Open))
-                reader = ReadStream(stream);
-        }
-        catch (System.Exception e)
-        {
-            throw new MapReadException("Error opening file", e);
-        }
-        return reader.FindCustomMaterials(layer);
-    }
-
-    private static WorldFileReader ReadStream(Stream stream)
+    public static WorldFileReader ReadStream(Stream stream)
     {
         try
         {

@@ -203,7 +203,8 @@ public class MessagePackWorldReader : WorldFileReader
         if (texDict.ContainsKey(FileKeys.CUSTOM_MATERIAL_NAME))
         {
             customMat.material.name = texDict[FileKeys.CUSTOM_MATERIAL_NAME].AsString();
-            customMaterialNames[customMat.material.name] = customMat.material;
+            if (customMaterialNames != null)
+                customMaterialNames[customMat.material.name] = customMat.material;
         }
         return customMat;
     }
@@ -368,37 +369,42 @@ public class MessagePackWorldReader : WorldFileReader
                 else
                     propType = prop.value.GetType();
 
-                if (propType == typeof(Material))
-                {
-                    // skip equality check
-                    prop.setter(ReadMaterial(propList[1].AsDictionary(), null, PaintLayer.BASE));
-                }
-                else if (propType == typeof(Texture2D))
-                {
-                    Texture2D tex = new Texture2D(2, 2);
-                    if (!ImageConversion.LoadImage(tex, propList[1].AsBinary()))
-                        warnings.Add("Error reading texture data");
-                    prop.setter(tex);
-                }
-                else if (propType == typeof(EmbeddedData))
-                {
-                    var dataList = propList[1].AsList();
-                    var name = dataList[0].AsString();
-                    var type = (EmbeddedDataType)System.Enum.Parse(typeof(EmbeddedDataType), dataList[1].AsString());
-                    var bytes = dataList[2].AsBinary();
-                    prop.setter(new EmbeddedData(name, bytes, type));
-                }
-                else // not a special type
-                {
-                    string valueString = propList[1].AsString();
-                    XmlSerializer xmlSerializer = new XmlSerializer(propType);
-                    using (var textReader = new StringReader(valueString))
-                    {
-                        // skip equality check. important if this is an EntityReference,
-                        // since EntityReference.Equals gets the entity which may not exist yet
-                        prop.setter(xmlSerializer.Deserialize(textReader));
-                    }
-                }
+                prop.setter(ReadPropertyValue(propList, propType));
+            }
+        }
+    }
+
+    private object ReadPropertyValue(IList<MessagePackObject> propList, System.Type propType)
+    {
+        if (propType == typeof(Material))
+        {
+            // skip equality check
+            return ReadMaterial(propList[1].AsDictionary(), null, PaintLayer.BASE);
+        }
+        else if (propType == typeof(Texture2D))
+        {
+            Texture2D tex = new Texture2D(2, 2);
+            if (!ImageConversion.LoadImage(tex, propList[1].AsBinary()))
+                warnings.Add("Error reading texture data");
+            return tex;
+        }
+        else if (propType == typeof(EmbeddedData))
+        {
+            var dataList = propList[1].AsList();
+            var name = dataList[0].AsString();
+            var type = (EmbeddedDataType)System.Enum.Parse(typeof(EmbeddedDataType), dataList[1].AsString());
+            var bytes = dataList[2].AsBinary();
+            return new EmbeddedData(name, bytes, type);
+        }
+        else // not a special type
+        {
+            string valueString = propList[1].AsString();
+            XmlSerializer xmlSerializer = new XmlSerializer(propType);
+            using (var textReader = new StringReader(valueString))
+            {
+                // skip equality check. important if this is an EntityReference,
+                // since EntityReference.Equals gets the entity which may not exist yet
+                return xmlSerializer.Deserialize(textReader);
             }
         }
     }
@@ -531,9 +537,7 @@ public class MessagePackWorldReader : WorldFileReader
             if (dataList.Count >= 3 && dataList[1].UnderlyingType == typeof(string)
                 && dataList[1].AsString() == typeString)
             {
-                var name = dataList[0].AsString();
-                var bytes = dataList[2].AsBinary();
-                yield return new EmbeddedData(name, bytes, type);
+                yield return (EmbeddedData)ReadPropertyValue(propList, typeof(EmbeddedData));
             }
         }
     }
@@ -577,17 +581,74 @@ public class MessagePackWorldReader : WorldFileReader
                 yield return behaviorObj.AsDictionary();
     }
 
-    public List<CustomMaterial> FindCustomMaterials(PaintLayer layer)
+    private IList<MessagePackObject> FindProperty(MessagePackObjectDictionary propsDict, string name)
+    {
+        if (propsDict.ContainsKey(FileKeys.PROPOBJ_PROPERTIES))
+        {
+            foreach (var propObj in propsDict[FileKeys.PROPOBJ_PROPERTIES].AsList())
+            {
+                var propList = propObj.AsList();
+                if (propList.Count >= 2 && propList[0] == name)
+                    return propList;
+            }
+        }
+        return null;
+    }
+
+    public List<string> GetCustomMaterialCategories(PaintLayer layer)
+    {
+        // TODO so much copy/pasting!
+        MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
+        CheckWorldValid(worldDict);
+
+        string key = layer == PaintLayer.OVERLAY ?
+            FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS : FileKeys.WORLD_CUSTOM_BASE_MATERIALS;
+        var categories = new SortedSet<string>();
+        try
+        {
+            if (worldDict.ContainsKey(key))
+            {
+                foreach (var matObj in worldDict[key].AsList())
+                {
+                    var matDict = matObj.AsDictionary();
+                    var catProp = FindProperty(matDict, "cat");
+                    if (catProp != null)
+                        categories.Add((string)ReadPropertyValue(catProp, typeof(string)));
+                }
+            }
+        }
+        catch (MapReadException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new MapReadException("Error reading world file", e);
+        }
+        return new List<string>(categories);
+    }
+
+    public List<CustomMaterial> FindCustomMaterials(PaintLayer layer, string category)
     {
         // copied from FindEmbeddedData
         MessagePackObjectDictionary worldDict = worldObject.AsDictionary();
         CheckWorldValid(worldDict);
 
+        string key = layer == PaintLayer.OVERLAY ?
+            FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS : FileKeys.WORLD_CUSTOM_BASE_MATERIALS;
         var matList = new List<CustomMaterial>();
         try
         {
-            foreach (var mat in IterateCustomMaterials(worldDict, layer))
-                matList.Add(mat);
+            if (worldDict.ContainsKey(key))
+            {
+                foreach (var matObj in worldDict[key].AsList())
+                {
+                    var matDict = matObj.AsDictionary();
+                    var catProp = FindProperty(matDict, "cat");
+                    if (catProp != null && (string)ReadPropertyValue(catProp, typeof(string)) == category)
+                        matList.Add(ReadCustomMaterial(matObj.AsDictionary(), null, layer));
+                }
+            }
         }
         catch (MapReadException e)
         {
@@ -598,16 +659,5 @@ public class MessagePackWorldReader : WorldFileReader
             throw new MapReadException("Error reading world file", e);
         }
         return matList;
-    }
-
-    private IEnumerable<CustomMaterial> IterateCustomMaterials(
-        MessagePackObjectDictionary worldDict, PaintLayer layer)
-    {
-        string key = layer == PaintLayer.OVERLAY ?
-            FileKeys.WORLD_CUSTOM_OVERLAY_MATERIALS : FileKeys.WORLD_CUSTOM_BASE_MATERIALS;
-        var names = new Dictionary<string, Material>();
-        if (worldDict.ContainsKey(key))
-            foreach (var matObj in worldDict[key].AsList())
-                yield return ReadCustomMaterial(matObj.AsDictionary(), names, layer);
     }
 }

@@ -48,7 +48,12 @@ public class JSONWorldReader : WorldFileReader
         return new List<EmbeddedData>();
     }
 
-    public List<CustomMaterial> FindCustomMaterials(PaintLayer layer)
+    public List<string> GetCustomMaterialCategories(PaintLayer layer)
+    {
+        return new List<string>();
+    }
+
+    public List<CustomMaterial> FindCustomMaterials(PaintLayer layer, string category)
     {
         return new List<CustomMaterial>();
     }

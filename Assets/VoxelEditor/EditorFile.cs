@@ -34,7 +34,7 @@ public class EditorFile : MonoBehaviour
         List<string> warnings;
         try
         {
-            warnings = ReadWorldFile.Read(SelectedWorld.GetLoadStream(),
+            warnings = ReadWorldFile.ReadWorld(SelectedWorld.GetLoadStream(),
                 cameraPivot, voxelArray, true);
         }
         catch (MapReadException e)
