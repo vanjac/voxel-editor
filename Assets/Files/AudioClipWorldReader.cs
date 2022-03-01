@@ -25,6 +25,9 @@ public class AudioClipWorldReader : WorldFileReader
         fs.Close();
         Debug.Log("Loading audio from " + path);
 
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        path = path.Replace('\\', '/');
+#endif
         // TODO file type
         UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://"
             + System.Uri.EscapeUriString(path), audioType);
