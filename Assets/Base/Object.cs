@@ -46,7 +46,7 @@ public abstract class ObjectEntity : DynamicEntity
             return;
         highlight = c;
         if (highlightMaterial == null)
-            highlightMaterial = ResourcesDirectory.InstantiateMaterial(
+            highlightMaterial = Material.Instantiate(
                 ResourcesDirectory.FindMaterial("UNLIT", true));
         highlightMaterial.color = highlight;
         if (marker != null)
@@ -75,10 +75,10 @@ public abstract class ObjectEntity : DynamicEntity
         if (renderer != null)
         {
             List<Material> materials = new List<Material>();
-            if (paint.baseMat != null)
-                materials.Add(paint.baseMat);
-            if (paint.overlay != null)
-                materials.Add(paint.overlay);
+            if (paint.baseLayer.material != null)
+                materials.Add(paint.baseLayer.material);
+            if (paint.overlay.material != null)
+                materials.Add(paint.overlay.material);
             renderer.materials = materials.ToArray();
         }
         return c;

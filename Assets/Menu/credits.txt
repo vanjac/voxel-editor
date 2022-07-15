@@ -9,7 +9,7 @@ If you have any questions, feedback, or suggestions, please send me an email:
 SOURCES:
 
 Images:
-    Materials from Poliigon.com, FreePBR.com, 3dtextures.me, spiralgraphics.biz (Genetica)
+    Materials from spiralgraphics.biz (Genetica), Poliigon.com, FreePBR.com, 3dtextures.me
     Skies from Sky5X One (Unity Asset Store)
     Space spheremap from NASA
     Icons from materialdesignicons.com

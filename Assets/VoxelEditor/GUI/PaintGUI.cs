@@ -36,7 +36,7 @@ public class PaintGUI : GUIPanel
 
     void Start()
     {
-        if (paint.overlay != null)
+        if (paint.overlay.material != null)
             selectedLayer = PaintLayer.OVERLAY;
         UpdateMaterialSelector();
     }
@@ -140,23 +140,23 @@ public class PaintGUI : GUIPanel
         materialSelector.layer = selectedLayer;
         if (selectedLayer == PaintLayer.BASE)
         {
-            materialSelector.handler = (Material mat) =>
+            materialSelector.handler = (VoxelFaceLayer faceLayer) =>
             {
-                if (mat != null || paint.overlay != null)
-                    paint.baseMat = mat;
+                if (faceLayer.material != null || paint.overlay.material != null)
+                    paint.baseLayer = faceLayer;
                 handler(paint);
             };
-            materialSelector.highlightMaterial = paint.baseMat;
+            materialSelector.selected = paint.baseLayer;
         }
         else
         {
-            materialSelector.handler = (Material mat) =>
+            materialSelector.handler = (VoxelFaceLayer faceLayer) =>
             {
-                if (mat != null || paint.baseMat != null)
-                    paint.overlay = mat;
+                if (faceLayer.material != null || paint.baseLayer.material != null)
+                    paint.overlay = faceLayer;
                 handler(paint);
             };
-            materialSelector.highlightMaterial = paint.overlay;
+            materialSelector.selected = paint.overlay;
         }
         materialSelector.Start(); // not enabled so wouldn't be called normally
         scroll = Vector2.zero;
@@ -190,15 +190,16 @@ public class PaintGUI : GUIPanel
         }
         Matrix4x4 baseMatrix = GUI.matrix;
         RotateAboutPoint(rect.center, rotation, scaleFactor);
-        MaterialSelectorGUI.DrawMaterialTexture(paint.baseMat, rect);
-        MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect);
+        MaterialSelectorGUI.DrawFaceLayer(paint.baseLayer, rect);
+        MaterialSelectorGUI.DrawFaceLayer(paint.overlay, rect);
         GUI.matrix = baseMatrix;
     }
 
     public void TutorialShowSky()
     {
         selectedLayer = PaintLayer.BASE;
-        paint.baseMat = ResourcesDirectory.FindMaterial("Sky", true);
+        paint.Clear();
+        paint.baseLayer.material = ResourcesDirectory.FindMaterial("Sky", true);
         handler(paint);
         UpdateMaterialSelector();
     }

@@ -16,15 +16,19 @@ public class WorldProperties : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "World", "Properties that affect the entire world", "earth", typeof(WorldProperties));
 
+    private Material originalSky;
+
     public PropertiesObjectType ObjectType()
     {
         return objectType;
     }
 
-    public void SetSky(Material sky)
+    public void SetSky(VoxelFaceLayer sky)
     {
         // instantiating material allows modifying the Rotation property without modifying asset
-        var skyInstance = ResourcesDirectory.InstantiateMaterial(sky);
+        originalSky = sky.material;
+        var skyInstance = Material.Instantiate(originalSky);
+        skyInstance.color = sky.color;
         RenderSettings.skybox = skyInstance;
         UpdateSky();
     }
@@ -60,11 +64,10 @@ public class WorldProperties : PropertiesObject
         return new Property[]
         {
             new Property("sky", "Sky",
-                () => RenderSettings.skybox,
-                v => {
-                    SetSky((Material)v);
-                },
-                PropertyGUIs.Material(PaintLayer.SKY)),
+                () => new VoxelFaceLayer {material = originalSky,
+                                          color = RenderSettings.skybox.color},
+                v => SetSky((VoxelFaceLayer)v),
+                PropertyGUIs.VoxelFaceLayer(PaintLayer.SKY)),
             new Property("amb", "Ambient light intensity",
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,

@@ -384,7 +384,7 @@ public static class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(PaintLayer layer = PaintLayer.BASE)
+    public static PropertyGUI VoxelFaceLayer(PaintLayer layer = PaintLayer.BASE)
     {
         return (Property property) =>
         {
@@ -403,14 +403,14 @@ public static class PropertyGUIs
                     = GUIManager.guiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = "Change " + property.name;
                 materialSelector.voxelArray = VoxelArrayEditor.instance;
-                materialSelector.highlightMaterial = (Material)property.value;
+                materialSelector.selected = (VoxelFaceLayer)property.value;
                 materialSelector.layer = layer;
-                materialSelector.handler = (Material mat) =>
+                materialSelector.handler = (VoxelFaceLayer faceLayer) =>
                 {
-                    property.setter(mat); // skip equality check, it could be the same material with a different color
+                    property.setter(faceLayer); // skip equality check, it could be the same material with a different color
                 };
             }
-            MaterialSelectorGUI.DrawMaterialTexture((Material)property.value, textureRect);
+            MaterialSelectorGUI.DrawFaceLayer((VoxelFaceLayer)property.value, textureRect);
             GUILayout.EndHorizontal();
         };
     }

@@ -4,20 +4,20 @@ using UnityEngine;
 
 public struct VoxelFace
 {
-    public Material baseMat;
-    public Material overlay;
+    public VoxelFaceLayer baseLayer;
+    public VoxelFaceLayer overlay;
     public byte orientation;
     public bool addSelected, storedSelected;
 
     public bool IsEmpty()
     {
-        return baseMat == null && overlay == null;
+        return baseLayer.material == null && overlay.material == null;
     }
 
     public void Clear()
     {
-        baseMat = null;
-        overlay = null;
+        baseLayer.Clear();
+        overlay.Clear();
         orientation = 0;
         addSelected = false;
         storedSelected = false;
@@ -38,7 +38,7 @@ public struct VoxelFace
 
     public static bool operator ==(VoxelFace s1, VoxelFace s2)
     {
-        return s1.baseMat == s2.baseMat && s1.overlay == s2.overlay
+        return s1.baseLayer == s2.baseLayer && s1.overlay == s2.overlay
             && s1.orientation == s2.orientation;
     }
     public static bool operator !=(VoxelFace s1, VoxelFace s2)
@@ -48,7 +48,7 @@ public struct VoxelFace
 
     public override int GetHashCode()
     {
-        int result = baseMat.GetHashCode();
+        int result = baseLayer.GetHashCode();
         result = 37 * result + overlay.GetHashCode();
         result = 37 * result + (int)orientation;
         return result;
@@ -74,12 +74,45 @@ public struct VoxelFace
 
     public MaterialSound GetSound()
     {
-        MaterialSound matSound = ResourcesDirectory.GetMaterialSound(baseMat);
-        MaterialSound overSound = ResourcesDirectory.GetMaterialSound(overlay);
+        MaterialSound matSound = ResourcesDirectory.GetMaterialSound(baseLayer.material);
+        MaterialSound overSound = ResourcesDirectory.GetMaterialSound(overlay.material);
         if (overSound == MaterialSound.GENERIC)
             return matSound;
         else
             return overSound;
+    }
+}
+
+public struct VoxelFaceLayer
+{
+    public Material material;
+    public Color color;
+
+    public void Clear()
+    {
+        material = null;
+        color = Color.white;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is VoxelFaceLayer && this == (VoxelFaceLayer)obj;
+    }
+
+    public static bool operator ==(VoxelFaceLayer s1, VoxelFaceLayer s2)
+    {
+        return s1.material == s2.material && s1.color == s2.color;
+    }
+    public static bool operator !=(VoxelFaceLayer s1, VoxelFaceLayer s2)
+    {
+        return !(s1 == s2);
+    }
+
+    public override int GetHashCode()
+    {
+        int result = material.GetHashCode();
+        result = 37 * result + color.GetHashCode();
+        return result;
     }
 }
 
@@ -232,8 +265,6 @@ public struct VoxelEdge
 
 public class Voxel
 {
-    public static VoxelFace EMPTY_FACE = new VoxelFace();
-
     public readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
 
 
@@ -741,21 +772,32 @@ public class VoxelComponent : MonoBehaviour
         var vertices = new Vector3[numVertices];
         var uvs = new Vector2[numVertices];
         var normals = new Vector3[numVertices];
-        var tangents = new Vector4[numVertices];
+        var baseColors = new Color32[numVertices];
+        var overlayColors = new Vector4[numVertices];
+        int colorI = 0;
 
         foreach (VoxelMeshInfo info in voxelInfos)
         {
             for (int faceNum = 0; faceNum < 6; faceNum++)
             {
+                var corners = info.faceCorners[faceNum];
                 try
                 {
-                    GenerateFaceVertices(info.voxel, faceNum, info.faceCorners[faceNum],
-                        vertices, uvs, normals, tangents);
+                    GenerateFaceVertices(info.voxel, faceNum, corners,
+                        vertices, uvs, normals);
                 }
                 catch (System.IndexOutOfRangeException)
                 {
                     Debug.LogError("Vertex indices don't match!");
                     return;
+                }
+                int faceVertices = corners[0].count + corners[1].count + corners[2].count + corners[3].count;
+                Color32 baseColor = info.voxel.faces[faceNum].baseLayer.color;
+                Vector4 overlayColor = info.voxel.faces[faceNum].overlay.color;
+                for (int i = 0; i < faceVertices; i++)
+                {
+                    baseColors[colorI] = baseColor;
+                    overlayColors[colorI++] = overlayColor;
                 }
             }
         }
@@ -765,9 +807,10 @@ public class VoxelComponent : MonoBehaviour
         mesh.name = "v";
         mesh.Clear();
         mesh.vertices = vertices;
-        mesh.uv = uvs;
+        mesh.SetUVs(0, uvs);
         mesh.normals = normals;
-        mesh.tangents = tangents;
+        mesh.colors32 = baseColors;
+        mesh.SetUVs(1, overlayColors);
         mesh.subMeshCount = 0;
 
         List<Material> matList = new List<Material>();
@@ -1110,7 +1153,7 @@ public class VoxelComponent : MonoBehaviour
 
     private static float[] vertexPos = new float[3]; // reusable
     private void GenerateFaceVertices(Voxel voxel, int faceNum, FaceCornerVertices[] corners,
-        Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
+        Vector3[] vertices, Vector2[] uvs, Vector3[] normals)
     {
         VoxelFace face = voxel.faces[faceNum];
         if (face.IsEmpty())
@@ -1140,9 +1183,6 @@ public class VoxelComponent : MonoBehaviour
             + positiveT_xyz * positiveU_st.y;
         Vector3 positiveV_xyz = positiveS_xyz * positiveV_st.x
             + positiveT_xyz * positiveV_st.y;
-
-        Vector4 tangent = new Vector4(positiveU_xyz.x, positiveU_xyz.y, positiveU_xyz.z,
-            mirrored ? 1 : -1);
 
         // use half bevels on all four edges to carve out a smaller block
         // move the face plane to fix the convex hull
@@ -1196,7 +1236,6 @@ public class VoxelComponent : MonoBehaviour
             vertices[corner.innerQuad_i] = Vector3FromArray(vertexPos) + positionOffset;
             uvs[corner.innerQuad_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
             normals[corner.innerQuad_i] = normal;
-            tangents[corner.innerQuad_i] = tangent;
 
             if (corner.hEdgeB.tab_i != -1)
             {
@@ -1205,7 +1244,6 @@ public class VoxelComponent : MonoBehaviour
                 vertices[corner.hEdgeB.tab_i] = Vector3FromArray(vertexPos) + positionOffset;
                 uvs[corner.hEdgeB.tab_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
                 normals[corner.hEdgeB.tab_i] = normal;
-                tangents[corner.hEdgeB.tab_i] = tangent;
             }
             if (corner.hEdgeC.tab_i != -1)
             {
@@ -1214,7 +1252,6 @@ public class VoxelComponent : MonoBehaviour
                 vertices[corner.hEdgeC.tab_i] = Vector3FromArray(vertexPos) + positionOffset;
                 uvs[corner.hEdgeC.tab_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
                 normals[corner.hEdgeC.tab_i] = normal;
-                tangents[corner.hEdgeC.tab_i] = tangent;
             }
             if (corner.bevelProfile_i != -1)
             {
@@ -1227,7 +1264,6 @@ public class VoxelComponent : MonoBehaviour
                     vertices[corner.bevelProfile_i + bevelI] = Vector3FromArray(vertexPos) + positionOffset;
                     uvs[corner.bevelProfile_i + bevelI] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
                     normals[corner.bevelProfile_i + bevelI] = normal;
-                    tangents[corner.bevelProfile_i + bevelI] = tangent;
 
                     vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, voxel.edges[edgeA], bevelVector.y); // x/y are swapped
                     vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, voxel.edges[edgeA], bevelVector.x);
@@ -1235,7 +1271,6 @@ public class VoxelComponent : MonoBehaviour
                     vertices[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = Vector3FromArray(vertexPos) + positionOffset;
                     uvs[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
                     normals[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = normal;
-                    tangents[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = tangent;
                 }
             }
 
@@ -1244,24 +1279,24 @@ public class VoxelComponent : MonoBehaviour
             if (corner.hEdgeB.bevel_i != -1)
             {
                 GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeB], corner.hEdgeB, false,
-                    concaveB, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
+                    concaveB, axis, squarePos, positionOffset, positiveU_xyz, positiveV_xyz,
                     collapsePlane, edgeA, edgeB, edgeC,
-                    vertices, uvs, normals, tangents);
+                    vertices, uvs, normals);
             }
             if (corner.hEdgeC.bevel_i != -1)
             {
                 GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeC], corner.hEdgeC, true,
-                    concaveC, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
+                    concaveC, axis, squarePos, positionOffset, positiveU_xyz, positiveV_xyz,
                     collapsePlane, edgeA, edgeB, edgeC,
-                    vertices, uvs, normals, tangents);
+                    vertices, uvs, normals);
             }
         } // end for each corner
     }
 
     private static void GenerateBevelVertices(Voxel voxel, int faceNum, VoxelEdge beveledEdge, FaceHalfEdgeVertices hEdge, bool isEdgeC,
-        bool concave, int axis, Vector2 squarePos, Vector3 positionOffset, Vector4 tangent, Vector3 positiveU_xyz, Vector3 positiveV_xyz,
+        bool concave, int axis, Vector2 squarePos, Vector3 positionOffset, Vector3 positiveU_xyz, Vector3 positiveV_xyz,
         float collapsePlane, int edgeA, int edgeB, int edgeC,
-        Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
+        Vector3[] vertices, Vector2[] uvs, Vector3[] normals)
     {
         bool isEdgeB = !isEdgeC;
         bool aHasBevel = voxel.edges[edgeA].hasBevel;
@@ -1308,7 +1343,6 @@ public class VoxelComponent : MonoBehaviour
                 vertexPos[axis] = faceNum % 2; // reset
             }
 
-            tangents[hEdge.cap_i] = tangent; // TODO
             // uv TODO
             // 0.29289f = 1 - 1/sqrt(2) for some reason
             vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, beveledEdge, 0.29289f);
@@ -1316,7 +1350,6 @@ public class VoxelComponent : MonoBehaviour
             uvs[hEdge.cap_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
             if (hEdge.reverseCap != null)
             {
-                tangents[hEdge.cap_i + hEdge.cap_count - 1] = tangent;
                 vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, hEdge.reverseCap.Value, 0);
                 vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, hEdge.reverseCap.Value, 0);
                 uvs[hEdge.cap_i + hEdge.cap_count - 1] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
@@ -1388,12 +1421,10 @@ public class VoxelComponent : MonoBehaviour
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, bHasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA],
                 bHasBevel ? yCoord : xCoord);
             vertices[bevelVertex] = Vector3FromArray(vertexPos) + positionOffset;
-            tangents[bevelVertex] = tangent; // TODO
 
             if (hEdge.cap_i != -1)
             {
                 vertices[hEdge.cap_i + bevelI + 1] = Vector3FromArray(vertexPos) + positionOffset;
-                tangents[hEdge.cap_i + bevelI + 1] = tangent; // TODO
                 normals[hEdge.cap_i + bevelI + 1] = capNormal;
             }
 
@@ -1410,7 +1441,6 @@ public class VoxelComponent : MonoBehaviour
             if (bevelI != 0 && bevelI != bevelArray.Length - 1)
             {
                 vertices[bevelVertex + 1] = vertices[bevelVertex];
-                tangents[bevelVertex + 1] = tangents[bevelVertex];
                 uvs[bevelVertex + 1] = uvs[bevelVertex];
                 bevelVertex++;
             }
@@ -1720,9 +1750,9 @@ public class VoxelComponent : MonoBehaviour
                 continue;
             Material mat;
             if (overlay)
-                mat = voxel.faces[i].overlay;
+                mat = voxel.faces[i].overlay.material;
             else
-                mat = voxel.faces[i].baseMat;
+                mat = voxel.faces[i].baseLayer.material;
             if (mat == null)
                 continue;
             facesEnabled[i] = true;
@@ -1730,9 +1760,9 @@ public class VoxelComponent : MonoBehaviour
             {
                 Material mat2;
                 if (overlay)
-                    mat2 = voxel.faces[j].overlay;
+                    mat2 = voxel.faces[j].overlay.material;
                 else
-                    mat2 = voxel.faces[j].baseMat;
+                    mat2 = voxel.faces[j].baseLayer.material;
                 if (mat2 == mat)
                 {
                     facesEnabled[j] = true;

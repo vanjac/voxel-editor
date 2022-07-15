@@ -10,16 +10,14 @@ public class MaterialSelectorGUI : GUIPanel
     private const int TEXTURE_MARGIN = 20;
     private const float CATEGORY_BUTTON_HEIGHT = 110;
 
-    public delegate void MaterialSelectHandler(Material material);
-
     private enum Page { MATERIALS, COLOR }
     private Page page = Page.MATERIALS;
 
-    public MaterialSelectHandler handler;
+    public System.Action<VoxelFaceLayer> handler;
     public PaintLayer layer = PaintLayer.BASE;
     public bool allowNullMaterial = false;
-    public Material highlightMaterial = null; // the current selected material
-    private CustomMaterial highlightCustom = null; // highlightMaterial will also be set
+    public VoxelFaceLayer selected;
+    private CustomMaterial selectedCustom = null; // selected.material will also be set
     public VoxelArrayEditor voxelArray;
 
     private bool importFromWorld = false;
@@ -37,7 +35,6 @@ public class MaterialSelectorGUI : GUIPanel
 
     private ColorPickerGUI colorPicker;
     // created an instance of the selected material?
-    private bool instance;
 
     private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
@@ -65,15 +62,14 @@ public class MaterialSelectorGUI : GUIPanel
     {
         OpenCurrentWorld();
         CategorySelected("");
-        instance = false;
 
-        if (highlightMaterial != null && CustomMaterial.IsCustomMaterial(highlightMaterial))
+        if (selected.material != null && CustomMaterial.IsCustomMaterial(selected.material))
         {
             foreach (var mat in voxelArray.customMaterials[(int)layer])
             {
-                if (mat.material == highlightMaterial)
+                if (mat.material == selected.material)
                 {
-                    highlightCustom = mat;
+                    selectedCustom = mat;
                     break;
                 }
             }
@@ -129,15 +125,13 @@ public class MaterialSelectorGUI : GUIPanel
         {
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
-            Color currentColor = highlightMaterial.color;
-            colorPicker.SetColor(currentColor);
+            colorPicker.SetColor(selected.color);
             colorPicker.includeAlpha = layer == PaintLayer.OVERLAY;
             colorPicker.handler = (Color c) =>
             {
-                MakeInstance();
-                highlightMaterial.color = c;
+                selected.color = c;
                 if (handler != null)
-                    handler(highlightMaterial);
+                    handler(selected);
             };
         }
         colorPicker.WindowGUI();
@@ -171,13 +165,13 @@ public class MaterialSelectorGUI : GUIPanel
                 ImportFromPhotos();
             if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
                 OpenWorldList();
-            if (highlightMaterial != null && CustomMaterial.IsSupportedShader(highlightMaterial)
+            if (selected.material != null && CustomMaterial.IsSupportedShader(selected.material)
                     && ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
-                CloneCustomMaterial(highlightMaterial, CustomDestinationCategory());
-            if (highlightCustom != null)
+                CloneCustomMaterial(selected.material, CustomDestinationCategory());
+            if (selectedCustom != null)
             {
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
-                    EditCustomMaterial(highlightCustom);
+                    EditCustomMaterial(selectedCustom);
                 if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
                 {
                     var dialog = gameObject.AddComponent<DialogGUI>();
@@ -204,15 +198,13 @@ public class MaterialSelectorGUI : GUIPanel
             labelText = selectedCategory;
         GUILayout.Label(labelText, categoryLabelStyle.Value);
         GUIUtils.EndHorizontalClipped();
-        if (!importFromWorld && highlightMaterial != null
-            && !CustomMaterial.IsCustomMaterial(highlightMaterial))
-        {
-            Color baseBGColor = GUI.backgroundColor;
-            GUI.backgroundColor *= highlightMaterial.color;
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.color))
-                page = Page.COLOR;
-            GUI.backgroundColor = baseBGColor;
-        }
+
+        Color baseBGColor = GUI.backgroundColor;
+        GUI.backgroundColor *= selected.color;
+        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.color))
+            page = Page.COLOR;
+        GUI.backgroundColor = baseBGColor;
+
         GUILayout.EndHorizontal();
 
         scroll = GUILayout.BeginScrollView(scroll);
@@ -285,35 +277,23 @@ public class MaterialSelectorGUI : GUIPanel
         Rect textureRect = new Rect(
             buttonRect.xMin + TEXTURE_MARGIN, buttonRect.yMin + TEXTURE_MARGIN,
             buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
-        bool selected;
-        if (material == highlightMaterial || (material != null && highlightMaterial != null
-                && material.name == highlightMaterial.name))
+        bool pressed;
+        if (material == selected.material)
             // highlight the button
-            selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
+            pressed = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
         else
-            selected = GUI.Button(buttonRect, "");
+            pressed = GUI.Button(buttonRect, "");
         if (thumbnail != null)
             GUI.DrawTexture(textureRect, thumbnail);
         else
-            DrawMaterialTexture(material, textureRect);
+            DrawFaceLayer(new VoxelFaceLayer {material = material, color = Color.white}, textureRect);
         if (label != null)
         {
             Rect labelRect = new Rect(textureRect.min,
                 GUIStyleSet.instance.buttonSmall.CalcSize(new GUIContent(label)));
             GUI.Label(labelRect, label, GUIStyleSet.instance.buttonSmall);
         }
-        return selected;
-    }
-
-    private void MakeInstance()
-    {
-        if (!instance)
-        {
-            //Debug.Log("instantiate");
-            highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
-            highlightCustom = null;
-            instance = true;
-        }
+        return pressed;
     }
 
     private void BackButton()
@@ -450,17 +430,17 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void MaterialSelected(Material material)
     {
-        highlightMaterial = material;
-        highlightCustom = null;
-        instance = false;
+        selected.material = material;
+        selected.color = Color.white; // reset to default
+        selectedCustom = null;
         if (handler != null)
-            handler(highlightMaterial);
+            handler(selected);
     }
 
     private void CustomMaterialSelected(CustomMaterial mat)
     {
         MaterialSelected(mat.material);
-        highlightCustom = mat;
+        selectedCustom = mat;
     }
 
     private void ImportFromPhotos()
@@ -512,20 +492,18 @@ public class MaterialSelectorGUI : GUIPanel
     private void DeleteCustomMaterial()
     {
         // TODO different shaders
-        Material replacement = ResourcesDirectory.InstantiateMaterial(ResourcesDirectory.FindMaterial(
-                layer == PaintLayer.OVERLAY ? "MATTE_overlay" : "MATTE", true));
-        replacement.color = highlightCustom.color;
-        voxelArray.ReplaceMaterial(highlightMaterial, replacement);
-        if (!voxelArray.customMaterials[(int)layer].Remove(highlightCustom))
+        Material replacement = ResourcesDirectory.FindMaterial(
+                layer == PaintLayer.OVERLAY ? "MATTE_overlay" : "MATTE", true);
+        voxelArray.ReplaceMaterial(selected.material, replacement);
+        if (!voxelArray.customMaterials[(int)layer].Remove(selectedCustom))
             Debug.LogError("Error removing material");
         MaterialSelected(replacement);
-        instance = true;
         voxelArray.unsavedChanges = true;
     }
 
-    public static void DrawMaterialTexture(Material mat, Rect rect)
+    public static void DrawFaceLayer(VoxelFaceLayer faceLayer, Rect rect)
     {
-        if (mat == null)
+        if (faceLayer.material == null)
             return;
         
         Color baseColor = GUI.color;
@@ -533,21 +511,21 @@ public class MaterialSelectorGUI : GUIPanel
         if (GUI.color.a > 1)
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
 
-        Color matColor = mat.color;
+        Color matColor = faceLayer.color;
         if (matColor.a == 0.0f)
             matColor = new Color(matColor.r, matColor.g, matColor.b, 0.6f);
         GUI.color *= matColor;
 
         Texture texture = Texture2D.whiteTexture;
         Vector2 textureScale = Vector2.one;
-        if (mat.HasProperty("_MainTex") && mat.mainTexture != null)
+        if (faceLayer.material.HasProperty("_MainTex") && faceLayer.material.mainTexture != null)
         {
-            texture = mat.mainTexture;
-            textureScale = mat.mainTextureScale;
+            texture = faceLayer.material.mainTexture;
+            textureScale = faceLayer.material.mainTextureScale;
         }
-        else if (mat.HasProperty("_FrontTex"))  // 6-sided skybox
+        else if (faceLayer.material.HasProperty("_FrontTex"))  // 6-sided skybox
         {
-            texture = mat.GetTexture("_FrontTex");
+            texture = faceLayer.material.GetTexture("_FrontTex");
             GUI.color *= 2;
         }
 

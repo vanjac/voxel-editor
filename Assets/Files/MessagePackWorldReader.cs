@@ -256,8 +256,9 @@ public class MessagePackWorldReader : WorldFileReader
             Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
             if (color != mat.color)
             {
-                mat = ResourcesDirectory.InstantiateMaterial(mat);
-                mat.color = color;
+                // TODO !!!
+                // mat = ResourcesDirectory.InstantiateMaterial(mat);
+                // mat.color = color;
             }
         }
         return mat;
@@ -376,10 +377,13 @@ public class MessagePackWorldReader : WorldFileReader
 
     private object ReadPropertyValue(IList<MessagePackObject> propList, System.Type propType)
     {
-        if (propType == typeof(Material))
+        if (propType == typeof(VoxelFaceLayer))
         {
             // skip equality check
-            return ReadMaterial(propList[1].AsDictionary(), null, PaintLayer.BASE);
+            // TODO!!!
+            return new VoxelFaceLayer {
+                material = ReadMaterial(propList[1].AsDictionary(), null, PaintLayer.BASE),
+                color = Color.white };
         }
         else if (propType == typeof(Texture2D))
         {
@@ -444,15 +448,16 @@ public class MessagePackWorldReader : WorldFileReader
         List<Material> bases, List<Material> overlays)
     {
         VoxelFace face = new VoxelFace();
+        face.Clear();
         var faceList = faceObj.AsList();
         if (faceList.Count >= 1)
             faceI = faceList[0].AsInt32();
         else
             faceI = -1;
         if (faceList.Count >= 2 && faceList[1].AsInt32() != -1)
-            face.baseMat = bases[faceList[1].AsInt32()];
+            face.baseLayer.material = bases[faceList[1].AsInt32()];
         if (faceList.Count >= 3 && faceList[2].AsInt32() != -1)
-            face.overlay = overlays[faceList[2].AsInt32()];
+            face.overlay.material = overlays[faceList[2].AsInt32()];
         if (faceList.Count >= 4)
             face.orientation = faceList[3].AsByte();
         return face;

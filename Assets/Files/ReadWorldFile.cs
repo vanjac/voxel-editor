@@ -99,10 +99,8 @@ public static class ReadWorldFile
     {
         if (missingBase == null)
         {
-            missingBase = ResourcesDirectory.InstantiateMaterial(
-                ResourcesDirectory.FindMaterial("MISSING", true));
-            missingOverlay = ResourcesDirectory.InstantiateMaterial(
-                ResourcesDirectory.FindMaterial("MISSING_overlay", true));
+            missingBase = ResourcesDirectory.FindMaterial("MISSING", true);
+            missingOverlay = ResourcesDirectory.FindMaterial("MISSING_overlay", true);
         }
         return layer == PaintLayer.OVERLAY ? missingOverlay : missingBase;
     }

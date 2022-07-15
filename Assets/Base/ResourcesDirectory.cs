@@ -46,14 +46,6 @@ public static class ResourcesDirectory
         return null;
     }
 
-    public static Material InstantiateMaterial(Material mat)
-    {
-        string name = mat.name;
-        mat = Material.Instantiate(mat);
-        mat.name = name;
-        return mat;
-    }
-
     public static MaterialSound GetMaterialSound(Material material)
     {
         if (material == null)

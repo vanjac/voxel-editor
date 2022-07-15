@@ -1119,10 +1119,13 @@ public static class Tutorials
 
     private class TutorialObjectPaint : TutorialObjectPage
     {
-        private Material prevMat = null;
+        private VoxelFace prevPaint;
 
         public TutorialObjectPaint()
-            : base("<i>Try painting the ball.</i>", highlight: "paint") { }
+            : base("<i>Try painting the ball.</i>", highlight: "paint")
+        {
+            prevPaint.Clear();
+        }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -1131,10 +1134,10 @@ public static class Tutorials
             foreach (Entity e in voxelArray.GetSelectedEntities())
                 if (e is BallObject)
                 {
-                    Material mat = ((BallObject)e).paint.baseMat;
-                    if (prevMat == null)
-                        prevMat = mat;
-                    else if (prevMat != mat)
+                    VoxelFace paint = ((BallObject)e).paint;
+                    if (prevPaint.IsEmpty())
+                        prevPaint = paint;
+                    else if (prevPaint != paint)
                         return TutorialAction.NEXT;
                 }
             return TutorialAction.NONE;

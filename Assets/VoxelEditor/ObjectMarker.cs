@@ -80,15 +80,15 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         }
         else
         {
-            if (objectEntity.paint.baseMat != null)
+            if (objectEntity.paint.baseLayer.material != null)
             {
-                materials.Add(objectEntity.paint.baseMat);
+                materials.Add(objectEntity.paint.baseLayer.material);
                 gameObject.layer = 0; // default
             }
             else
                 gameObject.layer = 10; // TransparentObject
-            if (objectEntity.paint.overlay != null)
-                materials.Add(objectEntity.paint.overlay);
+            if (objectEntity.paint.overlay.material != null)
+                materials.Add(objectEntity.paint.overlay.material);
         }
         if (selected)
             materials.Add(VoxelComponent.selectedMaterial);

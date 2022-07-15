@@ -33,8 +33,9 @@ public static class GameScripts
                 Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new WaterBehavior());
-                substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("WaterBasicDaytime", true);
+                substance.defaultPaint.Clear();
+                substance.defaultPaint.overlay.material =
+                    ResourcesDirectory.FindMaterial("WaterBasicDaytime", true);
                 return substance;
             }),
         new PropertiesObjectType("Trigger",
@@ -45,8 +46,9 @@ public static class GameScripts
                 Substance substance = new Substance();
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
-                substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("Invisible", true);
+                substance.defaultPaint.Clear();
+                substance.defaultPaint.overlay.material =
+                    ResourcesDirectory.FindMaterial("Invisible", true);
                 return substance;
             }),
         new PropertiesObjectType("Glass",
@@ -57,9 +59,9 @@ public static class GameScripts
                 Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
-                substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
+                substance.defaultPaint.Clear();
+                substance.defaultPaint.overlay.material =
+                    ResourcesDirectory.FindMaterial("GLASS_overlay", true);
                 substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
                 return substance;
             })
@@ -198,9 +200,9 @@ public static class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                ball.paint.baseMat = null;
-                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("MATTE_overlay", true));
+                ball.paint.Clear();
+                ball.paint.overlay.material =
+                    ResourcesDirectory.FindMaterial("MATTE_overlay", true);
                 ball.paint.overlay.color = new Color(1, 0, 0, 0.5f);
                 return ball;
             }),
@@ -210,9 +212,9 @@ public static class GameScripts
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
-                ball.paint.baseMat = null;
-                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
+                ball.paint.Clear();
+                ball.paint.overlay.material =
+                    ResourcesDirectory.FindMaterial("GLASS_overlay", true);
                 ball.paint.overlay.color = new Color(1, 1, 1, 0.25f);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());

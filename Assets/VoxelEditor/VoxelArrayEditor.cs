@@ -1245,22 +1245,24 @@ public class VoxelArrayEditor : VoxelArray
             else if (thing is ObjectMarker)
                 return ((ObjectMarker)thing).objectEntity.paint.PaintOnly();
         }
-        return new VoxelFace();
+        VoxelFace none = new VoxelFace();
+        none.Clear();
+        return none;
     }
 
     public void PaintSelectedFaces(VoxelFace paint)
     {
         foreach (var faceRef in IterateSelected<VoxelFaceReference>())
         {
-            if (paint.baseMat != null || faceRef.voxel.substance != null)
-                faceRef.voxel.faces[faceRef.faceI].baseMat = paint.baseMat;
+            if (paint.baseLayer.material != null || faceRef.voxel.substance != null)
+                faceRef.voxel.faces[faceRef.faceI].baseLayer = paint.baseLayer;
             faceRef.voxel.faces[faceRef.faceI].overlay = paint.overlay;
             faceRef.voxel.faces[faceRef.faceI].orientation = paint.orientation;
             VoxelModified(faceRef.voxel);
         }
         foreach (var obj in IterateSelected<ObjectMarker>())
         {
-            obj.objectEntity.paint.baseMat = paint.baseMat;
+            obj.objectEntity.paint.baseLayer = paint.baseLayer;
             obj.objectEntity.paint.overlay = paint.overlay;
             obj.objectEntity.paint.orientation = paint.orientation;
             ObjectModified(obj.objectEntity);
@@ -1273,15 +1275,15 @@ public class VoxelArrayEditor : VoxelArray
         {
             for (int faceI = 0; faceI < 6; faceI++)
             {
-                if (ReplaceMaterialSingle(ref voxel.faces[faceI].baseMat, oldMat, newMat)
-                        || ReplaceMaterialSingle(ref voxel.faces[faceI].overlay, oldMat, newMat))
+                if (ReplaceMaterialSingle(ref voxel.faces[faceI].baseLayer.material, oldMat, newMat)
+                        || ReplaceMaterialSingle(ref voxel.faces[faceI].overlay.material, oldMat, newMat))
                     VoxelModified(voxel);
             }
         }
         foreach (ObjectEntity obj in IterateObjects())
         {
-            if (ReplaceMaterialSingle(ref obj.paint.baseMat, oldMat, newMat)
-                    || ReplaceMaterialSingle(ref obj.paint.overlay, oldMat, newMat))
+            if (ReplaceMaterialSingle(ref obj.paint.baseLayer.material, oldMat, newMat)
+                    || ReplaceMaterialSingle(ref obj.paint.overlay.material, oldMat, newMat))
                 ObjectModified(obj);
         }
     }

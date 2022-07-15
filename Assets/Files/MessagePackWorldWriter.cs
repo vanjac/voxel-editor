@@ -65,8 +65,8 @@ public class MessagePackWorldWriter
         {
             foreach (VoxelFace face in voxel.faces)
             {
-                AddMaterial(face.baseMat, foundBases, basesList);
-                AddMaterial(face.overlay, foundOverlays, overlaysList);
+                AddMaterial(face.baseLayer.material, foundBases, basesList);
+                AddMaterial(face.overlay.material, foundOverlays, overlaysList);
             }
             if (voxel.substance != null && !foundSubstances.ContainsKey(voxel.substance))
             {
@@ -76,8 +76,8 @@ public class MessagePackWorldWriter
         }
         foreach (ObjectEntity obj in voxelArray.IterateObjects())
         {
-            AddMaterial(obj.paint.baseMat, foundBases, basesList);
-            AddMaterial(obj.paint.overlay, foundOverlays, overlaysList);
+            AddMaterial(obj.paint.baseLayer.material, foundBases, basesList);
+            AddMaterial(obj.paint.overlay.material, foundOverlays, overlaysList);
         }
 
         world[FileKeys.WORLD_BASE_MATERIALS] = new MessagePackObject(basesList);
@@ -198,9 +198,10 @@ public class MessagePackWorldWriter
             propList.Add(prop.id);
             var valueType = value.GetType();
 
-            if (valueType == typeof(Material))
+            if (valueType == typeof(VoxelFaceLayer))
             {
-                propList.Add(new MessagePackObject(WriteMaterial((Material)value)));
+                // TODO!!!
+                propList.Add(new MessagePackObject(WriteMaterial(((VoxelFaceLayer)value).material)));
             }
             else if (valueType == typeof(EmbeddedData))
             {
@@ -313,18 +314,18 @@ public class MessagePackWorldWriter
     {
         var faceList = new List<MessagePackObject>();
         faceList.Add(faceI);
-        if (face.baseMat != null)
-            faceList.Add(bases[face.baseMat]);
+        if (face.baseLayer != null)
+            faceList.Add(bases[face.baseLayer.material]);
         else
             faceList.Add(-1);
         if (face.overlay != null)
-            faceList.Add(overlays[face.overlay]);
+            faceList.Add(overlays[face.overlay.material]);
         else
             faceList.Add(-1);
         faceList.Add(face.orientation);
 
         StripDataList(faceList, new bool[] {
-            false, face.baseMat == null, face.overlay == null, face.orientation == 0 });
+            false, face.baseLayer.material == null, face.overlay.material == null, face.orientation == 0 });
         return new MessagePackObject(faceList);
     }
 
