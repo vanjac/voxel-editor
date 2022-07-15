@@ -31,7 +31,8 @@ public class CustomTexture : PropertiesObject
     }
 
     private Material _material;
-    private PaintLayer layer;
+    public PaintLayer layer;
+    public string category = " CUSTOM "; // leading space for sorting order (sorry)
 
     public Material material
     {
@@ -132,6 +133,10 @@ public class CustomTexture : PropertiesObject
     {
         ICollection<Property> properties = new Property[]
         {
+            new Property("cat", "Category",
+                () => category,
+                v => category = (string)v,
+                PropertyGUIs.Text), // TODO menu of existing categories
             new Property("shd", "Shader",
                 () => shader,
                 v => shader = (CustomShader)v,
