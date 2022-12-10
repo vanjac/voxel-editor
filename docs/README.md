@@ -31,7 +31,7 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 The app opens to a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as `.nspace` files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
 
-N-Space has built-in documentation and tutorials, which you can access through the overflow (<img src="https://user-images.githubusercontent.com/8228102/206855184-e73ee339-7490-478c-a93a-d57609127541.png" width="24" height="24">) menu, by tapping Help.
+N-Space has built-in documentation and tutorials, which you can access through the overflow (<img src="https://user-images.githubusercontent.com/8228102/206855184-e73ee339-7490-478c-a93a-d57609127541.png" width="24" height="24" style="display:inline;margin:0;">) menu, by tapping Help.
 
 ## Building the app yourself
 
