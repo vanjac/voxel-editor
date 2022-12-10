@@ -21,6 +21,12 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 - Interactive tutorials and demos guide you through the interface and more advanced features of the app.
 - World files can be sent to/from other apps.
 
+# Screenshots
+
+<span><img src="https://user-images.githubusercontent.com/8228102/206854943-364af43e-7b16-403d-9479-253b4b2f6b39.png" width="427" height="240">
+<img src="https://user-images.githubusercontent.com/8228102/206854950-f061274c-e1c9-4227-a9fa-67d78c2b3da8.png" width="427" height="240">
+<img src="https://user-images.githubusercontent.com/8228102/206854952-2faa8a2d-8eb6-4d52-a750-ee18973ae01f.png" width="427" height="240"></span>
+
 ## Using the app
 
 The app opens to a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as `.nspace` files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
