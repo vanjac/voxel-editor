@@ -23,9 +23,9 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 # Screenshots
 
-<span><img src="https://user-images.githubusercontent.com/8228102/206854943-364af43e-7b16-403d-9479-253b4b2f6b39.png" width="427" height="240">
-<img src="https://user-images.githubusercontent.com/8228102/206854950-f061274c-e1c9-4227-a9fa-67d78c2b3da8.png" width="427" height="240">
-<img src="https://user-images.githubusercontent.com/8228102/206854952-2faa8a2d-8eb6-4d52-a750-ee18973ae01f.png" width="427" height="240"></span>
+<span><img src="https://user-images.githubusercontent.com/8228102/206854943-364af43e-7b16-403d-9479-253b4b2f6b39.png" width="427">
+<img src="https://user-images.githubusercontent.com/8228102/206854950-f061274c-e1c9-4227-a9fa-67d78c2b3da8.png" width="427">
+<img src="https://user-images.githubusercontent.com/8228102/206854952-2faa8a2d-8eb6-4d52-a750-ee18973ae01f.png" width="427"></span>
 
 ## Using the app
 
