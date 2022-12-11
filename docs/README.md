@@ -67,4 +67,4 @@ See [credits.txt](https://github.com/vanjac/voxel-editor/blob/master/Assets/Menu
 
 ## Contact me:
 
-chroma [at] chroma [dot] zone
+For questions / feedback / bug reports please [email me](https://chroma.zone/contact)
