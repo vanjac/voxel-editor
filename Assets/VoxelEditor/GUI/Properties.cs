@@ -184,6 +184,38 @@ public static class PropertyGUIs
         FloatPair(property, "x");
     }
 
+    public static void Vector3(Property property)
+    {
+        GUILayout.Label(property.name + ":", headerLabelStyle.Value);
+        GUILayout.BeginHorizontal();
+        var vec = (Vector3)property.value;
+        Color baseColor = GUI.color;
+
+        GUI.color = baseColor * new Color(1, 0.6f, 0.6f);
+        Property wrapperX = new Property("", "",
+            () => vec.x,
+            v => property.value = new Vector3((float)v, vec.y, vec.z),
+            PropertyGUIs.Empty);
+        Float(wrapperX);
+
+        GUI.color = baseColor * new Color(0.6f, 1, 0.6f);
+        Property wrapperY = new Property("", "",
+            () => vec.y,
+            v => property.value = new Vector3(vec.x, (float)v, vec.z),
+            PropertyGUIs.Empty);
+        Float(wrapperY);
+
+        GUI.color = baseColor * new Color(0.6f, 0.6f, 1);
+        Property wrapperZ = new Property("", "",
+            () => vec.z,
+            v => property.value = new Vector3(vec.x, vec.y, (float)v),
+            PropertyGUIs.Empty);
+        Float(wrapperZ);
+
+        GUI.color = baseColor;
+        GUILayout.EndHorizontal();
+    }
+
     public static void Tag(Property property)
     {
         string tagString = Entity.TagToString((byte)property.value);

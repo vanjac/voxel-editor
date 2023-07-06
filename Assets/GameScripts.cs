@@ -115,6 +115,7 @@ public static class GameScripts
         LookAtBehavior.objectType,
         TeleportBehavior.objectType,
         MoveWithBehavior.objectType,
+        ScaleBehavior.objectType,
 
         VisibleBehavior.objectType,
         LightBehavior.objectType,
@@ -146,7 +147,8 @@ public static class GameScripts
             SpinBehavior.objectType,
             LookAtBehavior.objectType,
             TeleportBehavior.objectType,
-            MoveWithBehavior.objectType
+            MoveWithBehavior.objectType,
+            ScaleBehavior.objectType,
         },
         new BehaviorType[]
         {
