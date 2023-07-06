@@ -866,6 +866,7 @@ public abstract class DynamicEntityComponent : EntityComponent
             if (cumulativeRigidbodyTranslate.z == 0)
                 constraints |= RigidbodyConstraints.FreezePositionZ;
             rb.constraints = constraints;
+            rb.centerOfMass = Vector3.zero; // fix rotation pivot
         }
         rb.MovePosition(rb.position + cumulativeRigidbodyTranslate);
     }
