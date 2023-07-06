@@ -536,6 +536,45 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
+
+    private static readonly string[] PIVOT_X_NAMES = new string[] { "West ", "", "East " };
+    private static readonly string[] PIVOT_X_LETTERS = new string[] { "W", "", "E" };
+    private static readonly string[] PIVOT_Y_NAMES = new string[] { "Bottom ", "", "Top " };
+    private static readonly string[] PIVOT_Z_NAMES = new string[] { "South ", "", "North " };
+    private static readonly string[] PIVOT_Z_LETTERS = new string[] { "S", "", "N" };
+    public static void PivotProp(Property property)
+    {
+        var pivot = (Pivot)property.value;
+        string pivotString;
+        if (pivot.x == Pivot.Pos.Center && pivot.y == Pivot.Pos.Center && pivot.z == Pivot.Pos.Center)
+            pivotString = "Center";
+        else
+        {
+            pivotString = PIVOT_Y_NAMES[(int)pivot.y];
+            if (pivot.x == Pivot.Pos.Center || pivot.z == Pivot.Pos.Center)
+            {
+                pivotString += PIVOT_Z_NAMES[(int)pivot.z];
+                pivotString += PIVOT_X_NAMES[(int)pivot.x];
+            }
+            else
+            {
+                pivotString += PIVOT_Z_LETTERS[(int)pivot.z];
+                pivotString += PIVOT_X_LETTERS[(int)pivot.x];
+            }
+        }
+
+        GUILayout.BeginHorizontal();
+        AlignedLabel(property);
+        if (GUILayout.Button(pivotString, GUI.skin.textField))
+        {
+            PivotGUI pivotGUI = GUIManager.guiGameObject.AddComponent<PivotGUI>();
+            pivotGUI.title = property.name;
+            pivotGUI.value = pivot;
+            pivotGUI.handler = (Pivot newPivot) => { property.value = newPivot; };
+        }
+        GUILayout.EndHorizontal();
+    }
+
     public static PropertyGUI EmbeddedData(EmbeddedDataType type, AudioPlayerFactory playerFactory = null)
     {
         return (Property property) =>

@@ -36,8 +36,7 @@ public class TargetGUI : GUIPanel
         GUILayout.FlexibleSpace();
         GUILayout.Space(8);  // additional padding
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(200), GUILayout.Height(200));
-        float compassRotation = -Camera.main.transform.parent.rotation.eulerAngles.y;
-        DrawCompass(GUILayoutUtility.GetLastRect(), compassRotation);
+        DrawCompass(this, GUILayoutUtility.GetLastRect());
         GUILayout.Space(8);
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
@@ -119,10 +118,11 @@ public class TargetGUI : GUIPanel
         Destroy(this);
     }
 
-    private void DrawCompass(Rect rect, float rotation)
+    public static void DrawCompass(GUIPanel panel, Rect rect)
     {
+        float rotation = -Camera.main.transform.parent.rotation.eulerAngles.y;
         Matrix4x4 baseMatrix = GUI.matrix;
-        RotateAboutPoint(rect.center, rotation, Vector2.one);
+        panel.RotateAboutPoint(rect.center, rotation, Vector2.one);
         GUI.DrawTexture(rect, GUIIconSet.instance.compassLarge);
         GUI.matrix = baseMatrix;
     }

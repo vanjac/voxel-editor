@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct Pivot {
+    public enum Pos { Min, Center, Max };
+    public Pos x, y, z;
+}
+
 public class Substance : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Substance", "An entity made of blocks", "cube-outline", typeof(Substance));
+
+    public Pivot pivot = new Pivot { x = Pivot.Pos.Center, y = Pivot.Pos.Center, z = Pivot.Pos.Center };
 
     public HashSet<Voxel> voxels;
 
@@ -21,6 +28,17 @@ public class Substance : DynamicEntity
     public override PropertiesObjectType ObjectType()
     {
         return objectType;
+    }
+
+    public override ICollection<Property> Properties()
+    {
+        return Property.JoinProperties(base.Properties(), new Property[]
+        {
+            new Property("piv", "Pivot",
+                () => pivot,
+                v => {pivot = (Pivot)v;},
+                PropertyGUIs.PivotProp),
+        });
     }
 
     public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
@@ -91,7 +109,8 @@ public class Substance : DynamicEntity
             else
                 voxelBounds.Encapsulate(voxel.GetBounds());
         }
-        return voxelBounds.center;
+        var factor = new Vector3((float)pivot.x, (float)pivot.y, (float)pivot.z) / 2;
+        return voxelBounds.min + Vector3.Scale(voxelBounds.size, factor);
     }
 
     public override void SetHighlight(Color c)
