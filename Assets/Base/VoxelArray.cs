@@ -15,7 +15,7 @@ public class VoxelArray : MonoBehaviour
     public List<Material> customOverlays = new List<Material>();
     private Dictionary<Vector3Int, Voxel> voxels = new Dictionary<Vector3Int, Voxel>();
     protected VoxelGroup worldGroup = new VoxelGroup();
-    private List<ObjectEntity> objects = new List<ObjectEntity>();
+    private Dictionary<Vector3Int, ObjectEntity> objects = new Dictionary<Vector3Int, ObjectEntity>();
 
     public Voxel VoxelAt(Vector3Int position, bool createIfMissing)
     {
@@ -59,7 +59,7 @@ public class VoxelArray : MonoBehaviour
 
     public virtual void VoxelModified(Voxel voxel)
     {
-        if (voxel.CanBeDeleted())
+        if (voxel.IsEmpty())
         {
             if (voxels.TryGetValue(voxel.position, out Voxel existing))
             {
@@ -93,32 +93,31 @@ public class VoxelArray : MonoBehaviour
         return voxels.Values;
     }
 
+    public ObjectEntity ObjectAt(Vector3Int pos)
+    {
+        if (objects.TryGetValue(pos, out ObjectEntity obj))
+            return obj;
+        return null;
+    }
+
     public void AddObject(ObjectEntity obj)
     {
-        objects.Add(obj);
-        Voxel objVoxel = VoxelAt(obj.position, true);
-        if (objVoxel.objectEntity != null)
+        if (objects.ContainsKey(obj.position))
             Debug.Log("Object already at position!!");
-        objVoxel.objectEntity = obj;
-        // not necessary to call VoxelModified
+        objects[obj.position] = obj;
     }
 
     public void DeleteObject(ObjectEntity obj)
     {
-        objects.Remove(obj);
+        if (objects.TryGetValue(obj.position, out ObjectEntity existing) && existing == obj)
+            objects.Remove(obj.position);
+        else
+            Debug.Log("This object wasn't in the voxel array!");
         if (obj.marker != null)
         {
             Destroy(obj.marker.gameObject);
             obj.marker = null;
         }
-        Voxel objVoxel = VoxelAt(obj.position, false);
-        if (objVoxel != null)
-        {
-            objVoxel.objectEntity = null;
-            VoxelModified(objVoxel);
-        }
-        else
-            Debug.Log("This object wasn't in the voxel array!");
     }
 
     // return success
@@ -126,21 +125,15 @@ public class VoxelArray : MonoBehaviour
     {
         if (newPosition == obj.position)
             return true;
+        if (objects.ContainsKey(newPosition))
+            return false; // can't move here
 
-        Voxel newObjVoxel = VoxelAt(newPosition, true);
-        if (newObjVoxel.objectEntity != null)
-            return false;
-        newObjVoxel.objectEntity = obj;
-        // not necessary to call VoxelModified
-
-        Voxel oldObjVoxel = VoxelAt(obj.position, false);
-        if (oldObjVoxel != null)
-        {
-            oldObjVoxel.objectEntity = null;
-            VoxelModified(oldObjVoxel);
-        }
+        if (objects.TryGetValue(obj.position, out ObjectEntity existing) && existing == obj)
+            objects.Remove(obj.position);
         else
             Debug.Log("This object wasn't in the voxel array!");
+
+        objects[newPosition] = obj;
         obj.position = newPosition;
         ObjectModified(obj);
         return true;
@@ -148,8 +141,7 @@ public class VoxelArray : MonoBehaviour
 
     public IEnumerable<ObjectEntity> IterateObjects()
     {
-        foreach (ObjectEntity obj in objects)
-            yield return obj;
+        return objects.Values;
     }
 
     public void DeleteSubstance(Substance substance)

@@ -1037,7 +1037,7 @@ public class VoxelArrayEditor : VoxelArray
                 {
                     AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
                 }
-                if (movingSubstance == null && newVoxel != null && newVoxel.objectEntity != null)
+                if (movingSubstance == null && ObjectAt(newPos) != null)
                 {
                     // blocked by object
                     oldVoxel.faces[faceI].addSelected = false;
@@ -1489,7 +1489,7 @@ public class VoxelArrayEditor : VoxelArray
             Voxel voxel = VoxelAt(createPosition.ToInt(), false);
             if (voxel != null && voxel.substance == null && !voxel.faces[Voxel.OppositeFaceI(faceNormal)].IsEmpty())
                 return false; // blocked by wall. no room to create object
-            if (voxel == null || voxel.objectEntity == null)
+            if (ObjectAt(createPosition.ToInt()) == null)
                 break;
             createPosition += createDirection;
         }

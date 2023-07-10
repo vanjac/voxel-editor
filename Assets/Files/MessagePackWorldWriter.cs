@@ -89,7 +89,7 @@ public class MessagePackWorldWriter
         var voxelsList = new List<MessagePackObject>();
         foreach (Voxel voxel in voxelArray.IterateVoxels())
         {
-            if (voxel.CanBeDeleted())
+            if (voxel.IsEmpty())
             {
                 Debug.Log("Empty voxel found!");
                 continue;

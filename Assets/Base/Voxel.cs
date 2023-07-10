@@ -388,7 +388,6 @@ public class Voxel
     // for the Y/Z axes (0-3), Z/X axes (4-7, note order), or X/Y axes (8-11)
     public VoxelEdge[] edges = new VoxelEdge[12];
     public Substance substance;
-    public ObjectEntity objectEntity; // TODO remove
 
     public Bounds GetFaceBounds(int faceI)
     {
@@ -490,11 +489,6 @@ public class Voxel
                 return false;
         }
         return true;
-    }
-
-    public bool CanBeDeleted()
-    {
-        return IsEmpty() && objectEntity == null;
     }
 
     public void ClearFaces()
