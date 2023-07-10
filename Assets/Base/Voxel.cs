@@ -733,11 +733,11 @@ public class VoxelComponent : MonoBehaviour
             MeshCollider collider = GetComponent<MeshCollider>();
             if (collider == null)
                 collider = gameObject.AddComponent<MeshCollider>();
+            collider.convex = false;
             // force the collider to update. It otherwise might not since we're using the same mesh object
             // this fixes a bug where rays would pass through a voxel that used to be empty
             collider.sharedMesh = null;
             collider.sharedMesh = mesh;
-            collider.convex = false;
             collider.isTrigger = false;
         }
         else // gameSubstance
@@ -817,8 +817,8 @@ public class VoxelComponent : MonoBehaviour
                     meshSingle.vertices = verticesSingle;
                     meshSingle.triangles = triangles;
                     MeshCollider collider = gameObject.AddComponent<MeshCollider>();
-                    collider.sharedMesh = meshSingle;
                     collider.convex = true; // TODO: broken for planar meshes!!
+                    collider.sharedMesh = meshSingle;
                     theCollider = collider;
                 }
                 theCollider.isTrigger = true; // by default, changed by Solid behavior
