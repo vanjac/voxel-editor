@@ -111,17 +111,15 @@ public class WorldProperties : PropertiesObject
                 () => GetReflectionProbe().intensity,
                 v => GetReflectionProbe().intensity = (float)v,
                 PropertyGUIs.Slider(0, 1)),
-            new Property("fdn", "Fog density",
-                () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
+            new Property("fog", "Fog",
+                () => RenderSettings.fog,
+                v => RenderSettings.fog = (bool)v,
+                PropertyGUIs.Toggle),
+            new Property("fd2", "Fog density",
+                () => Mathf.Sqrt(RenderSettings.fogDensity),
                 v => {
                     float value = (float)v;
-                    if (value == 0)
-                        RenderSettings.fog = false;
-                    else
-                    {
-                        RenderSettings.fog = true;
-                        RenderSettings.fogDensity = value * value;
-                    }
+                    RenderSettings.fogDensity = value * value;
                 },
                 PropertyGUIs.Slider(0, 1)),
             new Property("fco", "Fog color",
@@ -133,6 +131,24 @@ public class WorldProperties : PropertiesObject
 
     public ICollection<Property> DeprecatedProperties()
     {
-        return System.Array.Empty<Property>();
+        return new Property[]
+        {
+            new Property("fdn", "Fog density",
+                () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
+                v => {
+                    float value = (float)v;
+                    if (value == 0)
+                    {
+                        RenderSettings.fog = false;
+                        RenderSettings.fogDensity = 0.04f;
+                    }
+                    else
+                    {
+                        RenderSettings.fog = true;
+                        RenderSettings.fogDensity = value * value;
+                    }
+                },
+                PropertyGUIs.Slider(0, 1)),
+        };
     }
 }
