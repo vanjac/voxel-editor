@@ -638,11 +638,11 @@ public class VoxelArrayEditor : VoxelArray
         {
             VoxelGroup group = (boxSelectSubstance != null) ? boxSelectSubstance.voxelGroup : worldGroup;
             const int BLOCK = VoxelGroup.COMPONENT_BLOCK_SIZE;
-            for (int z = (int)bounds.min.z; z < bounds.max.z + BLOCK; z += BLOCK)
+            for (int z = (int)bounds.min.z - 1; z < bounds.max.z + BLOCK; z += BLOCK)
             {
-                for (int y = (int)bounds.min.y; y < bounds.max.y + BLOCK; y += BLOCK)
+                for (int y = (int)bounds.min.y - 1; y < bounds.max.y + BLOCK; y += BLOCK)
                 {
-                    for (int x = (int)bounds.min.x; x < bounds.max.x + BLOCK; x += BLOCK)
+                    for (int x = (int)bounds.min.x - 1; x < bounds.max.x + BLOCK; x += BLOCK)
                     {
                         VoxelComponent component = group.ComponentAt(new Vector3Int(x, y, z), null);
                         if (!component)
