@@ -219,7 +219,19 @@ public static class GameScripts
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
                 return ball;
-            })
+            }),
+        new PropertiesObjectType("Reflector",
+            ReflectorBehavior.objectType.description,
+            "mirror",
+            typeof(BallObject),
+            () => {
+                var ball = new BallObject();
+                ball.paint.material = ResourcesDirectory.InstantiateMaterial(
+                    ResourcesDirectory.FindMaterial("METAL", true));
+                ball.paint.material.color = Color.white;
+                ball.behaviors.Add(new ReflectorBehavior());
+                return ball;
+            }),
     };
 
     public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]
