@@ -74,7 +74,7 @@ public class PhysicsComponent : BehaviorComponent
         voxels = new List<Vector3>();
         SubstanceComponent substanceComponent = GetComponent<SubstanceComponent>();
         if (substanceComponent != null)
-            foreach (Voxel voxel in substanceComponent.substance.voxels)
+            foreach (Voxel voxel in substanceComponent.substance.voxelGroup.IterateVoxels())
                 voxels.Add(voxel.GetBounds().center - transform.position);
         else
             voxels.Add(Vector3.zero);
@@ -84,10 +84,11 @@ public class PhysicsComponent : BehaviorComponent
     public override void BehaviorEnabled()
     {
         SubstanceComponent sComponent = GetComponent<SubstanceComponent>();
-        if (calculateVolumeAndMass)
+        if (calculateVolumeAndMass && sComponent != null)
         {
-            if (sComponent != null)
-                volume = sComponent.substance.voxels.Count;
+            volume = 0;
+            foreach (var vc in sComponent.substance.voxelGroup.IterateComponents())
+                volume += vc.voxels.Count;
             if (volume == 0)
                 volume = 1;
         }

@@ -380,45 +380,15 @@ public class Voxel
     }
 
 
-    public Vector3Int position;
+    public Vector3Int position; // TODO remove
     // see "Voxel Diagram.skp" for a diagram of face/edge numbers
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
     // Edges: 0-3: x, 4-7: y, 8-11: z
     // Each group of four follows the pattern (0,0), (1,0), (1,1), (0,1)
     // for the Y/Z axes (0-3), Z/X axes (4-7, note order), or X/Y axes (8-11)
     public VoxelEdge[] edges = new VoxelEdge[12];
-    private Substance _substance = null;
-    public Substance substance
-    {
-        get
-        {
-            return _substance;
-        }
-        set
-        {
-            if (_substance != null)
-                _substance.RemoveVoxel(this);
-            _substance = value;
-            if (_substance != null)
-            {
-                _substance.AddVoxel(this);
-                if (voxelComponent != null)
-                {
-                    // TODO this seems pretty ugly
-                    voxelComponent.VoxelDeleted(this);
-                    GameObject singleBlockGO = new GameObject();
-                    singleBlockGO.transform.position = GetBounds().center;
-                    singleBlockGO.transform.parent = voxelComponent.transform.parent;
-                    voxelComponent = singleBlockGO.AddComponent<VoxelComponent>();
-                    voxelComponent.AddVoxel(this);
-                }
-            }
-        }
-    }
-    public ObjectEntity objectEntity;
-
-    public VoxelArray.OctreeNode octreeNode;
-    public VoxelComponent voxelComponent;
+    public Substance substance;
+    public ObjectEntity objectEntity; // TODO remove
 
     public Bounds GetFaceBounds(int faceI)
     {
@@ -527,7 +497,7 @@ public class Voxel
         return IsEmpty() && objectEntity == null;
     }
 
-    public void Clear()
+    public void ClearFaces()
     {
         for (int faceI = 0; faceI < faces.Length; faceI++)
         {
@@ -537,19 +507,6 @@ public class Voxel
         {
             edges[edgeI].Clear();
         }
-        substance = null;
-        // does NOT clear objectEntity!
-    }
-
-    public void UpdateVoxel()
-    {
-        voxelComponent.UpdateVoxel();
-    }
-
-    public void VoxelDeleted()
-    {
-        voxelComponent.VoxelDeleted(this);
-        voxelComponent.UpdateVoxel();
     }
 }
 
@@ -585,47 +542,40 @@ public class VoxelComponent : MonoBehaviour
         Vector2.right, Vector2.down, Vector2.left, Vector2.up
     };
 
-    private List<Voxel> voxels = new List<Voxel>();
+    public VoxelArray voxelArray;
+    public List<Voxel> voxels = new List<Voxel>(); // TODO: change to list of positions
     private FaceVertexIndex[] faceVertexIndices;
+    private Collider[] voxelColliders; // for substance only
     private bool updateFlag = false;
-    public bool isDestroyed = false;
 
     void Awake()
     {
         gameObject.tag = "Voxel";
+        if (gameObject.GetComponent<MeshFilter>() != null)
+            return; // this is a clone!
         gameObject.AddComponent<MeshFilter>();
         var render = gameObject.AddComponent<MeshRenderer>();
         render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.TwoSided;
     }
 
-    public bool IsSingleBlock()
-    {
-        return voxels.Count == 1;
-    }
-
-    public Voxel GetSingleBlock()
-    {
-        return voxels[0];
-    }
-
     public Substance GetSubstance()
     {
-        if (IsSingleBlock())
-            return GetSingleBlock().substance;
+        if (voxels.Count != 0)
+            return voxels[0].substance;
         else
             return null;
     }
 
     void OnBecameVisible()
     {
-        if (IsSingleBlock())
+        if (VoxelArrayEditor.instance == null && GetSubstance() != null)
             // don't use substance.component (doesn't work for clones)
             transform.parent.SendMessage("OnBecameVisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 
     void OnBecameInvisible()
     {
-        if (IsSingleBlock())
+        if (VoxelArrayEditor.instance == null && GetSubstance() != null)
             transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 
@@ -646,22 +596,16 @@ public class VoxelComponent : MonoBehaviour
         faceNum = prevFVI.faceNum;
     }
 
-    public void AddVoxel(Voxel voxel)
+    public Voxel GetVoxelForCollider(Collider collider)
     {
-        voxels.Add(voxel);
-    }
-
-    public void VoxelDeleted(Voxel voxel)
-    {
-        voxels.Remove(voxel);
-        if (voxels.Count == 0)
-            // this will cause voxel to be destroyed in the next frame
-            UpdateVoxel();
+        int index = System.Array.IndexOf(voxelColliders, collider);
+        return (index >= 0) ? voxels[index] : null;
     }
 
     public VoxelComponent Clone()
     {
         VoxelComponent vClone = Component.Instantiate<VoxelComponent>(this);
+        vClone.voxelArray = voxelArray;
         vClone.voxels.AddRange(voxels);
         return vClone;
     }
@@ -686,13 +630,6 @@ public class VoxelComponent : MonoBehaviour
 
     private void UpdateVoxelImmediate()
     {
-        if (voxels.Count == 0)
-        {
-            Destroy(gameObject);
-            isDestroyed = true;
-            return;
-        }
-
         updateFlag = false;
         bool inEditor = VoxelArrayEditor.instance != null;
         Substance substance = GetSubstance();
@@ -721,19 +658,8 @@ public class VoxelComponent : MonoBehaviour
             {
                 if (!voxel.faces[faceNum].IsEmpty())
                     faceVertexIndices[numFaces++] = new FaceVertexIndex(voxel, faceNum, numVertices);
-                var corners = GetFaceVertices(voxel, faceNum, numVertices);
-                info.faceCorners[faceNum] = corners;
-                int faceVertices = corners[0].count + corners[1].count + corners[2].count + corners[3].count;
-                numVertices += faceVertices;
-                try
-                {
-                    info.faceTriangles[faceNum] = GenerateFaceTriangles(voxel, faceNum, corners);
-                }
-                catch (System.IndexOutOfRangeException)
-                {
-                    Debug.LogError("Vertex indices don't match!");
-                    return;
-                }
+                info.faceCorners[faceNum] = GetFaceVertices(voxelArray, voxel, faceNum, numVertices);
+                numVertices += info.FaceVertexCount(faceNum);
             }
             voxelInfos[i] = info;
         }
@@ -751,6 +677,8 @@ public class VoxelComponent : MonoBehaviour
                 {
                     GenerateFaceVertices(info.voxel, faceNum, info.faceCorners[faceNum],
                         vertices, uvs, normals, tangents);
+                    info.faceTriangles[faceNum] = GenerateFaceTriangles(info.voxel, faceNum,
+                        info.faceCorners[faceNum]);
                 }
                 catch (System.IndexOutOfRangeException)
                 {
@@ -762,7 +690,6 @@ public class VoxelComponent : MonoBehaviour
 
         // according to Mesh documentation, vertices must be assigned before triangles
         Mesh mesh = GetComponent<MeshFilter>().mesh;
-        mesh.name = "v";
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.uv = uvs;
@@ -803,59 +730,107 @@ public class VoxelComponent : MonoBehaviour
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         renderer.materials = matList.ToArray(); // TODO
 
-        bool useMeshCollider = true;
-        if (!inEditor && substance != null)
-        {
-            useMeshCollider = false;
-            foreach (VoxelEdge edge in GetSingleBlock().edges)
-            {
-                if (edge.hasBevel)
-                {
-                    useMeshCollider = true;
-                    break;
-                }
-            }
-        }
+        // collision
 
-        MeshCollider meshCollider = GetComponent<MeshCollider>();
-        BoxCollider boxCollider = GetComponent<BoxCollider>();
-        Collider theCollider;
-
-        if (useMeshCollider)
+        bool gameSubstance = !inEditor && substance != null;
+        renderer.enabled = !gameSubstance;
+        if (!gameSubstance)
         {
-            if (boxCollider != null)
-                Destroy(boxCollider);
-            if (meshCollider == null)
-                meshCollider = gameObject.AddComponent<MeshCollider>();
+            MeshCollider collider = GetComponent<MeshCollider>();
+            if (collider == null)
+                collider = gameObject.AddComponent<MeshCollider>();
             // force the collider to update. It otherwise might not since we're using the same mesh object
             // this fixes a bug where rays would pass through a voxel that used to be empty
-            meshCollider.sharedMesh = null;
-            meshCollider.sharedMesh = mesh;
-            meshCollider.convex = !inEditor && substance != null;
-            theCollider = meshCollider;
+            collider.sharedMesh = null;
+            collider.sharedMesh = mesh;
+            collider.convex = false;
+            collider.isTrigger = false;
         }
-        else
+        else // gameSubstance
         {
-            if (meshCollider != null)
-                Destroy(meshCollider);
-            if (boxCollider == null)
-                boxCollider = gameObject.AddComponent<BoxCollider>();
-            Bounds bounds = GetSingleBlock().GetBounds();
-            boxCollider.size = bounds.size;
-            boxCollider.center = bounds.center - transform.position;
-            theCollider = boxCollider;
-        }
+            // this shouldn't be necessary
+            foreach (MeshCollider c in GetComponents<MeshCollider>())
+                Destroy(c);
+            foreach (BoxCollider c in GetComponents<BoxCollider>())
+                Destroy(c);
 
-        if (!inEditor && substance != null)
-        {
-            renderer.enabled = false;
-            theCollider.isTrigger = true;
-        }
-        else
-        {
-            renderer.enabled = true;
-            theCollider.isTrigger = false;
-        }
+            voxelColliders = new Collider[voxels.Count];
+            for (int v = 0; v < voxels.Count; v++)
+            {
+                Voxel voxel = voxels[v];
+                bool hasBevel = false;
+                foreach (VoxelEdge edge in voxel.edges)
+                {
+                    if (edge.hasBevel)
+                    {
+                        hasBevel = true;
+                        break;
+                    }
+                }
+                Collider theCollider;
+                if (!hasBevel)
+                {
+                    BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+                    Bounds bounds = voxel.GetBounds();
+                    collider.size = bounds.size;
+                    collider.center = bounds.center - transform.position;
+                    theCollider = collider;
+                }
+                else // hasBevel
+                {
+                    // TODO: copied from above
+
+                    VoxelMeshInfo info = new VoxelMeshInfo(voxel);
+                    int numVerticesSingle = 0;
+                    for (int faceNum = 0; faceNum < 6; faceNum++)
+                    {
+                        info.faceCorners[faceNum] = GetFaceVertices(voxelArray, voxel, faceNum, numVerticesSingle);
+                        numVerticesSingle += info.FaceVertexCount(faceNum);
+                    }
+
+                    var verticesSingle = new Vector3[numVerticesSingle];
+                    // TODO: these are unnecessary for collision
+                    var uvsSingle = new Vector2[numVerticesSingle];
+                    var normalsSingle = new Vector3[numVerticesSingle];
+                    var tangentsSingle = new Vector4[numVerticesSingle];
+                    int numTriangles = 0;
+                    for (int faceNum = 0; faceNum < 6; faceNum++)
+                    {
+                        try
+                        {
+                            GenerateFaceVertices(info.voxel, faceNum, info.faceCorners[faceNum],
+                                verticesSingle, uvsSingle, normalsSingle, tangentsSingle);
+                            info.faceTriangles[faceNum] = GenerateFaceTriangles(voxel, faceNum,
+                                info.faceCorners[faceNum]);
+                            numTriangles += info.faceTriangles[faceNum].Length;
+                        }
+                        catch (System.IndexOutOfRangeException)
+                        {
+                            Debug.LogError("Vertex indices don't match!");
+                            return;
+                        }
+                    }
+                    int[] triangles = new int[numTriangles];
+                    numTriangles = 0;
+                    for (int i = 0; i < 6; i++)
+                    {
+                        System.Array.Copy(info.faceTriangles[i], 0, triangles, numTriangles,
+                            info.faceTriangles[i].Length);
+                        numTriangles += info.faceTriangles[i].Length;
+                    }
+
+                    Mesh meshSingle = new Mesh();
+                    meshSingle.vertices = verticesSingle;
+                    meshSingle.triangles = triangles;
+                    MeshCollider collider = gameObject.AddComponent<MeshCollider>();
+                    collider.sharedMesh = meshSingle;
+                    collider.convex = true; // TODO: broken for planar meshes!!
+                    theCollider = collider;
+                }
+                theCollider.isTrigger = true; // by default, changed by Solid behavior
+                voxelColliders[v] = theCollider;
+            }
+        } // end if gameSubstance
     } // end UpdateVoxel()
 
     // Utility functions for UpdateVoxel() ...
@@ -871,6 +846,12 @@ public class VoxelComponent : MonoBehaviour
             this.voxel = voxel;
             faceCorners = new FaceCornerVertices[6][];
             faceTriangles = new int[6][];
+        }
+
+        public int FaceVertexCount(int faceNum)
+        {
+            var corners = faceCorners[faceNum];
+            return corners[0].count + corners[1].count + corners[2].count + corners[3].count;
         }
     }
 
@@ -962,7 +943,7 @@ public class VoxelComponent : MonoBehaviour
         }
     }
 
-    private static FaceCornerVertices[] GetFaceVertices(Voxel voxel, int faceNum, int vertexI)
+    private static FaceCornerVertices[] GetFaceVertices(VoxelArray voxelArray, Voxel voxel, int faceNum, int vertexI)
     {
         var corners = new FaceCornerVertices[4] {
             new FaceCornerVertices(0), new FaceCornerVertices(0), new FaceCornerVertices(0), new FaceCornerVertices(0)};
@@ -976,12 +957,12 @@ public class VoxelComponent : MonoBehaviour
             VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
             if (voxel.edges[edgeB].hasBevel)
             {
-                GetBevelVertices(voxel, ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB, i, edgeB, false);
+                GetBevelVertices(voxelArray, voxel, ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB, i, edgeB, false);
                 corners[i].count += corners[i].hEdgeB.count;
             }
             if (voxel.edges[edgeC].hasBevel)
             {
-                GetBevelVertices(voxel, ref vertexI, voxel.edges[edgeC], ref corners[i].hEdgeC, i, edgeC, true);
+                GetBevelVertices(voxelArray, voxel, ref vertexI, voxel.edges[edgeC], ref corners[i].hEdgeC, i, edgeC, true);
                 corners[i].count += corners[i].hEdgeC.count;
             }
             if (voxel.edges[edgeA].hasBevel && !voxel.edges[edgeB].hasBevel && !voxel.edges[edgeC].hasBevel)
@@ -1025,7 +1006,7 @@ public class VoxelComponent : MonoBehaviour
         return corners;
     }
 
-    private static void GetBevelVertices(Voxel voxel, ref int vertexI, VoxelEdge bevelEdge,
+    private static void GetBevelVertices(VoxelArray voxelArray, Voxel voxel, ref int vertexI, VoxelEdge bevelEdge,
         ref FaceHalfEdgeVertices hEdge, int cornerI, int edgeI, bool isEdgeC)
     {
         hEdge.bevel_i = vertexI;
@@ -1039,7 +1020,7 @@ public class VoxelComponent : MonoBehaviour
         else if (isEdgeC && SQUARE_LOOP[cornerI].y == 1)
             capFaceI++;
         Vector3Int capDir = Voxel.DirectionForFaceI(capFaceI).ToInt();
-        Voxel adjacent = VoxelArray.VoxelAtAdjacent(voxel.position + capDir, voxel);
+        Voxel adjacent = voxelArray.VoxelAt(voxel.position + capDir, false);
 
         if (BevelCap(voxel, adjacent, edgeI, capFaceI, out hEdge.reverseCap))
         {

@@ -228,7 +228,7 @@ public class NewRigidbodyController : MonoBehaviour
                 {
                     // substances use convex hulls which don't have submeshes
                     // so just use the top face of the voxel
-                    voxel = voxelComponent.GetSingleBlock();
+                    voxel = voxelComponent.GetVoxelForCollider(hitInfo.collider);
                     faceI = 3;
                 }
                 else
@@ -236,7 +236,10 @@ public class NewRigidbodyController : MonoBehaviour
                     int hitVertexI = TouchListener.GetRaycastHitVertexIndex(hitInfo);
                     voxelComponent.GetVoxelFaceForVertex(hitVertexI, out voxel, out faceI);
                 }
-                footstepSound = voxel.faces[faceI].GetSound();
+                if (voxel != null)
+                    footstepSound = voxel.faces[faceI].GetSound();
+                else
+                    footstepSound = MaterialSound.GENERIC;
             }
             else
             {

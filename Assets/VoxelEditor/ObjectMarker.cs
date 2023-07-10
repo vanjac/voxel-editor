@@ -50,7 +50,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         UpdateMarker();
     }
 
-    public void SelectionStateUpdated()
+    public void SelectionStateUpdated(VoxelArray voxelArray)
     {
         UpdateMaterials();
     }

@@ -4,45 +4,8 @@ using UnityEngine;
 
 public class VoxelArray : MonoBehaviour
 {
-    private const int COMPONENT_BLOCK_SIZE = 4;
-
-    public class OctreeNode
+    public enum WorldType
     {
-        public Vector3Int position;
-        public int size;
-        public OctreeNode parent;
-        public OctreeNode[] branches = new OctreeNode[8];
-        public Voxel voxel;
-        public VoxelComponent voxelComponent;
-        public Bounds bounds
-        {
-            get
-            {
-                Vector3 sizeVector = new Vector3(size, size, size);
-                return new Bounds(position + sizeVector / 2, sizeVector);
-            }
-        }
-
-        public OctreeNode(Vector3Int position, int size)
-        {
-            this.position = position;
-            this.size = size;
-        }
-
-        public bool InBounds(Vector3Int point)
-        {
-            return point.x >= position.x && point.x < position.x + size
-                && point.y >= position.y && point.y < position.y + size
-                && point.z >= position.z && point.z < position.z + size;
-        }
-
-        public override string ToString()
-        {
-            return position + "(" + size + ")";
-        }
-    }
-
-    public enum WorldType {
         INDOOR, FLOATING, OUTDOOR
     }
 
@@ -50,183 +13,66 @@ public class VoxelArray : MonoBehaviour
     public WorldType type = WorldType.INDOOR;
     public List<Material> customMaterials = new List<Material>();
     public List<Material> customOverlays = new List<Material>();
-    protected OctreeNode rootNode;
+    private Dictionary<Vector3Int, Voxel> voxels = new Dictionary<Vector3Int, Voxel>();
+    protected VoxelGroup worldGroup = new VoxelGroup();
     private List<ObjectEntity> objects = new List<ObjectEntity>();
-    private VoxelComponent voxelComponent;
-
-    public virtual void Awake()
-    {
-        rootNode = new OctreeNode(new Vector3Int(-4, -4, -4), 8);
-    }
-
-    // will NOT create if missing
-    public static Voxel VoxelAtAdjacent(Vector3Int position, Voxel searchStart)
-    {
-        if (searchStart == null)
-            return null;
-        OctreeNode currentNode = searchStart.octreeNode;
-        if (currentNode == null)
-            return null;
-        while (!currentNode.InBounds(position))
-        {
-            currentNode = currentNode.parent;
-            if (currentNode == null)
-                return null;
-        }
-        return SearchDown(currentNode, position, false, null);
-    }
 
     public Voxel VoxelAt(Vector3Int position, bool createIfMissing)
     {
-        while (!rootNode.InBounds(position))
+        if (!voxels.TryGetValue(position, out Voxel voxel) && createIfMissing)
         {
-            if (!createIfMissing)
-                return null;
-            // create new root node...
-            // will it be the large end of the new node that will be created
-            bool xLarge = position.x < rootNode.position.x;
-            bool yLarge = position.y < rootNode.position.y;
-            bool zLarge = position.z < rootNode.position.z;
-            int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
-            Vector3Int newRootPos = new Vector3Int(
-                rootNode.position.x - (xLarge ? rootNode.size : 0),
-                rootNode.position.y - (yLarge ? rootNode.size : 0),
-                rootNode.position.z - (zLarge ? rootNode.size : 0)
-                );
-            OctreeNode newRoot = new OctreeNode(newRootPos, rootNode.size * 2);
-            newRoot.branches[branchI] = rootNode;
-            rootNode.parent = newRoot;
-            rootNode = newRoot;
+            voxel = new Voxel();
+            voxel.position = position;
+            voxels[position] = voxel;
+            worldGroup.AddVoxel(voxel, this);
         }
-        return SearchDown(rootNode, position, createIfMissing, this);
-    }
-
-    private Voxel InstantiateVoxel(Vector3Int position, VoxelComponent useComponent)
-    {
-        Voxel voxel = new Voxel();
-        voxel.position = position;
-
-        if (useComponent == null)
-        {
-            if (voxelComponent == null)
-            {
-                GameObject voxelObject = new GameObject();
-                voxelObject.transform.parent = transform;
-                voxelObject.name = "megavoxel";
-                voxelComponent = voxelObject.AddComponent<VoxelComponent>();
-            }
-            voxel.voxelComponent = voxelComponent;
-        }
-        else
-        {
-            voxel.voxelComponent = useComponent;
-        }
-        voxel.voxelComponent.AddVoxel(voxel);
         return voxel;
     }
 
-    // voxelArray is only used if createIfMissing is true
-    private static Voxel SearchDown(OctreeNode node, Vector3Int position, bool createIfMissing, VoxelArray voxelArray)
+    private void RemoveVoxel(Voxel voxel)
     {
-        VoxelComponent useComponent = null;
-        while (node.size != 1)
-        {
-            // initial root node is larger than COMPONENT_BLOCK_SIZE so a component node should always be found
-            if (createIfMissing && useComponent == null && node.size == COMPONENT_BLOCK_SIZE)
-            {
-                if (node.voxelComponent == null || node.voxelComponent.isDestroyed)
-                {
-                    GameObject voxelObject = new GameObject();
-                    voxelObject.transform.parent = voxelArray.transform;
-                    voxelObject.name = node.position.ToString();
-                    node.voxelComponent = voxelObject.AddComponent<VoxelComponent>();
-                }
-                useComponent = node.voxelComponent;
-            }
-
-            int halfSize = node.size / 2;
-            bool xLarge = position.x >= node.position.x + halfSize;
-            bool yLarge = position.y >= node.position.y + halfSize;
-            bool zLarge = position.z >= node.position.z + halfSize;
-            int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
-            OctreeNode branch = node.branches[branchI];
-            if (branch == null)
-            {
-                if (!createIfMissing)
-                    return null;
-                Vector3Int branchPos = new Vector3Int(
-                    node.position.x + (xLarge ? halfSize : 0),
-                    node.position.y + (yLarge ? halfSize : 0),
-                    node.position.z + (zLarge ? halfSize : 0)
-                    );
-                branch = new OctreeNode(branchPos, halfSize);
-                node.branches[branchI] = branch;
-                branch.parent = node;
-            }
-            node = branch;
-        }
-
-        if (!createIfMissing)
-            return node.voxel;
-        else if (node.voxel != null)
-            return node.voxel;
+        voxels.Remove(voxel.position);
+        if (voxel.substance != null)
+            voxel.substance.voxelGroup.RemoveVoxel(voxel);
         else
-        {
-            Voxel newVoxel = voxelArray.InstantiateVoxel(position, useComponent);
-            node.voxel = newVoxel;
-            newVoxel.octreeNode = node;
-            return newVoxel;
-        }
+            worldGroup.RemoveVoxel(voxel);
     }
 
-    // return if empty
-    private bool RemoveVoxelRecursive(OctreeNode node, Vector3Int position, Voxel voxelToRemove)
+    public void SetVoxelSubstance(Voxel voxel, Substance substance)
     {
-        if (node.size == 1)
-        {
-            // the voxel could have alreay been replaced with a new one
-            if (node.voxel == voxelToRemove)
-            {
-                node.voxel = null;
-                voxelToRemove.octreeNode = null;
-                return true;
-            }
-            return false;
-        }
+        if (voxel.substance != null)
+            voxel.substance.voxelGroup.RemoveVoxel(voxel);
+        else
+            worldGroup.RemoveVoxel(voxel);
+        voxel.substance = substance;
+        if (substance != null)
+            substance.voxelGroup.AddVoxel(voxel, this);
+        else
+            worldGroup.AddVoxel(voxel, this);
+    }
 
-        int halfSize = node.size / 2;
-        bool xLarge = position.x >= node.position.x + halfSize;
-        bool yLarge = position.y >= node.position.y + halfSize;
-        bool zLarge = position.z >= node.position.z + halfSize;
-        int branchI = (xLarge ? 1 : 0) + (yLarge ? 2 : 0) + (zLarge ? 4 : 0);
-        OctreeNode branch = node.branches[branchI];
-
-        if (branch != null)
-            if (RemoveVoxelRecursive(branch, position, voxelToRemove))
-            {
-                node.branches[branchI].parent = null;
-                node.branches[branchI] = null;
-            }
-
-        for (int i = 0; i < 8; i++)
-        {
-            if (node.branches[i] != null)
-                return false;
-        }
-        return true;
+    public void UpdateVoxel(Voxel voxel)
+    {
+        VoxelGroup group = (voxel.substance != null) ? voxel.substance.voxelGroup : worldGroup;
+        group.ComponentAt(voxel.position, null).UpdateVoxel();
     }
 
     public virtual void VoxelModified(Voxel voxel)
     {
         if (voxel.CanBeDeleted())
         {
-            voxel.VoxelDeleted();
-            RemoveVoxelRecursive(rootNode, voxel.position, voxel);
+            if (voxels.TryGetValue(voxel.position, out Voxel existing))
+            {
+                // the voxel could have alreay been replaced with a new one
+                // TODO: specify by position to prevent this problem
+                if (existing == voxel)
+                    RemoveVoxel(voxel);                
+            }
             AssetManager.UnusedAssets();
         }
         else
         {
-            voxel.UpdateVoxel();
+            UpdateVoxel(voxel);
         }
     }
 
@@ -244,27 +90,7 @@ public class VoxelArray : MonoBehaviour
 
     public IEnumerable<Voxel> IterateVoxels()
     {
-        foreach (Voxel v in IterateOctree(rootNode))
-            yield return v;
-    }
-
-    private IEnumerable<Voxel> IterateOctree(OctreeNode node)
-    {
-        if (node == null)
-        { }
-        else if (node.size == 1)
-        {
-            if (node.voxel != null)
-                yield return node.voxel;
-        }
-        else
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                foreach (Voxel v in IterateOctree(node.branches[i]))
-                    yield return v;
-            }
-        }
+        return voxels.Values;
     }
 
     public void AddObject(ObjectEntity obj)
@@ -328,10 +154,76 @@ public class VoxelArray : MonoBehaviour
 
     public void DeleteSubstance(Substance substance)
     {
-        foreach (var voxel in new HashSet<Voxel>(substance.voxels))
+        foreach (var voxel in new HashSet<Voxel>(substance.voxelGroup.IterateVoxels()))
         {
-            voxel.Clear();
+            voxel.ClearFaces();
+            SetVoxelSubstance(voxel, null);
             VoxelModified(voxel);
+        }
+    }
+}
+
+public class VoxelGroup
+{
+    public const int COMPONENT_BLOCK_SIZE = 4; // must be power of 2
+    private Dictionary<Vector3Int, VoxelComponent> components = new Dictionary<Vector3Int, VoxelComponent>();
+
+    private Vector3Int ComponentPos(Vector3Int voxelPos)
+    {
+        var mask = ~(COMPONENT_BLOCK_SIZE - 1);
+        return new Vector3Int(voxelPos.x & mask, voxelPos.y & mask, voxelPos.z & mask);
+    }
+
+    public VoxelComponent ComponentAt(Vector3Int position, VoxelArray createInArray)
+    {
+        position = ComponentPos(position);
+        if (!components.TryGetValue(position, out VoxelComponent component) && createInArray != null)
+        {
+            GameObject voxelObject = new GameObject();
+            voxelObject.transform.parent = createInArray.transform;
+            voxelObject.name = position.ToString();
+            component = voxelObject.AddComponent<VoxelComponent>();
+            component.voxelArray = createInArray;
+            components[position] = component;
+        }
+        return component;
+    }
+
+    public void AddVoxel(Voxel voxel, VoxelArray voxelArray)
+    {
+        var component = ComponentAt(voxel.position, voxelArray);
+        component.voxels.Add(voxel);
+    }
+
+    public void RemoveVoxel(Voxel voxel)
+    {
+        var pos = ComponentPos(voxel.position);
+        if (components.TryGetValue(pos, out VoxelComponent component))
+        {
+            component.voxels.Remove(voxel);
+            if (component.voxels.Count == 0)
+            {
+                GameObject.Destroy(component.gameObject);
+                components.Remove(pos);
+            }
+            else
+            {
+                component.UpdateVoxel();
+            }
+        }
+    }
+
+    public IEnumerable<VoxelComponent> IterateComponents()
+    {
+        return components.Values;
+    }
+
+    public IEnumerable<Voxel> IterateVoxels()
+    {
+        foreach (var vc in components.Values)
+        {
+            foreach (var voxel in vc.voxels)
+                yield return voxel;
         }
     }
 }

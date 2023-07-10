@@ -14,16 +14,11 @@ public class Substance : DynamicEntity
 
     public Pivot pivot = new Pivot { x = Pivot.Pos.Center, y = Pivot.Pos.Center, z = Pivot.Pos.Center };
 
-    public HashSet<Voxel> voxels;
+    public VoxelGroup voxelGroup = new VoxelGroup();
 
     public Color highlight = Color.clear;
     public Material highlightMaterial;
     public VoxelFace defaultPaint;
-
-    public Substance()
-    {
-        voxels = new HashSet<Voxel>();
-    }
 
     public override PropertiesObjectType ObjectType()
     {
@@ -48,10 +43,7 @@ public class Substance : DynamicEntity
         substanceObject.transform.parent = voxelArray.transform;
         substanceObject.transform.position = PositionInEditor();
 
-        var voxelComponents = new HashSet<VoxelComponent>();
-        foreach (Voxel v in voxels)
-            voxelComponents.Add(v.voxelComponent);
-        foreach (VoxelComponent vc in voxelComponents)
+        foreach (VoxelComponent vc in voxelGroup.IterateComponents())
         {
             // TODO: need to update this!
             if (storeComponent)
@@ -78,31 +70,22 @@ public class Substance : DynamicEntity
 
     public override bool AliveInEditor()
     {
-        return voxels.Count != 0;
-    }
-
-    // called by voxel
-    public void AddVoxel(Voxel v)
-    {
-        voxels.Add(v);
-    }
-
-    public void RemoveVoxel(Voxel v)
-    {
-        voxels.Remove(v);
+        foreach (var v in voxelGroup.IterateVoxels())
+            return true;
+        return false;
     }
 
     public override void UpdateEntityEditor()
     {
         base.UpdateEntityEditor();
-        foreach (Voxel v in voxels)
+        foreach (VoxelComponent v in voxelGroup.IterateComponents())
             v.UpdateVoxel();
     }
 
     public override Vector3 PositionInEditor()
     {
         Bounds voxelBounds = new Bounds();
-        foreach (Voxel voxel in voxels)
+        foreach (Voxel voxel in voxelGroup.IterateVoxels())
         {
             if (voxelBounds.extents == Vector3.zero)
                 voxelBounds = voxel.GetBounds();
@@ -121,7 +104,7 @@ public class Substance : DynamicEntity
         if (highlightMaterial == null)
             highlightMaterial = ResourcesDirectory.InstantiateMaterial(VoxelComponent.highlightMaterials[15]);
         highlightMaterial.color = highlight;
-        foreach (Voxel v in voxels)
+        foreach (VoxelComponent v in voxelGroup.IterateComponents())
             v.UpdateVoxel();
     }
 }
