@@ -524,10 +524,7 @@ public class PropertiesGUI : LeftPanelGUI
             if (entity is PlayerObject)
                 continue;
             else if (entity is ObjectEntity)
-            {
                 voxelArray.DeleteObject((ObjectEntity)entity);
-                voxelArray.unsavedChanges = true;
-            }
             else if (entity is Substance)
                 voxelArray.DeleteSubstance((Substance)entity);
         }

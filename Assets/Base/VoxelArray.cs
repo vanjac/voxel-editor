@@ -38,7 +38,7 @@ public class VoxelArray : MonoBehaviour
             worldGroup.RemoveVoxel(voxel);
     }
 
-    public void SetVoxelSubstance(Voxel voxel, Substance substance)
+    public virtual void SetVoxelSubstance(Voxel voxel, Substance substance)
     {
         if (voxel.substance != null)
             voxel.substance.voxelGroup.RemoveVoxel(voxel);
@@ -100,14 +100,14 @@ public class VoxelArray : MonoBehaviour
         return null;
     }
 
-    public void AddObject(ObjectEntity obj)
+    public virtual void AddObject(ObjectEntity obj)
     {
         if (objects.ContainsKey(obj.position))
             Debug.Log("Object already at position!!");
         objects[obj.position] = obj;
     }
 
-    public void DeleteObject(ObjectEntity obj)
+    public virtual void DeleteObject(ObjectEntity obj)
     {
         if (objects.TryGetValue(obj.position, out ObjectEntity existing) && existing == obj)
             objects.Remove(obj.position);

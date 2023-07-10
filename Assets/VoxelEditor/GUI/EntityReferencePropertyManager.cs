@@ -68,13 +68,12 @@ public class EntityReferencePropertyManager : MonoBehaviour
             {
                 // entity deselected
                 currentEntity.SetHighlight(Color.clear);
-                EntityPreviewManager.EntityDeselected();
             }
             if (entity != null)
             {
                 // entity selected
                 entity.SetHighlight(Color.white);
-                EntityPreviewManager.EntitySelected(entity);
+                EntityPreviewManager.AddEntity(entity); // refresh
             }
         }
         currentEntity = entity;

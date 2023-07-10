@@ -9,64 +9,67 @@ public class EditorPreviewBehaviorAttribute : System.Attribute
 
 public static class EntityPreviewManager
 {
-    private static List<GameObject> selfPreviewObjects = new List<GameObject>();
-    private static List<GameObject> otherPreviewObjects = new List<GameObject>();
+    private static Dictionary<Entity, List<GameObject>> entityPreviewObjects = new Dictionary<Entity, List<GameObject>>();
 
     public static bool IsEditorPreviewBehavior(EntityBehavior behavior)
     {
         return System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null;
     }
 
-    public static void EntitySelected(Entity entity)
+    public static void AddEntity(Entity entity)
     {
+        if (entityPreviewObjects.ContainsKey(entity))
+            RemoveEntity(entity);
+
+        var previewObjects = new List<GameObject>();
         foreach (EntityBehavior behavior in entity.behaviors)
         {
             if (IsEditorPreviewBehavior(behavior))
             {
+                if (behavior.targetEntity.entity != null && behavior.targetEntity.entity != entity)
+                    continue; // TODO: targeted behaviors not supported
+                if (behavior.condition != EntityBehavior.Condition.BOTH)
+                    continue;
                 var previewObj = new GameObject();
                 previewObj.tag = "EditorPreview";
-                if (behavior.targetEntity.entity != null)
-                    previewObj.transform.position = behavior.targetEntity.entity.PositionInEditor();
-                else
-                    previewObj.transform.position = entity.PositionInEditor();
+                previewObj.transform.position = entity.PositionInEditor();
                 behavior.MakeComponent(previewObj);
-                if (behavior.targetEntity.entity == null || behavior.targetEntity.entity == entity)
-                    selfPreviewObjects.Add(previewObj);
-                else
-                    otherPreviewObjects.Add(previewObj);
+                previewObjects.Add(previewObj);
             }
         }
+        if (previewObjects.Count != 0)
+            entityPreviewObjects[entity] = previewObjects;
     }
 
-    public static void EntityDeselected()
+    public static void RemoveEntity(Entity entity)
     {
-        foreach (GameObject obj in selfPreviewObjects)
-            GameObject.Destroy(obj);
-        selfPreviewObjects.Clear();
-        foreach (GameObject obj in otherPreviewObjects)
-            GameObject.Destroy(obj);
-        otherPreviewObjects.Clear();
+        if (entityPreviewObjects.TryGetValue(entity, out var previewObjects))
+        {
+            foreach (GameObject obj in entityPreviewObjects[entity])
+                GameObject.Destroy(obj);
+            entityPreviewObjects.Remove(entity);
+        }
     }
 
     public static void BehaviorUpdated(Entity entity, EntityBehavior behavior)
     {
         if (!IsEditorPreviewBehavior(behavior))
             return;
-        EntityDeselected();
         if (entity != null)
-            EntitySelected(entity);
+            AddEntity(entity);
     }
 
     public static void UpdateEntityPosition(Entity entity)
     {
-        if (selfPreviewObjects.Count == 0)
-            return;
-        Vector3 pos = entity.PositionInEditor();
-        foreach (GameObject obj in selfPreviewObjects)
+        if (entityPreviewObjects.TryGetValue(entity, out var previewObjects))
         {
-            if (obj == null)
-                continue; // map may have been closed with an object still selected
-            obj.transform.position = pos;
+            Vector3 pos = entity.PositionInEditor();
+            foreach (GameObject obj in entityPreviewObjects[entity])
+            {
+                if (obj == null)
+                    continue; // map may have been closed with an object still selected
+                obj.transform.position = pos;
+            }
         }
     }
 }

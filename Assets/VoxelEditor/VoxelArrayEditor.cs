@@ -209,6 +209,30 @@ public class VoxelArrayEditor : VoxelArray
         base.VoxelModified(voxel);
     }
 
+    public override void SetVoxelSubstance(Voxel voxel, Substance substance)
+    {
+        if (substance != null && !substance.AliveInEditor())
+            EntityPreviewManager.AddEntity(substance);
+        Substance oldSubstance = voxel.substance;
+        base.SetVoxelSubstance(voxel, substance);
+        if (oldSubstance != null && !oldSubstance.AliveInEditor())
+            EntityPreviewManager.RemoveEntity(oldSubstance);
+    }
+
+    public override void AddObject(ObjectEntity obj)
+    {
+        unsavedChanges = true;
+        base.AddObject(obj);
+        EntityPreviewManager.AddEntity(obj);
+    }
+
+    public override void DeleteObject(ObjectEntity obj)
+    {
+        unsavedChanges = true;
+        base.DeleteObject(obj);
+        EntityPreviewManager.RemoveEntity(obj);
+    }
+
     public override void ObjectModified(ObjectEntity obj)
     {
         unsavedChanges = true;
@@ -1477,7 +1501,6 @@ public class VoxelArrayEditor : VoxelArray
 
         obj.InitObjectMarker(this);
         AddObject(obj);
-        unsavedChanges = true;
         // select the object. Wait one frame so the position is correct
         StartCoroutine(SelectNewObjectCoroutine(obj));
     }

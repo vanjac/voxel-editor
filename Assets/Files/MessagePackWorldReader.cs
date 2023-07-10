@@ -176,6 +176,8 @@ public class MessagePackWorldReader : WorldFileReader
         }
         else // editor
         {
+            foreach (Substance s in substances)
+                EntityPreviewManager.UpdateEntityPosition(s);
             foreach (ObjectEntity obj in voxelArray.IterateObjects())
                 obj.InitObjectMarker((VoxelArrayEditor)voxelArray);
         }
