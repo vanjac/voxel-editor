@@ -348,11 +348,7 @@ public class PropertiesGUI : LeftPanelGUI
                     var pickerGUI = gameObject.AddComponent<FacePickerGUI>();
                     pickerGUI.voxelArray = voxelArray;
                     pickerGUI.message = "Tap to place clone";
-                    pickerGUI.pickAction = () =>
-                    {
-                        if (!voxelArray.PlaceObject(clone))
-                            DialogGUI.ShowMessageDialog(gameObject, ActionBarGUI.OBJECT_NO_ROOM_ERROR);
-                    };
+                    pickerGUI.pickAction = () => voxelArray.PlaceObject(clone);
                 }
                 else if (singleSelectedEntity is Substance)
                 {

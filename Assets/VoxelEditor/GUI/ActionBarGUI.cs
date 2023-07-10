@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ActionBarGUI : TopPanelGUI
 {
-    public const string OBJECT_NO_ROOM_ERROR = "There's no room to put an object there!";
-
     public VoxelArrayEditor voxelArray;
     public EditorFile editorFile;
     public TouchListener touchListener;
@@ -123,9 +121,7 @@ public class ActionBarGUI : TopPanelGUI
                 }
                 else if (typeof(ObjectEntity).IsAssignableFrom(type.type))
                 {
-                    ObjectEntity obj = (ObjectEntity)type.Create();
-                    if (!voxelArray.PlaceObject(obj))
-                        DialogGUI.ShowMessageDialog(gameObject, OBJECT_NO_ROOM_ERROR);
+                    voxelArray.PlaceObject((ObjectEntity)type.Create());
                 }
             };
         }

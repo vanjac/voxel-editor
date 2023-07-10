@@ -902,18 +902,7 @@ public class VoxelArrayEditor : VoxelArray
             if (thing is ObjectMarker)
             {
                 var obj = ((ObjectMarker)thing).objectEntity;
-                Vector3Int objNewPos = obj.position + adjustDirection;
-                MoveObject(obj, objNewPos);
-
-                Voxel objNewVoxel = VoxelAt(objNewPos, false);
-                if (objNewVoxel != null && objNewVoxel.substance == null
-                    && !objNewVoxel.faces[oppositeAdjustDirFaceI].IsEmpty()
-                    && !objNewVoxel.faces[oppositeAdjustDirFaceI].addSelected)
-                {
-                    // carve a hole for the object if it's being pushed into a wall
-                    objNewVoxel.faces[oppositeAdjustDirFaceI].addSelected = true;
-                    selectedThings.Insert(i + 1, new VoxelFaceReference(objNewVoxel, oppositeAdjustDirFaceI));
-                }
+                MoveObject(obj, obj.position + adjustDirection);
                 continue;
             }
             else if (!(thing is VoxelFaceReference))
@@ -1036,14 +1025,6 @@ public class VoxelArrayEditor : VoxelArray
                 foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
                 {
                     AdjustClearEdge(new VoxelEdgeReference(oldVoxel, edgeI), bevelsToUpdate, voxelsToUpdate);
-                }
-                if (movingSubstance == null && ObjectAt(newPos) != null)
-                {
-                    // blocked by object
-                    oldVoxel.faces[faceI].addSelected = false;
-                    selectedThings[i] = new VoxelFaceReference(null, -1);
-                    voxelsToUpdate.Add(oldVoxel);
-                    continue;
                 }
 
                 for (int sideNum = 0; sideNum < 4; sideNum++)
@@ -1173,7 +1154,7 @@ public class VoxelArrayEditor : VoxelArray
             substanceToCreate = null;
 
         AutoSetMoveAxesEnabled();
-    } // end Adjust()
+    } // end SingleAdjust()
 
     // fix for an issue when clearing concave edges on a face that will be deleted
     private void AdjustClearEdge(VoxelEdgeReference edgeRef,
@@ -1467,8 +1448,7 @@ public class VoxelArrayEditor : VoxelArray
         return faceI;
     }
 
-    // return false if object could not be placed
-    public bool PlaceObject(ObjectEntity obj)
+    public void PlaceObject(ObjectEntity obj)
     {
         Vector3 createPosition = selectionBounds.center; // not int
         int faceNormal = GetSelectedFaceNormal();
@@ -1484,15 +1464,8 @@ public class VoxelArrayEditor : VoxelArray
 
         // don't create the object at the same location of an existing object
         // keep moving in the direction of the face normal until an empty space is found
-        while (true)
-        {
-            Voxel voxel = VoxelAt(createPosition.ToInt(), false);
-            if (voxel != null && voxel.substance == null && !voxel.faces[Voxel.OppositeFaceI(faceNormal)].IsEmpty())
-                return false; // blocked by wall. no room to create object
-            if (ObjectAt(createPosition.ToInt()) == null)
-                break;
+        while (ObjectAt(createPosition.ToInt()) != null)
             createPosition += createDirection;
-        }
         obj.position = createPosition.ToInt();
 
         obj.InitObjectMarker(this);
@@ -1500,7 +1473,6 @@ public class VoxelArrayEditor : VoxelArray
         unsavedChanges = true;
         // select the object. Wait one frame so the position is correct
         StartCoroutine(SelectNewObjectCoroutine(obj));
-        return true;
     }
 
     private IEnumerator SelectNewObjectCoroutine(ObjectEntity obj)
