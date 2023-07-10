@@ -132,6 +132,11 @@ public class EditorFile : MonoBehaviour
             Debug.unityLogger.Log("EditorFile", "No unsaved changes");
             return true;
         }
+        if (voxelArray.IsEmpty())
+        {
+            Debug.Log("World is empty! File will not be written.");
+            return true;
+        }
         string savePath = SelectedWorld.GetSavePath();
         try
         {

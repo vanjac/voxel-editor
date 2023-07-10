@@ -12,11 +12,6 @@ public class MessagePackWorldWriter
 
     public static void Write(string filePath, Transform cameraPivot, VoxelArray voxelArray)
     {
-        if (voxelArray.IsEmpty())
-        {
-            Debug.Log("World is empty! File will not be written.");
-            return;
-        }
         Debug.Log("Writing MessagePack file " + filePath);
 
         var world = WriteWorld(cameraPivot, voxelArray);
