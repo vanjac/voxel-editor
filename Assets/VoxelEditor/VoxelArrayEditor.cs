@@ -890,7 +890,7 @@ public class VoxelArrayEditor : VoxelArray
         });
 
         bool createdSubstance = false;
-        bool temporarilyBlockPushingANewSubstance = false;
+        bool temporarilyBlockPushingANewSubstance = false; // :(
 
         // reuse arrays for each face
         VoxelEdge[] movingEdges = new VoxelEdge[4];
@@ -901,8 +901,7 @@ public class VoxelArrayEditor : VoxelArray
             Selectable thing = selectedThings[i];
             if (thing is ObjectMarker)
             {
-                var obj = ((ObjectMarker)thing).objectEntity;
-                MoveObject(obj, obj.position + adjustDirection);
+                PushObject(((ObjectMarker)thing).objectEntity, adjustDirection);
                 continue;
             }
             else if (!(thing is VoxelFaceReference))
@@ -1209,6 +1208,14 @@ public class VoxelArrayEditor : VoxelArray
         foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
             if (Voxel.EdgeIAxis(edgeI) == axis)
                 yield return edgeI;
+    }
+
+    private void PushObject(ObjectEntity obj, Vector3Int direction)
+    {
+        var existingObj = ObjectAt(obj.position + direction);
+        if (existingObj != null)
+            PushObject(existingObj, direction);
+        MoveObject(obj, obj.position + direction);
     }
 
     public void RotateObjects(float amount)
