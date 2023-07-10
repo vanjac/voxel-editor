@@ -51,6 +51,10 @@ public class MenuOverflowGUI : GUIPanel
                         AudioSettings.outputSampleRate, AudioSettings.speakerMode);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 }),
+                new OverflowMenuGUI.MenuItem("Website", GUIIconSet.instance.website, () =>
+                {
+                    Application.OpenURL("https://chroma.zone/voxel-editor/");
+                }),
                 new OverflowMenuGUI.MenuItem("Subreddit", GUIIconSet.instance.reddit, () =>
                 {
                     Application.OpenURL("https://www.reddit.com/r/nspace/");
@@ -59,9 +63,9 @@ public class MenuOverflowGUI : GUIPanel
                 {
                     Application.OpenURL("https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2");
                 }),
-                new OverflowMenuGUI.MenuItem("GitHub", GUIIconSet.instance.gitHub, () =>
+                new OverflowMenuGUI.MenuItem("Donate", GUIIconSet.instance.donate, () =>
                 {
-                    Application.OpenURL("https://github.com/vanjac/voxel-editor/");
+                    Application.OpenURL("https://ko-fi.com/chroma_zone");
                 })
             };
         }

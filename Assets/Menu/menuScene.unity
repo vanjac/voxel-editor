@@ -304,7 +304,6 @@ MonoBehaviour:
     playAudio: {fileID: 0}
     reddit: {fileID: 2800000, guid: 789e0959fe4fc43f1a1900850edd7218, type: 3}
     youTube: {fileID: 2800000, guid: cabf6c236add74d008a721d1a5e5d6b3, type: 3}
-    gitHub: {fileID: 2800000, guid: 076587c5b9ee64ac982f8ffa94e05e66, type: 3}
     undo: {fileID: 0}
     import: {fileID: 0}
     fill: {fileID: 0}
@@ -315,6 +314,8 @@ MonoBehaviour:
     newTexture: {fileID: 0}
     worldImport: {fileID: 0}
     newItem: {fileID: 2800000, guid: 828387e3304c7904191add38dad558f7, type: 3}
+    website: {fileID: 2800000, guid: 7b7e4425da0ebfd448404f2f1cf8d0b6, type: 3}
+    donate: {fileID: 2800000, guid: d535c068f20dae549ac44f32ee8d4344, type: 3}
     indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
     floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
     newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}
