@@ -55,4 +55,7 @@ Libraries:
     Opus-iOS build script
     Copyright (c) 2014 Chris Ballinger
 
+    Unity Native Gallery Plugin
+    Copyright (c) 2017 Süleyman Yasir KULA
+
     Other sources listed in scripts (see the GitHub repository above)

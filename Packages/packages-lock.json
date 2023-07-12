@@ -28,7 +28,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "62de2dc50ab85e57fafa105909247470155a4ad7"
+      "hash": "1283f87246881d69e1a1ad1fb668f47fb5defe51"
     },
     "com.unity.modules.androidjni": {
       "version": "1.0.0",
@@ -85,6 +85,15 @@
       "dependencies": {
         "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.modules.audio": "1.0.0"
+      }
+    },
+    "com.unity.modules.unitywebrequesttexture": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
       }
     }
   }
