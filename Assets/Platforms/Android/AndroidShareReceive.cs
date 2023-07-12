@@ -11,7 +11,7 @@ public static class AndroidShareReceive
 {
     private static string tempPath = null;
 
-    public static void OpenFileManager()
+    public static bool OpenFileManager()
     {
         using (AndroidJavaObject activity = AndroidShare.GetCurrentActivity())
         using (AndroidJavaClass downloadManagerClass = new AndroidJavaClass("android.app.DownloadManager"))
@@ -19,8 +19,17 @@ public static class AndroidShareReceive
         {
             using (intentObject.Call<AndroidJavaObject>("setAction", downloadManagerClass.GetStatic<string>("ACTION_VIEW_DOWNLOADS")))
             { }
-            activity.Call("startActivity", intentObject);
+            try
+            {
+                activity.Call("startActivity", intentObject);
+            }
+            catch (AndroidJavaException e)
+            {
+                Debug.LogError(e);
+                return false;
+            }
         }
+        return true;
     }
 
     public static bool FileWaitingToImport()

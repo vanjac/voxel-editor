@@ -48,7 +48,8 @@ public static class NativeGalleryWrapper
             }
         }));
 #else
-        ShareMap.OpenFileManager();
+        if (!ShareMap.OpenFileManager())
+            DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "Error opening file manager. Find an audio file and open it with N-Space.");
 #endif
     }
 

@@ -14,15 +14,17 @@ public class ShareMap
 #endif
     }
 
-    public static void OpenFileManager()
+    public static bool OpenFileManager()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        AndroidShareReceive.OpenFileManager();
+        return AndroidShareReceive.OpenFileManager();
 #elif UNITY_IOS && !UNITY_EDITOR
         // Files app
         Application.OpenURL("shareddocuments://");
+        return true;
 #else
         Application.OpenURL("file:///");
+        return true;
 #endif
     }
 
