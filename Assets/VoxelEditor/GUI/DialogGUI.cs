@@ -77,10 +77,10 @@ public class TextInputDialogGUI : GUIPanel
     // TODO not called when touch keyboard not supported
     public CancelHandler cancelHandler;
     public string prompt;
+    public string text = "";
 
     private TouchScreenKeyboard keyboard;
     private bool touchKeyboardSupported;
-    private string text = "";
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
@@ -108,11 +108,16 @@ public class TextInputDialogGUI : GUIPanel
     void Start()
     {
         if (touchKeyboardSupported)
-            keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable,
+        {
+            keyboard = TouchScreenKeyboard.Open(text, TouchScreenKeyboardType.ASCIICapable,
                 false, false, false, false, // autocorrect, multiline, password, alert mode
                 prompt);
+            keyboard.selection = new RangeInt(0, text.Length);
+        }
         else
+        {
             title = prompt;
+        }
     }
 
     public override void WindowGUI()

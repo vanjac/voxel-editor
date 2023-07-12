@@ -122,6 +122,7 @@ public class MenuGUI : GUIPanel
     {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
         inputDialog.prompt = "Enter new world name...";
+        inputDialog.text = "Untitled " + System.DateTime.Now.ToString("yyyy-MM-dd HHmmss");
         inputDialog.handler = (string name) => NewWorld(name, template);
     }
 
@@ -170,6 +171,7 @@ public class MenuGUI : GUIPanel
             new OverflowMenuGUI.MenuItem("Rename", GUIIconSet.instance.rename, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
                 inputDialog.prompt = "Enter new name for " + name;
+                inputDialog.text = name;
                 inputDialog.handler = RenameWorld;
             }),
             new OverflowMenuGUI.MenuItem("Copy", GUIIconSet.instance.copy, () => {
