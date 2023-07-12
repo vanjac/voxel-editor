@@ -1,7 +1,10 @@
+Copyright (c) 2022 J. van't Hoog
+
+If you enjoy N-Space, please consider donating to support development, using the Donate link in the menu.
+
 You can use the other buttons in the menu to access these websites:
 - N-Space subreddit (/r/nspace) for discussion and sharing your creations
 - Video tutorials on YouTube
-- GitHub, including source code and bug reports
 
 If you have any questions, feedback, or suggestions, please send me an email:
     chroma@chroma.zone
