@@ -113,6 +113,7 @@ public static class PropertyGUIs
             {
                 numberKeyboard = TouchScreenKeyboard.Open(sValue,
                     TouchScreenKeyboardType.NumbersAndPunctuation);
+                numberKeyboard.selection = new RangeInt(0, sValue.Length);
                 keyboardHandler = text =>
                 {
                     try
