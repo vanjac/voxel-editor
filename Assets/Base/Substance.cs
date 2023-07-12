@@ -116,7 +116,7 @@ public class SubstanceComponent : DynamicEntityComponent
     public override void Start()
     {
         // a rigidBody is required for collision detection
-        Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>();
+        Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>(); // TODO slow for large number of colliders!
         // no physics by default (could be disabled by a Physics behavior)
         rigidBody.isKinematic = true;
 
