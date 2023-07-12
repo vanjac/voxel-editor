@@ -11,9 +11,9 @@ public static class EntityPreviewManager
 {
     private static Dictionary<Entity, List<GameObject>> entityPreviewObjects = new Dictionary<Entity, List<GameObject>>();
 
-    public static bool IsEditorPreviewBehavior(EntityBehavior behavior)
+    public static bool IsEditorPreviewBehavior(System.Type type)
     {
-        return System.Attribute.GetCustomAttribute(behavior.GetType(), typeof(EditorPreviewBehaviorAttribute)) != null;
+        return System.Attribute.GetCustomAttribute(type, typeof(EditorPreviewBehaviorAttribute)) != null;
     }
 
     public static void AddEntity(Entity entity)
@@ -24,7 +24,7 @@ public static class EntityPreviewManager
         var previewObjects = new List<GameObject>();
         foreach (EntityBehavior behavior in entity.behaviors)
         {
-            if (IsEditorPreviewBehavior(behavior))
+            if (IsEditorPreviewBehavior(behavior.GetType()))
             {
                 if (behavior.targetEntity.entity != null && behavior.targetEntity.entity != entity)
                     continue; // TODO: targeted behaviors not supported
@@ -51,12 +51,13 @@ public static class EntityPreviewManager
         }
     }
 
-    public static void BehaviorUpdated(Entity entity, EntityBehavior behavior)
+    public static void BehaviorUpdated(IEnumerable<Entity> entities, System.Type behaviorType)
     {
-        if (!IsEditorPreviewBehavior(behavior))
-            return;
-        if (entity != null)
-            AddEntity(entity);
+        if (IsEditorPreviewBehavior(behaviorType))
+        {
+            foreach (var entity in entities)
+                AddEntity(entity);
+        }
     }
 
     public static void UpdateEntityPosition(Entity entity)

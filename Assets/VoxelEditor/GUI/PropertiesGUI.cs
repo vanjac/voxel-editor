@@ -411,8 +411,8 @@ public class PropertiesGUI : LeftPanelGUI
                         && !newBehavior.BehaviorObjectType().rule(entity))
                         continue;
                     entity.behaviors.Add(newBehavior);
-                    EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, newBehavior);
                 }
+                EntityPreviewManager.BehaviorUpdated(selectedEntities, behaviorType.type);
                 voxelArray.unsavedChanges = true;
                 UpdateEditEntity();
                 scrollVelocity = new Vector2(0, 2000 * editBehaviors.Count); // scroll to bottom
@@ -437,8 +437,8 @@ public class PropertiesGUI : LeftPanelGUI
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
             PropertiesObjectGUI(storedBehavior, " Behavior",
-                () => EntityPreviewManager.BehaviorUpdated(singleSelectedEntity,
-                    storedBehavior.allBehaviors[0]));
+                () => EntityPreviewManager.BehaviorUpdated(selectedEntities,
+                    storedBehavior.allBehaviors[0].GetType()));
             if (GUILayout.Button("Remove"))
                 behaviorToRemove = storedBehavior;
             GUILayout.EndVertical();
@@ -458,7 +458,7 @@ public class PropertiesGUI : LeftPanelGUI
             }
             voxelArray.unsavedChanges = true;
             UpdateEditEntity();
-            EntityPreviewManager.BehaviorUpdated(singleSelectedEntity, behaviorToRemove.allBehaviors[0]);
+            EntityPreviewManager.BehaviorUpdated(selectedEntities, behaviorToRemove.allBehaviors[0].GetType());
         }
 
         if (mismatchedSelectedBehaviorCounts)
