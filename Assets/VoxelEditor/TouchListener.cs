@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +16,10 @@ public class TouchListener : MonoBehaviour
     private const int NO_XRAY_MASK = Physics.DefaultRaycastLayers & ~(1 << 8); // everything but XRay layer
     private const int NO_TRANSPARENT_MASK = NO_XRAY_MASK & ~(1 << 10); // everything but XRay and TransparentObject
 
+    public enum CameraMode
+    {
+        ORBIT, PAN
+    }
     public enum TouchOperation
     {
         NONE, SELECT, CAMERA, GUI, MOVE
@@ -23,6 +27,7 @@ public class TouchListener : MonoBehaviour
 
     public VoxelArrayEditor voxelArray;
 
+    public CameraMode cameraMode;
     public TouchOperation currentTouchOperation = TouchOperation.NONE;
     public VoxelElement selectType = VoxelElement.FACES;
     public TransformAxis movingAxis;
@@ -231,17 +236,11 @@ public class TouchListener : MonoBehaviour
                     pivot.localScale = new Vector3(MIN_ZOOM, MIN_ZOOM, MIN_ZOOM);
             }
 
-            Vector3 move = (touchZero.deltaPosition + touchOne.deltaPosition) / 2;
-            move *= 300f;
-            move /= cam.pixelHeight;
-            Vector3 pivotRotationEuler = pivot.rotation.eulerAngles;
-            pivotRotationEuler.y += move.x;
-            pivotRotationEuler.x -= move.y;
-            if (pivotRotationEuler.x > 90 && pivotRotationEuler.x < 180)
-                pivotRotationEuler.x = 90;
-            if (pivotRotationEuler.x < -90 || (pivotRotationEuler.x > 180 && pivotRotationEuler.x < 270))
-                pivotRotationEuler.x = -90;
-            pivot.rotation = Quaternion.Euler(pivotRotationEuler);
+            Vector2 move = (touchZero.deltaPosition + touchOne.deltaPosition) / 2;
+            if (cameraMode == CameraMode.ORBIT)
+                Orbit(move);
+            else if (cameraMode == CameraMode.PAN)
+                Pan(move);
         }
         else if (Input.touchCount == 3)
         {
@@ -256,11 +255,34 @@ public class TouchListener : MonoBehaviour
             Vector2 move = Vector2.zero;
             for (int i = 0; i < 3; i++)
                 move += Input.GetTouch(i).deltaPosition;
-            move *= 4.0f;
-            move /= cam.pixelHeight;
-            pivot.position -= move.x * pivot.right * pivot.localScale.z;
-            pivot.position -= move.y * pivot.up * pivot.localScale.z;
+            move /= 3;
+            if (cameraMode == CameraMode.ORBIT)
+                Pan(move); // reverse of 2 touch
+            else if (cameraMode == CameraMode.PAN)
+                Orbit(move);
         }
+    }
+
+    private void Orbit(Vector2 move)
+    {
+        move *= 300f;
+        move /= cam.pixelHeight;
+        Vector3 pivotRotationEuler = pivot.rotation.eulerAngles;
+        pivotRotationEuler.y += move.x;
+        pivotRotationEuler.x -= move.y;
+        if (pivotRotationEuler.x > 90 && pivotRotationEuler.x < 180)
+            pivotRotationEuler.x = 90;
+        if (pivotRotationEuler.x < -90 || (pivotRotationEuler.x > 180 && pivotRotationEuler.x < 270))
+            pivotRotationEuler.x = -90;
+        pivot.rotation = Quaternion.Euler(pivotRotationEuler);
+    }
+
+    private void Pan(Vector2 move)
+    {
+        move *= 12.0f;
+        move /= cam.pixelHeight;
+        pivot.position -= move.x * pivot.right * pivot.localScale.z;
+        pivot.position -= move.y * pivot.up * pivot.localScale.z;
     }
 
     private void UpdateZoomDepth()

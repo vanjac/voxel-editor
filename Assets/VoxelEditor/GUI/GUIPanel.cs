@@ -16,7 +16,7 @@ public abstract class GUIPanel : MonoBehaviour
 
     private static List<GUIPanel> openPanels = new List<GUIPanel>();
 
-    public static GUIPanel leftPanel, topPanel;
+    public static GUIPanel leftPanel, topPanel, bottomPanel;
 
     public string title = "";
     protected bool showCloseButton = false;

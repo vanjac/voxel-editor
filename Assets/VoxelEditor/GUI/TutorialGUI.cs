@@ -190,6 +190,7 @@ public class TutorialGUI : GUIPanel
 
     public void Start()
     {
+        GUIPanel.bottomPanel = this;
         SetPage(pageI);
     }
 
