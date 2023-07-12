@@ -12,7 +12,8 @@ public static class Tutorials
         () => new SimpleTutorialPage(
             "Right now you're looking at the interior of a room. Two walls are hidden so you can see inside. "
             + "The player is standing in the center."),
-        () => new TutorialIntroNavigation(),
+        () => new TutorialIntroOrbit(),
+        () => new TutorialIntroPan(),
         () => new TutorialIntroSelectFace(),
         () => new TutorialIntroPull(),
         () => new TutorialIntroPush(),
@@ -229,16 +230,15 @@ public static class Tutorials
             + "Then play the game and push them all into the pit.</i> Enjoy."),
     };
 
-    private class TutorialIntroNavigation : TutorialPage
+    private class TutorialIntroOrbit : TutorialPage
     {
         private Quaternion startRotation;
-        private Vector3 startPan;
-        private bool rotate, pan;
+        bool rotated;
         private float startTime;
 
         public override string GetText()
         {
-            return "Navigation: Use two fingers to rotate and zoom, and three fingers to pan. "
+            return "Navigation: Use two fingers to rotate, and pinch to zoom. "
                 + "<i>Try looking around the room.</i> (tutorial will advance when you have completed this)";
         }
 
@@ -246,32 +246,53 @@ public static class Tutorials
             TouchListener touchListener)
         {
             startRotation = touchListener.pivot.rotation;
-            startPan = touchListener.pivot.position;
             startTime = Time.time;
         }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
         {
-            if (!rotate)
+            if (!rotated)
             {
                 var currentRotation = touchListener.pivot.rotation;
                 if (Quaternion.Angle(currentRotation, startRotation) > 60)
                 {
                     Debug.Log("Rotate complete");
-                    rotate = true;
+                    rotated = true;
                 }
             }
-            if (!pan)
-            {
-                var currentPan = touchListener.pivot.position;
-                if ((currentPan - startPan).magnitude > 4)
-                {
-                    Debug.Log("Pan complete");
-                    pan = true;
-                }
-            }
-            if (rotate && pan && Time.time - startTime > 4)
+            if (rotated && Time.time - startTime > 3)
+                return TutorialAction.NEXT;
+            else
+                return TutorialAction.NONE;
+        }
+    }
+
+    private class TutorialIntroPan : TutorialPage
+    {
+        private Vector3 startPan;
+        public override string GetText()
+        {
+            return "<i>Use three fingers to pan.</i> "
+                + "(If this doesn't work on your phone, try tapping the button in the bottom right to toggle pan/rotate mode.)";
+        }
+
+        public override string GetHighlightID()
+        {
+            return "pan";
+        }
+
+        public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+            TouchListener touchListener)
+        {
+            startPan = touchListener.pivot.position;
+        }
+
+        public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
+            TouchListener touchListener)
+        {
+            var currentPan = touchListener.pivot.position;
+            if ((currentPan - startPan).magnitude > 4)
                 return TutorialAction.NEXT;
             else
                 return TutorialAction.NONE;

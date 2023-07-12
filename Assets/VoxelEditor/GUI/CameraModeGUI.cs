@@ -34,11 +34,13 @@ public class CameraModeGUI : GUIPanel
         GUI.backgroundColor *= new Color(1, 1, 1, 0.5f);
         var icon = (touchListener.cameraMode == TouchListener.CameraMode.PAN) ?
             GUIIconSet.instance.pan : GUIIconSet.instance.orbit;
+        TutorialGUI.TutorialHighlight("pan");
         if (GUILayout.Button(icon, GUIStyleSet.instance.buttonLarge))
         {
             touchListener.cameraMode = (touchListener.cameraMode == TouchListener.CameraMode.PAN) ?
                 TouchListener.CameraMode.ORBIT : TouchListener.CameraMode.PAN;
         }
+        TutorialGUI.ClearHighlight();
         GUI.backgroundColor = baseColor;
     }
 }
