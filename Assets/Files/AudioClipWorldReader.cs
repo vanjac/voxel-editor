@@ -26,8 +26,12 @@ public class AudioClipWorldReader : WorldFileReader
         Debug.Log("Loading audio from " + path);
 
         // TODO file type
-        UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://"
-            + System.Uri.EscapeUriString(path), audioType);
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        var uri = "file://" + path;
+#else
+        var uri = "file://" + System.Uri.EscapeUriString(path);
+#endif
+        UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(uri, audioType);
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         var asyncOp = www.SendWebRequest();
