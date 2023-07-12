@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Linq;
 
 public static class WorldFiles
 {
@@ -46,26 +47,27 @@ public static class WorldFiles
 
     public static void ListWorlds(List<string> worldPaths, List<string> worldNames)
     {
-        string[] files = Directory.GetFiles(WorldFiles.GetWorldsDirectory());
         worldPaths.Clear();
-        foreach (string path in files)
+        worldNames.Clear();
+        var directory = new DirectoryInfo(WorldFiles.GetWorldsDirectory());
+        var files = directory.GetFiles().OrderByDescending(f => f.LastWriteTime);
+        foreach (var fi in files)
         {
-            string name = Path.GetFileNameWithoutExtension(path);
-            if (WorldFiles.IsWorldFile(path) && name != BACKUP_NAME && name != TEMP_NAME)
-                worldPaths.Add(path);
-            else if (WorldFiles.IsOldWorldFile(path))
+            string name = Path.GetFileNameWithoutExtension(fi.Name);
+            if (WorldFiles.IsWorldFile(fi.FullName) && name != BACKUP_NAME && name != TEMP_NAME)
+            {
+                worldPaths.Add(fi.FullName);
+                worldNames.Add(name);
+            }
+            else if (WorldFiles.IsOldWorldFile(fi.FullName))
             {
                 string newPath = WorldFiles.GetNewWorldPath(name);
-                Debug.Log("Updating " + path + " to " + newPath);
-                File.Move(path, newPath);
+                Debug.Log("Updating " + fi.FullName + " to " + newPath);
+                File.Move(fi.FullName, newPath);
                 worldPaths.Add(newPath);
+                worldNames.Add(name);
             }
         }
-        worldPaths.Sort();
-
-        worldNames.Clear();
-        foreach (string path in worldPaths)
-            worldNames.Add(Path.GetFileNameWithoutExtension(path));
     }
 
     public static bool ValidateName(string name, out string errorMessage)
