@@ -270,6 +270,7 @@ MonoBehaviour:
   - {fileID: 878046148}
   - {fileID: 878046150}
   - {fileID: 1179125982}
+  - {fileID: 878046153}
   - {fileID: 878046154}
   voxelArray: {fileID: 213926859}
   cameraPivot: {fileID: 661348387}
@@ -565,6 +566,7 @@ GameObject:
   - component: {fileID: 878046151}
   - component: {fileID: 878046148}
   - component: {fileID: 878046150}
+  - component: {fileID: 878046153}
   - component: {fileID: 878046154}
   - component: {fileID: 878046152}
   m_Layer: 0
@@ -670,6 +672,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineMaterial: {fileID: 2100000, guid: 2558a126d923bbd4c9f2dfc7bbd99124, type: 2}
+--- !u!114 &878046153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878046147}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1369c9bec7fae974681848d1194a6399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 
+  scroll: {x: 0, y: 0}
+  scrollVelocity: {x: 0, y: 0}
+  panelRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  touchListener: {fileID: 1179125982}
 --- !u!114 &878046154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,7 +765,6 @@ MonoBehaviour:
     playAudio: {fileID: 2800000, guid: 553f1c882f4dc401286a240925b9bc2f, type: 3}
     reddit: {fileID: 0}
     youTube: {fileID: 0}
-    gitHub: {fileID: 0}
     undo: {fileID: 2800000, guid: 3ca559fa1674c439f95e6569092d453e, type: 3}
     import: {fileID: 2800000, guid: 10566212bae5b46968b736b518c502eb, type: 3}
     fill: {fileID: 2800000, guid: 89445942d3294e84caeb98591980d3a7, type: 3}
@@ -752,6 +775,10 @@ MonoBehaviour:
     newTexture: {fileID: 2800000, guid: 71c2ad987d352b14db16de1a32f9be32, type: 3}
     worldImport: {fileID: 2800000, guid: 603a037b5c4ce2947bffab8fbac2db34, type: 3}
     newItem: {fileID: 0}
+    website: {fileID: 0}
+    donate: {fileID: 0}
+    pan: {fileID: 2800000, guid: aa4f4785f280c85489192cbe7f18b491, type: 3}
+    orbit: {fileID: 2800000, guid: ff7e857d4a19a16469926a96501dc0e4, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}
@@ -1217,6 +1244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voxelArray: {fileID: 213926859}
+  cameraMode: 0
   currentTouchOperation: 0
   selectType: 0
   movingAxis: {fileID: 0}
