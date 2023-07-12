@@ -1,8 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public enum VoxelElement
 {
@@ -37,31 +40,48 @@ public class TouchListener : MonoBehaviour
     private Voxel lastHitVoxel;
     private int lastHitElementI;
     private bool selectingXRay = true;
+    private Vector2 lastMousePos;
 
     void Start()
     {
         pivot = transform.parent;
         cam = GetComponent<Camera>();
+        lastMousePos = Input.mousePosition;
     }
 
     void Update()
     {
-        if (Input.touchCount == 0)
+        bool touchSupported;
+#if UNITY_EDITOR
+        touchSupported = UnityEditor.EditorApplication.isRemoteConnected;
+#else
+        touchSupported = Input.touchSupported;
+#endif
+
+        if (Input.touchCount == 1 || (!touchSupported && Input.GetMouseButton(0)))
         {
-            if (currentTouchOperation == TouchOperation.SELECT)
-                voxelArray.TouchUp();
-            if (currentTouchOperation == TouchOperation.MOVE)
-                movingAxis.TouchUp();
-            currentTouchOperation = TouchOperation.NONE;
-        }
-        else if (Input.touchCount == 1)
-        {
-            Touch touch = Input.GetTouch(0);
+            Touch touch;
+            if (touchSupported)
+            {
+                touch = Input.GetTouch(0);
+            }
+            else
+            {
+                touch = new Touch();
+                touch.position = Input.mousePosition;
+                touch.deltaPosition = touch.position - lastMousePos;
+                touch.phase = TouchPhase.Moved;
+                if (Input.GetMouseButtonDown(0))
+                    touch.phase = TouchPhase.Began;
+                if (Input.GetMouseButtonUp(0))
+                    touch.phase = TouchPhase.Ended;
+                touch.tapCount = 1;
+            }
 
             RaycastHit hit;
             if (currentTouchOperation != TouchOperation.SELECT)
                 selectingXRay = true;
-            bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
+            bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(touch.position),
                 out hit, Mathf.Infinity, selectingXRay ? Physics.DefaultRaycastLayers : NO_XRAY_MASK);
             Voxel hitVoxel = null;
             int hitElementI = -1;
@@ -100,7 +120,7 @@ public class TouchListener : MonoBehaviour
                 {
                     // allow moving axes through xray substances
                     RaycastHit newHit;
-                    if (Physics.Raycast(cam.ScreenPointToRay(Input.GetTouch(0).position),
+                    if (Physics.Raycast(cam.ScreenPointToRay(touch.position),
                         out newHit, Mathf.Infinity, NO_TRANSPARENT_MASK))
                     {
                         if (newHit.transform.tag == "MoveAxis")
@@ -261,6 +281,15 @@ public class TouchListener : MonoBehaviour
             else if (cameraMode == CameraMode.PAN)
                 Orbit(move);
         }
+        else // no touch / more than 3
+        {
+            if (currentTouchOperation == TouchOperation.SELECT)
+                voxelArray.TouchUp();
+            if (currentTouchOperation == TouchOperation.MOVE)
+                movingAxis.TouchUp();
+            currentTouchOperation = TouchOperation.NONE;
+        }
+        lastMousePos = Input.mousePosition;
     }
 
     private void Orbit(Vector2 move)
