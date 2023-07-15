@@ -74,7 +74,9 @@ public class LightComponent : BehaviorComponent
 
     public override void Start()
     {
-        lightComponent = gameObject.AddComponent<Light>();
+        var lightObj = new GameObject(); // only one Light allowed per GameObject
+        lightObj.transform.SetParent(transform, false);
+        lightComponent = lightObj.AddComponent<Light>();
         lightComponent.range = size;
         lightComponent.intensity = intensity;
         lightComponent.color = color;
