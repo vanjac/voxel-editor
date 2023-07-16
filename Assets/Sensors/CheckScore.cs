@@ -5,7 +5,7 @@ using UnityEngine;
 public class CheckScoreSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Check Score", "Active when the score is at or above/below a threshold",
+        "Check Score", "Active when score is at or above/below a threshold",
         "code-greater-than-or-equal", typeof(CheckScoreSensor));
     
     public enum AboveOrBelow

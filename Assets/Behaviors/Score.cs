@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScoreBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Score", "Add or subtract from the player's score",
+        "Score", "Add or subtract from player's score",
         "counter", typeof(ScoreBehavior));
     
     private int amount = 10;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PulseSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Pulse", "Turns on and off continuously",
+        "Pulse", "Turn on and off continuously",
         "<b>Input</b> is optional. When connected, it controls whether the pulse is active. "
         + "When the Input turns off, the pulse completes a full cycle then stops.",
         "pulse", typeof(PulseSensor));

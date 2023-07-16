@@ -6,7 +6,8 @@ using UnityEngine;
 public class HaloBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Halo", "A glowing effect", "blur", typeof(HaloBehavior));
+        "Halo", "Glowing effect",
+        "Halo appears at the Pivot point of substances", "blur", typeof(HaloBehavior));
 
     private float size = 3;
     private Color color = Color.white;  // scaled by INTENSITY

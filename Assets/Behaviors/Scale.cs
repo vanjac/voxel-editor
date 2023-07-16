@@ -5,7 +5,9 @@ using UnityEngine;
 public class ScaleBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Scale", "Change size",
+        "Scale", "Change size along each axis",
+        "Substances are scaled around their <b>Pivot</b> point."
+        + " For physics objects, mass will <i>not</i> change.",
         "resize", typeof(ScaleBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),

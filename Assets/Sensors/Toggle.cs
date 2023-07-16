@@ -5,7 +5,7 @@ using UnityEngine;
 public class ToggleSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Toggle", "One input switches it on, one input switches it off",
+        "Toggle", "One input to turn on, one input to turn off, otherwise hold",
         "If both inputs turn on simultaneously, the sensor toggles between on/off.\n\n"
         + "Activators: the activators of the <b>On input</b>, frozen when it is first turned on",
         "toggle-switch", typeof(ToggleSensor));

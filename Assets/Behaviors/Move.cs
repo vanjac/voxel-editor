@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Move", "Move in a direction or toward an object",
+        "Move", "Move in a direction or toward object",
         "When used with Solid and Physics behaviors, object will not be able to pass through other objects.\n"
         + "When used with Solid and Character behaviors, object will additionally be affected by gravity.\n"
         + "Increase the <b>Density</b> of the Physics/Character behavior to increase the object's pushing strength.",

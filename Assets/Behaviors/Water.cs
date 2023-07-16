@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaterBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Water", "Simulates buoyancy for player and physics objects",
+        "Water", "Simulate buoyancy physics",
         "Water should not be Solid and should not have Physics. This behavior controls only the physics of water, not appearance.",
         "water", typeof(WaterBehavior), BehaviorType.BaseTypeRule(typeof(Substance)));
 

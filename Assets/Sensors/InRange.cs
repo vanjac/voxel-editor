@@ -5,7 +5,7 @@ using UnityEngine;
 public class InRangeSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "In Range", "Detect objects within a certain distance",
+        "In Range", "Detect objects within some distance",
         "Activators: all objects in range",
         "radar", typeof(InRangeSensor));
 

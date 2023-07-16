@@ -5,7 +5,7 @@ using UnityEngine;
 public class PhysicsBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Physics", "Move and interact according to the laws of physics",
+        "Physics", "Move according to laws of physics",
         "<b>Density</b> affects the mass of the object, proportional to its volume.",
         "soccer", typeof(PhysicsBehavior),
         BehaviorType.AndRule(

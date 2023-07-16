@@ -5,7 +5,7 @@ using UnityEngine;
 public class SolidBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Solid", "Blocks and collides with other objects",
+        "Solid", "Block and collide with other objects",
         "wall", typeof(SolidBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),

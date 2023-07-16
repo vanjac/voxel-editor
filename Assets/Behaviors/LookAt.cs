@@ -5,11 +5,12 @@ using UnityEngine;
 public class LookAtBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Look At", "Point in a direction or towards an object",
+        "Look At", "Point in a direction or towards object",
         "•  <b>Speed</b> is the maximum angular velocity in degrees per second.\n"
         + "•  <b>Front</b> is the side of the object which will be pointed towards the target.\n"
         + "•  <b>Yaw</b> enables left-right rotation.\n"
-        + "•  <b>Pitch</b> enables up-down rotation. Both can be used at once.",
+        + "•  <b>Pitch</b> enables up-down rotation. Both can be used at once.\n"
+        + "Substances will rotate around their <b>Pivot</b> point.",
         "compass", typeof(LookAtBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 

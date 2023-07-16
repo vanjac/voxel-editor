@@ -5,7 +5,7 @@ using UnityEngine;
 public class TouchSensor : ActivatedSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Touch", "Active when touching or intersecting another object",
+        "Touch", "Active when touching another object",
         "•  <b>Filter:</b> The object or types of object which activate the sensor.\n"
         + "•  <b>Min velocity:</b> Object must enter with this relative velocity to activate.\n"
         + "•  <b>Direction:</b> Object must enter in this direction to activate.\n\n"

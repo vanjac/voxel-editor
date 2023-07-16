@@ -6,7 +6,8 @@ using UnityEngine;
 public class LightBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Light", "A light source at the center of the object",
+        "Light", "Light source at the center of object",
+        "Light originates from the Pivot point of substances",
         "lightbulb-on", typeof(LightBehavior));
 
     private float size = 10, intensity = 1;

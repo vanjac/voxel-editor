@@ -5,7 +5,7 @@ using UnityEngine;
 public class HurtHealBehavior : EntityBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Hurt/Heal", "Lose or gain health; below zero health, object will die",
+        "Hurt/Heal", "Lose/gain health; below 0, object dies",
         "•  <b>Amount</b>: Change in health. Positive heals, negative hurts.\n"
         + "•  <b>Rate</b>: Seconds between successive hurt/heals. 0 means health will only change once when behavior is activated.\n"
         + "•  <b>Keep within</b>: Health will only change if it's within this range, and will never go outside this range.",

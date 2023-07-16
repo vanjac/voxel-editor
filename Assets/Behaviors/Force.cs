@@ -10,7 +10,7 @@ public class ForceBehavior : EntityBehavior
     }
 
     public static new BehaviorType objectType = new BehaviorType(
-        "Force", "An instant or continuous force toward a target",
+        "Force", "Apply instant or continuous force",
         "Only works for objects with a Physics behavior.\n\n"
         + "•  <b>Impulse</b> mode will cause an instant impulse to be applied when the behavior activates.\n"
         + "•  <b>Continuous</b> mode will cause the force to be continuously applied while the behavior is active.\n"

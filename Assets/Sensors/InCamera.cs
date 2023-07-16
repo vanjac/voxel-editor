@@ -5,7 +5,7 @@ using UnityEngine;
 public class InCameraSensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "In Camera", "Active when the player is looking toward the object",
+        "In Camera", "Active when player looking at object",
         "Turns on as long as the player is looking in the direction of the object, even if it is obscured. "
         + "Does not turn on if object doesn't have Visible behavior.\n\n"
         + "Activator: the player",

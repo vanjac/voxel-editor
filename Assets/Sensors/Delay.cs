@@ -5,7 +5,7 @@ using UnityEngine;
 public class DelaySensor : Sensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Delay", "Adds a delay to an input turning on or off",
+        "Delay", "Add delay to input turning on or off",
         "If the <b>Input</b> has been on for longer than the <b>On time</b>, sensor will turn on. "
         + "If the Input has been off for longer than the <b>Off time</b>, sensor will turn off. "
         + "If the Input cycles on/off faster than the on/off time, nothing happens.\n\n"
