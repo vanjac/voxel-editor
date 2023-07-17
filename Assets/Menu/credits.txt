@@ -1,4 +1,4 @@
-Copyright (c) 2022 J. van't Hoog
+Copyright (c) 2023 J. van't Hoog
 
 If you enjoy N-Space, please consider donating to support development, using the Donate link in the menu.
 
