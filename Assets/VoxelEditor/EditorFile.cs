@@ -74,6 +74,7 @@ public class EditorFile : MonoBehaviour
                     + "•  Lights are visible in the editor, even when not selected\n"
                     + "•  Objects can be placed inside walls or outside bounds\n"
                     + "•  Fixed lag caused by larger substances\n"
+                    + "•  Button in the bottom right toggles pan/orbit with two fingers\n"
                     + "... and some more improvements / fixes!");
             }
         }
