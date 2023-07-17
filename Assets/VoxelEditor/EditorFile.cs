@@ -65,28 +65,16 @@ public class EditorFile : MonoBehaviour
             string lastVersion = PlayerPrefs.GetString("last_editScene_version");
             if (lastVersion.EndsWith("b"))
                 lastVersion = lastVersion.Substring(0, lastVersion.Length - 1);
-            if (CompareVersions(lastVersion, "1.3.3") == -1)
+            if (CompareVersions(lastVersion, "1.3.5") == -1)
             {
-                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!\n\n"
-                    + "•  You can now import custom textures from your photos library, "
-                    + "and change the color of any built-in material or overlay.\n"
-                    + "•  Two new behaviors have been added: <b>Character</b> and <b>Look At</b>.\n"
-                    + "•  Move behavior now has an option for \"local\" coordinates, or for choosing a random direction.\n"
-                    + "... and much more! Check out the new Demo Worlds (Character AI, Hovercraft, and Shapes) for examples.");
-            }
-            else if (CompareVersions(lastVersion, "1.3.0") == -1)
-            {
-                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "<b>Version 1.3.0 update</b>\n\n"
-                    + "N-Space has been updated with a new behavior for sound effects and music. Try it out!\n\n"
-                    + "Also, check the main menu for links to video tutorials and a subreddit.");
-            }
-            else if (CompareVersions(lastVersion, "1.3.2") == -1)
-            {
-                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!\n\n"
-                    + "3 new behaviors: Carryable, 3D Sound, and Score\n"
-                    + "2 new sensors: Random Pulse, and Check Score\n"
-                    + "There are now built-in sound effects for walking on different surfaces\n\n"
-                    + "... and many more improvements!");
+                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!"
+                    + " Check out the <b>Doors</b> Demo World in the help menu to see the new features.\n\n"
+                    + "•  New <b>Scale</b> behavior to change size of objects/substances\n"
+                    + "•  You can change the <b>Pivot</b> point of substances for rotaion/scaling\n"
+                    + "•  Lights are visible in the editor, even when not selected\n"
+                    + "•  Objects can be placed inside walls or outside bounds\n"
+                    + "•  Fixed lag caused by larger substances\n"
+                    + "... and some more improvements / fixes!");
             }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
