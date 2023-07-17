@@ -5,7 +5,8 @@ using UnityEngine;
 public class BallObject : ObjectEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Ball", "A sphere which can be painted", "circle-outline", typeof(BallObject));
+        "Ball", "A sphere which can be painted",
+        "Use the Paint button to change color/material", "circle-outline", typeof(BallObject));
 
     public BallObject()
     {
