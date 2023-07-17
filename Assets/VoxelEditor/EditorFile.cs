@@ -70,7 +70,7 @@ public class EditorFile : MonoBehaviour
                 LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!"
                     + " Check out the <b>Doors</b> Demo World in the help menu to see the new features.\n\n"
                     + "•  New <b>Scale</b> behavior to change size of objects/substances\n"
-                    + "•  You can change the <b>Pivot</b> point of substances for rotaion/scaling\n"
+                    + "•  You can change the <b>Pivot</b> point of substances for rotation/scaling\n"
                     + "•  Lights are visible in the editor, even when not selected\n"
                     + "•  Objects can be placed inside walls or outside bounds\n"
                     + "•  Fixed lag caused by larger substances\n"
