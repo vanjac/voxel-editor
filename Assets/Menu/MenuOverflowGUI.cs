@@ -65,7 +65,7 @@ public class MenuOverflowGUI : GUIPanel
                 }),
                 new OverflowMenuGUI.MenuItem("Donate", GUIIconSet.instance.donate, () =>
                 {
-                    Application.OpenURL("https://ko-fi.com/chroma_zone");
+                    Application.OpenURL("https://chroma.zone/donate");
                 })
             };
         }
