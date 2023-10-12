@@ -5,7 +5,7 @@
 A mobile app for building 3D interactive worlds. This is a work in progress.
 
 - [Google Play](https://play.google.com/store/apps/details?id=com.vantjac.voxel)
-- [iOS App Store](https://itunes.apple.com/us/app/n-space/id1448016814) (currently unavailable due to development costs)
+- [iOS App Store](https://apps.apple.com/us/app/n-space/id1448016814)
 - [Video tutorials](https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2)
 - **[Donate](https://chroma.zone/donate)** to support development
 
