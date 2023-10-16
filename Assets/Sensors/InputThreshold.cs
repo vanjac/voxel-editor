@@ -28,8 +28,8 @@ public class InputThresholdSensor : Sensor
         }
     }
 
-    private int threshold = 1;
-    private Input[] inputs = new Input[0];
+    public int threshold = 1;
+    public Input[] inputs = new Input[0];
 
     public override PropertiesObjectType ObjectType()
     {
@@ -51,11 +51,10 @@ public class InputThresholdSensor : Sensor
         }, base.Properties());
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         InputThresholdComponent component = gameObject.AddComponent<InputThresholdComponent>();
-        component.inputs = inputs;
-        component.threshold = threshold;
+        component.Init(this);
         return component;
     }
 
@@ -127,17 +126,15 @@ public class InputThresholdSensor : Sensor
     }
 }
 
-public class InputThresholdComponent : SensorComponent
+public class InputThresholdComponent : SensorComponent<InputThresholdSensor>
 {
-    public InputThresholdSensor.Input[] inputs;
-    public float threshold;
     private Dictionary<EntityComponent, int> activatorCounts = new Dictionary<EntityComponent, int>();
     private bool wasOn = false;
 
     void Update()
     {
         int energy = CalculateEnergy();
-        bool isOn = energy >= threshold;
+        bool isOn = energy >= sensor.threshold;
 
         if (isOn && !wasOn)
         {
@@ -151,7 +148,7 @@ public class InputThresholdComponent : SensorComponent
         }
         wasOn = isOn;
 
-        foreach (var input in inputs)
+        foreach (var input in sensor.inputs)
         {
             EntityComponent e = input.entityRef.component;
             if (e == null)
@@ -216,7 +213,7 @@ public class InputThresholdComponent : SensorComponent
     private int CalculateEnergy()
     {
         int energy = 0;
-        foreach (var input in inputs)
+        foreach (var input in sensor.inputs)
         {
             EntityComponent e = input.entityRef.component;
             if (e != null && e.IsOn())

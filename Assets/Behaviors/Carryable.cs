@@ -14,8 +14,8 @@ public class CarryableBehavior : EntityBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
     
-    private float throwSpeed = 0;
-    private float throwAngle = 25;
+    public float throwSpeed = 0;
+    public float throwAngle = 25;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -40,14 +40,13 @@ public class CarryableBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<CarryableComponent>();
-        component.throwSpeed = throwSpeed;
-        component.throwAngle = throwAngle;
+        component.Init(this);
         return component;
     }
 }
 
 
-public class CarryableComponent : BehaviorComponent
+public class CarryableComponent : BehaviorComponent<CarryableBehavior>
 {
     // measured from player feet to point on object closest to player feet
     private static readonly Vector3 CARRY_VECTOR = new Vector3(0, 0.1f, 0.85f);
@@ -55,7 +54,6 @@ public class CarryableComponent : BehaviorComponent
     private const float BREAK_FORCE = 40f;
     private const float PICK_UP_TIME = 0.25f;
 
-    public float throwSpeed, throwAngle;
     private FixedJoint joint;
     private Rigidbody rb;
 
@@ -82,12 +80,12 @@ public class CarryableComponent : BehaviorComponent
     public void Throw(EntityComponent player)
     {
         Drop();
-        if (throwSpeed != 0 && rb != null)
+        if (behavior.throwSpeed != 0 && rb != null)
         {
-            float degrees = throwAngle * Mathf.Deg2Rad;
+            float degrees = behavior.throwAngle * Mathf.Deg2Rad;
             Vector3 throwNormal = player.transform.forward * Mathf.Cos(degrees)
                 + Vector3.up * Mathf.Sin(degrees);
-            rb.AddForce(throwNormal * throwSpeed, ForceMode.VelocityChange);
+            rb.AddForce(throwNormal * behavior.throwSpeed, ForceMode.VelocityChange);
         }
     }
 

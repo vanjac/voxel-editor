@@ -9,8 +9,8 @@ public class HaloBehavior : EntityBehavior
         "Halo", "Glowing effect",
         "Halo appears at the Pivot point of substances", "blur", typeof(HaloBehavior));
 
-    private float size = 3;
-    private Color color = Color.white;  // scaled by INTENSITY
+    public float size = 3;
+    public Color color = Color.white;  // scaled by INTENSITY
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -35,17 +35,14 @@ public class HaloBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<HaloComponent>();
-        component.size = size;
-        component.color = color;
+        component.Init(this);
         return component;
     }
 }
 
-public class HaloComponent : BehaviorComponent
+public class HaloComponent : BehaviorComponent<HaloBehavior>
 {
     public const float INTENSITY = 1.4f;  // doesn't get any brighter past this
-    public float size;
-    public Color color;
 
     private Light lightComponent;
 
@@ -55,8 +52,8 @@ public class HaloComponent : BehaviorComponent
         var lightObj = Instantiate(Resources.Load<GameObject>("LightHaloPrefab"));
         lightObj.transform.SetParent(transform, false);
         lightComponent = lightObj.GetComponent<Light>();
-        lightComponent.range = size;
-        lightComponent.color = color;
+        lightComponent.range = behavior.size;
+        lightComponent.color = behavior.color;
         lightComponent.intensity = INTENSITY;
         lightComponent.enabled = false;
 

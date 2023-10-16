@@ -7,7 +7,14 @@ public enum PlayMode
     ONCE, _1SHOT, LOOP, BKGND
 }
 
-public class SoundBehavior : EntityBehavior
+public abstract class BaseSoundBehavior : EntityBehavior
+{
+    public EmbeddedData soundData = new EmbeddedData();
+    public float volume = 50.0f, fadeIn = 0, fadeOut = 0;
+    public PlayMode playMode = PlayMode.ONCE;
+}
+
+public class SoundBehavior : BaseSoundBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Sound", "Play a sound",
@@ -16,10 +23,6 @@ public class SoundBehavior : EntityBehavior
         + "•  In <b>Background</b> mode the sound is always playing, but muted when the behavior is inactive.\n\n"
         + "Supported formats: MP3, WAV, OGG, AIF, XM, IT",
         "volume-high", typeof(SoundBehavior));
-
-    private EmbeddedData soundData = new EmbeddedData();
-    private float volume = 50.0f, fadeIn = 0, fadeOut = 0;
-    private PlayMode playMode = PlayMode.ONCE;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -56,13 +59,7 @@ public class SoundBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<SoundComponent>();
-        component.soundData = soundData;
-        component.playMode = playMode;
-        component.volume = volume / 100.0f;
-        component.fadeIn = fadeIn;
-        component.fadeOut = fadeOut;
-        component.spatial = false;
-        component.Init();
+        component.Init(this);
         return component;
     }
 }
@@ -90,57 +87,56 @@ public class SoundPlayer : AudioPlayer
     }
 }
 
-public class SoundComponent : BehaviorComponent
+public class SoundComponent : BehaviorComponent<BaseSoundBehavior>
 {
-    public EmbeddedData soundData;
-    public float volume, fadeIn, fadeOut, minDistance, maxDistance;
-    public bool spatial;
-    public PlayMode playMode;
-    public SpatialSoundMode spatialMode;
-
     private AudioSource audioSource;
     private bool fadingIn, fadingOut;
 
-    public void Init()
+    public override void Init(BaseSoundBehavior behavior)
     {
+        base.Init(behavior);
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.volume = 0;
-        audioSource.loop = playMode == PlayMode.LOOP || playMode == PlayMode.BKGND;
-        audioSource.spatialBlend = spatial ? 1.0f : 0.0f;
-        if (spatial)
+        audioSource.loop = behavior.playMode == PlayMode.LOOP || behavior.playMode == PlayMode.BKGND;
+        if (behavior is Sound3DBehavior behavior3d)
         {
-            audioSource.minDistance = minDistance;
-            audioSource.spread = spatialMode == SpatialSoundMode.AMBIENT ? 180 : 0;
+            audioSource.spatialBlend = 1.0f;
+            audioSource.minDistance = behavior3d.distanceRange.Item1;
+            audioSource.spread = behavior3d.spatialMode == SpatialSoundMode.AMBIENT ? 180 : 0;
+        }
+        else
+        {
+            audioSource.spatialBlend = 0.0f;
         }
         audioSource.playOnAwake = false;
 
-        if (soundData.bytes.Length == 0)
+        if (behavior.soundData.bytes.Length == 0)
             return;
-        audioSource.clip = AudioCompression.Decompress(soundData.bytes, this);
+        audioSource.clip = AudioCompression.Decompress(behavior.soundData.bytes, this);
 
-        if (playMode != PlayMode._1SHOT)
+        if (behavior.playMode != PlayMode._1SHOT)
             StartCoroutine(VolumeUpdateCoroutine());
     }
 
     public override void BehaviorEnabled()
     {
-        if (playMode == PlayMode._1SHOT)
+        if (behavior.playMode == PlayMode._1SHOT)
         {
-            audioSource.volume = volume;
+            audioSource.volume = behavior.volume / 100.0f;
             audioSource.PlayOneShot(audioSource.clip);
         }
         else
         {
-            if (playMode != PlayMode.BKGND)
+            if (behavior.playMode != PlayMode.BKGND)
             {
-                if (fadeIn == 0)
-                    audioSource.volume = volume;
+                if (behavior.fadeIn == 0)
+                    audioSource.volume = behavior.volume / 100.0f;
                 else
                     audioSource.volume = 0;
             }
             fadingIn = true;
             fadingOut = false;
-            if (playMode != PlayMode.BKGND)
+            if (behavior.playMode != PlayMode.BKGND)
                 audioSource.Play();
         }
     }
@@ -155,23 +151,25 @@ public class SoundComponent : BehaviorComponent
     {
         yield return null; // wait a frame to allow world to finish loading
 
-        if (playMode == PlayMode.BKGND)
+        if (behavior.playMode == PlayMode.BKGND)
             audioSource.Play();
 
+        float volume = behavior.volume / 100.0f;
         Transform listener = GameObject.FindObjectOfType<AudioListener>().transform;
         while (true)
         {
-            if (spatial && listener != null)
+            if ((behavior is Sound3DBehavior behavior3d) && listener != null)
             {
                 float sqrDist = (this.transform.position - listener.position).sqrMagnitude;
-                audioSource.mute = sqrDist > (maxDistance * maxDistance);
+                float maxDist = behavior3d.distanceRange.Item2;
+                audioSource.mute = sqrDist > (maxDist * maxDist);
             }
             if (fadingIn)
             {
-                if (fadeIn == 0)
+                if (behavior.fadeIn == 0)
                     audioSource.volume = volume;
                 else
-                    audioSource.volume += volume / fadeIn * Time.unscaledDeltaTime;
+                    audioSource.volume += volume / behavior.fadeIn * Time.unscaledDeltaTime;
                 if (audioSource.volume >= volume)
                 {
                     audioSource.volume = volume;
@@ -180,15 +178,15 @@ public class SoundComponent : BehaviorComponent
             }
             else if (fadingOut)
             {
-                if (fadeOut == 0)
+                if (behavior.fadeOut == 0)
                     audioSource.volume = 0;
                 else
-                    audioSource.volume -= volume / fadeOut * Time.unscaledDeltaTime;
+                    audioSource.volume -= volume / behavior.fadeOut * Time.unscaledDeltaTime;
                 if (audioSource.volume <= 0)
                 {
                     audioSource.volume = 0;
                     fadingOut = false;
-                    if (playMode != PlayMode.BKGND)
+                    if (behavior.playMode != PlayMode.BKGND)
                         audioSource.Stop();
                 }
             }

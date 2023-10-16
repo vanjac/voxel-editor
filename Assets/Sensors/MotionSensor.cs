@@ -10,9 +10,9 @@ public class MotionSensor : Sensor
         + "and rotating about any axis faster than the <b>Minimum angular velocity</b> (degrees per second).",
         "speedometer", typeof(MotionSensor));
 
-    private float minVelocity = 1;
-    private float minAngularVelocity = 0;
-    private Target direction = new Target(null);
+    public float minVelocity = 1;
+    public float minAngularVelocity = 0;
+    public Target direction = new Target(null);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -38,29 +38,24 @@ public class MotionSensor : Sensor
         }, base.Properties());
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         var motion = gameObject.AddComponent<MotionSensorComponent>();
-        motion.minVelocity = minVelocity;
-        motion.minAngularVelocity = minAngularVelocity;
-        motion.direction = direction;
+        motion.Init(this);
         return motion;
     }
 }
 
-public class MotionSensorComponent : SensorComponent
+public class MotionSensorComponent : SensorComponent<MotionSensor>
 {
-    public float minVelocity, minAngularVelocity;
-    public Target direction;
-
     void Update()
     {
         var rigidbody = GetComponent<Rigidbody>();
         if (rigidbody != null)
         {
-            bool aboveVel = rigidbody.velocity.magnitude >= minVelocity;
-            bool aboveAngVel = Mathf.Rad2Deg * rigidbody.angularVelocity.magnitude >= minAngularVelocity;
-            bool matchesDirection = direction.MatchesDirection(transform, rigidbody.velocity);
+            bool aboveVel = rigidbody.velocity.magnitude >= sensor.minVelocity;
+            bool aboveAngVel = Mathf.Rad2Deg * rigidbody.angularVelocity.magnitude >= sensor.minAngularVelocity;
+            bool matchesDirection = sensor.direction.MatchesDirection(transform, rigidbody.velocity);
             if (aboveVel && aboveAngVel && matchesDirection)
                 AddActivator(null);
             else

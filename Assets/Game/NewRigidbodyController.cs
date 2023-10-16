@@ -205,7 +205,7 @@ public class NewRigidbodyController : MonoBehaviour
             groundContactNormal = hitInfo.normal;
             // move with moving object
             Vector3 move = Vector3.zero;
-            foreach (MotionComponent motionComponent in hitInfo.transform.GetComponents<MotionComponent>())
+            foreach (IMotionComponent motionComponent in hitInfo.transform.GetComponents<IMotionComponent>())
             {
                 if (motionComponent.enabled)
                 {

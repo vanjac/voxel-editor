@@ -22,7 +22,7 @@ public class SolidBehavior : EntityBehavior
     }
 }
 
-public class SolidComponent : BehaviorComponent
+public class SolidComponent : BehaviorComponent<SolidBehavior>
 {
     public override void BehaviorEnabled()
     {

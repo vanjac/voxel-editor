@@ -10,10 +10,10 @@ public class PulseSensor : Sensor
         + "When the Input turns off, the pulse completes a full cycle then stops.",
         "pulse", typeof(PulseSensor));
 
-    private bool startOn = true;
-    private float offTime = 1;
-    private float onTime = 1;
-    private EntityReference input = new EntityReference(null);
+    public bool startOn = true;
+    public float offTime = 1;
+    public float onTime = 1;
+    public EntityReference input = new EntityReference(null);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -43,22 +43,16 @@ public class PulseSensor : Sensor
         }, base.Properties());
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         PulseComponent pulse = gameObject.AddComponent<PulseComponent>();
-        pulse.offTime = offTime;
-        pulse.onTime = onTime;
-        pulse.startOn = startOn;
-        pulse.input = input;
+        pulse.Init(this);
         return pulse;
     }
 }
 
-public class PulseComponent : SensorComponent
+public class PulseComponent : SensorComponent<PulseSensor>
 {
-    public bool startOn;
-    public float offTime, onTime;
-    public EntityReference input;
     private float startTime;
     private bool useInput;
     private bool cyclePaused;
@@ -66,15 +60,15 @@ public class PulseComponent : SensorComponent
     void Start()
     {
         startTime = Time.time;
-        useInput = input.component != null;
+        useInput = sensor.input.component != null;
         cyclePaused = useInput;
     }
 
     public void Update()
     {
         bool inputIsOn = false;
-        if (input.component != null)
-            inputIsOn = input.component.IsOn();
+        if (sensor.input.component != null)
+            inputIsOn = sensor.input.component.IsOn();
 
         float timePassed = Time.time - startTime;
         if (cyclePaused && inputIsOn)
@@ -83,14 +77,14 @@ public class PulseComponent : SensorComponent
             startTime = Time.time;
             timePassed = 0;
         }
-        else if (useInput && timePassed >= offTime + onTime)
+        else if (useInput && timePassed >= sensor.offTime + sensor.onTime)
         {
             if (inputIsOn)
             {
-                while (timePassed >= offTime + onTime)
+                while (timePassed >= sensor.offTime + sensor.onTime)
                 {
-                    startTime += offTime + onTime;
-                    timePassed -= offTime + onTime;
+                    startTime += sensor.offTime + sensor.onTime;
+                    timePassed -= sensor.offTime + sensor.onTime;
                 }
             }
             else
@@ -104,11 +98,11 @@ public class PulseComponent : SensorComponent
         else
         {
             bool state;
-            float cycleTime = timePassed % (offTime + onTime);
-            if (startOn)
-                state = cycleTime < onTime;
+            float cycleTime = timePassed % (sensor.offTime + sensor.onTime);
+            if (sensor.startOn)
+                state = cycleTime < sensor.onTime;
             else
-                state = cycleTime >= offTime;
+                state = cycleTime >= sensor.offTime;
             if (state)
                 AddActivator(null);
             else

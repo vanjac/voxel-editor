@@ -10,9 +10,9 @@ public class ToggleSensor : Sensor
         + "Activators: the activators of the <b>On input</b>, frozen when it is first turned on",
         "toggle-switch", typeof(ToggleSensor));
 
-    private EntityReference offInput = new EntityReference(null);
-    private EntityReference onInput = new EntityReference(null);
-    private bool startOn;
+    public EntityReference offInput = new EntityReference(null);
+    public EntityReference onInput = new EntityReference(null);
+    public bool startOn;
 
     public override PropertiesObjectType ObjectType()
     {
@@ -38,22 +38,24 @@ public class ToggleSensor : Sensor
         }, base.Properties());
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         ToggleComponent component = gameObject.AddComponent<ToggleComponent>();
-        component.offInput = offInput;
-        component.onInput = onInput;
-        component.value = startOn;
+        component.Init(this);
         return component;
     }
 }
 
-public class ToggleComponent : SensorComponent
+public class ToggleComponent : SensorComponent<ToggleSensor>
 {
-    public EntityReference offInput;
-    public EntityReference onInput;
     public bool value;
     private bool bothOn = false;
+
+    public override void Init(ToggleSensor sensor)
+    {
+        base.Init(sensor);
+        value = sensor.startOn;
+    }
 
     void Start()
     {
@@ -65,12 +67,12 @@ public class ToggleComponent : SensorComponent
     void Update()
     {
         bool offInputOn = false;
-        EntityComponent offEntity = offInput.component;
+        EntityComponent offEntity = sensor.offInput.component;
         if (offEntity != null)
             offInputOn = offEntity.IsOn();
 
         bool onInputOn = false;
-        EntityComponent onEntity = onInput.component;
+        EntityComponent onEntity = sensor.onInput.component;
         if (onEntity != null)
             onInputOn = onEntity.IsOn();
 

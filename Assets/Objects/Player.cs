@@ -48,9 +48,14 @@ public class PlayerObject : ObjectEntity
     {
         GameObject playerObject = Resources.Load<GameObject>("ObjectPrefabs/Player");
         playerObject = GameObject.Instantiate(playerObject);
-        var component = playerObject.AddComponent<PlayerComponent>();
-        component.footstepSounds = footstepSounds;
-        return component;
+        var character = new CharacterBehavior();
+        character.density = 3;
+        var characterComponent = (CharacterComponent)character.MakeComponent(playerObject);
+        characterComponent.volume = 2;
+        characterComponent.calculateVolumeAndMass = false;
+        var playerComponent = playerObject.AddComponent<PlayerComponent>();
+        playerComponent.footstepSounds = footstepSounds;
+        return playerComponent;
     }
 }
 

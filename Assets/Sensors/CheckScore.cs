@@ -13,8 +13,8 @@ public class CheckScoreSensor : Sensor
         ABOVE, BELOW
     }
 
-    private int threshold = 100;
-    private AboveOrBelow compare = AboveOrBelow.ABOVE;
+    public int threshold = 100;
+    public AboveOrBelow compare = AboveOrBelow.ABOVE;
 
     public override PropertiesObjectType ObjectType()
     {
@@ -36,20 +36,16 @@ public class CheckScoreSensor : Sensor
         }, base.Properties());
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<CheckScoreComponent>();
-        component.threshold = threshold;
-        component.compare = compare;
+        component.Init(this);
         return component;
     }
 }
 
-public class CheckScoreComponent : SensorComponent
+public class CheckScoreComponent : SensorComponent<CheckScoreSensor>
 {
-    public int threshold;
-    public CheckScoreSensor.AboveOrBelow compare;
-
     void Update()
     {
         var player = PlayerComponent.instance;
@@ -59,16 +55,16 @@ public class CheckScoreComponent : SensorComponent
         }
         else
         {
-            if (compare == CheckScoreSensor.AboveOrBelow.ABOVE)
+            if (sensor.compare == CheckScoreSensor.AboveOrBelow.ABOVE)
             {
-                if (player.score >= threshold)
+                if (player.score >= sensor.threshold)
                     AddActivator(null);
                 else
                     RemoveActivator(null);
             }
             else
             {
-                if (player.score <= threshold)
+                if (player.score <= sensor.threshold)
                     AddActivator(null);
                 else
                     RemoveActivator(null);

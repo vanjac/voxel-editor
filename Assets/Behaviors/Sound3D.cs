@@ -7,7 +7,7 @@ public enum SpatialSoundMode
     POINT, AMBIENT
 }
 
-public class Sound3DBehavior : EntityBehavior
+public class Sound3DBehavior : BaseSoundBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "3D Sound", "Play a sound in 3D space",
@@ -19,11 +19,8 @@ public class Sound3DBehavior : EntityBehavior
         + "See Sound behavior for additional documentation.",
         "headphones", typeof(Sound3DBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private EmbeddedData soundData = new EmbeddedData();
-    private float volume = 50.0f;
-    private (float, float) distanceRange = (1, 30);
-    private PlayMode playMode = PlayMode.ONCE;
-    private SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
+    public (float, float) distanceRange = (1, 30);
+    public SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -60,16 +57,7 @@ public class Sound3DBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<SoundComponent>();
-        component.soundData = soundData;
-        component.playMode = playMode;
-        component.volume = volume / 100.0f;
-        component.minDistance = distanceRange.Item1;
-        component.maxDistance = distanceRange.Item2;
-        component.fadeIn = 0;
-        component.fadeOut = 0;
-        component.spatial = true;
-        component.spatialMode = spatialMode;
-        component.Init();
+        component.Init(this);
         return component;
     }
 }

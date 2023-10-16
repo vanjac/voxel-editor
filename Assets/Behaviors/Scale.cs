@@ -13,7 +13,7 @@ public class ScaleBehavior : EntityBehavior
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
 
-    private Vector3 scale = Vector3.one;
+    public Vector3 scale = Vector3.one;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -34,20 +34,19 @@ public class ScaleBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<ScaleComponent>();
-        component.scale = scale;
+        component.Init(this);
         return component;
     }
 }
 
-public class ScaleComponent : BehaviorComponent
+public class ScaleComponent : BehaviorComponent<ScaleBehavior>
 {
-    public Vector3 scale;
     private Vector3 storedScale;
 
     public override void BehaviorEnabled()
     {
         storedScale = transform.localScale;
-        transform.localScale = scale;
+        transform.localScale = behavior.scale;
     }
 
     public override void BehaviorDisabled()

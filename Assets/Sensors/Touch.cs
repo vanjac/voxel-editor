@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TouchSensor : ActivatedSensor
+public abstract class BaseTouchSensor : ActivatedSensor
+{
+    public float minVelocity = 0;
+    public Target direction = new Target(null);
+}
+
+public class TouchSensor : BaseTouchSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Touch", "Active when touching another object",
@@ -12,9 +18,6 @@ public class TouchSensor : ActivatedSensor
         + "Activators: all colliding objects matching the filter\n\n"
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));
-
-    private float minVelocity = 0;
-    private Target direction = new Target(null);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -36,21 +39,16 @@ public class TouchSensor : ActivatedSensor
         });
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         TouchComponent component = gameObject.AddComponent<TouchComponent>();
-        component.filter = filter;
-        component.minVelocity = minVelocity;
-        component.direction = direction;
+        component.Init(this);
         return component;
     }
 }
 
-public class TouchComponent : SensorComponent
+public class TouchComponent : SensorComponent<BaseTouchSensor>
 {
-    public ActivatedSensor.Filter filter;
-    public float minVelocity;
-    public Target direction = new Target(null);
     public EntityComponent ignoreEntity = null; // for use by InRangeComponent
     // could have multiple instances of the same collider if it's touching multiple voxels
     private List<Collider> touchingColliders = new List<Collider>();
@@ -69,8 +67,8 @@ public class TouchComponent : SensorComponent
 
         EntityComponent entity = EntityComponent.FindEntityComponent(c);
         if (entity != null && entity != ignoreEntity
-            && filter.EntityMatches(entity) && relativeVelocity.magnitude >= minVelocity
-            && direction.MatchesDirection(entity.transform, relativeVelocity)
+            && sensor.filter.EntityMatches(entity) && relativeVelocity.magnitude >= sensor.minVelocity
+            && sensor.direction.MatchesDirection(entity.transform, relativeVelocity)
             && !rejectedColliders.Contains(c))
         {
             touchingColliders.Add(c);

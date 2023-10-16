@@ -22,9 +22,9 @@ public class VisibleBehavior : EntityBehavior
     }
 }
 
-public class VisibleComponent : BehaviorComponent
+public class VisibleComponent : BehaviorComponent<VisibleBehavior>
 {
-    private System.Collections.Generic.IEnumerable<Renderer> IterateRenderers()
+    private IEnumerable<Renderer> IterateRenderers()
     {
         foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
             yield return childRenderer;

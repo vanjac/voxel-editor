@@ -10,9 +10,9 @@ public class LightBehavior : EntityBehavior
         "Light originates from the Pivot point of substances",
         "lightbulb-on", typeof(LightBehavior));
 
-    private float size = 10, intensity = 1;
-    private Color color = Color.white;
-    private bool shadows = false;
+    public float size = 10, intensity = 1;
+    public Color color = Color.white;
+    public bool shadows = false;
     public bool halo = false;  // deprecated
 
     public override BehaviorType BehaviorObjectType()
@@ -57,20 +57,13 @@ public class LightBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var light = gameObject.AddComponent<LightComponent>();
-        light.size = size;
-        light.color = color;
-        light.intensity = intensity;
-        light.shadows = shadows;
+        light.Init(this);
         return light;
     }
 }
 
-public class LightComponent : BehaviorComponent
+public class LightComponent : BehaviorComponent<LightBehavior>
 {
-    public float size, intensity;
-    public Color color;
-    public bool shadows;
-
     private Light lightComponent;
 
     public override void Start()
@@ -78,12 +71,12 @@ public class LightComponent : BehaviorComponent
         var lightObj = new GameObject(); // only one Light allowed per GameObject
         lightObj.transform.SetParent(transform, false);
         lightComponent = lightObj.AddComponent<Light>();
-        lightComponent.range = size;
-        lightComponent.intensity = intensity;
-        lightComponent.color = color;
+        lightComponent.range = behavior.size;
+        lightComponent.intensity = behavior.intensity;
+        lightComponent.color = behavior.color;
         lightComponent.enabled = false;
 
-        if (shadows)
+        if (behavior.shadows)
         {
             lightComponent.shadows = LightShadows.Hard;
             // fix seams (also done in directional light)

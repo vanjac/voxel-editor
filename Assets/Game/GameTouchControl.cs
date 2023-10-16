@@ -60,7 +60,7 @@ public class GameTouchControl : MonoBehaviour
                 if (TapRaycast(touch.position, out hit))
                 {
                     TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
-                    if (hitTapComponent != null && hit.distance <= hitTapComponent.maxDistance)
+                    if (hitTapComponent != null && hit.distance <= hitTapComponent.Distance)
                     {
                         touchedTapComponent = hitTapComponent;
                         touchedTapComponent.TapStart(PlayerComponent.instance);
@@ -89,7 +89,7 @@ public class GameTouchControl : MonoBehaviour
                     if (TapRaycast(touch.position, out hit))
                     {
                         TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
-                        if (hitTapComponent != touchedTapComponent || hit.distance > touchedTapComponent.maxDistance)
+                        if (hitTapComponent != touchedTapComponent || hit.distance > touchedTapComponent.Distance)
                         {
                             touchedTapComponent.TapEnd();
                             touchedTapComponent = null;

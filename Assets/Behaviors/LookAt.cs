@@ -14,10 +14,10 @@ public class LookAtBehavior : EntityBehavior
         "compass", typeof(LookAtBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private Target target = new Target(Target.EAST);
-    private Target front = new Target(Target.NORTH);
-    private float speed = 120;
-    private bool yaw = true, pitch = false;
+    public Target target = new Target(Target.EAST);
+    public Target front = new Target(Target.NORTH);
+    public float speed = 120;
+    public bool yaw = true, pitch = false;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -50,46 +50,38 @@ public class LookAtBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<LookAtComponent>();
-        component.target = target;
-        component.front = front;
-        component.speed = speed;
-        component.yaw = yaw;
-        component.pitch = pitch;
+        component.Init(this);
         return component;
     }
 }
 
-public class LookAtComponent : MotionComponent
+public class LookAtComponent : MotionComponent<LookAtBehavior>
 {
-    public Target target, front;
-    public float speed;
-    public bool yaw, pitch;
-
     public override void BehaviorEnabled()
     {
-        target.PickRandom();  // front will not be random
+        behavior.target.PickRandom();  // front will not be random
         base.BehaviorEnabled();
     }
 
     public override Quaternion GetRotateFixed()
     {
-        Vector3 direction = target.DirectionFrom(transform);
-        Vector3 frontDirection = front.DirectionFrom(transform);
-        float maxAngle = speed * Time.fixedDeltaTime;
+        Vector3 direction = behavior.target.DirectionFrom(transform);
+        Vector3 frontDirection = behavior.front.DirectionFrom(transform);
+        float maxAngle = behavior.speed * Time.fixedDeltaTime;
 
         Vector3 currentEuler = transform.rotation.eulerAngles;
         Vector3 targetEuler = (Quaternion.LookRotation(direction)
          * Quaternion.Inverse(Quaternion.LookRotation(frontDirection))).eulerAngles;
         
         Vector3 deltaEuler = Vector3.zero;
-        if (pitch)
+        if (behavior.pitch)
         {
             deltaEuler.x = Mathf.Clamp(Mathf.DeltaAngle(currentEuler.x, targetEuler.x),
                 -maxAngle, maxAngle);
             deltaEuler.z = Mathf.Clamp(Mathf.DeltaAngle(currentEuler.z, targetEuler.z),
                 -maxAngle, maxAngle);
         }
-        if (yaw)
+        if (behavior.yaw)
         {
             deltaEuler.y = Mathf.Clamp(Mathf.DeltaAngle(currentEuler.y, targetEuler.y),
                 -maxAngle, maxAngle);

@@ -178,7 +178,7 @@ public abstract class ActivatedSensor : Sensor
         }
     }
 
-    protected Filter filter = new EntityTypeFilter(Entity.objectType);
+    public Filter filter = new EntityTypeFilter(Entity.objectType);
 
     public override ICollection<Property> Properties()
     {

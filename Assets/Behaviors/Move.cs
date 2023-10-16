@@ -11,8 +11,8 @@ public class MoveBehavior : EntityBehavior
         + "Increase the <b>Density</b> of the Physics/Character behavior to increase the object's pushing strength.",
         "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private Target target = new Target(Target.NORTH);
-    private float speed = 1;
+    public Target target = new Target(Target.NORTH);
+    public float speed = 1;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -37,28 +37,24 @@ public class MoveBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         MoveComponent move = gameObject.AddComponent<MoveComponent>();
-        move.target = target;
-        move.speed = speed;
+        move.Init(this);
         return move;
     }
 }
 
-public class MoveComponent : MotionComponent
+public class MoveComponent : MotionComponent<MoveBehavior>
 {
-    public Target target;
-    public float speed;
-
     public override void BehaviorEnabled()
     {
-        target.PickRandom();
+        behavior.target.PickRandom();
         base.BehaviorEnabled();
     }
 
     public override Vector3 GetTranslateFixed()
     {
-        Vector3 direction = target.DirectionFrom(transform);
-        float distance = target.DistanceFrom(transform);
-        float magnitude = speed * Time.fixedDeltaTime;
+        Vector3 direction = behavior.target.DirectionFrom(transform);
+        float distance = behavior.target.DistanceFrom(transform);
+        float magnitude = behavior.speed * Time.fixedDeltaTime;
         if (magnitude > distance)
             magnitude = distance;
         return direction * magnitude;

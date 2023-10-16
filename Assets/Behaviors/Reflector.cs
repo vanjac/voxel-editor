@@ -13,9 +13,9 @@ public class ReflectorBehavior : EntityBehavior
         + "•  <b>Intensity</b> controls the brightness of the reflections\n"
         + "•  When <b>Real-time</b> is checked, reflections will update continuously (expensive!)",
         "mirror", typeof(ReflectorBehavior));
-    
-    private float size = 35, intensity = 1;
-    private bool realtime;
+
+    public float size = 35, intensity = 1;
+    public bool realtime;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -44,28 +44,23 @@ public class ReflectorBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<ReflectorComponent>();
-        component.size = size;
-        component.intensity = intensity;
-        component.realtime = realtime;
+        component.Init(this);
         return component;
     }
 }
 
-public class ReflectorComponent : BehaviorComponent
+public class ReflectorComponent : BehaviorComponent<ReflectorBehavior>
 {
-    public float size, intensity;
-    public bool realtime;
-
     private ReflectionProbe probe;
     private Vector3 prevPos;
 
     public override void Start()
     {
         probe = gameObject.AddComponent<ReflectionProbe>();
-        probe.size = Vector3.one * size;
-        probe.intensity = intensity;
+        probe.size = Vector3.one * behavior.size;
+        probe.intensity = behavior.intensity;
         probe.mode = ReflectionProbeMode.Realtime;
-        if (realtime && !CompareTag("EditorPreview"))
+        if (behavior.realtime && !CompareTag("EditorPreview"))
             probe.refreshMode = ReflectionProbeRefreshMode.EveryFrame;
         else
             probe.refreshMode = ReflectionProbeRefreshMode.ViaScripting;

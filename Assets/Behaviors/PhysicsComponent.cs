@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhysicsBehavior : EntityBehavior
+public abstract class BasePhysicsBehavior : EntityBehavior
+{
+    public float density = 0.5f;
+    public bool gravity = true;
+}
+
+public class PhysicsBehavior : BasePhysicsBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Physics", "Move according to laws of physics",
@@ -11,9 +17,6 @@ public class PhysicsBehavior : EntityBehavior
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
-
-    protected float density = 0.5f;
-    private bool gravity = true;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -38,8 +41,7 @@ public class PhysicsBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<PhysicsComponent>();
-        component.density = density;
-        component.gravity = gravity;
+        component.Init(this);
         return component;
     }
 }
@@ -52,10 +54,8 @@ public class PhysicsBehavior : EntityBehavior
 //
 // Terms of use: do whatever you like
 
-public class PhysicsComponent : BehaviorComponent
+public class PhysicsComponent : BehaviorComponent<BasePhysicsBehavior>
 {
-    public float density;
-    public bool gravity;
     public float volume = 1.0f;
     public bool calculateVolumeAndMass = true;
 
@@ -97,8 +97,8 @@ public class PhysicsComponent : BehaviorComponent
         {
             rigidBody.isKinematic = false;
             if (calculateVolumeAndMass)
-                rigidBody.mass = volume * density;
-            rigidBody.useGravity = gravity;
+                rigidBody.mass = volume * behavior.density;
+            rigidBody.useGravity = behavior.gravity;
         }
     }
 
@@ -120,7 +120,7 @@ public class PhysicsComponent : BehaviorComponent
             if (water != cWater)
             {
                 water = cWater;
-                float archimedesForceMagnitude = water.density * Mathf.Abs(Physics.gravity.y) * volume;
+                float archimedesForceMagnitude = water.Density * Mathf.Abs(Physics.gravity.y) * volume;
                 localArchimedesForce = new Vector3(0, archimedesForceMagnitude, 0) / voxels.Count;
             }
         }

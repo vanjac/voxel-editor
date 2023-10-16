@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBehavior : EntityBehavior
+public class CharacterBehavior : BasePhysicsBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Character",
@@ -16,8 +16,6 @@ public class CharacterBehavior : EntityBehavior
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
-
-    protected float density = 2.0f;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -38,8 +36,7 @@ public class CharacterBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<CharacterComponent>();
-        component.density = density;
-        component.gravity = true;
+        component.Init(this);
         return component;
     }
 }

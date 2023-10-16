@@ -11,8 +11,8 @@ public class SpinBehavior : EntityBehavior
         "format-rotate-90", typeof(SpinBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private float speed = 50;
-    private Target axis = new Target(Target.UP);
+    public float speed = 50;
+    public Target axis = new Target(Target.UP); // not random
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -37,19 +37,16 @@ public class SpinBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         SpinComponent spin = gameObject.AddComponent<SpinComponent>();
-        spin.speed = speed;
-        spin.axis = axis;
+        spin.Init(this);
         return spin;
     }
 }
 
-public class SpinComponent : MotionComponent
+public class SpinComponent : MotionComponent<SpinBehavior>
 {
-    public float speed;
-    public Target axis;  // not random
-
     public override Quaternion GetRotateFixed()
     {
-        return Quaternion.AngleAxis(speed * Time.fixedDeltaTime, axis.DirectionFrom(transform));
+        return Quaternion.AngleAxis(behavior.speed * Time.fixedDeltaTime,
+            behavior.axis.DirectionFrom(transform));
     }
 }

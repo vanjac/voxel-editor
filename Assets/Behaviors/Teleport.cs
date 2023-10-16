@@ -11,8 +11,8 @@ public class TeleportBehavior : EntityBehavior
         + "the object will be displaced by the difference between the target and origin.",
         "send", typeof(TeleportBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    protected EntityReference target = new EntityReference(null);
-    protected EntityReference origin = new EntityReference(null);
+    public EntityReference target = new EntityReference(null);
+    public EntityReference origin = new EntityReference(null);
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -50,26 +50,22 @@ public class TeleportBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         TeleportComponent component = gameObject.AddComponent<TeleportComponent>();
-        component.target = target;
-        component.origin = origin;
+        component.Init(this);
         return component;
     }
 }
 
-public class TeleportComponent : BehaviorComponent
+public class TeleportComponent : BehaviorComponent<TeleportBehavior>
 {
-    public EntityReference target;
-    public EntityReference origin;
-
     public override void BehaviorEnabled()
     {
-        if (target.component == null)
+        if (behavior.target.component == null)
             return;
         Vector3 originPos;
-        if (origin.component != null)
-            originPos = origin.component.transform.position;
+        if (behavior.origin.component != null)
+            originPos = behavior.origin.component.transform.position;
         else
             originPos = transform.position;
-        transform.position += target.component.transform.position - originPos;
+        transform.position += behavior.target.component.transform.position - originPos;
     }
 }

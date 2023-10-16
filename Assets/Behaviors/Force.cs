@@ -18,11 +18,11 @@ public class ForceBehavior : EntityBehavior
         + "•  <b>Stop object first</b> will stop any existing motion before applying the force.",
         "rocket", typeof(ForceBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;
-    private bool ignoreMass = false;
-    private bool stopObjectFirst = false;
-    private float strength = 10;
-    private Target target = new Target(Target.UP);
+    public ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;
+    public bool ignoreMass = false;
+    public bool stopObjectFirst = false;
+    public float strength = 10;
+    public Target target = new Target(Target.UP);
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -59,34 +59,13 @@ public class ForceBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var force = gameObject.AddComponent<ForceComponent>();
-        if (mode == ForceBehaviorMode.IMPULSE)
-        {
-            if (ignoreMass)
-                force.forceMode = ForceMode.VelocityChange;
-            else
-                force.forceMode = ForceMode.Impulse;
-        }
-        else if (mode == ForceBehaviorMode.CONTINUOUS)
-        {
-            if (ignoreMass)
-                force.forceMode = ForceMode.Acceleration;
-            else
-                force.forceMode = ForceMode.Force;
-        }
-        force.stopObjectFirst = stopObjectFirst;
-        force.strength = strength;
-        force.target = target;
+        force.Init(this);
         return force;
     }
 }
 
-public class ForceComponent : BehaviorComponent
+public class ForceComponent : BehaviorComponent<ForceBehavior>
 {
-    public ForceMode forceMode;
-    public float strength;
-    public Target target;
-    public bool stopObjectFirst;
-
     private Rigidbody rigidBody;
     private NewRigidbodyController player;
 
@@ -99,12 +78,13 @@ public class ForceComponent : BehaviorComponent
 
     public override void BehaviorEnabled()
     {
-        target.PickRandom();
-        if (stopObjectFirst && rigidBody != null)
+        behavior.target.PickRandom();
+        if (behavior.stopObjectFirst && rigidBody != null)
             rigidBody.velocity = Vector3.zero;
-        if ((forceMode == ForceMode.Impulse || forceMode == ForceMode.VelocityChange) && rigidBody != null)
+        if (behavior.mode == ForceBehavior.ForceBehaviorMode.IMPULSE && rigidBody != null)
         {
-            rigidBody.AddForce(target.DirectionFrom(transform) * strength, forceMode);
+            ForceMode mode = behavior.ignoreMass ? ForceMode.VelocityChange : ForceMode.Impulse;
+            rigidBody.AddForce(behavior.target.DirectionFrom(transform) * behavior.strength, mode);
             if (player != null)
                 player.disableGroundCheck = true;
         }
@@ -112,9 +92,10 @@ public class ForceComponent : BehaviorComponent
 
     void FixedUpdate()
     {
-        if ((forceMode == ForceMode.Force || forceMode == ForceMode.Acceleration) && rigidBody != null)
+        if (behavior.mode == ForceBehavior.ForceBehaviorMode.CONTINUOUS && rigidBody != null)
         {
-            rigidBody.AddForce(target.DirectionFrom(transform) * strength, forceMode);
+            ForceMode mode = behavior.ignoreMass ? ForceMode.Acceleration : ForceMode.Force;
+            rigidBody.AddForce(behavior.target.DirectionFrom(transform) * behavior.strength, mode);
             if (player != null)
                 player.disableGroundCheck = true;
         }

@@ -10,8 +10,8 @@ public class MoveWithBehavior : EntityBehavior
         "move-resize-variant", typeof(MoveWithBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
 
-    private EntityReference target = new EntityReference(null);
-    private bool followRotation = true;
+    public EntityReference target = new EntityReference(null);
+    public bool followRotation = true;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -36,56 +36,55 @@ public class MoveWithBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         MoveWithComponent component = gameObject.AddComponent<MoveWithComponent>();
-        component.target = target;
-        component.followRotation = followRotation;
+        component.Init(this);
         return component;
     }
 }
 
-public class MoveWithComponent : MotionComponent
+public class MoveWithComponent : MotionComponent<MoveWithBehavior>
 {
-    public EntityReference target;
-    public bool followRotation;
-
     private Vector3 positionOffset;
     private Quaternion rotationOffset;
 
     public override void BehaviorEnabled()
     {
-        if (target.component == null)
+        if (behavior.target.component == null)
         {
             positionOffset = transform.position;
             rotationOffset = transform.rotation;
         }
         else
         {
-            if (followRotation)
+            var targetTransform = behavior.target.component.transform;
+            if (behavior.followRotation)
             {
-                positionOffset = target.component.transform.InverseTransformPoint(transform.position);
-                rotationOffset = Quaternion.Inverse(target.component.transform.rotation) * transform.rotation;
+                positionOffset = targetTransform.InverseTransformPoint(transform.position);
+                rotationOffset = Quaternion.Inverse(targetTransform.rotation) * transform.rotation;
             }
             else
             {
-                positionOffset = transform.position - target.component.transform.position;
+                positionOffset = transform.position - targetTransform.position;
             }
         }
     }
 
     public override Vector3 GetTranslateFixed()
     {
-        if (target.component == null
-                || target.component.transform.position == DynamicEntityComponent.KILL_LOCATION)
+        var targetTransform = behavior.target.component.transform;
+        if (behavior.target.component == null
+                || targetTransform.position == DynamicEntityComponent.KILL_LOCATION)
             return Vector3.zero;
-        if (followRotation)
-            return target.component.transform.TransformPoint(positionOffset) - transform.position;
+        if (behavior.followRotation)
+            return targetTransform.TransformPoint(positionOffset) - transform.position;
         else
-            return target.component.transform.position + positionOffset - transform.position;
+            return targetTransform.position + positionOffset - transform.position;
     }
 
     public override Quaternion GetRotateFixed()
     {
-        if (!followRotation || target.component == null)
+        if (!behavior.followRotation || behavior.target.component == null)
             return Quaternion.identity;
-        return Quaternion.Inverse(transform.rotation) * target.component.transform.rotation * rotationOffset;
+        return Quaternion.Inverse(transform.rotation) * behavior.target.component.transform.rotation
+            * rotationOffset;
     }
 }

@@ -7,8 +7,8 @@ public class ScoreBehavior : EntityBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Score", "Add or subtract from player's score",
         "counter", typeof(ScoreBehavior));
-    
-    private int amount = 10;
+
+    public int amount = 10;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -29,18 +29,16 @@ public class ScoreBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<ScoreComponent>();
-        component.amount = amount;
+        component.Init(this);
         return component;
     }
 }
 
-public class ScoreComponent : BehaviorComponent
+public class ScoreComponent : BehaviorComponent<ScoreBehavior>
 {
-    public int amount;
-
     public override void BehaviorEnabled()
     {
         if (PlayerComponent.instance != null)  // not dead
-            PlayerComponent.instance.score += amount;
+            PlayerComponent.instance.score += behavior.amount;
     }
 }

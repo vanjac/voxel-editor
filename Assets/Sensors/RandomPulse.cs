@@ -9,9 +9,9 @@ public class RandomPulseSensor : Sensor
         "Alternates on/off using random times selected within the ranges."
         + " Useful for unpredictable behavior, flickering lights, etc.",
         "progress-question", typeof(RandomPulseSensor));
-    
-    private (float, float) offTimeRange = (1, 5);
-    private (float, float) onTimeRange = (1, 5);
+
+    public (float, float) offTimeRange = (1, 5);
+    public (float, float) onTimeRange = (1, 5);
 
     public override PropertiesObjectType ObjectType()
     {
@@ -33,20 +33,18 @@ public class RandomPulseSensor : Sensor
         }, base.Properties());
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         var component = gameObject.AddComponent<RandomPulseComponent>();
-        component.offTimeRange = offTimeRange;
-        component.onTimeRange = onTimeRange;
+        component.Init(this);
         return component;
     }
 }
 
-public class RandomPulseComponent : SensorComponent
+public class RandomPulseComponent : SensorComponent<RandomPulseSensor>
 {
     private const float MIN_PULSE = 1.0f / 30.0f;
 
-    public (float, float) offTimeRange, onTimeRange;
     private bool state;
     private float flipTime;
 
@@ -62,9 +60,9 @@ public class RandomPulseComponent : SensorComponent
     private float WaitTime()
     {
         if (state)
-            return RandomTime(onTimeRange);
+            return RandomTime(sensor.onTimeRange);
         else
-            return RandomTime(offTimeRange);
+            return RandomTime(sensor.offTimeRange);
     }
 
     private float RandomTime((float, float) range)

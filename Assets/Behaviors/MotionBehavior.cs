@@ -2,7 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MotionComponent : BehaviorComponent
+public interface IMotionComponent
+{
+    bool enabled { get; }
+    Transform transform { get; }
+    Vector3 GetTranslateFixed();
+    Quaternion GetRotateFixed();
+}
+
+public abstract class MotionComponent<T> : BehaviorComponent<T>, IMotionComponent
 {
     private Rigidbody rigidBody;
     private DynamicEntityComponent entityComponent;

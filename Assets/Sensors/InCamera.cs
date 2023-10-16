@@ -11,7 +11,7 @@ public class InCameraSensor : Sensor
         + "Activator: the player",
         "eye", typeof(InCameraSensor));
 
-    private float maxDistance = 100;
+    public float maxDistance = 100;
 
     public override PropertiesObjectType ObjectType()
     {
@@ -29,17 +29,16 @@ public class InCameraSensor : Sensor
         }, base.Properties());
     }
 
-    public override SensorComponent MakeComponent(GameObject gameObject)
+    public override ISensorComponent MakeComponent(GameObject gameObject)
     {
         var inCamera = gameObject.AddComponent<InCameraComponent>();
-        inCamera.maxDistance = maxDistance;
+        inCamera.Init(this);
         return inCamera;
     }
 }
 
-public class InCameraComponent : SensorComponent
+public class InCameraComponent : SensorComponent<InCameraSensor>
 {
-    public float maxDistance;
     private int visible = 0;
 
     void Update()
@@ -50,7 +49,7 @@ public class InCameraComponent : SensorComponent
             return;
         }
         bool inRange = (PlayerComponent.instance.transform.position
-            - transform.position).magnitude <= maxDistance;
+            - transform.position).magnitude <= sensor.maxDistance;
         if (visible > 0 && inRange)
             AddActivator(PlayerComponent.instance);
         else

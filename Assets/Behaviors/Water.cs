@@ -9,7 +9,7 @@ public class WaterBehavior : EntityBehavior
         "Water should not be Solid and should not have Physics. This behavior controls only the physics of water, not appearance.",
         "water", typeof(WaterBehavior), BehaviorType.BaseTypeRule(typeof(Substance)));
 
-    private float density = 1.0f;
+    public float density = 1.0f;
 
     public override BehaviorType BehaviorObjectType()
     {
@@ -30,14 +30,14 @@ public class WaterBehavior : EntityBehavior
     public override Behaviour MakeComponent(GameObject gameObject)
     {
         WaterComponent water = gameObject.AddComponent<WaterComponent>();
-        water.density = density;
+        water.Init(this);
         return water;
     }
 }
 
-public class WaterComponent : BehaviorComponent
+public class WaterComponent : BehaviorComponent<WaterBehavior>
 {
-    public float density;
+    public float Density { get => behavior.density; }
     private float waterLevel = float.MinValue;
 
     public override void Start()

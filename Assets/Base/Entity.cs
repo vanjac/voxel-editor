@@ -303,7 +303,7 @@ public abstract class EntityComponent : MonoBehaviour
     private Dictionary<EntityComponent, List<Behaviour>> activatorComponents
         = new Dictionary<EntityComponent, List<Behaviour>>();
 
-    private SensorComponent sensorComponent;
+    private ISensorComponent sensorComponent;
     private bool sensorWasOn;
 
     public static EntityComponent FindEntityComponent(GameObject obj)
@@ -442,21 +442,21 @@ public abstract class EntityComponent : MonoBehaviour
     public ICollection<EntityComponent> GetActivators()
     {
         if (sensorComponent == null)
-            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+            return System.Array.Empty<EntityComponent>();
         return sensorComponent.GetActivators();
     }
 
     public ICollection<EntityComponent> GetNewActivators()
     {
         if (sensorComponent == null)
-            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+            return System.Array.Empty<EntityComponent>();
         return sensorComponent.GetNewActivators();
     }
 
     public ICollection<EntityComponent> GetRemovedActivators()
     {
         if (sensorComponent == null)
-            return SensorComponent.EMPTY_COMPONENT_COLLECTION;
+            return System.Array.Empty<EntityComponent>();
         return sensorComponent.GetRemovedActivators();
     }
 }
@@ -551,9 +551,15 @@ public abstract class EntityBehavior : PropertiesObject
 }
 
 
-public abstract class BehaviorComponent : MonoBehaviour
+public abstract class BehaviorComponent<T> : MonoBehaviour
 {
+    protected T behavior;
     private bool started = false;
+
+    public virtual void Init(T behavior)
+    {
+        this.behavior = behavior;
+    }
 
     // called after object is created and first enabled
     public virtual void Start()
@@ -678,12 +684,22 @@ public abstract class Sensor : PropertiesObject
         return System.Array.Empty<Property>();
     }
 
-    public abstract SensorComponent MakeComponent(GameObject gameObject);
+    public abstract ISensorComponent MakeComponent(GameObject gameObject);
 }
 
-public abstract class SensorComponent : MonoBehaviour
+public interface ISensorComponent
 {
-    public static readonly EntityComponent[] EMPTY_COMPONENT_COLLECTION = new EntityComponent[0];
+    bool IsOn();
+    void LateUpdate();
+    ICollection<EntityComponent> GetActivators();
+    ICollection<EntityComponent> GetNewActivators();
+    ICollection<EntityComponent> GetRemovedActivators();
+    void ClearActivators();
+}
+
+public abstract class SensorComponent<T> : MonoBehaviour, ISensorComponent
+{
+    protected T sensor;
 
     private HashSet<EntityComponent> activators = new HashSet<EntityComponent>();
 
@@ -691,6 +707,11 @@ public abstract class SensorComponent : MonoBehaviour
     protected HashSet<EntityComponent> newActivators_next = new HashSet<EntityComponent>();
     private HashSet<EntityComponent> removedActivators = new HashSet<EntityComponent>();
     protected HashSet<EntityComponent> removedActivators_next = new HashSet<EntityComponent>();
+
+    public virtual void Init(T sensor)
+    {
+        this.sensor = sensor;
+    }
 
     public bool IsOn()
     {
@@ -831,7 +852,7 @@ public abstract class DynamicEntityComponent : EntityComponent
     {
         // move entity out of any touch sensors so they will have a chance to turn off before it's destroyed
         transform.position = KILL_LOCATION;
-        SensorComponent sensor = GetComponent<SensorComponent>();
+        ISensorComponent sensor = GetComponent<ISensorComponent>();
         if (sensor != null)
             // make sure activators are removed from any outputs
             sensor.ClearActivators();
