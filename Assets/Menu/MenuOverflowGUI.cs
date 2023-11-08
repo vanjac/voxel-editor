@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,10 +63,12 @@ public class MenuOverflowGUI : GUIPanel
                 {
                     Application.OpenURL("https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2");
                 }),
+#if !UNITY_IOS
                 new OverflowMenuGUI.MenuItem("Donate", GUIIconSet.instance.donate, () =>
                 {
                     Application.OpenURL("https://chroma.zone/donate");
-                })
+                }),
+#endif
             };
         }
         GUILayout.EndHorizontal();

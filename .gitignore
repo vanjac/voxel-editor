@@ -73,7 +73,7 @@ crashlytics-build.properties
 
 # ADDED
 
-iosBuild/
+ios-build/
 .DS_Store
 
 /Assets/GameAssets/Poliigon/*.jpg

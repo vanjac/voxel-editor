@@ -1,10 +1,9 @@
 Copyright (c) 2023 J. van't Hoog
 
-If you enjoy N-Space, please consider donating to support development, using the Donate link in the menu.
-
 You can use the other buttons in the menu to access these websites:
 - N-Space subreddit (/r/nspace) for discussion and sharing your creations
 - Video tutorials on YouTube
+- N-Space website with a link to the source code
 
 If you have any questions, feedback, or suggestions, please send me an email:
     chroma@chroma.zone
@@ -58,4 +57,4 @@ Libraries:
     Unity Native Gallery Plugin
     Copyright (c) 2017 Süleyman Yasir KULA
 
-    Other sources listed in scripts (see the GitHub repository above)
+    Other sources listed in scripts (source code available online)
