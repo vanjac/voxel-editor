@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,27 +8,27 @@ public static class PropertyGUIs
     private delegate void KeyboardHandler(string text);
     private static KeyboardHandler keyboardHandler;
 
-    private static readonly System.Lazy<GUIStyle> alignedLabelStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> alignedLabelStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.MiddleLeft;
         style.padding.right = 0;
         return style;
     });
-    private static readonly System.Lazy<GUIStyle> headerLabelStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> headerLabelStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.label);
         style.padding.top = 0;
         style.padding.bottom = 0;
         return style;
     });
-    private static readonly System.Lazy<GUIStyle> inlineLabelStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> inlineLabelStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(alignedLabelStyle.Value);
         style.padding.left = 0;
         return style;
     });
-    private static readonly System.Lazy<GUIStyle> tagFieldStyle = new System.Lazy<GUIStyle>(() =>
+    private static readonly Lazy<GUIStyle> tagFieldStyle = new Lazy<GUIStyle>(() =>
     {
         var style = new GUIStyle(GUI.skin.textField);
         style.fontSize = GUI.skin.font.fontSize * 2;

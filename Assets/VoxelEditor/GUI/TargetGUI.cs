@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetGUI : GUIPanel
@@ -25,7 +24,7 @@ public class TargetGUI : GUIPanel
 
         GUILayout.BeginVertical();
         if (!alwaysWorld)
-            localState = GUILayout.SelectionGrid(localState, new string[] {"World", "Local"}, 2);
+            localState = GUILayout.SelectionGrid(localState, new string[] { "World", "Local" }, 2);
         DirectionButtons();
         GUILayout.Space(16);  // fix weird layout issue
         GUILayout.EndVertical();

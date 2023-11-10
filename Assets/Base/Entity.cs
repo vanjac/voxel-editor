@@ -146,7 +146,7 @@ public class PropertiesObjectType
     {
         if (type == null)
             return null;
-        return (PropertiesObject)System.Activator.CreateInstance(type);
+        return (PropertiesObject)Activator.CreateInstance(type);
     }
 
     public PropertiesObject Create()
@@ -434,21 +434,21 @@ public abstract class EntityComponent : MonoBehaviour
     public ICollection<EntityComponent> GetActivators()
     {
         if (sensorComponent == null)
-            return System.Array.Empty<EntityComponent>();
+            return Array.Empty<EntityComponent>();
         return sensorComponent.GetActivators();
     }
 
     public ICollection<EntityComponent> GetNewActivators()
     {
         if (sensorComponent == null)
-            return System.Array.Empty<EntityComponent>();
+            return Array.Empty<EntityComponent>();
         return sensorComponent.GetNewActivators();
     }
 
     public ICollection<EntityComponent> GetRemovedActivators()
     {
         if (sensorComponent == null)
-            return System.Array.Empty<EntityComponent>();
+            return Array.Empty<EntityComponent>();
         return sensorComponent.GetRemovedActivators();
     }
 }
@@ -525,7 +525,7 @@ public abstract class EntityBehavior : PropertiesObject
                 })
         };
 
-    public virtual ICollection<Property> DeprecatedProperties() => System.Array.Empty<Property>();
+    public virtual ICollection<Property> DeprecatedProperties() => Array.Empty<Property>();
 
     public abstract Behaviour MakeComponent(GameObject gameObject);
 }

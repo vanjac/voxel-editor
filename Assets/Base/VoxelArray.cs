@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class VoxelArray : MonoBehaviour
@@ -66,7 +65,7 @@ public class VoxelArray : MonoBehaviour
                 // the voxel could have alreay been replaced with a new one
                 // TODO: specify by position to prevent this problem
                 if (existing == voxel)
-                    RemoveVoxel(voxel);                
+                    RemoveVoxel(voxel);
             }
             AssetManager.UnusedAssets();
         }

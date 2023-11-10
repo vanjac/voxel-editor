@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class FileKeys
+﻿public static class FileKeys
 {
     // constants follow name pattern:
     // [containing object type]_[property]

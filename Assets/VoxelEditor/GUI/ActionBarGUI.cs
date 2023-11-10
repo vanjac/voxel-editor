@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ActionBarGUI : TopPanelGUI
 {
@@ -284,7 +282,7 @@ public class ActionBarGUI : TopPanelGUI
 
     private void DrawSelectInterface()
     {
-        DrawSelectGUI drawSelect= gameObject.AddComponent<DrawSelectGUI>();
+        DrawSelectGUI drawSelect = gameObject.AddComponent<DrawSelectGUI>();
         drawSelect.voxelArray = voxelArray;
         drawSelect.touchListener = touchListener;
     }

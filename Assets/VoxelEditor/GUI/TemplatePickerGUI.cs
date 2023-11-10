@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TemplatePickerGUI : GUIPanel
 {
@@ -20,7 +18,8 @@ public class TemplatePickerGUI : GUIPanel
             900, 480);
     }
 
-    void Start() {
+    void Start()
+    {
         title = "New World";
         options = new GUIContent[]
         {

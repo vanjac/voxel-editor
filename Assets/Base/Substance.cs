@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public struct Pivot {
+public struct Pivot
+{
     public enum Pos { Min, Center, Max };
     public Pos x, y, z;
 }

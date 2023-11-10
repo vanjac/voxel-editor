@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -93,7 +91,7 @@ public class HelpGUI : GUIPanel
         bool forceIndoor = false)
     {
         TutorialGUI.StartTutorial(tutorial, gameObject, voxelArray, touchListener);
-        if (worldName != null && (voxelArray == null || 
+        if (worldName != null && (voxelArray == null ||
                 (voxelArray.type != VoxelArray.WorldType.INDOOR && forceIndoor)))
             OpenDemoWorld("Tutorial - " + worldName, "Templates/indoor");
         Destroy(this);

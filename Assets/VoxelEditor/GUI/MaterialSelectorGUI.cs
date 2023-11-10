@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class MaterialSelectorGUI : GUIPanel
@@ -162,7 +161,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (showColorStyle)
         {
             var newStyle = (ResourcesDirectory.ColorStyle)GUILayout.SelectionGrid((int)colorStyle,
-                new string[] {"Tint", "Paint"}, 2);
+                new string[] { "Tint", "Paint" }, 2);
             if (newStyle != colorStyle)
             {
                 colorStyle = newStyle;
@@ -391,7 +390,8 @@ public class MaterialSelectorGUI : GUIPanel
 
     private void ImportTextureFromPhotos()
     {
-        NativeGalleryWrapper.ImportTexture((Texture2D texture) => {
+        NativeGalleryWrapper.ImportTexture((Texture2D texture) =>
+        {
             if (texture == null)
                 return;
 

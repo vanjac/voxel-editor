@@ -1,7 +1,6 @@
 ﻿// https://answers.unity.com/answers/746039/view.html
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using System.Linq;
 
 public class CreateMaterialsForTextures : ScriptableWizard
@@ -12,7 +11,6 @@ public class CreateMaterialsForTextures : ScriptableWizard
     static void CreateWizard()
     {
         ScriptableWizard.DisplayWizard<CreateMaterialsForTextures>("Create Materials", "Create");
-
     }
 
     void OnEnable()

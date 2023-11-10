@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -106,8 +105,10 @@ public class MenuGUI : GUIPanel
     private void AskNewWorldTemplate()
     {
         var menu = gameObject.AddComponent<TemplatePickerGUI>();
-        menu.handler = (value) => {
-            switch (value) {
+        menu.handler = (value) =>
+        {
+            switch (value)
+            {
                 case 0:
                     AskNewWorldName(indoorTemplate);
                     break;

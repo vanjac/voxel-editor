@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 // Remember that Unity resource paths always use forward slashes
 public static class ResourcesDirectory

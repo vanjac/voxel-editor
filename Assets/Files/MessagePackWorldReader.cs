@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using MsgPack;
-using System.Xml;
 using System.Xml.Serialization;
 
 
@@ -341,7 +340,7 @@ public class MessagePackWorldReader : WorldFileReader
 
         if (entityDict.ContainsKey(FileKeys.ENTITY_ID))
         {
-            System.Guid id = new System.Guid(entityDict[FileKeys.ENTITY_ID].AsString());
+            Guid id = new Guid(entityDict[FileKeys.ENTITY_ID].AsString());
             EntityReference.AddExistingEntityId(entity, id);
         }
     }
@@ -373,9 +372,9 @@ public class MessagePackWorldReader : WorldFileReader
                     continue;
                 }
 
-                System.Type propType;
+                Type propType;
                 if (propList.Count > 2)
-                    propType = System.Type.GetType(propList[2].AsString()); // explicit type
+                    propType = Type.GetType(propList[2].AsString()); // explicit type
                 else
                     propType = prop.value.GetType();
 
@@ -395,7 +394,7 @@ public class MessagePackWorldReader : WorldFileReader
                 {
                     var dataList = propList[1].AsList();
                     var name = dataList[0].AsString();
-                    var type = (EmbeddedDataType)System.Enum.Parse(typeof(EmbeddedDataType), dataList[1].AsString());
+                    var type = (EmbeddedDataType)Enum.Parse(typeof(EmbeddedDataType), dataList[1].AsString());
                     var bytes = dataList[2].AsBinary();
                     prop.setter(new EmbeddedData(name, bytes, type));
                 }

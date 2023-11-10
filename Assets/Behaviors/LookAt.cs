@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,7 +58,7 @@ public class LookAtComponent : MotionComponent<LookAtBehavior>
         Vector3 currentEuler = transform.rotation.eulerAngles;
         Vector3 targetEuler = (Quaternion.LookRotation(direction)
          * Quaternion.Inverse(Quaternion.LookRotation(frontDirection))).eulerAngles;
-        
+
         Vector3 deltaEuler = Vector3.zero;
         if (behavior.pitch)
         {

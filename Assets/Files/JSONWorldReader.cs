@@ -110,7 +110,7 @@ public class JSONWorldReader : WorldFileReader
         }
         if (root["world"] != null)
             ConvertWorld(root["world"].AsObject, worldDict);
-        
+
         return worldDict;
     }
 
@@ -230,7 +230,7 @@ public class JSONWorldReader : WorldFileReader
         {
             entityDict[FileKeys.ENTITY_ID] = entityObject["id"].Value;
         }
-        
+
         return entityDict;
     }
 

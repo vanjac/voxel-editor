@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public struct VoxelFace
@@ -306,7 +305,7 @@ public class Voxel
             faceB += 1;
     }
 
-    public static System.Collections.Generic.IEnumerable<int> ConnectedEdges(int edgeI)
+    public static IEnumerable<int> ConnectedEdges(int edgeI)
     {
         int axis = EdgeIAxis(edgeI);
         edgeI %= 4;
@@ -332,7 +331,7 @@ public class Voxel
         }
     }
 
-    public static System.Collections.Generic.IEnumerable<int> UnconnectedEdges(int edgeI)
+    public static IEnumerable<int> UnconnectedEdges(int edgeI)
     {
         int axis = EdgeIAxis(edgeI);
         for (int i = 1; i < 4; i++)
@@ -370,7 +369,7 @@ public class Voxel
         return edgeI / 4;
     }
 
-    public static System.Collections.Generic.IEnumerable<int> FaceSurroundingEdges(int faceNum)
+    public static IEnumerable<int> FaceSurroundingEdges(int faceNum)
     {
         int axis = FaceIAxis(faceNum);
         yield return ((axis + 1) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2) * 2]; // 0 - 1
@@ -632,7 +631,7 @@ public class VoxelComponent : MonoBehaviour
             gameObject.layer = 8; // XRay layer
         else
             gameObject.layer = 0; // default
-        
+
         int numFaces = 0;
         foreach (Voxel v in voxels)
             foreach (VoxelFace f in v.faces)

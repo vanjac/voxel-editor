@@ -7,9 +7,9 @@ using UnityEngine.Networking;
 public class AudioClipWorldReader : WorldFileReader
 {
     private EmbeddedData data = new EmbeddedData();
-    private UnityEngine.AudioType audioType;
+    private AudioType audioType;
 
-    public AudioClipWorldReader(UnityEngine.AudioType audioType)
+    public AudioClipWorldReader(AudioType audioType)
     {
         this.audioType = audioType;
     }

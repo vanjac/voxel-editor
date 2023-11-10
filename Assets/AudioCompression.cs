@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using System.Runtime.InteropServices;
 
 public static class AudioCompression
 {
@@ -87,7 +86,7 @@ public static class AudioCompression
                 largestPacket = packetSize;
             bytes[byteI] = (byte)(packetSize >> 8);
             bytes[byteI + 1] = (byte)(packetSize & 0xff);
-            System.Buffer.BlockCopy(packet, 0, bytes, byteI + 2, packetSize);
+            Buffer.BlockCopy(packet, 0, bytes, byteI + 2, packetSize);
             byteI += packetSize + 2;
         }
         Opus.opus_encoder_destroy(encoder);
@@ -143,7 +142,7 @@ public static class AudioCompression
         while (byteI < bytes.Length)
         {
             int packetSize = bytes[byteI] * 256 + bytes[byteI + 1];
-            System.Buffer.BlockCopy(bytes, byteI + 2, packet, 0, packetSize);
+            Buffer.BlockCopy(bytes, byteI + 2, packet, 0, packetSize);
             byteI += packetSize + 2;
             int numSamples = Opus.opus_decode_float(decoder, packet, packetSize, sampleBlock, frameSize, 0);
             if (numSamples < 0)

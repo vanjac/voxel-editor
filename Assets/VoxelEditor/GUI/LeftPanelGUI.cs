@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public abstract class LeftPanelGUI : GUIPanel
+﻿public abstract class LeftPanelGUI : GUIPanel
 {
     private GUIPanel prevLeftPanel;
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PivotGUI : GUIPanel
 {
@@ -29,13 +27,13 @@ public class PivotGUI : GUIPanel
         Color baseColor = GUI.color;
         GUI.color = baseColor * new Color(0.6f, 0.6f, 1);
         value.z = (Pivot.Pos)GUILayout.SelectionGrid((int)value.z,
-            new string[] {"South", "Center", "North"}, 3);
+            new string[] { "South", "Center", "North" }, 3);
         GUI.color = baseColor * new Color(1, 0.6f, 0.6f);
         value.x = (Pivot.Pos)GUILayout.SelectionGrid((int)value.x,
-            new string[] {"West", "Center", "East"}, 3);
+            new string[] { "West", "Center", "East" }, 3);
         GUI.color = baseColor * new Color(0.6f, 1, 0.6f);
         value.y = (Pivot.Pos)GUILayout.SelectionGrid((int)value.y,
-            new string[] {"Bottom", "Center", "Top"}, 3);
+            new string[] { "Bottom", "Center", "Top" }, 3);
         GUI.color = baseColor;
         GUILayout.Space(16);  // fix weird layout issue
         GUILayout.EndVertical();

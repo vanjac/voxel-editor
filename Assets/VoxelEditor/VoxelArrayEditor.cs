@@ -491,7 +491,7 @@ public class VoxelArrayEditor : VoxelArray
 
     // add selected things come before stored selection
     // this is important for functions like GetSelectedPaint
-    private System.Collections.Generic.IEnumerable<Selectable> IterateSelected()
+    private IEnumerable<Selectable> IterateSelected()
     {
         foreach (Selectable thing in selectedThings)
             yield return thing;
@@ -500,7 +500,7 @@ public class VoxelArrayEditor : VoxelArray
                 yield return thing;
     }
 
-    private System.Collections.Generic.IEnumerable<T> IterateSelected<T>() where T : Selectable
+    private IEnumerable<T> IterateSelected<T>() where T : Selectable
     {
         foreach (Selectable thing in IterateSelected())
             if (thing is T)
@@ -627,7 +627,8 @@ public class VoxelArrayEditor : VoxelArray
             if (thingSubstance != boxSelectSubstance || !ThingInBoxSelection(thing, bounds))
                 DeselectThing(i);
         }
-        if (boxSelectSubstance == selectObjectSubstance) {
+        if (boxSelectSubstance == selectObjectSubstance)
+        {
             foreach (var obj in IterateObjects())
             {
                 if (ThingInBoxSelection(obj.marker, bounds))

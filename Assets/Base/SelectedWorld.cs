@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 
 public static class SelectedWorld
@@ -23,12 +21,15 @@ public static class SelectedWorld
     // this creates a stream, so make sure to wrap it in a "using" block!
     public static Stream GetLoadStream()
     {
-        try {
+        try
+        {
             if (demoWorldAsset == null)
                 return File.Open(worldPath, FileMode.Open);
             else
                 return new MemoryStream(demoWorldAsset.bytes);
-        } catch (System.Exception e) {
+        }
+        catch (System.Exception e)
+        {
             throw new MapReadException("Error opening file", e);
         }
     }

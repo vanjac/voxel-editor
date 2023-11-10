@@ -101,8 +101,8 @@ public class EditorFile : MonoBehaviour
         {
             if (i >= bNums.Length)
                 return 1;
-            int numA = System.Int32.Parse(aNums[i]);
-            int numB = System.Int32.Parse(bNums[i]);
+            int numA = int.Parse(aNums[i]);
+            int numB = int.Parse(bNums[i]);
             if (numA > numB)
                 return 1;
             else if (numB > numA)
