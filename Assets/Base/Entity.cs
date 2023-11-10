@@ -550,6 +550,18 @@ public abstract class EntityBehavior : PropertiesObject
     public abstract Behaviour MakeComponent(GameObject gameObject);
 }
 
+public abstract class GenericEntityBehavior<SelfType, ComponentType> : EntityBehavior
+    where SelfType : GenericEntityBehavior<SelfType, ComponentType>
+    where ComponentType : BehaviorComponent<SelfType>
+{
+    public override Behaviour MakeComponent(GameObject gameObject)
+    {
+        var component = gameObject.AddComponent<ComponentType>();
+        component.Init((SelfType)this);
+        return component;
+    }
+}
+
 
 public abstract class BehaviorComponent<T> : MonoBehaviour
 {
@@ -685,6 +697,18 @@ public abstract class Sensor : PropertiesObject
     }
 
     public abstract ISensorComponent MakeComponent(GameObject gameObject);
+}
+
+public abstract class GenericSensor<SelfType, ComponentType> : Sensor
+    where SelfType : GenericSensor<SelfType, ComponentType>
+    where ComponentType : SensorComponent<SelfType>
+{
+    public override ISensorComponent MakeComponent(GameObject gameObject)
+    {
+        var component = gameObject.AddComponent<ComponentType>();
+        component.Init((SelfType)this);
+        return component;
+    }
 }
 
 public interface ISensorComponent

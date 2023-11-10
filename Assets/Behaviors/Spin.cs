@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpinBehavior : EntityBehavior
+public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Spin", "Rotate continuously",
@@ -32,13 +32,6 @@ public class SpinBehavior : EntityBehavior
                 v => axis = (Target)v,
                 PropertyGUIs.TargetStatic)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        SpinComponent spin = gameObject.AddComponent<SpinComponent>();
-        spin.Init(this);
-        return spin;
     }
 }
 

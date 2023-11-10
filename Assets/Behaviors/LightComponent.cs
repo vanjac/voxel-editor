@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [EditorPreviewBehavior]
-public class LightBehavior : EntityBehavior
+public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Light", "Light source at the center of object",
@@ -52,13 +52,6 @@ public class LightBehavior : EntityBehavior
                 v => halo = (bool)v,
                 PropertyGUIs.Toggle)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var light = gameObject.AddComponent<LightComponent>();
-        light.Init(this);
-        return light;
     }
 }
 

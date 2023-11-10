@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RandomPulseSensor : Sensor
+public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Rand. Pulse", "Turn on and off in a random pattern",
@@ -31,13 +31,6 @@ public class RandomPulseSensor : Sensor
                 v => onTimeRange = ((float, float))v,
                 PropertyGUIs.FloatRange)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<RandomPulseComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckScoreSensor : Sensor
+public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Check Score", "Active when score is at or above/below a threshold",
@@ -34,13 +34,6 @@ public class CheckScoreSensor : Sensor
                 v => threshold = (int)v,
                 PropertyGUIs.Int)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<CheckScoreComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarryableBehavior : EntityBehavior
+public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, CarryableComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Carryable", "Allow player to pick up / drop / throw",
@@ -13,7 +13,7 @@ public class CarryableBehavior : EntityBehavior
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
-    
+
     public float throwSpeed = 0;
     public float throwAngle = 25;
 
@@ -35,13 +35,6 @@ public class CarryableBehavior : EntityBehavior
                 v => throwAngle = (float)v,
                 PropertyGUIs.Float),
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<CarryableComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

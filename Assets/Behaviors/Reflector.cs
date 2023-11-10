@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 [EditorPreviewBehavior]
-public class ReflectorBehavior : EntityBehavior
+public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, ReflectorComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Reflector", "Add more realistic reflections to area",
@@ -39,13 +39,6 @@ public class ReflectorBehavior : EntityBehavior
                 v => realtime = (bool)v,
                 PropertyGUIs.Toggle)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<ReflectorComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

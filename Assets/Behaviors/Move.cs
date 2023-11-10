@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveBehavior : EntityBehavior
+public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Move", "Move in a direction or toward object",
@@ -32,13 +32,6 @@ public class MoveBehavior : EntityBehavior
                 v => target = (Target)v,
                 PropertyGUIs.Target)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        MoveComponent move = gameObject.AddComponent<MoveComponent>();
-        move.Init(this);
-        return move;
     }
 }
 

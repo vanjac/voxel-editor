@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PulseSensor : Sensor
+public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Pulse", "Turn on and off continuously",
@@ -41,13 +41,6 @@ public class PulseSensor : Sensor
                 v => input = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        PulseComponent pulse = gameObject.AddComponent<PulseComponent>();
-        pulse.Init(this);
-        return pulse;
     }
 }
 

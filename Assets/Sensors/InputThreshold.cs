@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputThresholdSensor : Sensor
+public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThresholdComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Threshold", "Active when some number of other objects are active",
@@ -49,13 +49,6 @@ public class InputThresholdSensor : Sensor
                 v => inputs = (Input[])v,
                 InputsGUI)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        InputThresholdComponent component = gameObject.AddComponent<InputThresholdComponent>();
-        component.Init(this);
-        return component;
     }
 
     private void InputsGUI(Property property)

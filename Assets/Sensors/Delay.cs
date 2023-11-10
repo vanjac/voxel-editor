@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DelaySensor : Sensor
+public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Delay", "Add delay to input turning on or off",
@@ -42,13 +42,6 @@ public class DelaySensor : Sensor
                 v => startOn = (bool)v,
                 PropertyGUIs.Toggle)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        DelayComponent component = gameObject.AddComponent<DelayComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForceBehavior : EntityBehavior
+public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent>
 {
     public enum ForceBehaviorMode
     {
@@ -54,13 +54,6 @@ public class ForceBehavior : EntityBehavior
                 v => target = (Target)v,
                 PropertyGUIs.Target)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var force = gameObject.AddComponent<ForceComponent>();
-        force.Init(this);
-        return force;
     }
 }
 

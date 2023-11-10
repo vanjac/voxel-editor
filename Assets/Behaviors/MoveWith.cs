@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveWithBehavior : EntityBehavior
+public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWithComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Move With", "Follow the motion of another object",
@@ -31,13 +31,6 @@ public class MoveWithBehavior : EntityBehavior
                 v => followRotation = (bool)v,
                 PropertyGUIs.Toggle)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        MoveWithComponent component = gameObject.AddComponent<MoveWithComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

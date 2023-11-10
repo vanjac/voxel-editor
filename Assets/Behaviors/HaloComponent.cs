@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [EditorPreviewBehavior]
-public class HaloBehavior : EntityBehavior
+public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Halo", "Glowing effect",
@@ -30,13 +30,6 @@ public class HaloBehavior : EntityBehavior
                 v => color = (Color)v,
                 PropertyGUIs.Color)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<HaloComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

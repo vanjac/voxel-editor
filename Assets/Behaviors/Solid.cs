@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SolidBehavior : EntityBehavior
+public class SolidBehavior : GenericEntityBehavior<SolidBehavior, SolidComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Solid", "Block and collide with other objects",
@@ -14,11 +14,6 @@ public class SolidBehavior : EntityBehavior
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        return gameObject.AddComponent<SolidComponent>();
     }
 }
 

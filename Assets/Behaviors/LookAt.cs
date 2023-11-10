@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LookAtBehavior : EntityBehavior
+public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Look At", "Point in a direction or towards object",
@@ -45,13 +45,6 @@ public class LookAtBehavior : EntityBehavior
                 v => (yaw, pitch) = ((bool, bool))v,
                 PropertyGUIs.DoubleToggle)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<LookAtComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

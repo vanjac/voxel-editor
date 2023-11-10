@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScaleBehavior : EntityBehavior
+public class ScaleBehavior : GenericEntityBehavior<ScaleBehavior, ScaleComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Scale", "Change size along each axis",
@@ -29,13 +29,6 @@ public class ScaleBehavior : EntityBehavior
                 v => scale = (Vector3)v,
                 PropertyGUIs.Vector3),
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<ScaleComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

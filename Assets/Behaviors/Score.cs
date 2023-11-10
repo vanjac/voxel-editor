@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreBehavior : EntityBehavior
+public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Score", "Add or subtract from player's score",
@@ -24,13 +24,6 @@ public class ScoreBehavior : EntityBehavior
                 v => amount = (int)v,
                 PropertyGUIs.Int)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        var component = gameObject.AddComponent<ScoreComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

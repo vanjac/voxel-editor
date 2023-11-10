@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InCameraSensor : Sensor
+public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "In Camera", "Active when player looking at object",
@@ -27,13 +27,6 @@ public class InCameraSensor : Sensor
                 v => maxDistance = (float)v,
                 PropertyGUIs.Float)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        var inCamera = gameObject.AddComponent<InCameraComponent>();
-        inCamera.Init(this);
-        return inCamera;
     }
 }
 

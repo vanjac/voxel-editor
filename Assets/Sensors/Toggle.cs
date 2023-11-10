@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToggleSensor : Sensor
+public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Toggle", "One input to turn on, one input to turn off, otherwise hold",
@@ -36,13 +36,6 @@ public class ToggleSensor : Sensor
                 v => onInput = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        ToggleComponent component = gameObject.AddComponent<ToggleComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

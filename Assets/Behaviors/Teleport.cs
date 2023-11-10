@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TeleportBehavior : EntityBehavior
+public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, TeleportComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Teleport", "Instantly teleport to another location",
@@ -45,13 +45,6 @@ public class TeleportBehavior : EntityBehavior
                         targetEntityIsActivator ? "Activator" : "None");
                 })
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        TeleportComponent component = gameObject.AddComponent<TeleportComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

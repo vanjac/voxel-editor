@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MotionSensor : Sensor
+public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Motion", "Detect moving above some velocity",
@@ -36,13 +36,6 @@ public class MotionSensor : Sensor
                 v => direction = (Target)v,
                 PropertyGUIs.TargetDirectionFilter)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        var motion = gameObject.AddComponent<MotionSensorComponent>();
-        motion.Init(this);
-        return motion;
     }
 }
 

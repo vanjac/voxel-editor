@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VisibleBehavior : EntityBehavior
+public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Visible", "Object is visible in the game",
@@ -14,11 +14,6 @@ public class VisibleBehavior : EntityBehavior
     public override BehaviorType BehaviorObjectType()
     {
         return objectType;
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        return gameObject.AddComponent<VisibleComponent>();
     }
 }
 

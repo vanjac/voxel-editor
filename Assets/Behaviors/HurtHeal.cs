@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HurtHealBehavior : EntityBehavior
+public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHealComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Hurt/Heal", "Lose/gain health; below 0, object dies",
@@ -52,13 +52,6 @@ public class HurtHealBehavior : EntityBehavior
                 v => healthRange.Item2 = (float)v,
                 PropertyGUIs.Float)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        HurtHealComponent component = gameObject.AddComponent<HurtHealComponent>();
-        component.Init(this);
-        return component;
     }
 }
 

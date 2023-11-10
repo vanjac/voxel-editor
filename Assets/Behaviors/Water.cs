@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaterBehavior : EntityBehavior
+public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
         "Water", "Simulate buoyancy physics",
@@ -25,13 +25,6 @@ public class WaterBehavior : EntityBehavior
                 v => density = (float)v,
                 PropertyGUIs.Float)
         });
-    }
-
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
-        WaterComponent water = gameObject.AddComponent<WaterComponent>();
-        water.Init(this);
-        return water;
     }
 }
 

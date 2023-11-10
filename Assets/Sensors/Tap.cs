@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TapSensor : Sensor
+public class TapSensor : GenericSensor<TapSensor, TapComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Tap", "Detect player tapping the object",
@@ -26,13 +26,6 @@ public class TapSensor : Sensor
                 v => maxDistance = (float)v,
                 PropertyGUIs.Float)
         }, base.Properties());
-    }
-
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
-        var tap = gameObject.AddComponent<TapComponent>();
-        tap.Init(this);
-        return tap;
     }
 }
 
