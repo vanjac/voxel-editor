@@ -16,9 +16,8 @@ public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
     public float onTime = 1;
     public EntityReference input = new EntityReference(null);
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(new Property[]
         {
             new Property("sta", "Start on?",
                 () => startOn,
@@ -37,7 +36,6 @@ public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
                 v => input = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull)
         }, base.Properties());
-    }
 }
 
 public class PulseComponent : SensorComponent<PulseSensor>

@@ -125,9 +125,8 @@ public class CustomTexture : PropertiesObject
         return customTex;
     }
 
-    public ICollection<Property> Properties()
-    {
-        return new Property[]
+    public ICollection<Property> Properties() =>
+        new Property[]
         {
             new Property("bas", "Base",
                 () => baseMat,
@@ -146,12 +145,8 @@ public class CustomTexture : PropertiesObject
                 v => filter = (CustomFilter)v,
                 PropertyGUIs.Enum)
         };
-    }
 
-    public ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
-    }
+    public ICollection<Property> DeprecatedProperties() => System.Array.Empty<Property>();
 
     public static bool IsCustomTexture(Material material)
     {

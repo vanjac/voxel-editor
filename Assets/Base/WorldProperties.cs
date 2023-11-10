@@ -52,9 +52,8 @@ public class WorldProperties : PropertiesObject
         GetReflectionProbe().RenderProbe();
     }
 
-    public ICollection<Property> Properties()
-    {
-        return new Property[]
+    public ICollection<Property> Properties() =>
+        new Property[]
         {
             new Property("sky", "Sky",
                 () => RenderSettings.skybox,
@@ -123,11 +122,9 @@ public class WorldProperties : PropertiesObject
                 v => RenderSettings.fogColor = (Color) v,
                 PropertyGUIs.Color)
         };
-    }
 
-    public ICollection<Property> DeprecatedProperties()
-    {
-        return new Property[]
+    public ICollection<Property> DeprecatedProperties() =>
+        new Property[]
         {
             new Property("fdn", "Fog density",
                 () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
@@ -146,5 +143,4 @@ public class WorldProperties : PropertiesObject
                 },
                 PropertyGUIs.Slider(0, 1)),
         };
-    }
 }

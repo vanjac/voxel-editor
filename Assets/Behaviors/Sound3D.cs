@@ -23,9 +23,8 @@ public class Sound3DBehavior : BaseSoundBehavior
     public (float, float) distanceRange = (1, 30);
     public SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("dat", "Sound",
                 () => soundData,
@@ -48,7 +47,6 @@ public class Sound3DBehavior : BaseSoundBehavior
                 v => distanceRange = ((float, float))v,
                 PropertyGUIs.FloatRange)
         });
-    }
 
     public override Behaviour MakeComponent(GameObject gameObject)
     {

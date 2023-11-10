@@ -16,16 +16,14 @@ public class ScaleBehavior : GenericEntityBehavior<ScaleBehavior, ScaleComponent
 
     public Vector3 scale = Vector3.one;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("sca", "Factor",
                 () => scale,
                 v => scale = (Vector3)v,
                 PropertyGUIs.Vector3),
         });
-    }
 }
 
 public class ScaleComponent : BehaviorComponent<ScaleBehavior>

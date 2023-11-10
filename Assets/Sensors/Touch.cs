@@ -20,9 +20,8 @@ public class TouchSensor : BaseTouchSensor
         "vector-combine", typeof(TouchSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("vel", "Min velocity",
                 () => minVelocity,
@@ -33,7 +32,6 @@ public class TouchSensor : BaseTouchSensor
                 v => direction = (Target)v,
                 PropertyGUIs.TargetDirectionFilter)
         });
-    }
 
     public override ISensorComponent MakeComponent(GameObject gameObject)
     {

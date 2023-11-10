@@ -12,16 +12,14 @@ public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent
 
     public float density = 1.0f;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("den", "Density",
                 () => density,
                 v => density = (float)v,
                 PropertyGUIs.Float)
         });
-    }
 }
 
 public class WaterComponent : BehaviorComponent<WaterBehavior>

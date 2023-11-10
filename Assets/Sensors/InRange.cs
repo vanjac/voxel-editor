@@ -12,16 +12,14 @@ public class InRangeSensor : BaseTouchSensor
 
     private float distance = 5;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("dis", "Distance",
                 () => distance,
                 v => distance = (float)v,
                 PropertyGUIs.Float)
         });
-    }
 
     public override ISensorComponent MakeComponent(GameObject gameObject)
     {

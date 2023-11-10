@@ -20,9 +20,8 @@ public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtCompon
     public float speed = 120;
     public bool yaw = true, pitch = false;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("vel", "Speed",
                 () => speed,
@@ -41,7 +40,6 @@ public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtCompon
                 v => (yaw, pitch) = ((bool, bool))v,
                 PropertyGUIs.DoubleToggle)
         });
-    }
 }
 
 public class LookAtComponent : MotionComponent<LookAtBehavior>

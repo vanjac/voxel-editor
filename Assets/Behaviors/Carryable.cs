@@ -18,9 +18,8 @@ public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, Carrya
     public float throwSpeed = 0;
     public float throwAngle = 25;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("ths", "Throw speed",
                 () => throwSpeed,
@@ -31,7 +30,6 @@ public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, Carrya
                 v => throwAngle = (float)v,
                 PropertyGUIs.Float),
         });
-    }
 }
 
 

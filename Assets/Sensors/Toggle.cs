@@ -15,9 +15,8 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
     public EntityReference onInput = new EntityReference(null);
     public bool startOn;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(new Property[]
         {
             new Property("sta", "Start on?",
                 () => startOn,
@@ -32,7 +31,6 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
                 v => onInput = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull)
         }, base.Properties());
-    }
 }
 
 public class ToggleComponent : SensorComponent<ToggleSensor>

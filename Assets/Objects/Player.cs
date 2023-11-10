@@ -17,16 +17,14 @@ public class PlayerObject : ObjectEntity
         paint.material.color = Color.green;
     }
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("wlk", "Footstep sounds?",
                 () => footstepSounds,
                 v => footstepSounds = (bool)v,
                 PropertyGUIs.Toggle),
         });
-    }
 
     public override Vector3 PositionOffset()
     {

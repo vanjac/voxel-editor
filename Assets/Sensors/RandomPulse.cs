@@ -14,9 +14,8 @@ public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseCom
     public (float, float) offTimeRange = (1, 5);
     public (float, float) onTimeRange = (1, 5);
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(new Property[]
         {
             new Property("oft", "Off time",
                 () => offTimeRange,
@@ -27,7 +26,6 @@ public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseCom
                 v => onTimeRange = ((float, float))v,
                 PropertyGUIs.FloatRange)
         }, base.Properties());
-    }
 }
 
 public class RandomPulseComponent : SensorComponent<RandomPulseSensor>

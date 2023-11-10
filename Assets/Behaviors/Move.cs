@@ -15,9 +15,8 @@ public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
     public Target target = new Target(Target.NORTH);
     public float speed = 1;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("vel", "Speed",
                 () => speed,
@@ -28,7 +27,6 @@ public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
                 v => target = (Target)v,
                 PropertyGUIs.Target)
         });
-    }
 }
 
 public class MoveComponent : MotionComponent<MoveBehavior>

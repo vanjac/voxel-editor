@@ -23,16 +23,14 @@ public class Substance : DynamicEntity
     public Material highlightMaterial;
     public VoxelFace defaultPaint;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("piv", "Pivot",
                 () => pivot,
                 v => {pivot = (Pivot)v;},
                 PropertyGUIs.PivotProp),
         });
-    }
 
     public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
     {

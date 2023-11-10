@@ -25,9 +25,8 @@ public class SoundBehavior : BaseSoundBehavior
         "volume-high", typeof(SoundBehavior));
     public override BehaviorType BehaviorObjectType => objectType;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("dat", "Sound",
                 () => soundData,
@@ -50,7 +49,6 @@ public class SoundBehavior : BaseSoundBehavior
                 v => fadeOut = (float)v,
                 PropertyGUIs.Float)
         });
-    }
 
     public override Behaviour MakeComponent(GameObject gameObject)
     {

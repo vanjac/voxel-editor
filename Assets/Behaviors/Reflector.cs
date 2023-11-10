@@ -18,9 +18,8 @@ public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, Reflec
     public float size = 35, intensity = 1;
     public bool realtime;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("siz", "Range",
                 () => size,
@@ -35,7 +34,6 @@ public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, Reflec
                 v => realtime = (bool)v,
                 PropertyGUIs.Toggle)
         });
-    }
 }
 
 public class ReflectorComponent : BehaviorComponent<ReflectorBehavior>

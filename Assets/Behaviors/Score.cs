@@ -11,16 +11,14 @@ public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent
 
     public int amount = 10;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("num", "Amount",
                 () => amount,
                 v => amount = (int)v,
                 PropertyGUIs.Int)
         });
-    }
 }
 
 public class ScoreComponent : BehaviorComponent<ScoreBehavior>

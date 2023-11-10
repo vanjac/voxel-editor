@@ -13,9 +13,8 @@ public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
     public float size = 3;
     public Color color = Color.white;  // scaled by INTENSITY
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("siz", "Size",
                 () => size,
@@ -26,7 +25,6 @@ public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
                 v => color = (Color)v,
                 PropertyGUIs.Color)
         });
-    }
 }
 
 public class HaloComponent : BehaviorComponent<HaloBehavior>

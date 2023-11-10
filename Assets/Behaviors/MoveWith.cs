@@ -14,9 +14,8 @@ public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWith
     public EntityReference target = new EntityReference(null);
     public bool followRotation = true;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("par", "Parent",
                 () => target,
@@ -27,7 +26,6 @@ public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWith
                 v => followRotation = (bool)v,
                 PropertyGUIs.Toggle)
         });
-    }
 }
 
 public class MoveWithComponent : MotionComponent<MoveWithBehavior>

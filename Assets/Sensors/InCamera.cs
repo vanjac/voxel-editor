@@ -14,16 +14,14 @@ public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
 
     public float maxDistance = 100;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(new Property[]
         {
             new Property("dis", "Max distance",
                 () => maxDistance,
                 v => maxDistance = (float)v,
                 PropertyGUIs.Float)
         }, base.Properties());
-    }
 }
 
 public class InCameraComponent : SensorComponent<InCameraSensor>

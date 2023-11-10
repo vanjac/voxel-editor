@@ -15,9 +15,8 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
     public EntityReference target = new EntityReference(null);
     public EntityReference origin = new EntityReference(null);
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("loc", "To",
                 () => target,
@@ -41,7 +40,6 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
                         targetEntityIsActivator ? "Activator" : "None");
                 })
         });
-    }
 }
 
 public class TeleportComponent : BehaviorComponent<TeleportBehavior>

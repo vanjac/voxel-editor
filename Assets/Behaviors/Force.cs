@@ -25,9 +25,8 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
     public float strength = 10;
     public Target target = new Target(Target.UP);
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("fmo", "Mode",
                 () => mode,
@@ -50,7 +49,6 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
                 v => target = (Target)v,
                 PropertyGUIs.Target)
         });
-    }
 }
 
 public class ForceComponent : BehaviorComponent<ForceBehavior>

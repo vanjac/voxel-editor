@@ -16,9 +16,8 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
     public bool shadows = false;
     public bool halo = false;  // deprecated
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("siz", "Size",
                 () => size,
@@ -37,18 +36,15 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
                 v => shadows = (bool)v,
                 PropertyGUIs.Toggle)
         });
-    }
 
-    public override ICollection<Property> DeprecatedProperties()
-    {
-        return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
+    public override ICollection<Property> DeprecatedProperties() =>
+        Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
             new Property("hal", "Halo?",
                 () => halo,
                 v => halo = (bool)v,
                 PropertyGUIs.Toggle)
         });
-    }
 }
 
 public class LightComponent : BehaviorComponent<LightBehavior>

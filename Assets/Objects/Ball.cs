@@ -16,9 +16,8 @@ public class BallObject : ObjectEntity
         paint.material.color = Color.red;
     }
 
-    public override ICollection<Property> DeprecatedProperties()
-    {
-        return Property.JoinProperties(base.DeprecatedProperties(), new Property[]
+    public override ICollection<Property> DeprecatedProperties() =>
+        Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
             new Property("mat", "Material",
                 () => paint.material == null ? paint.overlay : paint.material,
@@ -40,7 +39,6 @@ public class BallObject : ObjectEntity
                 },
                 PropertyGUIs.Material("Overlays", true))
         });
-    }
 
     private GameObject ObjectTemplate(VoxelArray voxelArray)
     {

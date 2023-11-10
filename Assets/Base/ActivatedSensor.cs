@@ -180,9 +180,8 @@ public abstract class ActivatedSensor : Sensor
 
     public Filter filter = new EntityTypeFilter(Entity.objectType);
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(new Property[]
         {
             new Property("fil", "Filter",
                 () => filter,
@@ -190,5 +189,4 @@ public abstract class ActivatedSensor : Sensor
                 PropertyGUIs.Filter,
                 true) // explicit type
         }, base.Properties());
-    }
 }

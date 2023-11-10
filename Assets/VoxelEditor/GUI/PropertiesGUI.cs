@@ -96,15 +96,9 @@ class StoredPropertiesObject : PropertiesObject
 
     public PropertiesObjectType ObjectType => type;
 
-    public ICollection<Property> Properties()
-    {
-        return properties;
-    }
+    public ICollection<Property> Properties() => properties;
 
-    public ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
-    }
+    public ICollection<Property> DeprecatedProperties() => System.Array.Empty<Property>();
 }
 
 class StoredEntityBehavior : StoredPropertiesObject

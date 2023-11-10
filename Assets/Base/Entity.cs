@@ -242,21 +242,16 @@ public abstract class Entity : PropertiesObject
 
     public virtual PropertiesObjectType ObjectType => objectType;
 
-    public virtual ICollection<Property> Properties()
-    {
-        return new Property[]
+    public virtual ICollection<Property> Properties() =>
+        new Property[]
         {
             new Property("tag", "Tag",
                 () => tag,
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
         };
-    }
 
-    public virtual ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
-    }
+    public virtual ICollection<Property> DeprecatedProperties() => Array.Empty<Property>();
 
     // storeComponent: whether the "component" variable should be set
     // this should usually be true, but false for clones
@@ -485,9 +480,8 @@ public abstract class EntityBehavior : PropertiesObject
     public PropertiesObjectType ObjectType => BehaviorObjectType;
     public virtual BehaviorType BehaviorObjectType => objectType;
 
-    public virtual ICollection<Property> Properties()
-    {
-        return new Property[]
+    public virtual ICollection<Property> Properties() =>
+        new Property[]
         {
             new Property("tar", "Target",
                 () => new BehaviorTargetProperty(targetEntity, targetEntityIsActivator),
@@ -530,12 +524,8 @@ public abstract class EntityBehavior : PropertiesObject
                         PropertyGUIs.BehaviorCondition(property);
                 })
         };
-    }
 
-    public virtual ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
-    }
+    public virtual ICollection<Property> DeprecatedProperties() => System.Array.Empty<Property>();
 
     public abstract Behaviour MakeComponent(GameObject gameObject);
 }
@@ -673,15 +663,9 @@ public abstract class Sensor : PropertiesObject
 
     public virtual PropertiesObjectType ObjectType => objectType;
 
-    public virtual ICollection<Property> Properties()
-    {
-        return new Property[] { };
-    }
+    public virtual ICollection<Property> Properties() => new Property[] { };
 
-    public virtual ICollection<Property> DeprecatedProperties()
-    {
-        return System.Array.Empty<Property>();
-    }
+    public virtual ICollection<Property> DeprecatedProperties() => Array.Empty<Property>();
 
     public abstract ISensorComponent MakeComponent(GameObject gameObject);
 }
@@ -813,9 +797,8 @@ public abstract class DynamicEntity : Entity
     public bool xRay = false;
     public float health = 100;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("xra", "X-Ray?",
                 () => xRay,
@@ -826,7 +809,6 @@ public abstract class DynamicEntity : Entity
                 v => health = (float)v,
                 PropertyGUIs.Float)
         });
-    }
 
     // update the DynamicEntity's appearance in the Editor
     public virtual void UpdateEntityEditor() { }

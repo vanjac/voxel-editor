@@ -18,16 +18,14 @@ public class CharacterBehavior : BasePhysicsBehavior
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
     public override BehaviorType BehaviorObjectType => objectType;
 
-    public override ICollection<Property> Properties()
-    {
-        return Property.JoinProperties(base.Properties(), new Property[]
+    public override ICollection<Property> Properties() =>
+        Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("den", "Density",
                 () => density,
                 v => density = (float)v,
                 PropertyGUIs.Float)
         });
-    }
 
     public override Behaviour MakeComponent(GameObject gameObject)
     {
