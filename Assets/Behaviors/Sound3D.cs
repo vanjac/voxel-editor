@@ -18,14 +18,10 @@ public class Sound3DBehavior : BaseSoundBehavior
         + "•  <b>Max distance:</b> Sound will be inaudible past this distance.\n\n"
         + "See Sound behavior for additional documentation.",
         "headphones", typeof(Sound3DBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public (float, float) distanceRange = (1, 30);
     public SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

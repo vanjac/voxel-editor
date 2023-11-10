@@ -13,14 +13,10 @@ public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, Reflec
         + "•  <b>Intensity</b> controls the brightness of the reflections\n"
         + "•  When <b>Real-time</b> is checked, reflections will update continuously (expensive!)",
         "mirror", typeof(ReflectorBehavior));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 35, intensity = 1;
     public bool realtime;
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

@@ -10,14 +10,10 @@ public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
         + "Substances will rotate around their <b>Pivot</b> point.",
         "format-rotate-90", typeof(SpinBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public float speed = 50;
     public Target axis = new Target(Target.UP); // not random
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

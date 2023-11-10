@@ -210,7 +210,7 @@ public class PropertiesObjectType
 
 public interface PropertiesObject
 {
-    PropertiesObjectType ObjectType();
+    PropertiesObjectType ObjectType { get; }
     ICollection<Property> Properties();
     ICollection<Property> DeprecatedProperties();
 }
@@ -237,13 +237,10 @@ public abstract class Entity : PropertiesObject
 
     public override string ToString()
     {
-        return TagToString(tag) + " " + ObjectType().fullName;
+        return TagToString(tag) + " " + ObjectType.fullName;
     }
 
-    public virtual PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
+    public virtual PropertiesObjectType ObjectType => objectType;
 
     public virtual ICollection<Property> Properties()
     {
@@ -271,11 +268,11 @@ public abstract class Entity : PropertiesObject
 
     public virtual Entity Clone()
     {
-        var newEntity = (Entity)(ObjectType().Create());
+        var newEntity = (Entity)ObjectType.Create();
         PropertiesObjectType.CopyProperties(this, newEntity, this, newEntity);
         if (sensor != null)
         {
-            newEntity.sensor = (Sensor)(sensor.ObjectType().Create());
+            newEntity.sensor = (Sensor)sensor.ObjectType.Create();
             PropertiesObjectType.CopyProperties(sensor, newEntity.sensor, this, newEntity);
         }
         else
@@ -283,7 +280,7 @@ public abstract class Entity : PropertiesObject
         newEntity.behaviors.Clear(); // in case the Object Type had default behaviors
         foreach (var behavior in behaviors)
         {
-            var newBehavior = (EntityBehavior)(behavior.ObjectType().Create());
+            var newBehavior = (EntityBehavior)behavior.ObjectType.Create();
             PropertiesObjectType.CopyProperties(behavior, newBehavior, this, newEntity);
             newEntity.behaviors.Add(newBehavior);
         }
@@ -397,7 +394,7 @@ public abstract class EntityComponent : MonoBehaviour
             var behaviorComponents = new List<Behaviour>();
             foreach (EntityBehavior behavior in activatorBehaviors)
             {
-                if (!behavior.BehaviorObjectType().rule(newActivator.entity))
+                if (!behavior.BehaviorObjectType.rule(newActivator.entity))
                     continue;
                 Behaviour c = behavior.MakeComponent(newActivator.gameObject);
                 behaviorComponents.Add(c);
@@ -485,15 +482,8 @@ public abstract class EntityBehavior : PropertiesObject
     public EntityReference targetEntity = new EntityReference(null); // null for self
     public bool targetEntityIsActivator = false;
 
-    public PropertiesObjectType ObjectType()
-    {
-        return BehaviorObjectType();
-    }
-
-    public virtual BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
+    public PropertiesObjectType ObjectType => BehaviorObjectType;
+    public virtual BehaviorType BehaviorObjectType => objectType;
 
     public virtual ICollection<Property> Properties()
     {
@@ -681,10 +671,7 @@ public abstract class Sensor : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "Sensor", typeof(Sensor));
 
-    public virtual PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
+    public virtual PropertiesObjectType ObjectType => objectType;
 
     public virtual ICollection<Property> Properties()
     {

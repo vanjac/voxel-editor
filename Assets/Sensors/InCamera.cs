@@ -10,13 +10,9 @@ public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
         + "Does not turn on if object doesn't have Visible behavior.\n\n"
         + "Activator: the player",
         "eye", typeof(InCameraSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public float maxDistance = 100;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

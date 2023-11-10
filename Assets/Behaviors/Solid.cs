@@ -10,11 +10,7 @@ public class SolidBehavior : GenericEntityBehavior<SolidBehavior, SolidComponent
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
+    public override BehaviorType BehaviorObjectType => objectType;
 }
 
 public class SolidComponent : BehaviorComponent<SolidBehavior>

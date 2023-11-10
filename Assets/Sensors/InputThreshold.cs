@@ -13,6 +13,7 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
         + "The sensor turns on if the total is at or above the <b>Threshold</b>.\n\n"
         + "Activators: the combined activators of all Positive inputs minus the activators of Negative inputs",
         "altimeter", typeof(InputThresholdSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     // public so it can be serialized
     // this is serialized so don't change it!
@@ -30,11 +31,6 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
 
     public int threshold = 1;
     public Input[] inputs = new Input[0];
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

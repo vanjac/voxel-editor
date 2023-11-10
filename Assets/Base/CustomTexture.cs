@@ -8,6 +8,7 @@ public class CustomTexture : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "Custom Texture", "A custom texture image for materials or overlays",
         "image", typeof(CustomTexture));
+    public PropertiesObjectType ObjectType => objectType;
 
     public enum CustomFilter
     {
@@ -122,11 +123,6 @@ public class CustomTexture : PropertiesObject
         var customTex = new CustomTexture(null, overlay);
         customTex.baseMat = baseMat;
         return customTex;
-    }
-
-    public PropertiesObjectType ObjectType()
-    {
-        return objectType;
     }
 
     public ICollection<Property> Properties()

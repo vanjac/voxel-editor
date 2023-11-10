@@ -17,11 +17,7 @@ public class PhysicsBehavior : BasePhysicsBehavior
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public override ICollection<Property> Properties()
     {

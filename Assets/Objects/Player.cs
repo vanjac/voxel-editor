@@ -6,6 +6,7 @@ public class PlayerObject : ObjectEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Player", "The character you control in the game", "human-greeting", typeof(PlayerObject));
+    public override PropertiesObjectType ObjectType => objectType;
 
     private bool footstepSounds = true;
 
@@ -14,11 +15,6 @@ public class PlayerObject : ObjectEntity
         paint.material = ResourcesDirectory.InstantiateMaterial(
             ResourcesDirectory.FindMaterial("GLOSSY", true));
         paint.material.color = Color.green;
-    }
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
     }
 
     public override ICollection<Property> Properties()

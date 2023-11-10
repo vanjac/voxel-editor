@@ -10,11 +10,7 @@ public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleCom
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
+    public override BehaviorType BehaviorObjectType => objectType;
 }
 
 public class VisibleComponent : BehaviorComponent<VisibleBehavior>

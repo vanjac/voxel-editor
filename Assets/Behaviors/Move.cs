@@ -10,14 +10,10 @@ public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
         + "When used with Solid and Character behaviors, object will additionally be affected by gravity.\n"
         + "Increase the <b>Density</b> of the Physics/Character behavior to increase the object's pushing strength.",
         "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public Target target = new Target(Target.NORTH);
     public float speed = 1;
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

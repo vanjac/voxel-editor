@@ -8,14 +8,10 @@ public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
     public static new BehaviorType objectType = new BehaviorType(
         "Halo", "Glowing effect",
         "Halo appears at the Pivot point of substances", "blur", typeof(HaloBehavior));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 3;
     public Color color = Color.white;  // scaled by INTENSITY
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

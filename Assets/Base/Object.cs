@@ -6,6 +6,7 @@ public abstract class ObjectEntity : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Object", "An object not made of blocks", "circle", typeof(ObjectEntity));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public ObjectMarker marker;
     public Vector3Int position;
@@ -13,11 +14,6 @@ public abstract class ObjectEntity : DynamicEntity
     public VoxelFace paint;
     public Color highlight = Color.clear;
     public Material highlightMaterial;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public virtual Vector3 PositionOffset()
     {

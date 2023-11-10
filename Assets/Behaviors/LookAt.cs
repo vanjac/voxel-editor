@@ -13,16 +13,12 @@ public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtCompon
         + "Substances will rotate around their <b>Pivot</b> point.",
         "compass", typeof(LookAtBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public Target target = new Target(Target.EAST);
     public Target front = new Target(Target.NORTH);
     public float speed = 120;
     public bool yaw = true, pitch = false;
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

@@ -17,17 +17,13 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
         + "•  <b>Ignore mass</b> scales the force to compensate for the mass of the object.\n"
         + "•  <b>Stop object first</b> will stop any existing motion before applying the force.",
         "rocket", typeof(ForceBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;
     public bool ignoreMass = false;
     public bool stopObjectFirst = false;
     public float strength = 10;
     public Target target = new Target(Target.UP);
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

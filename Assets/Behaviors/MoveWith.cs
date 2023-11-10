@@ -9,14 +9,10 @@ public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWith
         "BUG: This behavior will block Move behaviors from working.",
         "move-resize-variant", typeof(MoveWithBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public EntityReference target = new EntityReference(null);
     public bool followRotation = true;
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

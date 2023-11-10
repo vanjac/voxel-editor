@@ -10,14 +10,10 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
         + "•  <b>Relative to:</b> Optional origin location. If specified, instead of going directly to the target, "
         + "the object will be displaced by the difference between the target and origin.",
         "send", typeof(TeleportBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public EntityReference target = new EntityReference(null);
     public EntityReference origin = new EntityReference(null);
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

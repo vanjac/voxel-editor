@@ -13,14 +13,10 @@ public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, Carrya
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public float throwSpeed = 0;
     public float throwAngle = 25;
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

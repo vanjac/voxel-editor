@@ -9,16 +9,12 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
         "Light", "Light source at the center of object",
         "Light originates from the Pivot point of substances",
         "lightbulb-on", typeof(LightBehavior));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 10, intensity = 1;
     public Color color = Color.white;
     public bool shadows = false;
     public bool halo = false;  // deprecated
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

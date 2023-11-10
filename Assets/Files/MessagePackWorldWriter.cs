@@ -185,7 +185,7 @@ public class MessagePackWorldWriter
         var propsDict = new MessagePackObjectDictionary();
 
         if (includeName)
-            propsDict[FileKeys.PROPOBJ_NAME] = obj.ObjectType().fullName;
+            propsDict[FileKeys.PROPOBJ_NAME] = obj.ObjectType.fullName;
 
         var propertiesList = new List<MessagePackObject>();
         foreach (Property prop in obj.Properties())

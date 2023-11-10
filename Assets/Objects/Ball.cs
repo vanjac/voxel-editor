@@ -7,17 +7,13 @@ public class BallObject : ObjectEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Ball", "A sphere which can be painted",
         "Use the Paint button to change color/material", "circle-outline", typeof(BallObject));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public BallObject()
     {
         paint.material = ResourcesDirectory.InstantiateMaterial(
             ResourcesDirectory.FindMaterial("MATTE", true));
         paint.material.color = Color.red;
-    }
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
     }
 
     public override ICollection<Property> DeprecatedProperties()

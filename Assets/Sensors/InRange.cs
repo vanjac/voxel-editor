@@ -8,13 +8,9 @@ public class InRangeSensor : BaseTouchSensor
         "In Range", "Detect objects within some distance",
         "Activators: all objects in range",
         "radar", typeof(InRangeSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     private float distance = 5;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

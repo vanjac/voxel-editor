@@ -9,16 +9,12 @@ public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
         "<b>Input</b> is optional. When connected, it controls whether the pulse is active. "
         + "When the Input turns off, the pulse completes a full cycle then stops.",
         "pulse", typeof(PulseSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public bool startOn = true;
     public float offTime = 1;
     public float onTime = 1;
     public EntityReference input = new EntityReference(null);
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

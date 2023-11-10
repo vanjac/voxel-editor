@@ -7,13 +7,9 @@ public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent
     public static new BehaviorType objectType = new BehaviorType(
         "Score", "Add or subtract from player's score",
         "counter", typeof(ScoreBehavior));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public int amount = 10;
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

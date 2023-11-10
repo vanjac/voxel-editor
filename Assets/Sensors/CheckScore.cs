@@ -7,7 +7,8 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Check Score", "Active when score is at or above/below a threshold",
         "code-greater-than-or-equal", typeof(CheckScoreSensor));
-    
+    public override PropertiesObjectType ObjectType => objectType;
+
     public enum AboveOrBelow
     {
         ABOVE, BELOW
@@ -15,11 +16,6 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
 
     public int threshold = 100;
     public AboveOrBelow compare = AboveOrBelow.ABOVE;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

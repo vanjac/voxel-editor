@@ -9,15 +9,11 @@ public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
         "Turns on when the object is both moving faster than the <b>Minimum velocity</b> in the given direction, "
         + "and rotating about any axis faster than the <b>Minimum angular velocity</b> (degrees per second).",
         "speedometer", typeof(MotionSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public float minVelocity = 1;
     public float minAngularVelocity = 0;
     public Target direction = new Target(null);
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

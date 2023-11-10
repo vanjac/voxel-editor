@@ -23,11 +23,7 @@ public class SoundBehavior : BaseSoundBehavior
         + "•  In <b>Background</b> mode the sound is always playing, but muted when the behavior is inactive.\n\n"
         + "Supported formats: MP3, WAV, OGG, AIF, XM, IT",
         "volume-high", typeof(SoundBehavior));
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public override ICollection<Property> Properties()
     {

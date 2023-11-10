@@ -14,7 +14,7 @@ class StoredPropertiesObject : PropertiesObject
 
     public StoredPropertiesObject(PropertiesObject store)
     {
-        type = store.ObjectType();
+        type = store.ObjectType;
         properties = store.Properties();
     }
 
@@ -25,13 +25,13 @@ class StoredPropertiesObject : PropertiesObject
         if (objects.Length == 0)
             return;
         if (objects[0] != null)
-            type = objects[0].ObjectType();
+            type = objects[0].ObjectType;
         // check that all objects have the same type. if they don't, fail
         foreach (PropertiesObject obj in objects)
         {
             PropertiesObjectType objType = null;
             if (obj != null)
-                objType = obj.ObjectType();
+                objType = obj.ObjectType;
             if (objType != type)
             {
                 type = DIFFERENT_OBJECT_TYPE;
@@ -94,10 +94,7 @@ class StoredPropertiesObject : PropertiesObject
         }
     }
 
-    public PropertiesObjectType ObjectType()
-    {
-        return type;
-    }
+    public PropertiesObjectType ObjectType => type;
 
     public ICollection<Property> Properties()
     {
@@ -300,7 +297,7 @@ public class PropertiesGUI : LeftPanelGUI
             for (int i = 0; i < selectedEntities.Count; i++)
                 selectedSensors[i] = selectedEntities[i].sensor;
             editSensor = new StoredPropertiesObject(selectedSensors);
-            if (editSensor.ObjectType() == null)
+            if (editSensor.ObjectType == null)
                 editSensor = null;
 
             int numBehaviors = selectedEntities[0].behaviors.Count; // minimum number of behaviors
@@ -408,7 +405,7 @@ public class PropertiesGUI : LeftPanelGUI
                     // with multiple selected entities, NewBehaviorGUI doesn't check if behaviors
                     // are valid for the selected entities
                     if (newBehavior.targetEntity.entity == null && !newBehavior.targetEntityIsActivator
-                        && !newBehavior.BehaviorObjectType().rule(entity))
+                        && !newBehavior.BehaviorObjectType.rule(entity))
                         continue;
                     entity.behaviors.Add(newBehavior);
                 }
@@ -482,15 +479,15 @@ public class PropertiesGUI : LeftPanelGUI
         }
         else
         {
-            title = obj.ObjectType().fullName + suffix;
+            title = obj.ObjectType.fullName + suffix;
             if (obj.Properties().Count > 0)
                 title += ":";
         }
         GUILayout.BeginHorizontal();
-        if (obj != null && GUILayout.Button(obj.ObjectType().icon, iconStyle.Value))
+        if (obj != null && GUILayout.Button(obj.ObjectType.icon, iconStyle.Value))
         {
             var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
-            typeInfo.type = obj.ObjectType();
+            typeInfo.type = obj.ObjectType;
         }
         GUILayout.Label(title, GUIStyleSet.instance.labelTitle);
         GUILayout.EndHorizontal();

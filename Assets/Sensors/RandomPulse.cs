@@ -9,14 +9,10 @@ public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseCom
         "Alternates on/off using random times selected within the ranges."
         + " Useful for unpredictable behavior, flickering lights, etc.",
         "progress-question", typeof(RandomPulseSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public (float, float) offTimeRange = (1, 5);
     public (float, float) onTimeRange = (1, 5);
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

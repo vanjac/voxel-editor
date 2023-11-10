@@ -9,13 +9,9 @@ public class TapSensor : GenericSensor<TapSensor, TapComponent>
         "Object has to be Solid to detect a tap, but it doesn't have to be Visible.\n\n"
         + "Activator: the player",
         "gesture-tap", typeof(TapSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public float maxDistance = 3;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

@@ -18,11 +18,7 @@ public class TouchSensor : BaseTouchSensor
         + "Activators: all colliding objects matching the filter\n\n"
         + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
         "vector-combine", typeof(TouchSensor));
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
+    public override PropertiesObjectType ObjectType => objectType;
 
     public override ICollection<Property> Properties()
     {

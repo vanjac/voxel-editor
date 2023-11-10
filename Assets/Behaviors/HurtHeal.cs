@@ -10,15 +10,11 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
         + "•  <b>Rate</b>: Seconds between successive hurt/heals. 0 means health will only change once when behavior is activated.\n"
         + "•  <b>Keep within</b>: Health will only change if it's within this range, and will never go outside this range.",
         "heart", typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public override BehaviorType BehaviorObjectType => objectType;
 
     public float amount = -30;
     public float rate = 0;
     public (float, float) healthRange = (0, 200);
-
-    public override BehaviorType BehaviorObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

@@ -13,6 +13,7 @@ public class Substance : DynamicEntity
         "Substance", "An entity made of blocks",
         "The Pivot point is used as the center of rotation/scaling, and as a target point for other behaviors.",
         "cube-outline", typeof(Substance));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public Pivot pivot = new Pivot { x = Pivot.Pos.Center, y = Pivot.Pos.Center, z = Pivot.Pos.Center };
 
@@ -21,11 +22,6 @@ public class Substance : DynamicEntity
     public Color highlight = Color.clear;
     public Material highlightMaterial;
     public VoxelFace defaultPaint;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

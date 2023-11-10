@@ -11,15 +11,11 @@ public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
         + "If the Input cycles on/off faster than the on/off time, nothing happens.\n\n"
         + "Activators: the activators of the Input, added and removed with a delay",
         "timer", typeof(DelaySensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public EntityReference input = new EntityReference(null);
     public float onTime, offTime;
     public bool startOn;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {

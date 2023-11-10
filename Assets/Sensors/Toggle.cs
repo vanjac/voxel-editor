@@ -9,15 +9,11 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
         "If both inputs turn on simultaneously, the sensor toggles between on/off.\n\n"
         + "Activators: the activators of the <b>On input</b>, frozen when it is first turned on",
         "toggle-switch", typeof(ToggleSensor));
+    public override PropertiesObjectType ObjectType => objectType;
 
     public EntityReference offInput = new EntityReference(null);
     public EntityReference onInput = new EntityReference(null);
     public bool startOn;
-
-    public override PropertiesObjectType ObjectType()
-    {
-        return objectType;
-    }
 
     public override ICollection<Property> Properties()
     {
