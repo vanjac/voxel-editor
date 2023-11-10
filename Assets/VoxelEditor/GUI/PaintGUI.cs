@@ -12,9 +12,7 @@ public class PaintGUI : GUIPanel
 
     private static List<VoxelFace> recentPaints = new List<VoxelFace>(); // most recent first
 
-    public delegate void PaintHandler(VoxelFace paint);
-
-    public PaintHandler handler;
+    public System.Action<VoxelFace> handler;
     public VoxelFace paint;
     public VoxelArrayEditor voxelArray;
 

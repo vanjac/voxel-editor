@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class EntityPickerGUI : ActionBarGUI
 {
-    public delegate void EntityPickerHanlder(ICollection<Entity> entities);
-    public EntityPickerHanlder handler;
+    public System.Action<ICollection<Entity>> handler;
     public bool allowNone = true, allowMultiple = true, allowNull = false;
     public string nullName = "None";
 

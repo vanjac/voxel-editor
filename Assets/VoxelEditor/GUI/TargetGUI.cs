@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class TargetGUI : GUIPanel
 {
-    public delegate void TargetHandler(Target target);
-
-    public TargetHandler handler;
+    public System.Action<Target> handler;
     public VoxelArrayEditor voxelArray;
     public bool allowObjectTarget = true, allowNullTarget = false, allowVertical = true;
     public bool alwaysWorld = false, allowRandom = true;

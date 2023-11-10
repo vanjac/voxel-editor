@@ -2,8 +2,7 @@
 
 public class TagPickerGUI : GUIPanel
 {
-    public delegate void TagHandler(byte tag);
-    public TagHandler handler;
+    public System.Action<byte> handler;
     public bool multiple;
     public byte multiSelection;
 

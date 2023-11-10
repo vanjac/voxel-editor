@@ -52,7 +52,7 @@ class StoredPropertiesObject : PropertiesObject
             int _propertyI = propertyI; // for use in lambda functions -- won't change
             Property firstProperty = objectPropertiesSets[0][propertyI];
 
-            GetProperty getter = () =>
+            System.Func<object> getter = () =>
             {
                 object value = objectPropertiesSets[0][_propertyI].getter();
                 for (int objectI = 0; objectI < numObjects; objectI++)
@@ -63,7 +63,7 @@ class StoredPropertiesObject : PropertiesObject
                 return value;
             };
 
-            SetProperty setter = value =>
+            System.Action<object> setter = value =>
             {
                 for (int objectI = 0; objectI < numObjects; objectI++)
                     objectPropertiesSets[objectI][_propertyI].setter(value);
@@ -524,8 +524,7 @@ public class PropertiesGUI : LeftPanelGUI
 
 public class NewBehaviorGUI : GUIPanel
 {
-    public delegate void BehaviorTypeHandler(PropertiesObjectType behavior);
-    public BehaviorTypeHandler handler;
+    public System.Action<PropertiesObjectType> handler;
     public Entity self;
     public VoxelArrayEditor voxelArray;
 

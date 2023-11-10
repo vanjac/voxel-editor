@@ -5,8 +5,7 @@ using UnityEngine;
 public static class PropertyGUIs
 {
     private static TouchScreenKeyboard numberKeyboard = null;
-    private delegate void KeyboardHandler(string text);
-    private static KeyboardHandler keyboardHandler;
+    private static Action<string> keyboardHandler;
 
     private static readonly Lazy<GUIStyle> alignedLabelStyle = new Lazy<GUIStyle>(() =>
     {

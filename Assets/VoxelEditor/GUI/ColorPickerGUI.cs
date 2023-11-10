@@ -4,14 +4,12 @@ public class ColorPickerGUI : GUIPanel
 {
     private const int PREVIEW_SIZE = 250;
 
-    public delegate void ColorChangeHandler(Color color);
-
     private Color color;
     private float hue, saturation, value;
     private Texture2D colorTexture = null;
     private Texture2D hueTexture, saturationTexture, valueTexture, alphaTexture;
     private GUIStyle hueSliderStyle = null, saturationSliderStyle = null, valueSliderStyle = null, alphaSliderStyle = null;
-    public ColorChangeHandler handler;
+    public System.Action<Color> handler;
     public bool includeAlpha = false;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)

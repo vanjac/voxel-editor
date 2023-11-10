@@ -14,9 +14,7 @@ public class MaterialSelectorGUI : GUIPanel
     private const string CUSTOM_CATEGORY = "CUSTOM";
     private const string WORLD_LIST_CATEGORY = "Import from world...";
 
-    public delegate void MaterialSelectHandler(Material material);
-
-    public MaterialSelectHandler handler;
+    public System.Action<Material> handler;
     public string rootDirectory = "Materials";
     public bool isOverlay = false;
     public bool allowNullMaterial = false;

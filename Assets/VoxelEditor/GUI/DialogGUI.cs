@@ -2,13 +2,11 @@
 
 public class DialogGUI : GUIPanel
 {
-    public delegate void ButtonHandler();
-
     public string message;
     public string yesButtonText;
     public string noButtonText;
-    public ButtonHandler yesButtonHandler;
-    public ButtonHandler noButtonHandler;
+    public System.Action yesButtonHandler;
+    public System.Action noButtonHandler;
 
     private bool calledHandler = false;
 
@@ -68,12 +66,9 @@ public class DialogGUI : GUIPanel
 
 public class TextInputDialogGUI : GUIPanel
 {
-    public delegate void TextHandler(string text);
-    public delegate void CancelHandler();
-
-    public TextHandler handler;
+    public System.Action<string> handler;
     // TODO not called when touch keyboard not supported
-    public CancelHandler cancelHandler;
+    public System.Action cancelHandler;
     public string prompt;
     public string text = "";
 
@@ -153,10 +148,8 @@ public class TextInputDialogGUI : GUIPanel
 
 public class LargeMessageGUI : GUIPanel
 {
-    public delegate void ButtonHandler();
-
     public string message;
-    public ButtonHandler closeHandler;
+    public System.Action closeHandler;
 
     public static LargeMessageGUI ShowLargeMessageDialog(GameObject gameObject, string message)
     {

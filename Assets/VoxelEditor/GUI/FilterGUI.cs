@@ -3,10 +3,8 @@ using UnityEngine;
 
 public class FilterGUI : GUIPanel
 {
-    public delegate void FilterHandler(ActivatedSensor.Filter filter);
-
     public ActivatedSensor.Filter current;
-    public FilterHandler handler;
+    public System.Action<ActivatedSensor.Filter> handler;
     public VoxelArrayEditor voxelArray;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)

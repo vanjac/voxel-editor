@@ -2,9 +2,7 @@
 
 public class TypePickerGUI : GUIPanel
 {
-    public delegate void TypeHandler(PropertiesObjectType type);
-
-    public TypeHandler handler;
+    public System.Action<PropertiesObjectType> handler;
     public PropertiesObjectType[][] categories;
     public string[] categoryNames = new string[0];
 

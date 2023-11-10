@@ -4,16 +4,14 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 
-public delegate object GetProperty();
-public delegate void SetProperty(object value);
 public delegate void PropertyGUI(Property property);
 
 public struct Property
 {
     public string id;
     public string name;
-    public GetProperty getter;
-    public SetProperty setter;
+    public Func<object> getter;
+    public Action<object> setter;
     public PropertyGUI gui;
     public object value
     {
@@ -29,7 +27,7 @@ public struct Property
     }
     public bool explicitType; // store object type with property in file
 
-    public Property(string id, string name, GetProperty getter, SetProperty setter,
+    public Property(string id, string name, Func<object> getter, Action<object> setter,
         PropertyGUI gui, bool explicitType = false)
     {
         this.id = id;
@@ -67,8 +65,6 @@ public class PropertiesObjectType
 {
     public static readonly PropertiesObjectType NONE = new PropertiesObjectType("None", null);
 
-    public delegate PropertiesObject PropertiesObjectConstructor();
-
     public string fullName; // not readonly so it can be serialized
     [XmlIgnore]
     public readonly string description;
@@ -78,7 +74,7 @@ public class PropertiesObjectType
     public readonly string iconName;
     [XmlIgnore]
     public readonly Type type;
-    private readonly PropertiesObjectConstructor constructor;
+    private readonly Func<PropertiesObject> constructor;
 
     private Texture _icon;
     public Texture icon
@@ -105,7 +101,7 @@ public class PropertiesObjectType
     }
 
     public PropertiesObjectType(string fullName, string description, string iconName,
-        Type type, PropertiesObjectConstructor constructor = null)
+        Type type, Func<PropertiesObject> constructor = null)
     {
         this.fullName = fullName;
         this.description = description;
@@ -119,7 +115,7 @@ public class PropertiesObjectType
     }
 
     public PropertiesObjectType(string fullName, string description, string longDescription,
-        string iconName, Type type, PropertiesObjectConstructor constructor = null)
+        string iconName, Type type, Func<PropertiesObject> constructor = null)
     {
         this.fullName = fullName;
         this.description = description;
@@ -132,7 +128,7 @@ public class PropertiesObjectType
             this.constructor = constructor;
     }
 
-    public PropertiesObjectType(PropertiesObjectType baseType, PropertiesObjectConstructor newConstructor)
+    public PropertiesObjectType(PropertiesObjectType baseType, Func<PropertiesObject> newConstructor)
     {
         this.fullName = baseType.fullName;
         this.description = baseType.description;
@@ -595,9 +591,7 @@ public abstract class BehaviorComponent<T> : MonoBehaviour
 
 public class BehaviorType : PropertiesObjectType
 {
-    public delegate bool BehaviorRule(Entity checkEntity);
-
-    public readonly BehaviorRule rule;
+    public readonly Predicate<Entity> rule;
 
     public BehaviorType(string fullName, Type type)
         : base(fullName, type)
@@ -606,7 +600,7 @@ public class BehaviorType : PropertiesObjectType
     }
 
     public BehaviorType(string fullName, string description, string iconName, Type type,
-        BehaviorRule rule = null)
+        Predicate<Entity> rule = null)
         : base(fullName, description, iconName, type)
     {
         if (rule == null)
@@ -616,7 +610,7 @@ public class BehaviorType : PropertiesObjectType
     }
 
     public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type,
-        BehaviorRule rule = null)
+        Predicate<Entity> rule = null)
         : base(fullName, description, longDescription, iconName, type)
     {
         if (rule == null)
@@ -625,34 +619,16 @@ public class BehaviorType : PropertiesObjectType
             this.rule = rule;
     }
 
-    private static bool DefaultRule(Entity checkEntity)
-    {
-        return true;
-    }
+    private static bool DefaultRule(Entity checkEntity) => true;
 
-    public static BehaviorRule AndRule(BehaviorRule r1, BehaviorRule r2)
-    {
-        return (Entity checkEntity) =>
-        {
-            return r1(checkEntity) && r2(checkEntity);
-        };
-    }
+    public static Predicate<Entity> AndRule(Predicate<Entity> r1, Predicate<Entity> r2) =>
+        (Entity checkEntity) => r1(checkEntity) && r2(checkEntity);
 
-    public static BehaviorRule BaseTypeRule(Type baseType)
-    {
-        return (Entity checkEntity) =>
-        {
-            return baseType.IsAssignableFrom(checkEntity.GetType());
-        };
-    }
+    public static Predicate<Entity> BaseTypeRule(Type baseType) =>
+        (Entity checkEntity) => baseType.IsAssignableFrom(checkEntity.GetType());
 
-    public static BehaviorRule NotBaseTypeRule(Type baseType)
-    {
-        return (Entity checkEntity) =>
-        {
-            return !baseType.IsAssignableFrom(checkEntity.GetType());
-        };
-    }
+    public static Predicate<Entity> NotBaseTypeRule(Type baseType) =>
+        (Entity checkEntity) => !baseType.IsAssignableFrom(checkEntity.GetType());
 }
 
 
