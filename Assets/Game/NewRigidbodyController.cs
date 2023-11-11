@@ -20,7 +20,7 @@ public class NewRigidbodyController : MonoBehaviour
     private const float groundCheckDistance = 0.15f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
     private const float stickToGroundHelperDistance = 0.6f; // stops the character
     private const float shellOffset = 0.1f; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
-    private const float footstepStride = 1.0f;
+    private const float footstepStride = 0.3f;
 
     public MouseLook mouseLook = new MouseLook();
 
@@ -90,8 +90,7 @@ public class NewRigidbodyController : MonoBehaviour
 
         float maxSpeed = (grounded && !underWater) ? walkSpeed : fallMoveSpeed;
         Vector3 desiredMove = Quaternion.AngleAxis(cam.transform.rotation.eulerAngles.y, Vector3.up)
-            * new Vector3(input.x, 0, input.y);
-        desiredMove *= input.magnitude * maxSpeed;
+            * new Vector3(input.x, 0, input.y) * input.magnitude * maxSpeed;
         if (hasInput &&
             (grounded || underWater || desiredMove.sqrMagnitude > rigidBody.velocity.sqrMagnitude))
         {
@@ -137,9 +136,7 @@ public class NewRigidbodyController : MonoBehaviour
         }
         else if (grounded || underWater)
         {
-            Vector3 velocity = rigidBody.velocity;
-            velocity.y = 0;
-            footstepDistance += velocity.magnitude * Time.fixedDeltaTime;
+            footstepDistance += input.magnitude * Time.fixedDeltaTime;
             if (footstepDistance > footstepStride)
             {
                 footstepDistance -= footstepStride;
