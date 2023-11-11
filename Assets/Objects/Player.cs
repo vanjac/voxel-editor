@@ -54,6 +54,7 @@ public class PlayerComponent : DynamicEntityComponent
     public static PlayerComponent instance;
     public bool footstepSounds;
     public int score = 0;
+    public bool hasScore = false;
 
     void Awake()
     {

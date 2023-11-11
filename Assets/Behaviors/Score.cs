@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Localization.Platform.Android;
 
 public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent>
 {
@@ -21,9 +22,18 @@ public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent
 
 public class ScoreComponent : BehaviorComponent<ScoreBehavior>
 {
+    void Awake()
+    {
+        if (PlayerComponent.instance != null)
+            PlayerComponent.instance.hasScore = true;
+    }
+
     public override void BehaviorEnabled()
     {
         if (PlayerComponent.instance != null)  // not dead
+        {
             PlayerComponent.instance.score += behavior.amount;
+            PlayerComponent.instance.hasScore = true;
+        }
     }
 }

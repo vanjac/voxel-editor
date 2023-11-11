@@ -90,7 +90,8 @@ public class PauseGUI : GUIPanel
             wasAlive = true;
 
             healthCounter.Update((int)player.health);
-            scoreCounter.Update(player.score);
+            if (player.hasScore)
+                scoreCounter.Update(player.score);
         }
         else if (wasAlive)
         {
