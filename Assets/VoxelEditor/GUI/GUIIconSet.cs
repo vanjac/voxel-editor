@@ -18,6 +18,7 @@ public struct GUIIconSet
     public Texture entityTag, target, rename, copy, delete, share, bevel, no, pause, restart, editor, playAudio;
     public Texture reddit, youTube, undo, import, fill, draw, singleObject, objectType, behavior, newTexture;
     public Texture worldImport, newItem, website, donate, pan, orbit, sensor, random, baseLayer, overlayLayer;
+    public Texture plusOne, minusOne;
     public Texture indoorLarge, floatingLarge, newWorldLarge, helpLarge, compassLarge;
 
     public Texture[] tagIcons;

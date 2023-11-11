@@ -49,7 +49,7 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
         Input[] inputs = (Input[])property.value;
 
         GUILayout.Label("Inputs:");
-        if (GUILayout.Button("Add Input"))
+        if (GUILayout.Button(new GUIContent("  Add Input", GUIIconSet.instance.newItem)))
         {
             EntityPickerGUI picker = GUIManager.guiGameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = VoxelArrayEditor.instance;
@@ -79,21 +79,26 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.color = baseColor;
-            GUILayout.BeginHorizontal();
             GUILayout.Label(EntityReferencePropertyManager.GetName() + " ");
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("X"))
-                inputToDelete = i;
-            GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
             int negativeNum = inputs[i].negative ? 1 : 0;
             int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
-                new string[] { "Positive", "Negative" }, 2, GUIStyleSet.instance.buttonTab);
+                new Texture[] { GUIIconSet.instance.plusOne, GUIIconSet.instance.minusOne }, 2,
+                GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false));
             if (negativeNum != newNegativeNum)
             {
                 inputs[i].negative = newNegativeNum == 1;
                 copyArray = true;
             }
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(GUIIconSet.instance.delete, GUIStyleSet.instance.buttonSmall,
+                    GUILayout.ExpandWidth(false)))
+            {
+                inputToDelete = i;
+            }
+            GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
         if (inputToDelete != -1)
