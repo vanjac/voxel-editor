@@ -23,12 +23,6 @@ public class PaintGUI : GUIPanel
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .7f, safeRect.height * .9f, maxWidth: 1360);
 
-    public override void OnEnable()
-    {
-        showCloseButton = true;
-        base.OnEnable();
-    }
-
     void Start()
     {
         if (paint.overlay != null)
@@ -88,6 +82,8 @@ public class PaintGUI : GUIPanel
         GUILayout.FlexibleSpace();
 
         GUIUtils.EndHorizontalClipped();
+        if (GUILayout.Button("Done", GUILayout.ExpandWidth(false)))
+            Destroy(this);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();

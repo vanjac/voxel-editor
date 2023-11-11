@@ -87,7 +87,6 @@ public class ActionBarGUI : TopPanelGUI
         if (ActionBarButton(GUIIconSet.instance.paint))
         {
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
-            paintGUI.title = "Paint Faces";
             paintGUI.voxelArray = voxelArray;
             paintGUI.handler = (VoxelFace paint) =>
             {
