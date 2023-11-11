@@ -76,7 +76,7 @@ public class PaintGUI : GUIPanel
                 GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE)))
             {
                 paint = recentPaint;
-                handler(paint);
+                PaintChanged();
                 UpdateMaterialSelector();
             }
             Rect buttonRect = GUILayoutUtility.GetLastRect();
@@ -126,6 +126,12 @@ public class PaintGUI : GUIPanel
         }
     }
 
+    private void PaintChanged()
+    {
+        if (paint.material != null || paint.overlay != null)
+            handler(paint);
+    }
+
     private void UpdateMaterialSelector()
     {
         if (materialSelector != null)
@@ -139,9 +145,8 @@ public class PaintGUI : GUIPanel
             materialSelector.rootDirectory = "Materials";
             materialSelector.handler = (Material mat) =>
             {
-                if (mat != null || paint.overlay != null)
-                    paint.material = mat;
-                handler(paint);
+                paint.material = mat;
+                PaintChanged();
             };
             materialSelector.highlightMaterial = paint.material;
         }
@@ -151,9 +156,8 @@ public class PaintGUI : GUIPanel
             materialSelector.isOverlay = true;
             materialSelector.handler = (Material mat) =>
             {
-                if (mat != null || paint.material != null)
-                    paint.overlay = mat;
-                handler(paint);
+                paint.overlay = mat;
+                PaintChanged();
             };
             materialSelector.highlightMaterial = paint.overlay;
         }
@@ -175,7 +179,7 @@ public class PaintGUI : GUIPanel
         if (changeFlip)
             paintFlip = !paintFlip;
         paint.orientation = VoxelFace.Orientation(paintRotation, paintFlip);
-        handler(paint);
+        PaintChanged();
     }
 
     private void DrawPaint(VoxelFace paint, Rect rect)
@@ -198,7 +202,7 @@ public class PaintGUI : GUIPanel
     {
         selectedLayer = 0;
         paint.material = ResourcesDirectory.FindMaterial("Sky", true);
-        handler(paint);
+        PaintChanged();
         UpdateMaterialSelector();
     }
 }
