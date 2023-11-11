@@ -1,20 +1,26 @@
 ﻿using System.Collections;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class NewRigidbodyController : MonoBehaviour
 {
-    public float walkSpeed = 3.5f;
-    public float fallMoveSpeed = 1.5f;
-    public float jumpForce = 55f;
-    public float swimForce = 70f;
+    private const float walkSpeed = 3.5f;
+    private const float walkAccel = 6.0f;
+    private const float stopDrag = 3.0f;
+    private const float waterDrag = 5.0f;
+    private const float stopDynamicFriction = 1.0f;
+    private const float stopStaticFriction = 10.0f;
+    private const float fallMoveSpeed = 1.5f;
+    private const float jumpVel = 5.5f;
+    private const float swimVel = 7.0f;
     public AnimationCurve slopeCurveModifier = new AnimationCurve(new Keyframe(-90.0f, 1.0f), new Keyframe(0.0f, 1.0f), new Keyframe(90.0f, 0.0f));
 
-    public float groundCheckDistance = 0.1f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
-    public float stickToGroundHelperDistance = 0.6f; // stops the character
-    public float shellOffset = 0.1f; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
-    public float footstepStride = 1.0f;
+    private const float groundCheckDistance = 0.15f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
+    private const float stickToGroundHelperDistance = 0.6f; // stops the character
+    private const float shellOffset = 0.1f; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
+    private const float footstepStride = 1.0f;
 
     public MouseLook mouseLook = new MouseLook();
 
@@ -22,7 +28,6 @@ public class NewRigidbodyController : MonoBehaviour
     private Rigidbody rigidBody;
     private CapsuleCollider capsule;
     private FootstepSounds footstepSoundPlayer;
-    private float yRotation;
     private Vector3 groundContactNormal;
     private bool jump, previouslyGrounded, jumping, grounded;
     public bool disableGroundCheck;
@@ -50,48 +55,65 @@ public class NewRigidbodyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        GroundCheck();
+        Vector2 input = new Vector2(
+            CrossPlatformInputManager.GetAxis("Horizontal"),
+            CrossPlatformInputManager.GetAxis("Vertical"));
+        bool hasInput = input.sqrMagnitude > 1e-12;
+
+        GroundCheck(hasInput);
         bool underWater = false;
         PhysicsComponent physicsComponent = GetComponent<PhysicsComponent>();
         if (physicsComponent != null)
             underWater = physicsComponent.underWater;
 
-        Vector2 input = new Vector2
+        if (underWater)
         {
-            x = CrossPlatformInputManager.GetAxis("Horizontal"),
-            y = CrossPlatformInputManager.GetAxis("Vertical")
-        };
+            capsule.material.dynamicFriction = 0.0f;
+            capsule.material.staticFriction = 0.0f;
+            capsule.material.frictionCombine = PhysicMaterialCombine.Minimum;
+            rigidBody.drag = waterDrag;
+        }
+        else if (grounded && !hasInput && !jump)
+        {
+            capsule.material.dynamicFriction = stopDynamicFriction * SlopeMultiplier();
+            capsule.material.staticFriction = stopStaticFriction * SlopeMultiplier();
+            capsule.material.frictionCombine = PhysicMaterialCombine.Maximum;
+            rigidBody.drag = stopDrag * SlopeMultiplier();
+        }
+        else
+        {
+            capsule.material.dynamicFriction = 0.0f;
+            capsule.material.staticFriction = 0.0f;
+            capsule.material.frictionCombine = PhysicMaterialCombine.Minimum;
+            rigidBody.drag = 0;
+        }
 
-        if (Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon)
+        float maxSpeed = (grounded && !underWater) ? walkSpeed : fallMoveSpeed;
+        Vector3 desiredMove = Quaternion.AngleAxis(cam.transform.rotation.eulerAngles.y, Vector3.up)
+            * new Vector3(input.x, 0, input.y);
+        desiredMove *= input.magnitude * maxSpeed;
+        if (hasInput &&
+            (grounded || underWater || desiredMove.sqrMagnitude > rigidBody.velocity.sqrMagnitude))
         {
-            float maxSpeed = (grounded && !underWater) ? walkSpeed : fallMoveSpeed;
-            // always move along the camera forward as it is the direction that it being aimed at
-            Vector3 desiredMove = Quaternion.AngleAxis(cam.transform.rotation.eulerAngles.y, Vector3.up)
-                * new Vector3(input.x, 0, input.y);
-            desiredMove = Vector3.ProjectOnPlane(desiredMove, groundContactNormal).normalized;
-            desiredMove *= input.magnitude * maxSpeed;
-            if (rigidBody.velocity.sqrMagnitude < (maxSpeed * maxSpeed))
-            {
-                // TODO: scale by time??
-                rigidBody.AddForce(desiredMove * SlopeMultiplier(), ForceMode.Impulse);
-            }
+            Vector3 moveVector = desiredMove - rigidBody.velocity;
+            moveVector = Vector3.ProjectOnPlane(moveVector, groundContactNormal).normalized;
+            float maxVelChange = walkAccel * maxSpeed * Time.fixedDeltaTime;
+            if (moveVector.sqrMagnitude > maxVelChange * maxVelChange)
+                moveVector *= maxVelChange / moveVector.magnitude;
+            rigidBody.AddForce(moveVector * SlopeMultiplier(), ForceMode.VelocityChange);
         }
 
         if (grounded || underWater)
         {
-            rigidBody.drag = 5f;
-
             if (jump)
             {
-                rigidBody.drag = 0f;
                 rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0f, rigidBody.velocity.z);
-                rigidBody.AddForce(new Vector3(0f, underWater ? swimForce : jumpForce, 0f), ForceMode.Impulse);
+                rigidBody.AddForce(new Vector3(0f, underWater ? swimVel : jumpVel, 0f), ForceMode.VelocityChange);
                 jumping = true;
             }
         }
         else
         {
-            rigidBody.drag = 0f;
             if (previouslyGrounded && !jumping)
             {
                 StickToGroundHelper();
@@ -186,7 +208,7 @@ public class NewRigidbodyController : MonoBehaviour
     }
 
     /// sphere cast down just beyond the bottom of the capsule to see if the capsule is colliding round the bottom
-    private void GroundCheck()
+    private void GroundCheck(bool hasInput)
     {
         previouslyGrounded = grounded;
         if (disableGroundCheck)
@@ -202,20 +224,23 @@ public class NewRigidbodyController : MonoBehaviour
         {
             grounded = true;
             groundContactNormal = hitInfo.normal;
-            // move with moving object
-            Vector3 move = Vector3.zero;
-            foreach (IMotionComponent motionComponent in hitInfo.transform.GetComponents<IMotionComponent>())
+            if (hasInput)
             {
-                if (motionComponent.enabled)
+                // move with moving object
+                Vector3 move = Vector3.zero;
+                foreach (IMotionComponent motionComponent in hitInfo.transform.GetComponents<IMotionComponent>())
                 {
-                    move += motionComponent.GetTranslateFixed();
-                    Vector3 relPos = transform.position - motionComponent.transform.position;
-                    move += (motionComponent.GetRotateFixed() * relPos) - relPos;
+                    if (motionComponent.enabled)
+                    {
+                        move += motionComponent.GetTranslateFixed();
+                        Vector3 relPos = transform.position - motionComponent.transform.position;
+                        move += (motionComponent.GetRotateFixed() * relPos) - relPos;
+                    }
                 }
-            }
-            move.y = 0;
-            if (move != Vector3.zero)
-                rigidBody.MovePosition(rigidBody.position + move);
+                move.y = 0;
+                if (move != Vector3.zero)
+                    rigidBody.MovePosition(rigidBody.position + move);
+            } // else rely on friction
 
             // determine footstep sound
             if (hitInfo.collider.gameObject.tag == "Voxel")

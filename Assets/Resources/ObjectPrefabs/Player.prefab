@@ -169,10 +169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83727d23b5158d43aecefb4df105983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 3.5
-  fallMoveSpeed: 1.5
-  jumpForce: 55
-  swimForce: 70
   slopeCurveModifier:
     serializedVersion: 2
     m_Curve:
@@ -186,7 +182,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0
+      time: 45
       value: 1
       inSlope: 0
       outSlope: 0
@@ -195,16 +191,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 63.896103
-      value: 0.86269474
-      inSlope: -0.0053077624
-      outSlope: -0.0053077624
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 90
+      time: 70
       value: 0
       inSlope: 0
       outSlope: 0
@@ -215,10 +202,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  groundCheckDistance: 0.1
-  stickToGroundHelperDistance: 0.6
-  shellOffset: 0.1
-  footstepStride: 1
   mouseLook:
     XSensitivity: 2
     YSensitivity: 2
