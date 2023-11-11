@@ -14,7 +14,7 @@ public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
     public float minAngularVelocity = 0;
     public Target direction = new Target(null);
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("vel", "Min velocity",

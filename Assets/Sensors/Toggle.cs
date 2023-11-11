@@ -13,7 +13,7 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
     public EntityReference onInput = new EntityReference(null);
     public bool startOn;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("sta", "Start on?",

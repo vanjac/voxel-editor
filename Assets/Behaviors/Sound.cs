@@ -25,7 +25,7 @@ public class SoundBehavior : BaseSoundBehavior
         "volume-high", typeof(SoundBehavior));
     public override BehaviorType BehaviorObjectType => objectType;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("dat", "Sound",

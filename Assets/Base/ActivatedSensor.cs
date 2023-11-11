@@ -173,7 +173,7 @@ public abstract class ActivatedSensor : Sensor
 
     public Filter filter = new EntityTypeFilter(Entity.objectType);
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("fil", "Filter",

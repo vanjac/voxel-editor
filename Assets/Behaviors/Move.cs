@@ -14,7 +14,7 @@ public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
     public Target target = new Target(Target.NORTH);
     public float speed = 1;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("vel", "Speed",

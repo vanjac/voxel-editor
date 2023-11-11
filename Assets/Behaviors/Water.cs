@@ -10,7 +10,7 @@ public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent
 
     public float density = 1.0f;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("den", "Density",

@@ -13,7 +13,7 @@ public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWith
     public EntityReference target = new EntityReference(null);
     public bool followRotation = true;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("par", "Parent",

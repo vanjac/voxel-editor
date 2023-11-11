@@ -51,7 +51,7 @@ public class WorldProperties : PropertiesObject
         GetReflectionProbe().RenderProbe();
     }
 
-    public ICollection<Property> Properties() =>
+    public IEnumerable<Property> Properties() =>
         new Property[]
         {
             new Property("sky", "Sky",
@@ -122,7 +122,7 @@ public class WorldProperties : PropertiesObject
                 PropertyGUIs.Color)
         };
 
-    public ICollection<Property> DeprecatedProperties() =>
+    public IEnumerable<Property> DeprecatedProperties() =>
         new Property[]
         {
             new Property("fdn", "Fog density",

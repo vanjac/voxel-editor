@@ -23,7 +23,7 @@ public class Substance : DynamicEntity
     public Material highlightMaterial;
     public VoxelFace defaultPaint;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("piv", "Pivot",

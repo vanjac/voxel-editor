@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -9,7 +10,7 @@ class StoredPropertiesObject : PropertiesObject
         = new PropertiesObjectType("(different)", null);
 
     private readonly PropertiesObjectType type;
-    private readonly ICollection<Property> properties;
+    private readonly IEnumerable<Property> properties;
 
     public StoredPropertiesObject(PropertiesObject store)
     {
@@ -20,7 +21,8 @@ class StoredPropertiesObject : PropertiesObject
     // merge properties of objects
     public StoredPropertiesObject(PropertiesObject[] objects)
     {
-        properties = new List<Property>();
+        var propsList = new List<Property>();
+        properties = propsList;
         if (objects.Length == 0)
             return;
         if (objects[0] != null)
@@ -88,16 +90,16 @@ class StoredPropertiesObject : PropertiesObject
                 }
             };
 
-            properties.Add(new Property(
+            propsList.Add(new Property(
                 firstProperty.id, firstProperty.name, getter, setter, gui, firstProperty.explicitType));
         }
     }
 
     public PropertiesObjectType ObjectType => type;
 
-    public ICollection<Property> Properties() => properties;
+    public IEnumerable<Property> Properties() => properties;
 
-    public ICollection<Property> DeprecatedProperties() => System.Array.Empty<Property>();
+    public IEnumerable<Property> DeprecatedProperties() => System.Array.Empty<Property>();
 }
 
 class StoredEntityBehavior : StoredPropertiesObject
@@ -473,7 +475,7 @@ public class PropertiesGUI : LeftPanelGUI
         else
         {
             title = obj.ObjectType.fullName + suffix;
-            if (obj.Properties().Count > 0)
+            if (obj.Properties().Any())
                 title += ":";
         }
         GUILayout.BeginHorizontal();

@@ -22,7 +22,7 @@ public class Sound3DBehavior : BaseSoundBehavior
     public (float, float) distanceRange = (1, 30);
     public SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("dat", "Sound",

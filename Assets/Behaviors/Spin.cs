@@ -14,7 +14,7 @@ public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
     public float speed = 50;
     public Target axis = new Target(Target.UP); // not random
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("vel", "Speed",

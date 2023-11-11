@@ -16,7 +16,7 @@ public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
     public float onTime, offTime;
     public bool startOn;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("inp", "Input",

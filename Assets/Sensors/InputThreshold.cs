@@ -31,7 +31,7 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
     public int threshold = 1;
     public Input[] inputs = new Input[0];
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("thr", "Threshold",

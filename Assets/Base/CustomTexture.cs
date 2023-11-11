@@ -124,7 +124,7 @@ public class CustomTexture : PropertiesObject
         return customTex;
     }
 
-    public ICollection<Property> Properties() =>
+    public IEnumerable<Property> Properties() =>
         new Property[]
         {
             new Property("bas", "Base",
@@ -145,7 +145,7 @@ public class CustomTexture : PropertiesObject
                 PropertyGUIs.Enum)
         };
 
-    public ICollection<Property> DeprecatedProperties() => System.Array.Empty<Property>();
+    public IEnumerable<Property> DeprecatedProperties() => System.Array.Empty<Property>();
 
     public static bool IsCustomTexture(Material material) => material.name.StartsWith("Custom:");
 

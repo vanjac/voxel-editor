@@ -11,7 +11,7 @@ public class TapSensor : GenericSensor<TapSensor, TapComponent>
 
     public float maxDistance = 3;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("dis", "Max distance",

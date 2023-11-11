@@ -19,7 +19,7 @@ public class JoystickBehavior
     public Target facing = new Target(Target.NO_DIRECTION);
     public JoystickAlignment alignment = JoystickAlignment.HORIZONTAL;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("vel", "Speed",

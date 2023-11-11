@@ -16,7 +16,7 @@ public class PlayerObject : ObjectEntity
         paint.material.color = Color.green;
     }
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("wlk", "Footstep sounds?",

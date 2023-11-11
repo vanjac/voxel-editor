@@ -15,7 +15,7 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
     public int threshold = 100;
     public AboveOrBelow compare = AboveOrBelow.ABOVE;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("cmp", "Score is",

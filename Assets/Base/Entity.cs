@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
 
@@ -38,22 +39,8 @@ public struct Property
         this.explicitType = explicitType;
     }
 
-    public static ICollection<Property> JoinProperties(
-        ICollection<Property> props1, ICollection<Property> props2)
-    {
-        var props = new List<Property>(props1);
-        props.AddRange(props2);
-        return props;
-    }
-
-    public static IEnumerable<Property> JoinIterateProperties(
-        IEnumerable<Property> props1, IEnumerable<Property> props2)
-    {
-        foreach (Property p in props1)
-            yield return p;
-        foreach (Property p in props2)
-            yield return p;
-    }
+    public static IEnumerable<Property> JoinProperties(
+        IEnumerable<Property> props1, IEnumerable<Property> props2) => props1.Concat(props2);
 }
 
 
@@ -205,8 +192,8 @@ public class PropertiesObjectType
 public interface PropertiesObject
 {
     PropertiesObjectType ObjectType { get; }
-    ICollection<Property> Properties();
-    ICollection<Property> DeprecatedProperties();
+    IEnumerable<Property> Properties();
+    IEnumerable<Property> DeprecatedProperties();
 }
 
 public abstract class Entity : PropertiesObject
@@ -233,7 +220,7 @@ public abstract class Entity : PropertiesObject
 
     public virtual PropertiesObjectType ObjectType => objectType;
 
-    public virtual ICollection<Property> Properties() =>
+    public virtual IEnumerable<Property> Properties() =>
         new Property[]
         {
             new Property("tag", "Tag",
@@ -242,7 +229,7 @@ public abstract class Entity : PropertiesObject
                 PropertyGUIs.Tag),
         };
 
-    public virtual ICollection<Property> DeprecatedProperties() => Array.Empty<Property>();
+    public virtual IEnumerable<Property> DeprecatedProperties() => Array.Empty<Property>();
 
     // storeComponent: whether the "component" variable should be set
     // this should usually be true, but false for clones
@@ -469,7 +456,7 @@ public abstract class EntityBehavior : PropertiesObject
     public PropertiesObjectType ObjectType => BehaviorObjectType;
     public virtual BehaviorType BehaviorObjectType => objectType;
 
-    public virtual ICollection<Property> Properties() =>
+    public virtual IEnumerable<Property> Properties() =>
         new Property[]
         {
             new Property("tar", "Target",
@@ -514,7 +501,7 @@ public abstract class EntityBehavior : PropertiesObject
                 })
         };
 
-    public virtual ICollection<Property> DeprecatedProperties() => Array.Empty<Property>();
+    public virtual IEnumerable<Property> DeprecatedProperties() => Array.Empty<Property>();
 
     public abstract Behaviour MakeComponent(GameObject gameObject);
 }
@@ -632,9 +619,9 @@ public abstract class Sensor : PropertiesObject
 
     public virtual PropertiesObjectType ObjectType => objectType;
 
-    public virtual ICollection<Property> Properties() => new Property[] { };
+    public virtual IEnumerable<Property> Properties() => Array.Empty<Property>();
 
-    public virtual ICollection<Property> DeprecatedProperties() => Array.Empty<Property>();
+    public virtual IEnumerable<Property> DeprecatedProperties() => Array.Empty<Property>();
 
     public abstract ISensorComponent MakeComponent(GameObject gameObject);
 }
@@ -754,7 +741,7 @@ public abstract class DynamicEntity : Entity
     public bool xRay = false;
     public float health = 100;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("xra", "X-Ray?",

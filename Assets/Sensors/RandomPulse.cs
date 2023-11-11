@@ -13,7 +13,7 @@ public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseCom
     public (float, float) offTimeRange = (1, 5);
     public (float, float) onTimeRange = (1, 5);
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
             new Property("oft", "Off time",

@@ -14,7 +14,7 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
     public EntityReference target = new EntityReference(null);
     public EntityReference origin = new EntityReference(null);
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("loc", "To",

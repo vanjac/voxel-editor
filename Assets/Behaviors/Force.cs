@@ -24,7 +24,7 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
     public float strength = 10;
     public Target target = new Target(Target.UP);
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("fmo", "Mode",

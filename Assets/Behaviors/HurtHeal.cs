@@ -15,7 +15,7 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
     public float rate = 0;
     public (float, float) healthRange = (0, 200);
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("num", "Amount",
@@ -32,7 +32,7 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
                 PropertyGUIs.FloatRange)
         });
 
-    public override ICollection<Property> DeprecatedProperties() =>
+    public override IEnumerable<Property> DeprecatedProperties() =>
         Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
             new Property("min", "Min health",

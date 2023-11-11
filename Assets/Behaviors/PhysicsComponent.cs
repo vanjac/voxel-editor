@@ -18,7 +18,7 @@ public class PhysicsBehavior : BasePhysicsBehavior
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
     public override BehaviorType BehaviorObjectType => objectType;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("den", "Density",

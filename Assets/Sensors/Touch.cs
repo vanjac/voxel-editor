@@ -19,7 +19,7 @@ public class TouchSensor : BaseTouchSensor
         "vector-combine", typeof(TouchSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
-    public override ICollection<Property> Properties() =>
+    public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
             new Property("vel", "Min velocity",

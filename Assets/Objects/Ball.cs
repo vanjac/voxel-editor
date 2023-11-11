@@ -15,7 +15,7 @@ public class BallObject : ObjectEntity
         paint.material.color = Color.red;
     }
 
-    public override ICollection<Property> DeprecatedProperties() =>
+    public override IEnumerable<Property> DeprecatedProperties() =>
         Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
             new Property("mat", "Material",
