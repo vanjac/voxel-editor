@@ -39,7 +39,8 @@ public class TargetGUI : GUIPanel
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        if (allowObjectTarget && GUILayout.Button("Pick object..."))
+        if (allowObjectTarget && GUILayout.Button(new GUIContent("  Pick object...",
+            GUIIconSet.instance.singleObject), GUIStyleSet.instance.buttonSmall))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = voxelArray;
@@ -56,12 +57,14 @@ public class TargetGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (allowNullTarget && GUILayout.Button("Any"))
+        if (allowNullTarget && GUILayout.Button(new GUIContent("  Any",
+            GUIIconSet.instance.helpCircle), GUIStyleSet.instance.buttonSmall))
         {
             handler(new Target(null));
             Destroy(this);
         }
-        if (allowRandom && GUILayout.Button("Random"))
+        if (allowRandom && GUILayout.Button(new GUIContent("  Random",
+            GUIIconSet.instance.random), GUIStyleSet.instance.buttonSmall))
         {
             handler(new Target(Target.RANDOM));  // don't check local state
             Destroy(this);

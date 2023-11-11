@@ -783,6 +783,7 @@ MonoBehaviour:
     pan: {fileID: 2800000, guid: aa4f4785f280c85489192cbe7f18b491, type: 3}
     orbit: {fileID: 2800000, guid: ff7e857d4a19a16469926a96501dc0e4, type: 3}
     sensor: {fileID: 2800000, guid: 00bd31410ef9fd14caddc4fa7cd6c7b4, type: 3}
+    random: {fileID: 2800000, guid: 7d489d7477de61343aa6bfacec253941, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}
