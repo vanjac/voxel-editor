@@ -63,7 +63,8 @@ public struct Property
 // with all the missing data (this is done by Filter)
 public class PropertiesObjectType
 {
-    public static readonly PropertiesObjectType NONE = new PropertiesObjectType("None", null);
+    public static readonly PropertiesObjectType NONE =
+        new PropertiesObjectType("None", "", "cancel", null);
 
     public string fullName; // not readonly so it can be serialized
     [XmlIgnore]
