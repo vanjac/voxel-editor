@@ -99,9 +99,11 @@ public class PaintGUI : GUIPanel
         TutorialGUI.ClearHighlight();
         int oldSelectedLayer = selectedLayer;
         TutorialGUI.TutorialHighlight("paint layer");
-        selectedLayer = GUILayout.SelectionGrid(
-            selectedLayer, new string[] { "Material", "Overlay" }, 2,
-            GUIStyleSet.instance.buttonSmall);
+        selectedLayer = GUILayout.SelectionGrid(selectedLayer, new GUIContent[]
+            {
+                new GUIContent("  Material", GUIIconSet.instance.baseLayer),
+                new GUIContent("  Overlay", GUIIconSet.instance.overlayLayer),
+            }, 2, GUIStyleSet.instance.buttonSmall);
         TutorialGUI.ClearHighlight();
         if (oldSelectedLayer != selectedLayer)
             UpdateMaterialSelector();

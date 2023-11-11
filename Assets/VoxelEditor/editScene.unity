@@ -784,6 +784,8 @@ MonoBehaviour:
     orbit: {fileID: 2800000, guid: ff7e857d4a19a16469926a96501dc0e4, type: 3}
     sensor: {fileID: 2800000, guid: 00bd31410ef9fd14caddc4fa7cd6c7b4, type: 3}
     random: {fileID: 2800000, guid: 7d489d7477de61343aa6bfacec253941, type: 3}
+    baseLayer: {fileID: 2800000, guid: 92f37b1ef7ce3cf4a8d0977713960531, type: 3}
+    overlayLayer: {fileID: 2800000, guid: 7e0e6bcbebe5b1e4a80e0f5576bc30ed, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}
