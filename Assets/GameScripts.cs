@@ -113,7 +113,7 @@ public static class GameScripts
         TeleportBehavior.objectType,
         MoveWithBehavior.objectType,
         ScaleBehavior.objectType,
-        JoystickBehavior.objectType,
+        // JoystickBehavior.objectType,
 
         VisibleBehavior.objectType,
         LightBehavior.objectType,
@@ -147,7 +147,7 @@ public static class GameScripts
             TeleportBehavior.objectType,
             MoveWithBehavior.objectType,
             ScaleBehavior.objectType,
-            JoystickBehavior.objectType,
+            // JoystickBehavior.objectType,
         },
         new BehaviorType[]
         {
