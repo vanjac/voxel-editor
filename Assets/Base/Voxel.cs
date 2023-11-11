@@ -8,10 +8,7 @@ public struct VoxelFace
     public byte orientation;
     public bool addSelected, storedSelected;
 
-    public bool IsEmpty()
-    {
-        return material == null && overlay == null;
-    }
+    public bool IsEmpty() => material == null && overlay == null;
 
     public void Clear()
     {
@@ -30,20 +27,11 @@ public struct VoxelFace
         return paintOnly;
     }
 
-    public override bool Equals(object obj)
-    {
-        return obj is VoxelFace && this == (VoxelFace)obj;
-    }
+    public override bool Equals(object obj) => obj is VoxelFace && this == (VoxelFace)obj;
 
-    public static bool operator ==(VoxelFace s1, VoxelFace s2)
-    {
-        return s1.material == s2.material && s1.overlay == s2.overlay
-            && s1.orientation == s2.orientation;
-    }
-    public static bool operator !=(VoxelFace s1, VoxelFace s2)
-    {
-        return !(s1 == s2);
-    }
+    public static bool operator ==(VoxelFace s1, VoxelFace s2) =>
+        s1.material == s2.material && s1.overlay == s2.overlay && s1.orientation == s2.orientation;
+    public static bool operator !=(VoxelFace s1, VoxelFace s2) => !(s1 == s2);
 
     public override int GetHashCode()
     {
@@ -53,15 +41,9 @@ public struct VoxelFace
         return result;
     }
 
-    public static int GetOrientationRotation(byte orientation)
-    {
-        return orientation & 3;
-    }
+    public static int GetOrientationRotation(byte orientation) => orientation & 3;
 
-    public static bool GetOrientationMirror(byte orientation)
-    {
-        return (orientation & 4) != 0;
-    }
+    public static bool GetOrientationMirror(byte orientation) => (orientation & 4) != 0;
 
     public static byte Orientation(int rotation, bool mirror)
     {
@@ -257,10 +239,8 @@ public class Voxel
         }
     }
 
-    public static Vector3 OppositeDirectionForFaceI(int faceI)
-    {
-        return DirectionForFaceI(OppositeFaceI(faceI));
-    }
+    public static Vector3 OppositeDirectionForFaceI(int faceI) =>
+        DirectionForFaceI(OppositeFaceI(faceI));
 
     public static int FaceIForDirection(Vector3 direction)
     {
@@ -280,10 +260,7 @@ public class Voxel
             return -1;
     }
 
-    public static int OppositeFaceI(int faceI)
-    {
-        return (faceI / 2) * 2 + (faceI % 2 == 0 ? 1 : 0);
-    }
+    public static int OppositeFaceI(int faceI) => (faceI / 2) * 2 + (faceI % 2 == 0 ? 1 : 0);
 
     public static int SideFaceI(int faceI, int sideNum)
     {
@@ -359,15 +336,9 @@ public class Voxel
         }
     }
 
-    public static int FaceIAxis(int faceI)
-    {
-        return faceI / 2;
-    }
+    public static int FaceIAxis(int faceI) => faceI / 2;
 
-    public static int EdgeIAxis(int edgeI)
-    {
-        return edgeI / 4;
-    }
+    public static int EdgeIAxis(int edgeI) => edgeI / 4;
 
     public static IEnumerable<int> FaceSurroundingEdges(int faceNum)
     {
@@ -444,10 +415,7 @@ public class Voxel
         return new Bounds(center + position, size);
     }
 
-    public Bounds GetBounds()
-    {
-        return new Bounds(position + new Vector3(0.5f, 0.5f, 0.5f), Vector3.one);
-    }
+    public Bounds GetBounds() => new Bounds(position + new Vector3(0.5f, 0.5f, 0.5f), Vector3.one);
 
     public bool EdgeIsEmpty(int edgeI)
     {
@@ -1421,10 +1389,8 @@ public class VoxelComponent : MonoBehaviour
     }
 
 
-    private static Vector3 Vector3FromArray(float[] vector)
-    {
-        return new Vector3(vector[0], vector[1], vector[2]);
-    }
+    private static Vector3 Vector3FromArray(float[] vector) =>
+        new Vector3(vector[0], vector[1], vector[2]);
 
     private static Vector2 CalcUV(Voxel voxel, float[] vertex, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
     {

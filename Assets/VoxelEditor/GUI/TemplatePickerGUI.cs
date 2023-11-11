@@ -12,11 +12,8 @@ public class TemplatePickerGUI : GUIPanel
         return style;
     });
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.HorizCenterRect(safeRect.center.x, 180,
-            900, 480);
-    }
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.HorizCenterRect(safeRect.center.x, 180, 900, 480);
 
     void Start()
     {

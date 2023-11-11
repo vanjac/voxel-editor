@@ -25,10 +25,7 @@ public class PlayerObject : ObjectEntity
                 PropertyGUIs.Toggle),
         });
 
-    public override Vector3 PositionOffset()
-    {
-        return new Vector3(0, -0.5f, 0);
-    }
+    public override Vector3 PositionOffset() => new Vector3(0, -0.5f, 0);
 
     protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray)
     {

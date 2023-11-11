@@ -18,10 +18,8 @@ public class DialogGUI : GUIPanel
         return dialog;
     }
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 576, 324);
-    }
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 576, 324);
 
     public override void WindowGUI()
     {
@@ -158,11 +156,9 @@ public class LargeMessageGUI : GUIPanel
         return dialog;
     }
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .6f, safeRect.height * .6f, maxWidth: 1280, maxHeight: 800);
-    }
 
     void OnDestroy()
     {

@@ -145,10 +145,7 @@ public class PropertiesObjectType
         return (PropertiesObject)Activator.CreateInstance(type);
     }
 
-    public PropertiesObject Create()
-    {
-        return constructor();
-    }
+    public PropertiesObject Create() => constructor();
 
     // assumes both objects are the same type and have the same order of properties
     public static void CopyProperties(PropertiesObject source, PropertiesObject dest,
@@ -231,10 +228,7 @@ public abstract class Entity : PropertiesObject
         return "■▲●★♥♦♠♣".Substring(tag, 1);
     }
 
-    public override string ToString()
-    {
-        return TagToString(tag) + " " + ObjectType.fullName;
-    }
+    public override string ToString() => TagToString(tag) + " " + ObjectType.fullName;
 
     public virtual PropertiesObjectType ObjectType => objectType;
 
@@ -305,10 +299,8 @@ public abstract class EntityComponent : MonoBehaviour
         return null;
     }
 
-    public static EntityComponent FindEntityComponent(Component c)
-    {
-        return FindEntityComponent(c.gameObject);
-    }
+    public static EntityComponent FindEntityComponent(Component c) =>
+        FindEntityComponent(c.gameObject);
 
     public virtual void Start()
     {
@@ -684,10 +676,7 @@ public abstract class SensorComponent<T> : MonoBehaviour, ISensorComponent
         this.sensor = sensor;
     }
 
-    public bool IsOn()
-    {
-        return GetActivators().Count > 0;
-    }
+    public bool IsOn() => GetActivators().Count > 0;
 
     public virtual void LateUpdate()
     {
@@ -697,22 +686,13 @@ public abstract class SensorComponent<T> : MonoBehaviour, ISensorComponent
     // all current activators
     // if the number is greater than zero, the sensor is on
     // a null activator is possible - this allows the sensor to be on without having any activators
-    public ICollection<EntityComponent> GetActivators()
-    {
-        return activators;
-    }
+    public ICollection<EntityComponent> GetActivators() => activators;
 
     // activators that have been added this frame
-    public ICollection<EntityComponent> GetNewActivators()
-    {
-        return newActivators;
-    }
+    public ICollection<EntityComponent> GetNewActivators() => newActivators;
 
     // activators that have been removed this frame
-    public ICollection<EntityComponent> GetRemovedActivators()
-    {
-        return removedActivators;
-    }
+    public ICollection<EntityComponent> GetRemovedActivators() => removedActivators;
 
     private void NewFrame()
     {

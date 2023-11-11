@@ -51,15 +51,10 @@ public class PauseGUI : GUIPanel
     private HUDCounter healthCounter;
     private HUDCounter scoreCounter;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(safeRect.xMin, safeRect.yMin, safeRect.width, 0);
-    }
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(safeRect.xMin, safeRect.yMin, safeRect.width, 0);
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     void Start()
     {

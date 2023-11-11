@@ -30,9 +30,7 @@ public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
 
 public class SpinComponent : MotionComponent<SpinBehavior>
 {
-    public override Quaternion GetRotateFixed()
-    {
-        return Quaternion.AngleAxis(behavior.speed * Time.fixedDeltaTime,
+    public override Quaternion GetRotateFixed() =>
+        Quaternion.AngleAxis(behavior.speed * Time.fixedDeltaTime,
             behavior.axis.DirectionFrom(transform));
-    }
 }

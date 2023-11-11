@@ -4,16 +4,11 @@ public class MenuOverflowGUI : GUIPanel
 {
     public TextAsset creditsText;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(safeRect.xMin + safeRect.width * .8f, safeRect.yMin,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(safeRect.xMin + safeRect.width * .8f, safeRect.yMin,
             safeRect.width * .2f, 0);
-    }
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     void Start()
     {

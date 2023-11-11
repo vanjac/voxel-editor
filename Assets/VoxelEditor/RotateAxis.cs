@@ -67,10 +67,7 @@ public class RotateAxis : TransformAxis
         return Vector2.SignedAngle(pos - originScreenPos2, Vector2.right);
     }
 
-    private float GetAxisAngle()
-    {
-        return transform.rotation.eulerAngles.y;
-    }
+    private float GetAxisAngle() => transform.rotation.eulerAngles.y;
 
     private void SetAxisAngle(float angle)
     {

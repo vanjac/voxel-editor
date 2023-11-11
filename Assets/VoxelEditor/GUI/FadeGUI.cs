@@ -5,10 +5,7 @@ public class FadeGUI : GUIPanel
     public Texture background;
     public float backgroundWidth, backgroundHeight;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return screenRect;
-    }
+    public override Rect GetRect(Rect safeRect, Rect screenRect) => screenRect;
 
     public override void OnEnable()
     {
@@ -18,10 +15,7 @@ public class FadeGUI : GUIPanel
         base.OnEnable();
     }
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     public override void WindowGUI()
     {

@@ -80,10 +80,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
     }
 
     // TODO: delete this when it is no longer needed
-    public static Entity CurrentEntity()
-    {
-        return currentEntity;
-    }
+    public static Entity CurrentEntity() => currentEntity;
 
     public static void Next(Entity entity)
     {
@@ -113,10 +110,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         return ColorI(currentTargetEntityI);
     }
 
-    private static Color ColorI(int i)
-    {
-        return Color.HSVToRGB((i * .618f) % 1.0f, 0.8f, 1.0f);
-    }
+    private static Color ColorI(int i) => Color.HSVToRGB((i * .618f) % 1.0f, 0.8f, 1.0f);
 
     public static string GetName()
     {

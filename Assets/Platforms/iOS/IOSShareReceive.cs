@@ -8,10 +8,7 @@ public static class IOSShareReceive
     private const string INBOX_PATH1 = "Documents/Inbox"; // from Gmail, etc.
     private const string INBOX_PATH2 = "tmp/com.vantjac.voxel-Inbox"; // from Files
 
-    public static bool FileWaitingToImport()
-    {
-        return GetFileToImport() != null;
-    }
+    public static bool FileWaitingToImport() => GetFileToImport() != null;
 
     public static void ClearFileWaitingToImport()
     {

@@ -147,15 +147,9 @@ public class CustomTexture : PropertiesObject
 
     public ICollection<Property> DeprecatedProperties() => System.Array.Empty<Property>();
 
-    public static bool IsCustomTexture(Material material)
-    {
-        return material.name.StartsWith("Custom:");
-    }
+    public static bool IsCustomTexture(Material material) => material.name.StartsWith("Custom:");
 
-    public static string GetBaseMaterialName(Material material)
-    {
-        return material.name.Split(':')[1];
-    }
+    public static string GetBaseMaterialName(Material material) => material.name.Split(':')[1];
 
     public static Material Clone(Material material)
     {

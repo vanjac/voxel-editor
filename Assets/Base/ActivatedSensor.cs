@@ -105,10 +105,7 @@ public abstract class ActivatedSensor : Sensor
             return false;
         }
 
-        public override string ToString()
-        {
-            return entityType.fullName;
-        }
+        public override string ToString() => entityType.fullName;
     }
 
     // for maps before version 10
@@ -130,10 +127,7 @@ public abstract class ActivatedSensor : Sensor
             return entityComponent.entity.tag == tag;
         }
 
-        public override string ToString()
-        {
-            return "With tag " + Entity.TagToString(tag);
-        }
+        public override string ToString() => "With tag " + Entity.TagToString(tag);
     }
 
     public class MultipleTagFilter : Filter

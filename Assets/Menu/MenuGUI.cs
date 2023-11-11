@@ -14,16 +14,11 @@ public class MenuGUI : GUIPanel
 
     private GUIContent[] startOptions;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.HorizCenterRect(safeRect.center.x, safeRect.yMin,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.HorizCenterRect(safeRect.center.x, safeRect.yMin,
             safeRect.width * .6f, safeRect.height, maxWidth: 1360);
-    }
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     public override void OnEnable()
     {

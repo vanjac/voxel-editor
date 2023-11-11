@@ -14,11 +14,9 @@ public class HelpGUI : GUIPanel
 
     private int tab = 0;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             576, safeRect.height * .8f, maxHeight: 1280);
-    }
 
     public void Start()
     {
@@ -82,10 +80,8 @@ public class HelpGUI : GUIPanel
         }
     }
 
-    private bool HelpButton(string text)
-    {
-        return GUILayout.Button(text, GUIStyleSet.instance.buttonLarge);
-    }
+    private bool HelpButton(string text) =>
+        GUILayout.Button(text, GUIStyleSet.instance.buttonLarge);
 
     private void StartTutorial(TutorialPageFactory[] tutorial, string worldName = null,
         bool forceIndoor = false)

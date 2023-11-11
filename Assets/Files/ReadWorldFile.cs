@@ -40,10 +40,8 @@ public static class ReadWorldFile
         return BuildWorld(reader, cameraPivot, voxelArray, editor);
     }
 
-    public static List<string> Read(TextAsset asset, Transform cameraPivot, VoxelArray voxelArray, bool editor)
-    {
-        return Read(new MemoryStream(asset.bytes), cameraPivot, voxelArray, editor);
-    }
+    public static List<string> Read(TextAsset asset, Transform cameraPivot, VoxelArray voxelArray, bool editor) =>
+        Read(new MemoryStream(asset.bytes), cameraPivot, voxelArray, editor);
 
     public static List<EmbeddedData> ReadEmbeddedData(string filePath, EmbeddedDataType type)
     {

@@ -346,10 +346,7 @@ public class MessagePackWorldWriter
         return new MessagePackObject(l);
     }
 
-    private static MessagePackObject WriteQuaternion(Quaternion v)
-    {
-        return WriteVector3(v.eulerAngles);
-    }
+    private static MessagePackObject WriteQuaternion(Quaternion v) => WriteVector3(v.eulerAngles);
 
     private static MessagePackObject WriteVector3Int(Vector3Int v)
     {

@@ -7,11 +7,8 @@ public class FilterGUI : GUIPanel
     public System.Action<ActivatedSensor.Filter> handler;
     public VoxelArrayEditor voxelArray;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
-            GUIPanel.topPanel.panelRect.yMax, 500, 0);
-    }
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(GUIPanel.leftPanel.panelRect.xMax, GUIPanel.topPanel.panelRect.yMax, 500, 0);
 
     public override void WindowGUI()
     {

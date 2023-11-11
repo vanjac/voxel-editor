@@ -16,15 +16,9 @@ public class MoveAxis : TransformAxis
         }
     }
 
-    private float GetAxisPosition()
-    {
-        return Vector3.Dot(transform.position, forwardDirection);
-    }
+    private float GetAxisPosition() => Vector3.Dot(transform.position, forwardDirection);
 
-    private float GetOriginPosition()
-    {
-        return Vector3.Dot(transform.parent.position, forwardDirection);
-    }
+    private float GetOriginPosition() => Vector3.Dot(transform.parent.position, forwardDirection);
 
     // below Touch functions are called by Touch Listener
 

@@ -11,22 +11,13 @@ public abstract class TutorialPage
         TouchListener touchListener)
     { }
     public virtual TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject,
-        TouchListener touchListener)
-    {
-        return TutorialAction.NONE;
-    }
+        TouchListener touchListener) => TutorialAction.NONE;
     public virtual void End(VoxelArrayEditor voxelArray, GameObject guiGameObject,
         TouchListener touchListener)
     { }
     public abstract string GetText();
-    public virtual bool ShowNextButton()
-    {
-        return false;
-    }
-    public virtual string GetHighlightID()
-    {
-        return "";
-    }
+    public virtual bool ShowNextButton() => false;
+    public virtual string GetHighlightID() => "";
 }
 
 public delegate TutorialPage TutorialPageFactory();
@@ -42,20 +33,11 @@ public class SimpleTutorialPage : TutorialPage
         this.highlight = highlight;
     }
 
-    public override string GetText()
-    {
-        return text;
-    }
+    public override string GetText() => text;
 
-    public override bool ShowNextButton()
-    {
-        return true;
-    }
+    public override bool ShowNextButton() => true;
 
-    public override string GetHighlightID()
-    {
-        return highlight;
-    }
+    public override string GetHighlightID() => highlight;
 }
 
 public class FullScreenTutorialPage : SimpleTutorialPage
@@ -181,10 +163,7 @@ public class TutorialGUI : GUIPanel
             safeRect.xMax - leftPanelRect.xMax, this.height);
     }
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     public void Start()
     {

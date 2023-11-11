@@ -490,10 +490,7 @@ public class MessagePackWorldReader : WorldFileReader
         return new Vector3Int(l[0].AsInt32(), l[1].AsInt32(), l[2].AsInt32());
     }
 
-    private Quaternion ReadQuaternion(MessagePackObject o)
-    {
-        return Quaternion.Euler(ReadVector3(o));
-    }
+    private Quaternion ReadQuaternion(MessagePackObject o) => Quaternion.Euler(ReadVector3(o));
 
     private Color ReadColor(MessagePackObject o)
     {

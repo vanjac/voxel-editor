@@ -87,10 +87,7 @@ public class VoxelArray : MonoBehaviour
         return true;
     }
 
-    public IEnumerable<Voxel> IterateVoxels()
-    {
-        return voxels.Values;
-    }
+    public IEnumerable<Voxel> IterateVoxels() => voxels.Values;
 
     public ObjectEntity ObjectAt(Vector3Int pos)
     {
@@ -138,10 +135,7 @@ public class VoxelArray : MonoBehaviour
         return true;
     }
 
-    public IEnumerable<ObjectEntity> IterateObjects()
-    {
-        return objects.Values;
-    }
+    public IEnumerable<ObjectEntity> IterateObjects() => objects.Values;
 
     public void DeleteSubstance(Substance substance)
     {
@@ -204,10 +198,7 @@ public class VoxelGroup
         }
     }
 
-    public IEnumerable<VoxelComponent> IterateComponents()
-    {
-        return components.Values;
-    }
+    public IEnumerable<VoxelComponent> IterateComponents() => components.Values;
 
     public IEnumerable<Voxel> IterateVoxels()
     {

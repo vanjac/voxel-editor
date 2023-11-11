@@ -29,16 +29,10 @@ public class OverflowMenuGUI : GUIPanel
         return style;
     });
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(safeRect.xMax - 432 * (depth + 1),
-            GUIPanel.topPanel.panelRect.yMax, 432, 0);
-    }
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(safeRect.xMax - 432 * (depth + 1), GUIPanel.topPanel.panelRect.yMax, 432, 0);
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     public override void OnEnable()
     {

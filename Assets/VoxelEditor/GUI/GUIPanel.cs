@@ -161,10 +161,7 @@ public abstract class GUIPanel : MonoBehaviour
 
     public abstract Rect GetRect(Rect safeRect, Rect screenRect);
 
-    public virtual GUIStyle GetStyle()
-    {
-        return GUI.skin.window;
-    }
+    public virtual GUIStyle GetStyle() => GUI.skin.window;
 
     public abstract void WindowGUI();
 

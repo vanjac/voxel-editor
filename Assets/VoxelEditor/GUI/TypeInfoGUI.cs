@@ -4,11 +4,9 @@ public class TypeInfoGUI : GUIPanel
 {
     public PropertiesObjectType type;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 960, 0);
-    }
 
     public override void WindowGUI()
     {

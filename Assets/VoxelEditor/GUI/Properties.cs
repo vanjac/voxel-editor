@@ -398,9 +398,8 @@ public static class PropertyGUIs
     }
 
     public static PropertyGUI Material(string materialDirectory, bool isOverlay = false,
-        bool customTextureBase = false)
-    {
-        return (Property property) =>
+        bool customTextureBase = false) =>
+        (Property property) =>
         {
             GUILayout.BeginHorizontal();
             AlignedLabel(property);
@@ -430,7 +429,6 @@ public static class PropertyGUIs
                 textureRect, isOverlay);
             GUILayout.EndHorizontal();
         };
-    }
 
     public static void Texture(Property property)
     {
@@ -456,15 +454,13 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static PropertyGUI Slider(float minValue, float maxValue)
-    {
-        return (Property property) =>
+    public static PropertyGUI Slider(float minValue, float maxValue) =>
+        (Property property) =>
         {
             GUILayout.Label(property.name + ":");
             property.value = GUILayout.HorizontalSlider(
                 (float)property.value, minValue, maxValue);
         };
-    }
 
     public static void Color(Property property)
     {
@@ -606,9 +602,8 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static PropertyGUI EmbeddedData(EmbeddedDataType type, AudioPlayerFactory playerFactory = null)
-    {
-        return (Property property) =>
+    public static PropertyGUI EmbeddedData(EmbeddedDataType type, AudioPlayerFactory playerFactory = null) =>
+        (Property property) =>
         {
             var embeddedData = (EmbeddedData)property.value;
 
@@ -627,5 +622,4 @@ public static class PropertyGUIs
             }
             GUILayout.EndHorizontal();
         };
-    }
 }

@@ -10,11 +10,9 @@ public class TargetGUI : GUIPanel
 
     private int localState = 0;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 880, 0);
-    }
 
     public override void WindowGUI()
     {

@@ -43,15 +43,9 @@ public class JSONWorldReader : WorldFileReader
             throw new MapReadException("Invalid world file");
     }
 
-    public List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type)
-    {
-        return new List<EmbeddedData>();
-    }
+    public List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type) => new List<EmbeddedData>();
 
-    public List<Material> FindCustomTextures(bool overlay)
-    {
-        return new List<Material>();
-    }
+    public List<Material> FindCustomTextures(bool overlay) => new List<Material>();
 
     public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
     {

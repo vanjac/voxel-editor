@@ -136,10 +136,8 @@ public class GameTouchControl : MonoBehaviour
         }
     }
 
-    private bool TapRaycast(Vector2 touchPosition, out RaycastHit hit)
-    {
-        return Physics.Raycast(cam.ScreenPointToRay(touchPosition), out hit,
+    private bool TapRaycast(Vector2 touchPosition, out RaycastHit hit) =>
+        Physics.Raycast(cam.ScreenPointToRay(touchPosition), out hit,
             Mathf.Infinity, Physics.DefaultRaycastLayers,
             QueryTriggerInteraction.Ignore);
-    }
 }

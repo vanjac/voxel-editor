@@ -479,15 +479,10 @@ public class VoxelArrayEditor : VoxelArray
         return EdgeType.CONCAVE;
     }
 
-    private bool EdgeIsCorner(EdgeType edgeType)
-    {
-        return edgeType == EdgeType.CONVEX || edgeType == EdgeType.CONCAVE;
-    }
+    private bool EdgeIsCorner(EdgeType edgeType) =>
+        edgeType == EdgeType.CONVEX || edgeType == EdgeType.CONCAVE;
 
-    private bool EdgeIsSelectable(VoxelEdgeReference edgeRef)
-    {
-        return EdgeIsCorner(GetEdgeType(edgeRef));
-    }
+    private bool EdgeIsSelectable(VoxelEdgeReference edgeRef) => EdgeIsCorner(GetEdgeType(edgeRef));
 
     // add selected things come before stored selection
     // this is important for functions like GetSelectedPaint
@@ -508,20 +503,11 @@ public class VoxelArrayEditor : VoxelArray
     }
 
     // including stored selection
-    public bool SomethingIsSelected()
-    {
-        return SomethingIsAddSelected() || SomethingIsStoredSelected();
-    }
+    public bool SomethingIsSelected() => SomethingIsAddSelected() || SomethingIsStoredSelected();
 
-    public bool SomethingIsAddSelected()
-    {
-        return selectedThings.Count != 0;
-    }
+    public bool SomethingIsAddSelected() => selectedThings.Count != 0;
 
-    public bool SomethingIsStoredSelected()
-    {
-        return storedSelectedThings.Count != 0;
-    }
+    public bool SomethingIsStoredSelected() => storedSelectedThings.Count != 0;
 
     private bool TypeIsSelected<T>() where T : Selectable
     {
@@ -530,10 +516,7 @@ public class VoxelArrayEditor : VoxelArray
         return false;
     }
 
-    public bool FacesAreSelected()
-    {
-        return TypeIsSelected<VoxelFaceReference>();
-    }
+    public bool FacesAreSelected() => TypeIsSelected<VoxelFaceReference>();
 
     public bool FacesAreAddSelected()
     {

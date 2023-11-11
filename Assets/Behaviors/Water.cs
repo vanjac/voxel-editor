@@ -40,8 +40,5 @@ public class WaterComponent : BehaviorComponent<WaterBehavior>
         base.Start();
     }
 
-    public float GetWaterLevel(float x, float z)
-    {
-        return waterLevel + transform.position.y;
-    }
+    public float GetWaterLevel(float x, float z) => waterLevel + transform.position.y;
 }

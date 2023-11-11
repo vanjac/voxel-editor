@@ -6,11 +6,9 @@ public class TagPickerGUI : GUIPanel
     public bool multiple;
     public byte multiSelection;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 960, 540);
-    }
 
     void Start()
     {

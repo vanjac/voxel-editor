@@ -3,17 +3,14 @@ using UnityEngine;
 
 public class EditorPreviewBehaviorAttribute : System.Attribute
 {
-
 }
 
 public static class EntityPreviewManager
 {
     private static Dictionary<Entity, List<GameObject>> entityPreviewObjects = new Dictionary<Entity, List<GameObject>>();
 
-    public static bool IsEditorPreviewBehavior(System.Type type)
-    {
-        return System.Attribute.GetCustomAttribute(type, typeof(EditorPreviewBehaviorAttribute)) != null;
-    }
+    public static bool IsEditorPreviewBehavior(System.Type type) =>
+        System.Attribute.GetCustomAttribute(type, typeof(EditorPreviewBehaviorAttribute)) != null;
 
     public static void AddEntity(Entity entity)
     {

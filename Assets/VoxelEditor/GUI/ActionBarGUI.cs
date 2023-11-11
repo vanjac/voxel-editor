@@ -23,10 +23,7 @@ public class ActionBarGUI : TopPanelGUI
         base.OnEnable();
     }
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     public override void WindowGUI()
     {
@@ -193,20 +190,14 @@ public class ActionBarGUI : TopPanelGUI
         };
     }
 
-    public static bool ActionBarButton(Texture icon)
-    {
-        return GUILayout.Button(icon, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
-    }
+    public static bool ActionBarButton(Texture icon) =>
+        GUILayout.Button(icon, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
 
-    public static bool ActionBarButton(string text)
-    {
-        return GUILayout.Button(text, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
-    }
+    public static bool ActionBarButton(string text) =>
+        GUILayout.Button(text, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
 
-    public static bool HighlightedActionBarButton(Texture icon)
-    {
-        return GUIUtils.HighlightedButton(icon, GUIStyleSet.instance.buttonLarge, true, GUILayout.ExpandWidth(false));
-    }
+    public static bool HighlightedActionBarButton(Texture icon) =>
+        GUIUtils.HighlightedButton(icon, GUIStyleSet.instance.buttonLarge, true, GUILayout.ExpandWidth(false));
 
     public static void ActionBarLabel(string text)
     {

@@ -24,11 +24,9 @@ public class DataImportGUI : GUIPanel
     private AudioPlayer playingAudio;
     private EmbeddedData playingData;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .6f, safeRect.height * .9f, maxWidth: 1280, maxHeight: 1360);
-    }
 
     void Start()
     {

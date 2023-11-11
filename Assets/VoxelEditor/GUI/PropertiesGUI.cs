@@ -179,10 +179,7 @@ public class PropertiesGUI : LeftPanelGUI
         return new Rect(safeRect.xMin + slide, safeRect.yMin, 540, screenRect.yMax - safeRect.yMin);
     }
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     public override void WindowGUI()
     {

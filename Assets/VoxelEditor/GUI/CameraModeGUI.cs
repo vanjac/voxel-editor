@@ -11,10 +11,7 @@ public class CameraModeGUI : GUIPanel
         base.OnEnable();
     }
 
-    public override GUIStyle GetStyle()
-    {
-        return GUIStyle.none;
-    }
+    public override GUIStyle GetStyle() => GUIStyle.none;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {

@@ -19,11 +19,9 @@ public class PaintGUI : GUIPanel
     private int selectedLayer = 0;
     private MaterialSelectorGUI materialSelector;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .7f, safeRect.height * .9f, maxWidth: 1360);
-    }
 
     public override void OnEnable()
     {

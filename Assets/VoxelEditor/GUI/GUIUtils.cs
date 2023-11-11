@@ -43,10 +43,8 @@ public static class GUIUtils
         return new Rect(centerX - width / 2, y, width, height);
     }
 
-    public static GUIContent MenuContent(string text, Texture image)
-    {
-        return new GUIContent("    " + text, image);
-    }
+    public static GUIContent MenuContent(string text, Texture image) =>
+        new GUIContent("    " + text, image);
 
     public static bool HighlightedButton(string text, GUIStyle style = null, bool highlight = true, params GUILayoutOption[] options)
     {

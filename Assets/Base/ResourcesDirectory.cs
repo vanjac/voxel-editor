@@ -28,10 +28,8 @@ public static class ResourcesDirectory
         }
     }
 
-    public static Material LoadMaterial(MaterialInfo info)
-    {
-        return Resources.Load<Material>("GameAssets/" + info.path);
-    }
+    public static Material LoadMaterial(MaterialInfo info) =>
+        Resources.Load<Material>("GameAssets/" + info.path);
 
     public static Material FindMaterial(string name, bool editor)
     {

@@ -103,10 +103,7 @@ public class EntityReference
     }
 
     // has the map file finished loading? are EntityReferences safe to be read?
-    public static bool EntitiesLoaded()
-    {
-        return entitiesLoaded;
-    }
+    public static bool EntitiesLoaded() => entitiesLoaded;
 
     public static void AddExistingEntityId(Entity entity, Guid guid)
     {

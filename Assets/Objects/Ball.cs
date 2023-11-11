@@ -39,10 +39,8 @@ public class BallObject : ObjectEntity
                 PropertyGUIs.Material("Overlays", true))
         });
 
-    private GameObject ObjectTemplate(VoxelArray voxelArray)
-    {
-        return GameObject.Instantiate(Resources.Load<GameObject>("ObjectPrefabs/Ball"));
-    }
+    private GameObject ObjectTemplate(VoxelArray voxelArray) =>
+        GameObject.Instantiate(Resources.Load<GameObject>("ObjectPrefabs/Ball"));
 
     protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray)
     {

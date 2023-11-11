@@ -60,13 +60,7 @@ public abstract class MotionComponent<T> : BehaviorComponent<T>, IMotionComponen
     }
 
     // player standing on top of object will move this amount
-    public virtual Vector3 GetTranslateFixed()
-    {
-        return Vector3.zero;
-    }
+    public virtual Vector3 GetTranslateFixed() => Vector3.zero;
 
-    public virtual Quaternion GetRotateFixed()
-    {
-        return Quaternion.identity;
-    }
+    public virtual Quaternion GetRotateFixed() => Quaternion.identity;
 }

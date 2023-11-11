@@ -5,11 +5,9 @@ public class PivotGUI : GUIPanel
     public Pivot value;
     public System.Action<Pivot> handler;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 1100, 0);
-    }
 
     public override void OnEnable()
     {

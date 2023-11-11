@@ -62,10 +62,7 @@ public class SoundPlayer : AudioPlayer
 {
     private GameObject gameObject;
 
-    public static AudioPlayer Factory(byte[] data)
-    {
-        return new SoundPlayer(data);
-    }
+    public static AudioPlayer Factory(byte[] data) => new SoundPlayer(data);
 
     public SoundPlayer(byte[] data)
     {

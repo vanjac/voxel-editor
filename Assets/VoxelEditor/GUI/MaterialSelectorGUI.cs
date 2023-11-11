@@ -68,11 +68,9 @@ public class MaterialSelectorGUI : GUIPanel
         AssetManager.UnusedAssets();
     }
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .5f, safeRect.height * .8f, maxWidth: 1280);
-    }
 
     public override void WindowGUI()
     {

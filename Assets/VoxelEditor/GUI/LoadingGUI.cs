@@ -8,10 +8,8 @@ public class LoadingGUI : GUIPanel
         base.OnEnable();
     }
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 432, 216);
-    }
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 432, 216);
 
     public override void WindowGUI()
     {

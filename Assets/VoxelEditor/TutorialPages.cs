@@ -234,11 +234,9 @@ public static class Tutorials
         bool rotated;
         private float startTime;
 
-        public override string GetText()
-        {
-            return "Navigation: Use two fingers to rotate, and pinch to zoom. "
+        public override string GetText() =>
+            "Navigation: Use two fingers to rotate, and pinch to zoom. "
                 + "<i>Try looking around the room.</i> (tutorial will advance when you have completed this)";
-        }
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
@@ -269,16 +267,11 @@ public static class Tutorials
     private class TutorialIntroPan : TutorialPage
     {
         private Vector3 startPan;
-        public override string GetText()
-        {
-            return "<i>Use three fingers to pan.</i> "
+        public override string GetText() =>
+            "<i>Use three fingers to pan.</i> "
                 + "(If this doesn't work on your phone, try tapping the button in the bottom right to toggle pan/rotate mode.)";
-        }
 
-        public override string GetHighlightID()
-        {
-            return "pan";
-        }
+        public override string GetHighlightID() => "pan";
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
@@ -300,10 +293,8 @@ public static class Tutorials
 
     private class TutorialIntroSelectFace : TutorialPage
     {
-        public override string GetText()
-        {
-            return "<i>Tap with one finger to select a single face of a block.</i>";
-        }
+        public override string GetText() =>
+            "<i>Tap with one finger to select a single face of a block.</i>";
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
@@ -439,11 +430,9 @@ public static class Tutorials
     {
         private int lastFaceNormal = -1;
 
-        public override string GetText()
-        {
-            return "<i>Now select a different face and pull it towards the center of the room. "
+        public override string GetText() =>
+            "<i>Now select a different face and pull it towards the center of the room. "
                 + "Keep pulling until you reach the other side.</i>";
-        }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -467,10 +456,8 @@ public static class Tutorials
         private int numBoxes;
         private Bounds lastStartBounds;
 
-        public override string GetText()
-        {
-            return "Tap and drag to select a group of faces in a rectangle or box. <i>Try this a few times.</i>";
-        }
+        public override string GetText() =>
+            "Tap and drag to select a group of faces in a rectangle or box. <i>Try this a few times.</i>";
 
         public override void Start(VoxelArrayEditor voxelArray, GameObject guiGameObject,
             TouchListener touchListener)
@@ -479,11 +466,9 @@ public static class Tutorials
             voxelArray.ClearStoredSelection();
         }
 
-        private bool BoxIsSelected(VoxelArrayEditor voxelArray)
-        {
-            return voxelArray.selectMode == VoxelArrayEditor.SelectMode.BOX
+        private bool BoxIsSelected(VoxelArrayEditor voxelArray) =>
+            voxelArray.selectMode == VoxelArrayEditor.SelectMode.BOX
                 && voxelArray.selectionBounds.size.sqrMagnitude > 3;
-        }
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -521,10 +506,7 @@ public static class Tutorials
 
     private class TutorialIntroSelectWall : TutorialPage
     {
-        public override string GetText()
-        {
-            return "<i>Double tap to select an entire wall.</i>";
-        }
+        public override string GetText() => "<i>Double tap to select an entire wall.</i>";
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -538,15 +520,10 @@ public static class Tutorials
 
     private class TutorialPaintStart : TutorialPage
     {
-        public override string GetText()
-        {
-            return "<i>Select some faces and tap the paint roller icon to open the Paint panel.</i>";
-        }
+        public override string GetText() =>
+            "<i>Select some faces and tap the paint roller icon to open the Paint panel.</i>";
 
-        public override string GetHighlightID()
-        {
-            return "paint";
-        }
+        public override string GetHighlightID() => "paint";
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -587,10 +564,7 @@ public static class Tutorials
                 return base.GetHighlightID();
         }
 
-        public override bool ShowNextButton()
-        {
-            return panelOpen;
-        }
+        public override bool ShowNextButton() => panelOpen;
     }
 
 
@@ -611,15 +585,10 @@ public static class Tutorials
 
     private class TutorialBevelStart : TutorialPage
     {
-        public override string GetText()
-        {
-            return "<i>Tap the menu button then choose \"Bevel\" to open Bevel Mode.</i>";
-        }
+        public override string GetText() =>
+            "<i>Tap the menu button then choose \"Bevel\" to open Bevel Mode.</i>";
 
-        public override string GetHighlightID()
-        {
-            return "bevel";
-        }
+        public override string GetHighlightID() => "bevel";
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -660,10 +629,7 @@ public static class Tutorials
                 return base.GetHighlightID();
         }
 
-        public override bool ShowNextButton()
-        {
-            return panelOpen;
-        }
+        public override bool ShowNextButton() => panelOpen;
     }
 
 
@@ -692,10 +658,7 @@ public static class Tutorials
                 return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -724,10 +687,7 @@ public static class Tutorials
                 return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -740,15 +700,9 @@ public static class Tutorials
             this.text = text;
         }
 
-        public override string GetText()
-        {
-            return text;
-        }
+        public override string GetText() => text;
 
-        public override string GetHighlightID()
-        {
-            return "create object";
-        }
+        public override string GetHighlightID() => "create object";
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -762,10 +716,7 @@ public static class Tutorials
 
     private class TutorialSubstanceCreate1 : TutorialPage
     {
-        public override string GetText()
-        {
-            return "<i>Choose \"Solid Substance\".</i>";
-        }
+        public override string GetText() => "<i>Choose \"Solid Substance\".</i>";
 
         public override TutorialAction Update(VoxelArrayEditor voxelArray, GameObject guiGameObject, TouchListener touchListener)
         {
@@ -781,10 +732,7 @@ public static class Tutorials
 
     private class TutorialSubstanceCreate2 : TutorialPage
     {
-        public override string GetText()
-        {
-            return "<i>Pull outwards to build a platform.</i>";
-        }
+        public override string GetText() => "<i>Pull outwards to build a platform.</i>";
 
         public static bool SubstanceSelected(VoxelArrayEditor voxelArray)
         {
@@ -837,10 +785,7 @@ public static class Tutorials
                 return base.GetText();
         }
 
-        public override bool ShowNextButton()
-        {
-            return substanceSelected;
-        }
+        public override bool ShowNextButton() => substanceSelected;
     }
 
 
@@ -863,10 +808,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -887,10 +829,7 @@ public static class Tutorials
                 return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -919,10 +858,7 @@ public static class Tutorials
                 return TutorialAction.NEXT;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -976,10 +912,7 @@ public static class Tutorials
                 return ((Target)value).direction;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1009,10 +942,7 @@ public static class Tutorials
             return foundOff && foundOn ? TutorialAction.NEXT : TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1034,10 +964,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1066,19 +993,13 @@ public static class Tutorials
             return onTimeSet && offTimeSet ? TutorialAction.NEXT : TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
     private class TutorialObjectCreate : TutorialPage
     {
-        public override string GetText()
-        {
-            return "<i>Choose the Object tab, then choose Ball.</i>";
-        }
+        public override string GetText() => "<i>Choose the Object tab, then choose Ball.</i>";
 
         public static bool ObjectSelected(VoxelArrayEditor voxelArray)
         {
@@ -1129,10 +1050,7 @@ public static class Tutorials
                 return base.GetText();
         }
 
-        public override bool ShowNextButton()
-        {
-            return objectSelected;
-        }
+        public override bool ShowNextButton() => objectSelected;
     }
 
 
@@ -1159,10 +1077,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1185,10 +1100,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1213,10 +1125,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1237,10 +1146,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1265,10 +1171,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1312,10 +1215,7 @@ public static class Tutorials
                 return base.GetText();
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1338,10 +1238,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1366,10 +1263,7 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 
 
@@ -1392,9 +1286,6 @@ public static class Tutorials
             return TutorialAction.NONE;
         }
 
-        public override bool ShowNextButton()
-        {
-            return false;
-        }
+        public override bool ShowNextButton() => false;
     }
 }

@@ -50,10 +50,7 @@ public class CarryableComponent : BehaviorComponent<CarryableBehavior>
         base.Start();
     }
 
-    public bool IsCarried()
-    {
-        return joint != null;
-    }
+    public bool IsCarried() => joint != null;
 
     public void Carry(EntityComponent player)
     {

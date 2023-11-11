@@ -14,10 +14,7 @@ public abstract class ObjectEntity : DynamicEntity
     public Color highlight = Color.clear;
     public Material highlightMaterial;
 
-    public virtual Vector3 PositionOffset()
-    {
-        return Vector3.zero;
-    }
+    public virtual Vector3 PositionOffset() => Vector3.zero;
 
     public override void UpdateEntityEditor()
     {
@@ -25,15 +22,10 @@ public abstract class ObjectEntity : DynamicEntity
             marker.UpdateMarker();
     }
 
-    public override Vector3 PositionInEditor()
-    {
-        return position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
-    }
+    public override Vector3 PositionInEditor() =>
+        position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
 
-    public override bool AliveInEditor()
-    {
-        return marker != null;
-    }
+    public override bool AliveInEditor() => marker != null;
 
     public override void SetHighlight(Color c)
     {

@@ -12,11 +12,9 @@ public class ColorPickerGUI : GUIPanel
     public System.Action<Color> handler;
     public bool includeAlpha = false;
 
-    public override Rect GetRect(Rect safeRect, Rect screenRect)
-    {
-        return new Rect(GUIPanel.leftPanel.panelRect.xMax,
+    public override Rect GetRect(Rect safeRect, Rect screenRect) =>
+        new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 1080, 0);
-    }
 
     public override void OnEnable()
     {
