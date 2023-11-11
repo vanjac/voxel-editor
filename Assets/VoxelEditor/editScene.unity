@@ -789,6 +789,7 @@ MonoBehaviour:
     plusOne: {fileID: 2800000, guid: 34b8c574bafcc7541bf8778c7f29e0fd, type: 3}
     minusOne: {fileID: 2800000, guid: ab5c3d88d3e155741b402fef1ee52c72, type: 3}
     color: {fileID: 2800000, guid: efd72c913ac0be549af477e59955aae8, type: 3}
+    camera: {fileID: 2800000, guid: 1c056bdad8f6317469edc45ad5abfb73, type: 3}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}

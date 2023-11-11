@@ -537,6 +537,35 @@ public static class PropertyGUIs
         _TargetCustom(property, allowObjectTarget: false, allowRandom: false);
     }
 
+    public static void TargetFacing(Property property)
+    {
+        var target = (Target)property.value;
+        string targetString = target.ToString();
+
+        if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
+            targetString = "Camera";
+
+        GUILayout.BeginHorizontal();
+        AlignedLabel(property);
+        if (GUILayout.Button(targetString, GUI.skin.textField))
+        {
+            TargetGUI targetGUI = GUIManager.guiGameObject.AddComponent<TargetGUI>();
+            targetGUI.title = property.name;
+            targetGUI.voxelArray = VoxelArrayEditor.instance;
+            targetGUI.allowNullTarget = true;
+            targetGUI.allowObjectTarget = false;
+            targetGUI.allowRandom = false;
+            targetGUI.allowVertical = false;
+            targetGUI.nullTargetName = "Camera";
+            targetGUI.nullTargetIcon = GUIIconSet.instance.camera;
+            targetGUI.handler = (Target newTarget) =>
+            {
+                property.value = newTarget;
+            };
+        }
+        GUILayout.EndHorizontal();
+    }
+
     public static void TargetDirectionFilter(Property property)
     {
         var target = (Target)property.value;

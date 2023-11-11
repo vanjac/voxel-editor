@@ -66,7 +66,6 @@ public static class GameScripts
     public static PropertiesObjectType[] sensors = new PropertiesObjectType[]
     {
         PropertiesObjectType.NONE,
-        //TestSensor.objectType,
 
         TouchSensor.objectType,
         TapSensor.objectType,
@@ -114,6 +113,7 @@ public static class GameScripts
         TeleportBehavior.objectType,
         MoveWithBehavior.objectType,
         ScaleBehavior.objectType,
+        JoystickBehavior.objectType,
 
         VisibleBehavior.objectType,
         LightBehavior.objectType,
@@ -147,6 +147,7 @@ public static class GameScripts
             TeleportBehavior.objectType,
             MoveWithBehavior.objectType,
             ScaleBehavior.objectType,
+            JoystickBehavior.objectType,
         },
         new BehaviorType[]
         {

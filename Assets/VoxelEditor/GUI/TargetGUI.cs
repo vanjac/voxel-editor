@@ -7,6 +7,8 @@ public class TargetGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public bool allowObjectTarget = true, allowNullTarget = false, allowVertical = true;
     public bool alwaysWorld = false, allowRandom = true;
+    public string nullTargetName = "Any";
+    public Texture nullTargetIcon = GUIIconSet.instance.helpCircle;
 
     private int localState = 0;
 
@@ -57,8 +59,8 @@ public class TargetGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (allowNullTarget && GUILayout.Button(new GUIContent("  Any",
-            GUIIconSet.instance.helpCircle), GUIStyleSet.instance.buttonSmall))
+        if (allowNullTarget && GUILayout.Button(new GUIContent("  " + nullTargetName,
+            nullTargetIcon), GUIStyleSet.instance.buttonSmall))
         {
             handler(new Target(null));
             Destroy(this);
