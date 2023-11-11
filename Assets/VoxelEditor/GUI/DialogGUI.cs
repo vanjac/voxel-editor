@@ -26,14 +26,16 @@ public class DialogGUI : GUIPanel
         GUILayout.Label(message, GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
-        if (yesButtonText != null && GUILayout.Button(yesButtonText))
+        if (yesButtonText != null &&
+            GUILayout.Button(new GUIContent("  " + yesButtonText, GUIIconSet.instance.done)))
         {
             if (yesButtonHandler != null)
                 yesButtonHandler();
             calledHandler = true;
             Destroy(this);
         }
-        if (noButtonText != null && GUILayout.Button(noButtonText))
+        if (noButtonText != null &&
+            GUILayout.Button(new GUIContent("  " + noButtonText, GUIIconSet.instance.x)))
         {
             if (noButtonHandler != null)
                 noButtonHandler();

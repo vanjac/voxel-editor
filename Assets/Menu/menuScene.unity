@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +118,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -272,7 +274,7 @@ MonoBehaviour:
   targetHeightOverride: 0
   iconSet:
     close: {fileID: 0}
-    x: {fileID: 0}
+    x: {fileID: 2800000, guid: 9fc69ad759eaaf243abd3a0ffff807cf, type: 3}
     next: {fileID: 0}
     create: {fileID: 0}
     applySelection: {fileID: 0}
@@ -283,7 +285,7 @@ MonoBehaviour:
     world: {fileID: 0}
     help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
     helpCircle: {fileID: 0}
-    done: {fileID: 0}
+    done: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
     rotateLeft: {fileID: 0}
     rotateRight: {fileID: 0}
     flipHorizontal: {fileID: 0}
@@ -318,6 +320,10 @@ MonoBehaviour:
     donate: {fileID: 2800000, guid: d535c068f20dae549ac44f32ee8d4344, type: 3}
     pan: {fileID: 0}
     orbit: {fileID: 0}
+    sensor: {fileID: 0}
+    random: {fileID: 0}
+    baseLayer: {fileID: 0}
+    overlayLayer: {fileID: 0}
     indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
     floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
     newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}
