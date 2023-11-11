@@ -326,7 +326,8 @@ public class PropertiesGUI : LeftPanelGUI
         if (singleSelectedEntity != null && !(singleSelectedEntity is PlayerObject))
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Clone"))
+            if (GUILayout.Button(new GUIContent("  Clone", GUIIconSet.instance.copy),
+                GUIStyleSet.instance.buttonSmall))
             {
                 if (singleSelectedEntity is ObjectEntity)
                 {
@@ -346,7 +347,8 @@ public class PropertiesGUI : LeftPanelGUI
                     createGUI.voxelArray = voxelArray;
                 }
             }
-            if (GUILayout.Button("Delete"))
+            if (GUILayout.Button(new GUIContent("  Delete", GUIIconSet.instance.delete),
+                GUIStyleSet.instance.buttonSmall))
             {
                 DeleteButton();
             }
@@ -354,14 +356,15 @@ public class PropertiesGUI : LeftPanelGUI
         }
         if (selectedEntities.Count > 1)
         {
-            if (GUILayout.Button("Delete"))
+            if (GUILayout.Button(new GUIContent("  Delete", GUIIconSet.instance.delete),
+                GUIStyleSet.instance.buttonSmall))
             {
                 DeleteButton();
             }
         }
 
         TutorialGUI.TutorialHighlight("change sensor");
-        if (GUILayout.Button("Change Sensor"))
+        if (GUILayout.Button(new GUIContent("  Change Sensor", GUIIconSet.instance.sensor)))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.title = "Change Sensor";
@@ -381,7 +384,7 @@ public class PropertiesGUI : LeftPanelGUI
         GUILayout.EndVertical();
 
         TutorialGUI.TutorialHighlight("add behavior");
-        if (GUILayout.Button("Add Behavior"))
+        if (GUILayout.Button(new GUIContent("  Add Behavior", GUIIconSet.instance.newItem)))
         {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
             behaviorMenu.title = "Add Behavior";
@@ -426,7 +429,7 @@ public class PropertiesGUI : LeftPanelGUI
             PropertiesObjectGUI(storedBehavior, " Behavior",
                 () => EntityPreviewManager.BehaviorUpdated(selectedEntities,
                     storedBehavior.allBehaviors[0].GetType()));
-            if (GUILayout.Button("Remove"))
+            if (GUILayout.Button(new GUIContent("  Remove", GUIIconSet.instance.delete)))
                 behaviorToRemove = storedBehavior;
             GUILayout.EndVertical();
             // clear this every time, in case the next target is the same
