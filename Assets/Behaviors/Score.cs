@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditor.Localization.Platform.Android;
 
 public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent>
 {
