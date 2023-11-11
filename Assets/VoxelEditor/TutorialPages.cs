@@ -36,8 +36,7 @@ public static class Tutorials
         () => new TutorialPaintPage(
             "You can use the Paint panel to paint the selected faces with <i>materials</i> and <i>overlays</i>."),
         () => new TutorialPaintPage(
-            "Choose any of the categories to browse for a texture. Then switch to the Color tab to change its color.",
-            highlight: "material type"),
+            "Choose any of the categories to browse for a texture. Then tap the Color button to change its color."),
         () => new TutorialPaintPage(
             "A paint is composed of two parts: an opaque material and a transparent overlay. "
             + "Use the tabs to switch between the two parts.",

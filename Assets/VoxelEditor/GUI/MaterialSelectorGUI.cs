@@ -9,7 +9,6 @@ public class MaterialSelectorGUI : GUIPanel
     private const int NUM_COLUMNS = 4;
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
-    private const float CATEGORY_BUTTON_HEIGHT = 110;
     private const string PREVIEW_SUFFIX = "_preview";
     private const string CUSTOM_CATEGORY = "CUSTOM";
     private const string WORLD_LIST_CATEGORY = "Import from world...";
@@ -22,7 +21,8 @@ public class MaterialSelectorGUI : GUIPanel
     public Material highlightMaterial = null; // the current selected material
     public VoxelArrayEditor voxelArray;
 
-    private int tab;
+    private enum Page { TEXTURE, COLOR };
+    private Page page = Page.TEXTURE;
     private string selectedCategory;
     private bool importFromWorld, loadingWorld;
     private string importMessage = null;
@@ -74,61 +74,39 @@ public class MaterialSelectorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        GUILayout.BeginHorizontal();
-        TutorialGUI.TutorialHighlight("material type");
-        tab = GUILayout.SelectionGrid(tab, new string[] { "Texture", "Color" }, 2);
-        TutorialGUI.ClearHighlight();
-        if (allowNullMaterial && GUILayout.Button("Clear", GUILayout.ExpandWidth(false)))
-            MaterialSelected(null);
-        GUILayout.EndHorizontal();
-
-        if (tab == 1)
+        if (page == Page.COLOR)
         {
-            if (!ColorTab() && colorPicker != null)
-            {
-                Destroy(colorPicker);
-                colorPicker = null;
-            }
+            ColorPage();
         }
         else if (colorPicker != null)
         {
             Destroy(colorPicker);
             colorPicker = null;
         }
-        if (tab == 0)
-            TextureTab();
+
+        if (page == Page.TEXTURE)
+            TexturePage();
         else
-        {
             scrollVelocity = Vector2.zero;
-        }
     }
 
-    private bool ColorTab()
+    private void ColorPage()
     {
-        if (highlightMaterial == null)
-        {
-            GUILayout.Label("No texture selected");
-            return false;
-        }
-        if (CustomTexture.IsCustomTexture(highlightMaterial))
-        {
-            GUILayout.Label("Can't change color of custom texture");
-            return false;
-        }
+        GUILayout.BeginHorizontal();
+        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+            page = Page.TEXTURE;
+        GUILayout.Label("Adjust color", categoryLabelStyle.Value);
+        GUILayout.EndHorizontal();
+
         string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
-        if (colorProp == null)
-        {
-            GUILayout.Label("Can't change color of this texture");
-            return false;
-        }
         if (colorPicker == null)
         {
             whitePoint = Color.white;
             showColorStyle = false;
             colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
-            if (!customTextureBase && ResourcesDirectory.materialInfos.ContainsKey(highlightMaterial.name))
+            if (!customTextureBase &&
+                ResourcesDirectory.materialInfos.TryGetValue(highlightMaterial.name, out var info))
             {
-                var info = ResourcesDirectory.materialInfos[highlightMaterial.name];
                 whitePoint = info.whitePoint;
                 whitePoint.a = 1.0f;
                 showColorStyle = info.supportsColorStyles;
@@ -166,10 +144,9 @@ public class MaterialSelectorGUI : GUIPanel
                 colorPicker.CallHandler();  // update white point and call material handler also
             }
         }
-        return true;
     }
 
-    private void TextureTab()
+    private void TexturePage()
     {
         if (materials == null)
             return;
@@ -178,53 +155,76 @@ public class MaterialSelectorGUI : GUIPanel
             GUILayout.Label("Loading world...");
             return;
         }
-        scroll = GUILayout.BeginScrollView(scroll);
 
-        if (selectedCategory != "")
+        GUILayout.BeginHorizontal();
+
+        bool wasEnabled = GUI.enabled;
+        Color baseColor = GUI.color;
+        if (selectedCategory == "" && !importFromWorld)
+            GUIUtils.ShowDisabled();
+        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+            BackButton();
+        GUI.enabled = wasEnabled;
+        GUI.color = baseColor;
+
+        if (selectedCategory == CUSTOM_CATEGORY)
         {
-            GUILayout.BeginHorizontal();
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
-                BackButton();
-            // prevent from expanding window
-            GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-            if (selectedCategory == CUSTOM_CATEGORY)
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
+                ImportTextureFromPhotos();
+            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
+                CategorySelected(WORLD_LIST_CATEGORY);
+            if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
             {
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
-                    ImportTextureFromPhotos();
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
-                    CategorySelected(WORLD_LIST_CATEGORY);
-                if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
+                    DuplicateCustomTexture();
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
+                    EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
+                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
                 {
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
-                        DuplicateCustomTexture();
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
-                        EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
-                    if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
-                    {
-                        var dialog = gameObject.AddComponent<DialogGUI>();
-                        dialog.message = "Are you sure you want to delete this custom texture?";
-                        dialog.yesButtonText = "Yes";
-                        dialog.noButtonText = "No";
-                        dialog.yesButtonHandler = () => DeleteCustomTexture();
-                    }
+                    var dialog = gameObject.AddComponent<DialogGUI>();
+                    dialog.message = "Are you sure you want to delete this custom texture?";
+                    dialog.yesButtonText = "Yes";
+                    dialog.noButtonText = "No";
+                    dialog.yesButtonHandler = () => DeleteCustomTexture();
                 }
             }
-            GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
-            GUIUtils.EndHorizontalClipped();
-            GUILayout.EndHorizontal();
         }
 
+        // prevent from expanding window
+        GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
+        GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
+        GUIUtils.EndHorizontalClipped();
+
+        wasEnabled = GUI.enabled;
+        baseColor = GUI.color;
+        if (highlightMaterial == null || CustomTexture.IsCustomTexture(highlightMaterial)
+            || ResourcesDirectory.MaterialColorProperty(highlightMaterial) == null)
+        {
+            GUIUtils.ShowDisabled();
+        }
+        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.color))
+            page = Page.COLOR;
+        GUI.enabled = wasEnabled;
+        GUI.color = baseColor;
+
+        if (allowNullMaterial && selectedCategory == "")
+        {
+            if (highlightMaterial != null && ActionBarGUI.ActionBarButton(GUIIconSet.instance.no))
+                MaterialSelected(null);
+            else if (highlightMaterial == null)
+                ActionBarGUI.HighlightedActionBarButton(GUIIconSet.instance.no);
+        }
+
+        GUILayout.EndHorizontal();
+
+        scroll = GUILayout.BeginScrollView(scroll);
         if (importFromWorld && (importMessage != null))
             GUILayout.Label(importMessage);
 
         Rect rowRect = new Rect();
         int materialColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
-        string highlightName = "", previewName = "";
-        if (highlightMaterial != null)
-        {
-            highlightName = highlightMaterial.name;
-            previewName = highlightName + PREVIEW_SUFFIX;
-        }
+        string highlightName = highlightMaterial?.name;
+        string previewName = (highlightName != null) ? (highlightName + PREVIEW_SUFFIX) : null;
         for (int i = 0; i < materials.Count; i++)
         {
             if (i % materialColumns == 0)
@@ -237,8 +237,7 @@ public class MaterialSelectorGUI : GUIPanel
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
             Material material = materials[i];
             bool selected;
-            if (material != null && (material.name == highlightName
-                    || material.name == previewName))
+            if (material?.name == highlightName || material?.name == previewName)
                 // highlight the button
                 selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
             else

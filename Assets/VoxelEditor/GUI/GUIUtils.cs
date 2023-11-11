@@ -133,4 +133,12 @@ public static class GUIUtils
         GUILayout.EndHorizontal();
         GUILayout.EndScrollView();
     }
+
+    public static void ShowDisabled()
+    {
+        if (!GUI.enabled)
+            GUI.color *= new Color(1, 1, 1, 0.5f); // aaaaaaaaa
+        else
+            GUI.enabled = false;
+    }
 }
