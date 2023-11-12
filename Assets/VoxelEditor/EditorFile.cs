@@ -214,8 +214,7 @@ public class EditorFile : MonoBehaviour
                 {
                     DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject, "An error occurred while reading the file.");
                     Debug.LogError(e);
-                    if (stream != null)
-                        stream.Dispose();
+                    stream?.Dispose();
                     ShareMap.ClearFileWaitingToImport();
                 }
             }

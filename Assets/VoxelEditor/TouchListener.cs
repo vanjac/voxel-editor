@@ -71,11 +71,10 @@ public class TouchListener : MonoBehaviour
                 touch.tapCount = 1;
             }
 
-            RaycastHit hit;
             if (currentTouchOperation != TouchOperation.SELECT)
                 selectingXRay = true;
             bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(touch.position),
-                out hit, Mathf.Infinity, selectingXRay ? Physics.DefaultRaycastLayers : NO_XRAY_MASK);
+                out RaycastHit hit, Mathf.Infinity, selectingXRay ? Physics.DefaultRaycastLayers : NO_XRAY_MASK);
             Voxel hitVoxel = null;
             int hitElementI = -1;
             TransformAxis hitTransformAxis = null;
@@ -87,8 +86,7 @@ public class TouchListener : MonoBehaviour
                 {
                     var voxelComponent = hitObject.GetComponent<VoxelComponent>();
                     int hitVertexI = GetRaycastHitVertexIndex(hit);
-                    int hitFaceI;
-                    voxelComponent.GetVoxelFaceForVertex(hitVertexI, out hitVoxel, out hitFaceI);
+                    voxelComponent.GetVoxelFaceForVertex(hitVertexI, out hitVoxel, out int hitFaceI);
                     if (selectType == VoxelElement.FACES)
                         hitElementI = hitFaceI;
                     else if (selectType == VoxelElement.EDGES)
@@ -112,9 +110,8 @@ public class TouchListener : MonoBehaviour
                     || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10))) // xray or TransparentObject layer
                 {
                     // allow moving axes through xray substances
-                    RaycastHit newHit;
                     if (Physics.Raycast(cam.ScreenPointToRay(touch.position),
-                        out newHit, Mathf.Infinity, NO_TRANSPARENT_MASK))
+                        out RaycastHit newHit, Mathf.Infinity, NO_TRANSPARENT_MASK))
                     {
                         if (newHit.transform.tag == "MoveAxis")
                         {
@@ -321,8 +318,7 @@ public class TouchListener : MonoBehaviour
 
         Ray ray = cam.ScreenPointToRay(avg);
 
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, NO_XRAY_MASK))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, NO_XRAY_MASK))
         {
             float currentDistanceToCamera = (pivot.position - transform.position).magnitude;
             float newDistanceToCamera = (hit.point - transform.position).magnitude;

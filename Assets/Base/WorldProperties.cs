@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldProperties : PropertiesObject
@@ -28,8 +28,7 @@ public class WorldProperties : PropertiesObject
     private void UpdateSky()
     {
         var sky = RenderSettings.skybox;
-        float baseRotation;
-        if (sky != null && skyRotations.TryGetValue(sky.name, out baseRotation))
+        if (sky != null && skyRotations.TryGetValue(sky.name, out float baseRotation))
         {
             // rotate sky to match sun direction
             float yaw = RenderSettings.sun.transform.rotation.eulerAngles.y;

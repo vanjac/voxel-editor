@@ -181,7 +181,6 @@ public class PaintGUI : GUIPanel
     private void DrawPaint(VoxelFace paint, Rect rect)
     {
         int rotation = VoxelFace.GetOrientationRotation(paint.orientation);
-        bool mirror = VoxelFace.GetOrientationMirror(paint.orientation);
         Vector2 u_vec = new Vector2(COARSE_COS[rotation], COARSE_SIN[rotation]);
         Vector2 v_vec = new Vector2(-COARSE_SIN[rotation], COARSE_COS[rotation]);
         if (VoxelFace.GetOrientationMirror(paint.orientation))

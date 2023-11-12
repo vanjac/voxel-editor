@@ -51,9 +51,7 @@ public abstract class MotionComponent<T> : BehaviorComponent<T>, IMotionComponen
         }
         else
         {
-            Vector3 axis;
-            float angle;
-            rotate.ToAngleAxis(out angle, out axis);
+            rotate.ToAngleAxis(out float angle, out Vector3 axis);
             transform.Rotate(axis, angle);
             transform.Translate(translate);
         }

@@ -31,14 +31,12 @@ public static class AudioCompression
         int opusSampleRate = GetClosestOpusSampleRate(clip.frequency);
         Debug.Log("Audio is " + clip.frequency + "Hz, storing at " + opusSampleRate + "Hz");
 
-        int error;
         IntPtr encoder = Opus.opus_encoder_create(opusSampleRate, clip.channels,
-            (int)Opus.Application.Audio, out error);
+            (int)Opus.Application.Audio, out int error);
         if ((Opus.Errors)error != Opus.Errors.OK)
             throw new MapReadException("Error creating Opus encoder: " + (Opus.Errors)error);
 
-        int bitrate;
-        error = Opus.opus_encoder_ctl(encoder, Opus.Ctl.GetBitrateRequest, out bitrate);
+        error = Opus.opus_encoder_ctl(encoder, Opus.Ctl.GetBitrateRequest, out int bitrate);
         if (error < 0)
             throw new MapReadException("Error getting bitrate " + error);
         if (bitrate <= 0)
@@ -127,8 +125,7 @@ public static class AudioCompression
         //Debug.Log("Largest packet: " + largestPacket);
 
         int opusSampleRate = GetClosestOpusSampleRate(clip.frequency);
-        int error;
-        IntPtr decoder = Opus.opus_decoder_create(opusSampleRate, clip.channels, out error);
+        IntPtr decoder = Opus.opus_decoder_create(opusSampleRate, clip.channels, out int error);
         if ((Opus.Errors)error != Opus.Errors.OK)
             throw new Exception("Error creating decoder " + (Opus.Errors)error);
 

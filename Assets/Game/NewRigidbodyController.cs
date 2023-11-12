@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Linq.Expressions;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
@@ -176,10 +176,10 @@ public class NewRigidbodyController : MonoBehaviour
 
     private void StickToGroundHelper()
     {
-        RaycastHit hitInfo;
-        if (Physics.SphereCast(transform.position, capsule.radius * (1.0f - shellOffset), Vector3.down, out hitInfo,
-                                ((capsule.height / 2f) - capsule.radius) +
-                                stickToGroundHelperDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(transform.position, capsule.radius * (1.0f - shellOffset),
+            Vector3.down, out RaycastHit hitInfo,
+            (capsule.height / 2f) - capsule.radius + stickToGroundHelperDistance,
+            Physics.AllLayers, QueryTriggerInteraction.Ignore))
         {
             if (Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f)
             {
@@ -215,9 +215,10 @@ public class NewRigidbodyController : MonoBehaviour
             jumping = true;
         }
 
-        RaycastHit hitInfo;
-        if (Physics.SphereCast(transform.position, capsule.radius * (1.0f - shellOffset), Vector3.down, out hitInfo,
-                                ((capsule.height / 2f) - capsule.radius) + groundCheckDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(transform.position, capsule.radius * (1.0f - shellOffset),
+            Vector3.down, out RaycastHit hitInfo,
+            (capsule.height / 2f) - capsule.radius + groundCheckDistance,
+            Physics.AllLayers, QueryTriggerInteraction.Ignore))
         {
             grounded = true;
             groundContactNormal = hitInfo.normal;

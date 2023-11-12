@@ -41,7 +41,7 @@ public static class EntityPreviewManager
     {
         if (entityPreviewObjects.TryGetValue(entity, out var previewObjects))
         {
-            foreach (GameObject obj in entityPreviewObjects[entity])
+            foreach (GameObject obj in previewObjects)
                 GameObject.Destroy(obj);
             entityPreviewObjects.Remove(entity);
         }
@@ -61,7 +61,7 @@ public static class EntityPreviewManager
         if (entityPreviewObjects.TryGetValue(entity, out var previewObjects))
         {
             Vector3 pos = entity.PositionInEditor();
-            foreach (GameObject obj in entityPreviewObjects[entity])
+            foreach (GameObject obj in previewObjects)
             {
                 if (obj == null)
                     continue; // map may have been closed with an object still selected

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public struct VoxelFace
@@ -127,20 +127,15 @@ public struct VoxelEdge
     {
         get
         {
-            switch (bevelType)
+            return bevelType switch
             {
-                case BevelType.SQUARE:
-                    return SHAPE_SQUARE;
-                case BevelType.FLAT:
-                    return SHAPE_FLAT;
-                case BevelType.CURVE:
-                    return SHAPE_CURVE;
-                case BevelType.STAIR_2:
-                    return SHAPE_STAIR_2;
-                case BevelType.STAIR_4:
-                    return SHAPE_STAIR_4;
-            }
-            return null;
+                BevelType.SQUARE => SHAPE_SQUARE,
+                BevelType.FLAT => SHAPE_FLAT,
+                BevelType.CURVE => SHAPE_CURVE,
+                BevelType.STAIR_2 => SHAPE_STAIR_2,
+                BevelType.STAIR_4 => SHAPE_STAIR_4,
+                _ => null,
+            };
         }
     }
 
@@ -148,20 +143,15 @@ public struct VoxelEdge
     {
         get
         {
-            switch (bevelType)
+            return bevelType switch
             {
-                case BevelType.SQUARE:
-                    return NORMALS_SQUARE;
-                case BevelType.FLAT:
-                    return NORMALS_FLAT;
-                case BevelType.CURVE:
-                    return NORMALS_CURVE;
-                case BevelType.STAIR_2:
-                    return NORMALS_STAIR_2;
-                case BevelType.STAIR_4:
-                    return NORMALS_STAIR_4;
-            }
-            return null;
+                BevelType.SQUARE => NORMALS_SQUARE,
+                BevelType.FLAT => NORMALS_FLAT,
+                BevelType.CURVE => NORMALS_CURVE,
+                BevelType.STAIR_2 => NORMALS_STAIR_2,
+                BevelType.STAIR_4 => NORMALS_STAIR_4,
+                _ => null,
+            };
         }
     }
 
@@ -169,16 +159,13 @@ public struct VoxelEdge
     {
         get
         {
-            switch (bevelSize)
+            return bevelSize switch
             {
-                case BevelSize.QUARTER:
-                    return 0.25f;
-                case BevelSize.HALF:
-                    return 0.5f;
-                case BevelSize.FULL:
-                    return 1.0f;
-            }
-            return 0.0f;
+                BevelSize.QUARTER => 0.25f,
+                BevelSize.HALF => 0.5f,
+                BevelSize.FULL => 1.0f,
+                _ => 0.0f,
+            };
         }
     }
 
@@ -202,23 +189,16 @@ public class Voxel
 
     public static Vector3 DirectionForFaceI(int faceI)
     {
-        switch (faceI)
+        return faceI switch
         {
-            case 0:
-                return Vector3.left;
-            case 1:
-                return Vector3.right;
-            case 2:
-                return Vector3.down;
-            case 3:
-                return Vector3.up;
-            case 4:
-                return Vector3.back;
-            case 5:
-                return Vector3.forward;
-            default:
-                return Vector3.zero;
-        }
+            0 => Vector3.left,
+            1 => Vector3.right,
+            2 => Vector3.down,
+            3 => Vector3.up,
+            4 => Vector3.back,
+            5 => Vector3.forward,
+            _ => Vector3.zero,
+        };
     }
 
     public static Vector3 OppositeDirectionForFaceI(int faceI) =>
@@ -343,31 +323,16 @@ public class Voxel
 
     public Bounds GetFaceBounds(int faceI)
     {
-        Bounds bounds;
-        switch (faceI)
+        var bounds = faceI switch
         {
-            case 0:
-                bounds = new Bounds(new Vector3(0, 0.5f, 0.5f), new Vector3(0, 1, 1));
-                break;
-            case 1:
-                bounds = new Bounds(new Vector3(1, 0.5f, 0.5f), new Vector3(0, 1, 1));
-                break;
-            case 2:
-                bounds = new Bounds(new Vector3(0.5f, 0, 0.5f), new Vector3(1, 0, 1));
-                break;
-            case 3:
-                bounds = new Bounds(new Vector3(0.5f, 1, 0.5f), new Vector3(1, 0, 1));
-                break;
-            case 4:
-                bounds = new Bounds(new Vector3(0.5f, 0.5f, 0), new Vector3(1, 1, 0));
-                break;
-            case 5:
-                bounds = new Bounds(new Vector3(0.5f, 0.5f, 1), new Vector3(1, 1, 0));
-                break;
-            default:
-                bounds = new Bounds(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0, 0, 0));
-                break;
-        }
+            0 => new Bounds(new Vector3(0, 0.5f, 0.5f), new Vector3(0, 1, 1)),
+            1 => new Bounds(new Vector3(1, 0.5f, 0.5f), new Vector3(0, 1, 1)),
+            2 => new Bounds(new Vector3(0.5f, 0, 0.5f), new Vector3(1, 0, 1)),
+            3 => new Bounds(new Vector3(0.5f, 1, 0.5f), new Vector3(1, 0, 1)),
+            4 => new Bounds(new Vector3(0.5f, 0.5f, 0), new Vector3(1, 1, 0)),
+            5 => new Bounds(new Vector3(0.5f, 0.5f, 1), new Vector3(1, 1, 0)),
+            _ => new Bounds(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0, 0, 0)),
+        };
         bounds.center += position;
         return bounds;
     }
@@ -401,15 +366,13 @@ public class Voxel
 
     public bool EdgeIsEmpty(int edgeI)
     {
-        int faceA, faceB;
-        EdgeFaces(edgeI, out faceA, out faceB);
+        EdgeFaces(edgeI, out int faceA, out int faceB);
         return faces[faceA].IsEmpty() && faces[faceB].IsEmpty();
     }
 
     public bool EdgeIsConvex(int edgeI)
     {
-        int faceA, faceB;
-        EdgeFaces(edgeI, out faceA, out faceB);
+        EdgeFaces(edgeI, out int faceA, out int faceB);
         return !faces[faceA].IsEmpty() && !faces[faceB].IsEmpty();
     }
 
@@ -896,8 +859,7 @@ public class VoxelComponent : MonoBehaviour
         {
             corners[i].innerQuad_i = vertexI++;
             corners[i].count++;
-            int edgeA, edgeB, edgeC;
-            VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
+            VertexEdges(faceNum, i, out int edgeA, out int edgeB, out int edgeC);
             if (voxel.edges[edgeB].hasBevel)
             {
                 GetBevelVertices(voxelArray, voxel, ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB, i, edgeB, false);
@@ -985,8 +947,7 @@ public class VoxelComponent : MonoBehaviour
         bool face = !thisVoxel.faces[capFaceI].IsEmpty();
         foreach (int connectedI in Voxel.ConnectedEdges(edgeI))
         {
-            int faceA, faceB;
-            Voxel.EdgeFaces(connectedI, out faceA, out faceB);
+            Voxel.EdgeFaces(connectedI, out int faceA, out int faceB);
             // only use faces on this half of the edge
             if (faceA != capFaceI && faceB != capFaceI)
                 continue;
@@ -999,7 +960,7 @@ public class VoxelComponent : MonoBehaviour
             }
         }
 
-        bool otherEmpty = (otherVoxel == null || otherVoxel.EdgeIsEmpty(edgeI));
+        bool otherEmpty = otherVoxel == null || otherVoxel.EdgeIsEmpty(edgeI);
         bool match = false;
         if (otherVoxel != null)
         {
@@ -1102,8 +1063,7 @@ public class VoxelComponent : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             FaceCornerVertices corner = corners[i];
-            int edgeA, edgeB, edgeC;
-            VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
+            VertexEdges(faceNum, i, out int edgeA, out int edgeB, out int edgeC);
             bool concaveB = voxel.faces[EdgeBOtherFace(faceNum, i)].IsEmpty();
             bool concaveC = voxel.faces[EdgeCOtherFace(faceNum, i)].IsEmpty();
             bool concaveA = concaveB || concaveC;
@@ -1402,8 +1362,7 @@ public class VoxelComponent : MonoBehaviour
         }
         for (int i = 0; i < 4; i++)
         {
-            int edgeA, edgeB, edgeC;
-            VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
+            VertexEdges(faceNum, i, out int edgeA, out int edgeB, out int edgeC);
             if (voxel.edges[edgeA].hasBevel && voxel.edges[edgeA].bevelSize == VoxelEdge.BevelSize.FULL
                 && voxel.EdgeIsConvex(edgeA))
             {
@@ -1534,8 +1493,6 @@ public class VoxelComponent : MonoBehaviour
     private static void GenerateCapTriangles(Voxel voxel, int faceNum, FaceCornerVertices[] vertices,
         int[] triangles, ref int triangleCount, FaceHalfEdgeVertices hEdge, int i, bool faceCCW, bool isEdgeC)
     {
-        int edgeA, edgeB, edgeC;
-        VertexEdges(faceNum, i, out edgeA, out edgeB, out edgeC);
         bool capCCW = faceCCW ^ (isEdgeC) ^ (i % 2 == 0);
         for (int capI = 1; capI < hEdge.cap_count - 1; capI++)
         {

@@ -63,11 +63,8 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
         if (currentEntity != entity)
         {
-            if (currentEntity != null)
-            {
-                // entity deselected
-                currentEntity.SetHighlight(Color.clear);
-            }
+            // entity deselected
+            currentEntity?.SetHighlight(Color.clear);
             if (entity != null)
             {
                 // entity selected
@@ -93,8 +90,7 @@ public class EntityReferencePropertyManager : MonoBehaviour
         targetEntities.Add(entity);
         entitiesToClear.Remove(entity);
         currentTargetEntityI = targetEntities.Count - 1;
-        if (entity != null)
-            entity.SetHighlight(GetColor());
+        entity?.SetHighlight(GetColor());
     }
 
     public static void SetBehaviorTarget(Entity entity)

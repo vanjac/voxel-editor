@@ -40,16 +40,7 @@ public class EntityReference
             return target;
         }
     }
-    public EntityComponent component
-    {
-        get
-        {
-            Entity e = entity;
-            if (e != null)
-                return e.component;
-            return null;
-        }
-    }
+    public EntityComponent component => entity?.component;
 
     private static Dictionary<Guid, WeakReference> existingEntityIds = new Dictionary<Guid, WeakReference>();
     private static bool entitiesLoaded = false;

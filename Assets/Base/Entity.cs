@@ -93,10 +93,7 @@ public class PropertiesObjectType
         longDescription = "";
         this.iconName = iconName;
         this.type = type;
-        if (constructor == null)
-            this.constructor = DefaultConstructor;
-        else
-            this.constructor = constructor;
+        this.constructor = constructor ?? DefaultConstructor;
     }
 
     public PropertiesObjectType(string fullName, string description, string longDescription,
@@ -107,10 +104,7 @@ public class PropertiesObjectType
         this.longDescription = longDescription;
         this.iconName = iconName;
         this.type = type;
-        if (constructor == null)
-            this.constructor = DefaultConstructor;
-        else
-            this.constructor = constructor;
+        this.constructor = constructor ?? DefaultConstructor;
     }
 
     public PropertiesObjectType(PropertiesObjectType baseType, Func<PropertiesObject> newConstructor)
@@ -580,20 +574,14 @@ public class BehaviorType : PropertiesObjectType
         Predicate<Entity> rule = null)
         : base(fullName, description, iconName, type)
     {
-        if (rule == null)
-            this.rule = DefaultRule;
-        else
-            this.rule = rule;
+        this.rule = rule ?? DefaultRule;
     }
 
     public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type,
         Predicate<Entity> rule = null)
         : base(fullName, description, longDescription, iconName, type)
     {
-        if (rule == null)
-            this.rule = DefaultRule;
-        else
-            this.rule = rule;
+        this.rule = rule ?? DefaultRule;
     }
 
     private static bool DefaultRule(Entity checkEntity) => true;

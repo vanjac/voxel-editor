@@ -42,8 +42,7 @@ public class DataImportGUI : GUIPanel
 
     private EmbeddedData StopPlayer()
     {
-        if (playingAudio != null)
-            playingAudio.Stop();
+        playingAudio?.Stop();
         playingAudio = null;
         var data = playingData;
         playingData = null;

@@ -33,9 +33,8 @@ public static class ResourcesDirectory
 
     public static Material FindMaterial(string name, bool editor)
     {
-        MaterialInfo info;
         // special alternate materials for game
-        if ((!editor) && materialInfos.TryGetValue("$" + name, out info))
+        if ((!editor) && materialInfos.TryGetValue("$" + name, out MaterialInfo info))
             return LoadMaterial(info);
         if (materialInfos.TryGetValue(name, out info))
             return LoadMaterial(info);
@@ -71,9 +70,8 @@ public static class ResourcesDirectory
             name = CustomTexture.GetBaseMaterialName(material);
         else
             name = material.name;
-        MaterialInfo info;
         // special alternate materials for game
-        if (materialInfos.TryGetValue("$" + name, out info))
+        if (materialInfos.TryGetValue("$" + name, out MaterialInfo info))
             return info.sound;
         if (materialInfos.TryGetValue(name, out info))
             return info.sound;

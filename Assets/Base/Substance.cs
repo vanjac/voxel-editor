@@ -28,7 +28,7 @@ public class Substance : DynamicEntity
         {
             new Property("piv", "Pivot",
                 () => pivot,
-                v => {pivot = (Pivot)v;},
+                v => pivot = (Pivot)v,
                 PropertyGUIs.PivotProp),
         });
 

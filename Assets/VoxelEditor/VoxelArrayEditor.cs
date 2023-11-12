@@ -1357,8 +1357,7 @@ public class VoxelArrayEditor : VoxelArray
     // return null voxel if edge doesn't exist or substances don't match
     private VoxelEdgeReference OpposingEdgeRef(VoxelEdgeReference edgeRef)
     {
-        int faceA, faceB;
-        Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
+        Voxel.EdgeFaces(edgeRef.edgeI, out int faceA, out int faceB);
         Vector3Int opposingPos = edgeRef.voxel.position
             + Voxel.DirectionForFaceI(faceA).ToInt() + Voxel.DirectionForFaceI(faceB).ToInt();
         Voxel opposingVoxel = VoxelAt(opposingPos, false);
@@ -1371,8 +1370,7 @@ public class VoxelArrayEditor : VoxelArray
     private VoxelEdgeReference OpposingFlatEdgeRef(VoxelEdgeReference edgeRef)
     {
         // find voxel next to this one
-        int faceA, faceB;
-        Voxel.EdgeFaces(edgeRef.edgeI, out faceA, out faceB);
+        Voxel.EdgeFaces(edgeRef.edgeI, out int faceA, out int faceB);
         int emptyFace = edgeRef.voxel.faces[faceA].IsEmpty() ? faceA : faceB;
         int notEmptyFace = emptyFace == faceA ? faceB : faceA;
         Voxel adjacentVoxel = VoxelAt(edgeRef.voxel.position

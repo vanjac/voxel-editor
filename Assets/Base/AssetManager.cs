@@ -9,9 +9,8 @@ public class AssetManager : MonoBehaviour
 
     public static void UnusedAssets()
     {
-        if (instance == null)
-            return;
-        instance.unloadUnusedAssets = true;
+        if (instance != null)
+            instance.unloadUnusedAssets = true;
     }
 
     void Start()

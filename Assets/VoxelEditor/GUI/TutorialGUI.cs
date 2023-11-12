@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public enum TutorialAction
 {
@@ -137,10 +137,8 @@ public class TutorialGUI : GUIPanel
         TutorialPage newPage = null;
         if (currentTutorial != null && pageI >= 0 && pageI < currentTutorial.Length)
             newPage = currentTutorial[pageI]();
-        if (currentPage != null)
-            currentPage.End(voxelArray, gameObject, touchListener);
-        if (newPage != null)
-            newPage.Start(voxelArray, gameObject, touchListener);
+        currentPage?.End(voxelArray, gameObject, touchListener);
+        newPage?.Start(voxelArray, gameObject, touchListener);
         currentPage = newPage;
     }
 

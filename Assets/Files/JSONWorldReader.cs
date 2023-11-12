@@ -241,8 +241,7 @@ public class JSONWorldReader : WorldFileReader
             {
                 JSONArray propArray = propNode.AsArray;
                 string name = propArray[0];
-                string id;
-                if (!propNamesToIDs.TryGetValue(name, out id))
+                if (!propNamesToIDs.TryGetValue(name, out string id))
                 {
                     warnings.Add("Unrecognized property: " + name);
                     continue;
