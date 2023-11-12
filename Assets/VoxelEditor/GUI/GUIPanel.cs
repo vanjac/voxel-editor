@@ -17,6 +17,10 @@ public abstract class GUIPanel : MonoBehaviour
 
     public static GUIPanel leftPanel, topPanel, bottomPanel;
 
+    public static GUIIconSet IconSet => GUIManager.instance?.iconSet ?? new GUIIconSet();
+    public static GUIStyleSet StyleSet => GUIManager.instance?.styleSet.Value;
+    public static GameObject GuiGameObject => GUIManager.instance?.gameObject;
+
     public string title = "";
     protected bool showCloseButton = false;
 

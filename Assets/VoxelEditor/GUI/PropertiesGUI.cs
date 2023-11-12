@@ -77,7 +77,7 @@ class StoredPropertiesObject : PropertiesObject
                 {
                     GUILayout.BeginHorizontal();
                     PropertyGUIs.AlignedLabel(property);
-                    if (GUILayout.Button("different", GUIStyleSet.instance.buttonSmall))
+                    if (GUILayout.Button("different", GUIPanel.StyleSet.buttonSmall))
                     {
                         // set all properties to one value
                         property.setter(firstProperty.getter());
@@ -328,8 +328,7 @@ public class PropertiesGUI : LeftPanelGUI
         if (singleSelectedEntity != null && !(singleSelectedEntity is PlayerObject))
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(new GUIContent("  Clone", GUIIconSet.instance.copy),
-                GUIStyleSet.instance.buttonSmall))
+            if (GUILayout.Button(new GUIContent("  Clone", IconSet.copy), StyleSet.buttonSmall))
             {
                 if (singleSelectedEntity is ObjectEntity)
                 {
@@ -349,8 +348,7 @@ public class PropertiesGUI : LeftPanelGUI
                     createGUI.voxelArray = voxelArray;
                 }
             }
-            if (GUILayout.Button(new GUIContent("  Delete", GUIIconSet.instance.delete),
-                GUIStyleSet.instance.buttonSmall))
+            if (GUILayout.Button(new GUIContent("  Delete", IconSet.delete), StyleSet.buttonSmall))
             {
                 DeleteButton();
             }
@@ -358,15 +356,14 @@ public class PropertiesGUI : LeftPanelGUI
         }
         if (selectedEntities.Count > 1)
         {
-            if (GUILayout.Button(new GUIContent("  Delete", GUIIconSet.instance.delete),
-                GUIStyleSet.instance.buttonSmall))
+            if (GUILayout.Button(new GUIContent("  Delete", IconSet.delete), StyleSet.buttonSmall))
             {
                 DeleteButton();
             }
         }
 
         TutorialGUI.TutorialHighlight("change sensor");
-        if (GUILayout.Button(new GUIContent("  Change Sensor", GUIIconSet.instance.sensor)))
+        if (GUILayout.Button(new GUIContent("  Change Sensor", IconSet.sensor)))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.title = "Change Sensor";
@@ -386,7 +383,7 @@ public class PropertiesGUI : LeftPanelGUI
         GUILayout.EndVertical();
 
         TutorialGUI.TutorialHighlight("add behavior");
-        if (GUILayout.Button(new GUIContent("  Add Behavior", GUIIconSet.instance.newItem)))
+        if (GUILayout.Button(new GUIContent("  Add Behavior", IconSet.newItem)))
         {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
             behaviorMenu.title = "Add Behavior";
@@ -431,7 +428,7 @@ public class PropertiesGUI : LeftPanelGUI
             PropertiesObjectGUI(storedBehavior, " Behavior",
                 () => EntityPreviewManager.BehaviorUpdated(selectedEntities,
                     storedBehavior.allBehaviors[0].GetType()));
-            if (GUILayout.Button(new GUIContent("  Remove", GUIIconSet.instance.delete)))
+            if (GUILayout.Button(new GUIContent("  Remove", IconSet.delete)))
                 behaviorToRemove = storedBehavior;
             GUILayout.EndVertical();
             // clear this every time, in case the next target is the same
@@ -456,7 +453,7 @@ public class PropertiesGUI : LeftPanelGUI
         if (mismatchedSelectedBehaviorCounts)
         {
             GUILayout.BeginVertical(GUI.skin.box);
-            GUILayout.Label("(other behaviors...)", GUIStyleSet.instance.labelTitle);
+            GUILayout.Label("(other behaviors...)", StyleSet.labelTitle);
             GUILayout.EndVertical();
         }
     }
@@ -484,7 +481,7 @@ public class PropertiesGUI : LeftPanelGUI
             var typeInfo = gameObject.AddComponent<TypeInfoGUI>();
             typeInfo.type = obj.ObjectType;
         }
-        GUILayout.Label(title, GUIStyleSet.instance.labelTitle);
+        GUILayout.Label(title, StyleSet.labelTitle);
         GUILayout.EndHorizontal();
 
         if (obj == null)

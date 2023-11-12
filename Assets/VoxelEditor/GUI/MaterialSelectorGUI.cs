@@ -37,7 +37,7 @@ public class MaterialSelectorGUI : GUIPanel
 
     private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        var style = new GUIStyle(StyleSet.buttonLarge);
         style.padding.left = 0;
         style.padding.right = 0;
         return style;
@@ -45,9 +45,9 @@ public class MaterialSelectorGUI : GUIPanel
 
     public static readonly System.Lazy<GUIStyle> categoryLabelStyle = new System.Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUIStyleSet.instance.labelTitle);
+        var style = new GUIStyle(StyleSet.labelTitle);
         style.alignment = TextAnchor.MiddleCenter;
-        style.fixedHeight = GUIStyleSet.instance.buttonLarge.fixedHeight;
+        style.fixedHeight = StyleSet.buttonLarge.fixedHeight;
         return style;
     });
 
@@ -93,7 +93,7 @@ public class MaterialSelectorGUI : GUIPanel
     private void ColorPage()
     {
         GUILayout.BeginHorizontal();
-        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+        if (ActionBarGUI.ActionBarButton(IconSet.close))
             page = Page.TEXTURE;
         GUILayout.Label("Adjust color", categoryLabelStyle.Value);
         GUILayout.EndHorizontal();
@@ -162,24 +162,24 @@ public class MaterialSelectorGUI : GUIPanel
         Color baseColor = GUI.color;
         if (selectedCategory == "" && !importFromWorld)
             GUIUtils.ShowDisabled();
-        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+        if (ActionBarGUI.ActionBarButton(IconSet.close))
             BackButton();
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
         if (selectedCategory == CUSTOM_CATEGORY)
         {
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.newTexture))
+            if (ActionBarGUI.ActionBarButton(IconSet.newTexture))
                 ImportTextureFromPhotos();
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.worldImport))
+            if (ActionBarGUI.ActionBarButton(IconSet.worldImport))
                 CategorySelected(WORLD_LIST_CATEGORY);
             if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
             {
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.copy))
+                if (ActionBarGUI.ActionBarButton(IconSet.copy))
                     DuplicateCustomTexture();
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.draw))
+                if (ActionBarGUI.ActionBarButton(IconSet.draw))
                     EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
-                if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.delete))
+                if (ActionBarGUI.ActionBarButton(IconSet.delete))
                 {
                     var dialog = gameObject.AddComponent<DialogGUI>();
                     dialog.message = "Are you sure you want to delete this custom texture?";
@@ -202,17 +202,17 @@ public class MaterialSelectorGUI : GUIPanel
         {
             GUIUtils.ShowDisabled();
         }
-        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.color))
+        if (ActionBarGUI.ActionBarButton(IconSet.color))
             page = Page.COLOR;
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
         if (allowNullMaterial && selectedCategory == "")
         {
-            if (highlightMaterial != null && ActionBarGUI.ActionBarButton(GUIIconSet.instance.no))
+            if (highlightMaterial != null && ActionBarGUI.ActionBarButton(IconSet.no))
                 MaterialSelected(null);
             else if (highlightMaterial == null)
-                ActionBarGUI.HighlightedActionBarButton(GUIIconSet.instance.no);
+                ActionBarGUI.HighlightedActionBarButton(IconSet.no);
         }
 
         GUILayout.EndHorizontal();

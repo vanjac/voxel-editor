@@ -2,16 +2,6 @@
 
 public class GUIStyleSet
 {
-    public static GUIStyleSet instance
-    {
-        get
-        {
-            if (GUIManager.instance == null)
-                return null;
-            return GUIManager.instance.styleSet;
-        }
-    }
-
     public GUIStyle labelTitle, buttonTab, buttonLarge, buttonSmall;
 
     // must be created in OnGUI

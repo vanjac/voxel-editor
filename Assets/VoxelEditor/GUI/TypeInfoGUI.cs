@@ -14,7 +14,7 @@ public class TypeInfoGUI : GUIPanel
         GUILayout.Label(type.icon, GUILayout.ExpandWidth(false));
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
-        GUILayout.Label(type.fullName, GUIStyleSet.instance.labelTitle);
+        GUILayout.Label(type.fullName, StyleSet.labelTitle);
         if (GUILayout.Button("Done", GUILayout.ExpandWidth(false)))
             Destroy(this);
         GUILayout.EndHorizontal();

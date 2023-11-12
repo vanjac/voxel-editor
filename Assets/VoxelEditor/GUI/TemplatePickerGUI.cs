@@ -7,7 +7,7 @@ public class TemplatePickerGUI : GUIPanel
 
     public static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUIStyleSet.instance.buttonSmall);
+        var style = new GUIStyle(StyleSet.buttonSmall);
         style.imagePosition = ImagePosition.ImageAbove;
         return style;
     });
@@ -20,8 +20,8 @@ public class TemplatePickerGUI : GUIPanel
         title = "New World";
         options = new GUIContent[]
         {
-            new GUIContent("Indoor", GUIIconSet.instance.indoorLarge),
-            new GUIContent("Floating", GUIIconSet.instance.floatingLarge)
+            new GUIContent("Indoor", IconSet.indoorLarge),
+            new GUIContent("Floating", IconSet.floatingLarge)
         };
     }
 

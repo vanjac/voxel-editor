@@ -24,7 +24,7 @@ public class OverflowMenuGUI : GUIPanel
 
     public static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        var style = new GUIStyle(StyleSet.buttonLarge);
         style.alignment = TextAnchor.MiddleLeft;
         return style;
     });

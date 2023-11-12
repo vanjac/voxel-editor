@@ -13,30 +13,14 @@ public class GUIManager : MonoBehaviour
     private const float MAX_PHONE_HEIGHT_INCHES = 2.7f;
 
     public static GUIManager instance;
-    public static GameObject guiGameObject
-    {
-        get
-        {
-            if (instance == null)
-                return null;
-            return instance.gameObject;
-        }
-    }
 
     public GUISkin guiSkin;
     public float targetHeightOverride = 0; // for testing
 
     public GUIIconSet iconSet;
-    private GUIStyleSet _styleSet;
-    public GUIStyleSet styleSet
-    {
-        get
-        {
-            if (_styleSet == null)
-                _styleSet = new GUIStyleSet(GUI.skin);
-            return _styleSet;
-        }
-    }
+    public System.Lazy<GUIStyleSet> styleSet = new System.Lazy<GUIStyleSet>(
+        () => new GUIStyleSet(GUI.skin));
+
     // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
     public Font[] alternateFonts;
 

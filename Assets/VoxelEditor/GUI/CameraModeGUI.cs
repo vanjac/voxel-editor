@@ -15,8 +15,8 @@ public class CameraModeGUI : GUIPanel
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        var style = GUIStyleSet.instance.buttonLarge;
-        float width = style.margin.left * 2 + style.padding.left * 2 + GUIIconSet.instance.orbit.width;
+        var style = StyleSet.buttonLarge;
+        float width = style.margin.left * 2 + style.padding.left * 2 + IconSet.orbit.width;
         float height = style.fixedHeight;
         float yMax = (GUIPanel.bottomPanel != null) ? GUIPanel.bottomPanel.panelRect.yMin
             : safeRect.yMax;
@@ -28,9 +28,9 @@ public class CameraModeGUI : GUIPanel
         var baseColor = GUI.backgroundColor;
         GUI.backgroundColor *= new Color(1, 1, 1, 0.5f);
         var icon = (touchListener.cameraMode == TouchListener.CameraMode.PAN) ?
-            GUIIconSet.instance.pan : GUIIconSet.instance.orbit;
+            IconSet.pan : IconSet.orbit;
         TutorialGUI.TutorialHighlight("pan");
-        if (GUILayout.Button(icon, GUIStyleSet.instance.buttonLarge))
+        if (GUILayout.Button(icon, StyleSet.buttonLarge))
         {
             touchListener.cameraMode = (touchListener.cameraMode == TouchListener.CameraMode.PAN) ?
                 TouchListener.CameraMode.ORBIT : TouchListener.CameraMode.PAN;

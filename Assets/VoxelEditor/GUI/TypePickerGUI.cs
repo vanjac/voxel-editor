@@ -35,7 +35,7 @@ public class TypePickerGUI : GUIPanel
         if (categoryNames.Length > 1)
         {
             int tab = GUILayout.SelectionGrid(selectedCategory, categoryNames,
-                categoryNames.Length, GUIStyleSet.instance.buttonTab);
+                categoryNames.Length, StyleSet.buttonTab);
             if (tab != selectedCategory)
             {
                 selectedCategory = tab;
@@ -54,10 +54,9 @@ public class TypePickerGUI : GUIPanel
             GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(item.fullName, GUIStyleSet.instance.labelTitle);
-            if (item.longDescription != ""
-                && GUILayout.Button(GUIIconSet.instance.helpCircle, helpIconStyle.Value,
-                    GUILayout.ExpandWidth(false)))
+            GUILayout.Label(item.fullName, StyleSet.labelTitle);
+            if (item.longDescription != "" && GUILayout.Button(IconSet.helpCircle,
+                helpIconStyle.Value, GUILayout.ExpandWidth(false)))
             {
                 if (showHelp == item)
                     showHelp = null;

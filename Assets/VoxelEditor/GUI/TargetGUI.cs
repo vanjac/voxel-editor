@@ -8,7 +8,7 @@ public class TargetGUI : GUIPanel
     public bool allowObjectTarget = true, allowNullTarget = false, allowVertical = true;
     public bool alwaysWorld = false, allowRandom = true;
     public string nullTargetName = "Any";
-    public Texture nullTargetIcon = GUIIconSet.instance.helpCircle;
+    public Texture nullTargetIcon = IconSet.helpCircle;
 
     private int localState = 0;
 
@@ -42,7 +42,7 @@ public class TargetGUI : GUIPanel
 
         GUILayout.BeginHorizontal();
         if (allowObjectTarget && GUILayout.Button(new GUIContent("  Pick object...",
-            GUIIconSet.instance.singleObject), GUIStyleSet.instance.buttonSmall))
+            IconSet.singleObject), StyleSet.buttonSmall))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = voxelArray;
@@ -60,13 +60,13 @@ public class TargetGUI : GUIPanel
             Destroy(this);
         }
         if (allowNullTarget && GUILayout.Button(new GUIContent("  " + nullTargetName,
-            nullTargetIcon), GUIStyleSet.instance.buttonSmall))
+            nullTargetIcon), StyleSet.buttonSmall))
         {
             handler(new Target(null));
             Destroy(this);
         }
         if (allowRandom && GUILayout.Button(new GUIContent("  Random",
-            GUIIconSet.instance.random), GUIStyleSet.instance.buttonSmall))
+            IconSet.random), StyleSet.buttonSmall))
         {
             handler(new Target(Target.RANDOM));  // don't check local state
             Destroy(this);
@@ -81,17 +81,17 @@ public class TargetGUI : GUIPanel
 
         GUI.color = baseColor * new Color(0.2f, 0.2f, 1);
         GUILayout.BeginVertical();
-        if (GUILayout.Button("North", GUIStyleSet.instance.buttonSmall))
+        if (GUILayout.Button("North", StyleSet.buttonSmall))
             SelectDirection(Target.NORTH);
-        if (GUILayout.Button("South", GUIStyleSet.instance.buttonSmall))
+        if (GUILayout.Button("South", StyleSet.buttonSmall))
             SelectDirection(Target.SOUTH);
         GUILayout.EndVertical();
 
         GUI.color = baseColor * new Color(1, 0.2f, 0.2f);
         GUILayout.BeginVertical();
-        if (GUILayout.Button("East", GUIStyleSet.instance.buttonSmall))
+        if (GUILayout.Button("East", StyleSet.buttonSmall))
             SelectDirection(Target.EAST);
-        if (GUILayout.Button("West", GUIStyleSet.instance.buttonSmall))
+        if (GUILayout.Button("West", StyleSet.buttonSmall))
             SelectDirection(Target.WEST);
         GUILayout.EndVertical();
 
@@ -99,9 +99,9 @@ public class TargetGUI : GUIPanel
         {
             GUI.color = baseColor * new Color(0.2f, 1, 0.2f);
             GUILayout.BeginVertical();
-            if (GUILayout.Button("Up", GUIStyleSet.instance.buttonSmall))
+            if (GUILayout.Button("Up", StyleSet.buttonSmall))
                 SelectDirection(Target.UP);
-            if (GUILayout.Button("Down", GUIStyleSet.instance.buttonSmall))
+            if (GUILayout.Button("Down", StyleSet.buttonSmall))
                 SelectDirection(Target.DOWN);
             GUILayout.EndVertical();
         }
@@ -123,7 +123,7 @@ public class TargetGUI : GUIPanel
         float rotation = -Camera.main.transform.parent.rotation.eulerAngles.y;
         Matrix4x4 baseMatrix = GUI.matrix;
         panel.RotateAboutPoint(rect.center, rotation, Vector2.one);
-        GUI.DrawTexture(rect, GUIIconSet.instance.compassLarge);
+        GUI.DrawTexture(rect, IconSet.compassLarge);
         GUI.matrix = baseMatrix;
     }
 }

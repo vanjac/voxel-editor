@@ -102,7 +102,7 @@ public class PauseGUI : GUIPanel
         //ActionBarGUI.ActionBarLabel((int)(1.0f / Time.smoothDeltaTime) + " FPS");
 
         GUILayout.FlexibleSpace();
-        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.pause))
+        if (ActionBarGUI.ActionBarButton(IconSet.pause))
             PauseGame();
         GUILayout.EndHorizontal();
     }
@@ -116,22 +116,14 @@ public class PauseGUI : GUIPanel
         pauseMenu = gameObject.AddComponent<OverflowMenuGUI>();
         pauseMenu.items = new OverflowMenuGUI.MenuItem[]
         {
-            new OverflowMenuGUI.MenuItem("Resume", GUIIconSet.instance.play, () =>
-            {
-                ; // menu will close
-            }),
-            new OverflowMenuGUI.MenuItem("Restart", GUIIconSet.instance.restart, () =>
-            {
-                gameLoad.Close(Scenes.GAME);
-            }),
-            new OverflowMenuGUI.MenuItem("Editor", GUIIconSet.instance.editor, () =>
-            {
-                gameLoad.Close(Scenes.EDITOR);
-            }),
-            new OverflowMenuGUI.MenuItem("Close", GUIIconSet.instance.x, () =>
-            {
-                gameLoad.Close(Scenes.MENU);
-            })
+            new OverflowMenuGUI.MenuItem("Resume", IconSet.play,
+                () => {}), // menu will close
+            new OverflowMenuGUI.MenuItem("Restart", IconSet.restart,
+                () => { gameLoad.Close(Scenes.GAME); }),
+            new OverflowMenuGUI.MenuItem("Editor", IconSet.editor,
+                () => { gameLoad.Close(Scenes.EDITOR); }),
+            new OverflowMenuGUI.MenuItem("Close", IconSet.x,
+                () => { gameLoad.Close(Scenes.MENU); }),
         };
 
         fade = gameObject.AddComponent<FadeGUI>();

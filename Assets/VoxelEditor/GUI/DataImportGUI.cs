@@ -67,8 +67,8 @@ public class DataImportGUI : GUIPanel
             scroll = GUILayout.BeginScrollView(scroll);
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(GUIUtils.MenuContent("Import file", GUIIconSet.instance.import),
-                    GUIStyleSet.instance.buttonLarge))
+            if (GUILayout.Button(GUIUtils.MenuContent("Import file", IconSet.import),
+                    StyleSet.buttonLarge))
                 NativeGalleryWrapper.ImportAudioStream(ImportWorldHandler);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -78,7 +78,7 @@ public class DataImportGUI : GUIPanel
                 string path = worldPaths[i];
                 string name = worldNames[i];
 
-                if (GUILayout.Button(name, GUIStyleSet.instance.buttonLarge))
+                if (GUILayout.Button(name, StyleSet.buttonLarge))
                 {
                     worldSelected = true;
                     selectedWorldName = name;
@@ -92,7 +92,7 @@ public class DataImportGUI : GUIPanel
         else // world is selected
         {
             GUILayout.BeginHorizontal();
-            if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.close))
+            if (ActionBarGUI.ActionBarButton(IconSet.close))
             {
                 worldSelected = false;
                 dataList = null;
@@ -108,16 +108,13 @@ public class DataImportGUI : GUIPanel
                 foreach (EmbeddedData data in dataList)
                 {
                     GUILayout.BeginHorizontal();
-                    if (GUILayout.Button(data.name, GUIStyleSet.instance.buttonLarge))
+                    if (GUILayout.Button(data.name, StyleSet.buttonLarge))
                     {
                         dataAction(data);
                         Destroy(this);
                     }
-                    if (playerFactory != null && GUIUtils.HighlightedButton(
-                        GUIIconSet.instance.playAudio,
-                        GUIStyleSet.instance.buttonLarge,
-                        playingData == data,
-                        GUILayout.ExpandWidth(false)))
+                    if (playerFactory != null && GUIUtils.HighlightedButton(IconSet.playAudio,
+                        StyleSet.buttonLarge, playingData == data, GUILayout.ExpandWidth(false)))
                     {
                         if (StopPlayer() != data)
                         {

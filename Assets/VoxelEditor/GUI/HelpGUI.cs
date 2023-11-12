@@ -27,7 +27,7 @@ public class HelpGUI : GUIPanel
     {
         int oldTab = tab;
         tab = GUILayout.SelectionGrid(tab,
-            new string[] { "Tutorials", "Demo Worlds" }, 2, GUIStyleSet.instance.buttonTab);
+            new string[] { "Tutorials", "Demo Worlds" }, 2, StyleSet.buttonTab);
         if (oldTab != tab)
         {
             scroll = Vector2.zero;
@@ -80,8 +80,7 @@ public class HelpGUI : GUIPanel
         }
     }
 
-    private bool HelpButton(string text) =>
-        GUILayout.Button(text, GUIStyleSet.instance.buttonLarge);
+    private bool HelpButton(string text) => GUILayout.Button(text, StyleSet.buttonLarge);
 
     private void StartTutorial(TutorialPageFactory[] tutorial, string worldName = null,
         bool forceIndoor = false)

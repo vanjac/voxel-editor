@@ -45,7 +45,7 @@ public class EntityPickerGUI : ActionBarGUI
     {
         GUILayout.BeginHorizontal();
 
-        if (ActionBarButton(GUIIconSet.instance.close))
+        if (ActionBarButton(IconSet.close))
             Destroy(this);
 
         if (allowMultiple)
@@ -74,7 +74,7 @@ public class EntityPickerGUI : ActionBarGUI
             ready = false;
         if (!allowMultiple && numSelectedEntities > 1)
             ready = false;
-        if (ready && HighlightedActionBarButton(GUIIconSet.instance.done))
+        if (ready && HighlightedActionBarButton(IconSet.done))
         {
             handler(voxelArray.GetSelectedEntities());
             Destroy(this);

@@ -15,7 +15,7 @@ public static class NativeGalleryWrapper
             Texture2D texture = NativeGallery.LoadImageAtPath(path,
                 maxSize: 1024, markTextureNonReadable: false);
             if (texture == null)
-                DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "Error importing image");
+                DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject, "Error importing image");
             else
                 Debug.Log("Dimensions: " + texture.width + ", " + texture.height);
             callback(texture);
@@ -42,20 +42,20 @@ public static class NativeGalleryWrapper
             }
             catch (System.Exception e)
             {
-                DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "Error importing audio file");
+                DialogGUI.ShowMessageDialog(GUIPanel.guiGameObject, "Error importing audio file");
                 Debug.LogError(e);
             }
         }));
 #else
         if (!ShareMap.OpenFileManager())
-            DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "Error opening file manager. Find an audio file and open it with N-Space.");
+            DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject, "Error opening file manager. Find an audio file and open it with N-Space.");
 #endif
     }
 
     private static void CheckPermission(NativeGallery.Permission permission)
     {
         if (permission != NativeGallery.Permission.Granted)
-            DialogGUI.ShowMessageDialog(GUIManager.guiGameObject,
+            DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject,
                 "Please grant N-Space permission to access your photo gallery.");
     }
 }

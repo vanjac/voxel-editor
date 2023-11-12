@@ -19,7 +19,7 @@ public class CreateSubstanceGUI : ActionBarGUI
     {
         GUILayout.BeginHorizontal();
 
-        if (ActionBarButton(GUIIconSet.instance.close))
+        if (ActionBarButton(IconSet.close))
         {
             voxelArray.substanceToCreate = null;
             Destroy(this);

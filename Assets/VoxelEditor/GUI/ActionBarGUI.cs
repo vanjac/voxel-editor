@@ -8,7 +8,7 @@ public class ActionBarGUI : TopPanelGUI
 
     private static readonly System.Lazy<GUIStyle> labelStyle = new System.Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        var style = new GUIStyle(StyleSet.buttonLarge);
         style.alignment = TextAnchor.MiddleCenter;
         style.normal.background = GUI.skin.box.normal.background;
         style.border = GUI.skin.box.border;
@@ -31,7 +31,7 @@ public class ActionBarGUI : TopPanelGUI
         // overflow menu will not be cut off if the buttons can't fit
         GUIUtils.BeginHorizontalClipped();
 
-        if (ActionBarButton(GUIIconSet.instance.close))
+        if (ActionBarButton(IconSet.close))
             editorFile.Close();
 
         SelectionGUI();
@@ -39,13 +39,13 @@ public class ActionBarGUI : TopPanelGUI
 
         GUILayout.FlexibleSpace();
 
-        if (ActionBarButton(GUIIconSet.instance.play))
+        if (ActionBarButton(IconSet.play))
             editorFile.Play();
 
         GUIUtils.EndHorizontalClipped();
 
         TutorialGUI.TutorialHighlight("bevel");
-        if (ActionBarButton(GUIIconSet.instance.overflow))
+        if (ActionBarButton(IconSet.overflow))
             BuildOverflowMenu();
         TutorialGUI.ClearHighlight();
 
@@ -56,13 +56,13 @@ public class ActionBarGUI : TopPanelGUI
     {
         if (voxelArray.SomethingIsAddSelected())
         {
-            if (ActionBarButton(GUIIconSet.instance.applySelection))
+            if (ActionBarButton(IconSet.applySelection))
                 voxelArray.StoreSelection();
         }
 
         if (voxelArray.SomethingIsStoredSelected())
         {
-            if (ActionBarButton(GUIIconSet.instance.clearSelection))
+            if (ActionBarButton(IconSet.clearSelection))
             {
                 voxelArray.ClearStoredSelection();
                 voxelArray.ClearSelection();
@@ -84,7 +84,7 @@ public class ActionBarGUI : TopPanelGUI
         bool facesSelected = voxelArray.FacesAreSelected();
 
         TutorialGUI.TutorialHighlight("paint");
-        if (ActionBarButton(GUIIconSet.instance.paint))
+        if (ActionBarButton(IconSet.paint))
         {
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
             paintGUI.voxelArray = voxelArray;
@@ -97,7 +97,7 @@ public class ActionBarGUI : TopPanelGUI
         TutorialGUI.ClearHighlight();
 
         TutorialGUI.TutorialHighlight("create object");
-        if (facesSelected && ActionBarButton(GUIIconSet.instance.create))
+        if (facesSelected && ActionBarButton(IconSet.create))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = "Create";
@@ -139,12 +139,12 @@ public class ActionBarGUI : TopPanelGUI
         var overflow = gameObject.AddComponent<OverflowMenuGUI>();
         overflow.items = new OverflowMenuGUI.MenuItem[]
         {
-            new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
+            new OverflowMenuGUI.MenuItem("Help", IconSet.help, () => {
                 var help = gameObject.AddComponent<HelpGUI>();
                 help.voxelArray = voxelArray;
                 help.touchListener = touchListener;
             }),
-            new OverflowMenuGUI.MenuItem("World", GUIIconSet.instance.world, () => {
+            new OverflowMenuGUI.MenuItem("World", IconSet.world, () => {
                 PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
                 if (propsGUI != null)
                 {
@@ -152,31 +152,31 @@ public class ActionBarGUI : TopPanelGUI
                     propsGUI.normallyOpen = true;
                 }
             }),
-            new OverflowMenuGUI.MenuItem("Select...", GUIIconSet.instance.select, () => {
+            new OverflowMenuGUI.MenuItem("Select...", IconSet.select, () => {
                 var selectMenu = gameObject.AddComponent<OverflowMenuGUI>();
                 selectMenu.depth = 1;
                 selectMenu.items = new OverflowMenuGUI.MenuItem[]
                 {
-                    new OverflowMenuGUI.MenuItem("Draw", GUIIconSet.instance.draw, () => {
+                    new OverflowMenuGUI.MenuItem("Draw", IconSet.draw, () => {
                         DrawSelectInterface();
                     }),
-                    new OverflowMenuGUI.MenuItem("With Paint", GUIIconSet.instance.paint, () => {
+                    new OverflowMenuGUI.MenuItem("With Paint", IconSet.paint, () => {
                         SelectByPaintInterface();
                     }),
-                    new OverflowMenuGUI.MenuItem("Fill Paint", GUIIconSet.instance.fill, () => {
+                    new OverflowMenuGUI.MenuItem("Fill Paint", IconSet.fill, () => {
                         FillPaintInterface();
                     }),
-                    new OverflowMenuGUI.MenuItem("With Tag", GUIIconSet.instance.entityTag, () => {
+                    new OverflowMenuGUI.MenuItem("With Tag", IconSet.entityTag, () => {
                         SelectByTagInterface();
                     })
                 };
             }, stayOpen: true),
-            new OverflowMenuGUI.MenuItem("Bevel", GUIIconSet.instance.bevel, () => {
+            new OverflowMenuGUI.MenuItem("Bevel", IconSet.bevel, () => {
                 var bevelGUI = gameObject.AddComponent<BevelActionBarGUI>();
                 bevelGUI.voxelArray = voxelArray;
                 bevelGUI.touchListener = touchListener;
             }),
-            new OverflowMenuGUI.MenuItem("Revert", GUIIconSet.instance.undo, () => {
+            new OverflowMenuGUI.MenuItem("Revert", IconSet.undo, () => {
                 var dialog = gameObject.AddComponent<DialogGUI>();
                 dialog.title = "Are you sure?";
                 dialog.message = "Undo all changes since the world was opened?";
@@ -190,13 +190,13 @@ public class ActionBarGUI : TopPanelGUI
     }
 
     public static bool ActionBarButton(Texture icon) =>
-        GUILayout.Button(icon, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
+        GUILayout.Button(icon, StyleSet.buttonLarge, GUILayout.ExpandWidth(false));
 
     public static bool ActionBarButton(string text) =>
-        GUILayout.Button(text, GUIStyleSet.instance.buttonLarge, GUILayout.ExpandWidth(false));
+        GUILayout.Button(text, StyleSet.buttonLarge, GUILayout.ExpandWidth(false));
 
     public static bool HighlightedActionBarButton(Texture icon) =>
-        GUIUtils.HighlightedButton(icon, GUIStyleSet.instance.buttonLarge, true, GUILayout.ExpandWidth(false));
+        GUIUtils.HighlightedButton(icon, StyleSet.buttonLarge, true, GUILayout.ExpandWidth(false));
 
     public static void ActionBarLabel(string text)
     {

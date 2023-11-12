@@ -49,9 +49,9 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
         Input[] inputs = (Input[])property.value;
 
         GUILayout.Label("Inputs:");
-        if (GUILayout.Button(new GUIContent("  Add Input", GUIIconSet.instance.newItem)))
+        if (GUILayout.Button(new GUIContent("  Add Input", GUIPanel.IconSet.newItem)))
         {
-            EntityPickerGUI picker = GUIManager.guiGameObject.AddComponent<EntityPickerGUI>();
+            EntityPickerGUI picker = GUIPanel.GuiGameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = VoxelArrayEditor.instance;
             picker.handler = (ICollection<Entity> entities) =>
             {
@@ -85,15 +85,15 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
             GUILayout.FlexibleSpace();
             int negativeNum = inputs[i].negative ? 1 : 0;
             int newNegativeNum = GUILayout.SelectionGrid(negativeNum,
-                new Texture[] { GUIIconSet.instance.plusOne, GUIIconSet.instance.minusOne }, 2,
-                GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false));
+                new Texture[] { GUIPanel.IconSet.plusOne, GUIPanel.IconSet.minusOne }, 2,
+                GUIPanel.StyleSet.buttonSmall, GUILayout.ExpandWidth(false));
             if (negativeNum != newNegativeNum)
             {
                 inputs[i].negative = newNegativeNum == 1;
                 copyArray = true;
             }
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(GUIIconSet.instance.delete, GUIStyleSet.instance.buttonSmall,
+            if (GUILayout.Button(GUIPanel.IconSet.delete, GUIPanel.StyleSet.buttonSmall,
                     GUILayout.ExpandWidth(false)))
             {
                 inputToDelete = i;

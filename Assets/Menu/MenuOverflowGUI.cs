@@ -26,15 +26,16 @@ public class MenuOverflowGUI : GUIPanel
     {
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (ActionBarGUI.ActionBarButton(GUIIconSet.instance.overflow))
+        if (ActionBarGUI.ActionBarButton(IconSet.overflow))
         {
             var overflow = gameObject.AddComponent<OverflowMenuGUI>();
             overflow.items = new OverflowMenuGUI.MenuItem[]
             {
-                new OverflowMenuGUI.MenuItem("Help", GUIIconSet.instance.help, () => {
+                new OverflowMenuGUI.MenuItem("Help", IconSet.help, () =>
+                {
                     gameObject.AddComponent<HelpGUI>();
                 }),
-                new OverflowMenuGUI.MenuItem("About", GUIIconSet.instance.about, () =>
+                new OverflowMenuGUI.MenuItem("About", IconSet.about, () =>
                 {
                     string text = System.String.Format("Version {0}\nMade with Unity {1}\n\n{2}"
                         + "\n\n----------\n\nSystem Info:\nResolution: {3}x{4}\nDPI: {5}"
@@ -44,20 +45,20 @@ public class MenuOverflowGUI : GUIPanel
                         AudioSettings.outputSampleRate, AudioSettings.speakerMode);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 }),
-                new OverflowMenuGUI.MenuItem("Website", GUIIconSet.instance.website, () =>
+                new OverflowMenuGUI.MenuItem("Website", IconSet.website, () =>
                 {
                     Application.OpenURL("https://chroma.zone/voxel-editor/");
                 }),
-                new OverflowMenuGUI.MenuItem("Subreddit", GUIIconSet.instance.reddit, () =>
+                new OverflowMenuGUI.MenuItem("Subreddit", IconSet.reddit, () =>
                 {
                     Application.OpenURL("https://www.reddit.com/r/nspace/");
                 }),
-                new OverflowMenuGUI.MenuItem("Videos", GUIIconSet.instance.youTube, () =>
+                new OverflowMenuGUI.MenuItem("Videos", IconSet.youTube, () =>
                 {
                     Application.OpenURL("https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2");
                 }),
 #if !UNITY_IOS
-                new OverflowMenuGUI.MenuItem("Donate", GUIIconSet.instance.donate, () =>
+                new OverflowMenuGUI.MenuItem("Donate", IconSet.donate, () =>
                 {
                     Application.OpenURL("https://chroma.zone/donate");
                 }),

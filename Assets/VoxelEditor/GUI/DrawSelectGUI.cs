@@ -22,7 +22,7 @@ public class DrawSelectGUI : ActionBarGUI
         // no stored selection
         if (voxelArray.SomethingIsSelected())
         {
-            if (ActionBarButton(GUIIconSet.instance.clearSelection))
+            if (ActionBarButton(IconSet.clearSelection))
             {
                 voxelArray.ClearStoredSelection();
                 voxelArray.ClearSelection();
@@ -31,7 +31,7 @@ public class DrawSelectGUI : ActionBarGUI
         EditGUI("Tap and drag to select");
         GUILayout.FlexibleSpace();
         GUIUtils.EndHorizontalClipped();
-        if (HighlightedActionBarButton(GUIIconSet.instance.done))
+        if (HighlightedActionBarButton(IconSet.done))
             Destroy(this);
         GUILayout.EndHorizontal();
     }

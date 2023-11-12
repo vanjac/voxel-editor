@@ -37,7 +37,7 @@ public class TagPickerGUI : GUIPanel
     private void TagButton(byte tag)
     {
         byte bit = (byte)(1 << tag);
-        if (!GUIUtils.HighlightedButton(GUIIconSet.instance.tagIcons[tag],
+        if (!GUIUtils.HighlightedButton(IconSet.tagIcons[tag],
                 highlight: (multiSelection & bit) != 0, options: GUILayout.ExpandHeight(true)))
             return;
         if (multiple)

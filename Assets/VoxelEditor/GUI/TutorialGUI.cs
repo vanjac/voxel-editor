@@ -74,14 +74,14 @@ public class TutorialGUI : GUIPanel
 
     private static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
     {
-        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        var style = new GUIStyle(StyleSet.buttonLarge);
         style.fixedHeight = 0;
         return style;
     });
     private static readonly System.Lazy<GUIStyle> textStyle = new System.Lazy<GUIStyle>(() =>
     {
         // keep original background because it's more opaque than Box
-        var style = new GUIStyle(GUIStyleSet.instance.buttonLarge);
+        var style = new GUIStyle(StyleSet.buttonLarge);
         style.wordWrap = true;
         style.alignment = TextAnchor.MiddleLeft;
         style.fixedHeight = 0;
@@ -156,7 +156,7 @@ public class TutorialGUI : GUIPanel
 
     public override Rect GetRect(Rect safeRect, Rect screenRect)
     {
-        float minHeight = GUIStyleSet.instance.buttonLarge.fixedHeight;
+        float minHeight = StyleSet.buttonLarge.fixedHeight;
         Rect leftPanelRect = GUIPanel.leftPanel.panelRect;
         this.height = minHeight * (1.25f - (leftPanelRect.xMin - safeRect.xMin) / PropertiesGUI.SLIDE_HIDDEN * .25f);
         return new Rect(leftPanelRect.xMax, safeRect.yMax - this.height,
@@ -194,14 +194,14 @@ public class TutorialGUI : GUIPanel
             GUI.backgroundColor = new Color(Time.time - successTime, 1.0f, Time.time - successTime);
 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button(GUIIconSet.instance.x, buttonStyle.Value,
+        if (GUILayout.Button(IconSet.x, buttonStyle.Value,
                 GUILayout.ExpandWidth(false), GUILayout.Height(height)))
         {
             SetPage(-1);
             GUI.backgroundColor = Color.white;
             return;
         }
-        if (pageI > 0 && GUILayout.Button(GUIIconSet.instance.close, buttonStyle.Value,
+        if (pageI > 0 && GUILayout.Button(IconSet.close, buttonStyle.Value,
                 GUILayout.ExpandWidth(false), GUILayout.Height(height)))
             action = TutorialAction.BACK;
         GUILayout.Label(currentPage.GetText(), textStyle.Value, GUILayout.Height(height));
@@ -209,13 +209,13 @@ public class TutorialGUI : GUIPanel
         {
             if (pageI == currentTutorial.Length - 1)
             {
-                if (GUIUtils.HighlightedButton(GUIIconSet.instance.done, buttonStyle.Value, true,
+                if (GUIUtils.HighlightedButton(IconSet.done, buttonStyle.Value, true,
                         GUILayout.ExpandWidth(false), GUILayout.Height(height)))
                     action = TutorialAction.NEXT;
             }
             else
             {
-                if (GUIUtils.HighlightedButton(GUIIconSet.instance.next, buttonStyle.Value, true,
+                if (GUIUtils.HighlightedButton(IconSet.next, buttonStyle.Value, true,
                         GUILayout.ExpandWidth(false), GUILayout.Height(height)))
                     action = TutorialAction.NEXT;
             }

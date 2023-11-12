@@ -150,7 +150,7 @@ public class EditorFile : MonoBehaviour
                     + "Please send me an email about this, and include a screenshot "
                     + "of this message. chroma@chroma.zone\n\n"
                     + e.ToString();
-                var dialog = LargeMessageGUI.ShowLargeMessageDialog(GUIManager.guiGameObject, message);
+                var dialog = LargeMessageGUI.ShowLargeMessageDialog(GUIPanel.GuiGameObject, message);
                 dialog.closeHandler = () => SceneManager.LoadScene(Scenes.MENU);
                 voxelArray.unsavedChanges = false;
             }
@@ -212,7 +212,7 @@ public class EditorFile : MonoBehaviour
                 }
                 catch (System.Exception e)
                 {
-                    DialogGUI.ShowMessageDialog(GUIManager.guiGameObject, "An error occurred while reading the file.");
+                    DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject, "An error occurred while reading the file.");
                     Debug.LogError(e);
                     if (stream != null)
                         stream.Dispose();

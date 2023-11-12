@@ -46,7 +46,7 @@ public class BevelActionBarGUI : ActionBarGUI
 
         GUILayout.FlexibleSpace();
         TutorialGUI.TutorialHighlight("bevel done");
-        if (HighlightedActionBarButton(GUIIconSet.instance.done))
+        if (HighlightedActionBarButton(IconSet.done))
             Destroy(this);
         TutorialGUI.ClearHighlight();
         GUILayout.EndHorizontal();
@@ -105,7 +105,7 @@ public class BevelGUI : LeftPanelGUI
             voxelEdge = voxelArray.GetSelectedBevel();
         }
 
-        GUILayout.Label("Bevel:", GUIStyleSet.instance.labelTitle);
+        GUILayout.Label("Bevel:", StyleSet.labelTitle);
 
         if (!voxelArray.SomethingIsSelected())
         {
@@ -117,23 +117,23 @@ public class BevelGUI : LeftPanelGUI
         GUILayout.Label("Shape:");
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
             new Texture[] {
-                GUIIconSet.instance.no,
-                GUIIconSet.instance.bevelIcons.flat,
-                GUIIconSet.instance.bevelIcons.curve,
-                GUIIconSet.instance.bevelIcons.square,
-                GUIIconSet.instance.bevelIcons.stair2,
-                GUIIconSet.instance.bevelIcons.stair4 },
-            3, GUIStyleSet.instance.buttonTab);
+                IconSet.no,
+                IconSet.bevelIcons.flat,
+                IconSet.bevelIcons.curve,
+                IconSet.bevelIcons.square,
+                IconSet.bevelIcons.stair2,
+                IconSet.bevelIcons.stair4 },
+            3, StyleSet.buttonTab);
         TutorialGUI.ClearHighlight();
 
         TutorialGUI.TutorialHighlight("bevel size");
         GUILayout.Label("Size:");
         var newBevelSize = (VoxelEdge.BevelSize)GUILayout.SelectionGrid((int)voxelEdge.bevelSize,
             new Texture[] {
-                GUIIconSet.instance.bevelIcons.quarter,
-                GUIIconSet.instance.bevelIcons.half,
-                GUIIconSet.instance.bevelIcons.full },
-            3, GUIStyleSet.instance.buttonTab);
+                IconSet.bevelIcons.quarter,
+                IconSet.bevelIcons.half,
+                IconSet.bevelIcons.full },
+            3, StyleSet.buttonTab);
         TutorialGUI.ClearHighlight();
 
         if (newBevelType != voxelEdge.bevelType || newBevelSize != voxelEdge.bevelSize)

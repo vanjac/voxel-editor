@@ -12,7 +12,7 @@ public class FilterGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button(GUIUtils.MenuContent("Specific object", GUIIconSet.instance.singleObject),
+        if (GUILayout.Button(GUIUtils.MenuContent("Specific object", IconSet.singleObject),
             OverflowMenuGUI.buttonStyle.Value))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
@@ -30,7 +30,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Tags", GUIIconSet.instance.entityTag),
+        if (GUILayout.Button(GUIUtils.MenuContent("Tags", IconSet.entityTag),
             OverflowMenuGUI.buttonStyle.Value))
         {
             TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
@@ -46,7 +46,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Active behavior", GUIIconSet.instance.behavior),
+        if (GUILayout.Button(GUIUtils.MenuContent("Active behavior", IconSet.behavior),
             OverflowMenuGUI.buttonStyle.Value))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
@@ -59,7 +59,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Anything", GUIIconSet.instance.objectType),
+        if (GUILayout.Button(GUIUtils.MenuContent("Anything", IconSet.objectType),
             OverflowMenuGUI.buttonStyle.Value))
         {
             handler(new ActivatedSensor.EntityTypeFilter(Entity.objectType));

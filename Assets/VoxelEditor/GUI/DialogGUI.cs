@@ -27,7 +27,7 @@ public class DialogGUI : GUIPanel
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
         if (yesButtonText != null &&
-            GUILayout.Button(new GUIContent("  " + yesButtonText, GUIIconSet.instance.done)))
+            GUILayout.Button(new GUIContent("  " + yesButtonText, IconSet.done)))
         {
             if (yesButtonHandler != null)
                 yesButtonHandler();
@@ -35,7 +35,7 @@ public class DialogGUI : GUIPanel
             Destroy(this);
         }
         if (noButtonText != null &&
-            GUILayout.Button(new GUIContent("  " + noButtonText, GUIIconSet.instance.x)))
+            GUILayout.Button(new GUIContent("  " + noButtonText, IconSet.x)))
         {
             if (noButtonHandler != null)
                 noButtonHandler();

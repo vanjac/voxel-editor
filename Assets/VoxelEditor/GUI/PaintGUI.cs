@@ -53,20 +53,20 @@ public class PaintGUI : GUIPanel
 
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
-        if (GUILayout.Button(GUIIconSet.instance.rotateLeft, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(IconSet.rotateLeft, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(3);
         // BeginHorizontalClipped prevents recent paints from expanding window
         // it's important that one button is outside the view to set the correct height
         // and that one button is always inside the view or weird buggy behavior happens
         GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-        if (GUILayout.Button(GUIIconSet.instance.rotateRight, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(IconSet.rotateRight, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(1);
         TutorialGUI.ClearHighlight();
 
         GUILayout.FlexibleSpace();
         foreach (VoxelFace recentPaint in recentPaints)
         {
-            if (GUILayout.Button(" ", GUIStyleSet.instance.buttonSmall,
+            if (GUILayout.Button(" ", StyleSet.buttonSmall,
                 GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE)))
             {
                 paint = recentPaint;
@@ -88,18 +88,18 @@ public class PaintGUI : GUIPanel
 
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
-        if (GUILayout.Button(GUIIconSet.instance.flipHorizontal, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(IconSet.flipHorizontal, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(5);
-        if (GUILayout.Button(GUIIconSet.instance.flipVertical, GUIStyleSet.instance.buttonSmall, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(IconSet.flipVertical, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
             Orient(7);
         TutorialGUI.ClearHighlight();
         int oldSelectedLayer = selectedLayer;
         TutorialGUI.TutorialHighlight("paint layer");
         selectedLayer = GUILayout.SelectionGrid(selectedLayer, new GUIContent[]
             {
-                new GUIContent("  Material", GUIIconSet.instance.baseLayer),
-                new GUIContent("  Overlay", GUIIconSet.instance.overlayLayer),
-            }, 2, GUIStyleSet.instance.buttonSmall);
+                new GUIContent("  Material", IconSet.baseLayer),
+                new GUIContent("  Overlay", IconSet.overlayLayer),
+            }, 2, StyleSet.buttonSmall);
         TutorialGUI.ClearHighlight();
         if (oldSelectedLayer != selectedLayer)
             UpdateMaterialSelector();

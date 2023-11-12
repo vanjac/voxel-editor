@@ -32,8 +32,8 @@ public class MenuGUI : GUIPanel
         UpdateWorldList();
         startOptions = new GUIContent[]
         {
-            new GUIContent("Tutorial", GUIIconSet.instance.helpLarge),
-            new GUIContent("New World", GUIIconSet.instance.newWorldLarge)
+            new GUIContent("Tutorial", IconSet.helpLarge),
+            new GUIContent("New World", IconSet.newWorldLarge)
         };
     }
 
@@ -67,8 +67,8 @@ public class MenuGUI : GUIPanel
         }
         else
         {
-            if (GUIUtils.HighlightedButton(GUIUtils.MenuContent("New World", GUIIconSet.instance.newItem),
-                    GUIStyleSet.instance.buttonLarge))
+            if (GUIUtils.HighlightedButton(GUIUtils.MenuContent("New World", IconSet.newItem),
+                    StyleSet.buttonLarge))
                 AskNewWorldTemplate();
             scroll = GUILayout.BeginScrollView(scroll);
             for (int i = 0; i < worldPaths.Count; i++)
@@ -79,10 +79,10 @@ public class MenuGUI : GUIPanel
 
                 GUILayout.BeginHorizontal();
                 GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-                if (GUIUtils.HighlightedButton(name, GUIStyleSet.instance.buttonLarge, selected))
+                if (GUIUtils.HighlightedButton(name, StyleSet.buttonLarge, selected))
                     OpenWorld(path, Scenes.EDITOR);
                 GUIUtils.EndHorizontalClipped();
-                if (GUIUtils.HighlightedButton(GUIIconSet.instance.overflow, GUIStyleSet.instance.buttonLarge,
+                if (GUIUtils.HighlightedButton(IconSet.overflow, StyleSet.buttonLarge,
                         selected, GUILayout.ExpandWidth(false)))
                     CreateWorldOverflowMenu(path);
                 GUILayout.EndHorizontal();
@@ -161,21 +161,21 @@ public class MenuGUI : GUIPanel
         selectedWorldPath = path;
         worldOverflowMenu.items = new OverflowMenuGUI.MenuItem[]
         {
-            new OverflowMenuGUI.MenuItem("Play", GUIIconSet.instance.play, () => {
+            new OverflowMenuGUI.MenuItem("Play", IconSet.play, () => {
                 MenuGUI.OpenWorld(path, Scenes.GAME);
             }),
-            new OverflowMenuGUI.MenuItem("Rename", GUIIconSet.instance.rename, () => {
+            new OverflowMenuGUI.MenuItem("Rename", IconSet.rename, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
                 inputDialog.prompt = "Enter new name for " + name;
                 inputDialog.text = name;
                 inputDialog.handler = RenameWorld;
             }),
-            new OverflowMenuGUI.MenuItem("Copy", GUIIconSet.instance.copy, () => {
+            new OverflowMenuGUI.MenuItem("Copy", IconSet.copy, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
                 inputDialog.prompt = "Enter new world name...";
                 inputDialog.handler = CopyWorld;
             }),
-            new OverflowMenuGUI.MenuItem("Delete", GUIIconSet.instance.delete, () => {
+            new OverflowMenuGUI.MenuItem("Delete", IconSet.delete, () => {
                 DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
                 dialog.message = "Are you sure you want to delete " + name + "?";
                 dialog.yesButtonText = "Yes";
@@ -187,8 +187,7 @@ public class MenuGUI : GUIPanel
                 };
             }),
 #if (UNITY_ANDROID || UNITY_IOS)
-            new OverflowMenuGUI.MenuItem("Share", GUIIconSet.instance.share,
-                () => ShareMap.Share(path))
+            new OverflowMenuGUI.MenuItem("Share", IconSet.share, () => ShareMap.Share(path))
 #endif
         };
     }

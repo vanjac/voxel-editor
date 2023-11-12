@@ -25,7 +25,7 @@ public class FacePickerGUI : ActionBarGUI
     public override void WindowGUI()
     {
         GUILayout.BeginHorizontal();
-        if (ActionBarButton(GUIIconSet.instance.close))
+        if (ActionBarButton(IconSet.close))
             Destroy(this);
         GUILayout.FlexibleSpace();
         ActionBarLabel(message);
