@@ -41,7 +41,8 @@ public class WorldProperties : PropertiesObject
     private ReflectionProbe GetReflectionProbe()
     {
         // TODO!
-        return GameObject.Find("ReflectionProbe")?.GetComponent<ReflectionProbe>();
+        GameObject probeObj = GameObject.Find("ReflectionProbe");
+        return (probeObj != null) ? probeObj.GetComponent<ReflectionProbe>() : null;
     }
 
     private void UpdateEnvironment()

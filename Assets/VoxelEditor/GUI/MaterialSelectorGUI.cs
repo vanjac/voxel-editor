@@ -223,7 +223,7 @@ public class MaterialSelectorGUI : GUIPanel
 
         Rect rowRect = new Rect();
         int materialColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
-        string highlightName = highlightMaterial?.name;
+        string highlightName = (highlightMaterial != null) ? highlightMaterial.name : null;
         string previewName = (highlightName != null) ? (highlightName + PREVIEW_SUFFIX) : null;
         for (int i = 0; i < materials.Count; i++)
         {
@@ -237,7 +237,8 @@ public class MaterialSelectorGUI : GUIPanel
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
             Material material = materials[i];
             bool selected;
-            if (material?.name == highlightName || material?.name == previewName)
+            if (material != null
+                    && (material.name == highlightName || material.name == previewName))
                 // highlight the button
                 selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
             else
