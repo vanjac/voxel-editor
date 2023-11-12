@@ -7,42 +7,18 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     public bool addSelected
     {
-        get
-        {
-            return objectEntity.paint.addSelected;
-        }
-        set
-        {
-            objectEntity.paint.addSelected = value;
-        }
+        get => objectEntity.paint.addSelected;
+        set => objectEntity.paint.addSelected = value;
     }
     public bool storedSelected
     {
-        get
-        {
-            return objectEntity.paint.storedSelected;
-        }
-        set
-        {
-            objectEntity.paint.storedSelected = value;
-        }
+        get => objectEntity.paint.storedSelected;
+        set => objectEntity.paint.storedSelected = value;
     }
-    public bool selected
-    {
-        get
-        {
-            return addSelected || storedSelected;
-        }
-    }
+    public bool selected => addSelected || storedSelected;
 
-    public Bounds bounds
-    {
-        get
-        {
-            return new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
-                Vector3.zero);
-        }
-    }
+    public Bounds bounds => new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
+        Vector3.zero);
 
     public void Start()
     {

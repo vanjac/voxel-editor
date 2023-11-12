@@ -23,10 +23,7 @@ public class TapSensor : GenericSensor<TapSensor, TapComponent>
 
 public class TapComponent : SensorComponent<TapSensor>
 {
-    public float Distance
-    {
-        get => sensor.maxDistance;
-    }
+    public float Distance => sensor.maxDistance;
 
     private EntityComponent player;
 

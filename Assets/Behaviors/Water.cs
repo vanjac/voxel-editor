@@ -22,7 +22,7 @@ public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent
 
 public class WaterComponent : BehaviorComponent<WaterBehavior>
 {
-    public float Density { get => behavior.density; }
+    public float Density => behavior.density;
     private float waterLevel = float.MinValue;
 
     public override void Start()

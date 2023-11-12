@@ -113,26 +113,14 @@ public struct VoxelEdge
 
     public BevelType bevelType
     {
-        get
-        {
-            return (BevelType)(bevel & 0x07);
-        }
-        set
-        {
-            bevel = (byte)((bevel & 0xF8) | (byte)value);
-        }
+        get => (BevelType)(bevel & 0x07);
+        set => bevel = (byte)((bevel & 0xF8) | (byte)value);
     }
 
     public BevelSize bevelSize
     {
-        get
-        {
-            return (BevelSize)((bevel >> 4) & 0x07);
-        }
-        set
-        {
-            bevel = (byte)((bevel & 0x8f) | ((byte)value << 4));
-        }
+        get => (BevelSize)((bevel >> 4) & 0x07);
+        set => bevel = (byte)((bevel & 0x8f) | ((byte)value << 4));
     }
 
     public Vector2[] bevelTypeArray
@@ -194,13 +182,7 @@ public struct VoxelEdge
         }
     }
 
-    public bool hasBevel
-    {
-        get
-        {
-            return bevelType != BevelType.NONE;
-        }
-    }
+    public bool hasBevel => bevelType != BevelType.NONE;
 
     public static bool BevelsMatch(VoxelEdge e1, VoxelEdge e2)
     {

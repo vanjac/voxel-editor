@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +16,7 @@ public struct Property
     public PropertyGUI gui;
     public object value
     {
-        get
-        {
-            return getter();
-        }
+        get => getter();
         set
         {
             if (!getter().Equals(value))

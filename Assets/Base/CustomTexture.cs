@@ -17,13 +17,7 @@ public class CustomTexture : PropertiesObject
     private Material _material, _baseMat;
     private bool isOverlay;
 
-    public Material material
-    {
-        get
-        {
-            return _material;
-        }
-    }
+    public Material material => _material;
 
     public Texture2D texture
     {
@@ -35,10 +29,7 @@ public class CustomTexture : PropertiesObject
                 return Texture2D.whiteTexture;
             return tex;
         }
-        set
-        {
-            _material.mainTexture = value;
-        }
+        set => _material.mainTexture = value;
     }
 
     protected (float, float) scale
@@ -48,19 +39,13 @@ public class CustomTexture : PropertiesObject
             Vector2 s = _material.mainTextureScale;
             return (s.x == 0 ? 0 : (1.0f / s.x), s.y == 0 ? 0 : (1.0f / s.y));
         }
-        set
-        {
-            _material.mainTextureScale = new Vector2(
-                value.Item1 == 0 ? 0 : (1.0f / value.Item1), value.Item2 == 0 ? 0 : (1.0f / value.Item2));
-        }
+        set => _material.mainTextureScale = new Vector2(
+            value.Item1 == 0 ? 0 : (1.0f / value.Item1), value.Item2 == 0 ? 0 : (1.0f / value.Item2));
     }
 
     public Material baseMat
     {
-        get
-        {
-            return _baseMat;
-        }
+        get => _baseMat;
         set
         {
             _baseMat = value;
@@ -86,14 +71,8 @@ public class CustomTexture : PropertiesObject
 
     protected CustomFilter filter
     {
-        get
-        {
-            return texture.filterMode == FilterMode.Point ? CustomFilter.PIXEL : CustomFilter.SMOOTH;
-        }
-        set
-        {
-            texture.filterMode = (value == CustomFilter.PIXEL ? FilterMode.Point : FilterMode.Bilinear);
-        }
+        get => texture.filterMode == FilterMode.Point ? CustomFilter.PIXEL : CustomFilter.SMOOTH;
+        set => texture.filterMode = (value == CustomFilter.PIXEL ? FilterMode.Point : FilterMode.Bilinear);
     }
 
     public CustomTexture(Material material, bool isOverlay)

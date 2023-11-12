@@ -21,40 +21,16 @@ public class VoxelArrayEditor : VoxelArray
 
         public bool addSelected
         {
-            get
-            {
-                return face.addSelected;
-            }
-            set
-            {
-                voxel.faces[faceI].addSelected = value;
-            }
+            get => face.addSelected;
+            set => voxel.faces[faceI].addSelected = value;
         }
         public bool storedSelected
         {
-            get
-            {
-                return face.storedSelected;
-            }
-            set
-            {
-                voxel.faces[faceI].storedSelected = value;
-            }
+            get => face.storedSelected;
+            set => voxel.faces[faceI].storedSelected = value;
         }
-        public bool selected
-        {
-            get
-            {
-                return (!face.IsEmpty()) && (face.addSelected || face.storedSelected);
-            }
-        }
-        public Bounds bounds
-        {
-            get
-            {
-                return voxel.GetFaceBounds(faceI);
-            }
-        }
+        public bool selected => (!face.IsEmpty()) && (face.addSelected || face.storedSelected);
+        public Bounds bounds => voxel.GetFaceBounds(faceI);
 
         public VoxelFaceReference(Voxel voxel, int faceI)
         {
@@ -62,13 +38,7 @@ public class VoxelArrayEditor : VoxelArray
             this.faceI = faceI;
         }
 
-        public VoxelFace face
-        {
-            get
-            {
-                return voxel.faces[faceI];
-            }
-        }
+        public VoxelFace face => voxel.faces[faceI];
 
         public void SelectionStateUpdated(VoxelArray voxelArray)
         {
@@ -83,40 +53,16 @@ public class VoxelArrayEditor : VoxelArray
 
         public bool addSelected
         {
-            get
-            {
-                return edge.addSelected;
-            }
-            set
-            {
-                voxel.edges[edgeI].addSelected = value;
-            }
+            get => edge.addSelected;
+            set => voxel.edges[edgeI].addSelected = value;
         }
         public bool storedSelected
         {
-            get
-            {
-                return edge.storedSelected;
-            }
-            set
-            {
-                voxel.edges[edgeI].storedSelected = value;
-            }
+            get => edge.storedSelected;
+            set => voxel.edges[edgeI].storedSelected = value;
         }
-        public bool selected
-        {
-            get
-            {
-                return edge.addSelected || edge.storedSelected;
-            }
-        }
-        public Bounds bounds
-        {
-            get
-            {
-                return voxel.GetEdgeBounds(edgeI);
-            }
-        }
+        public bool selected => edge.addSelected || edge.storedSelected;
+        public Bounds bounds => voxel.GetEdgeBounds(edgeI);
 
         public VoxelEdgeReference(Voxel voxel, int edgeI)
         {
@@ -124,13 +70,7 @@ public class VoxelArrayEditor : VoxelArray
             this.edgeI = edgeI;
         }
 
-        public VoxelEdge edge
-        {
-            get
-            {
-                return voxel.edges[edgeI];
-            }
-        }
+        public VoxelEdge edge => voxel.edges[edgeI];
 
         public void SelectionStateUpdated(VoxelArray voxelArray)
         {

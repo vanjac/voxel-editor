@@ -6,7 +6,7 @@ using UnityEngine;
 public class MapReadException : Exception
 {
     private const string MESSAGE_APPEND = "\n\nPlease email me about this!\nchroma@chroma.zone";
-    public string FullMessage { get { return Message + MESSAGE_APPEND; } }
+    public string FullMessage => Message + MESSAGE_APPEND;
     public MapReadException() { }
     public MapReadException(string message) : base(message) { }
     public MapReadException(string message, Exception inner) : base(message, inner) { }
