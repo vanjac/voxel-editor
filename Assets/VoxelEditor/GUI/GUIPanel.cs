@@ -157,7 +157,7 @@ public abstract class GUIPanel : MonoBehaviour
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(title, GUIUtils.LABEL_HORIZ_CENTERED.Value);
-            if (showCloseButton && GUILayout.Button("Done", GUILayout.ExpandWidth(false)))
+            if (showCloseButton && GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false)))
                 Destroy(this);
             GUILayout.EndHorizontal();
         }

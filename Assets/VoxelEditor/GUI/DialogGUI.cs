@@ -14,7 +14,7 @@ public class DialogGUI : GUIPanel
     {
         DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
         dialog.message = message;
-        dialog.yesButtonText = "OK";
+        dialog.yesButtonText = StringSet.Ok;
         return dialog;
     }
 
@@ -136,7 +136,7 @@ public class TextInputDialogGUI : GUIPanel
         {
             text = GUILayout.TextField(text);
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Done"))
+            if (GUILayout.Button(StringSet.Done))
             {
                 handler(text);
                 Destroy(this);
@@ -174,7 +174,7 @@ public class LargeMessageGUI : GUIPanel
         GUILayout.Label(message, GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.FlexibleSpace();
         GUILayout.EndScrollView();
-        if (GUILayout.Button("OK"))
+        if (GUILayout.Button(StringSet.Ok))
             Destroy(this);
     }
 }

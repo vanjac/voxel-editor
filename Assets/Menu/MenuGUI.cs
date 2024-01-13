@@ -32,8 +32,8 @@ public class MenuGUI : GUIPanel
         UpdateWorldList();
         startOptions = new GUIContent[]
         {
-            new GUIContent("Tutorial", IconSet.helpLarge),
-            new GUIContent("New World", IconSet.newWorldLarge)
+            new GUIContent(StringSet.StartTutorial, IconSet.helpLarge),
+            new GUIContent(StringSet.CreateNewWorld, IconSet.newWorldLarge)
         };
     }
 
@@ -47,13 +47,13 @@ public class MenuGUI : GUIPanel
 
             // copied from TemplatePickerGUI
             GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(900), GUILayout.Height(480));
-            GUILayout.Label("Welcome to N-Space\nFollowing the tutorial is recommended!", GUIUtils.LABEL_HORIZ_CENTERED.Value);
+            GUILayout.Label(StringSet.WelcomeMessage, GUIUtils.LABEL_HORIZ_CENTERED.Value);
             int selection = GUILayout.SelectionGrid(-1, startOptions, 2,
                 TemplatePickerGUI.buttonStyle.Value, GUILayout.ExpandHeight(true));
             if (selection == 0)
             {
                 TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, null, null, null);
-                HelpGUI.OpenDemoWorld("Tutorial - Introduction", "Templates/indoor");
+                HelpGUI.OpenDemoWorld(StringSet.IntroTutorialWorldName, "Templates/indoor");
             }
             else if (selection == 1)
             {
@@ -67,9 +67,12 @@ public class MenuGUI : GUIPanel
         }
         else
         {
-            if (GUIUtils.HighlightedButton(GUIUtils.MenuContent("New World", IconSet.newItem),
+            if (GUIUtils.HighlightedButton(
+                    GUIUtils.MenuContent(StringSet.CreateNewWorld, IconSet.newItem),
                     StyleSet.buttonLarge))
+            {
                 AskNewWorldTemplate();
+            }
             scroll = GUILayout.BeginScrollView(scroll);
             for (int i = 0; i < worldPaths.Count; i++)
             {
@@ -117,8 +120,8 @@ public class MenuGUI : GUIPanel
     private void AskNewWorldName(TextAsset template)
     {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-        inputDialog.prompt = "Enter new world name...";
-        inputDialog.text = "Untitled " + System.DateTime.Now.ToString("yyyy-MM-dd HHmmss");
+        inputDialog.prompt = StringSet.WorldNamePrompt;
+        inputDialog.text = StringSet.UntitledWorldName(System.DateTime.Now);
         inputDialog.handler = (string name) => NewWorld(name, template);
     }
 
@@ -140,7 +143,7 @@ public class MenuGUI : GUIPanel
         }
         catch (System.Exception ex)
         {
-            DialogGUI.ShowMessageDialog(gameObject, "Error creating world file");
+            DialogGUI.ShowMessageDialog(gameObject, StringSet.ErrorCreatingWorld);
             Debug.LogError(ex);
             return;
         }
@@ -161,25 +164,25 @@ public class MenuGUI : GUIPanel
         selectedWorldPath = path;
         worldOverflowMenu.items = new OverflowMenuGUI.MenuItem[]
         {
-            new OverflowMenuGUI.MenuItem("Play", IconSet.play, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.PlayWorld, IconSet.play, () => {
                 MenuGUI.OpenWorld(path, Scenes.GAME);
             }),
-            new OverflowMenuGUI.MenuItem("Rename", IconSet.rename, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.RenameWorld, IconSet.rename, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-                inputDialog.prompt = "Enter new name for " + name;
+                inputDialog.prompt = StringSet.WorldRenamePrompt(name);
                 inputDialog.text = name;
                 inputDialog.handler = RenameWorld;
             }),
-            new OverflowMenuGUI.MenuItem("Copy", IconSet.copy, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.CopyWorld, IconSet.copy, () => {
                 TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-                inputDialog.prompt = "Enter new world name...";
+                inputDialog.prompt = StringSet.WorldNamePrompt;
                 inputDialog.handler = CopyWorld;
             }),
-            new OverflowMenuGUI.MenuItem("Delete", IconSet.delete, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.DeleteWorld, IconSet.delete, () => {
                 DialogGUI dialog = gameObject.AddComponent<DialogGUI>();
-                dialog.message = "Are you sure you want to delete " + name + "?";
-                dialog.yesButtonText = "Yes";
-                dialog.noButtonText = "No";
+                dialog.message = StringSet.WorldDeleteConfirm(name);
+                dialog.yesButtonText = StringSet.Yes;
+                dialog.noButtonText = StringSet.No;
                 dialog.yesButtonHandler = () =>
                 {
                     File.Delete(path);
@@ -187,7 +190,8 @@ public class MenuGUI : GUIPanel
                 };
             }),
 #if (UNITY_ANDROID || UNITY_IOS)
-            new OverflowMenuGUI.MenuItem("Share", IconSet.share, () => ShareMap.Share(path))
+            new OverflowMenuGUI.MenuItem(StringSet.ShareWorld, IconSet.share,
+                () => ShareMap.Share(path))
 #endif
         };
     }

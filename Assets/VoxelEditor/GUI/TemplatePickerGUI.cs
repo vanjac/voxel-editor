@@ -17,11 +17,11 @@ public class TemplatePickerGUI : GUIPanel
 
     void Start()
     {
-        title = "New World";
+        title = StringSet.CreateNewWorld;
         options = new GUIContent[]
         {
-            new GUIContent("Indoor", IconSet.indoorLarge),
-            new GUIContent("Floating", IconSet.floatingLarge)
+            new GUIContent(StringSet.IndoorWorld, IconSet.indoorLarge),
+            new GUIContent(StringSet.FloatingWorld, IconSet.floatingLarge)
         };
     }
 

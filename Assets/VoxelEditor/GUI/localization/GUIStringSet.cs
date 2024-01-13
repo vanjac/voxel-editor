@@ -2,9 +2,71 @@
 // Other languages are implemented as subclasses that override these methods.
 public class GUIStringSet
 {
+    public virtual string Yes =>
+        "Yes";
+    public virtual string No =>
+        "No";
+    public virtual string Ok =>
+        "OK";
+    public virtual string Done =>
+        "Done";
+
+    // Main menu
+    public virtual string WelcomeMessage =>
+        "Welcome to N-Space\nFollowing the tutorial is recommended!";
+    public virtual string StartTutorial =>
+        "Tutorial";
+    public virtual string CreateNewWorld =>
+        "New World";
+    public virtual string IndoorWorld =>
+        "Indoor";
+    public virtual string FloatingWorld =>
+        "Floating";
+    public virtual string PlayWorld =>
+        "Play";
+    public virtual string RenameWorld =>
+        "Rename";
+    public virtual string CopyWorld =>
+        "Copy";
+    public virtual string DeleteWorld =>
+        "Delete";
+    public virtual string ShareWorld =>
+        "Share";
+    public virtual string WorldNamePrompt =>
+        "Enter new world name...";
+    public virtual string WorldRenamePrompt(string oldName) =>
+        $"Enter new name for {oldName}";
+    public virtual string WorldDeleteConfirm(string name) =>
+        $"Are you sure you want to delete {name}?";
+    public virtual string ErrorCreatingWorld =>
+        "Error creating world file";
+    public virtual string ErrorSpecialCharacter =>
+        "That name contains a special character which is not allowed.";
+    public virtual string ErrorPeriodName =>
+        "Name can't start with a period.";
+    public virtual string ErrorWorldAlreadyExists =>
+        "A world with that name already exists.";
+    public virtual string UntitledWorldName(System.DateTime date) =>
+        $"Untitled {date:yyyy-MM-dd HHmmss}";
+    public virtual string IntroTutorialWorldName =>
+        "Tutorial - Introduction";
+
+    // Main menu overflow
+    public virtual string OpenHelp =>
+        "Help";
+    public virtual string OpenAbout =>
+        "About";
+    public virtual string OpenWebsite =>
+        "Website";
+    public virtual string OpenSubreddit =>
+        "Subreddit";
+    public virtual string OpenVideos =>
+        "Videos";
+    public virtual string Donate =>
+        "Donate";
+
     // Tutorial messages...
     // Tutorials use <i>italics</i> to mark commands for the user.
-
     public virtual string TutorialWelcome =>
         "Welcome! This is a brief tutorial that will guide you through the app. You can access this tutorial and others at any time. Press the right arrow to continue.";
     public virtual string TutorialRoom =>

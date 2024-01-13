@@ -59,20 +59,20 @@ public static class WorldFiles
             return false;
         if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
         {
-            errorMessage = "That name contains a special character which is not allowed.";
+            errorMessage = GUIPanel.StringSet.ErrorSpecialCharacter;
             return false;
         }
 
         if (name.StartsWith("."))
         {
-            errorMessage = "Name can't start with a period.";
+            errorMessage = GUIPanel.StringSet.ErrorPeriodName;
             return false;
         }
 
         string path = WorldFiles.GetNewWorldPath(name);
         if (File.Exists(path))
         {
-            errorMessage = "A world with that name already exists.";
+            errorMessage = GUIPanel.StringSet.ErrorWorldAlreadyExists;
             return false;
         }
         return true;  // you are valid <3

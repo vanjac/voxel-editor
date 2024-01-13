@@ -31,13 +31,14 @@ public class MenuOverflowGUI : GUIPanel
             var overflow = gameObject.AddComponent<OverflowMenuGUI>();
             overflow.items = new OverflowMenuGUI.MenuItem[]
             {
-                new OverflowMenuGUI.MenuItem("Help", IconSet.help, () =>
+                new OverflowMenuGUI.MenuItem(StringSet.OpenHelp, IconSet.help, () =>
                 {
                     gameObject.AddComponent<HelpGUI>();
                 }),
-                new OverflowMenuGUI.MenuItem("About", IconSet.about, () =>
+                new OverflowMenuGUI.MenuItem(StringSet.OpenAbout, IconSet.about, () =>
                 {
-                    string text = System.String.Format("Version {0}\nMade with Unity {1}\n\n{2}"
+                    // TODO: localize!
+                    string text = string.Format("Version {0}\nMade with Unity {1}\n\n{2}"
                         + "\n\n----------\n\nSystem Info:\nResolution: {3}x{4}\nDPI: {5}"
                         + "\nAudio: {6}Hz {7}",
                         Application.version, Application.unityVersion, creditsText.text,
@@ -45,20 +46,20 @@ public class MenuOverflowGUI : GUIPanel
                         AudioSettings.outputSampleRate, AudioSettings.speakerMode);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 }),
-                new OverflowMenuGUI.MenuItem("Website", IconSet.website, () =>
+                new OverflowMenuGUI.MenuItem(StringSet.OpenWebsite, IconSet.website, () =>
                 {
                     Application.OpenURL("https://chroma.zone/voxel-editor/");
                 }),
-                new OverflowMenuGUI.MenuItem("Subreddit", IconSet.reddit, () =>
+                new OverflowMenuGUI.MenuItem(StringSet.OpenSubreddit, IconSet.reddit, () =>
                 {
                     Application.OpenURL("https://www.reddit.com/r/nspace/");
                 }),
-                new OverflowMenuGUI.MenuItem("Videos", IconSet.youTube, () =>
+                new OverflowMenuGUI.MenuItem(StringSet.OpenVideos, IconSet.youTube, () =>
                 {
                     Application.OpenURL("https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2");
                 }),
 #if !UNITY_IOS
-                new OverflowMenuGUI.MenuItem("Donate", IconSet.donate, () =>
+                new OverflowMenuGUI.MenuItem(StringSet.Donate, IconSet.donate, () =>
                 {
                     Application.OpenURL("https://chroma.zone/donate");
                 }),
