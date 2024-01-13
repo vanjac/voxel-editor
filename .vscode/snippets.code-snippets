@@ -1,0 +1,7 @@
+{
+	"public virtual string": {
+		"scope": "csharp",
+		"prefix": "pvs",
+		"body": "public virtual string ",
+	},
+}

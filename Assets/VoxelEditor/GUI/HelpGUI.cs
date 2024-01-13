@@ -55,7 +55,7 @@ public class HelpGUI : GUIPanel
             StartTutorial(Tutorials.OBJECT_TUTORIAL, "Objects");
         if (HelpButton("Tips and Shortcuts"))
         {
-            LargeMessageGUI.ShowLargeMessageDialog(gameObject, Tutorials.TIPS_AND_SHORTCUTS_TUTORIAL);
+            LargeMessageGUI.ShowLargeMessageDialog(gameObject, StringSet.TutorialTipsAndShortcuts);
             Destroy(this);
         }
         if (HelpButton("Advanced Game Logic 1"))

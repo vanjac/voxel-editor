@@ -20,6 +20,7 @@ public class GUIManager : MonoBehaviour
     public GUIIconSet iconSet;
     public System.Lazy<GUIStyleSet> styleSet = new System.Lazy<GUIStyleSet>(
         () => new GUIStyleSet(GUI.skin));
+    public GUIStringSet stringSet = new GUIStringSet();
 
     // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
     public Font[] alternateFonts;
