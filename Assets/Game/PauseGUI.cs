@@ -59,8 +59,8 @@ public class PauseGUI : GUIPanel
     void Start()
     {
         GUIPanel.topPanel = this;
-        healthCounter = new HUDCounter("Health: ");
-        scoreCounter = new HUDCounter("Score: ");
+        healthCounter = new HUDCounter(StringSet.HealthCounterPrefix);
+        scoreCounter = new HUDCounter(StringSet.ScoreCounterPrefix);
     }
 
     public override void OnEnable()
@@ -95,7 +95,7 @@ public class PauseGUI : GUIPanel
         }
         else if (wasAlive)
         {
-            ActionBarGUI.ActionBarLabel("you died :(");
+            ActionBarGUI.ActionBarLabel(StringSet.YouDied);
             scoreCounter.Display();
         }
 
@@ -116,13 +116,13 @@ public class PauseGUI : GUIPanel
         pauseMenu = gameObject.AddComponent<OverflowMenuGUI>();
         pauseMenu.items = new OverflowMenuGUI.MenuItem[]
         {
-            new OverflowMenuGUI.MenuItem("Resume", IconSet.play,
+            new OverflowMenuGUI.MenuItem(StringSet.ResumeGame, IconSet.play,
                 () => {}), // menu will close
-            new OverflowMenuGUI.MenuItem("Restart", IconSet.restart,
+            new OverflowMenuGUI.MenuItem(StringSet.RestartGame, IconSet.restart,
                 () => { gameLoad.Close(Scenes.GAME); }),
-            new OverflowMenuGUI.MenuItem("Editor", IconSet.editor,
+            new OverflowMenuGUI.MenuItem(StringSet.OpenEditor, IconSet.editor,
                 () => { gameLoad.Close(Scenes.EDITOR); }),
-            new OverflowMenuGUI.MenuItem("Close", IconSet.x,
+            new OverflowMenuGUI.MenuItem(StringSet.CloseGame, IconSet.x,
                 () => { gameLoad.Close(Scenes.MENU); }),
         };
 

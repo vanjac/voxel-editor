@@ -10,6 +10,8 @@ public class GUIStringSet
         "OK";
     public virtual string Done =>
         "Done";
+    public virtual string Close =>
+        "Close";
     public virtual string AreYouSure =>
         "Are you sure?";
 
@@ -286,6 +288,22 @@ public class GUIStringSet
         "Conveyor";
     public virtual string DemoBallPit =>
         "Ball Pit";
+
+    // Game UI
+    public virtual string HealthCounterPrefix =>
+        "Health: ";
+    public virtual string ScoreCounterPrefix =>
+        "Score: ";
+    public virtual string YouDied =>
+        "you died :(";
+    public virtual string ResumeGame =>
+        "Resume";
+    public virtual string RestartGame =>
+        "Restart";
+    public virtual string OpenEditor =>
+        "Editor";
+    public virtual string CloseGame =>
+        "Close";
 
     // Tutorial messages...
     // Tutorials use <i>italics</i> to mark commands for the user.

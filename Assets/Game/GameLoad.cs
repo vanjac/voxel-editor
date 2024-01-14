@@ -23,7 +23,7 @@ public class GameLoad : MonoBehaviour
         {
             var dialog = loadingGUI.gameObject.AddComponent<DialogGUI>();
             dialog.message = e.FullMessage;
-            dialog.yesButtonText = "Close";
+            dialog.yesButtonText = GUIPanel.StringSet.Close;
             dialog.yesButtonHandler = () =>
             {
                 Close(Scenes.MENU);
