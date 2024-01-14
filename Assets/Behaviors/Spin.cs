@@ -4,10 +4,7 @@ using UnityEngine;
 public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Spin", "Rotate continuously",
-        "<b>Speed</b> is in degrees per second. <b>Axis</b> specifies the axis of rotation.\n"
-        + "Substances will rotate around their <b>Pivot</b> point.",
-        "format-rotate-90", typeof(SpinBehavior),
+        "Spin", s => s.SpinDesc, s => s.SpinLongDesc, "format-rotate-90", typeof(SpinBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
     public override BehaviorType BehaviorObjectType => objectType;
 

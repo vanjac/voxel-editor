@@ -5,8 +5,7 @@ using UnityEngine;
 public class CustomTexture : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Custom Texture", "A custom texture image for materials or overlays",
-        "image", typeof(CustomTexture));
+        "Custom Texture", s => s.CustomTextureDesc, "image", typeof(CustomTexture));
     public PropertiesObjectType ObjectType => objectType;
 
     public enum CustomFilter

@@ -9,13 +9,8 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
     }
 
     public static new BehaviorType objectType = new BehaviorType(
-        "Force", "Apply instant or continuous force",
-        "Only works for objects with a Physics behavior.\n\n"
-        + "•  <b>Impulse</b> mode will cause an instant impulse to be applied when the behavior activates.\n"
-        + "•  <b>Continuous</b> mode will cause the force to be continuously applied while the behavior is active.\n"
-        + "•  <b>Ignore mass</b> scales the force to compensate for the mass of the object.\n"
-        + "•  <b>Stop object first</b> will stop any existing motion before applying the force.",
-        "rocket", typeof(ForceBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Force", s => s.ForceDesc, s => s.ForceLongDesc, "rocket", typeof(ForceBehavior),
+        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;

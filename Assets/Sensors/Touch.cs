@@ -10,13 +10,7 @@ public abstract class BaseTouchSensor : ActivatedSensor
 public class TouchSensor : BaseTouchSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Touch", "Active when touching another object",
-        "•  <b>Filter:</b> The object or types of object which activate the sensor.\n"
-        + "•  <b>Min velocity:</b> Object must enter with this relative velocity to activate.\n"
-        + "•  <b>Direction:</b> Object must enter in this direction to activate.\n\n"
-        + "Activators: all colliding objects matching the filter\n\n"
-        + "BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.",
-        "vector-combine", typeof(TouchSensor));
+        "Touch", s => s.TouchDesc, s => s.TouchLongDesc, "vector-combine", typeof(TouchSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public override IEnumerable<Property> Properties() =>

@@ -4,10 +4,7 @@ using UnityEngine;
 public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Pulse", "Turn on and off continuously",
-        "<b>Input</b> is optional. When connected, it controls whether the pulse is active. "
-        + "When the Input turns off, the pulse completes a full cycle then stops.",
-        "pulse", typeof(PulseSensor));
+        "Pulse", s => s.PulseDesc, s => s.PulseLongDesc, "pulse", typeof(PulseSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public bool startOn = true;

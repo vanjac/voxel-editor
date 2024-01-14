@@ -18,13 +18,15 @@ public class TypeInfoGUI : GUIPanel
         if (GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false)))
             Destroy(this);
         GUILayout.EndHorizontal();
-        GUILayout.Label("<i>" + type.description + "</i>", GUIUtils.LABEL_WORD_WRAPPED.Value);
+        GUILayout.Label("<i>" + type.description(StringSet) + "</i>",
+            GUIUtils.LABEL_WORD_WRAPPED.Value);
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
-        if (type.longDescription != "")
+        var longDesc = type.longDescription(StringSet);
+        if (longDesc != "")
         {
             GUILayout.BeginVertical(GUI.skin.box);
-            GUILayout.Label(type.longDescription, GUIUtils.LABEL_WORD_WRAPPED.Value);
+            GUILayout.Label(longDesc, GUIUtils.LABEL_WORD_WRAPPED.Value);
             GUILayout.EndVertical();
         }
     }

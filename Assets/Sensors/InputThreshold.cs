@@ -5,13 +5,8 @@ using UnityEngine;
 public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThresholdComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Threshold", "Active when some number of other objects are active",
-        "Adds up the values of all the <b>Inputs</b>. "
-        + "If an Input is on and set to <b>+1</b>, this adds 1 to the total. "
-        + "If an Input is on and set to <b>-1</b>, this subtracts 1 from the total. "
-        + "The sensor turns on if the total is at or above the <b>Threshold</b>.\n\n"
-        + "Activators: the combined activators of all Positive inputs minus the activators of Negative inputs",
-        "altimeter", typeof(InputThresholdSensor));
+        "Threshold", s => s.ThresholdDesc, s => s.ThresholdLongDesc, "altimeter",
+        typeof(InputThresholdSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     // public so it can be serialized

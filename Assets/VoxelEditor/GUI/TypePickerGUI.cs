@@ -55,7 +55,8 @@ public class TypePickerGUI : GUIPanel
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label(item.fullName, StyleSet.labelTitle);
-            if (item.longDescription != "" && GUILayout.Button(IconSet.helpCircle,
+            var longDesc = item.longDescription(StringSet);
+            if (longDesc != "" && GUILayout.Button(IconSet.helpCircle,
                 helpIconStyle.Value, GUILayout.ExpandWidth(false)))
             {
                 if (showHelp == item)
@@ -64,13 +65,13 @@ public class TypePickerGUI : GUIPanel
                     showHelp = item;
             }
             GUILayout.EndHorizontal();
-            GUILayout.Label("<i>" + item.description + "</i>", descriptionStyle.Value);
+            GUILayout.Label("<i>" + item.description(StringSet) + "</i>", descriptionStyle.Value);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             if (showHelp == item)
             {
                 GUILayout.Space(16);
-                GUILayout.Label(item.longDescription, descriptionStyle.Value);
+                GUILayout.Label(longDesc, descriptionStyle.Value);
             }
             if (GUIUtils.EndButtonVertical(item.fullName))
             {

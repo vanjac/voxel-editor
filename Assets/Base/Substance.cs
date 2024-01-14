@@ -10,9 +10,8 @@ public struct Pivot
 public class Substance : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Substance", "An entity made of blocks",
-        "The Pivot point is used as the center of rotation/scaling, and as a target point for other behaviors.",
-        "cube-outline", typeof(Substance));
+        "Substance", s => s.SubstanceDesc, s => s.SubstanceLongDesc, "cube-outline",
+        typeof(Substance));
     public override PropertiesObjectType ObjectType => objectType;
 
     public Pivot pivot = new Pivot { x = Pivot.Pos.Center, y = Pivot.Pos.Center, z = Pivot.Pos.Center };

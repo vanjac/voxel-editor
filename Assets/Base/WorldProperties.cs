@@ -13,7 +13,7 @@ public class WorldProperties : PropertiesObject
     };
 
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "World", "Properties that affect the entire world", "earth", typeof(WorldProperties));
+        "World", s => s.WorldDesc, "earth", typeof(WorldProperties));
     public PropertiesObjectType ObjectType => objectType;
 
     public void SetSky(Material sky)

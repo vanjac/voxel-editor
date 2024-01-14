@@ -4,14 +4,8 @@ using UnityEngine;
 public class CharacterBehavior : BasePhysicsBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Character",
-        "Apply gravity but keep upright",
-        "This is an alternative to the Physics behavior. "
-        + "Objects will have gravity but will not be able to tip over. "
-        + "When used with the Move behavior, objects will fall to the ground "
-        + "instead of floating.\n\n"
-        + "<b>Density</b> affects the mass of the object, proportional to its volume.",
-        "human", typeof(CharacterBehavior),
+        "Character", s => s.CharacterDesc, s => s.CharacterLongDesc, "human",
+        typeof(CharacterBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));

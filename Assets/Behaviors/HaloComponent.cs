@@ -5,8 +5,7 @@ using UnityEngine;
 public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Halo", "Glowing effect",
-        "Halo appears at the Pivot point of substances", "blur", typeof(HaloBehavior));
+        "Halo", s => s.HaloDesc, s => s.HaloLongDesc, "blur", typeof(HaloBehavior));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 3;

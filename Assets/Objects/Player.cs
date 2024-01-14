@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerObject : ObjectEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Player", "The character you control in the game", "human-greeting", typeof(PlayerObject));
+        "Player", s => s.PlayerDesc, "human-greeting", typeof(PlayerObject));
     public override PropertiesObjectType ObjectType => objectType;
 
     private bool footstepSounds = true;

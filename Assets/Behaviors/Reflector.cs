@@ -6,12 +6,8 @@ using UnityEngine.Rendering;
 public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, ReflectorComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Reflector", "Add more realistic reflections to area",
-        "Reflector captures an image of the surrounding area and uses it to simulate reflections.\n"
-        + "•  Surfaces within <b>Range</b> distance are affected\n"
-        + "•  <b>Intensity</b> controls the brightness of the reflections\n"
-        + "•  When <b>Real-time</b> is checked, reflections will update continuously (expensive!)",
-        "mirror", typeof(ReflectorBehavior));
+        "Reflector", s => s.ReflectorDesc, s => s.ReflectorLongDesc, "mirror",
+        typeof(ReflectorBehavior));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 35, intensity = 1;

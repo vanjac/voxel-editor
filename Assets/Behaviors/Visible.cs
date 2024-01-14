@@ -4,8 +4,7 @@ using UnityEngine;
 public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Visible", "Object is visible in the game",
-        "eye", typeof(VisibleBehavior),
+        "Visible", s => s.VisibleDesc, "eye", typeof(VisibleBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));

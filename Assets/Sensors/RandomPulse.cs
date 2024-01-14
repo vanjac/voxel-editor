@@ -4,10 +4,8 @@ using UnityEngine;
 public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Rand. Pulse", "Turn on and off in a random pattern",
-        "Alternates on/off using random times selected within the ranges."
-        + " Useful for unpredictable behavior, flickering lights, etc.",
-        "progress-question", typeof(RandomPulseSensor));
+        "Rand. Pulse", s => s.RandomPulseDesc, s => s.RandomPulseLongDesc, "progress-question",
+        typeof(RandomPulseSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public (float, float) offTimeRange = (1, 5);

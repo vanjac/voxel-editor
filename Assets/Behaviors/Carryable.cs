@@ -5,11 +5,8 @@ using UnityEngine;
 public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, CarryableComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Carryable", "Allow player to pick up / drop / throw",
-        "Tap to pick up the object, tap again to throw."
-        + " Increasing the <b>Throw angle</b> causes the object to be thrown with an arc.\n\n"
-        + "Requires Physics",
-        "coffee", typeof(CarryableBehavior),
+        "Carryable", s => s.CarryableDesc, s => s.CarryableLongDesc, "coffee",
+        typeof(CarryableBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));

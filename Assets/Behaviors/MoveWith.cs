@@ -4,9 +4,8 @@ using UnityEngine;
 public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWithComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Move With", "Follow the motion of another object",
-        "BUG: This behavior will block Move behaviors from working.",
-        "move-resize-variant", typeof(MoveWithBehavior),
+        "Move With", s => s.MoveWithDesc, s => s.MoveWithLongDesc, "move-resize-variant",
+        typeof(MoveWithBehavior),
         BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
     public override BehaviorType BehaviorObjectType => objectType;
 

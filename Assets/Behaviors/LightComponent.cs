@@ -5,9 +5,7 @@ using UnityEngine;
 public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Light", "Light source at the center of object",
-        "Light originates from the Pivot point of substances",
-        "lightbulb-on", typeof(LightBehavior));
+        "Light", s => s.LightDesc, s => s.LightLongDesc, "lightbulb-on", typeof(LightBehavior));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 10, intensity = 1;

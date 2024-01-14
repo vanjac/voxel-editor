@@ -4,10 +4,7 @@ using UnityEngine;
 public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Motion", "Detect moving above some velocity",
-        "Turns on when the object is both moving faster than the <b>Minimum velocity</b> in the given direction, "
-        + "and rotating about any axis faster than the <b>Minimum angular velocity</b> (degrees per second).",
-        "speedometer", typeof(MotionSensor));
+        "Motion", s => s.MotionDesc, s => s.MotionLongDesc, "speedometer", typeof(MotionSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public float minVelocity = 1;

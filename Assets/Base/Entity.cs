@@ -48,13 +48,14 @@ public struct Property
 public class PropertiesObjectType
 {
     public static readonly PropertiesObjectType NONE =
-        new PropertiesObjectType("None", "", "cancel", null);
+        new PropertiesObjectType("None", DefaultDescription, "cancel", null);
+    public delegate string Localizer(GUIStringSet stringSet);
 
     public string fullName; // not readonly so it can be serialized
     [XmlIgnore]
-    public readonly string description;
+    public readonly Localizer description;
     [XmlIgnore]
-    public readonly string longDescription;
+    public readonly Localizer longDescription;
     [XmlIgnore]
     public readonly string iconName;
     [XmlIgnore]
@@ -78,25 +79,25 @@ public class PropertiesObjectType
     public PropertiesObjectType(string fullName, Type type)
     {
         this.fullName = fullName;
-        description = "";
-        longDescription = "";
+        description = DefaultDescription;
+        longDescription = DefaultDescription;
         iconName = "";
         this.type = type;
         constructor = DefaultConstructor;
     }
 
-    public PropertiesObjectType(string fullName, string description, string iconName,
+    public PropertiesObjectType(string fullName, Localizer description, string iconName,
         Type type, Func<PropertiesObject> constructor = null)
     {
         this.fullName = fullName;
         this.description = description;
-        longDescription = "";
+        longDescription = DefaultDescription;
         this.iconName = iconName;
         this.type = type;
         this.constructor = constructor ?? DefaultConstructor;
     }
 
-    public PropertiesObjectType(string fullName, string description, string longDescription,
+    public PropertiesObjectType(string fullName, Localizer description, Localizer longDescription,
         string iconName, Type type, Func<PropertiesObject> constructor = null)
     {
         this.fullName = fullName;
@@ -116,6 +117,8 @@ public class PropertiesObjectType
         this.type = baseType.type;
         constructor = newConstructor;
     }
+
+    private static string DefaultDescription(GUIStringSet _) => "";
 
     private PropertiesObject DefaultConstructor()
     {
@@ -190,7 +193,7 @@ public interface PropertiesObject
 public abstract class Entity : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Anything", "", "circle-outline", typeof(Entity));
+        "Anything", s => "", "circle-outline", typeof(Entity));
 
     public EntityComponent component;
     public Sensor sensor;
@@ -570,15 +573,15 @@ public class BehaviorType : PropertiesObjectType
         this.rule = DefaultRule;
     }
 
-    public BehaviorType(string fullName, string description, string iconName, Type type,
+    public BehaviorType(string fullName, Localizer description, string iconName, Type type,
         Predicate<Entity> rule = null)
         : base(fullName, description, iconName, type)
     {
         this.rule = rule ?? DefaultRule;
     }
 
-    public BehaviorType(string fullName, string description, string longDescription, string iconName, Type type,
-        Predicate<Entity> rule = null)
+    public BehaviorType(string fullName, Localizer description, Localizer longDescription,
+        string iconName, Type type, Predicate<Entity> rule = null)
         : base(fullName, description, longDescription, iconName, type)
     {
         this.rule = rule ?? DefaultRule;

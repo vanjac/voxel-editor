@@ -4,11 +4,8 @@ using UnityEngine;
 public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHealComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Hurt/Heal", "Lose/gain health; below 0, object dies",
-        "•  <b>Amount</b>: Change in health. Positive heals, negative hurts.\n"
-        + "•  <b>Rate</b>: Seconds between successive hurt/heals. 0 means health will only change once when behavior is activated.\n"
-        + "•  <b>Keep within</b>: Health will only change if it's within this range, and will never go outside this range.",
-        "heart", typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Hurt/Heal", s => s.HurtHealDesc, s => s.HurtHealLongDesc, "heart",
+        typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float amount = -30;

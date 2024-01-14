@@ -3,10 +3,7 @@
 public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Toggle", "One input to turn on, one input to turn off, otherwise hold",
-        "If both inputs turn on simultaneously, the sensor toggles between on/off.\n\n"
-        + "Activators: the activators of the <b>On input</b>, frozen when it is first turned on",
-        "toggle-switch", typeof(ToggleSensor));
+        "Toggle", s => s.ToggleDesc, s => s.ToggleLongDesc, "toggle-switch", typeof(ToggleSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public EntityReference offInput = new EntityReference(null);

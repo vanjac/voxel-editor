@@ -4,8 +4,7 @@ using UnityEngine;
 public class BallObject : ObjectEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Ball", "A sphere which can be painted",
-        "Use the Paint button to change color/material", "circle-outline", typeof(BallObject));
+        "Ball", s => s.BallDesc, s => s.BallLongDesc, "circle-outline", typeof(BallObject));
     public override PropertiesObjectType ObjectType => objectType;
 
     public BallObject()

@@ -10,9 +10,7 @@ public abstract class BasePhysicsBehavior : EntityBehavior
 public class PhysicsBehavior : BasePhysicsBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Physics", "Move according to laws of physics",
-        "<b>Density</b> affects the mass of the object, proportional to its volume.",
-        "soccer", typeof(PhysicsBehavior),
+        "Physics", s => s.PhysicsDesc, s => s.PhysicsLongDesc, "soccer", typeof(PhysicsBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));

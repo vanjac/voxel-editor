@@ -3,15 +3,7 @@
 public class CloneBehavior : TeleportBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Clone", "Create a copy of the object",
-        "A new clone is created immediately when the behavior is activated. "
-        + "The clone will start with the original health of the object. "
-        + "Sensors which filter for a specific object will also activate for any of its clones.\n\n"
-        // based on TeleportBehavior:
-        + "•  <b>To:</b> Target location for clone\n"
-        + "•  <b>Relative to:</b> Optional origin location. "
-        + "If specified, the clone will be displaced from the original object by the difference between the target and origin.",
-        "content-copy", typeof(CloneBehavior),
+        "Clone", s => s.CloneDesc, s => s.CloneLongDesc, "content-copy", typeof(CloneBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));

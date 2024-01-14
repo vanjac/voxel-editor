@@ -4,12 +4,7 @@ using UnityEngine;
 public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Delay", "Add delay to input turning on or off",
-        "If the <b>Input</b> has been on for longer than the <b>On time</b>, sensor will turn on. "
-        + "If the Input has been off for longer than the <b>Off time</b>, sensor will turn off. "
-        + "If the Input cycles on/off faster than the on/off time, nothing happens.\n\n"
-        + "Activators: the activators of the Input, added and removed with a delay",
-        "timer", typeof(DelaySensor));
+        "Delay", s => s.DelayDesc, s => s.DelayLongDesc, "timer", typeof(DelaySensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public EntityReference input = new EntityReference(null);

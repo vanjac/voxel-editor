@@ -3,9 +3,8 @@
 public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Water", "Simulate buoyancy physics",
-        "Water should not be Solid and should not have Physics. This behavior controls only the physics of water, not appearance.",
-        "water", typeof(WaterBehavior), BehaviorType.BaseTypeRule(typeof(Substance)));
+        "Water", s => s.WaterDesc, s => s.WaterLongDesc, "water", typeof(WaterBehavior),
+        BehaviorType.BaseTypeRule(typeof(Substance)));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float density = 1.0f;

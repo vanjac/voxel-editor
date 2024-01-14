@@ -13,9 +13,7 @@ public static class GameScripts
 
     public static PropertiesObjectType[] entityTemplates = new PropertiesObjectType[]
     {
-        new PropertiesObjectType("Solid Substance",
-            "A block that is solid and opaque by default",
-            "wall",
+        new PropertiesObjectType("Solid Substance", s => s.SolidSubstanceDesc, "wall",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
@@ -23,9 +21,7 @@ public static class GameScripts
                 substance.behaviors.Add(new SolidBehavior());
                 return substance;
             }),
-        new PropertiesObjectType("Water",
-            "A block of water that you can swim in",
-            "water",
+        new PropertiesObjectType("Water", s => s.WaterSubstanceDesc, "water",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
@@ -35,9 +31,7 @@ public static class GameScripts
                 substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("WaterBasicDaytime", true);
                 return substance;
             }),
-        new PropertiesObjectType("Trigger",
-            "Invisible, non-solid block with a touch sensor",
-            "vector-combine",
+        new PropertiesObjectType("Trigger", s => s.TriggerDesc, "vector-combine",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
@@ -47,9 +41,7 @@ public static class GameScripts
                 substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("Invisible", true);
                 return substance;
             }),
-        new PropertiesObjectType("Glass",
-            "Solid block of glass",
-            "window-closed-variant",
+        new PropertiesObjectType("Glass", s => s.GlassDesc, "window-closed-variant",
             typeof(Substance),
             () => {
                 Substance substance = new Substance();
@@ -193,9 +185,7 @@ public static class GameScripts
             ball.behaviors.Add(new SolidBehavior());
             return ball;
         }),
-        new PropertiesObjectType("Empty",
-            "Invisible ball object",
-            "scan-helper",
+        new PropertiesObjectType("Empty", s => s.EmptyDesc, "scan-helper",
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
@@ -205,9 +195,7 @@ public static class GameScripts
                 ball.paint.overlay.color = new Color(1, 0, 0, 0.5f);
                 return ball;
             }),
-        new PropertiesObjectType("Light",
-            "Light source centered at a point",
-            "lightbulb-on",
+        new PropertiesObjectType("Light", s => s.LightObjectDesc, "lightbulb-on",
             typeof(BallObject),
             () => {
                 var ball = new BallObject();
@@ -219,9 +207,7 @@ public static class GameScripts
                 ball.behaviors.Add(new LightBehavior());
                 return ball;
             }),
-        new PropertiesObjectType("Reflector",
-            ReflectorBehavior.objectType.description,
-            "mirror",
+        new PropertiesObjectType("Reflector", ReflectorBehavior.objectType.description, "mirror",
             typeof(BallObject),
             () => {
                 var ball = new BallObject();

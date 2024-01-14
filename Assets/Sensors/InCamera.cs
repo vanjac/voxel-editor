@@ -4,11 +4,7 @@ using UnityEngine;
 public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "In Camera", "Active when player looking at object",
-        "Turns on as long as the player is looking in the direction of the object, even if it is obscured. "
-        + "Does not turn on if object doesn't have Visible behavior.\n\n"
-        + "Activator: the player",
-        "eye", typeof(InCameraSensor));
+        "In Camera", s => s.InCameraDesc, s => s.InCameraLongDesc, "eye", typeof(InCameraSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public float maxDistance = 100;

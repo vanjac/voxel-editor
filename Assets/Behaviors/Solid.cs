@@ -3,8 +3,7 @@
 public class SolidBehavior : GenericEntityBehavior<SolidBehavior, SolidComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Solid", "Block and collide with other objects",
-        "wall", typeof(SolidBehavior),
+        "Solid", s => s.SolidDesc, "wall", typeof(SolidBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));

@@ -4,11 +4,8 @@ using UnityEngine;
 public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, TeleportComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Teleport", "Instantly teleport to another location",
-        "•  <b>To:</b> Target location to teleport\n"
-        + "•  <b>Relative to:</b> Optional origin location. If specified, instead of going directly to the target, "
-        + "the object will be displaced by the difference between the target and origin.",
-        "send", typeof(TeleportBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Teleport", s => s.TeleportDesc, s => s.TeleportLongDesc, "send", typeof(TeleportBehavior),
+        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public EntityReference target = new EntityReference(null);

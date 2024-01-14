@@ -4,11 +4,8 @@ using UnityEngine;
 public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Move", "Move in a direction or toward object",
-        "When used with Solid and Physics behaviors, object will not be able to pass through other objects.\n"
-        + "When used with Solid and Character behaviors, object will additionally be affected by gravity.\n"
-        + "Increase the <b>Density</b> of the Physics/Character behavior to increase the object's pushing strength.",
-        "arrow-right-bold-box-outline", typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Move", s => s.MoveDesc, s => s.MoveLongDesc, "arrow-right-bold-box-outline",
+        typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
     public override BehaviorType BehaviorObjectType => objectType;
 
     public Target target = new Target(Target.NORTH);

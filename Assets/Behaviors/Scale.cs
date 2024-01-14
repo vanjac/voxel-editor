@@ -4,10 +4,7 @@ using UnityEngine;
 public class ScaleBehavior : GenericEntityBehavior<ScaleBehavior, ScaleComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Scale", "Change size along each axis",
-        "Substances are scaled around their <b>Pivot</b> point."
-        + " For physics objects, mass will <i>not</i> change.",
-        "resize", typeof(ScaleBehavior),
+        "Scale", s => s.ScaleDesc, s => s.ScaleLongDesc, "resize", typeof(ScaleBehavior),
         BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
             BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));

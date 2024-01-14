@@ -3,10 +3,7 @@
 public class TapSensor : GenericSensor<TapSensor, TapComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Tap", "Detect player tapping the object",
-        "Object has to be Solid to detect a tap, but it doesn't have to be Visible.\n\n"
-        + "Activator: the player",
-        "gesture-tap", typeof(TapSensor));
+        "Tap", s => s.TapDesc, s => s.TapLongDesc, "gesture-tap", typeof(TapSensor));
     public override PropertiesObjectType ObjectType => objectType;
 
     public float maxDistance = 3;
