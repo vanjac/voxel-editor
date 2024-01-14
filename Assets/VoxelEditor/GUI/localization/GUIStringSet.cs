@@ -2,6 +2,24 @@
 // Other languages are implemented as subclasses that override these methods.
 public class GUIStringSet
 {
+    // Common terminology:
+    // It's important that these terms are translated consistently
+    // - World
+    // - Paint
+    // - Material
+    // - Overlay
+    // - Custom Texture
+    // - Bevel
+    // - Object
+    // - Tag
+    // - Substance
+    // - Behavior
+    // - Sensor
+    // - Activator
+    // - Target
+    // - Input
+    // - Player
+
     public virtual string Yes =>
         "Yes";
     public virtual string No =>
@@ -74,11 +92,11 @@ public class GUIStringSet
         "Donate";
 
     // Import
-    public virtual string ImportNamePrompt =>
+    public virtual string ImportWorldNamePrompt =>
         "Enter name for imported world...";
     public virtual string ImportingFile =>
         "Importing file...";
-    public virtual string ImportError =>
+    public virtual string ImportWorldError =>
         "Error importing world";
 
     // Editor action bar
@@ -100,7 +118,7 @@ public class GUIStringSet
         "Bevel";
     public virtual string RevertChanges =>
         "Revert";
-    public virtual string ConfirmRevertChanges =>
+    public virtual string ConfirmRevertWorldChanges =>
         "Undo all changes since the world was opened?";
     public virtual string SelectWithTagTitle =>
         "Select by tag";
@@ -114,9 +132,9 @@ public class GUIStringSet
         "Tap and drag to select";
     public virtual string EntityPickNone =>
         "None";
-    public virtual string EntityPickInstruction =>
+    public virtual string PickObjectInstruction =>
         "Pick an object...";
-    public virtual string EntityPickCount(int count) =>
+    public virtual string PickObjectCount(int count) =>
         $"{count} objects selected";
 
     // Type names
@@ -206,7 +224,7 @@ public class GUIStringSet
         "W";
 
     // Material panel
-    public virtual string MaterialCustomCategory =>
+    public virtual string CustomTextureCategory =>
         "CUSTOM";
     public virtual string MaterialImportFromWorld =>
         "Import from world...";
@@ -216,7 +234,7 @@ public class GUIStringSet
         "Tint";
     public virtual string ColorPaintMode =>
         "Paint";
-    public virtual string TextureDeleteConfirm =>
+    public virtual string CustomTextureDeleteConfirm =>
         "Are you sure you want to delete this custom texture?";
     public virtual string NoCustomMaterialsInWorld =>
         "World contains no custom textures for materials.";
@@ -274,7 +292,7 @@ public class GUIStringSet
         $"Change {name}";
     public virtual string SelectProperty(string name) =>
         $"Select {name}";
-    public virtual string BehaviorConditionHeader =>
+    public virtual string SensorConditionHeader =>
         "When sensor is:";
     public virtual string SensorOn =>
         "On";

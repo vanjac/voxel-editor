@@ -10,7 +10,7 @@ public class MaterialSelectorGUI : GUIPanel
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
     private const string PREVIEW_SUFFIX = "_preview";
-    private readonly string CUSTOM_CATEGORY = StringSet.MaterialCustomCategory;
+    private readonly string CUSTOM_CATEGORY = StringSet.CustomTextureCategory;
     private readonly string WORLD_LIST_CATEGORY = StringSet.MaterialImportFromWorld;
 
     public System.Action<Material> handler;
@@ -182,7 +182,7 @@ public class MaterialSelectorGUI : GUIPanel
                 if (ActionBarGUI.ActionBarButton(IconSet.delete))
                 {
                     var dialog = gameObject.AddComponent<DialogGUI>();
-                    dialog.message = StringSet.TextureDeleteConfirm;
+                    dialog.message = StringSet.CustomTextureDeleteConfirm;
                     dialog.yesButtonText = StringSet.Yes;
                     dialog.noButtonText = StringSet.No;
                     dialog.yesButtonHandler = () => DeleteCustomTexture();

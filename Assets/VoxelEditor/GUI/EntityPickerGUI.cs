@@ -65,9 +65,9 @@ public class EntityPickerGUI : ActionBarGUI
         // TODO: not efficient to keep generating a list of selected entities
         int numSelectedEntities = voxelArray.GetSelectedEntities().Count;
         if (numSelectedEntities == 0)
-            ActionBarLabel(StringSet.EntityPickInstruction);
+            ActionBarLabel(StringSet.PickObjectInstruction);
         else
-            ActionBarLabel(StringSet.EntityPickCount(numSelectedEntities));
+            ActionBarLabel(StringSet.PickObjectCount(numSelectedEntities));
 
         GUILayout.FlexibleSpace();
 

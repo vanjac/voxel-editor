@@ -241,7 +241,7 @@ public static class PropertyGUIs
     public static void BehaviorCondition(Property property)
     {
         var condition = (EntityBehavior.Condition)property.value;
-        GUILayout.Label(StringSet.BehaviorConditionHeader);
+        GUILayout.Label(StringSet.SensorConditionHeader);
         TutorialGUI.TutorialHighlight("behavior condition");
         property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid((int)condition,
             new string[] { StringSet.SensorOn, StringSet.SensorOff, StringSet.SensorBoth }, 3,

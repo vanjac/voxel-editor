@@ -179,7 +179,7 @@ public class ActionBarGUI : TopPanelGUI
             new OverflowMenuGUI.MenuItem(StringSet.RevertChanges, IconSet.undo, () => {
                 var dialog = gameObject.AddComponent<DialogGUI>();
                 dialog.title = StringSet.AreYouSure;
-                dialog.message = StringSet.ConfirmRevertChanges;
+                dialog.message = StringSet.ConfirmRevertWorldChanges;
                 dialog.yesButtonText = StringSet.Yes;
                 dialog.noButtonText = StringSet.No;
                 dialog.yesButtonHandler = () => {
