@@ -53,7 +53,8 @@ public class MenuGUI : GUIPanel
             if (selection == 0)
             {
                 TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, null, null, null);
-                HelpGUI.OpenDemoWorld(StringSet.IntroTutorialWorldName, "Templates/indoor");
+                HelpGUI.OpenDemoWorld(StringSet.TutorialWorldName(StringSet.TutorialIntro),
+                    "Templates/indoor");
             }
             else if (selection == 1)
             {

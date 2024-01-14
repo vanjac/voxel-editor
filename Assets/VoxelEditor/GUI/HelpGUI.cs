@@ -4,11 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class HelpGUI : GUIPanel
 {
-    private static readonly string[] DEMO_WORLD_NAMES = new string[]
-    { "Doors", "Hovercraft", "Character AI", "Platform Game", "Shapes", "Logic", "Impossible Hallway", "Conveyor", "Ball Pit" };
-    private static readonly string[] DEMO_WORLD_FILES = new string[]
-    { "doors", "hovercraft", "ai", "platforms", "shapes", "logic", "impossible_hallway", "conveyor", "ball_pit" };
-
     public VoxelArrayEditor voxelArray;
     public TouchListener touchListener;
 
@@ -20,14 +15,15 @@ public class HelpGUI : GUIPanel
 
     public void Start()
     {
-        title = "Help";
+        title = StringSet.HelpMenuTitle;
     }
 
     public override void WindowGUI()
     {
         int oldTab = tab;
         tab = GUILayout.SelectionGrid(tab,
-            new string[] { "Tutorials", "Demo Worlds" }, 2, StyleSet.buttonTab);
+            new string[] { StringSet.HelpTutorials, StringSet.HelpDemoWorlds }, 2,
+            StyleSet.buttonTab);
         if (oldTab != tab)
         {
             scroll = Vector2.zero;
@@ -43,44 +39,56 @@ public class HelpGUI : GUIPanel
 
     private void TutorialsTab()
     {
-        if (HelpButton("Introduction"))
-            StartTutorial(Tutorials.INTRO_TUTORIAL, "Introduction", forceIndoor: true);
-        if (HelpButton("Painting"))
-            StartTutorial(Tutorials.PAINT_TUTORIAL, "Painting");
-        if (HelpButton("Bevels"))
-            StartTutorial(Tutorials.BEVEL_TUTORIAL, "Bevels");
-        if (HelpButton("Substances"))
-            StartTutorial(Tutorials.SUBSTANCE_TUTORIAL, "Substances", forceIndoor: true);
-        if (HelpButton("Objects"))
-            StartTutorial(Tutorials.OBJECT_TUTORIAL, "Objects");
-        if (HelpButton("Tips and Shortcuts"))
+        if (HelpButton(StringSet.TutorialIntro))
+            StartTutorial(Tutorials.INTRO_TUTORIAL, StringSet.TutorialIntro, forceIndoor: true);
+        if (HelpButton(StringSet.TutorialPainting))
+            StartTutorial(Tutorials.PAINT_TUTORIAL, StringSet.TutorialPainting);
+        if (HelpButton(StringSet.TutorialBevels))
+            StartTutorial(Tutorials.BEVEL_TUTORIAL, StringSet.TutorialBevels);
+        if (HelpButton(StringSet.TutorialSubstances))
+            StartTutorial(Tutorials.SUBSTANCE_TUTORIAL,
+                StringSet.TutorialSubstances, forceIndoor: true);
+        if (HelpButton(StringSet.TutorialObjects))
+            StartTutorial(Tutorials.OBJECT_TUTORIAL, StringSet.TutorialObjects);
+        if (HelpButton(StringSet.TutorialTips))
         {
-            LargeMessageGUI.ShowLargeMessageDialog(gameObject, StringSet.TutorialTipsAndShortcuts);
+            LargeMessageGUI.ShowLargeMessageDialog(gameObject, StringSet.TutorialTipsMessage);
             Destroy(this);
         }
-        if (HelpButton("Advanced Game Logic 1"))
+        if (HelpButton(StringSet.TutorialAdvancedGameLogic1))
         {
             StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1);
-            OpenDemoWorld("Tutorial - Advanced game logic 1", "Tutorials/advanced_game_logic_1");
+            OpenDemoWorld(StringSet.TutorialWorldName(StringSet.TutorialAdvancedGameLogic1),
+                "Tutorials/advanced_game_logic_1");
         }
-        if (HelpButton("Advanced Game Logic 2"))
-            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2, "Advanced game logic 2", forceIndoor: true);
+        if (HelpButton(StringSet.TutorialAdvancedGameLogic2))
+            StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2,
+                StringSet.TutorialAdvancedGameLogic2, forceIndoor: true);
     }
 
     private void DemoWorldsTab()
     {
-        for (int i = 0; i < DEMO_WORLD_NAMES.Length; i++)
-        {
-            if (HelpButton(DEMO_WORLD_NAMES[i]))
-            {
-                OpenDemoWorld("Demo - " + DEMO_WORLD_NAMES[i],
-                    "Demos/" + DEMO_WORLD_FILES[i]);
-                Destroy(this);
-            }
-        }
+        DemoWorldButton(StringSet.DemoDoors, "doors");
+        DemoWorldButton(StringSet.DemoHovercraft, "hovercraft");
+        DemoWorldButton(StringSet.DemoAI, "ai");
+        DemoWorldButton(StringSet.DemoPlatforms, "platforms");
+        DemoWorldButton(StringSet.DemoShapes, "shapes");
+        DemoWorldButton(StringSet.DemoLogic, "logic");
+        DemoWorldButton(StringSet.DemoImpossibleHallway, "impossible_hallway");
+        DemoWorldButton(StringSet.DemoConveyor, "conveyor");
+        DemoWorldButton(StringSet.DemoBallPit, "ball_pit");
     }
 
     private bool HelpButton(string text) => GUILayout.Button(text, StyleSet.buttonLarge);
+
+    private void DemoWorldButton(string name, string file)
+    {
+        if (HelpButton(name))
+        {
+            OpenDemoWorld(StringSet.DemoWorldName(name), "Demos/" + file);
+            Destroy(this);
+        }
+    }
 
     private void StartTutorial(TutorialPageFactory[] tutorial, string worldName = null,
         bool forceIndoor = false)
@@ -88,7 +96,7 @@ public class HelpGUI : GUIPanel
         TutorialGUI.StartTutorial(tutorial, gameObject, voxelArray, touchListener);
         if (worldName != null && (voxelArray == null ||
                 (voxelArray.type != VoxelArray.WorldType.INDOOR && forceIndoor)))
-            OpenDemoWorld("Tutorial - " + worldName, "Templates/indoor");
+            OpenDemoWorld(StringSet.TutorialWorldName(worldName), "Templates/indoor");
         Destroy(this);
     }
 

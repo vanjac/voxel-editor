@@ -48,8 +48,6 @@ public class GUIStringSet
         "A world with that name already exists.";
     public virtual string UntitledWorldName(System.DateTime date) =>
         $"Untitled {date:yyyy-MM-dd HHmmss}";
-    public virtual string IntroTutorialWorldName =>
-        "Tutorial - Introduction";
 
     // Main menu overflow
     public virtual string OpenHelp =>
@@ -64,6 +62,52 @@ public class GUIStringSet
         "Videos";
     public virtual string Donate =>
         "Donate";
+    
+    // Help menu
+    public virtual string HelpMenuTitle =>
+        "Help";
+    public virtual string HelpTutorials =>
+        "Tutorials";
+    public virtual string HelpDemoWorlds =>
+        "Demo Worlds";
+    public virtual string TutorialWorldName(string name) =>
+        $"Tutorial - {name}";
+    public virtual string DemoWorldName(string name) =>
+        $"Demo - {name}";
+    public virtual string TutorialIntro =>
+        "Introduction";
+    public virtual string TutorialPainting =>
+        "Painting";
+    public virtual string TutorialBevels =>
+        "Bevels";
+    public virtual string TutorialSubstances =>
+        "Substances";
+    public virtual string TutorialObjects =>
+        "Objects";
+    public virtual string TutorialTips =>
+        "Tips and Shortcuts";
+    public virtual string TutorialAdvancedGameLogic1 =>
+        "Advanced Game Logic 1";
+    public virtual string TutorialAdvancedGameLogic2 =>
+        "Advanced Game Logic 2";
+    public virtual string DemoDoors =>
+        "Doors";
+    public virtual string DemoHovercraft =>
+        "Hovercraft";
+    public virtual string DemoAI =>
+        "Character AI";
+    public virtual string DemoPlatforms =>
+        "Platform Game";
+    public virtual string DemoShapes =>
+        "Shapes";
+    public virtual string DemoLogic =>
+        "Logic";
+    public virtual string DemoImpossibleHallway =>
+        "Impossible Hallway";
+    public virtual string DemoConveyor =>
+        "Conveyor";
+    public virtual string DemoBallPit =>
+        "Ball Pit";
 
     // Tutorial messages...
     // Tutorials use <i>italics</i> to mark commands for the user.
@@ -203,7 +247,7 @@ public class GUIStringSet
         "If you build some obstacles, you'll notice that the ball can float and move through walls. <i>Add a Character behavior to fix this. (check the Physics tab)</i>";
     public virtual string TutorialObjectNext =>
         "Read the <i>Advanced Game Logic</i> tutorial to learn how to add more complex interactivity to games.";
-    public virtual string TutorialTipsAndShortcuts =>
+    public virtual string TutorialTipsMessage =>
 @"•  Double tap to select an entire wall. The selection will be bounded by already-selected faces.
 •  Triple tap a face to select <i>all</i> faces connected to it. The selection will be bounded by already-selected faces.
 •  Triple tap a substance to select the entire substance.
