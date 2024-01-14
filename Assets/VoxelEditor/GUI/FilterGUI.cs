@@ -52,7 +52,7 @@ public class FilterGUI : GUIPanel
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = StringSet.FilterActiveBehaviorTitle;
-            picker.categoryNames = GameScripts.behaviorTabNames;
+            picker.categoryNames = GameScripts.BehaviorTabNames(StringSet);
             picker.categories = GameScripts.behaviorTabs;
             picker.handler = (PropertiesObjectType type) =>
             {

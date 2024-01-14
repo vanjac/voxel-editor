@@ -144,12 +144,26 @@ public class GUIStringSet
     public virtual string PickObjectCount(int count) =>
         $"{count} objects selected";
 
-    // Type names
+    // Categories
     public virtual string Substance =>
         "Substance";
     public virtual string Object =>
         "Object";
-    
+    public virtual string SensorsDetect =>
+        "Detect";
+    public virtual string SensorsLogic =>
+        "Logic";
+    public virtual string BehaviorsMotion =>
+        "Motion";
+    public virtual string BehaviorsGraphics =>
+        "Graphics";
+    public virtual string BehaviorsLife =>
+        "Life";
+    public virtual string BehaviorsPhysics =>
+        "Physics";
+    public virtual string BehaviorsSound =>
+        "Sound";
+
     // Bevel
     public virtual string BevelSelectEdgesInstruction =>
         "Select edges to bevel...";

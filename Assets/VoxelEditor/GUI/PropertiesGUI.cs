@@ -372,7 +372,8 @@ public class PropertiesGUI : LeftPanelGUI
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
             sensorMenu.title = StringSet.ChangeSensor;
-            sensorMenu.categoryNames = GameScripts.sensorTabNames;
+            sensorMenu.categoryNames =
+                new string[] { StringSet.SensorsDetect, StringSet.SensorsLogic };
             sensorMenu.categories = GameScripts.sensorTabs;
             sensorMenu.handler = (PropertiesObjectType type) =>
             {
@@ -552,7 +553,7 @@ public class NewBehaviorGUI : GUIPanel
     void Start()
     {
         typePicker = gameObject.AddComponent<TypePickerGUI>();
-        typePicker.categoryNames = GameScripts.behaviorTabNames;
+        typePicker.categoryNames = GameScripts.BehaviorTabNames(StringSet);
         UpdateBehaviorList();
         typePicker.handler = (PropertiesObjectType type) =>
         {

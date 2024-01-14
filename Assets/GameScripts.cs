@@ -73,11 +73,9 @@ public static class GameScripts
         DelaySensor.objectType
     };
 
-    public static string[] sensorTabNames = new string[] { "Detect", "Logic" };
-
     public static PropertiesObjectType[][] sensorTabs = new PropertiesObjectType[][]
     {
-        new PropertiesObjectType[]
+        new PropertiesObjectType[] // Detect
         {
             PropertiesObjectType.NONE,
             TouchSensor.objectType,
@@ -87,7 +85,7 @@ public static class GameScripts
             InCameraSensor.objectType,
             CheckScoreSensor.objectType,
         },
-        new PropertiesObjectType[]
+        new PropertiesObjectType[] // Logic
         {
             InputThresholdSensor.objectType,
             ToggleSensor.objectType,
@@ -127,7 +125,15 @@ public static class GameScripts
         Sound3DBehavior.objectType
     };
 
-    public static string[] behaviorTabNames = new string[] { "Motion", "Graphics", "Life", "Physics", "Sound" };
+    public static string[] BehaviorTabNames(GUIStringSet s) =>
+        new string[]
+        {
+            s.BehaviorsMotion,
+            s.BehaviorsGraphics,
+            s.BehaviorsLife,
+            s.BehaviorsPhysics,
+            s.BehaviorsSound,
+        };
 
     public static BehaviorType[][] behaviorTabs = new BehaviorType[][]
     {
