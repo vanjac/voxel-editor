@@ -320,7 +320,7 @@ public class PortugueseStrings : GUIStringSet
     public override string HelpTutorials =>
         "Tutoriais";
     public override string HelpDemoWorlds =>
-        "Demonstrações";
+        "Demos"; // Demonstrações (too long)
     public override string TutorialWorldName(string name) =>
         $"Tutorial - {name}";
     public override string DemoWorldName(string name) =>
@@ -338,9 +338,9 @@ public class PortugueseStrings : GUIStringSet
     public override string TutorialTips =>
         "Dicas e Atalhos";
     public override string TutorialAdvancedGameLogic1 =>
-        "Lógica Avançada de Jogo 1 (Inglês)"; // not translated yet
+        "Lógica do Jogo 1 (Inglês)"; // not translated yet
     public override string TutorialAdvancedGameLogic2 =>
-        "Lógica Avançada de Jogo 2 (Inglês)"; // not translated yet
+        "Lógica do Jogo 2 (Inglês)"; // not translated yet
     public override string DemoDoors =>
         "Portas";
     public override string DemoHovercraft =>
@@ -714,7 +714,7 @@ As substâncias girarão em torno de seu ponto ""Pivot"".";
     public override string TutorialObjectCharacterBehavior =>
         "Se você construir alguns obstáculos, notará que a bola pode flutuar e se mover através das paredes. <i>Adicione um comportamento de \"Character\" para corrigir isso. (verifique a aba Física)</i>";
     public override string TutorialObjectNext =>
-        "Leia o tutorial <i>Lógica Avançada de Jogo</i> para aprender como adicionar interatividade mais complexa aos jogos.";
+        "Leia o tutorial <i>Lógica do Jogo</i> para aprender como adicionar interatividade mais complexa aos jogos.";
     public override string TutorialTipsMessage =>
 @"•  Toque duas vezes para selecionar uma parede inteira. A seleção será limitada pelas faces já selecionadas.
 •  Toque três vezes em um rosto para selecionar <i>todos</i> os rostos conectados a ele. A seleção será limitada pelas faces já selecionadas.
