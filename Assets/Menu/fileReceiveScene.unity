@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,8 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 18391b01b7b052b44b49537b15bd5d46,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -233,7 +236,7 @@ MonoBehaviour:
     world: {fileID: 0}
     help: {fileID: 0}
     helpCircle: {fileID: 0}
-    done: {fileID: 0}
+    done: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
     rotateLeft: {fileID: 0}
     rotateRight: {fileID: 0}
     flipHorizontal: {fileID: 0}
@@ -254,7 +257,6 @@ MonoBehaviour:
     playAudio: {fileID: 0}
     reddit: {fileID: 0}
     youTube: {fileID: 0}
-    gitHub: {fileID: 0}
     undo: {fileID: 0}
     import: {fileID: 0}
     fill: {fileID: 0}
@@ -265,6 +267,18 @@ MonoBehaviour:
     newTexture: {fileID: 0}
     worldImport: {fileID: 0}
     newItem: {fileID: 0}
+    website: {fileID: 0}
+    donate: {fileID: 0}
+    pan: {fileID: 0}
+    orbit: {fileID: 0}
+    sensor: {fileID: 0}
+    random: {fileID: 0}
+    baseLayer: {fileID: 0}
+    overlayLayer: {fileID: 0}
+    plusOne: {fileID: 0}
+    minusOne: {fileID: 0}
+    color: {fileID: 0}
+    camera: {fileID: 0}
     indoorLarge: {fileID: 0}
     floatingLarge: {fileID: 0}
     newWorldLarge: {fileID: 0}

@@ -25,7 +25,7 @@ public class FileReceiveGUI : GUIPanel
     void Start()
     {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
-        inputDialog.prompt = "Enter name for imported world...";
+        inputDialog.prompt = StringSet.ImportNamePrompt;
         inputDialog.handler = ImportWorld;
         inputDialog.cancelHandler = DestroyThis;
     }
@@ -41,7 +41,7 @@ public class FileReceiveGUI : GUIPanel
     {
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        ActionBarGUI.ActionBarLabel("Importing file...");
+        ActionBarGUI.ActionBarLabel(StringSet.ImportingFile);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
     }
@@ -73,7 +73,7 @@ public class FileReceiveGUI : GUIPanel
         catch (System.Exception e)
         {
             Debug.Log(e);
-            var dialog = DialogGUI.ShowMessageDialog(gameObject, "Error importing world");
+            var dialog = DialogGUI.ShowMessageDialog(gameObject, StringSet.ImportError);
             dialog.yesButtonHandler = DestroyThis;
         }
     }

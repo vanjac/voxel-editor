@@ -73,6 +73,14 @@ public class GUIStringSet
     public virtual string Donate =>
         "Donate";
 
+    // Import
+    public virtual string ImportNamePrompt =>
+        "Enter name for imported world...";
+    public virtual string ImportingFile =>
+        "Importing file...";
+    public virtual string ImportError =>
+        "Error importing world";
+
     // Editor action bar
     public virtual string CreateObjectTitle =>
         "Create";
