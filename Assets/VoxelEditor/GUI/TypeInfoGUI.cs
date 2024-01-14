@@ -15,7 +15,7 @@ public class TypeInfoGUI : GUIPanel
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
         GUILayout.Label(type.fullName, StyleSet.labelTitle);
-        if (GUILayout.Button("Done", GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false)))
             Destroy(this);
         GUILayout.EndHorizontal();
         GUILayout.Label("<i>" + type.description + "</i>", GUIUtils.LABEL_WORD_WRAPPED.Value);

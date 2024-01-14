@@ -149,6 +149,60 @@ public class GUIStringSet
     public virtual string FilterAnything =>
         "Anything";
 
+    // Target
+    public virtual string TargetAny =>
+        "Any";
+    public virtual string TargetWorld =>
+        "World";
+    public virtual string TargetLocal =>
+        "Local";
+    public virtual string TargetPickObject =>
+        "Pick object...";
+    public virtual string TargetRandom =>
+        "Random";
+    public virtual string Center =>
+        "Center";
+    public virtual string North =>
+        "North";
+    public virtual string South =>
+        "South";
+    public virtual string East =>
+        "East";
+    public virtual string West =>
+        "West";
+    public virtual string Up =>
+        "Up";
+    public virtual string Down =>
+        "Down";
+    public virtual string Top =>
+        "Top";
+    public virtual string Bottom =>
+        "Bottom";
+
+    // Material panel
+    public virtual string MaterialCustomCategory =>
+        "CUSTOM";
+    public virtual string MaterialImportFromWorld =>
+        "Import from world...";
+    public virtual string MaterialColorHeader =>
+        "Adjust color";
+    public virtual string ColorTintMode =>
+        "Tint";
+    public virtual string ColorPaintMode =>
+        "Paint";
+    public virtual string TextureDeleteConfirm =>
+        "Are you sure you want to delete this custom texture?";
+    public virtual string NoCustomMaterialsInWorld =>
+        "World contains no custom textures for materials.";
+    public virtual string NoCustomOverlaysInWorld =>
+        "World contains no custom textures for overlays.";
+
+    // Paint panel
+    public virtual string PaintMaterial =>
+        "Material";
+    public virtual string PaintOverlay =>
+        "Overlay";
+
     // Properties panel
     public virtual string PropertiesDifferent =>
         "different";

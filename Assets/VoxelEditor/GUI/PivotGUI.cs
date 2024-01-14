@@ -25,13 +25,13 @@ public class PivotGUI : GUIPanel
         Color baseColor = GUI.color;
         GUI.color = baseColor * new Color(0.6f, 0.6f, 1);
         value.z = (Pivot.Pos)GUILayout.SelectionGrid((int)value.z,
-            new string[] { "South", "Center", "North" }, 3);
+            new string[] { StringSet.South, StringSet.Center, StringSet.North }, 3);
         GUI.color = baseColor * new Color(1, 0.6f, 0.6f);
         value.x = (Pivot.Pos)GUILayout.SelectionGrid((int)value.x,
-            new string[] { "West", "Center", "East" }, 3);
+            new string[] { StringSet.West, StringSet.Center, StringSet.East }, 3);
         GUI.color = baseColor * new Color(0.6f, 1, 0.6f);
         value.y = (Pivot.Pos)GUILayout.SelectionGrid((int)value.y,
-            new string[] { "Bottom", "Center", "Top" }, 3);
+            new string[] { StringSet.Bottom, StringSet.Center, StringSet.Top }, 3);
         GUI.color = baseColor;
         GUILayout.Space(16);  // fix weird layout issue
         GUILayout.EndVertical();

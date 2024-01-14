@@ -7,7 +7,7 @@ public class TargetGUI : GUIPanel
     public VoxelArrayEditor voxelArray;
     public bool allowObjectTarget = true, allowNullTarget = false, allowVertical = true;
     public bool alwaysWorld = false, allowRandom = true;
-    public string nullTargetName = "Any";
+    public string nullTargetName = StringSet.TargetAny;
     public Texture nullTargetIcon = IconSet.helpCircle;
 
     private int localState = 0;
@@ -22,7 +22,10 @@ public class TargetGUI : GUIPanel
 
         GUILayout.BeginVertical();
         if (!alwaysWorld)
-            localState = GUILayout.SelectionGrid(localState, new string[] { "World", "Local" }, 2);
+        {
+            localState = GUILayout.SelectionGrid(localState,
+                new string[] { StringSet.TargetWorld, StringSet.TargetLocal }, 2);
+        }
         DirectionButtons();
         GUILayout.Space(16);  // fix weird layout issue
         GUILayout.EndVertical();
@@ -41,7 +44,7 @@ public class TargetGUI : GUIPanel
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        if (allowObjectTarget && GUILayout.Button(new GUIContent("  Pick object...",
+        if (allowObjectTarget && GUILayout.Button(GUIUtils.PadContent(StringSet.TargetPickObject,
             IconSet.singleObject), StyleSet.buttonSmall))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
@@ -59,14 +62,14 @@ public class TargetGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (allowNullTarget && GUILayout.Button(new GUIContent("  " + nullTargetName,
-            nullTargetIcon), StyleSet.buttonSmall))
+        if (allowNullTarget && GUILayout.Button(GUIUtils.PadContent(nullTargetName, nullTargetIcon),
+            StyleSet.buttonSmall))
         {
             handler(new Target(null));
             Destroy(this);
         }
-        if (allowRandom && GUILayout.Button(new GUIContent("  Random",
-            IconSet.random), StyleSet.buttonSmall))
+        if (allowRandom && GUILayout.Button(
+            GUIUtils.PadContent(StringSet.TargetRandom, IconSet.random), StyleSet.buttonSmall))
         {
             handler(new Target(Target.RANDOM));  // don't check local state
             Destroy(this);
@@ -81,17 +84,17 @@ public class TargetGUI : GUIPanel
 
         GUI.color = baseColor * new Color(0.2f, 0.2f, 1);
         GUILayout.BeginVertical();
-        if (GUILayout.Button("North", StyleSet.buttonSmall))
+        if (GUILayout.Button(StringSet.North, StyleSet.buttonSmall))
             SelectDirection(Target.NORTH);
-        if (GUILayout.Button("South", StyleSet.buttonSmall))
+        if (GUILayout.Button(StringSet.South, StyleSet.buttonSmall))
             SelectDirection(Target.SOUTH);
         GUILayout.EndVertical();
 
         GUI.color = baseColor * new Color(1, 0.2f, 0.2f);
         GUILayout.BeginVertical();
-        if (GUILayout.Button("East", StyleSet.buttonSmall))
+        if (GUILayout.Button(StringSet.East, StyleSet.buttonSmall))
             SelectDirection(Target.EAST);
-        if (GUILayout.Button("West", StyleSet.buttonSmall))
+        if (GUILayout.Button(StringSet.West, StyleSet.buttonSmall))
             SelectDirection(Target.WEST);
         GUILayout.EndVertical();
 
@@ -99,9 +102,9 @@ public class TargetGUI : GUIPanel
         {
             GUI.color = baseColor * new Color(0.2f, 1, 0.2f);
             GUILayout.BeginVertical();
-            if (GUILayout.Button("Up", StyleSet.buttonSmall))
+            if (GUILayout.Button(StringSet.Up, StyleSet.buttonSmall))
                 SelectDirection(Target.UP);
-            if (GUILayout.Button("Down", StyleSet.buttonSmall))
+            if (GUILayout.Button(StringSet.Down, StyleSet.buttonSmall))
                 SelectDirection(Target.DOWN);
             GUILayout.EndVertical();
         }

@@ -82,7 +82,7 @@ public class PaintGUI : GUIPanel
         GUILayout.FlexibleSpace();
 
         GUIUtils.EndHorizontalClipped();
-        if (GUILayout.Button("Done", GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false)))
             Destroy(this);
         GUILayout.EndHorizontal();
 
@@ -97,8 +97,8 @@ public class PaintGUI : GUIPanel
         TutorialGUI.TutorialHighlight("paint layer");
         selectedLayer = GUILayout.SelectionGrid(selectedLayer, new GUIContent[]
             {
-                new GUIContent("  Material", IconSet.baseLayer),
-                new GUIContent("  Overlay", IconSet.overlayLayer),
+                GUIUtils.PadContent(StringSet.PaintMaterial, IconSet.baseLayer),
+                GUIUtils.PadContent(StringSet.PaintOverlay, IconSet.overlayLayer),
             }, 2, StyleSet.buttonSmall);
         TutorialGUI.ClearHighlight();
         if (oldSelectedLayer != selectedLayer)

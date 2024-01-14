@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,8 +10,8 @@ public class MaterialSelectorGUI : GUIPanel
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
     private const string PREVIEW_SUFFIX = "_preview";
-    private const string CUSTOM_CATEGORY = "CUSTOM";
-    private const string WORLD_LIST_CATEGORY = "Import from world...";
+    private readonly string CUSTOM_CATEGORY = StringSet.MaterialCustomCategory;
+    private readonly string WORLD_LIST_CATEGORY = StringSet.MaterialImportFromWorld;
 
     public System.Action<Material> handler;
     public string rootDirectory = "Materials";
@@ -95,7 +95,7 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.BeginHorizontal();
         if (ActionBarGUI.ActionBarButton(IconSet.close))
             page = Page.TEXTURE;
-        GUILayout.Label("Adjust color", categoryLabelStyle.Value);
+        GUILayout.Label(StringSet.MaterialColorHeader, categoryLabelStyle.Value);
         GUILayout.EndHorizontal();
 
         string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
@@ -135,7 +135,7 @@ public class MaterialSelectorGUI : GUIPanel
         if (showColorStyle)
         {
             var newStyle = (ResourcesDirectory.ColorStyle)GUILayout.SelectionGrid((int)colorStyle,
-                new string[] { "Tint", "Paint" }, 2);
+                new string[] { StringSet.ColorTintMode, StringSet.ColorPaintMode }, 2);
             if (newStyle != colorStyle)
             {
                 colorStyle = newStyle;
@@ -152,7 +152,7 @@ public class MaterialSelectorGUI : GUIPanel
             return;
         if (loadingWorld)
         {
-            GUILayout.Label("Loading world...");
+            GUILayout.Label(StringSet.LoadingWorld);
             return;
         }
 
@@ -182,9 +182,9 @@ public class MaterialSelectorGUI : GUIPanel
                 if (ActionBarGUI.ActionBarButton(IconSet.delete))
                 {
                     var dialog = gameObject.AddComponent<DialogGUI>();
-                    dialog.message = "Are you sure you want to delete this custom texture?";
-                    dialog.yesButtonText = "Yes";
-                    dialog.noButtonText = "No";
+                    dialog.message = StringSet.TextureDeleteConfirm;
+                    dialog.yesButtonText = StringSet.Yes;
+                    dialog.noButtonText = StringSet.No;
                     dialog.yesButtonHandler = () => DeleteCustomTexture();
                 }
             }
@@ -446,7 +446,10 @@ public class MaterialSelectorGUI : GUIPanel
         {
             materials = ReadWorldFile.ReadCustomTextures(path, isOverlay);
             if (materials.Count == 0)
-                importMessage = "World contains no custom textures for " + (isOverlay ? "overlays." : "materials.");
+            {
+                importMessage = isOverlay ? StringSet.NoCustomOverlaysInWorld
+                    : StringSet.NoCustomMaterialsInWorld;
+            }
         }
         catch (MapReadException e)
         {
