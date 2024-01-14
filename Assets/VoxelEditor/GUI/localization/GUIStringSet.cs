@@ -3,22 +3,29 @@
 public class GUIStringSet
 {
     // Common terminology:
-    // It's important that these terms are translated consistently
+    // It's important that these terms are translated consistently (all nouns)
     // - World
     // - Paint
     // - Material
     // - Overlay
     // - Custom Texture
     // - Bevel
+    // - Edge
     // - Object
     // - Tag
     // - Substance
     // - Behavior
     // - Sensor
+    // - On/Off
     // - Activator
     // - Target
     // - Input
     // - Player
+    // - Health
+    // Tutorial-specific:
+    // - Face
+    // Quoted terms: (can't be localized yet)
+    // - "Pivot" point
 
     public virtual string Yes =>
         "Yes";
@@ -144,7 +151,7 @@ public class GUIStringSet
         "Object";
     
     // Bevel
-    public virtual string BevelInstruction =>
+    public virtual string BevelSelectEdgesInstruction =>
         "Select edges to bevel...";
     public virtual string BevelHeader =>
         "Bevel:";
@@ -493,9 +500,9 @@ Requires Physics";
     public virtual string HurtHealDesc =>
         "Lose/gain health; below 0, object dies";
     public virtual string HurtHealLongDesc =>
-@"•  <b>Amount</b>: Change in health. Positive heals, negative hurts.
-•  <b>Rate</b>: Seconds between successive hurt/heals. 0 means health will only change once when behavior is activated.
-•  <b>Keep within</b>: Health will only change if it's within this range, and will never go outside this range.";
+@"•  <b>Amount:</b> Change in health. Positive heals, negative hurts.
+•  <b>Rate:</b> Seconds between successive hurt/heals. 0 means health will only change once when behavior is activated.
+•  <b>Keep within:</b> Health will only change if it's within this range, and will never go outside this range.";
     public virtual string JoystickDesc =>
         "Control motion with the joystick";
     public virtual string LightDesc =>

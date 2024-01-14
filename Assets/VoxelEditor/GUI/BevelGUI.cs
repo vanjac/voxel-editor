@@ -40,7 +40,7 @@ public class BevelActionBarGUI : ActionBarGUI
 
         Vector3 selectionSize = voxelArray.selectionBounds.size;
         if (selectionSize == Vector3.zero)
-            ActionBarLabel(StringSet.BevelInstruction);
+            ActionBarLabel(StringSet.BevelSelectEdgesInstruction);
         else
             ActionBarLabel(SelectionString(selectionSize));
 
