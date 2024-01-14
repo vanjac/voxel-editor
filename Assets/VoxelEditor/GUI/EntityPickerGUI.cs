@@ -5,7 +5,7 @@ public class EntityPickerGUI : ActionBarGUI
 {
     public System.Action<ICollection<Entity>> handler;
     public bool allowNone = true, allowMultiple = true, allowNull = false;
-    public string nullName = "None";
+    public string nullName = StringSet.EntityPickNone;
 
     private VoxelArrayEditor.SelectionState selectionState;
 
@@ -52,20 +52,22 @@ public class EntityPickerGUI : ActionBarGUI
             SelectionGUI();
 
         if (allowNull)
+        {
             if (ActionBarButton(nullName))
             {
                 handler(new Entity[] { null });
                 Destroy(this);
             }
+        }
 
         GUILayout.FlexibleSpace();
 
         // TODO: not efficient to keep generating a list of selected entities
         int numSelectedEntities = voxelArray.GetSelectedEntities().Count;
         if (numSelectedEntities == 0)
-            ActionBarLabel("Pick an object...");
+            ActionBarLabel(StringSet.EntityPickInstruction);
         else
-            ActionBarLabel(numSelectedEntities + " objects selected");
+            ActionBarLabel(StringSet.EntityPickCount(numSelectedEntities));
 
         GUILayout.FlexibleSpace();
 

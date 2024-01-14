@@ -40,7 +40,7 @@ public class BevelActionBarGUI : ActionBarGUI
 
         Vector3 selectionSize = voxelArray.selectionBounds.size;
         if (selectionSize == Vector3.zero)
-            ActionBarLabel("Select edges to bevel...");
+            ActionBarLabel(StringSet.BevelInstruction);
         else
             ActionBarLabel(SelectionString(selectionSize));
 
@@ -105,16 +105,16 @@ public class BevelGUI : LeftPanelGUI
             voxelEdge = voxelArray.GetSelectedBevel();
         }
 
-        GUILayout.Label("Bevel:", StyleSet.labelTitle);
+        GUILayout.Label(StringSet.BevelHeader, StyleSet.labelTitle);
 
         if (!voxelArray.SomethingIsSelected())
         {
-            GUILayout.Label("(none selected)");
+            GUILayout.Label(StringSet.BevelNoSelection);
             return;
         }
 
         TutorialGUI.TutorialHighlight("bevel shape");
-        GUILayout.Label("Shape:");
+        GUILayout.Label(StringSet.BevelShapeHeader);
         var newBevelType = (VoxelEdge.BevelType)GUILayout.SelectionGrid((int)voxelEdge.bevelType,
             new Texture[] {
                 IconSet.no,
@@ -127,7 +127,7 @@ public class BevelGUI : LeftPanelGUI
         TutorialGUI.ClearHighlight();
 
         TutorialGUI.TutorialHighlight("bevel size");
-        GUILayout.Label("Size:");
+        GUILayout.Label(StringSet.BevelSizeHeader);
         var newBevelSize = (VoxelEdge.BevelSize)GUILayout.SelectionGrid((int)voxelEdge.bevelSize,
             new Texture[] {
                 IconSet.bevelIcons.quarter,

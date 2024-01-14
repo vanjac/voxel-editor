@@ -609,7 +609,7 @@ public class NewBehaviorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        string targetButtonText = StringSet.TargetEntity(StringSet.EntitySelf);
+        string targetButtonText = StringSet.TargetEntity(StringSet.EntityRefSelf);
         if (targetEntityIsActivator)
             targetButtonText = StringSet.TargetEntity(StringSet.EntityActivators);
         else if (targetEntity != null)

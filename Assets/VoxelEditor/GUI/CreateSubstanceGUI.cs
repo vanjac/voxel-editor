@@ -31,7 +31,7 @@ public class CreateSubstanceGUI : ActionBarGUI
 
         SelectionGUI();
         GUILayout.FlexibleSpace();
-        ActionBarLabel("Push or pull to create a substance");
+        ActionBarLabel(StringSet.CreateSubstanceInstruction);
 
         GUILayout.FlexibleSpace();
 

@@ -12,7 +12,8 @@ public class FilterGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        if (GUILayout.Button(GUIUtils.MenuContent("Specific object", IconSet.singleObject),
+        if (GUILayout.Button(
+            GUIUtils.MenuContent(StringSet.FilterSpecificObject, IconSet.singleObject),
             OverflowMenuGUI.buttonStyle.Value))
         {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
@@ -30,11 +31,11 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Tags", IconSet.entityTag),
+        if (GUILayout.Button(GUIUtils.MenuContent(StringSet.FilterTags, IconSet.entityTag),
             OverflowMenuGUI.buttonStyle.Value))
         {
             TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
-            picker.title = "Filter by tags";
+            picker.title = StringSet.FilterTagsTitle;
             picker.multiple = true;
             if (current is ActivatedSensor.MultipleTagFilter)
                 picker.multiSelection = (current as ActivatedSensor.MultipleTagFilter).tagBits;
@@ -46,11 +47,11 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Active behavior", IconSet.behavior),
+        if (GUILayout.Button(GUIUtils.MenuContent(StringSet.FilterActiveBehavior, IconSet.behavior),
             OverflowMenuGUI.buttonStyle.Value))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
-            picker.title = "Filter by active behavior";
+            picker.title = StringSet.FilterActiveBehaviorTitle;
             picker.categoryNames = GameScripts.behaviorTabNames;
             picker.categories = GameScripts.behaviorTabs;
             picker.handler = (PropertiesObjectType type) =>
@@ -59,7 +60,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent("Anything", IconSet.objectType),
+        if (GUILayout.Button(GUIUtils.MenuContent(StringSet.FilterAnything, IconSet.objectType),
             OverflowMenuGUI.buttonStyle.Value))
         {
             handler(new ActivatedSensor.EntityTypeFilter(Entity.objectType));

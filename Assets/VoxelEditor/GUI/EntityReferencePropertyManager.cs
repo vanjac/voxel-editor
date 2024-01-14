@@ -112,11 +112,11 @@ public class EntityReferencePropertyManager : MonoBehaviour
     {
         Entity entity = targetEntities[currentTargetEntityI];
         if (entity == null)
-            return "None";
+            return GUIPanel.StringSet.EntityRefNone;
         else if (entity == currentEntity)
-            return "Self";
+            return GUIPanel.StringSet.EntityRefSelf;
         else if (entity == behaviorTarget)
-            return "Target";
+            return GUIPanel.StringSet.EntityRefTarget;
         else
             return entity.ToString();
     }

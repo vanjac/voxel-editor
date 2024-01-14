@@ -56,7 +56,7 @@ public class DataImportGUI : GUIPanel
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Loading world...");
+            GUILayout.Label(StringSet.LoadingWorld);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
@@ -66,12 +66,12 @@ public class DataImportGUI : GUIPanel
             scroll = GUILayout.BeginScrollView(scroll);
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(GUIUtils.MenuContent("Import file", IconSet.import),
+            if (GUILayout.Button(GUIUtils.PadContent(StringSet.ImportFile, IconSet.import),
                     StyleSet.buttonLarge))
                 NativeGalleryWrapper.ImportAudioStream(ImportWorldHandler);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
-            GUILayout.Label("Or import from a world...");
+            GUILayout.Label(StringSet.ImportFromWorldHeader);
             for (int i = 0; i < worldPaths.Count; i++)
             {
                 string path = worldPaths[i];
@@ -132,7 +132,7 @@ public class DataImportGUI : GUIPanel
                 if (errorMessage != null)
                     ActionBarGUI.ActionBarLabel(errorMessage);
                 else
-                    ActionBarGUI.ActionBarLabel("World contains no " + type.ToString() + " files.");
+                    ActionBarGUI.ActionBarLabel(StringSet.NoDataInWorld(type.ToString()));
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }

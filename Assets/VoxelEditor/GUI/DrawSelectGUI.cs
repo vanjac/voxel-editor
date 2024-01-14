@@ -28,7 +28,7 @@ public class DrawSelectGUI : ActionBarGUI
                 voxelArray.ClearSelection();
             }
         }
-        EditGUI("Tap and drag to select");
+        EditGUI(StringSet.DrawSelectInstruction);
         GUILayout.FlexibleSpace();
         GUIUtils.EndHorizontalClipped();
         if (HighlightedActionBarButton(IconSet.done))

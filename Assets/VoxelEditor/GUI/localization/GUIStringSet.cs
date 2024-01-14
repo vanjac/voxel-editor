@@ -98,12 +98,56 @@ public class GUIStringSet
         "Tap to pick paint...";
     public virtual string SelectFillPaintInstruction =>
         "Tap to fill paint...";
+    public virtual string CreateSubstanceInstruction =>
+        "Push or pull to create a substance";
+    public virtual string DrawSelectInstruction =>
+        "Tap and drag to select";
+    public virtual string EntityPickNone =>
+        "None";
+    public virtual string EntityPickInstruction =>
+        "Pick an object...";
+    public virtual string EntityPickCount(int count) =>
+        $"{count} objects selected";
 
     // Type names
     public virtual string Substance =>
         "Substance";
     public virtual string Object =>
         "Object";
+    
+    // Bevel
+    public virtual string BevelInstruction =>
+        "Select edges to bevel...";
+    public virtual string BevelHeader =>
+        "Bevel:";
+    public virtual string BevelNoSelection =>
+        "(none selected)";
+    public virtual string BevelShapeHeader =>
+        "Shape:";
+    public virtual string BevelSizeHeader =>
+        "Size:";
+
+    // Data import
+    public virtual string ImportFile =>
+        "Import file";
+    public virtual string ImportFromWorldHeader =>
+        "Or import from a world...";
+    public virtual string NoDataInWorld(string type) =>
+        $"World contains no {type} files.";
+
+    // Filter
+    public virtual string FilterSpecificObject =>
+        "Specific object";
+    public virtual string FilterTags =>
+        "Tags";
+    public virtual string FilterTagsTitle =>
+        "Filter by tags";
+    public virtual string FilterActiveBehavior =>
+        "Active behavior";
+    public virtual string FilterActiveBehaviorTitle =>
+        "Filter by active behavior";
+    public virtual string FilterAnything =>
+        "Anything";
 
     // Properties panel
     public virtual string PropertiesDifferent =>
@@ -132,10 +176,16 @@ public class GUIStringSet
         "None";
     public virtual string TargetEntity(string name) =>
         $"Target:  {name}";
-    public virtual string EntitySelf =>
-        "Self";
     public virtual string EntityActivators =>
         "Activators";
+
+    // Property GUIs
+    public virtual string EntityRefNone =>
+        "None";
+    public virtual string EntityRefSelf =>
+        "Self";
+    public virtual string EntityRefTarget =>
+        "Target";
 
     // Help menu
     public virtual string HelpMenuTitle =>
