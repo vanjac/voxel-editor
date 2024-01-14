@@ -277,6 +277,14 @@ public class GUIStringSet
     public virtual string AddInput =>
         "Add Input";
 
+    // Editor errors
+    public virtual string WorldWarningsHeader =>
+        "There were some issues with reading the world:";
+    public virtual string UnknownSaveError =>
+        "An error occurred while saving the file. Please send me an email about this, and include a screenshot of this message. chroma@chroma.zone\n\n";
+    public virtual string UnknownReadError =>
+        "An error occurred while reading the file.";
+
     // Help menu
     public virtual string HelpMenuTitle =>
         "Help";
@@ -552,4 +560,16 @@ public class GUIStringSet
         "<i>Play your game. Try jumping in the pit.</i>";
     public virtual string TutorialPitBalls =>
         "<i>Now try making some balls with Physics behaviors. Then play the game and push them all into the pit.</i> Enjoy.";
+
+    // Update messages
+    public virtual string UpdateMessage_1_3_5 =>
+@"N-Space has been updated! Check out the <b>Doors</b> Demo World in the help menu to see the new features.
+
+•  New <b>Scale</b> behavior to change size of objects/substances
+•  You can change the <b>Pivot</b> point of substances for rotation/scaling
+•  Lights are visible in the editor, even when not selected
+•  Objects can be placed inside walls or outside bounds
+•  Fixed lag caused by larger substances
+•  Button in the bottom right toggles pan/orbit with two fingers
+... and some more improvements / fixes!";
 }

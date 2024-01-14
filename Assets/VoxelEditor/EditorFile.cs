@@ -41,7 +41,7 @@ public class EditorFile : MonoBehaviour
         {
             var dialog = guiGameObject.AddComponent<DialogGUI>();
             dialog.message = e.FullMessage;
-            dialog.yesButtonText = "Close";
+            dialog.yesButtonText = GUIPanel.StringSet.Close;
             dialog.yesButtonHandler = () =>
             {
                 voxelArray.unsavedChanges = false;
@@ -67,15 +67,8 @@ public class EditorFile : MonoBehaviour
                 lastVersion = lastVersion.Substring(0, lastVersion.Length - 1);
             if (CompareVersions(lastVersion, "1.3.5") == -1)
             {
-                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, "N-Space has been updated!"
-                    + " Check out the <b>Doors</b> Demo World in the help menu to see the new features.\n\n"
-                    + "•  New <b>Scale</b> behavior to change size of objects/substances\n"
-                    + "•  You can change the <b>Pivot</b> point of substances for rotation/scaling\n"
-                    + "•  Lights are visible in the editor, even when not selected\n"
-                    + "•  Objects can be placed inside walls or outside bounds\n"
-                    + "•  Fixed lag caused by larger substances\n"
-                    + "•  Button in the bottom right toggles pan/orbit with two fingers\n"
-                    + "... and some more improvements / fixes!");
+                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject,
+                    GUIPanel.StringSet.UpdateMessage_1_3_5);
             }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
@@ -86,7 +79,7 @@ public class EditorFile : MonoBehaviour
             // for some reason it's necessary to wait two frames
             yield return null;
             yield return null;
-            string message = "There were some issues with reading the world:\n\n  •  " +
+            string message = GUIPanel.StringSet.WorldWarningsHeader + "\n\n  •  " +
                 string.Join("\n  •  ", warnings.ToArray());
             LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, message);
         }
@@ -146,10 +139,7 @@ public class EditorFile : MonoBehaviour
         {
             if (allowPopups)
             {
-                string message = "An error occurred while saving the file. "
-                    + "Please send me an email about this, and include a screenshot "
-                    + "of this message. chroma@chroma.zone\n\n"
-                    + e.ToString();
+                string message = GUIPanel.StringSet.UnknownSaveError + e.ToString();
                 var dialog = LargeMessageGUI.ShowLargeMessageDialog(GUIPanel.GuiGameObject, message);
                 dialog.closeHandler = () => SceneManager.LoadScene(Scenes.MENU);
                 voxelArray.unsavedChanges = false;
@@ -212,7 +202,8 @@ public class EditorFile : MonoBehaviour
                 }
                 catch (System.Exception e)
                 {
-                    DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject, "An error occurred while reading the file.");
+                    DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject,
+                        GUIPanel.StringSet.UnknownReadError);
                     Debug.LogError(e);
                     stream?.Dispose();
                     ShareMap.ClearFileWaitingToImport();
