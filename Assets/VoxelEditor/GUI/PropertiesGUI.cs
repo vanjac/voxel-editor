@@ -339,7 +339,7 @@ public class PropertiesGUI : LeftPanelGUI
                     clone.paint = ((ObjectEntity)singleSelectedEntity).paint.PaintOnly();
                     var pickerGUI = gameObject.AddComponent<FacePickerGUI>();
                     pickerGUI.voxelArray = voxelArray;
-                    pickerGUI.message = StringSet.CloneIntruction;
+                    pickerGUI.message = StringSet.CloneInstruction;
                     pickerGUI.pickAction = () => voxelArray.PlaceObject(clone);
                 }
                 else if (singleSelectedEntity is Substance)

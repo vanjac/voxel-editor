@@ -100,10 +100,10 @@ public class ActionBarGUI : TopPanelGUI
         if (facesSelected && ActionBarButton(IconSet.create))
         {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
-            picker.title = "Create";
+            picker.title = StringSet.CreateObjectTitle;
             picker.categories = new PropertiesObjectType[][] {
                 GameScripts.entityTemplates, GameScripts.objectTemplates };
-            picker.categoryNames = new string[] { "Substance", "Object" };
+            picker.categoryNames = new string[] { StringSet.Substance, StringSet.Object };
             picker.handler = (PropertiesObjectType type) =>
             {
                 if (typeof(Substance).IsAssignableFrom(type.type))
@@ -139,12 +139,12 @@ public class ActionBarGUI : TopPanelGUI
         var overflow = gameObject.AddComponent<OverflowMenuGUI>();
         overflow.items = new OverflowMenuGUI.MenuItem[]
         {
-            new OverflowMenuGUI.MenuItem("Help", IconSet.help, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.OpenHelp, IconSet.help, () => {
                 var help = gameObject.AddComponent<HelpGUI>();
                 help.voxelArray = voxelArray;
                 help.touchListener = touchListener;
             }),
-            new OverflowMenuGUI.MenuItem("World", IconSet.world, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.OpenWorldProperties, IconSet.world, () => {
                 PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
                 if (propsGUI != null)
                 {
@@ -152,36 +152,36 @@ public class ActionBarGUI : TopPanelGUI
                     propsGUI.normallyOpen = true;
                 }
             }),
-            new OverflowMenuGUI.MenuItem("Select...", IconSet.select, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.SelectSubmenu, IconSet.select, () => {
                 var selectMenu = gameObject.AddComponent<OverflowMenuGUI>();
                 selectMenu.depth = 1;
                 selectMenu.items = new OverflowMenuGUI.MenuItem[]
                 {
-                    new OverflowMenuGUI.MenuItem("Draw", IconSet.draw, () => {
+                    new OverflowMenuGUI.MenuItem(StringSet.SelectDraw, IconSet.draw, () => {
                         DrawSelectInterface();
                     }),
-                    new OverflowMenuGUI.MenuItem("With Paint", IconSet.paint, () => {
+                    new OverflowMenuGUI.MenuItem(StringSet.SelectWithPaint, IconSet.paint, () => {
                         SelectByPaintInterface();
                     }),
-                    new OverflowMenuGUI.MenuItem("Fill Paint", IconSet.fill, () => {
+                    new OverflowMenuGUI.MenuItem(StringSet.SelectFillPaint, IconSet.fill, () => {
                         FillPaintInterface();
                     }),
-                    new OverflowMenuGUI.MenuItem("With Tag", IconSet.entityTag, () => {
+                    new OverflowMenuGUI.MenuItem(StringSet.SelectWithTag, IconSet.entityTag, () => {
                         SelectByTagInterface();
                     })
                 };
             }, stayOpen: true),
-            new OverflowMenuGUI.MenuItem("Bevel", IconSet.bevel, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.OpenBevel, IconSet.bevel, () => {
                 var bevelGUI = gameObject.AddComponent<BevelActionBarGUI>();
                 bevelGUI.voxelArray = voxelArray;
                 bevelGUI.touchListener = touchListener;
             }),
-            new OverflowMenuGUI.MenuItem("Revert", IconSet.undo, () => {
+            new OverflowMenuGUI.MenuItem(StringSet.RevertChanges, IconSet.undo, () => {
                 var dialog = gameObject.AddComponent<DialogGUI>();
-                dialog.title = "Are you sure?";
-                dialog.message = "Undo all changes since the world was opened?";
-                dialog.yesButtonText = "Yes";
-                dialog.noButtonText = "No";
+                dialog.title = StringSet.AreYouSure;
+                dialog.message = StringSet.ConfirmRevertChanges;
+                dialog.yesButtonText = StringSet.Yes;
+                dialog.noButtonText = StringSet.No;
                 dialog.yesButtonHandler = () => {
                     editorFile.Revert();
                 };
@@ -211,19 +211,19 @@ public class ActionBarGUI : TopPanelGUI
         if (selectionSize.x != 0)
         {
             if (selectionString != "")
-                selectionString += "x";
+                selectionString += StringSet.DimensionSeparator;
             selectionString += Mathf.RoundToInt(selectionSize.x);
         }
         if (selectionSize.y != 0)
         {
             if (selectionString != "")
-                selectionString += "x";
+                selectionString += StringSet.DimensionSeparator;
             selectionString += Mathf.RoundToInt(selectionSize.y);
         }
         if (selectionSize.z != 0)
         {
             if (selectionString != "")
-                selectionString += "x";
+                selectionString += StringSet.DimensionSeparator;
             selectionString += Mathf.RoundToInt(selectionSize.z);
         }
         return selectionString;
@@ -233,7 +233,7 @@ public class ActionBarGUI : TopPanelGUI
     private void SelectByTagInterface()
     {
         TagPickerGUI tagPicker = gameObject.AddComponent<TagPickerGUI>();
-        tagPicker.title = "Select by tag";
+        tagPicker.title = StringSet.SelectWithTagTitle;
         tagPicker.handler = (byte tag) =>
         {
             voxelArray.ClearSelection();
@@ -245,7 +245,7 @@ public class ActionBarGUI : TopPanelGUI
     {
         FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
         facePicker.voxelArray = voxelArray;
-        facePicker.message = "Tap to pick paint...";
+        facePicker.message = StringSet.SelectWithPaintInstruction;
         facePicker.clearStoredSelection = false;
         facePicker.pickAction = () =>
         {
@@ -261,7 +261,7 @@ public class ActionBarGUI : TopPanelGUI
     {
         FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
         facePicker.voxelArray = voxelArray;
-        facePicker.message = "Tap to fill paint...";
+        facePicker.message = StringSet.SelectFillPaintInstruction;
         facePicker.onlyFaces = true;  // filling object doesn't make sense
         facePicker.clearStoredSelection = false;
         facePicker.pickAction = () =>

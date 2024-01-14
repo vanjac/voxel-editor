@@ -10,6 +10,14 @@ public class GUIStringSet
         "OK";
     public virtual string Done =>
         "Done";
+    public virtual string AreYouSure =>
+        "Are you sure?";
+
+    public virtual string DimensionSeparator =>
+        "x";
+
+    public virtual string LoadingWorld =>
+        "Loading world...";
 
     // Main menu
     public virtual string WelcomeMessage =>
@@ -63,12 +71,46 @@ public class GUIStringSet
     public virtual string Donate =>
         "Donate";
 
+    // Editor action bar
+    public virtual string CreateObjectTitle =>
+        "Create";
+    public virtual string OpenWorldProperties =>
+        "World";
+    public virtual string SelectSubmenu =>
+        "Select...";
+    public virtual string SelectDraw =>
+        "Draw";
+    public virtual string SelectWithPaint =>
+        "With Paint";
+    public virtual string SelectFillPaint =>
+        "Fill Paint";
+    public virtual string SelectWithTag =>
+        "With Tag";
+    public virtual string OpenBevel =>
+        "Bevel";
+    public virtual string RevertChanges =>
+        "Revert";
+    public virtual string ConfirmRevertChanges =>
+        "Undo all changes since the world was opened?";
+    public virtual string SelectWithTagTitle =>
+        "Select by tag";
+    public virtual string SelectWithPaintInstruction =>
+        "Tap to pick paint...";
+    public virtual string SelectFillPaintInstruction =>
+        "Tap to fill paint...";
+
+    // Type names
+    public virtual string Substance =>
+        "Substance";
+    public virtual string Object =>
+        "Object";
+
     // Properties panel
     public virtual string PropertiesDifferent =>
         "different";
     public virtual string CloneEntity =>
         "Clone";
-    public virtual string CloneIntruction =>
+    public virtual string CloneInstruction =>
         "Tap to place clone";
     public virtual string DeleteEntity =>
         "Delete";
