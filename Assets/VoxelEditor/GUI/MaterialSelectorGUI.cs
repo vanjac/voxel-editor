@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -202,7 +202,7 @@ public class MaterialSelectorGUI : GUIPanel
         {
             GUIUtils.ShowDisabled();
         }
-        if (ActionBarGUI.ActionBarButton(IconSet.color))
+        if (selectedCategory != WORLD_LIST_CATEGORY && ActionBarGUI.ActionBarButton(IconSet.color))
             page = Page.COLOR;
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
