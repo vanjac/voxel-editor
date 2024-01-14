@@ -62,7 +62,39 @@ public class GUIStringSet
         "Videos";
     public virtual string Donate =>
         "Donate";
-    
+
+    // Properties panel
+    public virtual string PropertiesDifferent =>
+        "different";
+    public virtual string CloneEntity =>
+        "Clone";
+    public virtual string CloneIntruction =>
+        "Tap to place clone";
+    public virtual string DeleteEntity =>
+        "Delete";
+    public virtual string ChangeSensor =>
+        "Change Sensor";
+    public virtual string AddBehavior =>
+        "Add Behavior";
+    public virtual string RemoveBehavior =>
+        "Remove";
+    public virtual string OtherBehaviorsPlaceholder =>
+        "(other behaviors...)";
+    public virtual string SensorName(string name) =>
+        $"{name} Sensor";
+    public virtual string BehaviorName(string name) =>
+        $"{name} Behavior";
+    public virtual string NoSensor =>
+        "No Sensor";
+    public virtual string NoGeneric =>
+        "None";
+    public virtual string TargetEntity(string name) =>
+        $"Target:  {name}";
+    public virtual string EntitySelf =>
+        "Self";
+    public virtual string EntityActivators =>
+        "Activators";
+
     // Help menu
     public virtual string HelpMenuTitle =>
         "Help";

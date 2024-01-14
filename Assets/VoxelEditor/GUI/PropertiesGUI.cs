@@ -6,8 +6,9 @@ using UnityEngine;
 class StoredPropertiesObject : PropertiesObject
 {
     private const string NOT_EQUAL_VALUE = "not equal!!";
-    private static readonly PropertiesObjectType DIFFERENT_OBJECT_TYPE
-        = new PropertiesObjectType("(different)", null);
+    private static System.Lazy<PropertiesObjectType> differentObjectType
+        = new System.Lazy<PropertiesObjectType>(() =>
+            new PropertiesObjectType($"({GUIPanel.StringSet.PropertiesDifferent})", null));
 
     private readonly PropertiesObjectType type;
     private readonly IEnumerable<Property> properties;
@@ -35,7 +36,7 @@ class StoredPropertiesObject : PropertiesObject
                 objType = obj.ObjectType;
             if (objType != type)
             {
-                type = DIFFERENT_OBJECT_TYPE;
+                type = differentObjectType.Value;
                 return;
             }
         }
@@ -77,7 +78,8 @@ class StoredPropertiesObject : PropertiesObject
                 {
                     GUILayout.BeginHorizontal();
                     PropertyGUIs.AlignedLabel(property);
-                    if (GUILayout.Button("different", GUIPanel.StyleSet.buttonSmall))
+                    if (GUILayout.Button(GUIPanel.StringSet.PropertiesDifferent,
+                        GUIPanel.StyleSet.buttonSmall))
                     {
                         // set all properties to one value
                         property.setter(firstProperty.getter());
@@ -328,7 +330,8 @@ public class PropertiesGUI : LeftPanelGUI
         if (singleSelectedEntity != null && !(singleSelectedEntity is PlayerObject))
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(new GUIContent("  Clone", IconSet.copy), StyleSet.buttonSmall))
+            if (GUILayout.Button(GUIUtils.PadContent(StringSet.CloneEntity, IconSet.copy),
+                StyleSet.buttonSmall))
             {
                 if (singleSelectedEntity is ObjectEntity)
                 {
@@ -336,7 +339,7 @@ public class PropertiesGUI : LeftPanelGUI
                     clone.paint = ((ObjectEntity)singleSelectedEntity).paint.PaintOnly();
                     var pickerGUI = gameObject.AddComponent<FacePickerGUI>();
                     pickerGUI.voxelArray = voxelArray;
-                    pickerGUI.message = "Tap to place clone";
+                    pickerGUI.message = StringSet.CloneIntruction;
                     pickerGUI.pickAction = () => voxelArray.PlaceObject(clone);
                 }
                 else if (singleSelectedEntity is Substance)
@@ -348,7 +351,8 @@ public class PropertiesGUI : LeftPanelGUI
                     createGUI.voxelArray = voxelArray;
                 }
             }
-            if (GUILayout.Button(new GUIContent("  Delete", IconSet.delete), StyleSet.buttonSmall))
+            if (GUILayout.Button(GUIUtils.PadContent(StringSet.DeleteEntity, IconSet.delete),
+                StyleSet.buttonSmall))
             {
                 DeleteButton();
             }
@@ -356,17 +360,18 @@ public class PropertiesGUI : LeftPanelGUI
         }
         if (selectedEntities.Count > 1)
         {
-            if (GUILayout.Button(new GUIContent("  Delete", IconSet.delete), StyleSet.buttonSmall))
+            if (GUILayout.Button(GUIUtils.PadContent(StringSet.DeleteEntity, IconSet.delete),
+                StyleSet.buttonSmall))
             {
                 DeleteButton();
             }
         }
 
         TutorialGUI.TutorialHighlight("change sensor");
-        if (GUILayout.Button(new GUIContent("  Change Sensor", IconSet.sensor)))
+        if (GUILayout.Button(GUIUtils.PadContent(StringSet.ChangeSensor, IconSet.sensor)))
         {
             TypePickerGUI sensorMenu = gameObject.AddComponent<TypePickerGUI>();
-            sensorMenu.title = "Change Sensor";
+            sensorMenu.title = StringSet.ChangeSensor;
             sensorMenu.categoryNames = GameScripts.sensorTabNames;
             sensorMenu.categories = GameScripts.sensorTabs;
             sensorMenu.handler = (PropertiesObjectType type) =>
@@ -379,14 +384,14 @@ public class PropertiesGUI : LeftPanelGUI
         }
         TutorialGUI.ClearHighlight();
         GUILayout.BeginVertical(GUI.skin.box);
-        PropertiesObjectGUI(editSensor, " Sensor");
+        PropertiesObjectGUI(editSensor, StringSet.SensorName, StringSet.NoSensor);
         GUILayout.EndVertical();
 
         TutorialGUI.TutorialHighlight("add behavior");
-        if (GUILayout.Button(new GUIContent("  Add Behavior", IconSet.newItem)))
+        if (GUILayout.Button(GUIUtils.PadContent(StringSet.AddBehavior, IconSet.newItem)))
         {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
-            behaviorMenu.title = "Add Behavior";
+            behaviorMenu.title = StringSet.AddBehavior;
             behaviorMenu.self = singleSelectedEntity;
             behaviorMenu.voxelArray = voxelArray;
             behaviorMenu.handler = (PropertiesObjectType behaviorType) =>
@@ -425,10 +430,10 @@ public class PropertiesGUI : LeftPanelGUI
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            PropertiesObjectGUI(storedBehavior, " Behavior",
+            PropertiesObjectGUI(storedBehavior, StringSet.BehaviorName, null,
                 () => EntityPreviewManager.BehaviorUpdated(selectedEntities,
                     storedBehavior.allBehaviors[0].GetType()));
-            if (GUILayout.Button(new GUIContent("  Remove", IconSet.delete)))
+            if (GUILayout.Button(GUIUtils.PadContent(StringSet.RemoveBehavior, IconSet.delete)))
                 behaviorToRemove = storedBehavior;
             GUILayout.EndVertical();
             // clear this every time, in case the next target is the same
@@ -453,25 +458,28 @@ public class PropertiesGUI : LeftPanelGUI
         if (mismatchedSelectedBehaviorCounts)
         {
             GUILayout.BeginVertical(GUI.skin.box);
-            GUILayout.Label("(other behaviors...)", StyleSet.labelTitle);
+            GUILayout.Label(StringSet.OtherBehaviorsPlaceholder, StyleSet.labelTitle);
             GUILayout.EndVertical();
         }
     }
 
-    private void PropertiesObjectGUI(PropertiesObject obj, string suffix = "",
+    private void PropertiesObjectGUI(PropertiesObject obj,
+        System.Func<string, string> nameFmt = null, string noName = null,
         System.Action changedAction = null)
     {
         string title;
         if (obj == null)
         {
-            if (suffix.Length != 0)
-                title = "No" + suffix;
+            if (noName != null)
+                title = noName;
             else
-                title = "None";
+                title = StringSet.NoGeneric;
         }
         else
         {
-            title = obj.ObjectType.fullName + suffix;
+            title = obj.ObjectType.fullName;
+            if (nameFmt != null)
+                title = nameFmt(title);
             if (obj.Properties().Any())
                 title += ":";
         }
@@ -601,11 +609,11 @@ public class NewBehaviorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        string targetButtonText = "Target:  Self";
+        string targetButtonText = StringSet.TargetEntity(StringSet.EntitySelf);
         if (targetEntityIsActivator)
-            targetButtonText = "Target:  Activators";
+            targetButtonText = StringSet.TargetEntity(StringSet.EntityActivators);
         else if (targetEntity != null)
-            targetButtonText = "Target:  " + targetEntity.ToString();
+            targetButtonText = StringSet.TargetEntity(targetEntity.ToString());
         TutorialGUI.TutorialHighlight("behavior target");
         if (GUIUtils.HighlightedButton(targetButtonText))
         {
