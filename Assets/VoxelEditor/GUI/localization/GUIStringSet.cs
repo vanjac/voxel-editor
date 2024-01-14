@@ -180,6 +180,14 @@ public class GUIStringSet
         "Top";
     public virtual string Bottom =>
         "Bottom";
+    public virtual string NorthLetter =>
+        "N";
+    public virtual string SouthLetter =>
+        "S";
+    public virtual string EastLetter =>
+        "E";
+    public virtual string WestLetter =>
+        "W";
 
     // Material panel
     public virtual string MaterialCustomCategory =>
@@ -232,7 +240,7 @@ public class GUIStringSet
         "None";
     public virtual string TargetEntity(string name) =>
         $"Target:  {name}";
-    public virtual string EntityActivators =>
+    public virtual string EntityActivators => // plural!
         "Activators";
 
     // Property GUIs
@@ -242,6 +250,32 @@ public class GUIStringSet
         "Self";
     public virtual string EntityRefTarget =>
         "Target";
+    public virtual string EntityRefActivator => // singular!
+        "Activator";
+    public virtual string RangeSeparator =>
+        "to";
+    public virtual string ChangeProperty(string name) =>
+        $"Change {name}";
+    public virtual string SelectProperty(string name) =>
+        $"Select {name}";
+    public virtual string BehaviorConditionHeader =>
+        "When sensor is:";
+    public virtual string SensorOn =>
+        "On";
+    public virtual string SensorOff =>
+        "Off";
+    public virtual string SensorBoth =>
+        "Both";
+    public virtual string WhenSensorIsOn =>
+        "When sensor is On";
+    public virtual string FilterByTitle =>
+        "Filter by...";
+    public virtual string Camera =>
+        "Camera";
+    public virtual string InputsHeader =>
+        "Inputs:";
+    public virtual string AddInput =>
+        "Add Input";
 
     // Help menu
     public virtual string HelpMenuTitle =>

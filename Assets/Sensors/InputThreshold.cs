@@ -48,8 +48,9 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
     {
         Input[] inputs = (Input[])property.value;
 
-        GUILayout.Label("Inputs:");
-        if (GUILayout.Button(new GUIContent("  Add Input", GUIPanel.IconSet.newItem)))
+        GUILayout.Label(GUIPanel.StringSet.InputsHeader);
+        if (GUILayout.Button(
+            GUIUtils.PadContent(GUIPanel.StringSet.AddInput, GUIPanel.IconSet.newItem)))
         {
             EntityPickerGUI picker = GUIPanel.GuiGameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = VoxelArrayEditor.instance;

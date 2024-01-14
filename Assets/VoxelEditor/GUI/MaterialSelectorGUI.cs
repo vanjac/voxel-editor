@@ -335,7 +335,7 @@ public class MaterialSelectorGUI : GUIPanel
             if (dirEntry.name.StartsWith("$"))
                 continue; // special alternate materials for game
             if (dirEntry.isDirectory)
-                categoriesList.Add(dirEntry.name);
+                categoriesList.Add(dirEntry.name); // TODO: localize!
             else
             {
                 if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))

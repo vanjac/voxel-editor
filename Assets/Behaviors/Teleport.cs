@@ -35,8 +35,9 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
                             property.value = new EntityReference(
                                 EntityReferencePropertyManager.CurrentEntity());
                     }
-                    PropertyGUIs._EntityReferenceCustom(property, targetEntityIsActivator,
-                        targetEntityIsActivator ? "Activator" : "None");
+                    var none = targetEntityIsActivator ? GUIPanel.StringSet.EntityRefActivator
+                            : GUIPanel.StringSet.EntityRefNone;
+                    PropertyGUIs._EntityReferenceCustom(property, targetEntityIsActivator, none);
                 })
         });
 }

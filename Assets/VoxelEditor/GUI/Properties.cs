@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class PropertyGUIs
 {
+    private static GUIStringSet StringSet =>
+        (GUIManager.instance != null) ? GUIManager.instance.stringSet : null;
+
     private static TouchScreenKeyboard numberKeyboard = null;
     private static Action<string> keyboardHandler;
 
@@ -78,6 +81,7 @@ public static class PropertyGUIs
         GUILayout.BeginHorizontal();
         foreach (var enumValue in System.Enum.GetValues(e.GetType()))
         {
+            // TODO: localize!
             string name = enumValue.ToString();
             // sentence case
             if (name[0] == '_')
@@ -175,12 +179,12 @@ public static class PropertyGUIs
 
     public static void FloatRange(Property property)
     {
-        FloatPair(property, "to");
+        FloatPair(property, StringSet.RangeSeparator);
     }
 
     public static void FloatDimensions(Property property)
     {
-        FloatPair(property, "x");
+        FloatPair(property, StringSet.DimensionSeparator);
     }
 
     public static void Vector3(Property property)
@@ -224,7 +228,7 @@ public static class PropertyGUIs
         if (GUILayout.Button(" " + tagString + " ", tagFieldStyle.Value, GUILayout.ExpandWidth(false)))
         {
             TagPickerGUI picker = GUIPanel.GuiGameObject.AddComponent<TagPickerGUI>();
-            picker.title = "Change " + property.name;
+            picker.title = StringSet.ChangeProperty(property.name);
             picker.multiSelection = (byte)(1 << (byte)property.value);
             picker.handler = (byte tag) =>
             {
@@ -237,16 +241,17 @@ public static class PropertyGUIs
     public static void BehaviorCondition(Property property)
     {
         var condition = (EntityBehavior.Condition)property.value;
-        GUILayout.Label("When sensor is:");
+        GUILayout.Label(StringSet.BehaviorConditionHeader);
         TutorialGUI.TutorialHighlight("behavior condition");
-        property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid(
-            (int)condition, new string[] { "On", "Off", "Both" }, 3, GUIPanel.StyleSet.buttonTab);
+        property.value = (EntityBehavior.Condition)GUILayout.SelectionGrid((int)condition,
+            new string[] { StringSet.SensorOn, StringSet.SensorOff, StringSet.SensorBoth }, 3,
+            GUIPanel.StyleSet.buttonTab);
         TutorialGUI.ClearHighlight();
     }
 
     public static void ActivatorBehaviorCondition(Property property)
     {
-        GUILayout.Label("When sensor is On");
+        GUILayout.Label(StringSet.WhenSensorIsOn);
         property.value = EntityBehavior.Condition.ON;
     }
 
@@ -257,7 +262,7 @@ public static class PropertyGUIs
         string text;
         if (value.targetEntityIsActivator)
         {
-            text = "Activators";
+            text = StringSet.EntityActivators;
         }
         else if (behaviorTarget != null)
         {
@@ -294,7 +299,7 @@ public static class PropertyGUIs
         entityPicker.allowNone = true;
         entityPicker.allowMultiple = false;
         entityPicker.allowNull = true;
-        entityPicker.nullName = "Activators";
+        entityPicker.nullName = StringSet.EntityActivators;
         entityPicker.handler = (ICollection<Entity> entities) =>
         {
             entityPicker = null;
@@ -315,12 +320,12 @@ public static class PropertyGUIs
 
     public static void EntityReference(Property property)
     {
-        _EntityReferenceCustom(property, false, "None");
+        _EntityReferenceCustom(property, false, StringSet.EntityRefNone);
     }
 
     public static void EntityReferenceWithNull(Property property)
     {
-        _EntityReferenceCustom(property, true, "None");
+        _EntityReferenceCustom(property, true, StringSet.EntityRefNone);
     }
 
     public static void _EntityReferenceCustom(Property property, bool allowNull, string nullName)
@@ -384,7 +389,7 @@ public static class PropertyGUIs
         if (GUILayout.Button(filterString, GUI.skin.textField))
         {
             FilterGUI filterGUI = GUIPanel.GuiGameObject.AddComponent<FilterGUI>();
-            filterGUI.title = property.name + " by...";
+            filterGUI.title = StringSet.FilterByTitle;
             filterGUI.voxelArray = VoxelArrayEditor.instance;
             filterGUI.current = filter;
             filterGUI.handler = (ActivatedSensor.Filter newFilter) =>
@@ -414,7 +419,7 @@ public static class PropertyGUIs
             {
                 MaterialSelectorGUI materialSelector
                     = GUIPanel.GuiGameObject.AddComponent<MaterialSelectorGUI>();
-                materialSelector.title = "Change " + property.name;
+                materialSelector.title = StringSet.ChangeProperty(property.name);
                 materialSelector.voxelArray = VoxelArrayEditor.instance;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
@@ -543,7 +548,7 @@ public static class PropertyGUIs
         string targetString = target.ToString();
 
         if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
-            targetString = "Camera";
+            targetString = StringSet.Camera;
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
@@ -556,7 +561,7 @@ public static class PropertyGUIs
             targetGUI.allowObjectTarget = false;
             targetGUI.allowRandom = false;
             targetGUI.allowVertical = false;
-            targetGUI.nullTargetName = "Camera";
+            targetGUI.nullTargetName = StringSet.Camera;
             targetGUI.nullTargetIcon = GUIPanel.IconSet.camera;
             targetGUI.handler = (Target newTarget) =>
             {
@@ -572,7 +577,7 @@ public static class PropertyGUIs
         string targetString = target.ToString();
 
         if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
-            targetString = "Any";
+            targetString = StringSet.TargetAny;
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
@@ -592,30 +597,29 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-
-    private static readonly string[] PIVOT_X_NAMES = new string[] { "West ", "", "East " };
-    private static readonly string[] PIVOT_X_LETTERS = new string[] { "W", "", "E" };
-    private static readonly string[] PIVOT_Y_NAMES = new string[] { "Bottom ", "", "Top " };
-    private static readonly string[] PIVOT_Z_NAMES = new string[] { "South ", "", "North " };
-    private static readonly string[] PIVOT_Z_LETTERS = new string[] { "S", "", "N" };
     public static void PivotProp(Property property)
     {
         var pivot = (Pivot)property.value;
         string pivotString;
         if (pivot.x == Pivot.Pos.Center && pivot.y == Pivot.Pos.Center && pivot.z == Pivot.Pos.Center)
-            pivotString = "Center";
+            pivotString = StringSet.Center;
         else
         {
-            pivotString = PIVOT_Y_NAMES[(int)pivot.y];
+            pivotString = (int)pivot.y switch
+                {0 => StringSet.Bottom + " ", 2 => StringSet.Top + " ", _ => ""};
             if (pivot.x == Pivot.Pos.Center || pivot.z == Pivot.Pos.Center)
             {
-                pivotString += PIVOT_Z_NAMES[(int)pivot.z];
-                pivotString += PIVOT_X_NAMES[(int)pivot.x];
+                pivotString += (int)pivot.z switch
+                    {0 => StringSet.South, 2 => StringSet.North, _ => ""};
+                pivotString += (int)pivot.x switch
+                    {0 => StringSet.West, 2 => StringSet.East, _ => ""};
             }
             else
             {
-                pivotString += PIVOT_Z_LETTERS[(int)pivot.z];
-                pivotString += PIVOT_X_LETTERS[(int)pivot.x];
+                pivotString += (int)pivot.z switch
+                    {0 => StringSet.SouthLetter, 2 => StringSet.NorthLetter, _ => ""};
+                pivotString += (int)pivot.x switch
+                    {0 => StringSet.WestLetter, 2 => StringSet.EastLetter, _ => ""};
             }
         }
 
@@ -641,7 +645,7 @@ public static class PropertyGUIs
             if (GUILayout.Button(embeddedData.name, GUI.skin.textField))
             {
                 var import = GUIPanel.GuiGameObject.AddComponent<DataImportGUI>();
-                import.title = "Select " + property.name;
+                import.title = StringSet.SelectProperty(property.name);
                 import.type = type;
                 import.playerFactory = playerFactory;
                 import.dataAction = (data) =>
