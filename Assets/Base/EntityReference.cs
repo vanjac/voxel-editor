@@ -198,33 +198,33 @@ public struct Target
             return entityRef.entity.ToString();
         else
         {
-            string dirStr = "None";
+            string dirStr = GUIPanel.StringSet.EntityRefNone;
             switch (direction & ~LOCAL_BIT)
             {
                 case WEST:
-                    dirStr = "West";
+                    dirStr = GUIPanel.StringSet.West;
                     break;
                 case EAST:
-                    dirStr = "East";
+                    dirStr = GUIPanel.StringSet.East;
                     break;
                 case DOWN:
-                    dirStr = "Down";
+                    dirStr = GUIPanel.StringSet.Down;
                     break;
                 case UP:
-                    dirStr = "Up";
+                    dirStr = GUIPanel.StringSet.Up;
                     break;
                 case SOUTH:
-                    dirStr = "South";
+                    dirStr = GUIPanel.StringSet.South;
                     break;
                 case NORTH:
-                    dirStr = "North";
+                    dirStr = GUIPanel.StringSet.North;
                     break;
                 case RANDOM:
-                    dirStr = "Random";
+                    dirStr = GUIPanel.StringSet.TargetRandom;
                     break;
             }
             if ((direction & LOCAL_BIT) != 0 && direction != NO_DIRECTION)
-                return "Local " + dirStr;
+                return GUIPanel.StringSet.TargetLocalDirection(dirStr);
             else
                 return dirStr;
         }

@@ -31,7 +31,7 @@ public abstract class ActivatedSensor : Sensor
         {
             Entity e = entityRef.entity;
             if (e == null)
-                return "None";
+                return GUIPanel.StringSet.EntityRefNone;
             return e.ToString();
         }
     }
@@ -127,7 +127,8 @@ public abstract class ActivatedSensor : Sensor
             return entityComponent.entity.tag == tag;
         }
 
-        public override string ToString() => "With tag " + Entity.TagToString(tag);
+        public override string ToString() =>
+            GUIPanel.StringSet.FilterWithTag(Entity.TagToString(tag));
     }
 
     public class MultipleTagFilter : Filter
@@ -151,9 +152,9 @@ public abstract class ActivatedSensor : Sensor
         public override string ToString()
         {
             if (tagBits == 0)
-                return "Nothing";
+                return GUIPanel.StringSet.FilterNothing;
             else if (tagBits == 255)
-                return "Anything";
+                return GUIPanel.StringSet.FilterAnything;
             string str = "";
             int count = 0;
             for (byte i = 0; i < 8; i++)
@@ -165,9 +166,9 @@ public abstract class ActivatedSensor : Sensor
                 }
             }
             if (count == 1)
-                return "With tag " + str;
+                return GUIPanel.StringSet.FilterWithTag(str);
             else
-                return "Tags " + str;
+                return GUIPanel.StringSet.FilterMultipleTags(str);
         }
     }
 

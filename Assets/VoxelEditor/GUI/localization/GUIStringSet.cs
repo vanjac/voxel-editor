@@ -150,6 +150,12 @@ public class GUIStringSet
         "Filter by active behavior";
     public virtual string FilterAnything =>
         "Anything";
+    public virtual string FilterNothing =>
+        "Nothing";
+    public virtual string FilterWithTag(string tag) =>
+        $"With tag {tag}";
+    public virtual string FilterMultipleTags(string tags) =>
+        $"Tags {tags}";
 
     // Target
     public virtual string TargetAny =>
@@ -158,6 +164,8 @@ public class GUIStringSet
         "World";
     public virtual string TargetLocal =>
         "Local";
+    public virtual string TargetLocalDirection(string dir) =>
+        $"Local {dir}";
     public virtual string TargetPickObject =>
         "Pick object...";
     public virtual string TargetRandom =>
