@@ -4,10 +4,15 @@ using UnityEngine;
 public class ScaleBehavior : GenericEntityBehavior<ScaleBehavior, ScaleComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Scale", s => s.ScaleDesc, s => s.ScaleLongDesc, "resize", typeof(ScaleBehavior),
-        BehaviorType.AndRule(
+        "Scale", typeof(ScaleBehavior))
+    {
+        description = s => s.ScaleDesc,
+        longDescription = s => s.ScaleLongDesc,
+        iconName = "resize",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public Vector3 scale = Vector3.one;

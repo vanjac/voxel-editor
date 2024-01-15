@@ -16,8 +16,12 @@ public abstract class BaseSoundBehavior : EntityBehavior
 
 public class SoundBehavior : BaseSoundBehavior
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Sound", s => s.SoundDesc, s => s.SoundLongDesc, "volume-high", typeof(SoundBehavior));
+    public static new BehaviorType objectType = new BehaviorType("Sound", typeof(SoundBehavior))
+    {
+        description = s => s.SoundDesc,
+        longDescription = s => s.SoundLongDesc,
+        iconName = "volume-high",
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public override IEnumerable<Property> Properties() =>

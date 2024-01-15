@@ -9,8 +9,13 @@ public enum SpatialSoundMode
 public class Sound3DBehavior : BaseSoundBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "3D Sound", s => s.Sound3DDesc, s => s.Sound3DLongDesc, "headphones",
-        typeof(Sound3DBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "3D Sound", typeof(Sound3DBehavior))
+    {
+        description = s => s.Sound3DDesc,
+        longDescription = s => s.Sound3DLongDesc,
+        iconName = "headphones",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public (float, float) distanceRange = (1, 30);

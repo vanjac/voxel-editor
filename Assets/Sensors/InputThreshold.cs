@@ -5,8 +5,12 @@ using UnityEngine;
 public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThresholdComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Threshold", s => s.ThresholdDesc, s => s.ThresholdLongDesc, "altimeter",
-        typeof(InputThresholdSensor));
+        "Threshold", typeof(InputThresholdSensor))
+    {
+        description = s => s.ThresholdDesc,
+        longDescription = s => s.ThresholdLongDesc,
+        iconName = "altimeter",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     // public so it can be serialized

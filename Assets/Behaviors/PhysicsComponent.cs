@@ -10,10 +10,15 @@ public abstract class BasePhysicsBehavior : EntityBehavior
 public class PhysicsBehavior : BasePhysicsBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Physics", s => s.PhysicsDesc, s => s.PhysicsLongDesc, "soccer", typeof(PhysicsBehavior),
-        BehaviorType.AndRule(
+        "Physics", typeof(PhysicsBehavior))
+    {
+        description = s => s.PhysicsDesc,
+        longDescription = s => s.PhysicsLongDesc,
+        iconName = "soccer",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public override IEnumerable<Property> Properties() =>

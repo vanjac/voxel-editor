@@ -4,11 +4,15 @@ using UnityEngine;
 public class CharacterBehavior : BasePhysicsBehavior
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Character", s => s.CharacterDesc, s => s.CharacterLongDesc, "human",
-        typeof(CharacterBehavior),
-        BehaviorType.AndRule(
+        "Character", typeof(CharacterBehavior))
+    {
+        description = s => s.CharacterDesc,
+        longDescription = s => s.CharacterLongDesc,
+        iconName = "human",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public override IEnumerable<Property> Properties() =>

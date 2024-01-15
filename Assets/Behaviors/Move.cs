@@ -4,8 +4,13 @@ using UnityEngine;
 public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Move", s => s.MoveDesc, s => s.MoveLongDesc, "arrow-right-bold-box-outline",
-        typeof(MoveBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Move", typeof(MoveBehavior))
+    {
+        description = s => s.MoveDesc,
+        longDescription = s => s.MoveLongDesc,
+        iconName = "arrow-right-bold-box-outline",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public Target target = new Target(Target.NORTH);

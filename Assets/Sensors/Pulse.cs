@@ -4,7 +4,12 @@ using UnityEngine;
 public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Pulse", s => s.PulseDesc, s => s.PulseLongDesc, "pulse", typeof(PulseSensor));
+        "Pulse", typeof(PulseSensor))
+    {
+        description = s => s.PulseDesc,
+        longDescription = s => s.PulseLongDesc,
+        iconName = "pulse",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public bool startOn = true;

@@ -4,7 +4,12 @@ using UnityEngine;
 public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Motion", s => s.MotionDesc, s => s.MotionLongDesc, "speedometer", typeof(MotionSensor));
+        "Motion", typeof(MotionSensor))
+    {
+        description = s => s.MotionDesc,
+        longDescription = s => s.MotionLongDesc,
+        iconName = "speedometer",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public float minVelocity = 1;

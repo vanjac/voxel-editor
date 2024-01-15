@@ -13,7 +13,11 @@ public class WorldProperties : PropertiesObject
     };
 
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "World", s => s.WorldDesc, "earth", typeof(WorldProperties));
+        "World", typeof(WorldProperties))
+    {
+        description = s => s.WorldDesc,
+        iconName = "earth",
+    };
     public PropertiesObjectType ObjectType => objectType;
 
     public void SetSky(Material sky)

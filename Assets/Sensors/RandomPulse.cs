@@ -4,8 +4,12 @@ using UnityEngine;
 public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Rand. Pulse", s => s.RandomPulseDesc, s => s.RandomPulseLongDesc, "progress-question",
-        typeof(RandomPulseSensor));
+        "Rand. Pulse", typeof(RandomPulseSensor))
+    {
+        description = s => s.RandomPulseDesc,
+        longDescription = s => s.RandomPulseLongDesc,
+        iconName = "progress-question",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public (float, float) offTimeRange = (1, 5);

@@ -10,7 +10,12 @@ public abstract class BaseTouchSensor : ActivatedSensor
 public class TouchSensor : BaseTouchSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Touch", s => s.TouchDesc, s => s.TouchLongDesc, "vector-combine", typeof(TouchSensor));
+        "Touch", typeof(TouchSensor))
+    {
+        description = s => s.TouchDesc,
+        longDescription = s => s.TouchLongDesc,
+        iconName = "vector-combine",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public override IEnumerable<Property> Properties() =>

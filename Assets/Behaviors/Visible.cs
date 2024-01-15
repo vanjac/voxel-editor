@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Visible", s => s.VisibleDesc, "eye", typeof(VisibleBehavior),
-        BehaviorType.AndRule(
+    public static new BehaviorType objectType = new BehaviorType("Visible", typeof(VisibleBehavior))
+    {
+        description = s => s.VisibleDesc,
+        iconName = "eye",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 }
 

@@ -8,10 +8,14 @@ public class JoystickBehavior
     public enum JoystickAlignment { HORIZONTAL, VERTICAL }
 
     public static new BehaviorType objectType = new BehaviorType(
-        "Joystick", s => s.JoystickDesc, "joystick", typeof(JoystickBehavior),
-        BehaviorType.AndRule(
+        "Joystick", typeof(JoystickBehavior))
+    {
+        description = s => s.JoystickDesc,
+        iconName = "joystick",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float speed = 1;

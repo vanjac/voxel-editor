@@ -8,9 +8,13 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
         IMPULSE, CONTINUOUS
     }
 
-    public static new BehaviorType objectType = new BehaviorType(
-        "Force", s => s.ForceDesc, s => s.ForceLongDesc, "rocket", typeof(ForceBehavior),
-        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public static new BehaviorType objectType = new BehaviorType("Force", typeof(ForceBehavior))
+    {
+        description = s => s.ForceDesc,
+        longDescription = s => s.ForceLongDesc,
+        iconName = "rocket",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public ForceBehaviorMode mode = ForceBehaviorMode.CONTINUOUS;

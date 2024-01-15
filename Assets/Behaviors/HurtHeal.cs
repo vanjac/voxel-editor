@@ -4,8 +4,13 @@ using UnityEngine;
 public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHealComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Hurt/Heal", s => s.HurtHealDesc, s => s.HurtHealLongDesc, "heart",
-        typeof(HurtHealBehavior), BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Hurt/Heal", typeof(HurtHealBehavior))
+    {
+        description = s => s.HurtHealDesc,
+        longDescription = s => s.HurtHealLongDesc,
+        iconName = "heart",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float amount = -30;

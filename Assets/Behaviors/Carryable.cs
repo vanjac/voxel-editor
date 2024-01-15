@@ -5,11 +5,15 @@ using UnityEngine;
 public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, CarryableComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Carryable", s => s.CarryableDesc, s => s.CarryableLongDesc, "coffee",
-        typeof(CarryableBehavior),
-        BehaviorType.AndRule(
+        "Carryable", typeof(CarryableBehavior))
+    {
+        description = s => s.CarryableDesc,
+        longDescription = s => s.CarryableLongDesc,
+        iconName = "coffee",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float throwSpeed = 0;

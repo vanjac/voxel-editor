@@ -5,7 +5,12 @@ using UnityEngine;
 public class InRangeSensor : BaseTouchSensor
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "In Range", s => s.InRangeDesc, s => s.InRangeLongDesc, "radar", typeof(InRangeSensor));
+        "In Range", typeof(InRangeSensor))
+    {
+        description = s => s.InRangeDesc,
+        longDescription = s => s.InRangeLongDesc,
+        iconName = "radar",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     private float distance = 5;

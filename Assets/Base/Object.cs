@@ -4,7 +4,11 @@ using UnityEngine;
 public abstract class ObjectEntity : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Object", s => s.ObjectDesc, "circle", typeof(ObjectEntity));
+        "Object", typeof(ObjectEntity))
+    {
+        description = s => s.ObjectDesc,
+        iconName = "circle",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public ObjectMarker marker;

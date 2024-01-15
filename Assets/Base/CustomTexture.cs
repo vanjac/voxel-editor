@@ -5,7 +5,11 @@ using UnityEngine;
 public class CustomTexture : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Custom Texture", s => s.CustomTextureDesc, "image", typeof(CustomTexture));
+        "Custom Texture", typeof(CustomTexture))
+    {
+        description = s => s.CustomTextureDesc,
+        iconName = "image",
+    };
     public PropertiesObjectType ObjectType => objectType;
 
     public enum CustomFilter

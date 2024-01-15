@@ -6,8 +6,12 @@ using UnityEngine.Rendering;
 public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, ReflectorComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Reflector", s => s.ReflectorDesc, s => s.ReflectorLongDesc, "mirror",
-        typeof(ReflectorBehavior));
+        "Reflector", typeof(ReflectorBehavior))
+    {
+        description = s => s.ReflectorDesc,
+        longDescription = s => s.ReflectorLongDesc,
+        iconName = "mirror",
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 35, intensity = 1;

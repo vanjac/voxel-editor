@@ -2,9 +2,13 @@
 
 public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Water", s => s.WaterDesc, s => s.WaterLongDesc, "water", typeof(WaterBehavior),
-        BehaviorType.BaseTypeRule(typeof(Substance)));
+    public static new BehaviorType objectType = new BehaviorType("Water", typeof(WaterBehavior))
+    {
+        description = s => s.WaterDesc,
+        longDescription = s => s.WaterLongDesc,
+        iconName = "water",
+        rule = BehaviorType.BaseTypeRule(typeof(Substance)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float density = 1.0f;

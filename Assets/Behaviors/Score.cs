@@ -2,8 +2,11 @@
 
 public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Score", s => s.ScoreDesc, "counter", typeof(ScoreBehavior));
+    public static new BehaviorType objectType = new BehaviorType("Score", typeof(ScoreBehavior))
+    {
+        description = s => s.ScoreDesc,
+        iconName = "counter"
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public int amount = 10;

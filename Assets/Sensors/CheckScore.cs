@@ -3,8 +3,11 @@
 public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Check Score", s => s.CheckScoreDesc, "code-greater-than-or-equal",
-        typeof(CheckScoreSensor));
+        "Check Score", typeof(CheckScoreSensor))
+    {
+        description = s => s.CheckScoreDesc,
+        iconName = "code-greater-than-or-equal",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public enum AboveOrBelow

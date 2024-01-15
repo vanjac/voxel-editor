@@ -3,9 +3,13 @@ using UnityEngine;
 
 public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Spin", s => s.SpinDesc, s => s.SpinLongDesc, "format-rotate-90", typeof(SpinBehavior),
-        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public static new BehaviorType objectType = new BehaviorType("Spin", typeof(SpinBehavior))
+    {
+        description = s => s.SpinDesc,
+        longDescription = s => s.SpinLongDesc,
+        iconName = "format-rotate-90",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float speed = 50;

@@ -4,7 +4,12 @@ using UnityEngine;
 public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "In Camera", s => s.InCameraDesc, s => s.InCameraLongDesc, "eye", typeof(InCameraSensor));
+        "In Camera", typeof(InCameraSensor))
+    {
+        description = s => s.InCameraDesc,
+        longDescription = s => s.InCameraLongDesc,
+        iconName = "eye",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public float maxDistance = 100;

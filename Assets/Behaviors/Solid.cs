@@ -2,11 +2,14 @@
 
 public class SolidBehavior : GenericEntityBehavior<SolidBehavior, SolidComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Solid", s => s.SolidDesc, "wall", typeof(SolidBehavior),
-        BehaviorType.AndRule(
+    public static new BehaviorType objectType = new BehaviorType("Solid", typeof(SolidBehavior))
+    {
+        description = s => s.SolidDesc,
+        iconName = "wall",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 }
 

@@ -47,19 +47,24 @@ public struct Property
 // with all the missing data (this is done by Filter)
 public class PropertiesObjectType
 {
-    public static readonly PropertiesObjectType NONE =
-        new PropertiesObjectType("None", GUIStringSet.Empty, "cancel", null);
+    public static readonly PropertiesObjectType NONE = new PropertiesObjectType("None", null)
+        { iconName = "cancel" };
 
-    public string fullName; // not readonly so it can be serialized
-    [XmlIgnore]
-    public readonly Localizer description;
-    [XmlIgnore]
-    public readonly Localizer longDescription;
-    [XmlIgnore]
-    public readonly string iconName;
+    // This name is used for identifying types and for error messages if a type is not recognized.
+    // It is always in English (not localized) and can never change.
+    public string fullName;
+
     [XmlIgnore]
     public readonly Type type;
-    private readonly Func<PropertiesObject> constructor;
+    [XmlIgnore]
+    public Func<PropertiesObject> constructor;
+
+    [XmlIgnore]
+    public Localizer description = GUIStringSet.Empty;
+    [XmlIgnore]
+    public Localizer longDescription = GUIStringSet.Empty;
+    [XmlIgnore]
+    public string iconName = "";
 
     private Texture _icon;
     public Texture icon
@@ -73,47 +78,25 @@ public class PropertiesObjectType
     }
 
     // empty constructor for deserialization
-    public PropertiesObjectType() { }
+    public PropertiesObjectType()
+    {
+        constructor = DefaultConstructor;
+    }
 
     public PropertiesObjectType(string fullName, Type type)
     {
         this.fullName = fullName;
-        description = GUIStringSet.Empty;
-        longDescription = GUIStringSet.Empty;
-        iconName = "";
         this.type = type;
         constructor = DefaultConstructor;
     }
 
-    public PropertiesObjectType(string fullName, Localizer description, string iconName,
-        Type type, Func<PropertiesObject> constructor = null)
-    {
-        this.fullName = fullName;
-        this.description = description;
-        longDescription = GUIStringSet.Empty;
-        this.iconName = iconName;
-        this.type = type;
-        this.constructor = constructor ?? DefaultConstructor;
-    }
-
-    public PropertiesObjectType(string fullName, Localizer description, Localizer longDescription,
-        string iconName, Type type, Func<PropertiesObject> constructor = null)
-    {
-        this.fullName = fullName;
-        this.description = description;
-        this.longDescription = longDescription;
-        this.iconName = iconName;
-        this.type = type;
-        this.constructor = constructor ?? DefaultConstructor;
-    }
-
     public PropertiesObjectType(PropertiesObjectType baseType, Func<PropertiesObject> newConstructor)
     {
-        this.fullName = baseType.fullName;
-        this.description = baseType.description;
-        this.longDescription = baseType.longDescription;
-        this.iconName = baseType.iconName;
-        this.type = baseType.type;
+        fullName = baseType.fullName;
+        description = baseType.description;
+        longDescription = baseType.longDescription;
+        iconName = baseType.iconName;
+        type = baseType.type;
         constructor = newConstructor;
     }
 
@@ -190,7 +173,8 @@ public interface PropertiesObject
 public abstract class Entity : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Anything", GUIStringSet.Empty, "circle-outline", typeof(Entity));
+        "Anything", typeof(Entity))
+        { iconName = "circle-outline" };
 
     public EntityComponent component;
     public Sensor sensor;
@@ -562,27 +546,11 @@ public abstract class BehaviorComponent<T> : MonoBehaviour
 
 public class BehaviorType : PropertiesObjectType
 {
-    public readonly Predicate<Entity> rule;
+    public Predicate<Entity> rule = DefaultRule;
 
     public BehaviorType(string fullName, Type type)
         : base(fullName, type)
-    {
-        this.rule = DefaultRule;
-    }
-
-    public BehaviorType(string fullName, Localizer description, string iconName, Type type,
-        Predicate<Entity> rule = null)
-        : base(fullName, description, iconName, type)
-    {
-        this.rule = rule ?? DefaultRule;
-    }
-
-    public BehaviorType(string fullName, Localizer description, Localizer longDescription,
-        string iconName, Type type, Predicate<Entity> rule = null)
-        : base(fullName, description, longDescription, iconName, type)
-    {
-        this.rule = rule ?? DefaultRule;
-    }
+    { }
 
     private static bool DefaultRule(Entity checkEntity) => true;
 

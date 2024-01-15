@@ -4,9 +4,13 @@ using UnityEngine;
 public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWithComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Move With", s => s.MoveWithDesc, s => s.MoveWithLongDesc, "move-resize-variant",
-        typeof(MoveWithBehavior),
-        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Move With", typeof(MoveWithBehavior))
+    {
+        description = s => s.MoveWithDesc,
+        longDescription = s => s.MoveWithLongDesc,
+        iconName = "move-resize-variant",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public EntityReference target = new EntityReference(null);

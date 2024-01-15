@@ -4,8 +4,13 @@ using UnityEngine;
 public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, TeleportComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
-        "Teleport", s => s.TeleportDesc, s => s.TeleportLongDesc, "send", typeof(TeleportBehavior),
-        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+        "Teleport", typeof(TeleportBehavior))
+    {
+        description = s => s.TeleportDesc,
+        longDescription = s => s.TeleportLongDesc,
+        iconName = "send",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public EntityReference target = new EntityReference(null);

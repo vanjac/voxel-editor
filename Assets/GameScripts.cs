@@ -13,37 +13,48 @@ public static class GameScripts
 
     public static PropertiesObjectType[] entityTemplates = new PropertiesObjectType[]
     {
-        new PropertiesObjectType("Solid Substance", s => s.SolidSubstanceDesc, "wall",
-            typeof(Substance),
-            () => {
+        new PropertiesObjectType("Solid Substance", typeof(Substance))
+        {
+            description = s => s.SolidSubstanceDesc,
+            iconName = "wall",
+            constructor = () => {
                 Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 return substance;
-            }),
-        new PropertiesObjectType("Water", s => s.WaterSubstanceDesc, "water",
-            typeof(Substance),
-            () => {
+            },
+        },
+        new PropertiesObjectType("Water", typeof(Substance))
+        {
+            description = s => s.WaterSubstanceDesc,
+            iconName = "water",
+            constructor = () => {
                 Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new WaterBehavior());
                 substance.defaultPaint = new VoxelFace();
                 substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("WaterBasicDaytime", true);
                 return substance;
-            }),
-        new PropertiesObjectType("Trigger", s => s.TriggerDesc, "vector-combine",
-            typeof(Substance),
-            () => {
+            },
+        },
+        new PropertiesObjectType("Trigger", typeof(Substance))
+        {
+            description = s => s.TriggerDesc,
+            iconName = "vector-combine",
+            constructor = () => {
                 Substance substance = new Substance();
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
                 substance.defaultPaint = new VoxelFace();
                 substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("Invisible", true);
                 return substance;
-            }),
-        new PropertiesObjectType("Glass", s => s.GlassDesc, "window-closed-variant",
-            typeof(Substance),
-            () => {
+            },
+        },
+        new PropertiesObjectType("Glass", typeof(Substance))
+        {
+            description = s => s.GlassDesc,
+            iconName = "window-closed-variant",
+            constructor = () => {
                 Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
@@ -52,7 +63,8 @@ public static class GameScripts
                     ResourcesDirectory.FindMaterial("GLASS_overlay", true));
                 substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
                 return substance;
-            })
+            },
+        },
     };
 
     public static PropertiesObjectType[] sensors = new PropertiesObjectType[]
@@ -191,19 +203,24 @@ public static class GameScripts
             ball.behaviors.Add(new SolidBehavior());
             return ball;
         }),
-        new PropertiesObjectType("Empty", s => s.EmptyDesc, "scan-helper",
-            typeof(BallObject),
-            () => {
+        new PropertiesObjectType("Empty", typeof(BallObject))
+        {
+            description = s => s.EmptyDesc,
+            iconName = "scan-helper",
+            constructor = () => {
                 var ball = new BallObject();
                 ball.paint.material = null;
                 ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
                     ResourcesDirectory.FindMaterial("MATTE_overlay", true));
                 ball.paint.overlay.color = new Color(1, 0, 0, 0.5f);
                 return ball;
-            }),
-        new PropertiesObjectType("Light", s => s.LightObjectDesc, "lightbulb-on",
-            typeof(BallObject),
-            () => {
+            },
+        },
+        new PropertiesObjectType("Light", typeof(BallObject))
+        {
+            description = s => s.LightObjectDesc,
+            iconName = "lightbulb-on",
+            constructor = () => {
                 var ball = new BallObject();
                 ball.paint.material = null;
                 ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
@@ -212,17 +229,21 @@ public static class GameScripts
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
                 return ball;
-            }),
-        new PropertiesObjectType("Reflector", ReflectorBehavior.objectType.description, "mirror",
-            typeof(BallObject),
-            () => {
+            },
+        },
+        new PropertiesObjectType("Reflector", typeof(BallObject))
+        {
+            description = ReflectorBehavior.objectType.description,
+            iconName = "mirror",
+            constructor = () => {
                 var ball = new BallObject();
                 ball.paint.material = ResourcesDirectory.InstantiateMaterial(
                     ResourcesDirectory.FindMaterial("METAL", true));
                 ball.paint.material.color = Color.white;
                 ball.behaviors.Add(new ReflectorBehavior());
                 return ball;
-            }),
+            },
+        },
     };
 
     public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]

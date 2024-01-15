@@ -2,11 +2,15 @@
 
 public class CloneBehavior : TeleportBehavior
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Clone", s => s.CloneDesc, s => s.CloneLongDesc, "content-copy", typeof(CloneBehavior),
-        BehaviorType.AndRule(
+    public static new BehaviorType objectType = new BehaviorType("Clone", typeof(CloneBehavior))
+    {
+        description = s => s.CloneDesc,
+        longDescription = s => s.CloneLongDesc,
+        iconName = "content-copy",
+        rule = BehaviorType.AndRule(
             BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
-            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))));
+            BehaviorType.NotBaseTypeRule(typeof(PlayerObject))),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public override Behaviour MakeComponent(GameObject gameObject)

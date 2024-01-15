@@ -4,7 +4,12 @@ using UnityEngine;
 public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Delay", s => s.DelayDesc, s => s.DelayLongDesc, "timer", typeof(DelaySensor));
+        "Delay", typeof(DelaySensor))
+    {
+        description = s => s.DelayDesc,
+        longDescription = s => s.DelayLongDesc,
+        iconName = "timer",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public EntityReference input = new EntityReference(null);

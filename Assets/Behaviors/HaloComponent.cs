@@ -4,8 +4,12 @@ using UnityEngine;
 [EditorPreviewBehavior]
 public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Halo", s => s.HaloDesc, s => s.HaloLongDesc, "blur", typeof(HaloBehavior));
+    public static new BehaviorType objectType = new BehaviorType("Halo", typeof(HaloBehavior))
+    {
+        description = s => s.HaloDesc,
+        longDescription = s => s.HaloLongDesc,
+        iconName = "blur",
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 3;

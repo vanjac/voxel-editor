@@ -4,7 +4,12 @@ using UnityEngine;
 public class BallObject : ObjectEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Ball", s => s.BallDesc, s => s.BallLongDesc, "circle-outline", typeof(BallObject));
+        "Ball", typeof(BallObject))
+    {
+        description = s => s.BallDesc,
+        longDescription = s => s.BallLongDesc,
+        iconName = "circle-outline",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public BallObject()

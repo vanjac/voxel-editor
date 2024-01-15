@@ -3,7 +3,12 @@
 public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Toggle", s => s.ToggleDesc, s => s.ToggleLongDesc, "toggle-switch", typeof(ToggleSensor));
+        "Toggle", typeof(ToggleSensor))
+    {
+        description = s => s.ToggleDesc,
+        longDescription = s => s.ToggleLongDesc,
+        iconName = "toggle-switch",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public EntityReference offInput = new EntityReference(null);

@@ -10,8 +10,12 @@ public struct Pivot
 public class Substance : DynamicEntity
 {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Substance", s => s.SubstanceDesc, s => s.SubstanceLongDesc, "cube-outline",
-        typeof(Substance));
+        "Substance", typeof(Substance))
+    {
+        description = s => s.SubstanceDesc,
+        longDescription = s => s.SubstanceLongDesc,
+        iconName = "cube-outline",
+    };
     public override PropertiesObjectType ObjectType => objectType;
 
     public Pivot pivot = new Pivot { x = Pivot.Pos.Center, y = Pivot.Pos.Center, z = Pivot.Pos.Center };

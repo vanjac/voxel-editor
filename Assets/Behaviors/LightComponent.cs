@@ -4,8 +4,12 @@ using UnityEngine;
 [EditorPreviewBehavior]
 public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Light", s => s.LightDesc, s => s.LightLongDesc, "lightbulb-on", typeof(LightBehavior));
+    public static new BehaviorType objectType = new BehaviorType("Light", typeof(LightBehavior))
+    {
+        description = s => s.LightDesc,
+        longDescription = s => s.LightLongDesc,
+        iconName = "lightbulb-on",
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public float size = 10, intensity = 1;

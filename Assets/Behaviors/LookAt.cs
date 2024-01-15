@@ -3,9 +3,13 @@ using UnityEngine;
 
 public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtComponent>
 {
-    public static new BehaviorType objectType = new BehaviorType(
-        "Look At", s => s.LookAtDesc, s => s.LookAtLongDesc, "compass", typeof(LookAtBehavior),
-        BehaviorType.BaseTypeRule(typeof(DynamicEntity)));
+    public static new BehaviorType objectType = new BehaviorType("Look At", typeof(LookAtBehavior))
+    {
+        description = s => s.LookAtDesc,
+        longDescription =  s => s.LookAtLongDesc,
+        iconName = "compass",
+        rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
+    };
     public override BehaviorType BehaviorObjectType => objectType;
 
     public Target target = new Target(Target.EAST);
