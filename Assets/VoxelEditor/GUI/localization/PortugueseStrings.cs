@@ -390,7 +390,7 @@ public class PortugueseStrings : GUIStringSet
     public override string PropSky =>
         "Céu";
     public override string PropAmbientLightIntensity =>
-        "Intensidade da luz ambiente";
+        "Luz ambiente";
     public override string PropSunIntensity =>
         "Intensidade do sol";
     public override string PropSunColor =>
