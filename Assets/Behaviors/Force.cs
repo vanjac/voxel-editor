@@ -22,23 +22,23 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("fmo", "Mode",
+            new Property("fmo", s => s.PropMode,
                 () => mode,
                 v => mode = (ForceBehaviorMode)v,
                 PropertyGUIs.Enum),
-            new Property("ima", "Ignore mass?",
+            new Property("ima", s => s.PropIgnoreMass,
                 () => ignoreMass,
                 v => ignoreMass = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("sto", "Stop object first?",
+            new Property("sto", s => s.PropStopObjectFirst,
                 () => stopObjectFirst,
                 v => stopObjectFirst = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("mag", "Strength",
+            new Property("mag", s => s.PropStrength,
                 () => strength,
                 v => strength = (float)v,
                 PropertyGUIs.Float),
-            new Property("dir", "Toward",
+            new Property("dir", s => s.PropToward,
                 () => target,
                 v => target = (Target)v,
                 PropertyGUIs.Target)

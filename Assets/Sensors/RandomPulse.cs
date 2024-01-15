@@ -14,11 +14,11 @@ public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseCom
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("oft", "Off time",
+            new Property("oft", s => s.PropOffTime,
                 () => offTimeRange,
                 v => offTimeRange = ((float, float))v,
                 PropertyGUIs.FloatRange),
-            new Property("ont", "On time",
+            new Property("ont", s => s.PropOnTime,
                 () => onTimeRange,
                 v => onTimeRange = ((float, float))v,
                 PropertyGUIs.FloatRange)

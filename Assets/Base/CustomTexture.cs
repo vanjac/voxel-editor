@@ -105,19 +105,19 @@ public class CustomTexture : PropertiesObject
     public IEnumerable<Property> Properties() =>
         new Property[]
         {
-            new Property("bas", "Base",
+            new Property("bas", s => s.PropBase,
                 () => baseMat,
                 v => baseMat = (Material)v,
                 PropertyGUIs.Material(isOverlay ? "Overlays" : "Materials", isOverlay, customTextureBase: true)),
-            new Property("tex", "Texture",
+            new Property("tex", s => s.PropTexture,
                 () => texture,
                 v => texture = (Texture2D)v,
                 PropertyGUIs.Texture),
-            new Property("dim", "Size",
+            new Property("dim", s => s.PropSize,
                 () => scale,
                 v => scale = ((float, float))v,
                 PropertyGUIs.FloatDimensions),
-            new Property("flt", "Filter",
+            new Property("flt", s => s.PropPixelFilter,
                 () => filter,
                 v => filter = (CustomFilter)v,
                 PropertyGUIs.Enum)

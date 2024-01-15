@@ -193,7 +193,7 @@ public class MessagePackWorldWriter
             object value = prop.value;
             if (value == null)
             {
-                Debug.Log(prop.name + " is null!");
+                Debug.Log(prop.id + " is null!");
                 continue;
             }
             var propList = new List<MessagePackObject>();
@@ -226,7 +226,7 @@ public class MessagePackWorldWriter
                 }
                 catch (System.InvalidOperationException)
                 {
-                    Debug.Log(prop.name + " can't be serialized!");
+                    Debug.Log(prop.id + " can't be serialized!");
                     continue;
                 }
                 XmlSerializerNamespaces ns = new XmlSerializerNamespaces();

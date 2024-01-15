@@ -10,7 +10,7 @@ public delegate void PropertyGUI(Property property);
 public struct Property
 {
     public string id;
-    public string name;
+    public Localizer name;
     public Func<object> getter;
     public Action<object> setter;
     public PropertyGUI gui;
@@ -25,7 +25,7 @@ public struct Property
     }
     public bool explicitType; // store object type with property in file
 
-    public Property(string id, string name, Func<object> getter, Action<object> setter,
+    public Property(string id, Localizer name, Func<object> getter, Action<object> setter,
         PropertyGUI gui, bool explicitType = false)
     {
         this.id = id;
@@ -48,8 +48,7 @@ public struct Property
 public class PropertiesObjectType
 {
     public static readonly PropertiesObjectType NONE =
-        new PropertiesObjectType("None", DefaultDescription, "cancel", null);
-    public delegate string Localizer(GUIStringSet stringSet);
+        new PropertiesObjectType("None", GUIStringSet.Empty, "cancel", null);
 
     public string fullName; // not readonly so it can be serialized
     [XmlIgnore]
@@ -79,8 +78,8 @@ public class PropertiesObjectType
     public PropertiesObjectType(string fullName, Type type)
     {
         this.fullName = fullName;
-        description = DefaultDescription;
-        longDescription = DefaultDescription;
+        description = GUIStringSet.Empty;
+        longDescription = GUIStringSet.Empty;
         iconName = "";
         this.type = type;
         constructor = DefaultConstructor;
@@ -91,7 +90,7 @@ public class PropertiesObjectType
     {
         this.fullName = fullName;
         this.description = description;
-        longDescription = DefaultDescription;
+        longDescription = GUIStringSet.Empty;
         this.iconName = iconName;
         this.type = type;
         this.constructor = constructor ?? DefaultConstructor;
@@ -117,8 +116,6 @@ public class PropertiesObjectType
         this.type = baseType.type;
         constructor = newConstructor;
     }
-
-    private static string DefaultDescription(GUIStringSet _) => "";
 
     private PropertiesObject DefaultConstructor()
     {
@@ -193,7 +190,7 @@ public interface PropertiesObject
 public abstract class Entity : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Anything", s => "", "circle-outline", typeof(Entity));
+        "Anything", GUIStringSet.Empty, "circle-outline", typeof(Entity));
 
     public EntityComponent component;
     public Sensor sensor;
@@ -217,7 +214,7 @@ public abstract class Entity : PropertiesObject
     public virtual IEnumerable<Property> Properties() =>
         new Property[]
         {
-            new Property("tag", "Tag",
+            new Property("tag", s => s.PropTag,
                 () => tag,
                 v => tag = (byte)v,
                 PropertyGUIs.Tag),
@@ -453,7 +450,7 @@ public abstract class EntityBehavior : PropertiesObject
     public virtual IEnumerable<Property> Properties() =>
         new Property[]
         {
-            new Property("tar", "Target",
+            new Property("tar", s => s.PropTarget,
                 () => new BehaviorTargetProperty(targetEntity, targetEntityIsActivator),
                 v => {
                     var prop = (BehaviorTargetProperty)v;
@@ -484,7 +481,7 @@ public abstract class EntityBehavior : PropertiesObject
                     targetEntityIsActivator = prop.targetEntityIsActivator;
                 },
                 PropertyGUIs.BehaviorTarget),
-            new Property("con", "Condition",
+            new Property("con", s => s.PropCondition,
                 () => condition,
                 v => condition = (Condition)v,
                 (Property property) => {
@@ -732,11 +729,11 @@ public abstract class DynamicEntity : Entity
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("xra", "X-Ray?",
+            new Property("xra", s => s.PropXRay,
                 () => xRay,
                 v => {xRay = (bool)v; UpdateEntityEditor();},
                 PropertyGUIs.Toggle),
-            new Property("hea", "Health",
+            new Property("hea", s => s.PropHealth,
                 () => health,
                 v => health = (float)v,
                 PropertyGUIs.Float)

@@ -54,25 +54,25 @@ public class WorldProperties : PropertiesObject
     public IEnumerable<Property> Properties() =>
         new Property[]
         {
-            new Property("sky", "Sky",
+            new Property("sky", s => s.PropSky,
                 () => RenderSettings.skybox,
                 v => {
                     SetSky((Material)v);
                 },
                 PropertyGUIs.Material("Skies", false)),
-            new Property("amb", "Ambient light intensity",
+            new Property("amb", s => s.PropAmbientLightIntensity,
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,
                 PropertyGUIs.Slider(0, 3)),
-            new Property("sin", "Sun intensity",
+            new Property("sin", s => s.PropSunIntensity,
                 () => RenderSettings.sun.intensity,
                 v => RenderSettings.sun.intensity = (float)v,
                 PropertyGUIs.Slider(0, 3)),
-            new Property("sco", "Sun color",
+            new Property("sco", s => s.PropSunColor,
                 () => RenderSettings.sun.color,
                 v => RenderSettings.sun.color = (Color)v,
                 PropertyGUIs.Color),
-            new Property("spi", "Sun pitch",
+            new Property("spi", s => s.PropSunPitch,
                 () => {
                     float value = RenderSettings.sun.transform.rotation.eulerAngles.x;
                     if (value >= 270)
@@ -87,7 +87,7 @@ public class WorldProperties : PropertiesObject
                     UpdateEnvironment();
                 },
                 PropertyGUIs.Slider(-90, 90)),
-            new Property("sya", "Sun yaw",
+            new Property("sya", s => s.PropSunYaw,
                 () => RenderSettings.sun.transform.rotation.eulerAngles.y,
                 v => {
                     Vector3 eulerAngles = RenderSettings.sun.transform.rotation.eulerAngles;
@@ -97,26 +97,26 @@ public class WorldProperties : PropertiesObject
                     UpdateSky();
                 },
                 PropertyGUIs.Slider(0, 360)),
-            new Property("sha", "Shadows",
+            new Property("sha", s => s.PropShadows,
                 () => RenderSettings.sun.shadowStrength,
                 v => RenderSettings.sun.shadowStrength = (float)v,
                 PropertyGUIs.Slider(0, 1)),
-            new Property("ref", "Reflections",
+            new Property("ref", s => s.PropReflections,
                 () => GetReflectionProbe().intensity,
                 v => GetReflectionProbe().intensity = (float)v,
                 PropertyGUIs.Slider(0, 1)),
-            new Property("fog", "Fog",
+            new Property("fog", s => s.PropFog,
                 () => RenderSettings.fog,
                 v => RenderSettings.fog = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("fd2", "Fog density",
+            new Property("fd2", s => s.PropFogDensity,
                 () => Mathf.Sqrt(RenderSettings.fogDensity),
                 v => {
                     float value = (float)v;
                     RenderSettings.fogDensity = value * value;
                 },
                 PropertyGUIs.Slider(0, 1)),
-            new Property("fco", "Fog color",
+            new Property("fco", s => s.PropFogColor,
                 () => RenderSettings.fogColor,
                 v => RenderSettings.fogColor = (Color) v,
                 PropertyGUIs.Color)
@@ -125,7 +125,7 @@ public class WorldProperties : PropertiesObject
     public IEnumerable<Property> DeprecatedProperties() =>
         new Property[]
         {
-            new Property("fdn", "Fog density",
+            new Property("fdn", GUIStringSet.Empty,
                 () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
                 v => {
                     float value = (float)v;

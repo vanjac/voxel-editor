@@ -15,11 +15,11 @@ public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWith
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("par", "Parent",
+            new Property("par", s => s.PropParent,
                 () => target,
                 v => target = (EntityReference)v,
                 PropertyGUIs.EntityReference),
-            new Property("fro", "Follow rotation?",
+            new Property("fro", s => s.PropFollowRotation,
                 () => followRotation,
                 v => followRotation = (bool)v,
                 PropertyGUIs.Toggle)

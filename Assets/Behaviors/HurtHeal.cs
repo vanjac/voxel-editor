@@ -15,15 +15,15 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("num", "Amount",
+            new Property("num", s => s.PropAmount,
                 () => amount,
                 v => amount = (float)v,
                 PropertyGUIs.Float),
-            new Property("rat", "Rate",
+            new Property("rat", s => s.PropRate,
                 () => rate,
                 v => rate = (float)v,
                 PropertyGUIs.Time),
-            new Property("ran", "Keep within",
+            new Property("ran", s => s.PropKeepWithin,
                 () => healthRange,
                 v => healthRange = ((float, float))v,
                 PropertyGUIs.FloatRange)
@@ -32,11 +32,11 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
     public override IEnumerable<Property> DeprecatedProperties() =>
         Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
-            new Property("min", "Min health",
+            new Property("min", GUIStringSet.Empty,
                 () => healthRange.Item1,
                 v => healthRange.Item1 = (float)v,
                 PropertyGUIs.Float),
-            new Property("max", "Max health",
+            new Property("max", GUIStringSet.Empty,
                 () => healthRange.Item2,
                 v => healthRange.Item2 = (float)v,
                 PropertyGUIs.Float)

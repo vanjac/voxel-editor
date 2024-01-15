@@ -1,7 +1,11 @@
+public delegate string Localizer(GUIStringSet stringSet);
+
 // This class implements localizable strings for English.
 // Other languages are implemented as subclasses that override these methods.
 public class GUIStringSet
 {
+    public static string Empty(GUIStringSet _) => ""; // utility
+
     // Common terminology:
     // It's important that these terms are translated consistently (all nouns)
     // - World
@@ -401,6 +405,153 @@ public class GUIStringSet
         "Editor";
     public virtual string CloseGame =>
         "Close";
+
+    // Property names
+    // Boolean names should end in '?'
+    public virtual string PropTag =>
+        "Tag";
+    public virtual string PropTarget =>
+        "Target";
+    public virtual string PropCondition =>
+        "Condition";
+    public virtual string PropXRay =>
+        "X-Ray?";
+    public virtual string PropHealth =>
+        "Health";
+    public virtual string PropPivot =>
+        "Pivot";
+    public virtual string PropSky =>
+        "Sky";
+    public virtual string PropAmbientLightIntensity =>
+        "Ambient light intensity";
+    public virtual string PropSunIntensity =>
+        "Sun intensity";
+    public virtual string PropSunColor =>
+        "Sun color";
+    public virtual string PropSunPitch =>
+        "Sun pitch";
+    public virtual string PropSunYaw =>
+        "Sun yaw";
+    public virtual string PropShadows =>
+        "Shadows";
+    public virtual string PropReflections =>
+        "Reflections";
+    public virtual string PropFog =>
+        "Fog";
+    public virtual string PropFogDensity =>
+        "Fog density";
+    public virtual string PropFogColor =>
+        "Fog color";
+    public virtual string PropBase =>
+        "Base";
+    public virtual string PropTexture =>
+        "Texture";
+    public virtual string PropSize =>
+        "Size";
+    public virtual string PropPixelFilter =>
+        "Filter";
+    public virtual string PropFilter =>
+        "Filter";
+    public virtual string PropFootstepSounds =>
+        "Footstep sounds?";
+    public virtual string PropScoreIs =>
+        "Score is";
+    public virtual string PropThreshold =>
+        "Threshold";
+    public virtual string PropInput =>
+        "Input";
+    public virtual string PropOffTime =>
+        "Off time";
+    public virtual string PropOnTime =>
+        "On time";
+    public virtual string PropStartOn =>
+        "Start on?";
+    public virtual string PropMaxDistance =>
+        "Max distance";
+    public virtual string PropInputs =>
+        "Inputs";
+    public virtual string PropDistance =>
+        "Distance";
+    public virtual string PropMinVelocity =>
+        "Min velocity";
+    public virtual string PropMinAngularVelocity =>
+        "Min angular vel.";
+    public virtual string PropDirection =>
+        "Direction";
+    public virtual string PropOffInput =>
+        "Off input";
+    public virtual string PropOnInput =>
+        "On input";
+    public virtual string PropThrowSpeed =>
+        "Throw speed";
+    public virtual string PropThrowAngle =>
+        "Throw angle";
+    public virtual string PropDensity =>
+        "Density";
+    public virtual string PropMode =>
+        "Mode";
+    public virtual string PropIgnoreMass =>
+        "Ignore mass?";
+    public virtual string PropStopObjectFirst =>
+        "Stop object first?";
+    public virtual string PropStrength =>
+        "Strength";
+    public virtual string PropToward =>
+        "Toward";
+    public virtual string PropColor =>
+        "Color";
+    public virtual string PropAmount =>
+        "Amount";
+    public virtual string PropRate =>
+        "Rate";
+    public virtual string PropKeepWithin =>
+        "Keep within";
+    public virtual string PropSpeed =>
+        "Speed";
+    public virtual string PropFacing =>
+        "Facing";
+    public virtual string PropAlignment =>
+        "Alignment";
+    public virtual string PropIntensity =>
+        "Intensity";
+    public virtual string PropShadowsEnable =>
+        "Shadows?";
+    public virtual string PropFront =>
+        "Front";
+    public virtual string PropYawPitch =>
+        "Yaw|Pitch";
+    public virtual string PropParent =>
+        "Parent";
+    public virtual string PropFollowRotation =>
+        "Follow rotation?";
+    public virtual string PropGravity =>
+        "Gravity?";
+    public virtual string PropRange =>
+        "Range";
+    public virtual string PropRealTime =>
+        "Real-time?";
+    public virtual string PropScaleFactor =>
+        "Factor";
+    public virtual string PropSound =>
+        "Sound";
+    public virtual string PropPlayMode =>
+        "Play mode";
+    public virtual string PropVolume =>
+        "Volume";
+    public virtual string PropFadeIn =>
+        "Fade in";
+    public virtual string PropFadeOut =>
+        "Fade out";
+    public virtual string PropSpatialMode =>
+        "Spatial mode";
+    public virtual string PropFadeDistance =>
+        "Fade distance";
+    public virtual string PropAxis =>
+        "Axis";
+    public virtual string PropTo =>
+        "To";
+    public virtual string PropRelativeTo =>
+        "Relative to";
 
     // Object descriptions
     public virtual string ObjectDesc =>

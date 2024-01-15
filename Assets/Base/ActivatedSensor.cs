@@ -177,7 +177,7 @@ public abstract class ActivatedSensor : Sensor
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("fil", "Filter",
+            new Property("fil", s => s.PropFilter,
                 () => filter,
                 v => filter = (Filter)v,
                 PropertyGUIs.Filter,

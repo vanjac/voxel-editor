@@ -39,8 +39,9 @@ public static class PropertyGUIs
 
     public static void AlignedLabel(Property property)
     {
-        if (property.name != "")
-            GUILayout.Label(property.name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
+        var name = property.name(StringSet);
+        if (name != "")
+            GUILayout.Label(name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
     }
 
     public static void Empty(Property property) { }
@@ -64,7 +65,7 @@ public static class PropertyGUIs
 
     public static void DoubleToggle(Property property)
     {
-        string[] names = property.name.Split('|');
+        string[] names = property.name(StringSet).Split('|');
         var values = ((bool, bool))property.value;
         var buttonStyle = GUIPanel.StyleSet.buttonTab;
         GUILayout.BeginHorizontal();
@@ -156,12 +157,12 @@ public static class PropertyGUIs
 
     public static void FloatPair(Property property, string separator)
     {
-        GUILayout.Label(property.name + ":", headerLabelStyle.Value);
+        GUILayout.Label(property.name(StringSet) + ":", headerLabelStyle.Value);
         GUILayout.BeginHorizontal();
         var range = ((float, float))property.value;
         Property wrapper1 = new Property(
             property.id + "1",
-            "",
+            GUIStringSet.Empty,
             () => range.Item1,
             v => property.value = ((float)v, range.Item2),
             PropertyGUIs.Empty);
@@ -169,7 +170,7 @@ public static class PropertyGUIs
         GUILayout.Label(separator, inlineLabelStyle.Value, GUILayout.ExpandWidth(false));
         Property wrapper2 = new Property(
             property.id + "2",
-            "",
+            GUIStringSet.Empty,
             () => range.Item2,
             v => property.value = (range.Item1, (float)v),
             PropertyGUIs.Empty);
@@ -189,27 +190,27 @@ public static class PropertyGUIs
 
     public static void Vector3(Property property)
     {
-        GUILayout.Label(property.name + ":", headerLabelStyle.Value);
+        GUILayout.Label(property.name(StringSet) + ":", headerLabelStyle.Value);
         GUILayout.BeginHorizontal();
         var vec = (Vector3)property.value;
         Color baseColor = GUI.color;
 
         GUI.color = baseColor * new Color(1, 0.6f, 0.6f);
-        Property wrapperX = new Property("", "",
+        Property wrapperX = new Property("", GUIStringSet.Empty,
             () => vec.x,
             v => property.value = new Vector3((float)v, vec.y, vec.z),
             PropertyGUIs.Empty);
         Float(wrapperX);
 
         GUI.color = baseColor * new Color(0.6f, 1, 0.6f);
-        Property wrapperY = new Property("", "",
+        Property wrapperY = new Property("", GUIStringSet.Empty,
             () => vec.y,
             v => property.value = new Vector3(vec.x, (float)v, vec.z),
             PropertyGUIs.Empty);
         Float(wrapperY);
 
         GUI.color = baseColor * new Color(0.6f, 0.6f, 1);
-        Property wrapperZ = new Property("", "",
+        Property wrapperZ = new Property("", GUIStringSet.Empty,
             () => vec.z,
             v => property.value = new Vector3(vec.x, vec.y, (float)v),
             PropertyGUIs.Empty);
@@ -228,7 +229,7 @@ public static class PropertyGUIs
         if (GUILayout.Button(" " + tagString + " ", tagFieldStyle.Value, GUILayout.ExpandWidth(false)))
         {
             TagPickerGUI picker = GUIPanel.GuiGameObject.AddComponent<TagPickerGUI>();
-            picker.title = StringSet.ChangeProperty(property.name);
+            picker.title = StringSet.ChangeProperty(property.name(StringSet));
             picker.multiSelection = (byte)(1 << (byte)property.value);
             picker.handler = (byte tag) =>
             {
@@ -419,7 +420,7 @@ public static class PropertyGUIs
             {
                 MaterialSelectorGUI materialSelector
                     = GUIPanel.GuiGameObject.AddComponent<MaterialSelectorGUI>();
-                materialSelector.title = StringSet.ChangeProperty(property.name);
+                materialSelector.title = StringSet.ChangeProperty(property.name(StringSet));
                 materialSelector.voxelArray = VoxelArrayEditor.instance;
                 materialSelector.rootDirectory = materialDirectory;
                 materialSelector.highlightMaterial = (Material)property.value;
@@ -462,7 +463,7 @@ public static class PropertyGUIs
     public static PropertyGUI Slider(float minValue, float maxValue) =>
         (Property property) =>
         {
-            GUILayout.Label(property.name + ":");
+            GUILayout.Label(property.name(StringSet) + ":");
             property.value = GUILayout.HorizontalSlider(
                 (float)property.value, minValue, maxValue);
         };
@@ -472,10 +473,11 @@ public static class PropertyGUIs
         Color baseColor = GUI.color;
         Color valueColor = (Color)property.value;
         GUI.color = baseColor * valueColor;
-        if (GUILayout.Button(property.name))
+        var name = property.name(StringSet);
+        if (GUILayout.Button(name))
         {
             ColorPickerGUI colorPicker = GUIPanel.GuiGameObject.AddComponent<ColorPickerGUI>();
-            colorPicker.title = property.name;
+            colorPicker.title = name;
             colorPicker.SetColor(valueColor);
             colorPicker.handler = (Color color) =>
             {
@@ -505,7 +507,7 @@ public static class PropertyGUIs
         if (GUILayout.Button(targetString, GUI.skin.textField))
         {
             TargetGUI targetGUI = GUIPanel.GuiGameObject.AddComponent<TargetGUI>();
-            targetGUI.title = property.name;
+            targetGUI.title = property.name(StringSet);
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.allowObjectTarget = allowObjectTarget;
             targetGUI.allowVertical = allowVertical;
@@ -555,7 +557,7 @@ public static class PropertyGUIs
         if (GUILayout.Button(targetString, GUI.skin.textField))
         {
             TargetGUI targetGUI = GUIPanel.GuiGameObject.AddComponent<TargetGUI>();
-            targetGUI.title = property.name;
+            targetGUI.title = property.name(StringSet);
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.allowNullTarget = true;
             targetGUI.allowObjectTarget = false;
@@ -584,7 +586,7 @@ public static class PropertyGUIs
         if (GUILayout.Button(targetString, GUI.skin.textField))
         {
             TargetGUI targetGUI = GUIPanel.GuiGameObject.AddComponent<TargetGUI>();
-            targetGUI.title = property.name;
+            targetGUI.title = property.name(StringSet);
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.allowNullTarget = true;
             targetGUI.allowObjectTarget = false;
@@ -628,7 +630,7 @@ public static class PropertyGUIs
         if (GUILayout.Button(pivotString, GUI.skin.textField))
         {
             PivotGUI pivotGUI = GUIPanel.GuiGameObject.AddComponent<PivotGUI>();
-            pivotGUI.title = property.name;
+            pivotGUI.title = property.name(StringSet);
             pivotGUI.value = pivot;
             pivotGUI.handler = (Pivot newPivot) => { property.value = newPivot; };
         }
@@ -645,7 +647,7 @@ public static class PropertyGUIs
             if (GUILayout.Button(embeddedData.name, GUI.skin.textField))
             {
                 var import = GUIPanel.GuiGameObject.AddComponent<DataImportGUI>();
-                import.title = StringSet.SelectProperty(property.name);
+                import.title = StringSet.SelectProperty(property.name(StringSet));
                 import.type = type;
                 import.playerFactory = playerFactory;
                 import.dataAction = (data) =>

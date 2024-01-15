@@ -18,11 +18,11 @@ public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, Carrya
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("ths", "Throw speed",
+            new Property("ths", s => s.PropThrowSpeed,
                 () => throwSpeed,
                 v => throwSpeed = (float)v,
                 PropertyGUIs.Float),
-            new Property("tha", "Throw angle",
+            new Property("tha", s => s.PropThrowAngle,
                 () => throwAngle,
                 v => throwAngle = (float)v,
                 PropertyGUIs.Float),

@@ -14,11 +14,11 @@ public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("vel", "Speed",
+            new Property("vel", s => s.PropSpeed,
                 () => speed,
                 v => speed = (float)v,
                 PropertyGUIs.Float),
-            new Property("axi", "Axis",
+            new Property("axi", s => s.PropAxis,
                 () => axis,
                 v => axis = (Target)v,
                 PropertyGUIs.TargetStatic)

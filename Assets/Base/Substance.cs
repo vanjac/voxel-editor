@@ -25,7 +25,7 @@ public class Substance : DynamicEntity
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("piv", "Pivot",
+            new Property("piv", s => s.PropPivot,
                 () => pivot,
                 v => pivot = (Pivot)v,
                 PropertyGUIs.PivotProp),

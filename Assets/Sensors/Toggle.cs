@@ -13,15 +13,15 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("sta", "Start on?",
+            new Property("sta", s => s.PropStartOn,
                 () => startOn,
                 v => startOn = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("ofi", "Off input",
+            new Property("ofi", s => s.PropOffInput,
                 () => offInput,
                 v => offInput = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull),
-            new Property("oni", "On input",
+            new Property("oni", s => s.PropOnInput,
                 () => onInput,
                 v => onInput = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull)

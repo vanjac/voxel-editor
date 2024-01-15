@@ -11,7 +11,7 @@ public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("num", "Amount",
+            new Property("num", s => s.PropAmount,
                 () => amount,
                 v => amount = (int)v,
                 PropertyGUIs.Int)

@@ -19,7 +19,7 @@ public class PlayerObject : ObjectEntity
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("wlk", "Footstep sounds?",
+            new Property("wlk", s => s.PropFootstepSounds,
                 () => footstepSounds,
                 v => footstepSounds = (bool)v,
                 PropertyGUIs.Toggle),

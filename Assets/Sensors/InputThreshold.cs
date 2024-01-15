@@ -29,11 +29,11 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("thr", "Threshold",
+            new Property("thr", s => s.PropThreshold,
                 () => threshold,
                 v => threshold = (int)v,
                 PropertyGUIs.Int),
-            new Property("inp", "Inputs",
+            new Property("inp", s => s.PropInputs,
                 () => inputs,
                 v => inputs = (Input[])v,
                 InputsGUI)

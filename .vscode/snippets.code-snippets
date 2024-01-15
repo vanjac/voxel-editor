@@ -4,4 +4,9 @@
 		"prefix": "pvs",
 		"body": "public virtual string ",
 	},
+	"Localizer": {
+		"scope": "csharp",
+		"prefix": "loc",
+		"body": "s => s.",
+	},
 }

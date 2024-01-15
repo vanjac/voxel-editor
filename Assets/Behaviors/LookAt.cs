@@ -16,19 +16,19 @@ public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtCompon
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("vel", "Speed",
+            new Property("vel", s => s.PropSpeed,
                 () => speed,
                 v => speed = (float)v,
                 PropertyGUIs.Float),
-            new Property("dir", "Toward",
+            new Property("dir", s => s.PropToward,
                 () => target,
                 v => target = (Target)v,
                 PropertyGUIs.TargetWorldOnly),
-            new Property("fro", "Front",
+            new Property("fro", s => s.PropFront,
                 () => front,
                 v => front = (Target)v,
                 PropertyGUIs.Target4Directions),
-            new Property("rot", "Yaw|Pitch",
+            new Property("rot", s => s.PropYawPitch,
                 () => (yaw, pitch),
                 v => (yaw, pitch) = ((bool, bool))v,
                 PropertyGUIs.DoubleToggle)

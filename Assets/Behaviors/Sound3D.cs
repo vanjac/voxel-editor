@@ -19,23 +19,23 @@ public class Sound3DBehavior : BaseSoundBehavior
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("dat", "Sound",
+            new Property("dat", s => s.PropSound,
                 () => soundData,
                 v => soundData = (EmbeddedData)v,
                 PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)),
-            new Property("pmo", "Play mode",
+            new Property("pmo", s => s.PropPlayMode,
                 () => playMode,
                 v => playMode = (PlayMode)v,
                 PropertyGUIs.Enum),
-            new Property("smo", "Spatial mode",
+            new Property("smo", s => s.PropSpatialMode,
                 () => spatialMode,
                 v => spatialMode = (SpatialSoundMode)v,
                 PropertyGUIs.Enum),
-            new Property("vol", "Volume",
+            new Property("vol", s => s.PropVolume,
                 () => volume,
                 v => volume = (float)v,
                 PropertyGUIs.Float),
-            new Property("dis", "Fade distance",
+            new Property("dis", s => s.PropFadeDistance,
                 () => distanceRange,
                 v => distanceRange = ((float, float))v,
                 PropertyGUIs.FloatRange)

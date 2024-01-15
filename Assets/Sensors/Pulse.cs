@@ -15,19 +15,19 @@ public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("sta", "Start on?",
+            new Property("sta", s => s.PropStartOn,
                 () => startOn,
                 v => startOn = (bool)v,
                 PropertyGUIs.Toggle),
-            new Property("oft", "Off time",
+            new Property("oft", s => s.PropOffTime,
                 () => offTime,
                 v => offTime = (float)v,
                 PropertyGUIs.Time),
-            new Property("ont", "On time",
+            new Property("ont", s => s.PropOnTime,
                 () => onTime,
                 v => onTime = (float)v,
                 PropertyGUIs.Time),
-            new Property("inp", "Input",
+            new Property("inp", s => s.PropInput,
                 () => input,
                 v => input = (EntityReference)v,
                 PropertyGUIs.EntityReferenceWithNull)

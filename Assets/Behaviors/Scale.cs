@@ -15,7 +15,7 @@ public class ScaleBehavior : GenericEntityBehavior<ScaleBehavior, ScaleComponent
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("sca", "Factor",
+            new Property("sca", s => s.PropScaleFactor,
                 () => scale,
                 v => scale = (Vector3)v,
                 PropertyGUIs.Vector3),

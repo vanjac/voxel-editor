@@ -16,11 +16,11 @@ public class TouchSensor : BaseTouchSensor
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("vel", "Min velocity",
+            new Property("vel", s => s.PropMinVelocity,
                 () => minVelocity,
                 v => minVelocity = (float)v,
                 PropertyGUIs.Float),
-            new Property("dir", "Direction",
+            new Property("dir", s => s.PropDirection,
                 () => direction,
                 v => direction = (Target)v,
                 PropertyGUIs.TargetDirectionFilter)

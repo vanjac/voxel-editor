@@ -14,11 +14,11 @@ public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("siz", "Size",
+            new Property("siz", s => s.PropSize,
                 () => size,
                 v => size = (float)v,
                 PropertyGUIs.Slider(0.5f, 15)),
-            new Property("col", "Color",
+            new Property("col", s => s.PropColor,
                 () => color,
                 v => color = (Color)v,
                 PropertyGUIs.Color)

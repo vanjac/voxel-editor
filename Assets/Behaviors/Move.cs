@@ -14,11 +14,11 @@ public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("vel", "Speed",
+            new Property("vel", s => s.PropSpeed,
                 () => speed,
                 v => speed = (float)v,
                 PropertyGUIs.Float),
-            new Property("dir", "Toward",
+            new Property("dir", s => s.PropToward,
                 () => target,
                 v => target = (Target)v,
                 PropertyGUIs.Target)

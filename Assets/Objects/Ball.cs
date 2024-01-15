@@ -17,7 +17,7 @@ public class BallObject : ObjectEntity
     public override IEnumerable<Property> DeprecatedProperties() =>
         Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
-            new Property("mat", "Material",
+            new Property("mat", GUIStringSet.Empty,
                 () => paint.material == null ? paint.overlay : paint.material,
                 v =>
                 {

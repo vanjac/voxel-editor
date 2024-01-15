@@ -14,11 +14,11 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("loc", "To",
+            new Property("loc", s => s.PropTo,
                 () => target,
                 v => target = (EntityReference)v,
                 PropertyGUIs.EntityReference),
-            new Property("rel", "Relative to",
+            new Property("rel", s => s.PropRelativeTo,
                 () => origin,
                 v => origin = (EntityReference)v,
                 (Property property) => {

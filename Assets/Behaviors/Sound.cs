@@ -23,23 +23,23 @@ public class SoundBehavior : BaseSoundBehavior
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("dat", "Sound",
+            new Property("dat", s => s.PropSound,
                 () => soundData,
                 v => soundData = (EmbeddedData)v,
                 PropertyGUIs.EmbeddedData(EmbeddedDataType.Audio, SoundPlayer.Factory)),
-            new Property("pmo", "Play mode",
+            new Property("pmo", s => s.PropPlayMode,
                 () => playMode,
                 v => playMode = (PlayMode)v,
                 PropertyGUIs.Enum),
-            new Property("vol", "Volume",
+            new Property("vol", s => s.PropVolume,
                 () => volume,
                 v => volume = (float)v,
                 PropertyGUIs.Float),
-            new Property("fin", "Fade in",
+            new Property("fin", s => s.PropFadeIn,
                 () => fadeIn,
                 v => fadeIn = (float)v,
                 PropertyGUIs.Float),
-            new Property("fou", "Fade out",
+            new Property("fou", s => s.PropFadeOut,
                 () => fadeOut,
                 v => fadeOut = (float)v,
                 PropertyGUIs.Float)

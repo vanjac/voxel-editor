@@ -18,11 +18,11 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("cmp", "Score is",
+            new Property("cmp", s => s.PropScoreIs,
                 () => compare,
                 v => compare = (AboveOrBelow)v,
                 PropertyGUIs.Enum),
-            new Property("thr", "Threshold",
+            new Property("thr", s => s.PropThreshold,
                 () => threshold,
                 v => threshold = (int)v,
                 PropertyGUIs.Int)

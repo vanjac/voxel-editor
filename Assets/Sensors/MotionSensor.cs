@@ -14,15 +14,15 @@ public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("vel", "Min velocity",
+            new Property("vel", s => s.PropMinVelocity,
                 () => minVelocity,
                 v => minVelocity = (float)v,
                 PropertyGUIs.Float),
-            new Property("ang", "Min angular vel.",
+            new Property("ang", s => s.PropMinAngularVelocity,
                 () => minAngularVelocity,
                 v => minAngularVelocity = (float)v,
                 PropertyGUIs.Float),
-            new Property("dir", "Direction",
+            new Property("dir", s => s.PropDirection,
                 () => direction,
                 v => direction = (Target)v,
                 PropertyGUIs.TargetDirectionFilter)

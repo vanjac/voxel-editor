@@ -16,15 +16,15 @@ public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, Reflec
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("siz", "Range",
+            new Property("siz", s => s.PropRange,
                 () => size,
                 v => size = (float)v,
                 PropertyGUIs.Slider(1, 100)),
-            new Property("int", "Intensity",
+            new Property("int", s => s.PropIntensity,
                 () => intensity,
                 v => intensity = (float)v,
                 PropertyGUIs.Slider(0, 1.5f)),
-            new Property("upd", "Real-time?",
+            new Property("upd", s => s.PropRealTime,
                 () => realtime,
                 v => realtime = (bool)v,
                 PropertyGUIs.Toggle)

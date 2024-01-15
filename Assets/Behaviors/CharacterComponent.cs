@@ -14,7 +14,7 @@ public class CharacterBehavior : BasePhysicsBehavior
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("den", "Density",
+            new Property("den", s => s.PropDensity,
                 () => density,
                 v => density = (float)v,
                 PropertyGUIs.Float)

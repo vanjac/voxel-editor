@@ -12,7 +12,7 @@ public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[]
         {
-            new Property("dis", "Max distance",
+            new Property("dis", s => s.PropMaxDistance,
                 () => maxDistance,
                 v => maxDistance = (float)v,
                 PropertyGUIs.Float)

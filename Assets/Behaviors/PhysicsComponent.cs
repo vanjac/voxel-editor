@@ -19,11 +19,11 @@ public class PhysicsBehavior : BasePhysicsBehavior
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("den", "Density",
+            new Property("den", s => s.PropDensity,
                 () => density,
                 v => density = (float)v,
                 PropertyGUIs.Float),
-            new Property("gra", "Gravity?",
+            new Property("gra", s => s.PropGravity,
                 () => gravity,
                 v => gravity = (bool)v,
                 PropertyGUIs.Toggle)

@@ -16,19 +16,19 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("siz", "Size",
+            new Property("siz", s => s.PropSize,
                 () => size,
                 v => size = (float)v,
                 PropertyGUIs.Slider(1, 30)),
-            new Property("col", "Color",
+            new Property("col", s => s.PropColor,
                 () => color,
                 v => color = (Color)v,
                 PropertyGUIs.Color),
-            new Property("int", "Intensity",
+            new Property("int", s => s.PropIntensity,
                 () => intensity,
                 v => intensity = (float)v,
                 PropertyGUIs.Slider(0, 5)),
-            new Property("sha", "Shadows?",
+            new Property("sha", s => s.PropShadowsEnable,
                 () => shadows,
                 v => shadows = (bool)v,
                 PropertyGUIs.Toggle)
@@ -37,7 +37,7 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
     public override IEnumerable<Property> DeprecatedProperties() =>
         Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
-            new Property("hal", "Halo?",
+            new Property("hal", GUIStringSet.Empty,
                 () => halo,
                 v => halo = (bool)v,
                 PropertyGUIs.Toggle)

@@ -13,7 +13,7 @@ public class InRangeSensor : BaseTouchSensor
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[]
         {
-            new Property("dis", "Distance",
+            new Property("dis", s => s.PropDistance,
                 () => distance,
                 v => distance = (float)v,
                 PropertyGUIs.Float)
