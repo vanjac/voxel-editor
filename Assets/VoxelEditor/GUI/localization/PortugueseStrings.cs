@@ -13,6 +13,7 @@ public class PortugueseStrings : GUIStringSet
     // Edge -> Aresta
     // Object -> Objeto
     // Tag -> Tag
+    // Pivot -> Pivô
     // Substance -> Substância
     // Behavior -> Comportamento
     // Sensor -> Sensor
@@ -23,7 +24,6 @@ public class PortugueseStrings : GUIStringSet
     // Player -> Jogador
     // Health -> Saúde
     // Face -> Face
-    // Pivot point -> Ponto "Pivot"
 
     public override string Yes =>
         "Sim";
@@ -123,7 +123,7 @@ public class PortugueseStrings : GUIStringSet
     public override string DrawSelectInstruction =>
         "Toque e arraste para selecionar";
     public override string EntityPickNone =>
-        "Nenhum";
+        "Nada";
     public override string PickObjectInstruction =>
         "Selecione um objeto...";
     public override string PickObjectCount(int count) =>
@@ -269,14 +269,14 @@ public class PortugueseStrings : GUIStringSet
     public override string NoSensor =>
         "Sem Sensor";
     public override string NoGeneric =>
-        "Nenhum";
+        "Nada";
     public override string TargetEntity(string name) =>
         $"Alvo:  {name}";
     public override string EntityActivators =>
         "Ativadores";
 
     public override string EntityRefNone =>
-        "Nenhum";
+        "Nada";
     public override string EntityRefSelf =>
         "Auto";
     public override string EntityRefTarget =>
@@ -375,12 +375,157 @@ public class PortugueseStrings : GUIStringSet
     public override string CloseGame =>
         "Fechar";
 
+    public override string PropTag =>
+        "Tag";
+    public override string PropTarget =>
+        "Alvo";
+    public override string PropCondition =>
+        "Condição";
+    public override string PropXRay =>
+        "Raio X?";
+    public override string PropHealth =>
+        "Saúde";
+    public override string PropPivot =>
+        "Pivô";
+    public override string PropSky =>
+        "Céu";
+    public override string PropAmbientLightIntensity =>
+        "Intensidade da luz ambiente";
+    public override string PropSunIntensity =>
+        "Intensidade do sol";
+    public override string PropSunColor =>
+        "Cor do sol";
+    public override string PropSunPitch =>
+        "Inclinação do sol";
+    public override string PropSunYaw =>
+        "Guinada do sol";
+    public override string PropShadows =>
+        "Sombras";
+    public override string PropReflections =>
+        "Reflexões";
+    public override string PropFog =>
+        "Nevoeiro";
+    public override string PropFogDensity =>
+        "Densidade do nevoeiro";
+    public override string PropFogColor =>
+        "Cor do nevoeiro";
+    public override string PropBase =>
+        "Base";
+    public override string PropTexture =>
+        "Textura";
+    public override string PropSize =>
+        "Tamanho";
+    public override string PropPixelFilter =>
+        "Filtro";
+    public override string PropFilter =>
+        "Filtro";
+    public override string PropFootstepSounds =>
+        "Sons de passos?";
+    public override string PropScoreIs =>
+        "A pontuação é";
+    public override string PropThreshold =>
+        "Limiar";
+    public override string PropInput =>
+        "Entrada";
+    public override string PropOffTime =>
+        "Tempo desligar";
+    public override string PropOnTime =>
+        "Tempo ligar"; // ?
+    public override string PropStartOn =>
+        "Iniciar ativado?";
+    public override string PropMaxDistance =>
+        "Distância máx";
+    public override string PropInputs =>
+        "Entradas";
+    public override string PropDistance =>
+        "Distância";
+    public override string PropMinVelocity =>
+        "Velocidade min";
+    public override string PropMinAngularVelocity =>
+        "Vel. angular min";
+    public override string PropDirection =>
+        "Direção";
+    public override string PropOffInput =>
+        "Entrada deslig";
+    public override string PropOnInput =>
+        "Entrada lig";
+    public override string PropThrowSpeed =>
+        "Força arremesso";
+    public override string PropThrowAngle =>
+        "Ângulo arremesso";
+    public override string PropDensity =>
+        "Densidade";
+    public override string PropMode =>
+        "Modo";
+    public override string PropIgnoreMass =>
+        "Ignorar massa?";
+    public override string PropStopObjectFirst =>
+        "Parar o objeto?";
+    public override string PropStrength =>
+        "Força";
+    public override string PropToward =>
+        "Na direção";
+    public override string PropColor =>
+        "Cor";
+    public override string PropAmount =>
+        "Quantia";
+    public override string PropRate =>
+        "Taxa";
+    public override string PropKeepWithin =>
+        "Mantenha entre";
+    public override string PropSpeed =>
+        "Velocidade";
+    public override string PropFacing =>
+        "Voltado para";
+    public override string PropAlignment =>
+        "Alinhamento";
+    public override string PropIntensity =>
+        "Intensidade";
+    public override string PropShadowsEnable =>
+        "Sombras?";
+    public override string PropFront =>
+        "Frente";
+    public override string PropYawPitch =>
+        "Guinada|Arremesso";
+    public override string PropParent =>
+        "Pai";
+    public override string PropFollowRotation =>
+        "Seguir rotação?";
+    public override string PropGravity =>
+        "Gravity?";
+    public override string PropRange =>
+        "Alcance";
+    public override string PropRealTime =>
+        "Tempo real?";
+    public override string PropScaleFactor =>
+        "Fator";
+    public override string PropSound =>
+        "Som";
+    public override string PropPlayMode =>
+        "Modo de reprodução";
+    public override string PropVolume =>
+        "Volume";
+    public override string PropFadeIn =>
+        "Surgindo";
+    public override string PropFadeOut =>
+        "Desaparece";
+    public override string PropSpatialMode =>
+        "Modo espacial";
+    public override string PropFadeDistance =>
+        "Distância";
+    public override string PropAxis =>
+        "Eixo";
+    public override string PropTo =>
+        "Para";
+    public override string PropRelativeTo =>
+        "Relativo a";
+
     public override string ObjectDesc =>
         "Um objeto não feito de blocos";
     public override string SubstanceDesc =>
         "Uma entidade feita de blocos";
     public override string SubstanceLongDesc =>
-        "O ponto \"Pivot\" é usado como centro de rotação/escala e como ponto alvo para outros comportamentos.";
+        "O ponto pivô é usado como centro de rotação/escala e como ponto alvo para outros comportamentos.";
     public override string WorldDesc =>
         "Propriedades que afetam o mundo inteiro";
     public override string CustomTextureDesc =>
@@ -397,7 +542,7 @@ public class PortugueseStrings : GUIStringSet
     public override string DelayDesc =>
         "Adicionar atraso à ativação ou desativação da entrada";
     public override string DelayLongDesc =>
-@"Se a entrada estiver ligada por mais tempo do que o tempo ""On time"", o sensor será ligado. Se a entrada estiver desligada por mais tempo do que o tempo ""Off time"", o sensor será desligado. Se a entrada ligar/desligar mais rápido que o tempo de ligar/desligar, nada acontece.
+@"Se a <b>Entrada</b> estiver ligada por mais tempo do que o <b>Tempo ligar</b>, o sensor será ligado. Se a entrada estiver desligada por mais tempo do que o <b>Tempo desligar</b>, o sensor será desligado. Se a entrada ligar/desligar mais rápido que o tempo de ligar/desligar, nada acontece.
 
 Ativadores: os ativadores da Entrada, adicionados e removidos com atraso";
     public override string InCameraDesc =>
@@ -409,7 +554,7 @@ Ativador: o jogador";
     public override string ThresholdDesc =>
         "Ativo quando um certo número de outros objetos estão ativos";
     public override string ThresholdLongDesc =>
-@"Soma os valores de todas as entradas. Se uma entrada estiver ativada e definida como <b>+1</b>, isso adiciona 1 ao total. Se uma entrada estiver ativada e definida como <b>-1</b>, isso subtrai 1 do total. O sensor liga se o total estiver igual ou acima do ""Threshold"".
+@"Soma os valores de todas as <b>Entradas</b>. Se uma entrada estiver ativada e definida como <b>+1</b>, isso adiciona 1 ao total. Se uma entrada estiver ativada e definida como <b>-1</b>, isso subtrai 1 do total. O sensor liga se o total estiver igual ou acima do <b>Limiar</b>.
 
 Ativadores: os ativadores combinados de todas as entradas Positivas menos os ativadores das entradas Negativas";
     public override string InRangeDesc =>
@@ -419,11 +564,11 @@ Ativadores: os ativadores combinados de todas as entradas Positivas menos os ati
     public override string MotionDesc =>
         "Detectar movimento acima de alguma velocidade";
     public override string MotionLongDesc =>
-        "É ativado quando o objeto está se movendo mais rápido que a \"Minimum velocity\" na direção especificada e girando em torno de qualquer eixo mais rápido que a \"Minimum angular velocity\" (graus por segundo).";
+        "É ativado quando o objeto está se movendo mais rápido que a <b>Velocidade mínima</b> na direção especificada e girando em torno de qualquer eixo mais rápido que a <b>Velocidade angular mínima</b> (graus por segundo).";
     public override string PulseDesc =>
         "Ligar e desligar continuamente";
     public override string PulseLongDesc =>
-        "Input is optional. When connected, it controls whether the pulse is active. When the input turns off, the pulse completes a full cycle then stops.";
+        "<b>Entrada</b> é opcional. Quando conectado, controla se o pulso está ativo. Quando a entrada é desligada, o pulso completa um ciclo completo e então para.";
     public override string RandomPulseDesc =>
         "Ligue e desligue em um padrão aleatório";
     public override string RandomPulseLongDesc =>
@@ -439,13 +584,13 @@ Ativador: o jogador";
     public override string ToggleLongDesc =>
 @"Se ambas as entradas forem ligadas simultaneamente, o sensor alterna entre ligado/desligado.
 
-Ativadores: os ativadores de ""On input"", congelados quando é ligado";
+Ativadores: os ativadores da <b>Entrada Ligado</b>, congelados quando é ligado";
     public override string TouchDesc =>
         "Ativo ao tocar outro objeto";
     public override string TouchLongDesc =>
-@"•  <b>Filter:</b> O objeto ou tipos de objeto que ativam o sensor.
-•  <b>Min velocity:</b> O objeto deve entrar com esta velocidade relativa para ativar.
-•  <b>Direction:</b> O objeto deve entrar nesta direção para ativar.
+@"•  <b>Filtro:</b> O objeto ou tipos de objeto que ativam o sensor.
+•  <b>Velocidade min:</b> O objeto deve entrar com esta velocidade relativa para ativar.
+•  <b>Direção:</b> O objeto deve entrar nesta direção para ativar.
 
 Ativadores: todos os objetos em colisão correspondentes ao filtro
 
@@ -454,7 +599,7 @@ ERRO: Dois objetos que possuem comportamentos ""Solid"", mas não comportamentos
     public override string CarryableDesc =>
         "Permitir que o jogador pegue/solte/arremesse";
     public override string CarryableLongDesc =>
-@"Toque para pegar o objeto, toque novamente para lançar. Aumentar o ""Throw angle"" faz com que o objeto seja lançado em arco.
+@"Toque para pegar o objeto, toque novamente para lançar. Aumentar o <b>Ângulo de arremesso</b> faz com que o objeto seja lançado em arco.
 
 Requer comportamento ""Physics""";
     public override string CharacterDesc =>
@@ -462,53 +607,53 @@ Requer comportamento ""Physics""";
     public override string CharacterLongDesc =>
 @"Esta é uma alternativa ao comportamento ""Physics"". Os objetos terão gravidade, mas não poderão tombar. Quando usado com o comportamento Mover, os objetos cairão no chão em vez de flutuarem.
 
-<b>Density</b> afeta a massa do objeto, proporcional ao seu volume.";
+<b>Densidade</b> afeta a massa do objeto, proporcional ao seu volume.";
     public override string CloneDesc =>
         "Crie uma cópia do objeto";
     public override string CloneLongDesc =>
 @"Um novo clone é criado imediatamente quando o comportamento é ativado. O clone começará com a saúde original do objeto. Sensores que filtram um objeto específico também serão ativados para qualquer um de seus clones.
 
-•  <b>To:</b> Local de destino para clone
-•  <b>Relative to:</b> Localização de origem opcional. Se especificado, o clone será deslocado do objeto original pela diferença entre o destino e a origem.";
+•  <b>Para:</b> Local de destino para clone
+•  <b>Relativo a:</b> Localização de origem opcional. Se especificado, o clone será deslocado do objeto original pela diferença entre o destino e a origem.";
     public override string ForceDesc =>
         "Aplicar força instantânea ou contínua";
     public override string ForceLongDesc =>
 @"Funciona apenas para objetos com comportamento ""Physics"".
 
-•  O modo <b>Impulse</b> fará com que um impulso instantâneo seja aplicado quando o comportamento for ativado.
-•  O modo <b>Continuous</b> fará com que a força seja aplicada continuamente enquanto o comportamento estiver ativo.
-•  <b>Ignore mass</b> dimensiona a força para compensar a massa do objeto.
-•  <b>Stop object first</b> interromperá qualquer movimento existente antes de aplicar a força.";
+•  O modo ""Impulse"" fará com que um impulso instantâneo seja aplicado quando o comportamento for ativado.
+•  O modo ""Continuous"" fará com que a força seja aplicada continuamente enquanto o comportamento estiver ativo.
+•  <b>Ignorar massa</b> dimensiona a força para compensar a massa do objeto.
+•  <b>Parar o objeto</b> interromperá qualquer movimento existente antes de aplicar a força.";
     public override string HaloDesc =>
         "Efeito brilhante";
     public override string HaloLongDesc =>
-        "Halo aparece no ponto \"Pivot\" das substâncias";
+        "Halo aparece no ponto pivô das substâncias";
     public override string HurtHealDesc =>
         "Perder/ganhar saúde; abaixo de 0, o objeto morre";
     public override string HurtHealLongDesc =>
-@"•  <b>Amount:</b> Mudança na saúde. O positivo cura, o negativo dói.
-•  <b>Rate:</b> Segundos entre feridas/curas sucessivas. 0 significa que a saúde só mudará uma vez quando o comportamento for ativado.
-•  <b>Keep within:</b> A saúde só mudará se estiver dentro dessa faixa e nunca sairá dessa faixa.";
+@"•  <b>Quantia:</b> Mudança na saúde. O positivo cura, o negativo dói.
+•  <b>Taxa:</b> Segundos entre feridas/curas sucessivas. 0 significa que a saúde só mudará uma vez quando o comportamento for ativado.
+•  <b>Mantenha entre:</b> A saúde só mudará se estiver dentro dessa faixa e nunca sairá dessa faixa.";
     public override string JoystickDesc =>
         "Controle o movimento com o joystick";
     public override string LightDesc =>
         "Fonte de luz no centro do objeto";
     public override string LightLongDesc =>
-        "A luz se origina do ponto \"Pivot\" das substâncias";
+        "A luz se origina do ponto pivô das substâncias";
     public override string LookAtDesc =>
         "Apontar em uma direção ou em direção ao objeto";
     public override string LookAtLongDesc =>
-@"•  <b>Speed:</b> Velocidade angular máxima em graus por segundo.
-•  <b>Front:</b> O lado do objeto que será apontado para o alvo.
-•  <b>Yaw:</b> Ativa a rotação esquerda-direita.
-•  <b>Pitch:</b> Permite rotação para cima e para baixo. Ambos podem ser usados ao mesmo tempo.
-As substâncias girarão em torno de seu ponto ""Pivot"".";
+@"•  <b>Velocidade</b> é a velocidade angular máxima em graus por segundo.
+•  <b>Frente</b> é o lado do objeto que será apontado para o alvo.
+•  <b>Guinada:</b> Ativa a rotação esquerda-direita.
+•  <b>Arremesso:</b> Permite rotação para cima e para baixo. Ambos podem ser usados ao mesmo tempo.
+As substâncias girarão em torno de seu ponto pivô.";
     public override string MoveDesc =>
         "Mover-se em uma direção ou em direção a um objeto";
     public override string MoveLongDesc =>
 @"Quando usado com os comportamentos ""Solid"" e ""Physics"", o objeto não será capaz de passar por outros objetos.
 Quando usado com os comportamentos ""Solid"" e ""Character"", o objeto também será afetado pela gravidade.
-Aumente a ""Density"" do comportamento da Physics/Character para aumentar a força de empurrão do objeto.";
+Aumente a <b>Densidade</b> do comportamento da Physics/Character para aumentar a força de empurrão do objeto.";
     public override string MoveWithDesc =>
         "Acompanhe o movimento de outro objeto";
     public override string MoveWithLongDesc =>
@@ -516,18 +661,18 @@ Aumente a ""Density"" do comportamento da Physics/Character para aumentar a for�
     public override string PhysicsDesc =>
         "Mova-se de acordo com as leis da física";
     public override string PhysicsLongDesc =>
-        "<b>Density</b> afeta a massa do objeto, proporcional ao seu volume.";
+        "<b>Densidade</b> afeta a massa do objeto, proporcional ao seu volume.";
     public override string ReflectorDesc =>
         "Adicione reflexos mais realistas à área";
     public override string ReflectorLongDesc =>
 @"Captura uma imagem da área circundante e a utiliza para simular reflexos.
-•  <b>Range:</b> Faixa em que as superfícies são afetadas
-•  <b>Intensity:</b> Brilho dos reflexos
-•  <b>Real-time:</b> Faz com que os reflexos sejam atualizados continuamente (caro!)";
+•  Superfícies dentro do <b>Alcance</b> de distância são afetadas
+•  <b>Intensidade</b> controla o brilho dos reflexos
+•  Quando <b>Tempo real</b> estiver marcado, os reflexos serão atualizados continuamente (caro!)";
     public override string ScaleDesc =>
         "Alterar o tamanho ao longo de cada eixo";
     public override string ScaleLongDesc =>
-        "As substâncias são dimensionadas em torno de seu ponto \"Pivot\". Para objetos físicos, a massa <i>não</i> mudará.";
+        "As substâncias são dimensionadas em torno de seu ponto pivô. Para objetos físicos, a massa <i>não</i> mudará.";
     public override string ScoreDesc =>
         "Adicionar ou subtrair da pontuação do jogador";
     public override string SolidDesc =>
@@ -535,30 +680,28 @@ Aumente a ""Density"" do comportamento da Physics/Character para aumentar a for�
     public override string SoundDesc =>
         "Reproduzir um som";
     public override string SoundLongDesc =>
-@"• O modo <b>1shot</b> reproduz o som inteiro toda vez que o comportamento está ativo. Várias cópias podem ser reproduzidas ao mesmo tempo. Os fades não têm efeito.
-• No modo <b>Bkgnd</b> o som está sempre tocando, mas é silenciado quando o comportamento está inativo.
+@"• O modo ""1shot"" reproduz o som inteiro toda vez que o comportamento está ativo. Várias cópias podem ser reproduzidas ao mesmo tempo. Os fades não têm efeito.
+• No modo ""Bkgnd"" o som está sempre tocando, mas é silenciado quando o comportamento está inativo.
 
 Formatos suportados: MP3, WAV, OGG, AIF, XM, IT";
     public override string Sound3DDesc =>
         "Reproduzir um som no espaço 3D";
     public override string Sound3DLongDesc =>
-@"•  No modo <b>Point</b>, o panorâmica estéreo será usado para fazer com que o som pareça ser emitido pelo objeto.
-•  No modo <b>Ambient</b> o som parecerá envolver o player.
-•  <b>Fade distance:</b> Além desta faixa, o som diminuirá com a distância. Dentro da faixa está no volume máximo. Valores mais altos aumentam o volume fora da distância de fade.
-•  <b>Max distance:</b> O Som será inaudível além desta distância.
+@"•  No modo ""Point"", o panorâmica estéreo será usado para fazer com que o som pareça ser emitido pelo objeto.
+•  No modo ""Ambient"" o som parecerá envolver o player.
+•  <b>Distância:</b> O som diminuirá com a distância dentro desta faixa -- além da distância máxima, ele se tornará inaudível.
 
 Consulte o comportamento de ""Sound"" para documentação adicional.";
     public override string SpinDesc =>
         "Girar continuamente";
     public override string SpinLongDesc =>
-@"•  <b>Speed:</b> Velocidade em graus por segundo.
-•  <b>Axis</b> Eixo de rotação.
-As substâncias girarão em torno de seu ponto ""Pivot"".";
+@"•  <b>Velocidade</b> está em graus por segundo. <b>Eixo</b> especifica o eixo de rotação.
+As substâncias girarão em torno de seu ponto pivô.";
     public override string TeleportDesc =>
         "Teletransporte-se instantaneamente para outro local";
     public override string TeleportLongDesc =>
-@"•  <b>To:</b> Local de destino para teletransportar
-•  <b>Relative to:</b> Localização de origem opcional. Se especificado, em vez de ir diretamente ao destino, o objeto será deslocado pela diferença entre o destino e a origem.";
+@"•  <b>Para</b> Local de destino para teletransportar
+•  <b>Relativo a:</b> Localização de origem opcional. Se especificado, em vez de ir diretamente ao destino, o objeto será deslocado pela diferença entre o destino e a origem.";
     public override string VisibleDesc =>
         "O objeto é visível no jogo";
     public override string WaterDesc =>
@@ -658,7 +801,7 @@ As substâncias girarão em torno de seu ponto ""Pivot"".";
     public override string TutorialSubstanceReselect =>
         "<i>Toque na substância para selecioná-la novamente.</i>";
     public override string TutorialSubstanceMoveBehavior =>
-        "<i>Tente adicionar um comportamento \"Mover\" à plataforma.</i> Observe que os comportamentos são organizados em diversas categorias.";
+        "<i>Tente adicionar um comportamento \"Move\" à plataforma.</i> Observe que os comportamentos são organizados em diversas categorias.";
     public override string TutorialSubstanceEditDirection =>
         "O comportamento \"Move\" fará com que esta substância se mova para o Norte a uma velocidade constante. <i>Toque na direção para editá-la.</i>";
     public override string TutorialSubstanceSetDirection =>
@@ -708,7 +851,7 @@ As substâncias girarão em torno de seu ponto ""Pivot"".";
     public override string TutorialObjectHurtOn =>
         "<i>Defina \"Hurt/Heal\" para ativar quando o sensor estiver ligado.</i> Mesmo que tenha como alvo o jogador, ele usará o sensor da bola para ligar/desligar.";
     public override string TutorialObjectHurtRate =>
-        "<i>Defina a \"Rate\" de Hurt/Heal como 1 para machucar repetidamente (a cada 1 segundo) enquanto você estiver tocando a bola.</i>";
+        "<i>Defina a taxa de \"Hurt/Heal\" como 1 para machucar repetidamente (a cada 1 segundo) enquanto você estiver tocando a bola.</i>";
     public override string TutorialObjectPlayFinal =>
         "<i>Jogue e tente evitar a morte!</i> Você pode alterar a velocidade da bola e a quantidade de dano para ajustar a dificuldade.";
     public override string TutorialObjectCharacterBehavior =>
@@ -719,7 +862,7 @@ As substâncias girarão em torno de seu ponto ""Pivot"".";
 @"•  Toque duas vezes para selecionar uma parede inteira. A seleção será limitada pelas faces já selecionadas.
 •  Toque três vezes em um rosto para selecionar <i>todos</i> os rostos conectados a ele. A seleção será limitada pelas faces já selecionadas.
 •  Toque três vezes em uma substância para selecionar toda a substância.
-•  Marque a caixa ""X-ray"" de uma substância para torná-la transparente apenas no editor. Isso permite que você veja por trás e faça zoom.
+•  Marque a caixa ""Raio X"" de uma substância para torná-la transparente apenas no editor. Isso permite que você veja por trás e faça zoom.
 •  O painel de tinta mantém atalhos para as cinco tintas mais recentes. Para ""copiar"" uma tinta para outra face, selecione a face de origem, abra e feche o painel de tinta, selecione as faces de destino e use o atalho de tinta recente.
 •  Deslizar faces lateralmente ao longo de uma parede move suas tintas, deixando um rastro atrás delas.
 •  Verifique a seção ""Selecionar"" no menu para obter atalhos úteis para selecionar faces e objetos.

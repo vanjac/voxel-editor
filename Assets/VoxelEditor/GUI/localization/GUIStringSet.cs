@@ -17,6 +17,7 @@ public class GUIStringSet
     // - Edge
     // - Object
     // - Tag
+    // - Pivot
     // - Substance
     // - Behavior
     // - Sensor
@@ -28,8 +29,6 @@ public class GUIStringSet
     // - Health
     // Tutorial-specific:
     // - Face
-    // Quoted terms: (can't be localized yet)
-    // - "Pivot" point
 
     public virtual string Yes =>
         "Yes";
@@ -723,8 +722,7 @@ Supported formats: MP3, WAV, OGG, AIF, XM, IT";
     public virtual string Sound3DLongDesc =>
 @"•  In <b>Point</b> mode, stereo panning will be used to make the sound seem to emit from the object.
 •  In <b>Ambient</b> mode the sound will seem to surround the player.
-•  <b>Fade distance:</b> Beyond this range the sound will fade with distance. Within the range it's at full volume. Higher values increase the volume outside fade distance.
-•  <b>Max distance:</b> Sound will be inaudible past this distance.
+•  <b>Fade distance:</b> Sound will fade with distance within this range -- past the maximum distance it becomes inaudible.
 
 See Sound behavior for additional documentation.";
     public virtual string SpinDesc =>
