@@ -19,22 +19,23 @@ public class DialogGUI : GUIPanel
     }
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
-        GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 576, 324);
+        GUIUtils.HorizCenterRect(safeRect.center.x, safeRect.center.y - 162, 576, 0);
 
     public override void WindowGUI()
     {
         GUILayout.Label(message, GUIUtils.LABEL_WORD_WRAPPED.Value);
-        GUILayout.FlexibleSpace();
+        GUILayout.Space(32);
         GUILayout.BeginHorizontal();
         if (yesButtonText != null &&
-            GUILayout.Button(GUIUtils.PadContent(yesButtonText, IconSet.done)))
+            GUILayout.Button(GUIUtils.PadContent(yesButtonText, IconSet.done), StyleSet.buttonSmall))
         {
             if (yesButtonHandler != null)
                 yesButtonHandler();
             calledHandler = true;
             Destroy(this);
         }
-        if (noButtonText != null && GUILayout.Button(GUIUtils.PadContent(noButtonText, IconSet.x)))
+        if (noButtonText != null
+            && GUILayout.Button(GUIUtils.PadContent(noButtonText, IconSet.x), StyleSet.buttonSmall))
         {
             if (noButtonHandler != null)
                 noButtonHandler();

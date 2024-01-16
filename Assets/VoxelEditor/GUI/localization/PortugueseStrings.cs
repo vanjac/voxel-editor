@@ -104,7 +104,7 @@ public class PortugueseStrings : GUIStringSet
     public override string SelectWithPaint =>
         "Com Tinta";
     public override string SelectFillPaint =>
-        "Preencher Tinta";
+        "Preencher";
     public override string SelectWithTag =>
         "Com Tag";
     public override string OpenBevel =>
@@ -850,7 +850,7 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialPaintCategories =>
         "Escolha qualquer uma das categorias para procurar uma textura. Em seguida, toque no botão Cor para alterar sua cor.";
     public override string TutorialPaintLayers =>
-        "Uma tinta é composta de duas partes: um material opaco e uma sobreposição transparente. Use as guias para alternar entre as duas partes.";
+        "Uma tinta é composta de duas partes: um material opaco e uma sobreposição transparente. Use as abas para alternar entre as duas partes.";
     public override string TutorialPaintTransform =>
         "Use estes botões para girar e espelhar a tinta.";
     public override string TutorialPaintSky =>
@@ -880,7 +880,7 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialSubstancePull =>
         "<i>Puxe para fora para construir uma plataforma.</i>";
     public override string TutorialSubstanceBehaviors =>
-        "As substâncias são controladas pelos seus <i>Comportamentos</in>. Esta substância tem comportamentos <i>Visível</i> e <i>Sólido</i> que a tornam visível e sólida no jogo.";
+        "As substâncias são controladas pelos seus <i>Comportamentos</i>. Esta substância tem comportamentos <i>Visível</i> e <i>Sólido</i> que a tornam visível e sólida no jogo.";
     public override string TutorialSubstanceReselect =>
         "<i>Toque na substância para selecioná-la novamente.</i>";
     public override string TutorialSubstanceMoveBehavior =>
@@ -898,7 +898,7 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialSubstanceBehaviorConditions =>
         "<i>Agora ative um comportamento apenas no estado Desligado e outro no estado Ligado.</i> (a substância começará Desligada).";
     public override string TutorialSubstanceSensor =>
-        "O estado ligado/desligado de uma substância é controlado por um sensor. <i>Dê à plataforma um sensor Pulso. (na guia Lógica)</i> Isso fará com que ele seja ligado/desligado repetidamente.";
+        "O estado ligado/desligado de uma substância é controlado por um sensor. <i>Dê à plataforma um sensor Pulso. (na aba Lógica)</i> Isso fará com que ele ligue/desligue repetidamente.";
     public override string TutorialSubstanceTime =>
         "<i>Agora ajuste o tempo que o sensor passa no estado ligado e desligado para fazer a plataforma se mover por toda a distância do poço.</i>";
     public override string TutorialSubstancePlayFinal =>
@@ -908,7 +908,7 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialObjectSelect =>
         "<i>Selecione uma face e toque no botão cubo.</i>";
     public override string TutorialObjectCreate =>
-        "<i>Escolha a guia Objeto e escolha Bola.</i>";
+        "<i>Escolha a aba Objeto e escolha Bola.</i>";
     public override string TutorialObjectExplain =>
         "Você acabou de criar um objeto bola. Assim como as substâncias, você pode dar aos objetos comportamentos e sensores para adicionar interatividade.";
     public override string TutorialObjectReselect =>
@@ -938,7 +938,7 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialObjectPlayFinal =>
         "<i>Jogue e tente evitar a morte!</i> Você pode alterar a velocidade da bola e a quantidade de dano para ajustar a dificuldade.";
     public override string TutorialObjectCharacterBehavior =>
-        "Se você construir alguns obstáculos, notará que a bola pode flutuar e se mover através das paredes. <i>Adicione um comportamento de Personagem para corrigir isso. (verifique a aba Física)</i>";
+        "Se você construir alguns obstáculos, notará que a bola pode flutuar e passar pelas paredes. <i>Adicione um comportamento Personagem para corrigir isso. (na aba Física)</i>";
     public override string TutorialObjectNext =>
         "Leia o tutorial <i>Lógica do Jogo</i> para aprender como adicionar interatividade mais complexa aos jogos.";
     public override string TutorialTipsMessage =>
