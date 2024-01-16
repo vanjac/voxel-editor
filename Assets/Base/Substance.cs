@@ -12,6 +12,7 @@ public class Substance : DynamicEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Substance", typeof(Substance))
     {
+        displayName = s => s.SubstanceName,
         description = s => s.SubstanceDesc,
         longDescription = s => s.SubstanceLongDesc,
         iconName = "cube-outline",

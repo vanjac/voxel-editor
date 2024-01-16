@@ -4,6 +4,7 @@ public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent
 {
     public static new BehaviorType objectType = new BehaviorType("Water", typeof(WaterBehavior))
     {
+        displayName = s => s.WaterName,
         description = s => s.WaterDesc,
         longDescription = s => s.WaterLongDesc,
         iconName = "water",

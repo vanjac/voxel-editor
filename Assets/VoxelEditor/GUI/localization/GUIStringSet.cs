@@ -148,10 +148,6 @@ public class GUIStringSet
         $"{count} objects selected";
 
     // Categories
-    public virtual string Substance =>
-        "Substance";
-    public virtual string Object =>
-        "Object";
     public virtual string SensorsDetect =>
         "Detect";
     public virtual string SensorsLogic =>
@@ -198,8 +194,6 @@ public class GUIStringSet
         "Active behavior";
     public virtual string FilterActiveBehaviorTitle =>
         "Filter by active behavior";
-    public virtual string FilterAnything =>
-        "Anything";
     public virtual string FilterNothing =>
         "Nothing";
     public virtual string FilterWithTag(string tag) =>
@@ -294,8 +288,6 @@ public class GUIStringSet
         $"{name} Behavior";
     public virtual string NoSensor =>
         "No Sensor";
-    public virtual string NoGeneric =>
-        "None";
     public virtual string TargetEntity(string name) =>
         $"Target:  {name}";
     public virtual string EntityActivators => // plural!
@@ -552,72 +544,110 @@ public class GUIStringSet
     public virtual string PropRelativeTo =>
         "Relative to";
 
-    // Object descriptions
+    // Object names/descriptions
+    public virtual string NoneName =>
+        "None";
+    public virtual string AnythingName =>
+        "Anything";
+    public virtual string ObjectName =>
+        "Object";
     public virtual string ObjectDesc =>
         "An object not made of blocks";
+    public virtual string SubstanceName =>
+        "Substance";
     public virtual string SubstanceDesc =>
         "An entity made of blocks";
     public virtual string SubstanceLongDesc =>
         "The Pivot point is used as the center of rotation/scaling, and as a target point for other behaviors.";
+    public virtual string WorldName =>
+        "World";
     public virtual string WorldDesc =>
         "Properties that affect the entire world";
+    public virtual string CustomTextureName =>
+        "Custom Texture";
     public virtual string CustomTextureDesc =>
         "A custom texture image for materials or overlays";
+    public virtual string BallName =>
+        "Ball";
     public virtual string BallDesc =>
         "A sphere which can be painted";
     public virtual string BallLongDesc =>
         "Use the Paint button to change color/material";
+    public virtual string PlayerName =>
+        "Player";
     public virtual string PlayerDesc =>
         "The character you control in the game";
     // Sensors
+    public virtual string CheckScoreName =>
+        "Check Score";
     public virtual string CheckScoreDesc =>
         "Active when score is at or above/below a threshold";
+    public virtual string DelayName =>
+        "Delay";
     public virtual string DelayDesc =>
         "Add delay to input turning on or off";
     public virtual string DelayLongDesc =>
 @"If the <b>Input</b> has been on for longer than the <b>On time</b>, sensor will turn on. If the Input has been off for longer than the <b>Off time</b>, sensor will turn off. If the Input cycles on/off faster than the on/off time, nothing happens.
 
 Activators: the activators of the Input, added and removed with a delay";
+    public virtual string InCameraName =>
+        "In Camera";
     public virtual string InCameraDesc =>
         "Active when player looking at object";
     public virtual string InCameraLongDesc =>
 @"Turns on as long as the player is looking in the direction of the object, even if it is obscured. Does not turn on if object doesn't have Visible behavior.
 
 Activator: the player";
+    public virtual string ThresholdName =>
+        "Threshold";
     public virtual string ThresholdDesc =>
         "Active when some number of other objects are active";
     public virtual string ThresholdLongDesc =>
 @"Adds up the values of all the <b>Inputs</b>. If an Input is on and set to <b>+1</b>, this adds 1 to the total. If an Input is on and set to <b>-1</b>, this subtracts 1 from the total. The sensor turns on if the total is at or above the <b>Threshold</b>.
 
 Activators: the combined activators of all Positive inputs minus the activators of Negative inputs";
+    public virtual string InRangeName =>
+        "In Range";
     public virtual string InRangeDesc =>
         "Detect objects within some distance";
     public virtual string InRangeLongDesc =>
         "Activators: all objects in range";
+    public virtual string MotionName =>
+        "Motion";
     public virtual string MotionDesc =>
         "Detect moving above some velocity";
     public virtual string MotionLongDesc =>
         "Turns on when the object is both moving faster than the <b>Minimum velocity</b> in the given direction, and rotating about any axis faster than the <b>Minimum angular velocity</b> (degrees per second).";
+    public virtual string PulseName =>
+        "Pulse";
     public virtual string PulseDesc =>
         "Turn on and off continuously";
     public virtual string PulseLongDesc =>
         "<b>Input</b> is optional. When connected, it controls whether the pulse is active. When the Input turns off, the pulse completes a full cycle then stops.";
+    public virtual string RandomPulseName =>
+        "Rand. Pulse";
     public virtual string RandomPulseDesc =>
         "Turn on and off in a random pattern";
     public virtual string RandomPulseLongDesc =>
         "Alternates on/off using random times selected within the ranges. Useful for unpredictable behavior, flickering lights, etc.";
+    public virtual string TapName =>
+        "Tap";
     public virtual string TapDesc =>
         "Detect player tapping the object";
     public virtual string TapLongDesc =>
 @"Object has to be Solid to detect a tap, but it doesn't have to be Visible.
 
 Activator: the player";
+    public virtual string ToggleName =>
+        "Toggle";
     public virtual string ToggleDesc =>
         "One input to turn on, one input to turn off, otherwise hold";
     public virtual string ToggleLongDesc =>
 @"If both inputs turn on simultaneously, the sensor toggles between on/off.
 
 Activators: the activators of the <b>On input</b>, frozen when it is first turned on";
+    public virtual string TouchName =>
+        "Touch";
     public virtual string TouchDesc =>
         "Active when touching another object";
     public virtual string TouchLongDesc =>
@@ -629,18 +659,24 @@ Activators: all colliding objects matching the filter
 
 BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.";
     // Behaviors
+    public virtual string CarryableName =>
+        "Carryable";
     public virtual string CarryableDesc =>
         "Allow player to pick up / drop / throw";
     public virtual string CarryableLongDesc =>
 @"Tap to pick up the object, tap again to throw. Increasing the <b>Throw angle</b> causes the object to be thrown with an arc.
 
 Requires Physics";
+    public virtual string CharacterName =>
+        "Character";
     public virtual string CharacterDesc =>
         "Apply gravity but keep upright";
     public virtual string CharacterLongDesc =>
 @"This is an alternative to the Physics behavior. Objects will have gravity but will not be able to tip over. When used with the Move behavior, objects will fall to the ground instead of floating.
 
 <b>Density</b> affects the mass of the object, proportional to its volume.";
+    public virtual string CloneName =>
+        "Clone";
     public virtual string CloneDesc =>
         "Create a copy of the object";
     public virtual string CloneLongDesc => // based on TeleportLongDesc
@@ -648,6 +684,8 @@ Requires Physics";
 
 •  <b>To:</b> Target location for clone
 •  <b>Relative to:</b> Optional origin location. If specified, the clone will be displaced from the original object by the difference between the target and origin.";
+    public virtual string ForceName =>
+        "Force";
     public virtual string ForceDesc =>
         "Apply instant or continuous force";
     public virtual string ForceLongDesc =>
@@ -657,22 +695,32 @@ Requires Physics";
 •  <b>Continuous</b> mode will cause the force to be continuously applied while the behavior is active.
 •  <b>Ignore mass</b> scales the force to compensate for the mass of the object.
 •  <b>Stop object first</b> will stop any existing motion before applying the force.";
+    public virtual string HaloName =>
+        "Halo";
     public virtual string HaloDesc =>
         "Glowing effect";
     public virtual string HaloLongDesc =>
         "Halo appears at the Pivot point of substances";
+    public virtual string HurtHealName =>
+        "Hurt/Heal";
     public virtual string HurtHealDesc =>
         "Lose/gain health; below 0, object dies";
     public virtual string HurtHealLongDesc =>
 @"•  <b>Amount:</b> Change in health. Positive heals, negative hurts.
 •  <b>Rate:</b> Seconds between successive hurt/heals. 0 means health will only change once when behavior is activated.
 •  <b>Keep within:</b> Health will only change if it's within this range, and will never go outside this range.";
+    public virtual string JoystickName =>
+        "Joystick";
     public virtual string JoystickDesc =>
         "Control motion with the joystick";
+    public virtual string LightName =>
+        "Light";
     public virtual string LightDesc =>
         "Light source at the center of object";
     public virtual string LightLongDesc =>
         "Light originates from the Pivot point of substances";
+    public virtual string LookAtName =>
+        "Look At";
     public virtual string LookAtDesc =>
         "Point in a direction or towards object";
     public virtual string LookAtLongDesc =>
@@ -681,20 +729,28 @@ Requires Physics";
 •  <b>Yaw</b> enables left-right rotation.
 •  <b>Pitch</b> enables up-down rotation. Both can be used at once.
 Substances will rotate around their <b>Pivot</b> point.";
+    public virtual string MoveName =>
+        "Move";
     public virtual string MoveDesc =>
         "Move in a direction or toward object";
     public virtual string MoveLongDesc =>
 @"When used with Solid and Physics behaviors, object will not be able to pass through other objects.
 When used with Solid and Character behaviors, object will additionally be affected by gravity.
 Increase the <b>Density</b> of the Physics/Character behavior to increase the object's pushing strength.";
+    public virtual string MoveWithName =>
+        "Move With";
     public virtual string MoveWithDesc =>
         "Follow the motion of another object";
     public virtual string MoveWithLongDesc =>
         "BUG: This behavior will block Move behaviors from working.";
+    public virtual string PhysicsName =>
+        "Physics";
     public virtual string PhysicsDesc =>
         "Move according to laws of physics";
     public virtual string PhysicsLongDesc =>
         "<b>Density</b> affects the mass of the object, proportional to its volume.";
+    public virtual string ReflectorName =>
+        "Reflector";
     public virtual string ReflectorDesc =>
         "Add more realistic reflections to area";
     public virtual string ReflectorLongDesc =>
@@ -702,14 +758,22 @@ Increase the <b>Density</b> of the Physics/Character behavior to increase the ob
 •  Surfaces within <b>Range</b> distance are affected
 •  <b>Intensity</b> controls the brightness of the reflections
 •  When <b>Real-time</b> is checked, reflections will update continuously (expensive!)";
+    public virtual string ScaleName =>
+        "Scale";
     public virtual string ScaleDesc =>
         "Change size along each axis";
     public virtual string ScaleLongDesc =>
         "Substances are scaled around their <b>Pivot</b> point. For physics objects, mass will <i>not</i> change.";
+    public virtual string ScoreName =>
+        "Score";
     public virtual string ScoreDesc =>
         "Add or subtract from player's score";
+    public virtual string SolidName =>
+        "Solid";
     public virtual string SolidDesc =>
         "Block and collide with other objects";
+    public virtual string SoundName =>
+        "Sound";
     public virtual string SoundDesc =>
         "Play a sound";
     public virtual string SoundLongDesc =>
@@ -717,6 +781,8 @@ Increase the <b>Density</b> of the Physics/Character behavior to increase the ob
 •  In <b>Background</b> mode the sound is always playing, but muted when the behavior is inactive.
 
 Supported formats: MP3, WAV, OGG, AIF, XM, IT";
+    public virtual string Sound3DName =>
+        "3D Sound";
     public virtual string Sound3DDesc =>
         "Play a sound in 3D space";
     public virtual string Sound3DLongDesc =>
@@ -725,31 +791,47 @@ Supported formats: MP3, WAV, OGG, AIF, XM, IT";
 •  <b>Fade distance:</b> Sound will fade with distance within this range -- past the maximum distance it becomes inaudible.
 
 See Sound behavior for additional documentation.";
+    public virtual string SpinName =>
+        "Spin";
     public virtual string SpinDesc =>
         "Rotate continuously";
     public virtual string SpinLongDesc =>
 @"<b>Speed</b> is in degrees per second. <b>Axis</b> specifies the axis of rotation.
 Substances will rotate around their <b>Pivot</b> point.";
+    public virtual string TeleportName =>
+        "Teleport";
     public virtual string TeleportDesc =>
         "Instantly teleport to another location";
     public virtual string TeleportLongDesc =>
 @"•  <b>To:</b> Target location to teleport
 •  <b>Relative to:</b> Optional origin location. If specified, instead of going directly to the target, the object will be displaced by the difference between the target and origin.";
+    public virtual string VisibleName =>
+        "Visible";
     public virtual string VisibleDesc =>
         "Object is visible in the game";
+    public virtual string WaterName =>
+        "Water";
     public virtual string WaterDesc =>
         "Simulate buoyancy physics";
     public virtual string WaterLongDesc =>
         "Water should not be Solid and should not have Physics. This behavior controls only the physics of water, not appearance.";
     // Templates
+    public virtual string SolidSubstanceName =>
+        "Solid Substance";
     public virtual string SolidSubstanceDesc =>
         "A block that is solid and opaque by default";
     public virtual string WaterSubstanceDesc =>
         "A block of water that you can swim in";
+    public virtual string TriggerName =>
+        "Trigger";
     public virtual string TriggerDesc =>
         "Invisible, non-solid block with a touch sensor";
+    public virtual string GlassName =>
+        "Glass";
     public virtual string GlassDesc =>
         "Solid block of glass";
+    public virtual string EmptyName =>
+        "Empty";
     public virtual string EmptyDesc =>
         "Invisible ball object";
     public virtual string LightObjectDesc =>

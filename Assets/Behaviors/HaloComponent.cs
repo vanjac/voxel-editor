@@ -6,6 +6,7 @@ public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
 {
     public static new BehaviorType objectType = new BehaviorType("Halo", typeof(HaloBehavior))
     {
+        displayName = s => s.HaloName,
         description = s => s.HaloDesc,
         longDescription = s => s.HaloLongDesc,
         iconName = "blur",

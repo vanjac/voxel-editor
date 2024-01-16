@@ -12,6 +12,7 @@ public class TouchSensor : BaseTouchSensor
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Touch", typeof(TouchSensor))
     {
+        displayName = s => s.TouchName,
         description = s => s.TouchDesc,
         longDescription = s => s.TouchLongDesc,
         iconName = "vector-combine",

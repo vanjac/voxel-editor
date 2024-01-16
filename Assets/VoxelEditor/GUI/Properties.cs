@@ -270,7 +270,7 @@ public static class PropertyGUIs
             // only temporarily, so the name won't be "Target":
             EntityReferencePropertyManager.SetBehaviorTarget(null);
             EntityReferencePropertyManager.Next(behaviorTarget);
-            text = EntityReferencePropertyManager.GetName();
+            text = EntityReferencePropertyManager.GetName(StringSet);
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget); // put it back
         }
         else
@@ -339,7 +339,7 @@ public static class PropertyGUIs
         {
             EntityReferencePropertyManager.Next(reference.entity);
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
-            valueString = EntityReferencePropertyManager.GetName();
+            valueString = EntityReferencePropertyManager.GetName(StringSet);
         }
 
         GUILayout.BeginHorizontal();
@@ -370,7 +370,7 @@ public static class PropertyGUIs
     public static void Filter(Property property)
     {
         var filter = (ActivatedSensor.Filter)property.value;
-        string filterString = filter.ToString();
+        string filterString = filter.ToString(StringSet);
 
         Color baseColor = GUI.color;
         ActivatedSensor.EntityFilter entityFilter = filter as ActivatedSensor.EntityFilter;
@@ -381,7 +381,7 @@ public static class PropertyGUIs
             {
                 EntityReferencePropertyManager.Next(e);
                 GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
-                filterString = EntityReferencePropertyManager.GetName();
+                filterString = EntityReferencePropertyManager.GetName(StringSet);
             }
         }
 
@@ -492,14 +492,14 @@ public static class PropertyGUIs
         bool allowRandom = true)
     {
         var target = (Target)property.value;
-        string targetString = target.ToString();
+        string targetString = target.ToString(StringSet);
 
         Color baseColor = GUI.color;
         if (target.entityRef.entity != null)
         {
             EntityReferencePropertyManager.Next(target.entityRef.entity);
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
-            targetString = EntityReferencePropertyManager.GetName();
+            targetString = EntityReferencePropertyManager.GetName(StringSet);
         }
 
         GUILayout.BeginHorizontal();
@@ -547,7 +547,7 @@ public static class PropertyGUIs
     public static void TargetFacing(Property property)
     {
         var target = (Target)property.value;
-        string targetString = target.ToString();
+        string targetString = target.ToString(StringSet);
 
         if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
             targetString = StringSet.Camera;
@@ -576,7 +576,7 @@ public static class PropertyGUIs
     public static void TargetDirectionFilter(Property property)
     {
         var target = (Target)property.value;
-        string targetString = target.ToString();
+        string targetString = target.ToString(StringSet);
 
         if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
             targetString = StringSet.TargetAny;

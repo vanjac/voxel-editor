@@ -15,6 +15,7 @@ public class WorldProperties : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "World", typeof(WorldProperties))
     {
+        displayName = s => s.WorldName,
         description = s => s.WorldDesc,
         iconName = "earth",
     };

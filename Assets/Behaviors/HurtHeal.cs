@@ -6,6 +6,7 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
     public static new BehaviorType objectType = new BehaviorType(
         "Hurt/Heal", typeof(HurtHealBehavior))
     {
+        displayName = s => s.HurtHealName,
         description = s => s.HurtHealDesc,
         longDescription = s => s.HurtHealLongDesc,
         iconName = "heart",

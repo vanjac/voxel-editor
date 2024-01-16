@@ -7,6 +7,7 @@ public abstract class ActivatedSensor : Sensor
     public interface Filter
     {
         bool EntityMatches(EntityComponent entityComponent);
+        string ToString(GUIStringSet s);
     }
 
     public class EntityFilter : Filter
@@ -27,12 +28,12 @@ public abstract class ActivatedSensor : Sensor
             return entityComponent.entity == entityRef.entity; // also matches clones
         }
 
-        public override string ToString()
+        public string ToString(GUIStringSet s)
         {
             Entity e = entityRef.entity;
             if (e == null)
-                return GUIPanel.StringSet.EntityRefNone;
-            return e.ToString();
+                return s.EntityRefNone;
+            return e.ToString(s);
         }
     }
 
@@ -105,7 +106,7 @@ public abstract class ActivatedSensor : Sensor
             return false;
         }
 
-        public override string ToString() => entityType.fullName;
+        public string ToString(GUIStringSet s) => entityType.displayName(s);
     }
 
     // for maps before version 10
@@ -127,8 +128,7 @@ public abstract class ActivatedSensor : Sensor
             return entityComponent.entity.tag == tag;
         }
 
-        public override string ToString() =>
-            GUIPanel.StringSet.FilterWithTag(Entity.TagToString(tag));
+        public string ToString(GUIStringSet s) => s.FilterWithTag(Entity.TagToString(tag));
     }
 
     public class MultipleTagFilter : Filter
@@ -149,12 +149,12 @@ public abstract class ActivatedSensor : Sensor
             return ((1 << entityComponent.entity.tag) & tagBits) != 0;
         }
 
-        public override string ToString()
+        public string ToString(GUIStringSet s)
         {
             if (tagBits == 0)
-                return GUIPanel.StringSet.FilterNothing;
+                return s.FilterNothing;
             else if (tagBits == 255)
-                return GUIPanel.StringSet.FilterAnything;
+                return s.AnythingName;
             string str = "";
             int count = 0;
             for (byte i = 0; i < 8; i++)
@@ -166,9 +166,9 @@ public abstract class ActivatedSensor : Sensor
                 }
             }
             if (count == 1)
-                return GUIPanel.StringSet.FilterWithTag(str);
+                return s.FilterWithTag(str);
             else
-                return GUIPanel.StringSet.FilterMultipleTags(str);
+                return s.FilterMultipleTags(str);
         }
     }
 

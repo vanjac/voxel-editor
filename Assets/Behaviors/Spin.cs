@@ -5,6 +5,7 @@ public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
 {
     public static new BehaviorType objectType = new BehaviorType("Spin", typeof(SpinBehavior))
     {
+        displayName = s => s.SpinName,
         description = s => s.SpinDesc,
         longDescription = s => s.SpinLongDesc,
         iconName = "format-rotate-90",

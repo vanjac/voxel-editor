@@ -7,6 +7,7 @@ public class InRangeSensor : BaseTouchSensor
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "In Range", typeof(InRangeSensor))
     {
+        displayName = s => s.InRangeName,
         description = s => s.InRangeDesc,
         longDescription = s => s.InRangeLongDesc,
         iconName = "radar",

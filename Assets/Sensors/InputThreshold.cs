@@ -7,6 +7,7 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Threshold", typeof(InputThresholdSensor))
     {
+        displayName = s => s.ThresholdName,
         description = s => s.ThresholdDesc,
         longDescription = s => s.ThresholdLongDesc,
         iconName = "altimeter",
@@ -79,7 +80,7 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.color = baseColor;
-            GUILayout.Label(EntityReferencePropertyManager.GetName() + " ");
+            GUILayout.Label(EntityReferencePropertyManager.GetName(GUIPanel.StringSet) + " ");
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();

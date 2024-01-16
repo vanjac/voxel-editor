@@ -6,6 +6,7 @@ public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Delay", typeof(DelaySensor))
     {
+        displayName = s => s.DelayName,
         description = s => s.DelayDesc,
         longDescription = s => s.DelayLongDesc,
         iconName = "timer",

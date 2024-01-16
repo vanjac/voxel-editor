@@ -5,6 +5,7 @@ public class TapSensor : GenericSensor<TapSensor, TapComponent>
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Tap", typeof(TapSensor))
     {
+        displayName = s => s.TapName,
         description = s => s.TapDesc,
         longDescription = s => s.TapLongDesc,
         iconName = "gesture-tap",

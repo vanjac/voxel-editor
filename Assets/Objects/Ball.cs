@@ -6,6 +6,7 @@ public class BallObject : ObjectEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Ball", typeof(BallObject))
     {
+        displayName = s => s.BallName,
         description = s => s.BallDesc,
         longDescription = s => s.BallLongDesc,
         iconName = "circle-outline",

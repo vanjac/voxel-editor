@@ -6,6 +6,7 @@ public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Motion", typeof(MotionSensor))
     {
+        displayName = s => s.MotionName,
         description = s => s.MotionDesc,
         longDescription = s => s.MotionLongDesc,
         iconName = "speedometer",

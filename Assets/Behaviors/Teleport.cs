@@ -6,6 +6,7 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
     public static new BehaviorType objectType = new BehaviorType(
         "Teleport", typeof(TeleportBehavior))
     {
+        displayName = s => s.TeleportName,
         description = s => s.TeleportDesc,
         longDescription = s => s.TeleportLongDesc,
         iconName = "send",

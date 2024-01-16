@@ -192,39 +192,39 @@ public struct Target
         return Vector3.Angle(targetDirection, direction) < 45;
     }
 
-    public override string ToString()
+    public string ToString(GUIStringSet s)
     {
         if (entityRef.entity != null)
-            return entityRef.entity.ToString();
+            return entityRef.entity.ToString(s);
         else
         {
-            string dirStr = GUIPanel.StringSet.EntityRefNone;
+            string dirStr = s.EntityRefNone;
             switch (direction & ~LOCAL_BIT)
             {
                 case WEST:
-                    dirStr = GUIPanel.StringSet.West;
+                    dirStr = s.West;
                     break;
                 case EAST:
-                    dirStr = GUIPanel.StringSet.East;
+                    dirStr = s.East;
                     break;
                 case DOWN:
-                    dirStr = GUIPanel.StringSet.Down;
+                    dirStr = s.Down;
                     break;
                 case UP:
-                    dirStr = GUIPanel.StringSet.Up;
+                    dirStr = s.Up;
                     break;
                 case SOUTH:
-                    dirStr = GUIPanel.StringSet.South;
+                    dirStr = s.South;
                     break;
                 case NORTH:
-                    dirStr = GUIPanel.StringSet.North;
+                    dirStr = s.North;
                     break;
                 case RANDOM:
-                    dirStr = GUIPanel.StringSet.TargetRandom;
+                    dirStr = s.TargetRandom;
                     break;
             }
             if ((direction & LOCAL_BIT) != 0 && direction != NO_DIRECTION)
-                return GUIPanel.StringSet.TargetLocalDirection(dirStr);
+                return s.TargetLocalDirection(dirStr);
             else
                 return dirStr;
         }

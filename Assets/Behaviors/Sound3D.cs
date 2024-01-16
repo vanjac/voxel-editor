@@ -11,6 +11,7 @@ public class Sound3DBehavior : BaseSoundBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "3D Sound", typeof(Sound3DBehavior))
     {
+        displayName = s => s.Sound3DName,
         description = s => s.Sound3DDesc,
         longDescription = s => s.Sound3DLongDesc,
         iconName = "headphones",

@@ -12,6 +12,7 @@ public class PhysicsBehavior : BasePhysicsBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Physics", typeof(PhysicsBehavior))
     {
+        displayName = s => s.PhysicsName,
         description = s => s.PhysicsDesc,
         longDescription = s => s.PhysicsLongDesc,
         iconName = "soccer",

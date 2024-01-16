@@ -6,6 +6,7 @@ public abstract class ObjectEntity : DynamicEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Object", typeof(ObjectEntity))
     {
+        displayName = s => s.ObjectName,
         description = s => s.ObjectDesc,
         iconName = "circle",
     };

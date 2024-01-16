@@ -60,7 +60,7 @@ public class FilterGUI : GUIPanel
             };
             Destroy(this);
         }
-        if (GUILayout.Button(GUIUtils.MenuContent(StringSet.FilterAnything, IconSet.objectType),
+        if (GUILayout.Button(GUIUtils.MenuContent(StringSet.AnythingName, IconSet.objectType),
             OverflowMenuGUI.buttonStyle.Value))
         {
             handler(new ActivatedSensor.EntityTypeFilter(Entity.objectType));

@@ -5,6 +5,7 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Check Score", typeof(CheckScoreSensor))
     {
+        displayName = s => s.CheckScoreName,
         description = s => s.CheckScoreDesc,
         iconName = "code-greater-than-or-equal",
     };

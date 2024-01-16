@@ -132,7 +132,7 @@ public class DataImportGUI : GUIPanel
                 if (errorMessage != null)
                     ActionBarGUI.ActionBarLabel(errorMessage);
                 else
-                    ActionBarGUI.ActionBarLabel(StringSet.NoDataInWorld(type.ToString()));
+                    ActionBarGUI.ActionBarLabel(StringSet.NoDataInWorld(type.ToString())); // TODO: localize
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }

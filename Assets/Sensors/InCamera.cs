@@ -6,6 +6,7 @@ public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "In Camera", typeof(InCameraSensor))
     {
+        displayName = s => s.InCameraName,
         description = s => s.InCameraDesc,
         longDescription = s => s.InCameraLongDesc,
         iconName = "eye",

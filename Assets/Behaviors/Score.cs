@@ -4,6 +4,7 @@ public class ScoreBehavior : GenericEntityBehavior<ScoreBehavior, ScoreComponent
 {
     public static new BehaviorType objectType = new BehaviorType("Score", typeof(ScoreBehavior))
     {
+        displayName = s => s.ScoreName,
         description = s => s.ScoreDesc,
         iconName = "counter"
     };

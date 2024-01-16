@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -474,11 +474,11 @@ public class PropertiesGUI : LeftPanelGUI
             if (noName != null)
                 title = noName;
             else
-                title = StringSet.NoGeneric;
+                title = StringSet.NoneName;
         }
         else
         {
-            title = obj.ObjectType.fullName;
+            title = obj.ObjectType.displayName(StringSet);
             if (nameFmt != null)
                 title = nameFmt(title);
             if (obj.Properties().Any())
@@ -614,7 +614,7 @@ public class NewBehaviorGUI : GUIPanel
         if (targetEntityIsActivator)
             targetButtonText = StringSet.TargetEntity(StringSet.EntityActivators);
         else if (targetEntity != null)
-            targetButtonText = StringSet.TargetEntity(targetEntity.ToString());
+            targetButtonText = StringSet.TargetEntity(targetEntity.ToString(StringSet));
         TutorialGUI.TutorialHighlight("behavior target");
         if (GUIUtils.HighlightedButton(targetButtonText))
         {

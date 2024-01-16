@@ -6,6 +6,7 @@ public class ScaleBehavior : GenericEntityBehavior<ScaleBehavior, ScaleComponent
     public static new BehaviorType objectType = new BehaviorType(
         "Scale", typeof(ScaleBehavior))
     {
+        displayName = s => s.ScaleName,
         description = s => s.ScaleDesc,
         longDescription = s => s.ScaleLongDesc,
         iconName = "resize",

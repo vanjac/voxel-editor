@@ -4,6 +4,7 @@ public class CloneBehavior : TeleportBehavior
 {
     public static new BehaviorType objectType = new BehaviorType("Clone", typeof(CloneBehavior))
     {
+        displayName = s => s.CloneName,
         description = s => s.CloneDesc,
         longDescription = s => s.CloneLongDesc,
         iconName = "content-copy",

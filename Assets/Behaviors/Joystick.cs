@@ -10,6 +10,7 @@ public class JoystickBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Joystick", typeof(JoystickBehavior))
     {
+        displayName = s => s.JoystickName,
         description = s => s.JoystickDesc,
         iconName = "joystick",
         rule = BehaviorType.AndRule(

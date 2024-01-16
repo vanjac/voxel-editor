@@ -54,7 +54,7 @@ public class TypePickerGUI : GUIPanel
             GUILayout.Label(item.icon, GUILayout.ExpandWidth(false));
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(item.fullName, StyleSet.labelTitle);
+            GUILayout.Label(item.displayName(StringSet), StyleSet.labelTitle);
             var longDesc = item.longDescription(StringSet);
             if (longDesc != "" && GUILayout.Button(IconSet.helpCircle,
                 helpIconStyle.Value, GUILayout.ExpandWidth(false)))

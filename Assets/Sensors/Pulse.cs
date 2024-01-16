@@ -6,6 +6,7 @@ public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Pulse", typeof(PulseSensor))
     {
+        displayName = s => s.PulseName,
         description = s => s.PulseDesc,
         longDescription = s => s.PulseLongDesc,
         iconName = "pulse",

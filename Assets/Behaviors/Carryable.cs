@@ -7,6 +7,7 @@ public class CarryableBehavior : GenericEntityBehavior<CarryableBehavior, Carrya
     public static new BehaviorType objectType = new BehaviorType(
         "Carryable", typeof(CarryableBehavior))
     {
+        displayName = s => s.CarryableName,
         description = s => s.CarryableDesc,
         longDescription = s => s.CarryableLongDesc,
         iconName = "coffee",

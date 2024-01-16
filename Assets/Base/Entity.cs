@@ -48,7 +48,10 @@ public struct Property
 public class PropertiesObjectType
 {
     public static readonly PropertiesObjectType NONE = new PropertiesObjectType("None", null)
-        { iconName = "cancel" };
+    {
+        displayName = s => s.NoneName,
+        iconName = "cancel",
+    };
 
     // This name is used for identifying types and for error messages if a type is not recognized.
     // It is always in English (not localized) and can never change.
@@ -59,6 +62,8 @@ public class PropertiesObjectType
     [XmlIgnore]
     public Func<PropertiesObject> constructor;
 
+    [XmlIgnore]
+    public Localizer displayName;
     [XmlIgnore]
     public Localizer description = GUIStringSet.Empty;
     [XmlIgnore]
@@ -81,6 +86,7 @@ public class PropertiesObjectType
     public PropertiesObjectType()
     {
         constructor = DefaultConstructor;
+        displayName = DefaultDisplayName;
     }
 
     public PropertiesObjectType(string fullName, Type type)
@@ -88,17 +94,21 @@ public class PropertiesObjectType
         this.fullName = fullName;
         this.type = type;
         constructor = DefaultConstructor;
+        displayName = DefaultDisplayName;
     }
 
     public PropertiesObjectType(PropertiesObjectType baseType, Func<PropertiesObject> newConstructor)
     {
         fullName = baseType.fullName;
+        displayName = baseType.displayName;
         description = baseType.description;
         longDescription = baseType.longDescription;
         iconName = baseType.iconName;
         type = baseType.type;
         constructor = newConstructor;
     }
+
+    private string DefaultDisplayName(GUIStringSet s) => fullName;
 
     private PropertiesObject DefaultConstructor()
     {
@@ -174,7 +184,10 @@ public abstract class Entity : PropertiesObject
 {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "Anything", typeof(Entity))
-        { iconName = "circle-outline" };
+    {
+        displayName = s => s.AnythingName,
+        iconName = "circle-outline",
+    };
 
     public EntityComponent component;
     public Sensor sensor;
@@ -192,6 +205,8 @@ public abstract class Entity : PropertiesObject
     }
 
     public override string ToString() => TagToString(tag) + " " + ObjectType.fullName;
+    public string ToString(GUIStringSet s) =>
+        TagToString(tag) + " " + ObjectType.displayName(s);
 
     public virtual PropertiesObjectType ObjectType => objectType;
 

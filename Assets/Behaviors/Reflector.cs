@@ -8,6 +8,7 @@ public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, Reflec
     public static new BehaviorType objectType = new BehaviorType(
         "Reflector", typeof(ReflectorBehavior))
     {
+        displayName = s => s.ReflectorName,
         description = s => s.ReflectorDesc,
         longDescription = s => s.ReflectorLongDesc,
         iconName = "mirror",

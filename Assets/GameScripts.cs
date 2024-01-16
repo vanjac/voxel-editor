@@ -15,8 +15,9 @@ public static class GameScripts
     {
         new PropertiesObjectType("Solid Substance", typeof(Substance))
         {
+            displayName = s => s.SolidSubstanceName,
             description = s => s.SolidSubstanceDesc,
-            iconName = "wall",
+            iconName = SolidBehavior.objectType.iconName,
             constructor = () => {
                 Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
@@ -26,8 +27,9 @@ public static class GameScripts
         },
         new PropertiesObjectType("Water", typeof(Substance))
         {
+            displayName = WaterBehavior.objectType.displayName,
             description = s => s.WaterSubstanceDesc,
-            iconName = "water",
+            iconName = WaterBehavior.objectType.iconName,
             constructor = () => {
                 Substance substance = new Substance();
                 substance.behaviors.Add(new VisibleBehavior());
@@ -39,8 +41,9 @@ public static class GameScripts
         },
         new PropertiesObjectType("Trigger", typeof(Substance))
         {
+            displayName = s => s.TriggerName,
             description = s => s.TriggerDesc,
-            iconName = "vector-combine",
+            iconName = TouchSensor.objectType.iconName,
             constructor = () => {
                 Substance substance = new Substance();
                 substance.sensor = new TouchSensor();
@@ -52,6 +55,7 @@ public static class GameScripts
         },
         new PropertiesObjectType("Glass", typeof(Substance))
         {
+            displayName = s => s.GlassName,
             description = s => s.GlassDesc,
             iconName = "window-closed-variant",
             constructor = () => {
@@ -205,6 +209,7 @@ public static class GameScripts
         }),
         new PropertiesObjectType("Empty", typeof(BallObject))
         {
+            displayName = s => s.EmptyName,
             description = s => s.EmptyDesc,
             iconName = "scan-helper",
             constructor = () => {
@@ -218,8 +223,9 @@ public static class GameScripts
         },
         new PropertiesObjectType("Light", typeof(BallObject))
         {
+            displayName = LightBehavior.objectType.displayName,
             description = s => s.LightObjectDesc,
-            iconName = "lightbulb-on",
+            iconName = LightBehavior.objectType.iconName,
             constructor = () => {
                 var ball = new BallObject();
                 ball.paint.material = null;
@@ -233,8 +239,9 @@ public static class GameScripts
         },
         new PropertiesObjectType("Reflector", typeof(BallObject))
         {
+            displayName = ReflectorBehavior.objectType.displayName,
             description = ReflectorBehavior.objectType.description,
-            iconName = "mirror",
+            iconName = ReflectorBehavior.objectType.iconName,
             constructor = () => {
                 var ball = new BallObject();
                 ball.paint.material = ResourcesDirectory.InstantiateMaterial(

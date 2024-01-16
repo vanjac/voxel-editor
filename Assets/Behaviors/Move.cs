@@ -6,6 +6,7 @@ public class MoveBehavior : GenericEntityBehavior<MoveBehavior, MoveComponent>
     public static new BehaviorType objectType = new BehaviorType(
         "Move", typeof(MoveBehavior))
     {
+        displayName = s => s.MoveName,
         description = s => s.MoveDesc,
         longDescription = s => s.MoveLongDesc,
         iconName = "arrow-right-bold-box-outline",

@@ -108,17 +108,17 @@ public class EntityReferencePropertyManager : MonoBehaviour
 
     private static Color ColorI(int i) => Color.HSVToRGB((i * .618f) % 1.0f, 0.8f, 1.0f);
 
-    public static string GetName()
+    public static string GetName(GUIStringSet s)
     {
         Entity entity = targetEntities[currentTargetEntityI];
         if (entity == null)
-            return GUIPanel.StringSet.EntityRefNone;
+            return s.EntityRefNone;
         else if (entity == currentEntity)
-            return GUIPanel.StringSet.EntityRefSelf;
+            return s.EntityRefSelf;
         else if (entity == behaviorTarget)
-            return GUIPanel.StringSet.EntityRefTarget;
+            return s.EntityRefTarget;
         else
-            return entity.ToString();
+            return entity.ToString(s);
     }
 
     void Awake()

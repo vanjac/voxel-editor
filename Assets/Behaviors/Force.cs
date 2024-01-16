@@ -10,6 +10,7 @@ public class ForceBehavior : GenericEntityBehavior<ForceBehavior, ForceComponent
 
     public static new BehaviorType objectType = new BehaviorType("Force", typeof(ForceBehavior))
     {
+        displayName = s => s.ForceName,
         description = s => s.ForceDesc,
         longDescription = s => s.ForceLongDesc,
         iconName = "rocket",

@@ -6,6 +6,7 @@ public class MoveWithBehavior : GenericEntityBehavior<MoveWithBehavior, MoveWith
     public static new BehaviorType objectType = new BehaviorType(
         "Move With", typeof(MoveWithBehavior))
     {
+        displayName = s => s.MoveWithName,
         description = s => s.MoveWithDesc,
         longDescription = s => s.MoveWithLongDesc,
         iconName = "move-resize-variant",

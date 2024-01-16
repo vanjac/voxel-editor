@@ -4,6 +4,7 @@ public class SolidBehavior : GenericEntityBehavior<SolidBehavior, SolidComponent
 {
     public static new BehaviorType objectType = new BehaviorType("Solid", typeof(SolidBehavior))
     {
+        displayName = s => s.SolidName,
         description = s => s.SolidDesc,
         iconName = "wall",
         rule = BehaviorType.AndRule(

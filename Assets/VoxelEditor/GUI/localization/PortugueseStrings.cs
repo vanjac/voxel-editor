@@ -129,10 +129,6 @@ public class PortugueseStrings : GUIStringSet
     public override string PickObjectCount(int count) =>
         $"{count} objetos selecionados";
 
-    public override string Substance =>
-        "Substância";
-    public override string Object =>
-        "Objeto";
     public override string SensorsDetect =>
         "Deteco";
     public override string SensorsLogic =>
@@ -176,8 +172,6 @@ public class PortugueseStrings : GUIStringSet
         "Comportamento"; // shortened for space
     public override string FilterActiveBehaviorTitle =>
         "Filtrar por comportamento ativo";
-    public override string FilterAnything =>
-        "Qualquer";
     public override string FilterNothing =>
         "Nada";
     public override string FilterWithTag(string tag) =>
@@ -268,8 +262,6 @@ public class PortugueseStrings : GUIStringSet
         $"{name}"; // removed for space
     public override string NoSensor =>
         "Sem Sensor";
-    public override string NoGeneric =>
-        "Nada";
     public override string TargetEntity(string name) =>
         $"Alvo:  {name}";
     public override string EntityActivators =>
@@ -520,8 +512,16 @@ public class PortugueseStrings : GUIStringSet
     public override string PropRelativeTo =>
         "Relativo a";
 
+    public override string NoneName =>
+        "Nada";
+    public override string AnythingName =>
+        "Qualquer";
+    public override string ObjectName =>
+        "Objeto";
     public override string ObjectDesc =>
         "Um objeto não feito de blocos";
+    public override string SubstanceName =>
+        "Substância";
     public override string SubstanceDesc =>
         "Uma entidade feita de blocos";
     public override string SubstanceLongDesc =>

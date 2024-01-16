@@ -18,6 +18,7 @@ public class SoundBehavior : BaseSoundBehavior
 {
     public static new BehaviorType objectType = new BehaviorType("Sound", typeof(SoundBehavior))
     {
+        displayName = s => s.SoundName,
         description = s => s.SoundDesc,
         longDescription = s => s.SoundLongDesc,
         iconName = "volume-high",

@@ -7,6 +7,7 @@ public class CustomTexture : PropertiesObject
     public static PropertiesObjectType objectType = new PropertiesObjectType(
         "Custom Texture", typeof(CustomTexture))
     {
+        displayName = s => s.CustomTextureName,
         description = s => s.CustomTextureDesc,
         iconName = "image",
     };

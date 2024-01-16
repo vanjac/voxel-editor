@@ -6,6 +6,7 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
 {
     public static new BehaviorType objectType = new BehaviorType("Light", typeof(LightBehavior))
     {
+        displayName = s => s.LightName,
         description = s => s.LightDesc,
         longDescription = s => s.LightLongDesc,
         iconName = "lightbulb-on",

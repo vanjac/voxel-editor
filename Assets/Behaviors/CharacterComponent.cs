@@ -6,6 +6,7 @@ public class CharacterBehavior : BasePhysicsBehavior
     public static new BehaviorType objectType = new BehaviorType(
         "Character", typeof(CharacterBehavior))
     {
+        displayName = s => s.CharacterName,
         description = s => s.CharacterDesc,
         longDescription = s => s.CharacterLongDesc,
         iconName = "human",

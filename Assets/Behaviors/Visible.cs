@@ -5,6 +5,7 @@ public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleCom
 {
     public static new BehaviorType objectType = new BehaviorType("Visible", typeof(VisibleBehavior))
     {
+        displayName = s => s.VisibleName,
         description = s => s.VisibleDesc,
         iconName = "eye",
         rule = BehaviorType.AndRule(

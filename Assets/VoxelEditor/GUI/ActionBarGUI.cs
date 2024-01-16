@@ -103,7 +103,7 @@ public class ActionBarGUI : TopPanelGUI
             picker.title = StringSet.CreateObjectTitle;
             picker.categories = new PropertiesObjectType[][] {
                 GameScripts.entityTemplates, GameScripts.objectTemplates };
-            picker.categoryNames = new string[] { StringSet.Substance, StringSet.Object };
+            picker.categoryNames = new string[] { StringSet.SubstanceName, StringSet.ObjectName };
             picker.handler = (PropertiesObjectType type) =>
             {
                 if (typeof(Substance).IsAssignableFrom(type.type))

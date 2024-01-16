@@ -5,6 +5,7 @@ public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtCompon
 {
     public static new BehaviorType objectType = new BehaviorType("Look At", typeof(LookAtBehavior))
     {
+        displayName = s => s.LookAtName,
         description = s => s.LookAtDesc,
         longDescription =  s => s.LookAtLongDesc,
         iconName = "compass",

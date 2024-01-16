@@ -5,6 +5,7 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Toggle", typeof(ToggleSensor))
     {
+        displayName = s => s.ToggleName,
         description = s => s.ToggleDesc,
         longDescription = s => s.ToggleLongDesc,
         iconName = "toggle-switch",

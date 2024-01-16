@@ -6,6 +6,7 @@ public class PlayerObject : ObjectEntity
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Player", typeof(PlayerObject))
     {
+        displayName = s => s.PlayerName,
         description = s => s.PlayerDesc,
         iconName = "human-greeting",
     };

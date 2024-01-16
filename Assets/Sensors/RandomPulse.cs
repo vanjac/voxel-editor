@@ -6,6 +6,7 @@ public class RandomPulseSensor : GenericSensor<RandomPulseSensor, RandomPulseCom
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
         "Rand. Pulse", typeof(RandomPulseSensor))
     {
+        displayName = s => s.RandomPulseName,
         description = s => s.RandomPulseDesc,
         longDescription = s => s.RandomPulseLongDesc,
         iconName = "progress-question",
