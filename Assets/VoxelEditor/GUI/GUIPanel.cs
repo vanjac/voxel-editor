@@ -23,8 +23,7 @@ public abstract class GUIPanel : MonoBehaviour
         (GUIManager.instance != null) ? GUIManager.instance.styleSet.Value : null;
     public static GameObject GuiGameObject =>
         (GUIManager.instance != null) ? GUIManager.instance.gameObject : null;
-    public static GUIStringSet StringSet =>
-        (GUIManager.instance != null) ? GUIManager.instance.stringSet : null;
+    public static GUIStringSet StringSet = new GUIStringSet();
 
     public string title = "";
     protected bool showCloseButton = false;

@@ -256,7 +256,7 @@ public class PortugueseStrings : GUIStringSet
     public override string RemoveBehavior =>
         "Remover";
     public override string OtherBehaviorsPlaceholder =>
-        "(outros comportamentos......)";
+        "mais comportamentos...";
     public override string SensorName(string name) =>
         $"Sensor {name}";
     public override string BehaviorName(string name) =>

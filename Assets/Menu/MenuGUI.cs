@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,11 +30,6 @@ public class MenuGUI : GUIPanel
     void Start()
     {
         UpdateWorldList();
-        startOptions = new GUIContent[]
-        {
-            new GUIContent(StringSet.StartTutorial, IconSet.helpLarge),
-            new GUIContent(StringSet.CreateNewWorld, IconSet.newWorldLarge)
-        };
     }
 
     public override void WindowGUI()
@@ -48,8 +43,11 @@ public class MenuGUI : GUIPanel
             // copied from TemplatePickerGUI
             GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(900), GUILayout.Height(480));
             GUILayout.Label(StringSet.WelcomeMessage, GUIUtils.LABEL_HORIZ_CENTERED.Value);
-            int selection = GUILayout.SelectionGrid(-1, startOptions, 2,
-                TemplatePickerGUI.buttonStyle.Value, GUILayout.ExpandHeight(true));
+            int selection = GUILayout.SelectionGrid(-1, new GUIContent[]
+            {
+                new GUIContent(StringSet.StartTutorial, IconSet.helpLarge),
+                new GUIContent(StringSet.CreateNewWorld, IconSet.newWorldLarge)
+            }, 2, TemplatePickerGUI.buttonStyle.Value, GUILayout.ExpandHeight(true));
             if (selection == 0)
             {
                 TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, null, null, null);

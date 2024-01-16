@@ -2,8 +2,7 @@ using UnityEngine;
 
 public static class Tutorials
 {
-    private static GUIStringSet StringSet =>
-        (GUIManager.instance != null) ? GUIManager.instance.stringSet : null;
+    private static GUIStringSet StringSet => GUIPanel.StringSet;
 
     public static TutorialPageFactory[] INTRO_TUTORIAL = new TutorialPageFactory[]
     {

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,9 +6,11 @@ using UnityEngine;
 class StoredPropertiesObject : PropertiesObject
 {
     private const string NOT_EQUAL_VALUE = "not equal!!";
-    private static System.Lazy<PropertiesObjectType> differentObjectType
-        = new System.Lazy<PropertiesObjectType>(() =>
-            new PropertiesObjectType($"({GUIPanel.StringSet.PropertiesDifferent})", null));
+    private static readonly PropertiesObjectType DIFFERENT_OBJECT_TYPE = new PropertiesObjectType(
+        "(different)", null)
+    {
+        displayName = s => $"({s.PropertiesDifferent})",
+    };
 
     private readonly PropertiesObjectType type;
     private readonly IEnumerable<Property> properties;
@@ -36,7 +38,7 @@ class StoredPropertiesObject : PropertiesObject
                 objType = obj.ObjectType;
             if (objType != type)
             {
-                type = differentObjectType.Value;
+                type = DIFFERENT_OBJECT_TYPE;
                 return;
             }
         }

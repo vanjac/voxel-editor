@@ -4,8 +4,7 @@ using UnityEngine;
 
 public static class PropertyGUIs
 {
-    private static GUIStringSet StringSet =>
-        (GUIManager.instance != null) ? GUIManager.instance.stringSet : null;
+    private static GUIStringSet StringSet => GUIPanel.StringSet;
 
     private static TouchScreenKeyboard numberKeyboard = null;
     private static Action<string> keyboardHandler;
