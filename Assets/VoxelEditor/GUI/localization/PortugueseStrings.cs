@@ -2,6 +2,7 @@
 // Additional resources:
 // https://georeference.org/forum/t150812.62
 // https://steamcommunity.com/app/519860/discussions/6/1744512496199584988
+// https://www.construct.net/en/forum/construct-3/portugues-pt-br-14/100-today-132770
 public class PortugueseStrings : GUIStringSet
 {
     // World -> Mundo
@@ -526,65 +527,95 @@ public class PortugueseStrings : GUIStringSet
         "Uma entidade feita de blocos";
     public override string SubstanceLongDesc =>
         "O ponto pivô é usado como centro de rotação/escala e como ponto alvo para outros comportamentos.";
+    public override string WorldName =>
+        "Mundo";
     public override string WorldDesc =>
         "Propriedades que afetam o mundo inteiro";
+    public override string CustomTextureName =>
+        "Textura";
     public override string CustomTextureDesc =>
         "Uma imagem de textura personalizada para materiais ou sobreposições";
+    public override string BallName =>
+        "Bola";
     public override string BallDesc =>
         "Uma esfera que pode ser pintada";
     public override string BallLongDesc =>
         "Use o botão de pintura para alterar a cor/material";
+    public override string PlayerName =>
+        "Jogador";
     public override string PlayerDesc =>
         "O personagem que você controla no jogo";
 
+    public override string CheckScoreName =>
+        "Pontuação"; // same as Score behavior
     public override string CheckScoreDesc =>
         "Ativo quando a pontuação está igual ou acima/abaixo de um limite";
+    public override string DelayName =>
+        "Atraso";
     public override string DelayDesc =>
         "Adicionar atraso à ativação ou desativação da entrada";
     public override string DelayLongDesc =>
 @"Se a <b>Entrada</b> estiver ligada por mais tempo do que o <b>Tempo ligar</b>, o sensor será ligado. Se a entrada estiver desligada por mais tempo do que o <b>Tempo desligar</b>, o sensor será desligado. Se a entrada ligar/desligar mais rápido que o tempo de ligar/desligar, nada acontece.
 
 Ativadores: os ativadores da Entrada, adicionados e removidos com atraso";
+    public override string InCameraName =>
+        "Na Câmera";
     public override string InCameraDesc =>
         "Ativo quando o jogador olha para o objeto";
     public override string InCameraLongDesc =>
-@"Ativa enquanto o jogador estiver olhando na direção do objeto, mesmo que esteja obscurecido. Não é ativado se o objeto não tiver comportamento ""Visible"".
+@"Ativa enquanto o jogador estiver olhando na direção do objeto, mesmo que esteja obscurecido. Não é ativado se o objeto não tiver comportamento Visível.
 
 Ativador: o jogador";
+    public override string ThresholdName =>
+        "Limiar";
     public override string ThresholdDesc =>
         "Ativo quando um certo número de outros objetos estão ativos";
     public override string ThresholdLongDesc =>
 @"Soma os valores de todas as <b>Entradas</b>. Se uma entrada estiver ativada e definida como <b>+1</b>, isso adiciona 1 ao total. Se uma entrada estiver ativada e definida como <b>-1</b>, isso subtrai 1 do total. O sensor liga se o total estiver igual ou acima do <b>Limiar</b>.
 
 Ativadores: os ativadores combinados de todas as entradas Positivas menos os ativadores das entradas Negativas";
+    public override string InRangeName =>
+        "No Alcance";
     public override string InRangeDesc =>
         "Detectar objetos dentro de alguma distância";
     public override string InRangeLongDesc =>
         "Ativadores: todos os objetos ao alcance";
+    public override string MotionName =>
+        "Movimento";
     public override string MotionDesc =>
         "Detectar movimento acima de alguma velocidade";
     public override string MotionLongDesc =>
         "É ativado quando o objeto está se movendo mais rápido que a <b>Velocidade mínima</b> na direção especificada e girando em torno de qualquer eixo mais rápido que a <b>Velocidade angular mínima</b> (graus por segundo).";
+    public override string PulseName =>
+        "Pulso";
     public override string PulseDesc =>
         "Ligar e desligar continuamente";
     public override string PulseLongDesc =>
         "<b>Entrada</b> é opcional. Quando conectado, controla se o pulso está ativo. Quando a entrada é desligada, o pulso completa um ciclo completo e então para.";
+    public override string RandomPulseName =>
+        "Cintilação"; // flicker
     public override string RandomPulseDesc =>
         "Ligue e desligue em um padrão aleatório";
     public override string RandomPulseLongDesc =>
         "Alterna entre ligar/desligar usando tempos aleatórios selecionados dentro dos intervalos. Útil para comportamento imprevisível, luzes tremeluzentes, etc.";
+    public override string TapName =>
+        "Aperte";
     public override string TapDesc =>
         "Detectar jogador tocando no objeto";
     public override string TapLongDesc =>
-@"O objeto deve ter comportamento ""Solid"" para detectar um toque, mas não precisa ter comportamento ""Visible"".
+@"O objeto precisa ser Sólido para detectar um toque, mas não precisa ser Visível.
 
 Ativador: o jogador";
+    public override string ToggleName =>
+        "Alternar";
     public override string ToggleDesc =>
         "Uma entrada para ligar, uma entrada para desligar, caso contrário, segure";
     public override string ToggleLongDesc =>
 @"Se ambas as entradas forem ligadas simultaneamente, o sensor alterna entre ligado/desligado.
 
 Ativadores: os ativadores da <b>Entrada Ligado</b>, congelados quando é ligado";
+    public override string TouchName =>
+        "Toque";
     public override string TouchDesc =>
         "Ativo ao tocar outro objeto";
     public override string TouchLongDesc =>
@@ -594,20 +625,26 @@ Ativadores: os ativadores da <b>Entrada Ligado</b>, congelados quando é ligado"
 
 Ativadores: todos os objetos em colisão correspondentes ao filtro
 
-ERRO: Dois objetos que possuem comportamentos ""Solid"", mas não comportamentos ""Physics"", não detectarão uma colisão.";
+ERRO: Dois objetos que tenham comportamentos Sólidos, mas não comportamentos Físicos, não detectarão uma colisão.";
 
+    public override string CarryableName =>
+        "Transportável";
     public override string CarryableDesc =>
         "Permitir que o jogador pegue/solte/arremesse";
     public override string CarryableLongDesc =>
 @"Toque para pegar o objeto, toque novamente para lançar. Aumentar o <b>Ângulo de arremesso</b> faz com que o objeto seja lançado em arco.
 
-Requer comportamento ""Physics""";
+Requer Física";
+    public override string CharacterName =>
+        "Personagem";
     public override string CharacterDesc =>
         "Aplique a gravidade, mas mantenha-se em pé";
     public override string CharacterLongDesc =>
-@"Esta é uma alternativa ao comportamento ""Physics"". Os objetos terão gravidade, mas não poderão tombar. Quando usado com o comportamento Mover, os objetos cairão no chão em vez de flutuarem.
+@"Esta é uma alternativa ao comportamento Física. Os objetos terão gravidade, mas não poderão tombar. Quando usado com o comportamento Mover, os objetos cairão no chão em vez de flutuarem.
 
 <b>Densidade</b> afeta a massa do objeto, proporcional ao seu volume.";
+    public override string CloneName =>
+        "Clone";
     public override string CloneDesc =>
         "Crie uma cópia do objeto";
     public override string CloneLongDesc =>
@@ -615,31 +652,43 @@ Requer comportamento ""Physics""";
 
 •  <b>Para:</b> Local de destino para clone
 •  <b>Relativo a:</b> Localização de origem opcional. Se especificado, o clone será deslocado do objeto original pela diferença entre o destino e a origem.";
+    public override string ForceName =>
+        "Força";
     public override string ForceDesc =>
         "Aplicar força instantânea ou contínua";
     public override string ForceLongDesc =>
-@"Funciona apenas para objetos com comportamento ""Physics"".
+@"Funciona apenas para objetos com comportamento Física.
 
 •  O modo ""Impulse"" fará com que um impulso instantâneo seja aplicado quando o comportamento for ativado.
 •  O modo ""Continuous"" fará com que a força seja aplicada continuamente enquanto o comportamento estiver ativo.
 •  <b>Ignorar massa</b> dimensiona a força para compensar a massa do objeto.
 •  <b>Parar o objeto</b> interromperá qualquer movimento existente antes de aplicar a força.";
+    public override string HaloName =>
+        "Halo";
     public override string HaloDesc =>
         "Efeito brilhante";
     public override string HaloLongDesc =>
         "Halo aparece no ponto pivô das substâncias";
+    public override string HurtHealName =>
+        "Ferir/Curar";
     public override string HurtHealDesc =>
         "Perder/ganhar saúde; abaixo de 0, o objeto morre";
     public override string HurtHealLongDesc =>
 @"•  <b>Quantia:</b> Mudança na saúde. O positivo cura, o negativo dói.
 •  <b>Taxa:</b> Segundos entre feridas/curas sucessivas. 0 significa que a saúde só mudará uma vez quando o comportamento for ativado.
 •  <b>Mantenha entre:</b> A saúde só mudará se estiver dentro dessa faixa e nunca sairá dessa faixa.";
+    public override string JoystickName =>
+        "Controle";
     public override string JoystickDesc =>
         "Controle o movimento com o joystick";
+    public override string LightName =>
+        "Luz";
     public override string LightDesc =>
         "Fonte de luz no centro do objeto";
     public override string LightLongDesc =>
         "A luz se origina do ponto pivô das substâncias";
+    public override string LookAtName =>
+        "Olhe Para";
     public override string LookAtDesc =>
         "Apontar em uma direção ou em direção ao objeto";
     public override string LookAtLongDesc =>
@@ -648,20 +697,28 @@ Requer comportamento ""Physics""";
 •  <b>Guinada:</b> Ativa a rotação esquerda-direita.
 •  <b>Arremesso:</b> Permite rotação para cima e para baixo. Ambos podem ser usados ao mesmo tempo.
 As substâncias girarão em torno de seu ponto pivô.";
+    public override string MoveName =>
+        "Mover";
     public override string MoveDesc =>
         "Mover-se em uma direção ou em direção a um objeto";
     public override string MoveLongDesc =>
-@"Quando usado com os comportamentos ""Solid"" e ""Physics"", o objeto não será capaz de passar por outros objetos.
-Quando usado com os comportamentos ""Solid"" e ""Character"", o objeto também será afetado pela gravidade.
-Aumente a <b>Densidade</b> do comportamento da Physics/Character para aumentar a força de empurrão do objeto.";
+@"Quando usado com comportamentos Sólidos e Físicos, o objeto não poderá passar por outros objetos.
+Quando usado com comportamentos Sólido e Personagem, o objeto também será afetado pela gravidade.
+Aumente a <b>Densidade</b> do comportamento da Física/Personagem para aumentar a força de empurrão do objeto.";
+    public override string MoveWithName =>
+        "Mover Com";
     public override string MoveWithDesc =>
         "Acompanhe o movimento de outro objeto";
     public override string MoveWithLongDesc =>
-        "ERRO: Este comportamento impedirá que os comportamentos Move funcionem.";
+        "ERRO: Este comportamento impedirá que os comportamentos Mover funcionem.";
+    public override string PhysicsName =>
+        "Física";
     public override string PhysicsDesc =>
         "Mova-se de acordo com as leis da física";
     public override string PhysicsLongDesc =>
         "<b>Densidade</b> afeta a massa do objeto, proporcional ao seu volume.";
+    public override string ReflectorName =>
+        "Refletor";
     public override string ReflectorDesc =>
         "Adicione reflexos mais realistas à área";
     public override string ReflectorLongDesc =>
@@ -669,14 +726,22 @@ Aumente a <b>Densidade</b> do comportamento da Physics/Character para aumentar a
 •  Superfícies dentro do <b>Alcance</b> de distância são afetadas
 •  <b>Intensidade</b> controla o brilho dos reflexos
 •  Quando <b>Tempo real</b> estiver marcado, os reflexos serão atualizados continuamente (caro!)";
+    public override string ScaleName =>
+        "Escala";
     public override string ScaleDesc =>
         "Alterar o tamanho ao longo de cada eixo";
     public override string ScaleLongDesc =>
         "As substâncias são dimensionadas em torno de seu ponto pivô. Para objetos físicos, a massa <i>não</i> mudará.";
+    public override string ScoreName =>
+        "Pontuação";
     public override string ScoreDesc =>
         "Adicionar ou subtrair da pontuação do jogador";
+    public override string SolidName =>
+        "Sólido";
     public override string SolidDesc =>
         "Bloqueie e colida com outros objetos";
+    public override string SoundName =>
+        "Som";
     public override string SoundDesc =>
         "Reproduzir um som";
     public override string SoundLongDesc =>
@@ -684,6 +749,8 @@ Aumente a <b>Densidade</b> do comportamento da Physics/Character para aumentar a
 • No modo ""Bkgnd"" o som está sempre tocando, mas é silenciado quando o comportamento está inativo.
 
 Formatos suportados: MP3, WAV, OGG, AIF, XM, IT";
+    public override string Sound3DName =>
+        "Som 3D";
     public override string Sound3DDesc =>
         "Reproduzir um som no espaço 3D";
     public override string Sound3DLongDesc =>
@@ -691,32 +758,48 @@ Formatos suportados: MP3, WAV, OGG, AIF, XM, IT";
 •  No modo ""Ambient"" o som parecerá envolver o player.
 •  <b>Distância:</b> O som diminuirá com a distância dentro desta faixa -- além da distância máxima, ele se tornará inaudível.
 
-Consulte o comportamento de ""Sound"" para documentação adicional.";
+Consulte comportamento Som para documentação adicional.";
+    public override string SpinName =>
+        "Rodar";
     public override string SpinDesc =>
         "Girar continuamente";
     public override string SpinLongDesc =>
 @"•  <b>Velocidade</b> está em graus por segundo. <b>Eixo</b> especifica o eixo de rotação.
 As substâncias girarão em torno de seu ponto pivô.";
+    public override string TeleportName =>
+        "Teleporte";
     public override string TeleportDesc =>
         "Teletransporte-se instantaneamente para outro local";
     public override string TeleportLongDesc =>
 @"•  <b>Para</b> Local de destino para teletransportar
 •  <b>Relativo a:</b> Localização de origem opcional. Se especificado, em vez de ir diretamente ao destino, o objeto será deslocado pela diferença entre o destino e a origem.";
+    public override string VisibleName =>
+        "Visível";
     public override string VisibleDesc =>
         "O objeto é visível no jogo";
+    public override string WaterName =>
+        "Água";
     public override string WaterDesc =>
         "Simular física de flutuabilidade";
     public override string WaterLongDesc =>
-        "A água não deve ter comportamentos \"Solid\" ou \"Physics\". Este comportamento controla apenas a física da água, não a aparência.";
+        "A água não deveria ser Sólida e não deveria ter Física. Este comportamento controla apenas a física da água, não a aparência.";
 
+    public override string SolidSubstanceName =>
+        "Substância Sólida";
     public override string SolidSubstanceDesc =>
         "Um bloco sólido e opaco por padrão";
     public override string WaterSubstanceDesc =>
         "Um bloco de água onde você pode nadar";
+    public override string TriggerName =>
+        "Acionar";
     public override string TriggerDesc =>
         "Bloco invisível e não sólido com sensor de toque";
+    public override string GlassName =>
+        "Vidro";
     public override string GlassDesc =>
         "Bloco sólido de vidro";
+    public override string EmptyName =>
+        "Vazio";
     public override string EmptyDesc =>
         "Objeto bola invisível";
     public override string LightObjectDesc =>
@@ -793,17 +876,17 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialSubstanceCreateButton =>
         "Agora adicionaremos uma substância que se tornará uma plataforma móvel. <i>Selecione uma fileira de faces em um lado do poço e toque no botão do cubo.</i>";
     public override string TutorialSubstanceSolid =>
-        "<i>Escolha \"Solid Substance\".</i>";
+        "<i>Escolha \"Substância Sólida\".</i>";
     public override string TutorialSubstancePull =>
         "<i>Puxe para fora para construir uma plataforma.</i>";
     public override string TutorialSubstanceBehaviors =>
-        "As substâncias são controladas pelos seus <i>Comportamentos</in>. Esta substância possui comportamentos \"Visible\" e \"Solid\" que a tornam visível e sólida no jogo.";
+        "As substâncias são controladas pelos seus <i>Comportamentos</in>. Esta substância tem comportamentos <i>Visível</i> e <i>Sólido</i> que a tornam visível e sólida no jogo.";
     public override string TutorialSubstanceReselect =>
         "<i>Toque na substância para selecioná-la novamente.</i>";
     public override string TutorialSubstanceMoveBehavior =>
-        "<i>Tente adicionar um comportamento \"Move\" à plataforma.</i> Observe que os comportamentos são organizados em diversas categorias.";
+        "<i>Tente adicionar um comportamento Mover à plataforma.</i> Observe que os comportamentos são organizados em diversas categorias.";
     public override string TutorialSubstanceEditDirection =>
-        "O comportamento \"Move\" fará com que esta substância se mova para o Norte a uma velocidade constante. <i>Toque na direção para editá-la.</i>";
+        "O comportamento Mover fará com que esta substância se mova para o Norte a uma velocidade constante. <i>Toque na direção para editá-la.</i>";
     public override string TutorialSubstanceSetDirection =>
         "<i>Faça-o se mover em direção ao outro lado do poço (olhe para a rosa dos ventos para orientação)</i>";
     public override string TutorialSubstancePlayTest =>
@@ -811,11 +894,11 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialSubstanceOnOff =>
         "As substâncias têm dois estados, Ligado e Desligado. Os comportamentos podem ser configurados para ficarem ativos apenas no estado Ligado ou Desligado.";
     public override string TutorialSubstanceMoveOpposite =>
-        "<i>Adicione um segundo comportamento \"Move\", que move a plataforma na direção oposta.</i>";
+        "<i>Adicione um segundo comportamento Mover, que move a plataforma na direção oposta.</i>";
     public override string TutorialSubstanceBehaviorConditions =>
         "<i>Agora ative um comportamento apenas no estado Desligado e outro no estado Ligado.</i> (a substância começará Desligada).";
     public override string TutorialSubstanceSensor =>
-        "O estado ligado/desligado de uma substância é controlado por um sensor. <i>Dê à plataforma um sensor de \"Pulse\". (na guia Lógica)</i> Isso fará com que ele seja ligado/desligado repetidamente.";
+        "O estado ligado/desligado de uma substância é controlado por um sensor. <i>Dê à plataforma um sensor Pulso. (na guia Lógica)</i> Isso fará com que ele seja ligado/desligado repetidamente.";
     public override string TutorialSubstanceTime =>
         "<i>Agora ajuste o tempo que o sensor passa no estado ligado e desligado para fazer a plataforma se mover por toda a distância do poço.</i>";
     public override string TutorialSubstancePlayFinal =>
@@ -825,7 +908,7 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialObjectSelect =>
         "<i>Selecione uma face e toque no botão cubo.</i>";
     public override string TutorialObjectCreate =>
-        "<i>Escolha a guia Objeto e escolha \"Ball\".</i>";
+        "<i>Escolha a guia Objeto e escolha Bola.</i>";
     public override string TutorialObjectExplain =>
         "Você acabou de criar um objeto bola. Assim como as substâncias, você pode dar aos objetos comportamentos e sensores para adicionar interatividade.";
     public override string TutorialObjectReselect =>
@@ -833,29 +916,29 @@ As substâncias girarão em torno de seu ponto pivô.";
     public override string TutorialObjectPaint =>
         "<i>Experimente pintar a bola.</i>";
     public override string TutorialObjectAddMove =>
-        "<i>Adicione um comportamento \"Move\" à bola.</i>";
+        "<i>Adicione um comportamento Mover à bola.</i>";
     public override string TutorialObjectFollowPlayer =>
-        "<i>Edite o comportamento \"Move\" para fazer a bola seguir o jogador.</i>";
+        "<i>Edite o comportamento Mover para fazer a bola seguir o jogador.</i>";
     public override string TutorialObjectPlayTest =>
         "<i>Tente jogar o seu jogo.</i> Em seguida, faremos com que a bola machuque você quando você tocá-la.";
     public override string TutorialObjectSensor =>
-        "<i>Dê à bola um sensor de \"Touch\".</i>";
+        "<i>Dê à bola um sensor de Toque.</i>";
     public override string TutorialObjectTouchPlayer =>
-        "<i>Agora configure o sensor \"Touch\" para que ele só ligue ao tocar no player.</i>";
+        "<i>Agora configure o sensor Toque para que ele só ligue ao tocar no player.</i>";
     public override string TutorialObjectAddTargetedBehavior =>
-        "<i>Toque em Adicionar comportamento. No menu de comportamento, toque no botão \"Alvo\" e selecione o jogador como alvo. Em seguida, escolha \"Hurt/Heal\" na aba \"Vida\".</i>";
+        "<i>Toque em Adicionar comportamento. No menu de comportamento, toque no botão \"Alvo\" e selecione o jogador como alvo. Em seguida, escolha Ferir/Curar na aba \"Vida\".</i>";
     public override string TutorialObjectIncorrectTarget =>
         "Você não definiu o alvo para o jogador. Remova o comportamento e tente novamente.";
     public override string TutorialObjectTargetExplain =>
-        "Por padrão, \"Hurt/Heal\" fere o objeto ao qual está anexado (a bola). Ao definir um Alvo, fizemos com que ele atuasse sobre um objeto diferente (o jogador).";
+        "Por padrão, Ferir/Curar fere o objeto ao qual está anexado (a bola). Ao definir um Alvo, fizemos com que ele atuasse sobre um objeto diferente (o jogador).";
     public override string TutorialObjectHurtOn =>
-        "<i>Defina \"Hurt/Heal\" para ativar quando o sensor estiver ligado.</i> Mesmo que tenha como alvo o jogador, ele usará o sensor da bola para ligar/desligar.";
+        "<i>Defina Ferir/Curar para ativar quando o sensor estiver ligado.</i> Mesmo que tenha como alvo o jogador, ele usará o sensor da bola para ligar/desligar.";
     public override string TutorialObjectHurtRate =>
-        "<i>Defina a taxa de \"Hurt/Heal\" como 1 para machucar repetidamente (a cada 1 segundo) enquanto você estiver tocando a bola.</i>";
+        "<i>Defina a taxa de Ferir/Curar como 1 para machucar repetidamente (a cada 1 segundo) enquanto você estiver tocando a bola.</i>";
     public override string TutorialObjectPlayFinal =>
         "<i>Jogue e tente evitar a morte!</i> Você pode alterar a velocidade da bola e a quantidade de dano para ajustar a dificuldade.";
     public override string TutorialObjectCharacterBehavior =>
-        "Se você construir alguns obstáculos, notará que a bola pode flutuar e se mover através das paredes. <i>Adicione um comportamento de \"Character\" para corrigir isso. (verifique a aba Física)</i>";
+        "Se você construir alguns obstáculos, notará que a bola pode flutuar e se mover através das paredes. <i>Adicione um comportamento de Personagem para corrigir isso. (verifique a aba Física)</i>";
     public override string TutorialObjectNext =>
         "Leia o tutorial <i>Lógica do Jogo</i> para aprender como adicionar interatividade mais complexa aos jogos.";
     public override string TutorialTipsMessage =>

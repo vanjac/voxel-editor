@@ -657,7 +657,7 @@ Activators: the activators of the <b>On input</b>, frozen when it is first turne
 
 Activators: all colliding objects matching the filter
 
-BUG: Two objects which both have Solid behaviors but not Physics behaviors, will not detect a collision.";
+BUG: Two objects which both have Solid behaviors, but not Physics behaviors, will not detect a collision.";
     // Behaviors
     public virtual string CarryableName =>
         "Carryable";
