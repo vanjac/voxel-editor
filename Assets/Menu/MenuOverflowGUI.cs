@@ -54,10 +54,6 @@ public class MenuOverflowGUI : GUIPanel
                 {
                     Application.OpenURL("https://www.reddit.com/r/nspace/");
                 }),
-                new OverflowMenuGUI.MenuItem(StringSet.OpenVideos, IconSet.youTube, () =>
-                {
-                    Application.OpenURL("https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2");
-                }),
 #if !UNITY_IOS
                 new OverflowMenuGUI.MenuItem(StringSet.Donate, IconSet.donate, () =>
                 {

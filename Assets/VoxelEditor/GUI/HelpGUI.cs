@@ -39,31 +39,40 @@ public class HelpGUI : GUIPanel
 
     private void TutorialsTab()
     {
-        if (HelpButton(StringSet.TutorialIntro))
+        var style = StyleSet.buttonLarge;
+        if (GUILayout.Button(StringSet.TutorialIntro, style))
             StartTutorial(Tutorials.INTRO_TUTORIAL, StringSet.TutorialIntro, forceIndoor: true);
-        if (HelpButton(StringSet.TutorialPainting))
+        if (GUILayout.Button(StringSet.TutorialPainting, style))
             StartTutorial(Tutorials.PAINT_TUTORIAL, StringSet.TutorialPainting);
-        if (HelpButton(StringSet.TutorialBevels))
+        if (GUILayout.Button(StringSet.TutorialBevels, style))
             StartTutorial(Tutorials.BEVEL_TUTORIAL, StringSet.TutorialBevels);
-        if (HelpButton(StringSet.TutorialSubstances))
+        if (GUILayout.Button(StringSet.TutorialSubstances, style))
+        {
             StartTutorial(Tutorials.SUBSTANCE_TUTORIAL,
                 StringSet.TutorialSubstances, forceIndoor: true);
-        if (HelpButton(StringSet.TutorialObjects))
+        }
+        if (GUILayout.Button(StringSet.TutorialObjects, style))
             StartTutorial(Tutorials.OBJECT_TUTORIAL, StringSet.TutorialObjects);
-        if (HelpButton(StringSet.TutorialTips))
+        if (GUILayout.Button(StringSet.TutorialTips, style))
         {
             LargeMessageGUI.ShowLargeMessageDialog(gameObject, StringSet.TutorialTipsMessage);
             Destroy(this);
         }
-        if (HelpButton(StringSet.TutorialAdvancedGameLogic1))
+        if (GUILayout.Button(StringSet.TutorialAdvancedGameLogic1, style))
         {
             StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_1);
             OpenDemoWorld(StringSet.TutorialWorldName(StringSet.TutorialAdvancedGameLogic1),
                 "Tutorials/advanced_game_logic_1");
         }
-        if (HelpButton(StringSet.TutorialAdvancedGameLogic2))
+        if (GUILayout.Button(StringSet.TutorialAdvancedGameLogic2, style))
+        {
             StartTutorial(Tutorials.ADVANCED_GAME_LOGIC_TUTORIAL_2,
                 StringSet.TutorialAdvancedGameLogic2, forceIndoor: true);
+        }
+        if (GUILayout.Button(GUIUtils.MenuContent(StringSet.OpenVideos, IconSet.youTube), style))
+        {
+            Application.OpenURL("https://www.youtube.com/playlist?list=PLMiQPjIk5IrpgNcQY5EUYaGFDuAf7PLY2");
+        }
     }
 
     private void DemoWorldsTab()
@@ -79,11 +88,9 @@ public class HelpGUI : GUIPanel
         DemoWorldButton(StringSet.DemoBallPit, "ball_pit");
     }
 
-    private bool HelpButton(string text) => GUILayout.Button(text, StyleSet.buttonLarge);
-
     private void DemoWorldButton(string name, string file)
     {
-        if (HelpButton(name))
+        if (GUILayout.Button(name, StyleSet.buttonLarge))
         {
             OpenDemoWorld(StringSet.DemoWorldName(name), "Demos/" + file);
             Destroy(this);
