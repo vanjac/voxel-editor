@@ -27,7 +27,7 @@ public static class Tutorials
     {
         () => new TutorialPaintStart(),
         () => new TutorialPaintPage(StringSet.TutorialPaintPanel),
-        () => new TutorialPaintPage(StringSet.TutorialPaintCategories),
+        () => new TutorialPaintPage(StringSet.TutorialPaintCategories, highlight: "material color"),
         () => new TutorialPaintPage(StringSet.TutorialPaintLayers, highlight: "paint layer"),
         () => new TutorialPaintPage(StringSet.TutorialPaintTransform, highlight: "paint transform"),
         () => new TutorialPaintSky(),

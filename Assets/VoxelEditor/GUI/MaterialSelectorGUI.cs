@@ -202,8 +202,10 @@ public class MaterialSelectorGUI : GUIPanel
         {
             GUIUtils.ShowDisabled();
         }
+        TutorialGUI.TutorialHighlight("material color");
         if (selectedCategory != WORLD_LIST_CATEGORY && ActionBarGUI.ActionBarButton(IconSet.color))
             page = Page.COLOR;
+        TutorialGUI.ClearHighlight();
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
