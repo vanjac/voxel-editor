@@ -875,6 +875,8 @@ Substances will rotate around their <b>Pivot</b> point.";
         "By selecting faces and pushing/pulling them, you can sculpt the world.";
     public virtual string TutorialButtons =>
         "These buttons appear at the top of the screen, based on context.";
+    public virtual string TutorialButtonsResource =>
+        "Tutorials/toolbar_buttons";
     public virtual string TutorialHelpMenu =>
         "That's enough to get started! You can access more tutorials by choosing Help in the menu.";
     public virtual string TutorialLinks =>

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class Tutorials
 {
@@ -18,7 +18,7 @@ public static class Tutorials
         () => new TutorialIntroSelectWall(),
         () => new SimpleTutorialPage(StringSet.TutorialSculpt),
         () => new FullScreenTutorialPage(StringSet.TutorialButtons,
-            "Tutorials/toolbar_buttons", width:1536, height:798), // TODO: localize!
+            StringSet.TutorialButtonsResource, width:1536, height:798),
         () => new SimpleTutorialPage(StringSet.TutorialHelpMenu),
         () => new SimpleTutorialPage(StringSet.TutorialLinks),
     };

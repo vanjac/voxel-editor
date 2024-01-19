@@ -841,6 +841,8 @@ As substâncias girarão em torno de seu ponto pivô.";
         "Ao selecionar faces e empurrá-los/puxá-los, você pode esculpir o mundo.";
     public override string TutorialButtons =>
         "Esses botões aparecem na parte superior da tela, com base no contexto.";
+    public override string TutorialButtonsResource =>
+        "Tutorials/toolbar_buttons_portuguese";
     public override string TutorialHelpMenu =>
         "Isso é o suficiente para começar! Você pode acessar mais tutoriais escolhendo Ajuda no menu.";
     public override string TutorialLinks =>
