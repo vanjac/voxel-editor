@@ -21,6 +21,7 @@ public class OverflowMenuGUI : GUIPanel
     public MenuItem[] items;
     public int depth = 0;
     private int selected = -1;
+    public new bool stealFocus { get => base.stealFocus; set => base.stealFocus = value; } // :(
 
     public static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
     {

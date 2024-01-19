@@ -85,6 +85,10 @@ public class PortugueseStrings : GUIStringSet
         "Vídeos";
     public override string Donate =>
         "Doar";
+    public override string Language =>
+        "Idioma";
+    public override string LanguageAuto =>
+        "<i>Automático</i>";
 
     public override string ImportWorldNamePrompt =>
         "Digite o nome do mundo importado...";

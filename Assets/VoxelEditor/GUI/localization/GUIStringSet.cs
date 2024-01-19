@@ -100,6 +100,10 @@ public class GUIStringSet
         "Videos";
     public virtual string Donate =>
         "Donate";
+    public virtual string Language =>
+        "Language";
+    public virtual string LanguageAuto =>
+        "<i>Auto</i>";
 
     // Import
     public virtual string ImportWorldNamePrompt =>

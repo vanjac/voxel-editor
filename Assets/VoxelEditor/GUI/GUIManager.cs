@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class GUIManager : MonoBehaviour
 {
+    public enum Language { Auto, English, Portuguese }
+
     // minimum supported targetHeight value
     // (so the largest supported interface scale)
     private const int MIN_TARGET_HEIGHT = 1080;
@@ -24,9 +26,38 @@ public class GUIManager : MonoBehaviour
     // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
     public Font[] alternateFonts;
 
+    public static void SetLanguage(Language language)
+    {
+        PlayerPrefs.SetInt("language", (int)language);
+        UpdateLanguage(language);
+    }
+
+    private static void UpdateLanguage(Language language)
+    {
+        if (language == Language.Auto)
+        {
+            language = Application.systemLanguage switch
+            {
+                SystemLanguage.Portuguese => Language.Portuguese,
+                _ => Language.English
+            };
+        }
+        switch (language)
+        {
+            case Language.English:
+                GUIPanel.StringSet = new GUIStringSet();
+                break;
+            case Language.Portuguese:
+                GUIPanel.StringSet = new PortugueseStrings();
+                break;
+        }
+    }
+
     void Awake()
     {
         instance = this;
+
+        UpdateLanguage((Language)PlayerPrefs.GetInt("language", (int)Language.Auto));
     }
 
     void Start()
