@@ -64,12 +64,27 @@ public class PaintGUI : GUIPanel
         TutorialGUI.ClearHighlight();
 
         GUILayout.FlexibleSpace();
-        foreach (VoxelFace recentPaint in recentPaints)
+        for (int i = 0; i < recentPaints.Count; i++)
         {
             if (GUILayout.Button(" ", StyleSet.buttonSmall,
                 GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE)))
             {
-                paint = recentPaint;
+                paint = recentPaints[i];
+                if (paint.material != null && CustomTexture.IsCustomTexture(paint.material)
+                    && !voxelArray.customMaterials.Contains(paint.material))
+                {
+                    Debug.Log("Cloning custom material");
+                    paint.material = CustomTexture.Clone(paint.material);
+                    voxelArray.customMaterials.Add(paint.material);
+                }
+                if (paint.overlay != null && CustomTexture.IsCustomTexture(paint.overlay)
+                    && !voxelArray.customOverlays.Contains(paint.overlay))
+                {
+                    Debug.Log("Cloning custom overlay");
+                    paint.overlay = CustomTexture.Clone(paint.overlay);
+                    voxelArray.customOverlays.Add(paint.overlay);
+                }
+                recentPaints[i] = paint;
                 PaintChanged();
                 UpdateMaterialSelector();
             }
@@ -77,7 +92,7 @@ public class PaintGUI : GUIPanel
             Rect paintRect = new Rect(
                 buttonRect.xMin + RECENT_MARGIN, buttonRect.yMin + RECENT_MARGIN,
                 buttonRect.width - RECENT_MARGIN * 2, buttonRect.height - RECENT_MARGIN * 2);
-            DrawPaint(recentPaint, paintRect);
+            DrawPaint(recentPaints[i], paintRect);
         }
         GUILayout.FlexibleSpace();
 
