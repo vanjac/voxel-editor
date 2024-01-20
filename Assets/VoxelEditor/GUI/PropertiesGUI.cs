@@ -227,7 +227,8 @@ public class PropertiesGUI : LeftPanelGUI
 
         if (Input.touchCount == 1)
         {
-            if (horizontalSlide && (!adjustingSlider) && PanelContainsPoint(touchStartPos))
+            if (propertiesDisplayed && horizontalSlide && !adjustingSlider
+                && PanelContainsPoint(touchStartPos))
             {
                 slidingPanel = true;
             }
