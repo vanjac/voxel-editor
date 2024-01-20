@@ -1,4 +1,4 @@
-Copyright (c) 2023 J. van't Hoog
+Copyright (c) 2024 J. van't Hoog
 
 You can use the other buttons in the menu to access these websites:
 - N-Space subreddit (/r/nspace) for discussion and sharing your creations

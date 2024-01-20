@@ -65,10 +65,10 @@ public class EditorFile : MonoBehaviour
             string lastVersion = PlayerPrefs.GetString("last_editScene_version");
             if (lastVersion.EndsWith("b"))
                 lastVersion = lastVersion.Substring(0, lastVersion.Length - 1);
-            if (CompareVersions(lastVersion, "1.3.5") == -1)
+            if (CompareVersions(lastVersion, "1.3.6") == -1)
             {
                 LargeMessageGUI.ShowLargeMessageDialog(guiGameObject,
-                    GUIPanel.StringSet.UpdateMessage_1_3_5);
+                    GUIPanel.StringSet.UpdateMessage_1_3_6);
             }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);

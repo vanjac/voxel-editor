@@ -1058,14 +1058,18 @@ Substances will rotate around their <b>Pivot</b> point.";
         "<i>Now try making some balls with Physics behaviors. Then play the game and push them all into the pit.</i> Enjoy.";
 
     // Update messages
-    public virtual string UpdateMessage_1_3_5 =>
-@"N-Space has been updated! Check out the <b>Doors</b> Demo World in the help menu to see the new features.
+    public virtual string UpdateMessage_1_3_6 =>
+@"N-Space has been updated! You're on the <b>Beta</b> channel, so you'll get updates early. Feedback is appreciated!
 
-•  New <b>Scale</b> behavior to change size of objects/substances
-•  You can change the <b>Pivot</b> point of substances for rotation/scaling
-•  Lights are visible in the editor, even when not selected
-•  Objects can be placed inside walls or outside bounds
-•  Fixed lag caused by larger substances
-•  Button in the bottom right toggles pan/orbit with two fingers
-... and some more improvements / fixes!";
+I'm working on adding translations for other languages. In this update I've added Portuguese. You can switch languages in the main menu.
+Unfortunately I'm using machine translation so there may be mistakes. If you find any issues or want to help with translation, please contact me: chroma@chroma.zone
+
+Other changes in this update:
+•  Improved Paint panel UI
+•  Only show Score in HUD if it's being used
+•  Fixed bug with selecting custom textures from recent paint list
+•  Fixed issue with scroll momentum
+•  Fixed selecting no material/overlay in the paint panel
+•  Added various icons to help usability
+•  Other minor bug fixes";
 }
