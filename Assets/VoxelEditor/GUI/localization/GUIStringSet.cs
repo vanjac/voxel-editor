@@ -1061,8 +1061,8 @@ Substances will rotate around their <b>Pivot</b> point.";
     public virtual string UpdateMessage_1_3_6 =>
 @"N-Space has been updated! You're on the <b>Beta</b> channel, so you'll get updates early. Feedback is appreciated!
 
-I'm working on adding translations for other languages. In this update I've added Portuguese. You can switch languages in the main menu.
-Unfortunately I'm using machine translation so there may be mistakes. If you find any issues or want to help with translation, please contact me: chroma@chroma.zone
+I'm working on adding translations for other languages. This update adds Portuguese; more to come. You can switch languages in the main menu.
+Unfortunately I'm relying on machine translation. If you find issues or want to help with translating, please contact me: chroma@chroma.zone
 
 Other changes in this update:
 •  Improved Paint panel UI
