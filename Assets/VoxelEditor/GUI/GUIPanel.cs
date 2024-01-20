@@ -137,15 +137,13 @@ public abstract class GUIPanel : MonoBehaviour
                 Touch touch = Input.GetTouch(0);
                 float scrollVel = touch.deltaPosition.y / scaleFactor;
                 scroll.y += scrollVel;
-                if (touch.phase != TouchPhase.Ended)
-                {
+                scrollVelocity = Vector2.zero;
+                if (touch.phase == TouchPhase.Moved && touch.deltaTime != 0)
                     touchVelocity = scrollVel / touch.deltaTime;
-                    scrollVelocity = Vector2.zero;
-                }
+                else if (touch.phase == TouchPhase.Stationary)
+                    touchVelocity = 0;
                 else
-                {
                     scrollVelocity = new Vector2(0, touchVelocity);
-                }
             }
         }
         else
