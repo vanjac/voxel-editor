@@ -1061,15 +1061,16 @@ Substances will rotate around their <b>Pivot</b> point.";
     public virtual string UpdateMessage_1_3_6 =>
 @"N-Space has been updated! You're on the <b>Beta</b> channel, so you'll get updates early. Feedback is appreciated!
 
-I'm working on adding translations for other languages. This update adds Portuguese; more to come. You can switch languages in the main menu.
-Unfortunately I'm relying on machine translation. If you find issues or want to help with translating, please contact me: chroma@chroma.zone
+<b>I'm looking for help with translation.</b> If you would like to help translate this app to another language, please contact me: chroma@chroma.zone
+Thanks!
 
-Other changes in this update:
+Changes in this update:
 •  Improved Paint panel UI
 •  Only show Score in HUD if it's being used
 •  Fixed bug with selecting custom textures from recent paint list
 •  Fixed issue with scroll momentum
 •  Fixed selecting no material/overlay in the paint panel
 •  Added various icons to help usability
-•  Other minor bug fixes";
+•  Other minor bug fixes
+•  Lots of internal restructuring";
 }

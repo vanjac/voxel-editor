@@ -57,7 +57,8 @@ public class GUIManager : MonoBehaviour
     {
         instance = this;
 
-        UpdateLanguage((Language)PlayerPrefs.GetInt("language", (int)Language.Auto));
+        // TODO: enable this when other languages are properly supported
+        // UpdateLanguage((Language)PlayerPrefs.GetInt("language", (int)Language.Auto));
     }
 
     void Start()

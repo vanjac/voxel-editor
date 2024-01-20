@@ -60,6 +60,7 @@ public class MenuOverflowGUI : GUIPanel
                     Application.OpenURL("https://chroma.zone/donate");
                 }),
 #endif
+#if false
                 new OverflowMenuGUI.MenuItem(StringSet.Language, IconSet.language, () =>
                 {
                     var languageMenu = gameObject.AddComponent<OverflowMenuGUI>();
@@ -81,6 +82,7 @@ public class MenuOverflowGUI : GUIPanel
                         }),
                     };
                 }, stayOpen: true),
+#endif
             };
         }
         GUILayout.EndHorizontal();

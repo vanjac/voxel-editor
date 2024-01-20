@@ -956,19 +956,4 @@ As substâncias girarão em torno de seu ponto pivô.";
 •  Deslizar faces lateralmente ao longo de uma parede move suas tintas, deixando um rastro atrás delas.
 •  Verifique a seção ""Selecionar"" no menu para obter atalhos úteis para selecionar faces e objetos.
 •  Você pode selecionar vários objetos/substâncias para editar todas as suas propriedades de uma só vez.";
-
-    public override string UpdateMessage_1_3_6 =>
-@"O N-Space foi atualizado! Você está no canal <b>Beta</b> e receberá atualizações com antecedência. O feedback é apreciado!
-
-Estou trabalhando para adicionar traduções para outros idiomas. Nesta atualização adicionei o português. Você pode mudar de idioma no menu principal.
-Infelizmente estou usando tradução automática, então pode haver erros. Se você encontrar algum problema ou quiser ajudar com a tradução, entre em contato comigo: chroma@chroma.zone
-
-Outras mudanças nesta atualização:
-• UI do painel Paint aprimorada
-• Mostrar pontuação no HUD apenas se estiver sendo usado
-• Corrigido bug ao selecionar texturas personalizadas da lista de pinturas recentes
-• Corrigido problema com impulso de rolagem
-• Corrigida a seleção de nenhum material/sobreposição no painel de pintura
-• Adicionados vários ícones para ajudar na usabilidade
-• Outras pequenas correções de bugs";
 }
