@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f0502d5ffcf65c47918ac612478a3e0, type: 3}
+  m_Name: icons
+  m_EditorClassIdentifier: 
+  close: {fileID: 2800000, guid: d93908596c8ffe74f929d4417b01a750, type: 3}
+  x: {fileID: 2800000, guid: 9fc69ad759eaaf243abd3a0ffff807cf, type: 3}
+  next: {fileID: 2800000, guid: 0fab2d0179bffd246a29f4cf65561bc5, type: 3}
+  create: {fileID: 2800000, guid: 8bb23b4cef324ea428433ef09ab2bc6e, type: 3}
+  applySelection: {fileID: 2800000, guid: 026b56777602f674e9f7c304b242258f, type: 3}
+  clearSelection: {fileID: 2800000, guid: 00d830bfa0543c74f89a94d7894a19d3, type: 3}
+  paint: {fileID: 2800000, guid: b716f268f2cc0c644817a72b0bf3d6ce, type: 3}
+  play: {fileID: 2800000, guid: bc2d021d920e44f419d6fd7198d6411c, type: 3}
+  overflow: {fileID: 2800000, guid: f693e6e5705aceb45944ff895117acbf, type: 3}
+  world: {fileID: 2800000, guid: 9076f51e512308e48b81eeabfeae83c6, type: 3}
+  help: {fileID: 2800000, guid: e38c16e08e15fdb439f1b06d646a37c5, type: 3}
+  helpCircle: {fileID: 2800000, guid: fe7fb42b36aa0b34fae803c54f766ab8, type: 3}
+  done: {fileID: 2800000, guid: e1b609b81bf81fd4b8188b39dbbdfca4, type: 3}
+  rotateLeft: {fileID: 2800000, guid: 0d62748abe8faa04c8f75c80793a80e6, type: 3}
+  rotateRight: {fileID: 2800000, guid: 1198250b3cf1af44b9d7b2a93a2cc8ec, type: 3}
+  flipHorizontal: {fileID: 2800000, guid: db8bba60595744c44b0eea385cd24bd3, type: 3}
+  flipVertical: {fileID: 2800000, guid: 7aedd43693e19f248b02170e9ff4fb29, type: 3}
+  about: {fileID: 2800000, guid: c51491f24aa308c478dce23ffe9b3f15, type: 3}
+  select: {fileID: 2800000, guid: a81e8a94ba6da284ca1a45f2694326e5, type: 3}
+  entityTag: {fileID: 2800000, guid: 1c7271f3875d8ce4d98afe91ddc3eb6e, type: 3}
+  target: {fileID: 2800000, guid: e32c2e24ffccfe246a44f3cef0fdec0a, type: 3}
+  rename: {fileID: 2800000, guid: 655f20fe0dcfa1546a197b2c5b019e78, type: 3}
+  copy: {fileID: 2800000, guid: ef8570bda8643ab4e84246dbd0191475, type: 3}
+  delete: {fileID: 2800000, guid: a91481f4c06fdb946817fd08f059dd99, type: 3}
+  share: {fileID: 2800000, guid: a85f6c8cea88810459e1e20c4380b2b6, type: 3}
+  bevel: {fileID: 2800000, guid: a2196131ae0adc94db6a16177538d05f, type: 3}
+  no: {fileID: 2800000, guid: b7365fd42b2f6e1479b471b1498cca62, type: 3}
+  pause: {fileID: 2800000, guid: 6f667e4f9cc054fcc99502eb649b7d3f, type: 3}
+  restart: {fileID: 2800000, guid: 0d62748abe8faa04c8f75c80793a80e6, type: 3}
+  editor: {fileID: 2800000, guid: c7fbf9efd92624bef9a6267c970e2e0f, type: 3}
+  playAudio: {fileID: 2800000, guid: 553f1c882f4dc401286a240925b9bc2f, type: 3}
+  reddit: {fileID: 2800000, guid: 789e0959fe4fc43f1a1900850edd7218, type: 3}
+  youTube: {fileID: 2800000, guid: cabf6c236add74d008a721d1a5e5d6b3, type: 3}
+  undo: {fileID: 2800000, guid: 3ca559fa1674c439f95e6569092d453e, type: 3}
+  import: {fileID: 2800000, guid: 10566212bae5b46968b736b518c502eb, type: 3}
+  fill: {fileID: 2800000, guid: 89445942d3294e84caeb98591980d3a7, type: 3}
+  draw: {fileID: 2800000, guid: addd569b17e6bd04fb21b6224a0d7705, type: 3}
+  singleObject: {fileID: 2800000, guid: 349e92702e1695d44b22fbda80fa138c, type: 3}
+  objectType: {fileID: 2800000, guid: 907e5b067b45f74459c17473d688d0bd, type: 3}
+  behavior: {fileID: 2800000, guid: 0feee20dbbdb00749b74d19e8bf252ef, type: 3}
+  newTexture: {fileID: 2800000, guid: 71c2ad987d352b14db16de1a32f9be32, type: 3}
+  worldImport: {fileID: 2800000, guid: 603a037b5c4ce2947bffab8fbac2db34, type: 3}
+  newItem: {fileID: 2800000, guid: 828387e3304c7904191add38dad558f7, type: 3}
+  website: {fileID: 2800000, guid: 7b7e4425da0ebfd448404f2f1cf8d0b6, type: 3}
+  donate: {fileID: 2800000, guid: d535c068f20dae549ac44f32ee8d4344, type: 3}
+  pan: {fileID: 2800000, guid: aa4f4785f280c85489192cbe7f18b491, type: 3}
+  orbit: {fileID: 2800000, guid: ff7e857d4a19a16469926a96501dc0e4, type: 3}
+  sensor: {fileID: 2800000, guid: 00bd31410ef9fd14caddc4fa7cd6c7b4, type: 3}
+  random: {fileID: 2800000, guid: 7d489d7477de61343aa6bfacec253941, type: 3}
+  baseLayer: {fileID: 2800000, guid: 92f37b1ef7ce3cf4a8d0977713960531, type: 3}
+  overlayLayer: {fileID: 2800000, guid: 7e0e6bcbebe5b1e4a80e0f5576bc30ed, type: 3}
+  plusOne: {fileID: 2800000, guid: 34b8c574bafcc7541bf8778c7f29e0fd, type: 3}
+  minusOne: {fileID: 2800000, guid: ab5c3d88d3e155741b402fef1ee52c72, type: 3}
+  color: {fileID: 2800000, guid: efd72c913ac0be549af477e59955aae8, type: 3}
+  camera: {fileID: 2800000, guid: 1c056bdad8f6317469edc45ad5abfb73, type: 3}
+  language: {fileID: 2800000, guid: 147a008df0bbd8743a1943cdab71897a, type: 3}
+  indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
+  floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
+  newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}
+  helpLarge: {fileID: 2800000, guid: 0bb4905118ec61d46ac168a97c9d37df, type: 3}
+  compassLarge: {fileID: 2800000, guid: f2c752916f63df84d858483d55a07dea, type: 3}
+  tagIcons:
+  - {fileID: 2800000, guid: 93f1ba19171b85c428ae0c1342580115, type: 3}
+  - {fileID: 2800000, guid: 28031886181f6c74da581772139a1efc, type: 3}
+  - {fileID: 2800000, guid: b2611dfa8c6539e4a850f63307ca97ca, type: 3}
+  - {fileID: 2800000, guid: 0ef64c307a87b7141b62ed885fe9f3f3, type: 3}
+  - {fileID: 2800000, guid: 8bc7a7df6b171ea40a6eccad78e0a0e7, type: 3}
+  - {fileID: 2800000, guid: eea18c8052e452b4e9a64afa97eae349, type: 3}
+  - {fileID: 2800000, guid: 4aef6dd4730d79846ad4add53701e121, type: 3}
+  - {fileID: 2800000, guid: 376258ccc6083a940b4c85a435b15002, type: 3}
+  bevelIcons:
+    quarter: {fileID: 2800000, guid: 99975edfbe865f5448975c8ad248e5ac, type: 3}
+    half: {fileID: 2800000, guid: acb466ed941b93d40b2d71c394323885, type: 3}
+    full: {fileID: 2800000, guid: 82908e4490a514243ba4932062757b07, type: 3}
+    square: {fileID: 2800000, guid: a70f93c573269aa439bb860584fcecb4, type: 3}
+    flat: {fileID: 2800000, guid: 25f1a4d2e901df44bbf70e4f15f807f4, type: 3}
+    curve: {fileID: 2800000, guid: 180c1c225960848459d004cc95a15e2f, type: 3}
+    stair2: {fileID: 2800000, guid: 70775c82176ed8b4a979d1a3b777ce50, type: 3}
+    stair4: {fileID: 2800000, guid: 2580dd68d1990d94cbc485272a032af4, type: 3}

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public struct GUIIconSet
+[CreateAssetMenu(fileName = "icons", menuName = "ScriptableObjects/N-Space Icon Set")]
+public class GUIIconSet : ScriptableObject
 {
     public Texture close, x, next, create, applySelection, clearSelection, paint, play, overflow, world, help;
     public Texture helpCircle, done, rotateLeft, rotateRight, flipHorizontal, flipVertical, about, select;
