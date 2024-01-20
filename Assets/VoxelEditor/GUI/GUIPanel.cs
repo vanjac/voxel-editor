@@ -30,6 +30,7 @@ public abstract class GUIPanel : MonoBehaviour
 
     public Vector2 scroll = Vector2.zero;
     public Vector2 scrollVelocity = Vector2.zero;
+    private float touchVelocity = 0;
 
     protected Vector2 touchStartPos = Vector2.zero;
     protected bool panelSlide, horizontalSlide, verticalSlide;
@@ -72,6 +73,7 @@ public abstract class GUIPanel : MonoBehaviour
                 if (PanelContainsPoint(touch.position))
                 {
                     scrollVelocity = Vector2.zero;
+                    touchVelocity = 0;
                     panelSlide = true;
                 }
                 else if (!holdOpen)
@@ -128,16 +130,23 @@ public abstract class GUIPanel : MonoBehaviour
         }
         else if (verticalSlide && Input.touchCount == 1 && IsFocused())
         {
-            Touch touch = Input.GetTouch(0);
             GUI.enabled = false;
             GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
-            float scrollVel = touch.deltaPosition.y / scaleFactor;
             if (Event.current.type == EventType.Repaint) // scroll at correct rate
+            {
+                Touch touch = Input.GetTouch(0);
+                float scrollVel = touch.deltaPosition.y / scaleFactor;
                 scroll.y += scrollVel;
-            if (touch.phase == TouchPhase.Ended)
-                scrollVelocity = new Vector2(0, scrollVel / touch.deltaTime);
-            else
-                scrollVelocity = Vector2.zero;
+                if (touch.phase != TouchPhase.Ended)
+                {
+                    touchVelocity = scrollVel / touch.deltaTime;
+                    scrollVelocity = Vector2.zero;
+                }
+                else
+                {
+                    scrollVelocity = new Vector2(0, touchVelocity);
+                }
+            }
         }
         else
         {
