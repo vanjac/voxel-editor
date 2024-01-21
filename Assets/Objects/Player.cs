@@ -12,7 +12,7 @@ public class PlayerObject : ObjectEntity
     };
     public override PropertiesObjectType ObjectType => objectType;
 
-    private bool footstepSounds = true;
+    public bool footstepSounds = true;
 
     public PlayerObject()
     {
@@ -49,7 +49,7 @@ public class PlayerObject : ObjectEntity
         characterComponent.volume = 2;
         characterComponent.calculateVolumeAndMass = false;
         var playerComponent = playerObject.AddComponent<PlayerComponent>();
-        playerComponent.footstepSounds = footstepSounds;
+        playerComponent.obj = this;
         return playerComponent;
     }
 }
@@ -57,7 +57,7 @@ public class PlayerObject : ObjectEntity
 public class PlayerComponent : DynamicEntityComponent
 {
     public static PlayerComponent instance;
-    public bool footstepSounds;
+    public PlayerObject obj;
     public int score = 0;
     public bool hasScore = false;
 

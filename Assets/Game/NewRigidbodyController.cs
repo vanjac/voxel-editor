@@ -131,7 +131,7 @@ public class NewRigidbodyController : MonoBehaviour
 
     private void PlayFootstep()
     {
-        if (!PlayerComponent.instance.footstepSounds)
+        if (!PlayerComponent.instance.obj.footstepSounds)
             return;
         if (leftFoot)
             footstepSoundPlayer.PlayLeftFoot(footstepSound);
