@@ -209,7 +209,7 @@ public class MaterialSelectorGUI : GUIPanel
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
-        if (allowNullMaterial && selectedCategory == "")
+        if (allowNullMaterial && selectedCategory != WORLD_LIST_CATEGORY)
         {
             if (highlightMaterial != null && ActionBarGUI.ActionBarButton(IconSet.no))
                 MaterialSelected(null);
