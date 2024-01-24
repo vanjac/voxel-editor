@@ -173,21 +173,6 @@ public class MaterialSelectorGUI : GUIPanel
                 ImportTextureFromPhotos();
             if (ActionBarGUI.ActionBarButton(IconSet.worldImport))
                 CategorySelected(WORLD_LIST_CATEGORY);
-            if (highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
-            {
-                if (ActionBarGUI.ActionBarButton(IconSet.copy))
-                    DuplicateCustomTexture();
-                if (ActionBarGUI.ActionBarButton(IconSet.draw))
-                    EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
-                if (ActionBarGUI.ActionBarButton(IconSet.delete))
-                {
-                    var dialog = gameObject.AddComponent<DialogGUI>();
-                    dialog.message = StringSet.CustomTextureDeleteConfirm;
-                    dialog.yesButtonText = StringSet.Yes;
-                    dialog.noButtonText = StringSet.No;
-                    dialog.yesButtonHandler = () => DeleteCustomTexture();
-                }
-            }
         }
 
         // prevent from expanding window
@@ -195,26 +180,45 @@ public class MaterialSelectorGUI : GUIPanel
         GUILayout.Label(selectedCategory, categoryLabelStyle.Value);
         GUIUtils.EndHorizontalClipped();
 
-        wasEnabled = GUI.enabled;
-        baseColor = GUI.color;
-        if (highlightMaterial == null || CustomTexture.IsCustomTexture(highlightMaterial)
-            || ResourcesDirectory.MaterialColorProperty(highlightMaterial) == null)
+        if (selectedCategory == CUSTOM_CATEGORY
+            && highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
         {
-            GUIUtils.ShowDisabled();
+            if (ActionBarGUI.ActionBarButton(IconSet.copy))
+                DuplicateCustomTexture();
+            if (ActionBarGUI.ActionBarButton(IconSet.draw))
+                EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
+            if (ActionBarGUI.ActionBarButton(IconSet.delete))
+            {
+                var dialog = gameObject.AddComponent<DialogGUI>();
+                dialog.message = StringSet.CustomTextureDeleteConfirm;
+                dialog.yesButtonText = StringSet.Yes;
+                dialog.noButtonText = StringSet.No;
+                dialog.yesButtonHandler = () => DeleteCustomTexture();
+            }
         }
-        TutorialGUI.TutorialHighlight("material color");
-        if (selectedCategory != WORLD_LIST_CATEGORY && ActionBarGUI.ActionBarButton(IconSet.color))
-            page = Page.COLOR;
-        TutorialGUI.ClearHighlight();
-        GUI.enabled = wasEnabled;
-        GUI.color = baseColor;
-
-        if (allowNullMaterial && selectedCategory != WORLD_LIST_CATEGORY)
+        else if (selectedCategory != WORLD_LIST_CATEGORY)
         {
-            if (highlightMaterial != null && ActionBarGUI.ActionBarButton(IconSet.no))
-                MaterialSelected(null);
-            else if (highlightMaterial == null)
-                ActionBarGUI.HighlightedActionBarButton(IconSet.no);
+            wasEnabled = GUI.enabled;
+            baseColor = GUI.color;
+            if (highlightMaterial == null || CustomTexture.IsCustomTexture(highlightMaterial)
+                || ResourcesDirectory.MaterialColorProperty(highlightMaterial) == null)
+            {
+                GUIUtils.ShowDisabled();
+            }
+            TutorialGUI.TutorialHighlight("material color");
+            if (ActionBarGUI.ActionBarButton(IconSet.color))
+                page = Page.COLOR;
+            TutorialGUI.ClearHighlight();
+            GUI.enabled = wasEnabled;
+            GUI.color = baseColor;
+
+            if (allowNullMaterial)
+            {
+                if (highlightMaterial != null && ActionBarGUI.ActionBarButton(IconSet.no))
+                    MaterialSelected(null);
+                else if (highlightMaterial == null)
+                    ActionBarGUI.HighlightedActionBarButton(IconSet.no);
+            }
         }
 
         GUILayout.EndHorizontal();
