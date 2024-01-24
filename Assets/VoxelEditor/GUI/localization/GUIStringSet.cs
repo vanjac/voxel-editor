@@ -1083,12 +1083,12 @@ If you have any questions, feedback, or suggestions, please send me an email:
 
     // Update messages
     public virtual string UpdateMessage_1_3_6 =>
-@"N-Space has been updated! You're on the <b>Beta</b> channel, so you'll get updates early. Feedback is appreciated!
+@"N-Space has been updated!
 
-<b>I'm looking for help with translation.</b> If you would like to help translate this app to another language, please contact me: chroma@chroma.zone
+I'm looking for help with translation. If you would like to help translate this app to another language, please email me: <i>chroma@chroma.zone</i>
 Thanks!
 
-Changes in this update:
+Changes in this update (v1.3.6):
 •  Improved Paint panel UI
 •  Only show Score in HUD if it's being used
 •  Fixed bug with selecting custom textures from recent paint list
