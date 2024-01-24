@@ -1,15 +1,3 @@
-Copyright (c) 2024 J. van't Hoog
-
-You can use the other buttons in the menu to access these websites:
-- N-Space subreddit (/r/nspace) for discussion and sharing your creations
-- Video tutorials on YouTube
-- N-Space website with a link to the source code
-
-If you have any questions, feedback, or suggestions, please send me an email:
-    chroma@chroma.zone
-
-SOURCES:
-
 Images:
     Materials from Poliigon.com, FreePBR.com, 3dtextures.me, spiralgraphics.biz (Genetica)
     Skies from Sky5X One (Unity Asset Store)

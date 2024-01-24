@@ -37,13 +37,17 @@ public class MenuOverflowGUI : GUIPanel
                 }),
                 new OverflowMenuGUI.MenuItem(StringSet.OpenAbout, IconSet.about, () =>
                 {
-                    // TODO: localize!
-                    string text = string.Format("Version {0}\nMade with Unity {1}\n\n{2}"
-                        + "\n\n----------\n\nSystem Info:\nResolution: {3}x{4}\nDPI: {5}"
-                        + "\nAudio: {6}Hz {7}",
-                        Application.version, Application.unityVersion, creditsText.text,
-                        Screen.width, Screen.height, Screen.dpi,
-                        AudioSettings.outputSampleRate, AudioSettings.speakerMode);
+#if !UNITY_IOS
+                    string donate = StringSet.DonateMessage + "\n\n";
+#else
+                    string donate = "";
+#endif
+                    string debugInfo =
+                        $"Build: {Application.buildGUID}\n"
+                        + $"Resolution: {Screen.width}x{Screen.height}\nDPI: {Screen.dpi}\n"
+                        + $"Audio: {AudioSettings.outputSampleRate}Hz {AudioSettings.speakerMode}";
+                    string text = StringSet.AboutMessage(Application.version,
+                        Application.unityVersion, donate, creditsText.text, debugInfo);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 }),
                 new OverflowMenuGUI.MenuItem(StringSet.OpenWebsite, IconSet.website, () =>

@@ -1057,6 +1057,30 @@ Substances will rotate around their <b>Pivot</b> point.";
     public virtual string TutorialPitBalls =>
         "<i>Now try making some balls with Physics behaviors. Then play the game and push them all into the pit.</i> Enjoy.";
 
+    public virtual string AboutMessage(string appVersion, string unityVersion, string donate, string credits, string debugInfo) =>
+@$"<i>Version {appVersion}</i>
+<i>Made with Unity {unityVersion}</i>
+
+Copyright (c) 2024 J. van't Hoog
+
+{donate}You can use the other buttons in the menu to access these websites:
+- N-Space subreddit (/r/nspace) for discussion and sharing your creations
+- N-Space website with a link to the source code
+
+If you have any questions, feedback, or suggestions, please send me an email:
+    chroma@chroma.zone
+
+<b>Sources:</b>
+
+{credits}
+
+----------
+
+<b>System Info:</b>
+{debugInfo}";
+    public virtual string DonateMessage =>
+        "If you enjoy N-Space, please consider donating to support development, using the Donate link in the menu. Thanks!";
+
     // Update messages
     public virtual string UpdateMessage_1_3_6 =>
 @"N-Space has been updated! You're on the <b>Beta</b> channel, so you'll get updates early. Feedback is appreciated!
