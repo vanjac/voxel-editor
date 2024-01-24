@@ -151,6 +151,13 @@ public class LargeMessageGUI : GUIPanel
     public string message;
     public System.Action closeHandler;
 
+    private static readonly System.Lazy<GUIStyle> dialogStyle = new System.Lazy<GUIStyle>(() =>
+    {
+        var style = new GUIStyle(GUI.skin.window);
+        style.normal.background = GUI.skin.button.normal.background; // more opaque :/
+        return style;
+    });
+
     public static LargeMessageGUI ShowLargeMessageDialog(GameObject gameObject, string message)
     {
         var dialog = gameObject.AddComponent<LargeMessageGUI>();
@@ -161,6 +168,8 @@ public class LargeMessageGUI : GUIPanel
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .6f, safeRect.height * .6f, maxWidth: 1280, maxHeight: 800);
+
+    public override GUIStyle GetStyle() => dialogStyle.Value;
 
     void OnDestroy()
     {
