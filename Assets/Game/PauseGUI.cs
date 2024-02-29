@@ -6,6 +6,7 @@ public class HUDCounter
     private int lastValue = -1;
     private float changeTime = -10f;
     private bool negativeChange;
+    private bool hasUpdated = false;
 
     public HUDCounter(string text)
     {
@@ -14,17 +15,20 @@ public class HUDCounter
 
     public void Update(int value)
     {
-        if (lastValue != -1 && lastValue != value)
+        if (hasUpdated && lastValue != value)
         {
             changeTime = Time.time;
             negativeChange = value < lastValue;
         }
         lastValue = value;
+        hasUpdated = true;
         Display();
     }
 
     public void Display()
     {
+        if (!hasUpdated)
+            return;
         Color baseColor = GUI.color;
         if (Time.time - changeTime < 1.0)
         {
