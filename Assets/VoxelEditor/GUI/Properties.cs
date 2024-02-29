@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public static class PropertyGUIs
@@ -96,6 +97,17 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
+    private static bool ParseFloat(string s, out float result)
+    {
+        // do NOT allow thousands separators, they can get confused for decimals
+        if (float.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out result))
+            return true;
+        // a bug on Android prevents commas from being used as decimal separators
+        if (float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
+            return true;
+        return false;
+    }
+
     public static void Float(Property property)
     {
         float fValue = (float)property.value;
@@ -118,22 +130,16 @@ public static class PropertyGUIs
                 numberKeyboard.selection = new RangeInt(0, sValue.Length);
                 keyboardHandler = text =>
                 {
-                    try
-                    {
-                        property.value = float.Parse(text);
-                    }
-                    catch (FormatException) { }
+                    if (ParseFloat(text, out float newValue))
+                        property.value = newValue;
                 };
             }
         }
         else // TouchScreenKeyboard not supported
         {
             sValue = GUILayout.TextField(sValue);
-            try
-            {
-                property.value = float.Parse(sValue);
-            }
-            catch (FormatException) { }
+            if (ParseFloat(sValue, out float newValue))
+                property.value = newValue;
         }
         GUILayout.EndHorizontal();
     }
