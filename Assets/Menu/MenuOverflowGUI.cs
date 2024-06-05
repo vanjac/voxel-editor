@@ -37,7 +37,7 @@ public class MenuOverflowGUI : GUIPanel
                 }),
                 new OverflowMenuGUI.MenuItem(StringSet.OpenAbout, IconSet.about, () =>
                 {
-#if !UNITY_IOS
+#if false
                     string donate = StringSet.DonateMessage + "\n\n";
 #else
                     string donate = "";
@@ -58,7 +58,7 @@ public class MenuOverflowGUI : GUIPanel
                 {
                     Application.OpenURL("https://www.reddit.com/r/nspace/");
                 }),
-#if !UNITY_IOS
+#if false
                 new OverflowMenuGUI.MenuItem(StringSet.Donate, IconSet.donate, () =>
                 {
                     Application.OpenURL("https://chroma.zone/donate");
