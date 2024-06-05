@@ -168,6 +168,12 @@ public class ActionBarGUI : TopPanelGUI
                     }),
                     new OverflowMenuGUI.MenuItem(StringSet.SelectWithTag, IconSet.entityTag, () => {
                         SelectByTagInterface();
+                    }),
+                    new OverflowMenuGUI.MenuItem(StringSet.SelectOutgoingConnections, IconSet.outgoing, () => {
+                        voxelArray.SelectOutgoingConnections();
+                    }),
+                    new OverflowMenuGUI.MenuItem(StringSet.SelectIncomingConnections, IconSet.incoming, () => {
+                        voxelArray.SelectIncomingConnections();
                     })
                 };
             }, stayOpen: true),

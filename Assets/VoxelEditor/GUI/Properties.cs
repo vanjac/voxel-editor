@@ -3,6 +3,38 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
+public static class Properties
+{
+    // Unlike EntityReferencePropertyManager, this is not tied to GUI
+    public static IEnumerable<EntityReference> EntityReferences(Property prop)
+    {
+        var value = prop.value;
+        if (value is EntityReference reference)
+        {
+            yield return reference;
+        }
+        else if (value is Target target)
+        {
+            yield return target.entityRef;
+        }
+        else if (value is ActivatedSensor.EntityFilter filter)
+        {
+            yield return filter.entityRef;
+        }
+        else if (value is EntityBehavior.BehaviorTargetProperty behaviorTarget)
+        {
+            yield return behaviorTarget.targetEntity;
+        }
+        else if (value is InputThresholdSensor.Input[] inputs)
+        {
+            foreach (var input in inputs)
+            {
+                yield return input.entityRef;
+            }
+        }
+    }
+}
+
 public static class PropertyGUIs
 {
     private static GUIStringSet StringSet => GUIPanel.StringSet;

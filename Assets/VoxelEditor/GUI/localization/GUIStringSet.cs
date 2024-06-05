@@ -128,6 +128,10 @@ public class GUIStringSet
         "Fill Paint";
     public virtual string SelectWithTag =>
         "With Tag";
+    public virtual string SelectOutgoingConnections =>
+        "Connections";
+    public virtual string SelectIncomingConnections =>
+        "Reverse Conn.";
     public virtual string OpenBevel =>
         "Bevel";
     public virtual string RevertChanges =>

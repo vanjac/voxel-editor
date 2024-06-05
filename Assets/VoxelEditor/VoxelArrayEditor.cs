@@ -716,6 +716,18 @@ public class VoxelArrayEditor : VoxelArray
                 }
     }
 
+    private void SelectEntireEntity(Entity e)
+    {
+        if (e is ObjectEntity objectEntity)
+        {
+            SelectThing(objectEntity.marker);
+        }
+        else if (e is Substance substance)
+        {
+            SubstanceSelect(substance);
+        }
+    }
+
     public void SelectAllWithTag(byte tag)
     {
         // TODO: set position of move axes
@@ -750,6 +762,95 @@ public class VoxelArrayEditor : VoxelArray
                 SelectThing(obj.marker);
         }
         AutoSetMoveAxesEnabled();
+    }
+
+    private IEnumerable<Property> AllEntityProperties(Entity e)
+    {
+        foreach (var prop in e.Properties())
+            yield return prop;
+        if (e.sensor != null)
+        {
+            foreach (var prop in e.sensor.Properties())
+                yield return prop;
+        }
+        foreach (var behavior in e.behaviors)
+        {
+            foreach (var prop in behavior.Properties())
+                yield return prop;
+        }
+    }
+
+    private IEnumerable<Entity> OutgoingConnections(Entity e)
+    {
+        foreach (var prop in AllEntityProperties(e))
+        {
+            foreach (var entityRef in Properties.EntityReferences(prop))
+            {
+                if (entityRef.entity != null)
+                {
+                    yield return entityRef.entity;
+                }
+            }
+        }
+    }
+
+    public void SelectOutgoingConnections()
+    {
+        var outgoing = new HashSet<Entity>();
+        foreach (var entity in GetSelectedEntities())
+        {
+            foreach (var connection in OutgoingConnections(entity))
+            {
+                outgoing.Add(connection);
+            }
+        }
+        ClearSelection();
+        foreach (var entity in outgoing)
+        {
+            SelectEntireEntity(entity);
+        }
+        AutoSetMoveAxesEnabled(); // TODO also set position
+    }
+
+    public void SelectIncomingConnections()
+    {
+        var selectedEntities = new HashSet<Entity>(GetSelectedEntities());
+        var incoming = new HashSet<Entity>();
+
+        foreach (ObjectEntity entity in IterateObjects())
+        {
+            foreach (var connection in OutgoingConnections(entity))
+            {
+                if (selectedEntities.Contains(connection))
+                {
+                    incoming.Add(entity);
+                    break;
+                }
+            }
+        }
+
+        var visited = new HashSet<Substance>();
+        foreach (Voxel voxel in IterateVoxels())
+        {
+            if (voxel.substance != null && visited.Add(voxel.substance))
+            {
+                foreach (var connection in OutgoingConnections(voxel.substance))
+                {
+                    if (selectedEntities.Contains(connection))
+                    {
+                        incoming.Add(voxel.substance);
+                        break;
+                    }
+                }
+            }
+        }
+
+        ClearSelection();
+        foreach (var entity in incoming)
+        {
+            SelectEntireEntity(entity);
+        }
+        AutoSetMoveAxesEnabled(); // TODO also set position
     }
 
     public SelectionState GetSelectionState()
