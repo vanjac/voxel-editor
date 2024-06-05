@@ -327,7 +327,7 @@ public class PropertiesGUI : LeftPanelGUI
         EntityReferencePropertyManager.Reset(singleSelectedEntity); // could be null and that's fine (?)
 
         GUILayout.BeginVertical(GUI.skin.box);
-        PropertiesObjectGUI(editEntity);
+        PropertiesObjectGUI(editEntity, selectedEntities.Count);
         GUILayout.EndVertical();
 
         if (singleSelectedEntity != null && !(singleSelectedEntity is PlayerObject))
@@ -388,7 +388,7 @@ public class PropertiesGUI : LeftPanelGUI
         }
         TutorialGUI.ClearHighlight();
         GUILayout.BeginVertical(GUI.skin.box);
-        PropertiesObjectGUI(editSensor, StringSet.SensorName, StringSet.NoSensor);
+        PropertiesObjectGUI(editSensor, 1, StringSet.SensorName, StringSet.NoSensor);
         GUILayout.EndVertical();
 
         TutorialGUI.TutorialHighlight("add behavior");
@@ -434,7 +434,7 @@ public class PropertiesGUI : LeftPanelGUI
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget);
             GUILayout.BeginVertical(GUI.skin.box);
             GUI.backgroundColor = guiBaseColor;
-            PropertiesObjectGUI(storedBehavior, StringSet.BehaviorName, null,
+            PropertiesObjectGUI(storedBehavior, 1, StringSet.BehaviorName, null,
                 () => EntityPreviewManager.BehaviorUpdated(selectedEntities,
                     storedBehavior.allBehaviors[0].GetType()));
             if (GUILayout.Button(GUIUtils.PadContent(StringSet.RemoveBehavior, IconSet.delete)))
@@ -467,7 +467,7 @@ public class PropertiesGUI : LeftPanelGUI
         }
     }
 
-    private void PropertiesObjectGUI(PropertiesObject obj,
+    private void PropertiesObjectGUI(PropertiesObject obj, int count = 1,
         System.Func<string, string> nameFmt = null, string noName = null,
         System.Action changedAction = null)
     {
@@ -484,6 +484,8 @@ public class PropertiesGUI : LeftPanelGUI
             title = obj.ObjectType.displayName(StringSet);
             if (nameFmt != null)
                 title = nameFmt(title);
+            if (count != 1)
+                title = StringSet.ObjectCount(title, count);
             if (obj.Properties().Any())
                 title += ":";
         }

@@ -290,6 +290,8 @@ public class GUIStringSet
         "Remove";
     public virtual string OtherBehaviorsPlaceholder =>
         "(other behaviors...)";
+    public virtual string ObjectCount(string title, int count) =>
+        $"{title} ({count})";
     public virtual string SensorName(string name) =>
         $"{name} Sensor";
     public virtual string BehaviorName(string name) =>
