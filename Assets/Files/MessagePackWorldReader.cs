@@ -161,6 +161,8 @@ public class MessagePackWorldReader : WorldFileReader
                 }
                 ObjectEntity obj = (ObjectEntity)objType.Create();
                 ReadObjectEntity(objDict, obj, materials, overlays);
+                if (editor)
+                    obj.InitObjectMarker((VoxelArrayEditor)voxelArray);
                 voxelArray.AddObject(obj);
             }
         }
@@ -177,8 +179,6 @@ public class MessagePackWorldReader : WorldFileReader
         {
             foreach (Substance s in substances)
                 EntityPreviewManager.UpdateEntityPosition(s);
-            foreach (ObjectEntity obj in voxelArray.IterateObjects())
-                obj.InitObjectMarker((VoxelArrayEditor)voxelArray);
         }
     }
 

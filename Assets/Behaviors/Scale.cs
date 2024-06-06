@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[EditorPreviewBehavior(marker = true)]
 public class ScaleBehavior : GenericEntityBehavior<ScaleBehavior, ScaleComponent>
 {
     public static new BehaviorType objectType = new BehaviorType(
@@ -35,7 +36,14 @@ public class ScaleComponent : BehaviorComponent<ScaleBehavior>
     public override void BehaviorEnabled()
     {
         storedScale = transform.localScale;
-        transform.localScale = behavior.scale;
+        var scale = behavior.scale;
+        if (GetComponent<ObjectMarker>()) // editor preview
+        {
+            scale.x = Mathf.Max(scale.x, 0.1f);
+            scale.y = Mathf.Max(scale.y, 0.1f);
+            scale.z = Mathf.Max(scale.z, 0.1f);
+        }
+        transform.localScale = scale;
     }
 
     public override void BehaviorDisabled()
