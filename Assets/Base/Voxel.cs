@@ -182,8 +182,6 @@ public struct VoxelEdge
 
 public class Voxel
 {
-    public static VoxelFace EMPTY_FACE = new VoxelFace();
-
     public readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
 
 

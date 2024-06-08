@@ -8,10 +8,11 @@ public class VoxelArrayEditor : VoxelArray
     {
         bool addSelected { get; set; }
         bool storedSelected { get; set; }
-        bool IsSelected();
         Bounds GetBounds();
         void SelectionStateUpdated(VoxelArray voxelArray);
     }
+
+    private static bool IsSelected(Selectable s) => s.addSelected && s.storedSelected;
 
     private struct VoxelFaceReference : VoxelArrayEditor.Selectable
     {
@@ -28,12 +29,6 @@ public class VoxelArrayEditor : VoxelArray
         {
             get => GetFace().storedSelected;
             set => voxel.faces[faceI].storedSelected = value;
-        }
-
-        public bool IsSelected()
-        {
-            var face = GetFace();
-            return (!face.IsEmpty()) && (face.addSelected || face.storedSelected);
         }
 
         public Bounds GetBounds() => Voxel.FaceBounds(position, faceI);
@@ -67,12 +62,6 @@ public class VoxelArrayEditor : VoxelArray
         {
             get => GetEdge().storedSelected;
             set => voxel.edges[edgeI].storedSelected = value;
-        }
-
-        public bool IsSelected()
-        {
-            var edge = GetEdge();
-            return edge.addSelected || edge.storedSelected;
         }
 
         public Bounds GetBounds() => Voxel.EdgeBounds(position, edgeI);
@@ -553,10 +542,10 @@ public class VoxelArrayEditor : VoxelArray
         {
             Selectable thing = selectedThings[i];
             Substance thingSubstance = null;
-            if (thing is VoxelFaceReference)
-                thingSubstance = ((VoxelFaceReference)thing).voxel.substance;
-            else if (thing is VoxelEdgeReference)
-                thingSubstance = ((VoxelEdgeReference)thing).voxel.substance;
+            if (thing is VoxelFaceReference faceRef)
+                thingSubstance = faceRef.voxel.substance;
+            else if (thing is VoxelEdgeReference edgeRef)
+                thingSubstance = edgeRef.voxel.substance;
             else if (thing is ObjectEntity)
                 thingSubstance = selectObjectSubstance;
             if (thingSubstance != boxSelectSubstance || !ThingInBoxSelection(thing, bounds))
@@ -640,7 +629,7 @@ public class VoxelArrayEditor : VoxelArray
         {
             VoxelFaceReference faceRef = facesToSelect.Dequeue();
             if (faceRef.voxel == null || faceRef.voxel.substance != substance
-                || faceRef.GetFace().IsEmpty() || faceRef.IsSelected()) // stop at boundaries of stored selection
+                || faceRef.GetFace().IsEmpty() || IsSelected(faceRef)) // stop at boundaries of stored selection
                 continue;
             if (matchPaint && faceRef.GetFace() != paint)
                 continue;
