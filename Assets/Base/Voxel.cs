@@ -326,7 +326,7 @@ public class Voxel
     }
 
 
-    public Vector3Int position; // TODO remove
+    public readonly Vector3Int position; // TODO remove
     // see "Voxel Diagram.skp" for a diagram of face/edge numbers
     public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
     // Edges: 0-3: x, 4-7: y, 8-11: z
@@ -334,6 +334,11 @@ public class Voxel
     // for the Y/Z axes (0-3), Z/X axes (4-7, note order), or X/Y axes (8-11)
     public VoxelEdge[] edges = new VoxelEdge[12];
     public Substance substance;
+
+    public Voxel(Vector3Int position)
+    {
+        this.position = position;
+    }
 
     public static Bounds FaceBounds(Vector3Int position, int faceI)
     {

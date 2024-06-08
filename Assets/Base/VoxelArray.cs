@@ -20,8 +20,7 @@ public class VoxelArray : MonoBehaviour
     {
         if (!voxels.TryGetValue(position, out Voxel voxel) && createIfMissing)
         {
-            voxel = new Voxel();
-            voxel.position = position;
+            voxel = new Voxel(position);
             voxels[position] = voxel;
             worldGroup.AddVoxel(voxel, this);
         }
