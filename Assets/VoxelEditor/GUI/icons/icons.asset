@@ -68,6 +68,8 @@ MonoBehaviour:
   color: {fileID: 2800000, guid: efd72c913ac0be549af477e59955aae8, type: 3}
   camera: {fileID: 2800000, guid: 1c056bdad8f6317469edc45ad5abfb73, type: 3}
   language: {fileID: 2800000, guid: 147a008df0bbd8743a1943cdab71897a, type: 3}
+  outgoing: {fileID: 2800000, guid: c1541e99001de67499abd2035f4dd25b, type: 3}
+  incoming: {fileID: 2800000, guid: ce5e2b2696d009549918e698e86fb355, type: 3}
   indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
   floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
   newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}
