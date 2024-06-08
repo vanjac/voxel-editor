@@ -328,11 +328,11 @@ public class Voxel
 
     public readonly Vector3Int position; // TODO remove
     // see "Voxel Diagram.skp" for a diagram of face/edge numbers
-    public VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
+    public readonly VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
     // Edges: 0-3: x, 4-7: y, 8-11: z
     // Each group of four follows the pattern (0,0), (1,0), (1,1), (0,1)
     // for the Y/Z axes (0-3), Z/X axes (4-7, note order), or X/Y axes (8-11)
-    public VoxelEdge[] edges = new VoxelEdge[12];
+    public readonly VoxelEdge[] edges = new VoxelEdge[12];
     public Substance substance;
 
     public Voxel(Vector3Int position)

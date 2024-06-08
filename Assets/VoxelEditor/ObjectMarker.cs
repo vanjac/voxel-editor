@@ -15,9 +15,10 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         get => objectEntity.paint.storedSelected;
         set => objectEntity.paint.storedSelected = value;
     }
-    public bool selected => addSelected || storedSelected;
 
-    public Bounds bounds => new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
+    public bool IsSelected() => addSelected || storedSelected;
+
+    public Bounds GetBounds() => new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
         Vector3.zero);
 
     public void Start()
@@ -43,7 +44,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         if (renderer == null || objectEntity == null)
             return;
         List<Material> materials = new List<Material>();
-        if (objectEntity.highlight != Color.clear && !selected)
+        if (objectEntity.highlight != Color.clear && !IsSelected())
         {
             materials.Add(objectEntity.highlightMaterial);
             gameObject.layer = 0; // default
@@ -65,7 +66,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
             if (objectEntity.paint.overlay != null)
                 materials.Add(objectEntity.paint.overlay);
         }
-        if (selected)
+        if (IsSelected())
             materials.Add(VoxelComponent.selectedMaterial);
         renderer.materials = materials.ToArray();
     }

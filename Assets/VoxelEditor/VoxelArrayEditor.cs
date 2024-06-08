@@ -8,9 +8,8 @@ public class VoxelArrayEditor : VoxelArray
     {
         bool addSelected { get; set; }
         bool storedSelected { get; set; }
-        bool selected { get; }
-        Bounds bounds { get; }
-
+        bool IsSelected();
+        Bounds GetBounds();
         void SelectionStateUpdated(VoxelArray voxelArray);
     }
 
@@ -18,19 +17,26 @@ public class VoxelArrayEditor : VoxelArray
     {
         public Voxel voxel;
         public int faceI;
+        public Vector3Int position => voxel.position;
 
         public bool addSelected
         {
-            get => face.addSelected;
+            get => GetFace().addSelected;
             set => voxel.faces[faceI].addSelected = value;
         }
         public bool storedSelected
         {
-            get => face.storedSelected;
+            get => GetFace().storedSelected;
             set => voxel.faces[faceI].storedSelected = value;
         }
-        public bool selected => (!face.IsEmpty()) && (face.addSelected || face.storedSelected);
-        public Bounds bounds => Voxel.FaceBounds(voxel.position, faceI);
+
+        public bool IsSelected()
+        {
+            var face = GetFace();
+            return (!face.IsEmpty()) && (face.addSelected || face.storedSelected);
+        }
+
+        public Bounds GetBounds() => Voxel.FaceBounds(position, faceI);
 
         public VoxelFaceReference(Voxel voxel, int faceI)
         {
@@ -38,7 +44,7 @@ public class VoxelArrayEditor : VoxelArray
             this.faceI = faceI;
         }
 
-        public VoxelFace face => voxel.faces[faceI];
+        public VoxelFace GetFace() => voxel.faces[faceI];
 
         public void SelectionStateUpdated(VoxelArray voxelArray)
         {
@@ -50,19 +56,26 @@ public class VoxelArrayEditor : VoxelArray
     {
         public Voxel voxel;
         public int edgeI;
+        public Vector3Int position => voxel.position;
 
         public bool addSelected
         {
-            get => edge.addSelected;
+            get => GetEdge().addSelected;
             set => voxel.edges[edgeI].addSelected = value;
         }
         public bool storedSelected
         {
-            get => edge.storedSelected;
+            get => GetEdge().storedSelected;
             set => voxel.edges[edgeI].storedSelected = value;
         }
-        public bool selected => edge.addSelected || edge.storedSelected;
-        public Bounds bounds => Voxel.EdgeBounds(voxel.position, edgeI);
+
+        public bool IsSelected()
+        {
+            var edge = GetEdge();
+            return edge.addSelected || edge.storedSelected;
+        }
+
+        public Bounds GetBounds() => Voxel.EdgeBounds(position, edgeI);
 
         public VoxelEdgeReference(Voxel voxel, int edgeI)
         {
@@ -70,7 +83,7 @@ public class VoxelArrayEditor : VoxelArray
             this.edgeI = edgeI;
         }
 
-        public VoxelEdge edge => voxel.edges[edgeI];
+        public VoxelEdge GetEdge() => voxel.edges[edgeI];
 
         public void SelectionStateUpdated(VoxelArray voxelArray)
         {
@@ -219,7 +232,7 @@ public class VoxelArrayEditor : VoxelArray
             else
             {
                 SelectThing(thing);
-                SetMoveAxes(thing.bounds.center);
+                SetMoveAxes(thing.GetBounds().center);
                 selectMode = SelectMode.DRAW_SELECT;
             }
         }
@@ -227,7 +240,7 @@ public class VoxelArrayEditor : VoxelArray
         {
             ClearSelection();
             selectMode = thing is VoxelEdgeReference ? SelectMode.BOX_EDGES : SelectMode.BOX;
-            boxSelectStartBounds = thing.bounds;
+            boxSelectStartBounds = thing.GetBounds();
             selectionBounds = boxSelectStartBounds;
             // don't actually call this, only select the tapped thing
             // avoid issues when tapping things with overlapping bounds
@@ -262,7 +275,7 @@ public class VoxelArrayEditor : VoxelArray
             return;
         Bounds oldSelectionBounds = selectionBounds;
         selectionBounds = boxSelectStartBounds;
-        selectionBounds.Encapsulate(thing.bounds);
+        selectionBounds.Encapsulate(thing.GetBounds());
         if (oldSelectionBounds != selectionBounds)
             UpdateBoxSelection();
     }
@@ -284,7 +297,7 @@ public class VoxelArrayEditor : VoxelArray
         if (selectMode == SelectMode.DRAW_SELECT)
         {
             SelectThing(thing);
-            SetMoveAxes(thing.bounds.center);
+            SetMoveAxes(thing.GetBounds().center);
         }
         else
             DeselectThing(thing);
@@ -607,14 +620,14 @@ public class VoxelArrayEditor : VoxelArray
     private bool ThingInBoxSelection(Selectable thing, Bounds bounds)
     {
         bounds.Expand(new Vector3(0.1f, 0.1f, 0.1f));
-        Bounds thingBounds = thing.bounds;
+        Bounds thingBounds = thing.GetBounds();
         return bounds.Contains(thingBounds.min) && bounds.Contains(thingBounds.max);
     }
 
     private void FaceSelectFloodFill(VoxelFaceReference start, bool stayOnPlane, bool matchPaint = false)
     {
         Substance substance = start.voxel.substance;
-        VoxelFace paint = start.face;
+        VoxelFace paint = start.GetFace();
 
         // this used to be a recursive algorithm but it would cause stack overflow exceptions
         Queue<VoxelFaceReference> facesToSelect = new Queue<VoxelFaceReference>();
@@ -622,19 +635,19 @@ public class VoxelArrayEditor : VoxelArray
 
         // reset selection bounds
         selectMode = SelectMode.FACE_FLOOD_FILL;
-        selectionBounds = start.bounds;
+        selectionBounds = start.GetBounds();
 
         while (facesToSelect.Count != 0)
         {
             VoxelFaceReference faceRef = facesToSelect.Dequeue();
             if (faceRef.voxel == null || faceRef.voxel.substance != substance
-                || faceRef.face.IsEmpty() || faceRef.selected) // stop at boundaries of stored selection
+                || faceRef.GetFace().IsEmpty() || faceRef.IsSelected()) // stop at boundaries of stored selection
                 continue;
-            if (matchPaint && faceRef.face != paint)
+            if (matchPaint && faceRef.GetFace() != paint)
                 continue;
             SelectThing(faceRef);
 
-            Vector3Int position = faceRef.voxel.position;
+            Vector3Int position = faceRef.position;
             for (int sideNum = 0; sideNum < 4; sideNum++)
             {
                 int sideFaceI = Voxel.SideFaceI(faceRef.faceI, sideNum);
@@ -650,10 +663,10 @@ public class VoxelArrayEditor : VoxelArray
             }
 
             // grow bounds
-            selectionBounds.Encapsulate(faceRef.bounds);
+            selectionBounds.Encapsulate(faceRef.GetBounds());
         }
 
-        SetMoveAxes(start.voxel.position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(start.faceI) / 2);
+        SetMoveAxes(start.position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(start.faceI) / 2);
     }
 
     public void FillSelectPaint()
@@ -671,7 +684,7 @@ public class VoxelArrayEditor : VoxelArray
     private void EdgeSelectFloodFill(VoxelEdgeReference edgeRef, Substance substance)
     {
         selectMode = SelectMode.EDGE_FLOOD_FILL;
-        selectionBounds = edgeRef.bounds;
+        selectionBounds = edgeRef.GetBounds();
         int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
         Vector3Int minDir = Voxel.IntDirectionForFaceI(minFaceI);
         var edgeType = GetEdgeType(edgeRef);
@@ -682,7 +695,7 @@ public class VoxelArrayEditor : VoxelArray
     private void SelectContiguousEdges(VoxelEdgeReference edgeRef, Substance substance,
         Vector3Int direction, EdgeType edgeType)
     {
-        for (Vector3Int voxelPos = edgeRef.voxel.position; true; voxelPos += direction)
+        for (Vector3Int voxelPos = edgeRef.position; true; voxelPos += direction)
         {
             Voxel voxel = VoxelAt(voxelPos, false);
             if (voxel == null || voxel.substance != substance)
@@ -692,7 +705,7 @@ public class VoxelArrayEditor : VoxelArray
             if (contigEdgeType != edgeType)
                 break;
             SelectThing(contigEdgeRef);
-            selectionBounds.Encapsulate(contigEdgeRef.bounds);
+            selectionBounds.Encapsulate(contigEdgeRef.GetBounds());
 
             var oppEdgeRef = OpposingEdgeRef(contigEdgeRef);
             if (oppEdgeRef.voxel != null && !oppEdgeRef.voxel.EdgeIsEmpty(oppEdgeRef.edgeI))
@@ -703,7 +716,9 @@ public class VoxelArrayEditor : VoxelArray
     private void SubstanceSelect(Substance substance)
     {
         foreach (Voxel v in substance.voxelGroup.IterateVoxels())
+        {
             for (int i = 0; i < 6; i++)
+            {
                 if (!v.faces[i].IsEmpty())
                 {
                     SelectFace(v, i);
@@ -714,6 +729,8 @@ public class VoxelArrayEditor : VoxelArray
                         selectionBounds.Encapsulate(faceBounds);
                     selectMode = SelectMode.FACE_FLOOD_FILL;
                 }
+            }
+        }
     }
 
     private void SelectEntireEntity(Entity e)
@@ -903,8 +920,8 @@ public class VoxelArrayEditor : VoxelArray
         {
             // positive means A is greater than B
             // so positive means B will be adjusted before A
-            Vector3 aCenter = a.bounds.center;
-            Vector3 bCenter = b.bounds.center;
+            Vector3 aCenter = a.GetBounds().center;
+            Vector3 bCenter = b.GetBounds().center;
             float diff = 0;
             switch (adjustAxis)
             {
@@ -958,7 +975,7 @@ public class VoxelArrayEditor : VoxelArray
             VoxelFaceReference faceRef = (VoxelFaceReference)thing;
 
             Voxel oldVoxel = faceRef.voxel;
-            Vector3Int oldPos = oldVoxel.position;
+            Vector3Int oldPos = faceRef.position;
             Vector3Int newPos = oldPos + adjustDirection;
             Voxel newVoxel = VoxelAt(newPos, true);
 
@@ -1283,7 +1300,7 @@ public class VoxelArrayEditor : VoxelArray
         foreach (Selectable thing in IterateSelected())
         {
             if (thing is VoxelFaceReference)
-                return ((VoxelFaceReference)thing).face.PaintOnly();
+                return ((VoxelFaceReference)thing).GetFace().PaintOnly();
             else if (thing is ObjectMarker)
                 return ((ObjectMarker)thing).objectEntity.paint.PaintOnly();
         }
@@ -1336,7 +1353,7 @@ public class VoxelArrayEditor : VoxelArray
     {
         foreach (var edgeRef in IterateSelected<VoxelEdgeReference>())
         {
-            var edge = edgeRef.edge;
+            var edge = edgeRef.GetEdge();
             edge.addSelected = false;
             edge.storedSelected = false;
             return edge;
@@ -1369,8 +1386,8 @@ public class VoxelArrayEditor : VoxelArray
         Voxel voxel = edgeRef.voxel;
         int minFaceI = Voxel.EdgeIAxis(edgeRef.edgeI) * 2;
         var minFaceDir = Voxel.IntDirectionForFaceI(minFaceI);
-        Voxel minVoxel = VoxelAt(voxel.position + minFaceDir, false);
-        Voxel maxVoxel = VoxelAt(voxel.position - minFaceDir, false);
+        Voxel minVoxel = VoxelAt(edgeRef.position + minFaceDir, false);
+        Voxel maxVoxel = VoxelAt(edgeRef.position - minFaceDir, false);
         var minEdgeRef = new VoxelEdgeReference(minVoxel, edgeRef.edgeI);
         var maxEdgeRef = new VoxelEdgeReference(maxVoxel, edgeRef.edgeI);
 
@@ -1384,30 +1401,30 @@ public class VoxelArrayEditor : VoxelArray
 
         // update adjacent edges if they are beveled (for caps)
         // TODO this often won't be necessary
-        if (minVoxel != null && minEdgeRef.edge.hasBevel)
+        if (minVoxel != null && minEdgeRef.GetEdge().hasBevel)
         {
             voxelsToUpdate.Add(minVoxel);
             if (!minVoxel.EdgeIsConvex(minEdgeRef.edgeI))
             {
                 // probably concave, unless the bevel hasn't been cleared yet
                 var oppMinEdgeRef = OpposingEdgeRef(minEdgeRef);
-                if (oppMinEdgeRef.voxel != null && oppMinEdgeRef.edge.hasBevel)
+                if (oppMinEdgeRef.voxel != null && oppMinEdgeRef.GetEdge().hasBevel)
                     voxelsToUpdate.Add(oppMinEdgeRef.voxel);
             }
         }
-        if (maxVoxel != null && maxEdgeRef.edge.hasBevel)
+        if (maxVoxel != null && maxEdgeRef.GetEdge().hasBevel)
         {
             voxelsToUpdate.Add(maxVoxel);
             if (!maxVoxel.EdgeIsConvex(maxEdgeRef.edgeI))
             {
                 // probably concave, unless the bevel hasn't been cleared yet
                 var oppMaxEdgeRef = OpposingEdgeRef(maxEdgeRef);
-                if (oppMaxEdgeRef.voxel != null && oppMaxEdgeRef.edge.hasBevel)
+                if (oppMaxEdgeRef.voxel != null && oppMaxEdgeRef.GetEdge().hasBevel)
                     voxelsToUpdate.Add(oppMaxEdgeRef.voxel);
             }
         }
 
-        if (edgeRef.edge.hasBevel && EdgeIsCorner(type.Value))
+        if (edgeRef.GetEdge().hasBevel && EdgeIsCorner(type.Value))
         {
             // don't allow full convex bevels to overlap with other bevels
             foreach (int unconnectedEdgeI in Voxel.UnconnectedEdges(edgeRef.edgeI))
@@ -1415,11 +1432,11 @@ public class VoxelArrayEditor : VoxelArray
                 if (voxel.EdgeIsEmpty(unconnectedEdgeI))
                     continue;
                 var unconnectedEdgeRef = new VoxelEdgeReference(voxel, unconnectedEdgeI);
-                if (unconnectedEdgeRef.edge.hasBevel)
+                if (unconnectedEdgeRef.GetEdge().hasBevel)
                 {
-                    if ((edgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL
+                    if ((edgeRef.GetEdge().bevelSize == VoxelEdge.BevelSize.FULL
                         && type == EdgeType.CONVEX)
-                        || (unconnectedEdgeRef.edge.bevelSize == VoxelEdge.BevelSize.FULL)
+                        || (unconnectedEdgeRef.GetEdge().bevelSize == VoxelEdge.BevelSize.FULL)
                             && voxel.EdgeIsConvex(unconnectedEdgeI))
                     {
                         // full convex bevel overlaps with another bevel! this won't work!
@@ -1436,7 +1453,7 @@ public class VoxelArrayEditor : VoxelArray
             var oppEdgeRef = OpposingEdgeRef(edgeRef);
             if (oppEdgeRef.voxel != null)
             {
-                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.edge.bevel;
+                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.GetEdge().bevel;
                 UpdateBevel(oppEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
                     dontUpdateThisVoxel: false, type: type);
             }
@@ -1446,7 +1463,7 @@ public class VoxelArrayEditor : VoxelArray
             var oppEdgeRef = OpposingFlatEdgeRef(edgeRef);
             if (oppEdgeRef.voxel != null)
             {
-                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.edge.bevel;
+                oppEdgeRef.voxel.edges[oppEdgeRef.edgeI].bevel = edgeRef.GetEdge().bevel;
                 UpdateBevel(oppEdgeRef, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
                     dontUpdateThisVoxel: false, type: type);
             }
@@ -1459,7 +1476,7 @@ public class VoxelArrayEditor : VoxelArray
     private VoxelEdgeReference OpposingEdgeRef(VoxelEdgeReference edgeRef)
     {
         Voxel.EdgeFaces(edgeRef.edgeI, out int faceA, out int faceB);
-        Vector3Int opposingPos = edgeRef.voxel.position
+        Vector3Int opposingPos = edgeRef.position
             + Voxel.IntDirectionForFaceI(faceA) + Voxel.IntDirectionForFaceI(faceB);
         Voxel opposingVoxel = VoxelAt(opposingPos, false);
         if (opposingVoxel != null && opposingVoxel.substance != edgeRef.voxel.substance)
@@ -1474,7 +1491,7 @@ public class VoxelArrayEditor : VoxelArray
         Voxel.EdgeFaces(edgeRef.edgeI, out int faceA, out int faceB);
         int emptyFace = edgeRef.voxel.faces[faceA].IsEmpty() ? faceA : faceB;
         int notEmptyFace = emptyFace == faceA ? faceB : faceA;
-        Voxel adjacentVoxel = VoxelAt(edgeRef.voxel.position
+        Voxel adjacentVoxel = VoxelAt(edgeRef.position
             + Voxel.IntDirectionForFaceI(emptyFace), false);
         if (adjacentVoxel != null && adjacentVoxel.substance == edgeRef.voxel.substance)
         {
