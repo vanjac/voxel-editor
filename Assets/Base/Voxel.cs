@@ -335,7 +335,7 @@ public class Voxel
     public VoxelEdge[] edges = new VoxelEdge[12];
     public Substance substance;
 
-    public Bounds GetFaceBounds(int faceI)
+    public static Bounds FaceBounds(Vector3Int position, int faceI)
     {
         var bounds = faceI switch
         {
@@ -351,7 +351,7 @@ public class Voxel
         return bounds;
     }
 
-    public Bounds GetEdgeBounds(int edgeI)
+    public static Bounds EdgeBounds(Vector3Int position, int edgeI)
     {
         Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
         Vector3 size = Vector3.zero;
@@ -376,7 +376,8 @@ public class Voxel
         return new Bounds(center + position, size);
     }
 
-    public Bounds GetBounds() => new Bounds(position + new Vector3(0.5f, 0.5f, 0.5f), Vector3.one);
+    public static Bounds Bounds(Vector3Int position) =>
+        new Bounds(position + new Vector3(0.5f, 0.5f, 0.5f), Vector3.one);
 
     public bool EdgeIsEmpty(int edgeI)
     {
@@ -691,7 +692,7 @@ public class VoxelComponent : MonoBehaviour
                 if (!hasBevel)
                 {
                     BoxCollider collider = gameObject.AddComponent<BoxCollider>();
-                    Bounds bounds = voxel.GetBounds();
+                    Bounds bounds = Voxel.Bounds(voxel.position);
                     collider.size = bounds.size;
                     collider.center = bounds.center - transform.position;
                     theCollider = collider;

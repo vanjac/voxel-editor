@@ -70,7 +70,7 @@ public class Substance : DynamicEntity
 
     public override bool AliveInEditor()
     {
-        foreach (var v in voxelGroup.IterateVoxels())
+        foreach (var _ in voxelGroup.IteratePositions())
             return true;
         return false;
     }
@@ -85,12 +85,12 @@ public class Substance : DynamicEntity
     public override Vector3 PositionInEditor()
     {
         Bounds voxelBounds = new Bounds();
-        foreach (Voxel voxel in voxelGroup.IterateVoxels())
+        foreach (var position in voxelGroup.IteratePositions())
         {
             if (voxelBounds.extents == Vector3.zero)
-                voxelBounds = voxel.GetBounds();
+                voxelBounds = Voxel.Bounds(position);
             else
-                voxelBounds.Encapsulate(voxel.GetBounds());
+                voxelBounds.Encapsulate(Voxel.Bounds(position));
         }
         var factor = new Vector3((float)pivot.x, (float)pivot.y, (float)pivot.z) / 2;
         return voxelBounds.min + Vector3.Scale(voxelBounds.size, factor);

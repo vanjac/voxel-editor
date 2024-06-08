@@ -34,9 +34,9 @@ public class WaterComponent : BehaviorComponent<WaterBehavior>
         SubstanceComponent substanceComponent = GetComponent<SubstanceComponent>();
         if (substanceComponent != null)
         {
-            foreach (Voxel voxel in substanceComponent.substance.voxelGroup.IterateVoxels())
+            foreach (var position in substanceComponent.substance.voxelGroup.IteratePositions())
             {
-                float top = voxel.GetBounds().max.y - transform.position.y;
+                float top = Voxel.Bounds(position).max.y - transform.position.y;
                 if (top > waterLevel)
                     waterLevel = top;
             }

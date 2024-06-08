@@ -421,8 +421,7 @@ public class MessagePackWorldReader : WorldFileReader
             return;
 
         Vector3Int position = ReadVector3Int(voxelList[0]);
-        Voxel voxel = null;
-        voxel = voxelArray.VoxelAt(position, true);
+        Voxel voxel = voxelArray.VoxelAt(position, true);
 
         if (voxelList.Count >= 2)
         {

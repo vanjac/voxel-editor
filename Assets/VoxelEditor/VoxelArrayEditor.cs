@@ -30,7 +30,7 @@ public class VoxelArrayEditor : VoxelArray
             set => voxel.faces[faceI].storedSelected = value;
         }
         public bool selected => (!face.IsEmpty()) && (face.addSelected || face.storedSelected);
-        public Bounds bounds => voxel.GetFaceBounds(faceI);
+        public Bounds bounds => Voxel.FaceBounds(voxel.position, faceI);
 
         public VoxelFaceReference(Voxel voxel, int faceI)
         {
@@ -62,7 +62,7 @@ public class VoxelArrayEditor : VoxelArray
             set => voxel.edges[edgeI].storedSelected = value;
         }
         public bool selected => edge.addSelected || edge.storedSelected;
-        public Bounds bounds => voxel.GetEdgeBounds(edgeI);
+        public Bounds bounds => Voxel.EdgeBounds(voxel.position, edgeI);
 
         public VoxelEdgeReference(Voxel voxel, int edgeI)
         {
@@ -581,7 +581,7 @@ public class VoxelArrayEditor : VoxelArray
 
     private void UpdateBoxSelectionVoxel(Voxel voxel, Bounds bounds, Substance substance, bool edges)
     {
-        if (!bounds.Intersects(voxel.GetBounds()))
+        if (!bounds.Intersects(Voxel.Bounds(voxel.position)))
             return;
         if (!edges)
         {
@@ -707,7 +707,7 @@ public class VoxelArrayEditor : VoxelArray
                 if (!v.faces[i].IsEmpty())
                 {
                     SelectFace(v, i);
-                    var faceBounds = v.GetFaceBounds(i);
+                    var faceBounds = Voxel.FaceBounds(v.position, i);
                     if (selectMode != SelectMode.FACE_FLOOD_FILL)
                         selectionBounds = faceBounds;
                     else

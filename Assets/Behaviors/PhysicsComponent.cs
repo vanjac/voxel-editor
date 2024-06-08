@@ -71,8 +71,8 @@ public class PhysicsComponent : BehaviorComponent<BasePhysicsBehavior>
         voxels = new List<Vector3>();
         SubstanceComponent substanceComponent = GetComponent<SubstanceComponent>();
         if (substanceComponent != null)
-            foreach (Voxel voxel in substanceComponent.substance.voxelGroup.IterateVoxels())
-                voxels.Add(voxel.GetBounds().center - transform.position);
+            foreach (var position in substanceComponent.substance.voxelGroup.IteratePositions())
+                voxels.Add(Voxel.Bounds(position).center - transform.position);
         else
             voxels.Add(Vector3.zero);
         base.Start();

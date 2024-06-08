@@ -208,4 +208,13 @@ public class VoxelGroup
                 yield return voxel;
         }
     }
+
+    public IEnumerable<Vector3Int> IteratePositions()
+    {
+        foreach (var vc in components.Values)
+        {
+            foreach (var voxel in vc.voxels)
+                yield return voxel.position;
+        }
+    }
 }
