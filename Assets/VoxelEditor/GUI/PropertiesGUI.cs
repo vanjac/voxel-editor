@@ -526,10 +526,10 @@ public class PropertiesGUI : LeftPanelGUI
         {
             if (entity is PlayerObject)
                 continue;
-            else if (entity is ObjectEntity)
-                voxelArray.DeleteObject((ObjectEntity)entity);
-            else if (entity is Substance)
-                voxelArray.DeleteSubstance((Substance)entity);
+            else if (entity is ObjectEntity obj)
+                voxelArray.DeleteObject(obj);
+            else if (entity is Substance substance)
+                voxelArray.DeleteSubstance(substance);
         }
     }
 }

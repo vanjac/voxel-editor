@@ -213,10 +213,10 @@ public class VoxelArrayEditor : VoxelArray
             ClearSelection();
             return;
         }
-        if (thing is VoxelFaceReference)
-            boxSelectSubstance = ((VoxelFaceReference)thing).voxel.substance;
-        else if (thing is VoxelEdgeReference)
-            boxSelectSubstance = ((VoxelEdgeReference)thing).voxel.substance;
+        if (thing is VoxelFaceReference faceRef)
+            boxSelectSubstance = faceRef.voxel.substance;
+        else if (thing is VoxelEdgeReference edgeRef)
+            boxSelectSubstance = edgeRef.voxel.substance;
         else if (thing is ObjectMarker)
             boxSelectSubstance = selectObjectSubstance;
         else
@@ -290,8 +290,8 @@ public class VoxelArrayEditor : VoxelArray
         }
         else
         {
-            if (!(thing is VoxelFaceReference)
-                || ((VoxelFaceReference)thing).voxel.substance != boxSelectSubstance)
+            if (!(thing is VoxelFaceReference faceRef)
+                    || faceRef.voxel.substance != boxSelectSubstance)
                 return;
         }
         if (selectMode == SelectMode.DRAW_SELECT)
@@ -451,8 +451,8 @@ public class VoxelArrayEditor : VoxelArray
     private IEnumerable<T> IterateSelected<T>() where T : Selectable
     {
         foreach (Selectable thing in IterateSelected())
-            if (thing is T)
-                yield return (T)thing;
+            if (thing is T tThing)
+                yield return tThing;
     }
 
     // including stored selection
@@ -484,15 +484,14 @@ public class VoxelArrayEditor : VoxelArray
         var selectedEntities = new HashSet<Entity>();
         foreach (Selectable thing in IterateSelected())
         {
-            if (thing is VoxelFaceReference)
+            if (thing is VoxelFaceReference faceRef)
             {
-                var faceRef = (VoxelFaceReference)thing;
                 if (faceRef.voxel.substance != null)
                     selectedEntities.Add(faceRef.voxel.substance); // HashSet will prevent duplicates
             }
-            else if (thing is ObjectMarker)
+            else if (thing is ObjectMarker marker)
             {
-                selectedEntities.Add(((ObjectMarker)thing).objectEntity);
+                selectedEntities.Add(marker.objectEntity);
             }
         }
         return selectedEntities;
@@ -941,10 +940,8 @@ public class VoxelArrayEditor : VoxelArray
                 return 1;
             if (diff < 0)
                 return -1;
-            if (a is VoxelFaceReference && b is VoxelFaceReference)
+            if (a is VoxelFaceReference aFace && b is VoxelFaceReference bFace)
             {
-                var aFace = (VoxelFaceReference)a;
-                var bFace = (VoxelFaceReference)b;
                 if (aFace.faceI == oppositeAdjustDirFaceI
                         && bFace.faceI != oppositeAdjustDirFaceI)
                     return -1; // move one substance back before moving other forward
@@ -965,9 +962,9 @@ public class VoxelArrayEditor : VoxelArray
         for (int i = 0; i < selectedThings.Count; i++)
         {
             Selectable thing = selectedThings[i];
-            if (thing is ObjectMarker)
+            if (thing is ObjectMarker marker)
             {
-                PushObject(((ObjectMarker)thing).objectEntity, adjustDirection);
+                PushObject(marker.objectEntity, adjustDirection);
                 continue;
             }
             else if (!(thing is VoxelFaceReference))
@@ -1209,8 +1206,7 @@ public class VoxelArrayEditor : VoxelArray
         for (int i = selectedThings.Count - 1; i >= 0; i--)
         {
             Selectable thing = selectedThings[i];
-            if ((thing is VoxelFaceReference)
-                    && ((VoxelFaceReference)thing).voxel == null)
+            if ((thing is VoxelFaceReference faceRef) && faceRef.voxel == null)
                 selectedThings.RemoveAt(i);
         }
         selectionChanged = true;
@@ -1299,10 +1295,10 @@ public class VoxelArrayEditor : VoxelArray
 
         foreach (Selectable thing in IterateSelected())
         {
-            if (thing is VoxelFaceReference)
-                return ((VoxelFaceReference)thing).GetFace().PaintOnly();
-            else if (thing is ObjectMarker)
-                return ((ObjectMarker)thing).objectEntity.paint.PaintOnly();
+            if (thing is VoxelFaceReference faceRef)
+                return faceRef.GetFace().PaintOnly();
+            else if (thing is ObjectMarker marker)
+                return marker.objectEntity.paint.PaintOnly();
         }
         return new VoxelFace();
     }

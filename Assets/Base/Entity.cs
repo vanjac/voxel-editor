@@ -140,14 +140,14 @@ public class PropertiesObjectType
     {
         if (findEntity == null)
             return value;
-        if (value is EntityReference)
+        if (value is EntityReference entityRef)
         {
-            if (((EntityReference)value).entity == findEntity)
+            if (entityRef.entity == findEntity)
                 return new EntityReference(replaceEntity);
         }
-        else if (value is Target)
+        else if (value is Target target)
         {
-            if (((Target)value).entityRef.entity == findEntity)
+            if (target.entityRef.entity == findEntity)
                 return new Target(replaceEntity);
         }
         return value;

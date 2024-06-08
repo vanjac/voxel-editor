@@ -37,10 +37,10 @@ public class FilterGUI : GUIPanel
             TagPickerGUI picker = gameObject.AddComponent<TagPickerGUI>();
             picker.title = StringSet.FilterTagsTitle;
             picker.multiple = true;
-            if (current is ActivatedSensor.MultipleTagFilter)
-                picker.multiSelection = (current as ActivatedSensor.MultipleTagFilter).tagBits;
-            else if (current is ActivatedSensor.TagFilter)
-                picker.multiSelection = (byte)(1 << (current as ActivatedSensor.TagFilter).tag);
+            if (current is ActivatedSensor.MultipleTagFilter multiFilter)
+                picker.multiSelection = multiFilter.tagBits;
+            else if (current is ActivatedSensor.TagFilter tagFilter)
+                picker.multiSelection = (byte)(1 << tagFilter.tag);
             picker.handler = (byte tagBits) =>
             {
                 handler(new ActivatedSensor.MultipleTagFilter(tagBits));

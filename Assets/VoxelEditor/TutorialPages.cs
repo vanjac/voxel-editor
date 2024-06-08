@@ -948,9 +948,9 @@ public static class Tutorials
             base.Update(voxelArray, guiGameObject, touchListener);
 
             foreach (Entity e in voxelArray.GetSelectedEntities())
-                if (e is BallObject)
+                if (e is BallObject ball)
                 {
-                    Material mat = ((BallObject)e).paint.material;
+                    Material mat = ball.paint.material;
                     if (prevMat == null)
                         prevMat = mat;
                     else if (prevMat != mat)
@@ -1042,8 +1042,8 @@ public static class Tutorials
                 {
                     ActivatedSensor.Filter touchFilter =
                         (ActivatedSensor.Filter)PropertiesObjectType.GetProperty(e.sensor, "fil");
-                    if (touchFilter is ActivatedSensor.EntityFilter
-                            && ((ActivatedSensor.EntityFilter)touchFilter).entityRef.entity is PlayerObject)
+                    if (touchFilter is ActivatedSensor.EntityFilter entityFilter
+                            && entityFilter.entityRef.entity is PlayerObject)
                         return TutorialAction.NEXT;
                 }
             return TutorialAction.NONE;
