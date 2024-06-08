@@ -201,6 +201,20 @@ public class Voxel
         };
     }
 
+    public static Vector3Int IntDirectionForFaceI(int faceI)
+    {
+        return faceI switch
+        {
+            0 => Vector3Int.left,
+            1 => Vector3Int.right,
+            2 => Vector3Int.down,
+            3 => Vector3Int.up,
+            4 => Vector3Int.back,
+            5 => Vector3Int.forward,
+            _ => Vector3Int.zero,
+        };
+    }
+
     public static Vector3 OppositeDirectionForFaceI(int faceI) =>
         DirectionForFaceI(OppositeFaceI(faceI));
 
@@ -924,7 +938,7 @@ public class VoxelComponent : MonoBehaviour
             capFaceI++;
         else if (isEdgeC && SQUARE_LOOP[cornerI].y == 1)
             capFaceI++;
-        Vector3Int capDir = Voxel.DirectionForFaceI(capFaceI).ToInt();
+        Vector3Int capDir = Voxel.IntDirectionForFaceI(capFaceI);
         Voxel adjacent = voxelArray.VoxelAt(voxel.position + capDir, false);
 
         if (BevelCap(voxel, adjacent, edgeI, capFaceI, out hEdge.reverseCap))
