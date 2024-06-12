@@ -434,13 +434,13 @@ public class MessagePackWorldReader : WorldFileReader
         }
 
         if (voxelList.Count >= 3 && voxelList[2].AsInt32() != -1)
-            voxelArray.SetVoxelSubstance(voxel, substances[voxelList[2].AsInt32()]);
+            voxelArray.SetSubstance(position, substances[voxelList[2].AsInt32()]);
 
         if (voxelList.Count >= 4)
             foreach (var edgeObj in voxelList[3].AsList())
                 ReadEdge(edgeObj, voxel);
 
-        voxelArray.UpdateVoxel(voxel);
+        voxelArray.UpdateVoxel(position);
     }
 
     private VoxelFace ReadFace(MessagePackObject faceObj, out int faceI,

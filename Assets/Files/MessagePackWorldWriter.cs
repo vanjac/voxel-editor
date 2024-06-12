@@ -82,14 +82,14 @@ public class MessagePackWorldWriter
         world[FileKeys.WORLD_GLOBAL] = new MessagePackObject(WritePropertiesObject(voxelArray.world, false));
 
         var voxelsList = new List<MessagePackObject>();
-        foreach (Voxel voxel in voxelArray.IterateVoxels())
+        foreach (var (pos, voxel) in voxelArray.IterateVoxelPairs())
         {
             if (voxel.IsEmpty())
             {
-                Debug.Log("Empty voxel found!");
+                Debug.LogWarning("Empty voxel found!");
                 continue;
             }
-            voxelsList.Add(WriteVoxel(voxel, foundMaterials, foundOverlays, foundSubstances));
+            voxelsList.Add(WriteVoxel(pos, voxel, foundMaterials, foundOverlays, foundSubstances));
         }
         world[FileKeys.WORLD_VOXELS] = new MessagePackObject(voxelsList);
 
@@ -253,15 +253,15 @@ public class MessagePackWorldWriter
         return propsDict;
     }
 
-    private static MessagePackObject WriteVoxel(Voxel voxel,
+    private static MessagePackObject WriteVoxel(Vector3Int position, Voxel voxel,
         Dictionary<Material, int> materials, Dictionary<Material, int> overlays,
         Dictionary<Substance, int> substances)
     {
         var voxelList = new List<MessagePackObject>();
-        voxelList.Add(WriteVector3Int(voxel.position));
+        voxelList.Add(WriteVector3Int(position));
 
         var facesList = new List<MessagePackObject>();
-        for (int faceI = 0; faceI < voxel.faces.Length; faceI++)
+        for (int faceI = 0; faceI < Voxel.NUM_FACES; faceI++)
         {
             VoxelFace face = voxel.faces[faceI];
             if (face.IsEmpty())
@@ -276,7 +276,7 @@ public class MessagePackWorldWriter
             voxelList.Add(-1);
 
         var edgesList = new List<MessagePackObject>();
-        for (int edgeI = 0; edgeI < voxel.edges.Length; edgeI++)
+        for (int edgeI = 0; edgeI < Voxel.NUM_EDGES; edgeI++)
         {
             VoxelEdge edge = voxel.edges[edgeI];
             if (!edge.hasBevel)

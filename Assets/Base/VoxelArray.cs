@@ -1,8 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+public struct VoxelFaceLoc
+{
+    public static readonly VoxelFaceLoc NONE = new VoxelFaceLoc(VoxelArray.NONE, 0);
+    public Vector3Int position;
+    public int faceI;
+    public VoxelFaceLoc(Vector3Int position, int faceI)
+    {
+        this.position = position;
+        this.faceI = faceI;
+    }
+}
+
+public struct VoxelEdgeLoc
+{
+    public static readonly VoxelEdgeLoc NONE = new VoxelEdgeLoc(VoxelArray.NONE, 0);
+    public Vector3Int position;
+    public int edgeI;
+    public VoxelEdgeLoc(Vector3Int position, int edgeI)
+    {
+        this.position = position;
+        this.edgeI = edgeI;
+    }
+}
 
 public class VoxelArray : MonoBehaviour
 {
+    public static readonly Vector3Int NONE = new Vector3Int(9999, 9999, 9999);
     public enum WorldType
     {
         INDOOR, FLOATING, OUTDOOR
@@ -20,57 +47,105 @@ public class VoxelArray : MonoBehaviour
     {
         if (!voxels.TryGetValue(position, out Voxel voxel) && createIfMissing)
         {
-            voxel = new Voxel(position);
+            voxel = new Voxel();
             voxels[position] = voxel;
-            worldGroup.AddVoxel(voxel, this);
+            worldGroup.AddVoxel(position, this);
         }
         return voxel;
     }
 
-    private void RemoveVoxel(Voxel voxel)
+    public VoxelFace FaceAt(VoxelFaceLoc loc) =>
+        VoxelAt(loc.position, false)?.faces?[loc.faceI] ?? default;
+    
+    public bool SetFace(VoxelFaceLoc loc, VoxelFace face)
     {
-        voxels.Remove(voxel.position);
-        if (voxel.substance != null)
-            voxel.substance.voxelGroup.RemoveVoxel(voxel);
-        else
-            worldGroup.RemoveVoxel(voxel);
+        var voxel = VoxelAt(loc.position, !face.IsEmpty());
+        if (voxel != null)
+            voxel.faces[loc.faceI] = face;
+        return voxel != null;
     }
 
-    public virtual void SetVoxelSubstance(Voxel voxel, Substance substance)
+    public bool ChangeFace(VoxelFaceLoc loc, Func<VoxelFace, VoxelFace> fn, bool createIfMissing = true)
     {
-        if (voxel.substance != null)
-            voxel.substance.voxelGroup.RemoveVoxel(voxel);
-        else
-            worldGroup.RemoveVoxel(voxel);
-        voxel.substance = substance;
+        var voxel = VoxelAt(loc.position, createIfMissing);
+        if (voxel != null)
+            voxel.faces[loc.faceI] = fn(voxel.faces[loc.faceI]);
+        return voxel != null;
+    }
+
+    public VoxelEdge EdgeAt(VoxelEdgeLoc loc) =>
+        VoxelAt(loc.position, false)?.edges?[loc.edgeI] ?? default;
+
+    public bool SetEdge(VoxelEdgeLoc loc, VoxelEdge edge)
+    {
+        var voxel = VoxelAt(loc.position, edge.hasBevel);
+        if (voxel != null)
+            voxel.edges[loc.edgeI] = edge;
+        return voxel != null;
+    }
+
+    public bool ChangeEdge(VoxelEdgeLoc loc, Func<VoxelEdge, VoxelEdge> fn, bool createIfMissing = true)
+    {
+        var voxel = VoxelAt(loc.position, createIfMissing);
+        if (voxel != null)
+            voxel.edges[loc.edgeI] = fn(voxel.edges[loc.edgeI]);
+        return voxel != null;
+    }
+
+    private void RemoveVoxel(Vector3Int position)
+    {
+        var substance = SubstanceAt(position);
+        voxels.Remove(position);
         if (substance != null)
-            substance.voxelGroup.AddVoxel(voxel, this);
+            substance.voxelGroup.RemoveVoxel(position);
         else
-            worldGroup.AddVoxel(voxel, this);
+            worldGroup.RemoveVoxel(position);
     }
 
-    public void UpdateVoxel(Voxel voxel)
+    public Substance SubstanceAt(Vector3Int position) => VoxelAt(position, false)?.substance;
+
+    public virtual Substance SetSubstance(Vector3Int position, Substance substance)
     {
-        VoxelGroup group = (voxel.substance != null) ? voxel.substance.voxelGroup : worldGroup;
-        group.ComponentAt(voxel.position, null).UpdateVoxel();
+        var voxel = VoxelAt(position, substance != null);
+        var oldSubstance = voxel?.substance;
+
+        if (oldSubstance != null)
+            oldSubstance.voxelGroup.RemoveVoxel(position);
+        else
+            worldGroup.RemoveVoxel(position);
+
+        if (voxel != null)
+            voxel.substance = substance;
+
+        if (substance != null)
+            substance.voxelGroup.AddVoxel(position, this);
+        else
+            worldGroup.AddVoxel(position, this);
+
+        return oldSubstance;
     }
 
-    public virtual void VoxelModified(Voxel voxel)
+    public void UpdateVoxel(Vector3Int position)
     {
-        if (voxel.IsEmpty())
+        var substance = SubstanceAt(position);
+        VoxelGroup group = (substance != null) ? substance.voxelGroup : worldGroup;
+        group.ComponentAt(position, null).UpdateVoxel();
+    }
+
+    public virtual void VoxelModified(Vector3Int position)
+    {
+        var voxel = VoxelAt(position, false);
+        if (voxel == null)
         {
-            if (voxels.TryGetValue(voxel.position, out Voxel existing))
-            {
-                // the voxel could have alreay been replaced with a new one
-                // TODO: specify by position to prevent this problem
-                if (existing == voxel)
-                    RemoveVoxel(voxel);
-            }
+        }
+        else if (voxel.IsEmpty())
+        {
+            RemoveVoxel(position);
             AssetManager.UnusedAssets();
         }
         else
         {
-            UpdateVoxel(voxel);
+            UpdateVoxel(position);
         }
     }
 
@@ -81,12 +156,17 @@ public class VoxelArray : MonoBehaviour
 
     public bool IsEmpty()
     {
-        foreach (Voxel v in IterateVoxels())
+        foreach (var _ in IterateVoxelPositions())
             return false;
         return true;
     }
 
+    public IEnumerable<Vector3Int> IterateVoxelPositions() => voxels.Keys;
+
     public IEnumerable<Voxel> IterateVoxels() => voxels.Values;
+
+    public IEnumerable<(Vector3Int, Voxel)> IterateVoxelPairs() =>
+        voxels.Select(p => (p.Key, p.Value));
 
     public ObjectEntity ObjectAt(Vector3Int pos)
     {
@@ -138,11 +218,11 @@ public class VoxelArray : MonoBehaviour
 
     public void DeleteSubstance(Substance substance)
     {
-        foreach (var voxel in new HashSet<Voxel>(substance.voxelGroup.IterateVoxels()))
+        foreach (var (pos, voxel) in new List<(Vector3Int, Voxel)>(substance.voxelGroup.IterateVoxelPairs()))
         {
             voxel.ClearFaces();
-            SetVoxelSubstance(voxel, null);
-            VoxelModified(voxel);
+            SetSubstance(pos, null);
+            VoxelModified(pos);
         }
     }
 }
@@ -173,19 +253,19 @@ public class VoxelGroup
         return component;
     }
 
-    public void AddVoxel(Voxel voxel, VoxelArray voxelArray)
+    public void AddVoxel(Vector3Int position, VoxelArray voxelArray)
     {
-        var component = ComponentAt(voxel.position, voxelArray);
-        component.voxels.Add(voxel);
+        var component = ComponentAt(position, voxelArray);
+        component.positions.Add(position);
     }
 
-    public void RemoveVoxel(Voxel voxel)
+    public void RemoveVoxel(Vector3Int position)
     {
-        var pos = ComponentPos(voxel.position);
+        var pos = ComponentPos(position);
         if (components.TryGetValue(pos, out VoxelComponent component))
         {
-            component.voxels.Remove(voxel);
-            if (component.voxels.Count == 0)
+            component.positions.Remove(position);
+            if (component.positions.Count == 0)
             {
                 GameObject.Destroy(component.gameObject);
                 components.Remove(pos);
@@ -199,21 +279,25 @@ public class VoxelGroup
 
     public IEnumerable<VoxelComponent> IterateComponents() => components.Values;
 
-    public IEnumerable<Voxel> IterateVoxels()
-    {
-        foreach (var vc in components.Values)
-        {
-            foreach (var voxel in vc.voxels)
-                yield return voxel;
-        }
-    }
-
     public IEnumerable<Vector3Int> IteratePositions()
     {
         foreach (var vc in components.Values)
         {
-            foreach (var voxel in vc.voxels)
-                yield return voxel.position;
+            foreach (var pos in vc.positions)
+                yield return pos;
+        }
+    }
+
+    public IEnumerable<(Vector3Int, Voxel)> IterateVoxelPairs()
+    {
+        foreach (var vc in components.Values)
+        {
+            foreach (var pos in vc.positions)
+            {
+                var voxel = vc.voxelArray.VoxelAt(pos, false);
+                if (voxel != null)
+                    yield return (pos, voxel);
+            }
         }
     }
 }

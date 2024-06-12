@@ -33,7 +33,7 @@ public class VoxelComponent : MonoBehaviour
     };
 
     public VoxelArray voxelArray;
-    public List<Voxel> voxels = new List<Voxel>(); // TODO: change to list of positions
+    public List<Vector3Int> positions = new List<Vector3Int>();
     private FaceVertexIndex[] faceVertexIndices;
     private Collider[] voxelColliders; // for substance only
     private bool updateFlag = false;
@@ -50,8 +50,8 @@ public class VoxelComponent : MonoBehaviour
 
     public Substance GetSubstance()
     {
-        if (voxels.Count != 0)
-            return voxels[0].substance;
+        if (positions.Count != 0)
+            return voxelArray.SubstanceAt(positions[0]);
         else
             return null;
     }
@@ -69,34 +69,32 @@ public class VoxelComponent : MonoBehaviour
             transform.parent.SendMessage("OnBecameInvisible", options: SendMessageOptions.DontRequireReceiver); // for InCameraComponent
     }
 
-    public void GetVoxelFaceForVertex(int vertex, out Voxel voxel, out int faceNum)
+    public VoxelFaceLoc GetVoxelFaceForVertex(int vertex)
     {
-        FaceVertexIndex prevFVI = new FaceVertexIndex();
+        if (faceVertexIndices.Length == 0)
+            return VoxelFaceLoc.NONE;
+
+        FaceVertexIndex prevFVI = default;
         foreach (FaceVertexIndex fvi in faceVertexIndices)
         {
             if (fvi.index > vertex)
-            {
-                voxel = prevFVI.voxel;
-                faceNum = prevFVI.faceNum;
-                return;
-            }
+                break;
             prevFVI = fvi;
         }
-        voxel = prevFVI.voxel;
-        faceNum = prevFVI.faceNum;
+        return prevFVI.loc;
     }
 
-    public Voxel GetVoxelForCollider(Collider collider)
+    public Vector3Int GetVoxelForCollider(Collider collider)
     {
         int index = System.Array.IndexOf(voxelColliders, collider);
-        return (index >= 0) ? voxels[index] : null;
+        return (index >= 0) ? positions[index] : VoxelArray.NONE;
     }
 
     public VoxelComponent Clone()
     {
-        VoxelComponent vClone = Component.Instantiate<VoxelComponent>(this);
+        VoxelComponent vClone = Instantiate(this);
         vClone.voxelArray = voxelArray;
-        vClone.voxels.AddRange(voxels);
+        vClone.positions.AddRange(positions);
         return vClone;
     }
 
@@ -130,26 +128,42 @@ public class VoxelComponent : MonoBehaviour
             gameObject.layer = 0; // default
 
         int numFaces = 0;
-        foreach (Voxel v in voxels)
-            foreach (VoxelFace f in v.faces)
+        foreach (var pos in positions)
+        {
+            var voxel = voxelArray.VoxelAt(pos, false);
+            if (voxel == null)
+                continue;
+            foreach (VoxelFace f in voxel.faces)
+            {
                 if (!f.IsEmpty())
                     numFaces++;
+            }
+        }
 
-        VoxelMeshInfo[] voxelInfos = new VoxelMeshInfo[voxels.Count];
+        VoxelMeshInfo[] voxelInfos = new VoxelMeshInfo[positions.Count];
         faceVertexIndices = new FaceVertexIndex[numFaces];
         numFaces = 0;
         int numVertices = 0;
 
-        for (int i = 0; i < voxels.Count; i++)
+        for (int i = 0; i < positions.Count; i++)
         {
-            Voxel voxel = voxels[i];
-            VoxelMeshInfo info = new VoxelMeshInfo(voxel);
-            for (int faceNum = 0; faceNum < 6; faceNum++)
+            var pos = positions[i];
+            var voxel = voxelArray.VoxelAt(pos, false);
+            VoxelMeshInfo info = new VoxelMeshInfo(pos);
+            if (voxel != null)
             {
-                if (!voxel.faces[faceNum].IsEmpty())
-                    faceVertexIndices[numFaces++] = new FaceVertexIndex(voxel, faceNum, numVertices);
-                info.faceCorners[faceNum] = GetFaceVertices(voxelArray, voxel, faceNum, numVertices);
-                numVertices += info.FaceVertexCount(faceNum);
+                for (int faceNum = 0; faceNum < 6; faceNum++)
+                {
+                    if (!voxel.faces[faceNum].IsEmpty())
+                    {
+                        faceVertexIndices[numFaces++] = new FaceVertexIndex() {
+                            loc = new VoxelFaceLoc(pos, faceNum),
+                            index = numVertices
+                        };
+                    }
+                    info.faceCorners[faceNum] = GetFaceVertices(voxelArray, pos, voxel, faceNum, numVertices);
+                    numVertices += info.FaceVertexCount(faceNum);
+                }
             }
             voxelInfos[i] = info;
         }
@@ -161,13 +175,16 @@ public class VoxelComponent : MonoBehaviour
 
         foreach (VoxelMeshInfo info in voxelInfos)
         {
+            var voxel = voxelArray.VoxelAt(info.position, false);
+            if (voxel == null)
+                continue;
             for (int faceNum = 0; faceNum < 6; faceNum++)
             {
                 try
                 {
-                    GenerateFaceVertices(info.voxel, faceNum, info.faceCorners[faceNum],
+                    GenerateFaceVertices(info.position, voxel, faceNum, info.faceCorners[faceNum],
                         vertices, uvs, normals, tangents);
-                    info.faceTriangles[faceNum] = GenerateFaceTriangles(info.voxel, faceNum,
+                    info.faceTriangles[faceNum] = GenerateFaceTriangles(voxel, faceNum,
                         info.faceCorners[faceNum]);
                 }
                 catch (System.IndexOutOfRangeException)
@@ -190,7 +207,10 @@ public class VoxelComponent : MonoBehaviour
         List<Material> matList = new List<Material>();
         foreach (VoxelMeshInfo info in voxelInfos)
         {
-            foreach (var matInfo in IterateVoxelMaterials(info.voxel, inEditor))
+            var voxel = voxelArray.VoxelAt(info.position, false);
+            if (voxel == null)
+                continue;
+            foreach (var matInfo in IterateVoxelMaterials(voxel, inEditor))
             {
                 if (matInfo.material == null || matInfo.NoFaces())
                     continue;
@@ -244,10 +264,13 @@ public class VoxelComponent : MonoBehaviour
             foreach (BoxCollider c in GetComponents<BoxCollider>())
                 Destroy(c);
 
-            voxelColliders = new Collider[voxels.Count];
-            for (int v = 0; v < voxels.Count; v++)
+            voxelColliders = new Collider[positions.Count];
+            for (int v = 0; v < positions.Count; v++)
             {
-                Voxel voxel = voxels[v];
+                var pos = positions[v];
+                Voxel voxel = voxelArray.VoxelAt(positions[v], false);
+                if (voxel == null)
+                    continue;
                 bool hasBevel = false;
                 foreach (VoxelEdge edge in voxel.edges)
                 {
@@ -261,7 +284,7 @@ public class VoxelComponent : MonoBehaviour
                 if (!hasBevel)
                 {
                     BoxCollider collider = gameObject.AddComponent<BoxCollider>();
-                    Bounds bounds = Voxel.Bounds(voxel.position);
+                    Bounds bounds = Voxel.Bounds(pos);
                     collider.size = bounds.size;
                     collider.center = bounds.center - transform.position;
                     theCollider = collider;
@@ -270,11 +293,11 @@ public class VoxelComponent : MonoBehaviour
                 {
                     // TODO: copied from above
 
-                    VoxelMeshInfo info = new VoxelMeshInfo(voxel);
+                    VoxelMeshInfo info = new VoxelMeshInfo(pos);
                     int numVerticesSingle = 0;
                     for (int faceNum = 0; faceNum < 6; faceNum++)
                     {
-                        info.faceCorners[faceNum] = GetFaceVertices(voxelArray, voxel, faceNum, numVerticesSingle);
+                        info.faceCorners[faceNum] = GetFaceVertices(voxelArray, pos, voxel, faceNum, numVerticesSingle);
                         numVerticesSingle += info.FaceVertexCount(faceNum);
                     }
 
@@ -288,7 +311,7 @@ public class VoxelComponent : MonoBehaviour
                     {
                         try
                         {
-                            GenerateFaceVertices(info.voxel, faceNum, info.faceCorners[faceNum],
+                            GenerateFaceVertices(pos, voxel, faceNum, info.faceCorners[faceNum],
                                 verticesSingle, uvsSingle, normalsSingle, tangentsSingle);
                             info.faceTriangles[faceNum] = GenerateFaceTriangles(voxel, faceNum,
                                 info.faceCorners[faceNum]);
@@ -327,13 +350,13 @@ public class VoxelComponent : MonoBehaviour
 
     private struct VoxelMeshInfo
     {
-        public Voxel voxel;
+        public Vector3Int position;
         public FaceCornerVertices[][] faceCorners;
         public int[][] faceTriangles;
 
-        public VoxelMeshInfo(Voxel voxel)
+        public VoxelMeshInfo(Vector3Int position)
         {
-            this.voxel = voxel;
+            this.position = position;
             faceCorners = new FaceCornerVertices[6][];
             faceTriangles = new int[6][];
         }
@@ -347,16 +370,8 @@ public class VoxelComponent : MonoBehaviour
 
     private struct FaceVertexIndex
     {
-        public Voxel voxel;
-        public int faceNum;
+        public VoxelFaceLoc loc;
         public int index;
-
-        public FaceVertexIndex(Voxel voxel, int faceNum, int index)
-        {
-            this.voxel = voxel;
-            this.faceNum = faceNum;
-            this.index = index;
-        }
     }
 
     // stores indices of the mesh vertices of one corner of a face
@@ -433,7 +448,8 @@ public class VoxelComponent : MonoBehaviour
         }
     }
 
-    private static FaceCornerVertices[] GetFaceVertices(VoxelArray voxelArray, Voxel voxel, int faceNum, int vertexI)
+    private static FaceCornerVertices[] GetFaceVertices(
+        VoxelArray voxelArray, Vector3Int position, Voxel voxel, int faceNum, int vertexI)
     {
         var corners = new FaceCornerVertices[4] {
             new FaceCornerVertices(0), new FaceCornerVertices(0), new FaceCornerVertices(0), new FaceCornerVertices(0)};
@@ -446,12 +462,12 @@ public class VoxelComponent : MonoBehaviour
             VertexEdges(faceNum, i, out int edgeA, out int edgeB, out int edgeC);
             if (voxel.edges[edgeB].hasBevel)
             {
-                GetBevelVertices(voxelArray, voxel, ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB, i, edgeB, false);
+                GetBevelVertices(voxelArray, position, voxel, ref vertexI, voxel.edges[edgeB], ref corners[i].hEdgeB, i, edgeB, false);
                 corners[i].count += corners[i].hEdgeB.count;
             }
             if (voxel.edges[edgeC].hasBevel)
             {
-                GetBevelVertices(voxelArray, voxel, ref vertexI, voxel.edges[edgeC], ref corners[i].hEdgeC, i, edgeC, true);
+                GetBevelVertices(voxelArray, position, voxel, ref vertexI, voxel.edges[edgeC], ref corners[i].hEdgeC, i, edgeC, true);
                 corners[i].count += corners[i].hEdgeC.count;
             }
             if (voxel.edges[edgeA].hasBevel && !voxel.edges[edgeB].hasBevel && !voxel.edges[edgeC].hasBevel)
@@ -495,7 +511,8 @@ public class VoxelComponent : MonoBehaviour
         return corners;
     }
 
-    private static void GetBevelVertices(VoxelArray voxelArray, Voxel voxel, ref int vertexI, VoxelEdge bevelEdge,
+    private static void GetBevelVertices(
+        VoxelArray voxelArray, Vector3Int position, Voxel voxel, ref int vertexI, VoxelEdge bevelEdge,
         ref FaceHalfEdgeVertices hEdge, int cornerI, int edgeI, bool isEdgeC)
     {
         hEdge.bevel_i = vertexI;
@@ -509,7 +526,7 @@ public class VoxelComponent : MonoBehaviour
         else if (isEdgeC && SQUARE_LOOP[cornerI].y == 1)
             capFaceI++;
         Vector3Int capDir = Voxel.IntDirectionForFaceI(capFaceI);
-        Voxel adjacent = voxelArray.VoxelAt(voxel.position + capDir, false);
+        Voxel adjacent = voxelArray.VoxelAt(position + capDir, false);
 
         if (BevelCap(voxel, adjacent, edgeI, capFaceI, out hEdge.reverseCap))
         {
@@ -578,14 +595,14 @@ public class VoxelComponent : MonoBehaviour
 
 
     private static float[] vertexPos = new float[3]; // reusable
-    private void GenerateFaceVertices(Voxel voxel, int faceNum, FaceCornerVertices[] corners,
+    private void GenerateFaceVertices(Vector3Int position, Voxel voxel, int faceNum, FaceCornerVertices[] corners,
         Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
     {
         VoxelFace face = voxel.faces[faceNum];
         if (face.IsEmpty())
             return;
 
-        Vector3 positionOffset = voxel.position - transform.position;
+        Vector3 positionOffset = position - transform.position;
         int axis = Voxel.FaceIAxis(faceNum);
         Vector3 normal = Voxel.DirectionForFaceI(faceNum);
         bool mirrored = VoxelFace.GetOrientationMirror(face.orientation);
@@ -662,7 +679,7 @@ public class VoxelComponent : MonoBehaviour
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y,
                 corner.hEdgeB.tab_i != -1 && !concaveA ? voxel.edges[edgeA] : voxel.edges[edgeB]);
             vertices[corner.innerQuad_i] = Vector3FromArray(vertexPos) + positionOffset;
-            uvs[corner.innerQuad_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+            uvs[corner.innerQuad_i] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
             normals[corner.innerQuad_i] = normal;
             tangents[corner.innerQuad_i] = tangent;
 
@@ -671,7 +688,7 @@ public class VoxelComponent : MonoBehaviour
                 vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, voxel.edges[edgeC].hasBevel ? voxel.edges[edgeC] : voxel.edges[edgeA]);
                 vertexPos[(axis + 2) % 3] = squarePos.y; // will never have both edgeB and a bevel
                 vertices[corner.hEdgeB.tab_i] = Vector3FromArray(vertexPos) + positionOffset;
-                uvs[corner.hEdgeB.tab_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+                uvs[corner.hEdgeB.tab_i] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
                 normals[corner.hEdgeB.tab_i] = normal;
                 tangents[corner.hEdgeB.tab_i] = tangent;
             }
@@ -680,7 +697,7 @@ public class VoxelComponent : MonoBehaviour
                 vertexPos[(axis + 1) % 3] = squarePos.x;
                 vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, voxel.edges[edgeB].hasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA]);
                 vertices[corner.hEdgeC.tab_i] = Vector3FromArray(vertexPos) + positionOffset;
-                uvs[corner.hEdgeC.tab_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+                uvs[corner.hEdgeC.tab_i] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
                 normals[corner.hEdgeC.tab_i] = normal;
                 tangents[corner.hEdgeC.tab_i] = tangent;
             }
@@ -693,7 +710,7 @@ public class VoxelComponent : MonoBehaviour
                     vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, voxel.edges[edgeA], bevelVector.x);
                     vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, voxel.edges[edgeA], bevelVector.y);
                     vertices[corner.bevelProfile_i + bevelI] = Vector3FromArray(vertexPos) + positionOffset;
-                    uvs[corner.bevelProfile_i + bevelI] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+                    uvs[corner.bevelProfile_i + bevelI] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
                     normals[corner.bevelProfile_i + bevelI] = normal;
                     tangents[corner.bevelProfile_i + bevelI] = tangent;
 
@@ -701,7 +718,7 @@ public class VoxelComponent : MonoBehaviour
                     vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, voxel.edges[edgeA], bevelVector.x);
                     // last iteration vertices will overlap
                     vertices[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = Vector3FromArray(vertexPos) + positionOffset;
-                    uvs[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+                    uvs[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
                     normals[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = normal;
                     tangents[corner.bevelProfile_i + corner.bevelProfile_count - 1 - bevelI] = tangent;
                 }
@@ -711,14 +728,14 @@ public class VoxelComponent : MonoBehaviour
 
             if (corner.hEdgeB.bevel_i != -1)
             {
-                GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeB], corner.hEdgeB, false,
+                GenerateBevelVertices(position, voxel, faceNum, voxel.edges[edgeB], corner.hEdgeB, false,
                     concaveB, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
                     collapsePlane, edgeA, edgeB, edgeC,
                     vertices, uvs, normals, tangents);
             }
             if (corner.hEdgeC.bevel_i != -1)
             {
-                GenerateBevelVertices(voxel, faceNum, voxel.edges[edgeC], corner.hEdgeC, true,
+                GenerateBevelVertices(position, voxel, faceNum, voxel.edges[edgeC], corner.hEdgeC, true,
                     concaveC, axis, squarePos, positionOffset, tangent, positiveU_xyz, positiveV_xyz,
                     collapsePlane, edgeA, edgeB, edgeC,
                     vertices, uvs, normals, tangents);
@@ -726,7 +743,8 @@ public class VoxelComponent : MonoBehaviour
         } // end for each corner
     }
 
-    private static void GenerateBevelVertices(Voxel voxel, int faceNum, VoxelEdge beveledEdge, FaceHalfEdgeVertices hEdge, bool isEdgeC,
+    private static void GenerateBevelVertices(
+        Vector3Int position, Voxel voxel, int faceNum, VoxelEdge beveledEdge, FaceHalfEdgeVertices hEdge, bool isEdgeC,
         bool concave, int axis, Vector2 squarePos, Vector3 positionOffset, Vector4 tangent, Vector3 positiveU_xyz, Vector3 positiveV_xyz,
         float collapsePlane, int edgeA, int edgeB, int edgeC,
         Vector3[] vertices, Vector2[] uvs, Vector3[] normals, Vector4[] tangents)
@@ -781,13 +799,13 @@ public class VoxelComponent : MonoBehaviour
             // 0.29289f = 1 - 1/sqrt(2) for some reason
             vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, beveledEdge, 0.29289f);
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, beveledEdge, 0.29289f);
-            uvs[hEdge.cap_i] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+            uvs[hEdge.cap_i] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
             if (hEdge.reverseCap != null)
             {
                 tangents[hEdge.cap_i + hEdge.cap_count - 1] = tangent;
                 vertexPos[(axis + 1) % 3] = ApplyBevel(squarePos.x, hEdge.reverseCap.Value, 0);
                 vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, hEdge.reverseCap.Value, 0);
-                uvs[hEdge.cap_i + hEdge.cap_count - 1] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+                uvs[hEdge.cap_i + hEdge.cap_count - 1] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
             }
 
             // normal (b and c are supposed to be swapped)
@@ -871,7 +889,7 @@ public class VoxelComponent : MonoBehaviour
                 cHasBevel ? uvCoord : xCoord);
             vertexPos[(axis + 2) % 3] = ApplyBevel(squarePos.y, bHasBevel ? voxel.edges[edgeB] : voxel.edges[edgeA],
                 bHasBevel ? uvCoord : xCoord);
-            uvs[bevelVertex] = CalcUV(voxel, vertexPos, positiveU_xyz, positiveV_xyz);
+            uvs[bevelVertex] = CalcUV(position, vertexPos, positiveU_xyz, positiveV_xyz);
             if (hEdge.cap_i != -1)
                 uvs[hEdge.cap_i + bevelI + 1] = uvs[bevelVertex];
 
@@ -918,9 +936,9 @@ public class VoxelComponent : MonoBehaviour
     private static Vector3 Vector3FromArray(float[] vector) =>
         new Vector3(vector[0], vector[1], vector[2]);
 
-    private static Vector2 CalcUV(Voxel voxel, float[] vertex, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
+    private static Vector2 CalcUV(Vector3Int voxelPos, float[] vertex, Vector3 positiveU_xyz, Vector3 positiveV_xyz)
     {
-        Vector3 vector = Vector3FromArray(vertex) + voxel.position;
+        Vector3 vector = Vector3FromArray(vertex) + voxelPos;
         return new Vector2(
             vector.x * positiveU_xyz.x + vector.y * positiveU_xyz.y + vector.z * positiveU_xyz.z,
             vector.x * positiveV_xyz.x + vector.y * positiveV_xyz.y + vector.z * positiveV_xyz.z);

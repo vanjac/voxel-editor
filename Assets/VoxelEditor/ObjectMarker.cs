@@ -5,18 +5,21 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 {
     public ObjectEntity objectEntity; // set when created
 
-    public bool addSelected
+    public bool IsAddSelected(VoxelArrayEditor voxelArray) => objectEntity.paint.addSelected;
+
+    public void SetAddSelected(VoxelArrayEditor voxelArray, bool value)
     {
-        get => objectEntity.paint.addSelected;
-        set => objectEntity.paint.addSelected = value;
-    }
-    public bool storedSelected
-    {
-        get => objectEntity.paint.storedSelected;
-        set => objectEntity.paint.storedSelected = value;
+        objectEntity.paint.addSelected = value;
     }
 
-    private bool IsSelected() => addSelected || storedSelected;
+    public bool IsStoredSelected(VoxelArrayEditor voxelArray) => objectEntity.paint.storedSelected;
+
+    public void SetStoredSelected(VoxelArrayEditor voxelArray, bool value)
+    {
+        objectEntity.paint.storedSelected = value;
+    }
+
+    private bool IsSelected() => objectEntity.paint.IsSelected();
 
     public Bounds GetBounds() => new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
         Vector3.zero);

@@ -6,17 +6,14 @@ public struct VoxelFace
     public Material material;
     public Material overlay;
     public byte orientation;
-    public bool addSelected, storedSelected;
+    public bool addSelected, storedSelected; // TODO: don't store in face/edge
 
+    public bool IsSelected() => addSelected || storedSelected;
     public bool IsEmpty() => material == null && overlay == null;
 
-    public void Clear()
+    public VoxelFace(VoxelFace other)
     {
-        material = null;
-        overlay = null;
-        orientation = 0;
-        addSelected = false;
-        storedSelected = false;
+        this = other;
     }
 
     public VoxelFace PaintOnly()
@@ -105,10 +102,9 @@ public struct VoxelEdge
     public byte bevel;
     public bool addSelected, storedSelected;
 
-    public void Clear()
+    public VoxelEdge(VoxelEdge other)
     {
-        bevel = 0;
-        addSelected = storedSelected = false;
+        this = other;
     }
 
     public BevelType bevelType
@@ -182,6 +178,9 @@ public struct VoxelEdge
 
 public class Voxel
 {
+    public const int NUM_FACES = 6;
+    public const int NUM_EDGES = 12;
+
     public readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
 
 
@@ -323,24 +322,17 @@ public class Voxel
         yield return ((axis + 2) % 3) * 4 + SQUARE_LOOP_COORD_INDEX[(faceNum % 2)]; // 3 - 0
     }
 
-
-    public readonly Vector3Int position; // TODO remove
     // see "Voxel Diagram.skp" for a diagram of face/edge numbers
-    public readonly VoxelFace[] faces = new VoxelFace[6]; // xMin, xMax, yMin, yMax, zMin, zMax
+    public readonly VoxelFace[] faces = new VoxelFace[NUM_FACES]; // xMin, xMax, yMin, yMax, zMin, zMax
     // Edges: 0-3: x, 4-7: y, 8-11: z
     // Each group of four follows the pattern (0,0), (1,0), (1,1), (0,1)
     // for the Y/Z axes (0-3), Z/X axes (4-7, note order), or X/Y axes (8-11)
-    public readonly VoxelEdge[] edges = new VoxelEdge[12];
+    public readonly VoxelEdge[] edges = new VoxelEdge[NUM_EDGES];
     public Substance substance;
 
-    public Voxel(Vector3Int position)
+    public static Bounds FaceBounds(VoxelFaceLoc loc)
     {
-        this.position = position;
-    }
-
-    public static Bounds FaceBounds(Vector3Int position, int faceI)
-    {
-        var bounds = faceI switch
+        var bounds = loc.faceI switch
         {
             0 => new Bounds(new Vector3(0, 0.5f, 0.5f), new Vector3(0, 1, 1)),
             1 => new Bounds(new Vector3(1, 0.5f, 0.5f), new Vector3(0, 1, 1)),
@@ -350,12 +342,13 @@ public class Voxel
             5 => new Bounds(new Vector3(0.5f, 0.5f, 1), new Vector3(1, 1, 0)),
             _ => new Bounds(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0, 0, 0)),
         };
-        bounds.center += position;
+        bounds.center += loc.position;
         return bounds;
     }
 
-    public static Bounds EdgeBounds(Vector3Int position, int edgeI)
+    public static Bounds EdgeBounds(VoxelEdgeLoc loc)
     {
+        var edgeI = loc.edgeI;
         Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
         Vector3 size = Vector3.zero;
         if (edgeI >= 0 && edgeI < 4)
@@ -376,7 +369,7 @@ public class Voxel
             center.z = 0;
         else if (edgeI == 2 || edgeI == 3 || edgeI == 5 || edgeI == 6)
             center.z = 1;
-        return new Bounds(center + position, size);
+        return new Bounds(center + loc.position, size);
     }
 
     public static Bounds Bounds(Vector3Int position) =>
@@ -423,13 +416,13 @@ public class Voxel
 
     public void ClearFaces()
     {
-        for (int faceI = 0; faceI < faces.Length; faceI++)
+        for (int faceI = 0; faceI < NUM_FACES; faceI++)
         {
-            faces[faceI].Clear();
+            faces[faceI] = default;
         }
-        for (int edgeI = 0; edgeI < edges.Length; edgeI++)
+        for (int edgeI = 0; edgeI < NUM_EDGES; edgeI++)
         {
-            edges[edgeI].Clear();
+            edges[edgeI] = default;
         }
     }
 }

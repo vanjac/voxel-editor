@@ -222,24 +222,19 @@ public class NewRigidbodyController : MonoBehaviour
             if (hitInfo.collider.gameObject.tag == "Voxel")
             {
                 var voxelComponent = hitInfo.collider.GetComponent<VoxelComponent>();
-                Voxel voxel;
-                int faceI;
+                VoxelFaceLoc faceLoc;
                 if (voxelComponent.GetSubstance() != null)
                 {
                     // substances use convex hulls which don't have submeshes
                     // so just use the top face of the voxel
-                    voxel = voxelComponent.GetVoxelForCollider(hitInfo.collider);
-                    faceI = 3;
+                    faceLoc = new VoxelFaceLoc(voxelComponent.GetVoxelForCollider(hitInfo.collider), 3);
                 }
                 else
                 {
                     int hitVertexI = TouchListener.GetRaycastHitVertexIndex(hitInfo);
-                    voxelComponent.GetVoxelFaceForVertex(hitVertexI, out voxel, out faceI);
+                    faceLoc = voxelComponent.GetVoxelFaceForVertex(hitVertexI);
                 }
-                if (voxel != null)
-                    footstepSound = voxel.faces[faceI].GetSound();
-                else
-                    footstepSound = MaterialSound.GENERIC;
+                footstepSound = voxelComponent.voxelArray.FaceAt(faceLoc).GetSound();
             }
             else
             {

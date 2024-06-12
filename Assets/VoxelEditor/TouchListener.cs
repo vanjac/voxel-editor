@@ -30,7 +30,7 @@ public class TouchListener : MonoBehaviour
     public Transform pivot;
     private Camera cam;
 
-    private Voxel lastHitVoxel;
+    private Vector3Int lastHitPosition = VoxelArray.NONE;
     private int lastHitElementI;
     private bool selectingXRay = true;
     private Vector2 lastMousePos;
@@ -75,7 +75,7 @@ public class TouchListener : MonoBehaviour
                 selectingXRay = true;
             bool rayHitSomething = Physics.Raycast(cam.ScreenPointToRay(touch.position),
                 out RaycastHit hit, Mathf.Infinity, selectingXRay ? Physics.DefaultRaycastLayers : NO_XRAY_MASK);
-            Voxel hitVoxel = null;
+            Vector3Int hitPosition = VoxelArray.NONE;
             int hitElementI = -1;
             TransformAxis hitTransformAxis = null;
             ObjectMarker hitMarker = null;
@@ -86,15 +86,22 @@ public class TouchListener : MonoBehaviour
                 {
                     var voxelComponent = hitObject.GetComponent<VoxelComponent>();
                     int hitVertexI = GetRaycastHitVertexIndex(hit);
-                    voxelComponent.GetVoxelFaceForVertex(hitVertexI, out hitVoxel, out int hitFaceI);
+                    var hitFace = voxelComponent.GetVoxelFaceForVertex(hitVertexI);
                     if (selectType == VoxelElement.FACES)
-                        hitElementI = hitFaceI;
+                    {
+                        hitElementI = hitFace.faceI;
+                    }
                     else if (selectType == VoxelElement.EDGES)
-                        hitElementI = ClosestEdgeToUV(hitVoxel, hit.textureCoord, hitFaceI);
+                    {
+                        var hitVoxel = voxelArray.VoxelAt(hitFace.position, false);
+                        hitElementI = ClosestEdgeToUV(hitVoxel, hit.textureCoord, hitFace.faceI);
+                    }
                     else
+                    {
                         hitElementI = -1;
-                    if (hitElementI == -1)
-                        hitVoxel = null;
+                    }
+                    if (hitElementI != -1)
+                        hitPosition = hitFace.position;
                 }
                 else if (hitObject.tag == "ObjectMarker")
                 {
@@ -106,7 +113,8 @@ public class TouchListener : MonoBehaviour
                     hitTransformAxis = hitObject.GetComponent<TransformAxis>();
                 }
 
-                if ((hitVoxel != null && hitVoxel.substance != null && hitVoxel.substance.xRay)
+                var hitSubstance = voxelArray.SubstanceAt(hitPosition);
+                if ((hitSubstance != null && hitSubstance.xRay)
                     || (hitMarker != null && (hitMarker.gameObject.layer == 8 || hitMarker.gameObject.layer == 10))) // xray or TransparentObject layer
                 {
                     // allow moving axes through xray substances
@@ -115,7 +123,7 @@ public class TouchListener : MonoBehaviour
                     {
                         if (newHit.transform.tag == "MoveAxis")
                         {
-                            hitVoxel = null;
+                            hitPosition = VoxelArray.NONE;
                             hitElementI = -1;
                             hitMarker = null;
                             hitTransformAxis = newHit.transform.GetComponent<TransformAxis>();
@@ -123,14 +131,14 @@ public class TouchListener : MonoBehaviour
                     }
                 }
             }
-            if (hitVoxel != null)
+            if (hitPosition != VoxelArray.NONE)
             {
-                lastHitVoxel = hitVoxel;
+                lastHitPosition = hitPosition;
                 lastHitElementI = hitElementI;
             }
             else if (hitMarker != null)
             {
-                lastHitVoxel = null;
+                lastHitPosition = VoxelArray.NONE;
                 lastHitElementI = -1;
             }
 
@@ -154,21 +162,21 @@ public class TouchListener : MonoBehaviour
                 {
                     voxelArray.TouchDown(null);
                 }
-                else if (hitVoxel != null)
+                else if (hitPosition != VoxelArray.NONE)
                 {
                     if (touch.tapCount == 1)
                     {
                         currentTouchOperation = TouchOperation.SELECT;
-                        voxelArray.TouchDown(hitVoxel, hitElementI, selectType);
-                        selectingXRay = hitVoxel.substance != null && hitVoxel.substance.xRay;
+                        voxelArray.TouchDown(hitPosition, hitElementI, selectType);
+                        selectingXRay = voxelArray.SubstanceAt(hitPosition)?.xRay ?? false;
                     }
                     else if (touch.tapCount == 2 && touch.phase == TouchPhase.Began)
                     {
-                        voxelArray.DoubleTouch(hitVoxel, hitElementI, selectType);
+                        voxelArray.DoubleTouch(hitPosition, hitElementI, selectType);
                     }
                     else if (touch.tapCount == 3 && touch.phase == TouchPhase.Began)
                     {
-                        voxelArray.TripleTouch(hitVoxel, hitElementI, selectType);
+                        voxelArray.TripleTouch(hitPosition, hitElementI, selectType);
                     }
                     UpdateZoomDepth();
                 }
@@ -187,13 +195,13 @@ public class TouchListener : MonoBehaviour
                         movingAxis = hitTransformAxis;
                         movingAxis.TouchDown(touch);
                     }
-                    else if (touch.tapCount == 2 && touch.phase == TouchPhase.Began && lastHitVoxel != null)
+                    else if (touch.tapCount == 2 && touch.phase == TouchPhase.Began && lastHitPosition != VoxelArray.NONE)
                     {
-                        voxelArray.DoubleTouch(lastHitVoxel, lastHitElementI, selectType);
+                        voxelArray.DoubleTouch(lastHitPosition, lastHitElementI, selectType);
                     }
-                    else if (touch.tapCount == 3 && touch.phase == TouchPhase.Began && lastHitVoxel != null)
+                    else if (touch.tapCount == 3 && touch.phase == TouchPhase.Began && lastHitPosition != VoxelArray.NONE)
                     {
-                        voxelArray.TripleTouch(lastHitVoxel, lastHitElementI, selectType);
+                        voxelArray.TripleTouch(lastHitPosition, lastHitElementI, selectType);
                     }
                     UpdateZoomDepth();
                 }
@@ -201,9 +209,9 @@ public class TouchListener : MonoBehaviour
 
             else if (currentTouchOperation == TouchOperation.SELECT)
             {
-                if (hitVoxel != null)
+                if (hitPosition != VoxelArray.NONE)
                 {
-                    voxelArray.TouchDrag(hitVoxel, hitElementI, selectType);
+                    voxelArray.TouchDrag(hitPosition, hitElementI, selectType);
                 }
                 if (hitMarker != null)
                 {
@@ -336,6 +344,8 @@ public class TouchListener : MonoBehaviour
 
     private static int ClosestEdgeToUV(Voxel voxel, Vector2 uv, int faceI)
     {
+        if (voxel == null)
+            return -1;
         float minDist = 1.0f;
         int closestEdge = -1;
         int n = 0;

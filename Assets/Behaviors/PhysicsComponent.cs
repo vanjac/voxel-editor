@@ -85,7 +85,7 @@ public class PhysicsComponent : BehaviorComponent<BasePhysicsBehavior>
         {
             volume = 0;
             foreach (var vc in sComponent.substance.voxelGroup.IterateComponents())
-                volume += vc.voxels.Count;
+                volume += vc.positions.Count;
             if (volume == 0)
                 volume = 1;
         }
