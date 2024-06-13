@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public struct VoxelFaceLoc
+public struct VoxelFaceLoc : IEquatable<VoxelFaceLoc>
 {
     public static readonly VoxelFaceLoc NONE = new VoxelFaceLoc(VoxelArray.NONE, 0);
     public Vector3Int position;
@@ -13,9 +13,13 @@ public struct VoxelFaceLoc
         this.position = position;
         this.faceI = faceI;
     }
+
+    public override bool Equals(object obj) => obj is VoxelFaceLoc other && Equals(other);
+    public bool Equals(VoxelFaceLoc other) => position == other.position && faceI == other.faceI;
+    public override int GetHashCode() => position.GetHashCode() * 37 + faceI.GetHashCode();
 }
 
-public struct VoxelEdgeLoc
+public struct VoxelEdgeLoc : IEquatable<VoxelEdgeLoc>
 {
     public static readonly VoxelEdgeLoc NONE = new VoxelEdgeLoc(VoxelArray.NONE, 0);
     public Vector3Int position;
@@ -25,6 +29,10 @@ public struct VoxelEdgeLoc
         this.position = position;
         this.edgeI = edgeI;
     }
+
+    public override bool Equals(object obj) => obj is VoxelEdgeLoc other && Equals(other);
+    public bool Equals(VoxelEdgeLoc other) => position == other.position && edgeI == other.edgeI;
+    public override int GetHashCode() => position.GetHashCode() * 37 + edgeI.GetHashCode();
 }
 
 public class VoxelArray : MonoBehaviour

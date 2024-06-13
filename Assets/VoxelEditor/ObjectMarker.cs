@@ -19,6 +19,8 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         objectEntity.paint.storedSelected = value;
     }
 
+    public bool Equals(VoxelArrayEditor.Selectable other) => ReferenceEquals(this, other);
+
     private bool IsSelected() => objectEntity.paint.IsSelected();
 
     public Bounds GetBounds() => new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),

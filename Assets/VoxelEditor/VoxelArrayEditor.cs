@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VoxelArrayEditor : VoxelArray
 {
-    public interface Selectable
+    public interface Selectable : System.IEquatable<Selectable>
     {
         bool IsAddSelected(VoxelArrayEditor voxelArray);
         void SetAddSelected(VoxelArrayEditor voxelArray, bool value);
@@ -16,7 +16,7 @@ public class VoxelArrayEditor : VoxelArray
         void SelectionStateUpdated(VoxelArray voxelArray);
     }
 
-    private struct VoxelFaceSelect : Selectable
+    private struct VoxelFaceSelect : Selectable, System.IEquatable<VoxelFaceSelect>
     {
         public VoxelFaceLoc loc;
 
@@ -50,9 +50,14 @@ public class VoxelArrayEditor : VoxelArray
         {
             voxelArray.UpdateVoxel(loc.position);
         }
+
+        public override bool Equals(object obj) => obj is VoxelFaceSelect other && Equals(other);
+        public bool Equals(Selectable sel) => sel is VoxelFaceSelect other && Equals(other);
+        public bool Equals(VoxelFaceSelect other) => loc.Equals(other.loc);
+        public override int GetHashCode() => loc.GetHashCode();
     }
 
-    private struct VoxelEdgeSelect : Selectable
+    private struct VoxelEdgeSelect : Selectable, System.IEquatable<VoxelEdgeSelect>
     {
         public VoxelEdgeLoc loc;
 
@@ -86,6 +91,11 @@ public class VoxelArrayEditor : VoxelArray
         {
             voxelArray.UpdateVoxel(loc.position);
         }
+
+        public override bool Equals(object obj) => obj is VoxelEdgeSelect other && Equals(other);
+        public bool Equals(Selectable sel) => sel is VoxelEdgeSelect other && Equals(other);
+        public bool Equals(VoxelEdgeSelect other) => loc.Equals(other.loc);
+        public override int GetHashCode() => loc.GetHashCode();
     }
 
 
