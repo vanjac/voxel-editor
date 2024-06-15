@@ -233,6 +233,10 @@ public class VoxelArray : MonoBehaviour
             VoxelModified(pos);
         }
     }
+
+    public virtual bool IsSelected(VoxelArrayEditor.Selectable thing) => false;
+    public virtual bool FaceIsSelected(VoxelFaceLoc faceLoc) => false;
+    public virtual bool EdgeIsSelected(VoxelEdgeLoc edgeLoc) => false;
 }
 
 public class VoxelGroup

@@ -4,24 +4,9 @@ using UnityEngine;
 public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 {
     public ObjectEntity objectEntity; // set when created
-
-    public bool IsAddSelected(VoxelArrayEditor voxelArray) => objectEntity.paint.addSelected;
-
-    public void SetAddSelected(VoxelArrayEditor voxelArray, bool value)
-    {
-        objectEntity.paint.addSelected = value;
-    }
-
-    public bool IsStoredSelected(VoxelArrayEditor voxelArray) => objectEntity.paint.storedSelected;
-
-    public void SetStoredSelected(VoxelArrayEditor voxelArray, bool value)
-    {
-        objectEntity.paint.storedSelected = value;
-    }
+    private bool selected = false;
 
     public bool Equals(VoxelArrayEditor.Selectable other) => ReferenceEquals(this, other);
-
-    private bool IsSelected() => objectEntity.paint.IsSelected();
 
     public Bounds GetBounds() => new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
         Vector3.zero);
@@ -33,6 +18,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     public void SelectionStateUpdated(VoxelArray voxelArray)
     {
+        selected = voxelArray.IsSelected(this);
         UpdateMaterials();
     }
 
@@ -49,7 +35,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         if (renderer == null || objectEntity == null)
             return;
         List<Material> materials = new List<Material>();
-        if (objectEntity.highlight != Color.clear && !IsSelected())
+        if (objectEntity.highlight != Color.clear && !selected)
         {
             materials.Add(objectEntity.highlightMaterial);
             gameObject.layer = 0; // default
@@ -71,7 +57,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
             if (objectEntity.paint.overlay != null)
                 materials.Add(objectEntity.paint.overlay);
         }
-        if (IsSelected())
+        if (selected)
             materials.Add(VoxelComponent.selectedMaterial);
         renderer.materials = materials.ToArray();
     }

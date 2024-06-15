@@ -336,10 +336,10 @@ public class PropertiesGUI : LeftPanelGUI
             if (GUILayout.Button(GUIUtils.PadContent(StringSet.CloneEntity, IconSet.copy),
                 StyleSet.buttonSmall))
             {
-                if (singleSelectedEntity is ObjectEntity)
+                if (singleSelectedEntity is ObjectEntity singleObject)
                 {
-                    ObjectEntity clone = (ObjectEntity)(singleSelectedEntity.Clone());
-                    clone.paint = ((ObjectEntity)singleSelectedEntity).paint.PaintOnly();
+                    ObjectEntity clone = (ObjectEntity)(singleObject.Clone());
+                    clone.paint = singleObject.paint;
                     var pickerGUI = gameObject.AddComponent<FacePickerGUI>();
                     pickerGUI.voxelArray = voxelArray;
                     pickerGUI.message = StringSet.CloneInstruction;

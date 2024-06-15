@@ -6,22 +6,12 @@ public struct VoxelFace
     public Material material;
     public Material overlay;
     public byte orientation;
-    public bool addSelected, storedSelected; // TODO: don't store in face/edge
 
-    public bool IsSelected() => addSelected || storedSelected;
     public bool IsEmpty() => material == null && overlay == null;
 
     public VoxelFace(VoxelFace other)
     {
         this = other;
-    }
-
-    public VoxelFace PaintOnly()
-    {
-        VoxelFace paintOnly = this;
-        paintOnly.addSelected = false;
-        paintOnly.storedSelected = false;
-        return paintOnly;
     }
 
     public override bool Equals(object obj) => obj is VoxelFace && this == (VoxelFace)obj;
@@ -100,7 +90,6 @@ public struct VoxelEdge
 
     // 0x08 and 0x80 used to be used for caps and may still be used in old world files
     public byte bevel;
-    public bool addSelected, storedSelected;
 
     public VoxelEdge(VoxelEdge other)
     {

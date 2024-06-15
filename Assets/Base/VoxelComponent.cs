@@ -210,7 +210,7 @@ public class VoxelComponent : MonoBehaviour
             var voxel = voxelArray.VoxelAt(info.position, false);
             if (voxel == null)
                 continue;
-            foreach (var matInfo in IterateVoxelMaterials(voxel, inEditor))
+            foreach (var matInfo in IterateVoxelMaterials(voxelArray, info.position, voxel, inEditor))
             {
                 if (matInfo.material == null || matInfo.NoFaces())
                     continue;
@@ -1129,7 +1129,8 @@ public class VoxelComponent : MonoBehaviour
         triangleArray[i + 2] = ccw ? vertex2 : vertex1;
     }
 
-    private static IEnumerable<VoxelMaterialInfo> IterateVoxelMaterials(Voxel voxel, bool inEditor)
+    private static IEnumerable<VoxelMaterialInfo> IterateVoxelMaterials(
+        VoxelArray voxelArray, Vector3Int position, Voxel voxel, bool inEditor)
     {
         if (voxel.IsEmpty())
             yield break; // no materials
@@ -1152,7 +1153,7 @@ public class VoxelComponent : MonoBehaviour
         }
 
         for (int i = 0; i < 6; i++) // apply to all selected faces
-            facesEnabled[i] = voxel.faces[i].addSelected || voxel.faces[i].storedSelected;
+            facesEnabled[i] = voxelArray.FaceIsSelected(new VoxelFaceLoc(position, i));
         yield return new VoxelMaterialInfo(selectedMaterial, facesEnabled);
 
         // show selected edges
@@ -1167,7 +1168,7 @@ public class VoxelComponent : MonoBehaviour
             foreach (int edgeI in Voxel.FaceSurroundingEdges(faceNum))
             {
                 var e = voxel.edges[edgeI];
-                if (e.addSelected || e.storedSelected)
+                if (voxelArray.EdgeIsSelected(new VoxelEdgeLoc(position, edgeI)))
                 {
                     int n = voxel.FaceTransformedEdgeNum(faceNum, surroundingEdgeI);
                     highlightNum |= 1 << n;

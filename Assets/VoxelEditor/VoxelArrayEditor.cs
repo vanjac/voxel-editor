@@ -1,17 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class VoxelArrayEditor : VoxelArray
 {
     public interface Selectable : System.IEquatable<Selectable>
     {
-        bool IsAddSelected(VoxelArrayEditor voxelArray);
-        void SetAddSelected(VoxelArrayEditor voxelArray, bool value);
-
-        bool IsStoredSelected(VoxelArrayEditor voxelArray);
-        void SetStoredSelected(VoxelArrayEditor voxelArray, bool value);
-
         Bounds GetBounds();
         void SelectionStateUpdated(VoxelArray voxelArray);
     }
@@ -19,20 +14,6 @@ public class VoxelArrayEditor : VoxelArray
     private struct VoxelFaceSelect : Selectable, System.IEquatable<VoxelFaceSelect>
     {
         public VoxelFaceLoc loc;
-
-        public bool IsAddSelected(VoxelArrayEditor voxelArray) => voxelArray.FaceAt(loc).addSelected;
-
-        public void SetAddSelected(VoxelArrayEditor voxelArray, bool value)
-        {
-            voxelArray.ChangeFace(loc, f => new VoxelFace(f){addSelected = value}, false);
-        }
-
-        public bool IsStoredSelected(VoxelArrayEditor voxelArray) => voxelArray.FaceAt(loc).storedSelected;
-
-        public void SetStoredSelected(VoxelArrayEditor voxelArray, bool value)
-        {
-            voxelArray.ChangeFace(loc, f => new VoxelFace(f){storedSelected = value}, false);
-        }
 
         public Bounds GetBounds() => Voxel.FaceBounds(loc);
 
@@ -61,20 +42,6 @@ public class VoxelArrayEditor : VoxelArray
     {
         public VoxelEdgeLoc loc;
 
-        public bool IsAddSelected(VoxelArrayEditor voxelArray) => voxelArray.EdgeAt(loc).addSelected;
-
-        public void SetAddSelected(VoxelArrayEditor voxelArray, bool value)
-        {
-            voxelArray.ChangeEdge(loc, e => new VoxelEdge(e){addSelected = value}, false);
-        }
-
-        public bool IsStoredSelected(VoxelArrayEditor voxelArray) => voxelArray.EdgeAt(loc).storedSelected;
-
-        public void SetStoredSelected(VoxelArrayEditor voxelArray, bool value)
-        {
-            voxelArray.ChangeEdge(loc, e => new VoxelEdge(e){storedSelected = value}, false);
-        }
-
         public Bounds GetBounds() => Voxel.EdgeBounds(loc);
 
         public VoxelEdgeSelect(VoxelEdgeLoc loc)
@@ -96,6 +63,57 @@ public class VoxelArrayEditor : VoxelArray
         public bool Equals(Selectable sel) => sel is VoxelEdgeSelect other && Equals(other);
         public bool Equals(VoxelEdgeSelect other) => loc.Equals(other.loc);
         public override int GetHashCode() => loc.GetHashCode();
+    }
+
+    private class AdjustComparer : IComparer<Selectable>
+    {
+        private int adjustAxis;
+        private bool negativeAdjustAxis;
+        private int oppositeAdjustDirFaceI;
+
+        public AdjustComparer(int adjustDirFaceI)
+        {
+            oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
+            adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
+            negativeAdjustAxis = adjustDirFaceI % 2 == 0;
+        }
+
+        public int Compare(Selectable a, Selectable b)
+        {
+            // positive means A is greater than B
+            // so positive means B will be adjusted before A
+            Vector3 aCenter = a.GetBounds().center;
+            Vector3 bCenter = b.GetBounds().center;
+            float diff = 0;
+            switch (adjustAxis)
+            {
+                case 0:
+                    diff = bCenter.x - aCenter.x;
+                    break;
+                case 1:
+                    diff = bCenter.y - aCenter.y;
+                    break;
+                case 2:
+                    diff = bCenter.z - aCenter.z;
+                    break;
+            }
+            if (negativeAdjustAxis)
+                diff = -diff;
+            if (diff > 0)
+                return 1;
+            if (diff < 0)
+                return -1;
+            if (a is VoxelFaceSelect aFace && b is VoxelFaceSelect bFace)
+            {
+                if (aFace.loc.faceI == oppositeAdjustDirFaceI
+                        && bFace.loc.faceI != oppositeAdjustDirFaceI)
+                    return -1; // move one substance back before moving other forward
+                if (bFace.loc.faceI == oppositeAdjustDirFaceI
+                        && aFace.loc.faceI != oppositeAdjustDirFaceI)
+                    return 1;
+            }
+            return 0;
+        }
     }
 
 
@@ -126,9 +144,9 @@ public class VoxelArrayEditor : VoxelArray
     public SelectMode selectMode = SelectMode.NONE; // only for the "add" selection
     public bool drawSelect = false;
     // all faces where face.addSelected == true
-    private List<Selectable> selectedThings = new List<Selectable>();
+    private HashSet<Selectable> selectedThings = new HashSet<Selectable>();
     // all faces where face.storedSelected == true
-    private List<Selectable> storedSelectedThings = new List<Selectable>();
+    private HashSet<Selectable> storedSelectedThings = new HashSet<Selectable>();
     public Bounds boxSelectStartBounds = new Bounds(Vector3.zero, Vector3.zero);
     private Substance boxSelectSubstance = null;
     // dummy Substance to use for boxSelectSubstance when selecting objects
@@ -139,8 +157,8 @@ public class VoxelArrayEditor : VoxelArray
 
     public struct SelectionState
     {
-        public List<Selectable> selectedThings;
-        public List<Selectable> storedSelectedThings;
+        public HashSet<Selectable> selectedThings;
+        public HashSet<Selectable> storedSelectedThings;
 
         public SelectMode selectMode;
         public Vector3 axes;
@@ -231,7 +249,7 @@ public class VoxelArrayEditor : VoxelArray
         if (drawSelect)
         {
             MergeStoredSelected();
-            if (thing.IsAddSelected(this))
+            if (IsAddSelected(thing))
             {
                 DeselectThing(thing);
                 selectMode = SelectMode.DRAW_DESELECT;
@@ -378,12 +396,12 @@ public class VoxelArrayEditor : VoxelArray
 
     public void ClearSelection()
     {
-        foreach (Selectable thing in selectedThings)
+        var prevSelectedThings = selectedThings;
+        selectedThings = new HashSet<Selectable>();
+        foreach (Selectable thing in prevSelectedThings)
         {
-            thing.SetAddSelected(this, false);
             thing.SelectionStateUpdated(this);
         }
-        selectedThings.Clear();
         AutoSetMoveAxesEnabled();
         selectMode = SelectMode.NONE;
         selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
@@ -392,12 +410,11 @@ public class VoxelArrayEditor : VoxelArray
 
     private void SelectThing(Selectable thing)
     {
-        if (thing.IsAddSelected(this))
-            return;
-        thing.SetAddSelected(this, true);
-        selectedThings.Add(thing);
-        thing.SelectionStateUpdated(this);
-        selectionChanged = true;
+        if (selectedThings.Add(thing))
+        {
+            thing.SelectionStateUpdated(this);
+            selectionChanged = true;
+        }
     }
 
     private void SelectFace(Vector3Int position, int faceI)
@@ -407,24 +424,20 @@ public class VoxelArrayEditor : VoxelArray
 
     private void DeselectThing(Selectable thing)
     {
-        if (!thing.IsAddSelected(this))
-            return;
-        thing.SetAddSelected(this, false);
-        selectedThings.Remove(thing);
-        thing.SelectionStateUpdated(this);
-        selectionChanged = true;
+        if (selectedThings.Remove(thing))
+        {
+            thing.SelectionStateUpdated(this);
+            selectionChanged = true;
+        }
     }
 
-    private void DeselectThing(int index)
-    {
-        Selectable thing = selectedThings[index];
-        if (!thing.IsAddSelected(this))
-            return;
-        thing.SetAddSelected(this, false);
-        selectedThings.RemoveAt(index);
-        thing.SelectionStateUpdated(this);
-        selectionChanged = true;
-    }
+    private bool IsAddSelected(Selectable thing) => selectedThings.Contains(thing);
+
+    private bool IsStoredSelected(Selectable thing) => storedSelectedThings.Contains(thing);
+
+    public override bool IsSelected(Selectable thing) => IsAddSelected(thing) || IsStoredSelected(thing);
+    public override bool FaceIsSelected(VoxelFaceLoc faceLoc) => IsSelected(new VoxelFaceSelect(faceLoc));
+    public override bool EdgeIsSelected(VoxelEdgeLoc edgeLoc) => IsSelected(new VoxelEdgeSelect(edgeLoc));
 
     private EdgeType GetEdgeType(VoxelEdgeLoc loc)
     {
@@ -453,7 +466,7 @@ public class VoxelArrayEditor : VoxelArray
         foreach (Selectable thing in selectedThings)
             yield return thing;
         foreach (Selectable thing in storedSelectedThings)
-            if (!thing.IsAddSelected(this)) // make sure the thing isn't also in selectedThings
+            if (!IsAddSelected(thing)) // make sure the thing isn't also in selectedThings
                 yield return thing;
     }
 
@@ -510,15 +523,8 @@ public class VoxelArrayEditor : VoxelArray
     public void StoreSelection()
     {
         // move things out of storedSelectedThings and into selectedThings
-        foreach (Selectable thing in selectedThings)
-        {
-            thing.SetAddSelected(this, false);
-            if (thing.IsStoredSelected(this))
-                continue; // already in storedSelectedThings
-            thing.SetStoredSelected(this, true);
-            storedSelectedThings.Add(thing);
-            // shouldn't need to update the voxel since it should have already been selected
-        }
+        storedSelectedThings.UnionWith(selectedThings);
+        // shouldn't need to update the things since they should have already been selected
         selectedThings.Clear();
         selectMode = SelectMode.NONE;
         selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
@@ -528,27 +534,20 @@ public class VoxelArrayEditor : VoxelArray
     {
         // move things out of storedSelectedThings and into selectedThings
         // opposite of StoreSelection()
-        foreach (Selectable thing in storedSelectedThings)
-        {
-            thing.SetStoredSelected(this, false);
-            if (thing.IsAddSelected(this))
-                continue; // already in selectedThings
-            thing.SetAddSelected(this, true);
-            selectedThings.Add(thing);
-            // shouldn't need to update the voxel since it should have already been selected
-        }
+        selectedThings.UnionWith(storedSelectedThings);
+        // shouldn't need to update the things since they should have already been selected
         storedSelectedThings.Clear();
         selectMode = SelectMode.ADJUSTED;
     }
 
     public void ClearStoredSelection()
     {
-        foreach (Selectable thing in storedSelectedThings)
+        var prevStored = storedSelectedThings;
+        storedSelectedThings = new HashSet<Selectable>();
+        foreach (Selectable thing in prevStored)
         {
-            thing.SetStoredSelected(this, false);
             thing.SelectionStateUpdated(this);
         }
-        storedSelectedThings.Clear();
         AutoSetMoveAxesEnabled();
         selectionChanged = true;
     }
@@ -559,9 +558,9 @@ public class VoxelArrayEditor : VoxelArray
         SetMoveAxes(bounds.center);
 
         // update selection...
-        for (int i = selectedThings.Count - 1; i >= 0; i--)
+        var toDeselect = new List<Selectable>();
+        foreach (var thing in selectedThings)
         {
-            Selectable thing = selectedThings[i];
             Substance thingSubstance = null;
             if (thing is VoxelFaceSelect faceSel)
                 thingSubstance = SubstanceAt(faceSel.loc.position);
@@ -569,8 +568,13 @@ public class VoxelArrayEditor : VoxelArray
                 thingSubstance = SubstanceAt(edgeSel.loc.position);
             else if (thing is ObjectEntity)
                 thingSubstance = selectObjectSubstance;
+
             if (thingSubstance != boxSelectSubstance || !ThingInBoxSelection(thing, bounds))
-                DeselectThing(i);
+                toDeselect.Add(thing);
+        }
+        foreach (var thing in toDeselect)
+        {
+            DeselectThing(thing);
         }
         if (boxSelectSubstance == selectObjectSubstance)
         {
@@ -657,7 +661,7 @@ public class VoxelArrayEditor : VoxelArray
             var faceLoc = facesToSelect.Dequeue();
             var face = FaceAt(faceLoc);
             // stop at boundaries of stored selection
-            if (face.IsEmpty() || face.IsSelected() || SubstanceAt(faceLoc.position) != substance)
+            if (face.IsEmpty() || FaceIsSelected(faceLoc) || SubstanceAt(faceLoc.position) != substance)
                 continue;
             if (matchPaint && face != paint)
                 continue;
@@ -786,12 +790,12 @@ public class VoxelArrayEditor : VoxelArray
         foreach (var (pos, voxel) in IterateVoxelPairs())
         {
             for (int faceI = 0; faceI < 6; faceI++)
-                if (voxel.faces[faceI].PaintOnly().Equals(paint))
+                if (voxel.faces[faceI].Equals(paint))
                     SelectFace(pos, faceI);
         }
         foreach (ObjectEntity obj in IterateObjects())
         {
-            if (obj.paint.PaintOnly().Equals(paint))
+            if (obj.paint.Equals(paint))
                 SelectThing(obj.marker);
         }
         AutoSetMoveAxesEnabled();
@@ -889,8 +893,8 @@ public class VoxelArrayEditor : VoxelArray
     public SelectionState GetSelectionState()
     {
         SelectionState state;
-        state.selectedThings = new List<Selectable>(selectedThings);
-        state.storedSelectedThings = new List<Selectable>(storedSelectedThings);
+        state.selectedThings = new HashSet<Selectable>(selectedThings);
+        state.storedSelectedThings = new HashSet<Selectable>(storedSelectedThings);
         state.selectMode = selectMode;
         state.axes = axes.position;
         return state;
@@ -900,11 +904,13 @@ public class VoxelArrayEditor : VoxelArray
     {
         ClearSelection();
         ClearStoredSelection();
-        foreach (Selectable thing in state.storedSelectedThings)
-            SelectThing(thing);
-        StoreSelection();
-        foreach (Selectable thing in state.selectedThings)
-            SelectThing(thing);
+
+        selectedThings = state.selectedThings;
+        storedSelectedThings = state.storedSelectedThings;
+        foreach (Selectable thing in selectedThings)
+            thing.SelectionStateUpdated(this);
+        foreach (Selectable thing in storedSelectedThings)
+            thing.SelectionStateUpdated(this);
         selectMode = state.selectMode;
         axes.position = state.axes;
         AutoSetMoveAxesEnabled();
@@ -925,321 +931,269 @@ public class VoxelArrayEditor : VoxelArray
         // now we can safely look only the addSelected property and the selectedThings list
         // and ignore the storedSelected property and the storedSelectedThings list
 
-        int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
-        int oppositeAdjustDirFaceI = Voxel.OppositeFaceI(adjustDirFaceI);
-        int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
-        bool negativeAdjustAxis = adjustDirFaceI % 2 == 0;
-
         // sort selectedThings in order along the adjustDirection vector
-        selectedThings.Sort((Selectable a, Selectable b) =>
-        {
-            // positive means A is greater than B
-            // so positive means B will be adjusted before A
-            Vector3 aCenter = a.GetBounds().center;
-            Vector3 bCenter = b.GetBounds().center;
-            float diff = 0;
-            switch (adjustAxis)
-            {
-                case 0:
-                    diff = bCenter.x - aCenter.x;
-                    break;
-                case 1:
-                    diff = bCenter.y - aCenter.y;
-                    break;
-                case 2:
-                    diff = bCenter.z - aCenter.z;
-                    break;
-            }
-            if (negativeAdjustAxis)
-                diff = -diff;
-            if (diff > 0)
-                return 1;
-            if (diff < 0)
-                return -1;
-            if (a is VoxelFaceSelect aFace && b is VoxelFaceSelect bFace)
-            {
-                if (aFace.loc.faceI == oppositeAdjustDirFaceI
-                        && bFace.loc.faceI != oppositeAdjustDirFaceI)
-                    return -1; // move one substance back before moving other forward
-                if (bFace.loc.faceI == oppositeAdjustDirFaceI
-                        && aFace.loc.faceI != oppositeAdjustDirFaceI)
-                    return 1;
-            }
-            return 0;
-        });
+        var comparer = new AdjustComparer(Voxel.FaceIForDirection(adjustDirection));
+        var sortedThings = new List<Selectable>(selectedThings.OrderBy(s => s, comparer));
 
         bool createdSubstance = false;
-        bool temporarilyBlockPushingANewSubstance = false; // :(
 
-        // reuse arrays for each face
-        VoxelEdge[] movingEdges = new VoxelEdge[4];
-        var bevelsToUpdate = new HashSet<VoxelEdgeLoc>();
-
-        for (int i = 0; i < selectedThings.Count; i++)
+        foreach (Selectable thing in sortedThings)
         {
-            Selectable thing = selectedThings[i];
             if (thing is ObjectMarker marker)
             {
                 PushObject(marker.objectEntity, adjustDirection);
-                continue;
             }
-            else if (!(thing is VoxelFaceSelect))
-                continue;
-            VoxelFaceSelect faceSel = (VoxelFaceSelect)thing;
-
-            Vector3Int oldPos = faceSel.loc.position;
-            Voxel oldVoxel = VoxelAt(oldPos, true);
-            Vector3Int newPos = oldPos + adjustDirection;
-            Voxel newVoxel = VoxelAt(newPos, true);
-
-            int faceI = faceSel.loc.faceI;
-            int oppositeFaceI = Voxel.OppositeFaceI(faceI);
-            bool pushing = adjustDirFaceI == oppositeFaceI;
-            bool pulling = adjustDirFaceI == faceI;
-
-            if (pulling && (!newVoxel.faces[oppositeFaceI].IsEmpty()) && !newVoxel.faces[oppositeFaceI].addSelected)
+            else if (thing is VoxelFaceSelect faceSel)
             {
-                // usually this means there's another substance. push it away before this face
-                if (substanceToCreate != null && newVoxel.substance == substanceToCreate)
-                {
-                    // substance has already been created there!
-                    // substanceToCreate has never existed in the map before Adjust() was called
-                    // so it must have been created earlier in the loop
-                    // remove selection
-                    oldVoxel.faces[faceI].addSelected = false;
-                    selectedThings[i] = new VoxelFaceSelect(VoxelFaceLoc.NONE);
-                    voxelsToUpdate.Add(oldPos);
-                }
-                else
-                {
-                    newVoxel.faces[oppositeFaceI].addSelected = true;
-                    selectedThings.Insert(i, new VoxelFaceSelect(newPos, oppositeFaceI));
-                    i -= 1;
-                    // need to move the other substance out of the way first
-                    temporarilyBlockPushingANewSubstance = true;
-                }
-                continue;
+                if (AdjustSelectedFace(faceSel, adjustDirection, substanceToCreate, voxelsToUpdate))
+                    createdSubstance = true;
             }
-
-            VoxelFace movingFace = oldVoxel.faces[faceI];
-            movingFace.addSelected = false;
-            Substance movingSubstance = oldVoxel.substance;
-            int movingEdgesI = 0;
-            foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
-            {
-                movingEdges[movingEdgesI++] = oldVoxel.edges[edgeI];
-            }
-
-            bool blocked = false; // is movement blocked?
-            Vector3Int newSubstanceBlock = NONE;
-
-            if (pushing)
-            {
-                foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
-                {
-                    AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
-                }
-                for (int sideNum = 0; sideNum < 4; sideNum++)
-                {
-                    int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
-                    if (oldVoxel.faces[sideFaceI].IsEmpty())
-                    {
-                        // add side
-                        Vector3Int sideFaceDir = Voxel.IntDirectionForFaceI(sideFaceI);
-                        Vector3Int sidePos = oldPos + sideFaceDir;
-                        Voxel sideVoxel = VoxelAt(sidePos, true);
-                        int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
-
-                        // if possible, the new side should have the properties of the adjacent side
-                        Voxel adjacentSideVoxel = VoxelAt(oldPos - adjustDirection + sideFaceDir, false);
-                        if (adjacentSideVoxel != null && !adjacentSideVoxel.faces[oppositeSideFaceI].IsEmpty()
-                            && movingSubstance == adjacentSideVoxel.substance)
-                        {
-                            sideVoxel.faces[oppositeSideFaceI] = adjacentSideVoxel.faces[oppositeSideFaceI];
-                            sideVoxel.faces[oppositeSideFaceI].addSelected = false;
-                            foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
-                            {
-                                sideVoxel.edges[edgeI] = adjacentSideVoxel.edges[edgeI];
-                                bevelsToUpdate.Add(new VoxelEdgeLoc(sidePos, edgeI));
-                            }
-                        }
-                        else
-                        {
-                            sideVoxel.faces[oppositeSideFaceI] = movingFace;
-                        }
-                        voxelsToUpdate.Add(sidePos);
-                    }
-                    else
-                    {
-                        // side will be deleted when voxel is cleared but we'll remove/update the bevels now
-                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
-                        {
-                            AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
-                        }
-                    }
-                }
-
-                if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
-                {
-                    blocked = true;
-                    // make sure any concave edges are cleared
-                    foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
-                    {
-                        AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
-                    }
-                }
-                oldVoxel.ClearFaces();
-                SetSubstance(oldPos, null);
-                if (substanceToCreate != null && !temporarilyBlockPushingANewSubstance)
-                {
-                    if (CreateSubstanceBlock(oldPos, substanceToCreate, movingFace))
-                        newSubstanceBlock = oldPos;
-                }
-            }
-            else if (pulling && substanceToCreate != null)
-            {
-                if (CreateSubstanceBlock(newPos, substanceToCreate, movingFace))
-                    newSubstanceBlock = newPos;
-                oldVoxel.faces[faceI].addSelected = false;
-                blocked = true;
-            }
-            else if (pulling)
-            {
-                foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
-                {
-                    AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
-                }
-
-                for (int sideNum = 0; sideNum < 4; sideNum++)
-                {
-                    int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
-                    int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
-                    var sidePos = newPos + Voxel.IntDirectionForFaceI(sideFaceI);
-                    Voxel sideVoxel = VoxelAt(sidePos, false);
-                    if (sideVoxel == null || sideVoxel.faces[oppositeSideFaceI].IsEmpty() || movingSubstance != sideVoxel.substance)
-                    {
-                        // add side
-                        // if possible, the new side should have the properties of the adjacent side
-                        if (!oldVoxel.faces[sideFaceI].IsEmpty())
-                        {
-                            newVoxel.faces[sideFaceI] = oldVoxel.faces[sideFaceI];
-                            newVoxel.faces[sideFaceI].addSelected = false;
-                            foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
-                            {
-                                newVoxel.edges[edgeI] = oldVoxel.edges[edgeI];
-                                bevelsToUpdate.Add(new VoxelEdgeLoc(newPos, edgeI));
-                            }
-                        }
-                        else
-                            newVoxel.faces[sideFaceI] = movingFace;
-                    }
-                    else
-                    {
-                        // delete side
-                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
-                        {
-                            AdjustClearEdge(new VoxelEdgeLoc(sidePos, edgeI), bevelsToUpdate, voxelsToUpdate);
-                        }
-                        sideVoxel.faces[oppositeSideFaceI] = default;
-                        voxelsToUpdate.Add(sidePos);
-                    }
-                }
-
-                var blockingPos = newPos + adjustDirection;
-                Voxel blockingVoxel = VoxelAt(blockingPos, false);
-                if (blockingVoxel != null && !blockingVoxel.faces[oppositeFaceI].IsEmpty())
-                {
-                    if (movingSubstance == blockingVoxel.substance)
-                    {
-                        blocked = true;
-                        foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
-                        {
-                            // clear any bevels on the face that will be deleted
-                            AdjustClearEdge(new VoxelEdgeLoc(blockingPos, edgeI), bevelsToUpdate, voxelsToUpdate);
-                        }
-                        blockingVoxel.faces[oppositeFaceI] = default;
-                        voxelsToUpdate.Add(blockingPos);
-                    }
-                }
-                oldVoxel.faces[faceI] = default;
-            }
-            else // sliding
-            {
-                oldVoxel.faces[faceI].addSelected = false;
-
-                if (newVoxel.faces[faceI].IsEmpty() || newVoxel.substance != movingSubstance)
-                    blocked = true;
-            }
-
-            if (!blocked)
-            {
-                // move the face
-                newVoxel.faces[faceI] = movingFace;
-                newVoxel.faces[faceI].addSelected = true;
-                SetSubstance(newPos, movingSubstance);
-                selectedThings[i] = new VoxelFaceSelect(newPos, faceI);
-                if (pushing || pulling)
-                {
-                    movingEdgesI = 0;
-                    foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
-                    {
-                        var edgeLoc = new VoxelEdgeLoc(newPos, edgeI);
-                        newVoxel.edges[edgeI] = movingEdges[movingEdgesI];
-                        // if the face was pushed/pulled to be coplanar with surrounding faces,
-                        // UpdateBevel will automatically catch this, and clear the bevel along with the
-                        // surrounding face's bevel (with alsoBevelOppositeFlatEdge=true)
-                        UpdateBevel(edgeLoc, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
-                            dontUpdateThisVoxel: true, alsoBevelOppositeFlatEdge: true);
-                        movingEdgesI++;
-                    }
-                }
-            }
-            else
-            {
-                // clear the selection; will be deleted later
-                selectedThings[i] = new VoxelFaceSelect(VoxelFaceLoc.NONE);
-                if (pulling && substanceToCreate == null)
-                    SetSubstance(newPos, movingSubstance);
-            }
-
-            foreach (var edgeLoc in bevelsToUpdate)
-            {
-                UpdateBevel(edgeLoc, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
-                    dontUpdateThisVoxel: true, alsoBevelOppositeFlatEdge: true);
-            }
-            bevelsToUpdate.Clear();
-
-            if (newSubstanceBlock != NONE)
-            {
-                createdSubstance = true;
-                Voxel voxel = VoxelAt(newSubstanceBlock, true);
-                if (!voxel.faces[adjustDirFaceI].IsEmpty())
-                {
-                    voxel.faces[adjustDirFaceI].addSelected = true;
-                    selectedThings.Insert(0, new VoxelFaceSelect(newSubstanceBlock, adjustDirFaceI));
-                    i += 1;
-                }
-            }
-
-            voxelsToUpdate.Add(newPos);
-            voxelsToUpdate.Add(oldPos);
-
-            temporarilyBlockPushingANewSubstance = false;
-        } // end for each selected face
-
-        for (int i = selectedThings.Count - 1; i >= 0; i--)
-        {
-            Selectable thing = selectedThings[i];
-            if ((thing is VoxelFaceSelect faceSel) && faceSel.loc.position == NONE)
-                selectedThings.RemoveAt(i);
         }
+
         selectionChanged = true;
 
         if (substanceToCreate != null && createdSubstance)
             substanceToCreate = null;
 
         AutoSetMoveAxesEnabled();
-    } // end SingleAdjust()
+    }
+
+    private bool AdjustSelectedFace(VoxelFaceSelect faceSel, Vector3Int adjustDirection,
+        Substance createSubstance, HashSet<Vector3Int> voxelsToUpdate)
+    {
+        int adjustDirFaceI = Voxel.FaceIForDirection(adjustDirection);
+        int adjustAxis = Voxel.FaceIAxis(adjustDirFaceI);
+
+        Vector3Int oldPos = faceSel.loc.position;
+        Voxel oldVoxel = VoxelAt(oldPos, true);
+        Vector3Int newPos = oldPos + adjustDirection;
+        Voxel newVoxel = VoxelAt(newPos, true);
+
+        int faceI = faceSel.loc.faceI;
+        int oppositeFaceI = Voxel.OppositeFaceI(faceI);
+        bool pushing = adjustDirFaceI == oppositeFaceI;
+        bool pulling = adjustDirFaceI == faceI;
+
+        var bevelsToUpdate = new HashSet<VoxelEdgeLoc>();
+
+        var opposingFaceSel = new VoxelFaceSelect(newPos, oppositeFaceI);
+        if (pulling && (!newVoxel.faces[oppositeFaceI].IsEmpty()) && !IsAddSelected(opposingFaceSel))
+        {
+            // usually this means there's another substance. push it away before this face
+            if (createSubstance != null && newVoxel.substance == createSubstance)
+            {
+                // substance has already been created there!
+                // createSubstance has never existed in the map before Adjust() was called
+                // so it must have been created earlier in the loop
+                // remove selection
+                selectedThings.Remove(faceSel);
+                voxelsToUpdate.Add(oldPos);
+            }
+            else
+            {
+                selectedThings.Add(opposingFaceSel);
+                AdjustSelectedFace(opposingFaceSel, adjustDirection, null, voxelsToUpdate); // recurse!
+                // need to move the other substance out of the way first
+            }
+            return false;
+        }
+
+        VoxelFace movingFace = oldVoxel.faces[faceI];
+        Substance movingSubstance = oldVoxel.substance;
+
+        VoxelEdge[] movingEdges = new VoxelEdge[4];
+        int movingEdgesI = 0;
+        foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+        {
+            movingEdges[movingEdgesI++] = oldVoxel.edges[edgeI];
+        }
+
+        bool blocked = false; // is movement blocked?
+        Vector3Int newSubstanceBlock = NONE;
+
+        if (pushing)
+        {
+            foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+            {
+                AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
+            }
+            for (int sideNum = 0; sideNum < 4; sideNum++)
+            {
+                int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
+                if (oldVoxel.faces[sideFaceI].IsEmpty())
+                {
+                    // add side
+                    Vector3Int sideFaceDir = Voxel.IntDirectionForFaceI(sideFaceI);
+                    Vector3Int sidePos = oldPos + sideFaceDir;
+                    Voxel sideVoxel = VoxelAt(sidePos, true);
+                    int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
+
+                    // if possible, the new side should have the properties of the adjacent side
+                    Voxel adjacentSideVoxel = VoxelAt(oldPos - adjustDirection + sideFaceDir, false);
+                    if (adjacentSideVoxel != null && !adjacentSideVoxel.faces[oppositeSideFaceI].IsEmpty()
+                        && movingSubstance == adjacentSideVoxel.substance)
+                    {
+                        sideVoxel.faces[oppositeSideFaceI] = adjacentSideVoxel.faces[oppositeSideFaceI];
+                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
+                        {
+                            sideVoxel.edges[edgeI] = adjacentSideVoxel.edges[edgeI];
+                            bevelsToUpdate.Add(new VoxelEdgeLoc(sidePos, edgeI));
+                        }
+                    }
+                    else
+                    {
+                        sideVoxel.faces[oppositeSideFaceI] = movingFace;
+                    }
+                    voxelsToUpdate.Add(sidePos);
+                }
+                else
+                {
+                    // side will be deleted when voxel is cleared but we'll remove/update the bevels now
+                    foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
+                    {
+                        AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
+                    }
+                }
+            }
+
+            if (!oldVoxel.faces[oppositeFaceI].IsEmpty())
+            {
+                blocked = true;
+                // make sure any concave edges are cleared
+                foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
+                {
+                    AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
+                }
+            }
+            oldVoxel.ClearFaces();
+            SetSubstance(oldPos, null);
+            if (createSubstance != null)
+            {
+                if (CreateSubstanceBlock(oldPos, createSubstance, movingFace))
+                    newSubstanceBlock = oldPos;
+            }
+        }
+        else if (pulling && createSubstance != null)
+        {
+            if (CreateSubstanceBlock(newPos, createSubstance, movingFace))
+                newSubstanceBlock = newPos;
+            blocked = true;
+        }
+        else if (pulling)
+        {
+            foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+            {
+                AdjustClearEdge(new VoxelEdgeLoc(oldPos, edgeI), bevelsToUpdate, voxelsToUpdate);
+            }
+
+            for (int sideNum = 0; sideNum < 4; sideNum++)
+            {
+                int sideFaceI = Voxel.SideFaceI(faceI, sideNum);
+                int oppositeSideFaceI = Voxel.OppositeFaceI(sideFaceI);
+                var sidePos = newPos + Voxel.IntDirectionForFaceI(sideFaceI);
+                Voxel sideVoxel = VoxelAt(sidePos, false);
+                if (sideVoxel == null || sideVoxel.faces[oppositeSideFaceI].IsEmpty() || movingSubstance != sideVoxel.substance)
+                {
+                    // add side
+                    // if possible, the new side should have the properties of the adjacent side
+                    if (!oldVoxel.faces[sideFaceI].IsEmpty())
+                    {
+                        newVoxel.faces[sideFaceI] = oldVoxel.faces[sideFaceI];
+                        foreach (int edgeI in FaceSurroundingEdgesAlongAxis(sideFaceI, adjustAxis))
+                        {
+                            newVoxel.edges[edgeI] = oldVoxel.edges[edgeI];
+                            bevelsToUpdate.Add(new VoxelEdgeLoc(newPos, edgeI));
+                        }
+                    }
+                    else
+                        newVoxel.faces[sideFaceI] = movingFace;
+                }
+                else
+                {
+                    // delete side
+                    foreach (int edgeI in FaceSurroundingEdgesAlongAxis(oppositeSideFaceI, adjustAxis))
+                    {
+                        AdjustClearEdge(new VoxelEdgeLoc(sidePos, edgeI), bevelsToUpdate, voxelsToUpdate);
+                    }
+                    sideVoxel.faces[oppositeSideFaceI] = default;
+                    voxelsToUpdate.Add(sidePos);
+                }
+            }
+
+            var blockingPos = newPos + adjustDirection;
+            Voxel blockingVoxel = VoxelAt(blockingPos, false);
+            if (blockingVoxel != null && !blockingVoxel.faces[oppositeFaceI].IsEmpty())
+            {
+                if (movingSubstance == blockingVoxel.substance)
+                {
+                    blocked = true;
+                    foreach (int edgeI in Voxel.FaceSurroundingEdges(oppositeFaceI))
+                    {
+                        // clear any bevels on the face that will be deleted
+                        AdjustClearEdge(new VoxelEdgeLoc(blockingPos, edgeI), bevelsToUpdate, voxelsToUpdate);
+                    }
+                    blockingVoxel.faces[oppositeFaceI] = default;
+                    voxelsToUpdate.Add(blockingPos);
+                }
+            }
+            oldVoxel.faces[faceI] = default;
+        }
+        else // sliding
+        {
+            if (newVoxel.faces[faceI].IsEmpty() || newVoxel.substance != movingSubstance)
+                blocked = true;
+        }
+
+        selectedThings.Remove(faceSel);
+        if (!blocked)
+        {
+            // move the face
+            newVoxel.faces[faceI] = movingFace;
+            SetSubstance(newPos, movingSubstance);
+            selectedThings.Add(new VoxelFaceSelect(newPos, faceI));
+            if (pushing || pulling)
+            {
+                movingEdgesI = 0;
+                foreach (int edgeI in Voxel.FaceSurroundingEdges(faceI))
+                {
+                    var edgeLoc = new VoxelEdgeLoc(newPos, edgeI);
+                    newVoxel.edges[edgeI] = movingEdges[movingEdgesI];
+                    // if the face was pushed/pulled to be coplanar with surrounding faces,
+                    // UpdateBevel will automatically catch this, and clear the bevel along with the
+                    // surrounding face's bevel (with alsoBevelOppositeFlatEdge=true)
+                    UpdateBevel(edgeLoc, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
+                        dontUpdateThisVoxel: true, alsoBevelOppositeFlatEdge: true);
+                    movingEdgesI++;
+                }
+            }
+        }
+        else
+        {
+            // selection is cleared
+            if (pulling && createSubstance == null)
+                SetSubstance(newPos, movingSubstance);
+        }
+
+        foreach (var edgeLoc in bevelsToUpdate)
+        {
+            UpdateBevel(edgeLoc, voxelsToUpdate, alsoBevelOppositeConcaveEdge: true,
+                dontUpdateThisVoxel: true, alsoBevelOppositeFlatEdge: true);
+        }
+
+        if (newSubstanceBlock != NONE)
+        {
+            Voxel voxel = VoxelAt(newSubstanceBlock, true);
+            if (!voxel.faces[adjustDirFaceI].IsEmpty())
+            {
+                selectedThings.Add(new VoxelFaceSelect(newSubstanceBlock, adjustDirFaceI));
+            }
+        }
+
+        voxelsToUpdate.Add(newPos);
+        voxelsToUpdate.Add(oldPos);
+
+        return newSubstanceBlock != NONE;
+    } // end AdjustSelectedFace()
 
     // fix for an issue when clearing concave edges on a face that will be deleted
     private void AdjustClearEdge(VoxelEdgeLoc edgeLoc,
@@ -1320,9 +1274,9 @@ public class VoxelArrayEditor : VoxelArray
         foreach (Selectable thing in IterateSelected())
         {
             if (thing is VoxelFaceSelect faceSel)
-                return FaceAt(faceSel.loc).PaintOnly();
+                return FaceAt(faceSel.loc);
             else if (thing is ObjectMarker marker)
-                return marker.objectEntity.paint.PaintOnly();
+                return marker.objectEntity.paint;
         }
         return new VoxelFace();
     }
@@ -1373,12 +1327,7 @@ public class VoxelArrayEditor : VoxelArray
     public VoxelEdge GetSelectedBevel()
     {
         foreach (var edgeSel in IterateSelected<VoxelEdgeSelect>())
-        {
-            var edge = EdgeAt(edgeSel.loc);
-            edge.addSelected = false;
-            edge.storedSelected = false;
-            return edge;
-        }
+            return EdgeAt(edgeSel.loc);
         return new VoxelEdge();
     }
 
