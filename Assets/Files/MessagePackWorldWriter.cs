@@ -7,8 +7,8 @@ using System.Xml.Serialization;
 
 public class MessagePackWorldWriter
 {
-    public const int VERSION = 11;
-    private const int FILE_MIN_READER_VERSION = 10;
+    public const int VERSION = 12;
+    private const int FILE_MIN_READER_VERSION = 12;
 
     public static void Write(string filePath, Transform cameraPivot, VoxelArray voxelArray)
     {
@@ -149,7 +149,7 @@ public class MessagePackWorldWriter
         Dictionary<Material, int> materials, Dictionary<Material, int> overlays)
     {
         var entityDict = WriteEntity(objectEntity, true);
-        entityDict[FileKeys.OBJECT_POSITION] = WriteVector3Int(objectEntity.position);
+        entityDict[FileKeys.OBJECT_POSITION] = WriteVector3(objectEntity.position);
         entityDict[FileKeys.OBJECT_ROTATION] = objectEntity.rotation;
         entityDict[FileKeys.OBJECT_PAINT] = WriteFace(objectEntity.paint, 0, materials, overlays);
 

@@ -122,7 +122,7 @@ public class ActionBarGUI : TopPanelGUI
         TutorialGUI.ClearHighlight();
 
         GUILayout.FlexibleSpace();
-        int moveCount = 0;
+        float moveCount = 0;
         if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
             && touchListener.movingAxis is MoveAxis)
             moveCount = Mathf.Abs(((MoveAxis)touchListener.movingAxis).moveCount);

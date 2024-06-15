@@ -486,7 +486,7 @@ public class VoxelArrayEditor : VoxelArray
 
     private bool TypeIsSelected<T>() where T : Selectable
     {
-        foreach (var thing in IterateSelected<T>())
+        foreach (var _ in IterateSelected<T>())
             return true;
         return false;
     }
@@ -916,16 +916,18 @@ public class VoxelArrayEditor : VoxelArray
         AutoSetMoveAxesEnabled();
     }
 
-    public void Adjust(Vector3Int adjustDirection, int count)
+    public float AllowedAdjustScale() => FacesAreSelected() ? 1.0f : OBJECT_GRID;
+
+    public void Adjust(Vector3Int adjustDirection, int count, float scale)
     {
         var voxelsToUpdate = new HashSet<Vector3Int>();
         for (int i = 0; i < count; i++)
-            SingleAdjust(adjustDirection, voxelsToUpdate);
+            SingleAdjust(adjustDirection, voxelsToUpdate, scale);
         foreach (var pos in voxelsToUpdate)
             VoxelModified(pos);
     }
 
-    private void SingleAdjust(Vector3Int adjustDirection, HashSet<Vector3Int> voxelsToUpdate)
+    private void SingleAdjust(Vector3Int adjustDirection, HashSet<Vector3Int> voxelsToUpdate, float scale)
     {
         MergeStoredSelected();
         // now we can safely look only the addSelected property and the selectedThings list
@@ -941,7 +943,7 @@ public class VoxelArrayEditor : VoxelArray
         {
             if (thing is ObjectMarker marker)
             {
-                PushObject(marker.objectEntity, adjustDirection);
+                PushObject(marker.objectEntity, adjustDirection, scale);
             }
             else if (thing is VoxelFaceSelect faceSel)
             {
@@ -1250,12 +1252,13 @@ public class VoxelArrayEditor : VoxelArray
                 yield return edgeI;
     }
 
-    private void PushObject(ObjectEntity obj, Vector3Int direction)
+    private void PushObject(ObjectEntity obj, Vector3Int direction, float scale)
     {
-        var existingObj = ObjectAt(obj.position + direction);
+        var newPos = SnapToObjectGrid(obj.position + (Vector3)direction * scale);
+        var existingObj = ObjectAt(newPos);
         if (existingObj != null)
-            PushObject(existingObj, direction);
-        MoveObject(obj, obj.position + direction);
+            PushObject(existingObj, direction, OBJECT_GRID); // nudge
+        MoveObject(obj, newPos);
     }
 
     public void RotateObjects(float amount)
@@ -1498,18 +1501,14 @@ public class VoxelArrayEditor : VoxelArray
         Vector3 createDirection = Voxel.DirectionForFaceI(faceNormal);
         if (faceNormal != -1)
             createPosition += createDirection / 2;
-        else
-        {
-            faceNormal = 3;
+        else // different normals
             createDirection = Vector3.up;
-        }
-        createPosition -= new Vector3(0.5f, 0.5f, 0.5f);
 
         // don't create the object at the same location of an existing object
         // keep moving in the direction of the face normal until an empty space is found
-        while (ObjectAt(Vector3Int.RoundToInt(createPosition)) != null)
-            createPosition += createDirection;
-        obj.position = Vector3Int.RoundToInt(createPosition);
+        while (ObjectAt(createPosition) != null)
+            createPosition += createDirection * OBJECT_GRID;
+        obj.position = SnapToObjectGrid(createPosition);
 
         obj.InitObjectMarker(this);
         AddObject(obj);

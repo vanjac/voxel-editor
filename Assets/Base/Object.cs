@@ -13,13 +13,11 @@ public abstract class ObjectEntity : DynamicEntity
     public override PropertiesObjectType ObjectType => objectType;
 
     public ObjectMarker marker;
-    public Vector3Int position;
+    public Vector3 position;
     public float rotation;
     public VoxelFace paint;
     public Color highlight = Color.clear;
     public Material highlightMaterial;
-
-    public virtual Vector3 PositionOffset() => Vector3.zero;
 
     public override void UpdateEntityEditor()
     {
@@ -27,8 +25,9 @@ public abstract class ObjectEntity : DynamicEntity
             marker.UpdateMarker();
     }
 
-    public override Vector3 PositionInEditor() =>
-        position + new Vector3(0.5f, 0.5f, 0.5f) + PositionOffset();
+    public override Vector3 PositionInEditor() => position;
+
+    protected virtual Vector3 PositionInGame() => position;
 
     public override bool AliveInEditor() => marker != null;
 
@@ -57,7 +56,7 @@ public abstract class ObjectEntity : DynamicEntity
     {
         var c = CreateEntityComponent(voxelArray);
         c.transform.parent = voxelArray.transform;
-        c.transform.position = PositionInEditor();
+        c.transform.position = PositionInGame();
         c.transform.rotation = Quaternion.Euler(new Vector3(0, rotation, 0));
         c.entity = this;
         c.health = health;

@@ -8,8 +8,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     public bool Equals(VoxelArrayEditor.Selectable other) => ReferenceEquals(this, other);
 
-    public Bounds GetBounds() => new Bounds(objectEntity.position + new Vector3(0.5f, 0.5f, 0.5f),
-        Vector3.zero);
+    public Bounds GetBounds() => new Bounds(objectEntity.position, Vector3.zero);
 
     public void Start()
     {

@@ -30,7 +30,7 @@ public class PlayerObject : ObjectEntity
                 PropertyGUIs.Toggle),
         });
 
-    public override Vector3 PositionOffset() => new Vector3(0, -0.5f, 0);
+    protected override Vector3 PositionInGame() => base.PositionInGame() + new Vector3(0, 1, 0);
 
     protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray)
     {

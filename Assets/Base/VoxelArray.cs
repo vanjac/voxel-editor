@@ -37,6 +37,7 @@ public struct VoxelEdgeLoc : IEquatable<VoxelEdgeLoc>
 
 public class VoxelArray : MonoBehaviour
 {
+    protected const float OBJECT_GRID = 0.5f;
     public static readonly Vector3Int NONE = new Vector3Int(9999, 9999, 9999);
     public enum WorldType
     {
@@ -176,24 +177,36 @@ public class VoxelArray : MonoBehaviour
     public IEnumerable<(Vector3Int, Voxel)> IterateVoxelPairs() =>
         voxels.Select(p => (p.Key, p.Value));
 
-    public ObjectEntity ObjectAt(Vector3Int pos)
+    private Vector3Int ObjectPositionKey(Vector3 position)
     {
-        if (objects.TryGetValue(pos, out ObjectEntity obj))
+        return Vector3Int.RoundToInt(position / OBJECT_GRID);
+    }
+
+    protected Vector3 SnapToObjectGrid(Vector3 position)
+    {
+        return ((Vector3)Vector3Int.RoundToInt(position / OBJECT_GRID)) * OBJECT_GRID;
+    }
+
+    public ObjectEntity ObjectAt(Vector3 pos)
+    {
+        if (objects.TryGetValue(ObjectPositionKey(pos), out ObjectEntity obj))
             return obj;
         return null;
     }
 
     public virtual void AddObject(ObjectEntity obj)
     {
-        if (objects.ContainsKey(obj.position))
+        var key = ObjectPositionKey(obj.position);
+        if (objects.ContainsKey(key))
             Debug.Log("Object already at position!!");
-        objects[obj.position] = obj;
+        objects[key] = obj;
     }
 
     public virtual void DeleteObject(ObjectEntity obj)
     {
-        if (objects.TryGetValue(obj.position, out ObjectEntity existing) && existing == obj)
-            objects.Remove(obj.position);
+        var key = ObjectPositionKey(obj.position);
+        if (objects.TryGetValue(key, out ObjectEntity existing) && existing == obj)
+            objects.Remove(key);
         else
             Debug.Log("This object wasn't in the voxel array!");
         if (obj.marker != null)
@@ -204,19 +217,21 @@ public class VoxelArray : MonoBehaviour
     }
 
     // return success
-    public bool MoveObject(ObjectEntity obj, Vector3Int newPosition)
+    public bool MoveObject(ObjectEntity obj, Vector3 newPosition)
     {
-        if (newPosition == obj.position)
+        var oldKey = ObjectPositionKey(obj.position);
+        var newKey = ObjectPositionKey(newPosition);
+        if (oldKey == newKey)
             return true;
-        if (objects.ContainsKey(newPosition))
+        if (objects.ContainsKey(newKey))
             return false; // can't move here
 
-        if (objects.TryGetValue(obj.position, out ObjectEntity existing) && existing == obj)
-            objects.Remove(obj.position);
+        if (objects.TryGetValue(oldKey, out ObjectEntity existing) && existing == obj)
+            objects.Remove(oldKey);
         else
             Debug.Log("This object wasn't in the voxel array!");
 
-        objects[newPosition] = obj;
+        objects[newKey] = obj;
         obj.position = newPosition;
         ObjectModified(obj);
         return true;

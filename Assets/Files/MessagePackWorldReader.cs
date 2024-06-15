@@ -277,7 +277,16 @@ public class MessagePackWorldReader : WorldFileReader
     {
         ReadEntity(entityDict, objectEntity);
         if (entityDict.ContainsKey(FileKeys.OBJECT_POSITION))
-            objectEntity.position = ReadVector3Int(entityDict[FileKeys.OBJECT_POSITION]);
+        {
+            objectEntity.position = ReadVector3(entityDict[FileKeys.OBJECT_POSITION]);
+            if (fileWriterVersion < 12)
+            {
+                if (objectEntity is PlayerObject)
+                    objectEntity.position += new Vector3(0.5f, 0, 0.5f);
+                else
+                    objectEntity.position += new Vector3(0.5f, 0.5f, 0.5f);
+            }
+        }
         if (entityDict.ContainsKey(FileKeys.OBJECT_ROTATION))
             objectEntity.rotation = entityDict[FileKeys.OBJECT_ROTATION].AsSingle();
         if (entityDict.ContainsKey(FileKeys.OBJECT_PAINT))

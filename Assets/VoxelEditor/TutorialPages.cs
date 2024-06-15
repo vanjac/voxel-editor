@@ -255,7 +255,7 @@ public static class Tutorials
             if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
                 && AxisMatchesFace(touchListener.movingAxis, faceNormal))
             {
-                int moveCount = ((MoveAxis)touchListener.movingAxis).moveCount;
+                float moveCount = ((MoveAxis)touchListener.movingAxis).moveCount;
                 if (faceNormal % 2 == 0)
                 {
                     if (moveCount <= -1)
@@ -302,7 +302,7 @@ public static class Tutorials
             if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
                 && TutorialIntroPull.AxisMatchesFace(touchListener.movingAxis, faceNormal))
             {
-                int moveCount = ((MoveAxis)touchListener.movingAxis).moveCount;
+                float moveCount = ((MoveAxis)touchListener.movingAxis).moveCount;
                 if (faceNormal % 2 == 0)
                 {
                     if (moveCount >= 1)

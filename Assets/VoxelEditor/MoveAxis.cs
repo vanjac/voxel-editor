@@ -3,7 +3,7 @@
 public class MoveAxis : TransformAxis
 {
     public Vector3 forwardDirection;
-    public int moveCount = 0;
+    public float moveCount = 0;
     private bool moving;
 
     public override void Update()
@@ -44,25 +44,27 @@ public class MoveAxis : TransformAxis
         float moveAmount = Vector3.Dot(touch.deltaPosition * 1.5f / mainCamera.pixelHeight, screenMoveVector.normalized);
         transform.position += forwardDirection * moveAmount * distanceToCam;
 
+        float adjustScale = voxelArray.AllowedAdjustScale();
+
         float currentPosition = GetAxisPosition();
         float prevPosition = GetOriginPosition();
         int count = 0;
-        if (currentPosition - prevPosition > 1)
+        if (currentPosition - prevPosition > adjustScale)
         {
-            count = (int)Mathf.Floor(currentPosition - prevPosition);
-            voxelArray.Adjust(Vector3Int.RoundToInt(forwardDirection), count);
+            count = (int)Mathf.Floor((currentPosition - prevPosition) / adjustScale);
+            voxelArray.Adjust(Vector3Int.RoundToInt(forwardDirection), count, adjustScale);
         }
-        else if (currentPosition - prevPosition < -1)
+        else if (currentPosition - prevPosition < -adjustScale)
         {
-            count = -(int)Mathf.Floor(prevPosition - currentPosition);
-            voxelArray.Adjust(Vector3Int.RoundToInt(-forwardDirection), -count);
+            count = -(int)Mathf.Floor((prevPosition - currentPosition) / adjustScale);
+            voxelArray.Adjust(Vector3Int.RoundToInt(-forwardDirection), -count, adjustScale);
         }
         if (count != 0)
         {
-            transform.parent.position += forwardDirection * count;
-            transform.position -= forwardDirection * count;
-            moveCount += count;
-            currentPosition -= count;
+            float scaledCount = count * adjustScale;
+            transform.parent.position += forwardDirection * scaledCount;
+            transform.position -= forwardDirection * scaledCount;
+            moveCount += scaledCount;
         }
     }
 }
