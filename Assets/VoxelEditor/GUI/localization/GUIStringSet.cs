@@ -577,6 +577,10 @@ public class GUIStringSet
         "Custom Texture";
     public virtual string CustomTextureDesc =>
         "A custom texture image for materials or overlays";
+    public virtual string PropName =>
+        "Prop";
+    public virtual string PropDesc =>
+        "A static 3D model";
     public virtual string BallName =>
         "Ball";
     public virtual string BallDesc =>

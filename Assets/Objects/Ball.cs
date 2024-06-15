@@ -56,20 +56,6 @@ public class BallObject : ObjectEntity
     protected override DynamicEntityComponent CreateEntityComponent(VoxelArray voxelArray)
     {
         GameObject obj = ObjectTemplate(voxelArray);
-        return obj.AddComponent<BallComponent>();
-    }
-}
-
-public class BallComponent : DynamicEntityComponent
-{
-    public override void Start()
-    {
-        GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<SphereCollider>().isTrigger = true;
-        // a rigidBody is required for collision detection
-        Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>();
-        // no physics by default (could be disabled by a Physics behavior)
-        rigidBody.isKinematic = true;
-        base.Start();
+        return obj.AddComponent<PropComponent>();
     }
 }
