@@ -28,6 +28,15 @@ public static class ResourcesDirectory
         }
     }
 
+    private static ModelDatabase modelDatabase;
+
+    public static ModelDatabase GetModelDatabase()
+    {
+        if (modelDatabase == null)
+            modelDatabase = Resources.Load<ModelDatabase>("models");
+        return modelDatabase;
+    }
+
     public static Material LoadMaterial(MaterialInfo info) =>
         Resources.Load<Material>("GameAssets/" + info.path);
 

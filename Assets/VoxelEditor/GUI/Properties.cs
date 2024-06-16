@@ -497,6 +497,21 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
+    public static void Model(Property property)
+    {
+        GUILayout.BeginHorizontal();
+        var selectString = StringSet.SelectProperty(property.name(StringSet));
+        if (GUILayout.Button(GUIUtils.PadContent(selectString, GUIPanel.IconSet.model)))
+        {
+            ModelSelectorGUI modelSelector = GUIPanel.GuiGameObject.AddComponent<ModelSelectorGUI>();
+            modelSelector.title = selectString;
+            modelSelector.handler = model => {
+                property.setter(model);
+            };
+        }
+        GUILayout.EndHorizontal();
+    }
+
     public static PropertyGUI Slider(float minValue, float maxValue) =>
         (Property property) =>
         {

@@ -8,7 +8,7 @@ public class PropObject : ObjectEntity
     {
         displayName = s => s.PropName,
         description = s => s.PropDesc,
-        iconName = "table-chair",
+        iconName = "traffic-cone",
     };
     public override PropertiesObjectType ObjectType => objectType;
 
@@ -36,7 +36,7 @@ public class PropObject : ObjectEntity
                         marker.GetComponent<MeshCollider>().sharedMesh = mesh;
                     }
                 },
-                PropertyGUIs.Text),
+                PropertyGUIs.Model),
         });
     
     private Mesh GetMesh() => Resources.Load<Mesh>("GameAssets/Models/" + modelName);
