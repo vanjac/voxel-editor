@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public struct ModelCategory
 {
-    public string name;
+    public Texture2D icon;
     public List<string> models;
 }
 

@@ -6,7 +6,7 @@ public class ModelSelectorGUI : GUIPanel
     public System.Action<string> handler;
 
     private int selectedCategory = 0;
-    private string[] categoryNames;
+    private Texture2D[] categoryIcons;
     private Texture2D[] modelThumbnails;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
@@ -15,7 +15,7 @@ public class ModelSelectorGUI : GUIPanel
 
     void Start()
     {
-        categoryNames = ResourcesDirectory.GetModelDatabase().categories.Select(cat => cat.name)
+        categoryIcons = ResourcesDirectory.GetModelDatabase().categories.Select(cat => cat.icon)
             .ToArray();
     }
 
@@ -24,7 +24,7 @@ public class ModelSelectorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        int tab = GUILayout.SelectionGrid(selectedCategory, categoryNames, categoryNames.Count(),
+        int tab = GUILayout.SelectionGrid(selectedCategory, categoryIcons, categoryIcons.Count(),
             StyleSet.buttonTab);
         if (tab != selectedCategory || modelThumbnails == null)
         {

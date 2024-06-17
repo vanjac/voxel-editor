@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: models
   m_EditorClassIdentifier: 
   categories:
-  - name: Shapes
+  - icon: {fileID: 2800000, guid: ae85ead688b361b4a9aa8c4fb21f2440, type: 3}
     models:
     - SM_Primitive_Cone_03
-    - SM_Primitive_Torus_05
+    - Torus
     - SM_Primitive_Helix_01
     - SM_Primitive_SoccerBall_01
-  - name: Collect
+  - icon: {fileID: 2800000, guid: cff0e338481dbed4eb274490963998b9, type: 3}
     models:
     - SM_Icon_CoinBag_01
     - SM_Icon_Coin_01
@@ -31,7 +31,7 @@ MonoBehaviour:
     - SM_Icon_Potion_02
     - SM_Icon_Star_01
     - SM_Icon_Watch_01
-  - name: Trees
+  - icon: {fileID: 2800000, guid: 8821ad1ef07f7e74685ed638da856cbd, type: 3}
     models:
     - SM_Generic_TreeDead_01
     - SM_Generic_TreeStump_01
@@ -43,14 +43,14 @@ MonoBehaviour:
     - SM_Prop_Tree_Palm_02
     - SM_Prop_Tree_Pine_02
     - SM_Prop_Tree_Round_02
-  - name: Terrain
+  - icon: {fileID: 2800000, guid: 50a06eb9af5b0424eb3156078f2b5e49, type: 3}
     models:
     - SM_Generic_Small_Rocks_01
     - SM_Generic_Small_Rocks_02
     - SM_Gerneric_Grass_Patch_01
     - SM_Gerneric_Grass_Patch_02
     - SM_Prop_Tree_Bush_01
-  - name: Misc
+  - icon: {fileID: 2800000, guid: d2e6970125c54014dab222a78bc4611a, type: 3}
     models:
     - SM_Icon_Apple_01
     - SM_Icon_Axe_01
