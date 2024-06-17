@@ -42,7 +42,6 @@ MonoBehaviour:
     - SM_Prop_Tree_Palm_01
     - SM_Prop_Tree_Palm_02
     - SM_Prop_Tree_Pine_02
-    - SM_Prop_Tree_Round_02
   - icon: {fileID: 2800000, guid: 50a06eb9af5b0424eb3156078f2b5e49, type: 3}
     models:
     - SM_Generic_Small_Rocks_01

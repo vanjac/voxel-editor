@@ -18,7 +18,7 @@ public class PropObject : ObjectEntity
     {
         paint.material = ResourcesDirectory.InstantiateMaterial(
             ResourcesDirectory.FindMaterial("MATTE", true));
-        paint.material.color = Color.white;
+        paint.material.color = new Color(0.8f, 0.8f, 0.8f);
     }
 
     public override IEnumerable<Property> Properties() =>
