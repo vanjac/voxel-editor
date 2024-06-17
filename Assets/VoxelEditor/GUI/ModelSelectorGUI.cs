@@ -7,7 +7,7 @@ public class ModelSelectorGUI : GUIPanel
 
     private int selectedCategory = 0;
     private string[] categoryNames;
-    private string[] modelNames;
+    private Texture2D[] modelThumbnails;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 960, safeRect.height * .8f,
@@ -19,25 +19,28 @@ public class ModelSelectorGUI : GUIPanel
             .ToArray();
     }
 
+    private ModelCategory GetCategory() =>
+        ResourcesDirectory.GetModelDatabase().categories[selectedCategory];
+
     public override void WindowGUI()
     {
         int tab = GUILayout.SelectionGrid(selectedCategory, categoryNames, categoryNames.Count(),
             StyleSet.buttonTab);
-        if (tab != selectedCategory || modelNames == null)
+        if (tab != selectedCategory || modelThumbnails == null)
         {
             selectedCategory = tab;
             scroll = Vector2.zero;
             scrollVelocity = Vector2.zero;
 
-            var category = ResourcesDirectory.GetModelDatabase().categories[selectedCategory];
-            modelNames = category.models.ToArray();
+            modelThumbnails = GetCategory().models.Select(
+                name => ResourcesDirectory.GetModelThumbnail(name)).ToArray();
         }
 
         scroll = GUILayout.BeginScrollView(scroll);
-        int selection = GUILayout.SelectionGrid(-1, modelNames, 1, StyleSet.buttonLarge);
+        int selection = GUILayout.SelectionGrid(-1, modelThumbnails, 4, StyleSet.buttonSmall);
         if (selection != -1)
         {
-            handler(modelNames[selection]);
+            handler(GetCategory().models[selection]);
             Destroy(this);
         }
         GUILayout.EndScrollView();

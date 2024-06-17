@@ -101,4 +101,9 @@ public static class ResourcesDirectory
         else if (style == ColorStyle.TINT)
             material.mainTexture = FindMaterial(material.name, true).mainTexture;
     }
+
+    public static Texture2D GetModelThumbnail(string name)
+    {
+        return Resources.Load<Texture2D>("Thumbnails/" + name);
+    }
 }
