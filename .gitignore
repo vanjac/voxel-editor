@@ -85,6 +85,8 @@ ios-build/
 /Assets/GameAssets/3dtextures/*/*.png
 /Assets/GameAssets/NASA/*.tif
 /Assets/GameAssets/Footsteps/*.wav
+/Assets/Resources/GameAssets/Models/*.obj
+/Assets/Resources/Thumbnails/*.png
 
 *.keystore
 upload_certificate.pem

@@ -41,6 +41,7 @@ public static class GenerateModelThumbnails
                 System.IO.File.WriteAllBytes(writePath, readableTexture.EncodeToPNG());
                 Object.DestroyImmediate(readableTexture);
 
+                AssetDatabase.Refresh();
                 var importer = AssetImporter.GetAtPath(writePath) as TextureImporter;
                 importer.textureType = TextureImporterType.GUI;
                 importer.SaveAndReimport();

@@ -195,7 +195,8 @@ public static class GameScripts
     public static PropertiesObjectType[] objects = new PropertiesObjectType[]
     {
         PlayerObject.objectType,
-        BallObject.objectType
+        BallObject.objectType,
+        PropObject.objectType,
     };
 
     public static PropertiesObjectType[] objectTemplates = new PropertiesObjectType[]
@@ -206,6 +207,13 @@ public static class GameScripts
             ball.behaviors.Add(new VisibleBehavior());
             ball.behaviors.Add(new SolidBehavior());
             return ball;
+        }),
+        new PropertiesObjectType(PropObject.objectType, () =>
+        {
+            PropObject prop = new PropObject();
+            prop.behaviors.Add(new VisibleBehavior());
+            prop.behaviors.Add(new SolidBehavior());
+            return prop;
         }),
         new PropertiesObjectType("Empty", typeof(BallObject))
         {
@@ -257,7 +265,8 @@ public static class GameScripts
     {
         Entity.objectType,
         Substance.objectType,
-        BallObject.objectType
+        BallObject.objectType,
+        PropObject.objectType,
     };
 
 }

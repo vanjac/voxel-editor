@@ -4,6 +4,9 @@ Images:
     Space spheremap from NASA
     Icons from materialdesignicons.com
 
+Models:
+    Low Poly 3D Art by Synty (Unity Asset Store)
+
 Fonts:
     Roboto
     Designed by Christian Robertson. From Google.

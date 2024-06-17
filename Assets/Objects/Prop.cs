@@ -12,7 +12,7 @@ public class PropObject : ObjectEntity
     };
     public override PropertiesObjectType ObjectType => objectType;
 
-    public string modelName = "";
+    public string modelName = "SM_Primitive_Cone_03";
 
     public PropObject()
     {
