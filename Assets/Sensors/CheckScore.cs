@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreComponent>
 {
@@ -25,7 +26,8 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
             new Property("cmp", s => s.PropScoreIs,
                 () => compare,
                 v => compare = (AboveOrBelow)v,
-                PropertyGUIs.Enum),
+                PropertyGUIs.EnumIcons(
+                    new Texture[]{ GUIPanel.IconSet.greaterEqual, GUIPanel.IconSet.lessEqual })),
             new Property("thr", s => s.PropThreshold,
                 () => threshold,
                 v => threshold = (int)v,
