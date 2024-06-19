@@ -553,6 +553,8 @@ public class GUIStringSet
         "To";
     public virtual string PropRelativeTo =>
         "Relative to";
+    public virtual string PropModel =>
+        "Model";
 
     // Object names/descriptions
     public virtual string NoneName =>

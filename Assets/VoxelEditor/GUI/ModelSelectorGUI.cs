@@ -24,7 +24,7 @@ public class ModelSelectorGUI : GUIPanel
 
     public override void WindowGUI()
     {
-        int tab = GUILayout.SelectionGrid(selectedCategory, categoryIcons, categoryIcons.Count(),
+        int tab = GUILayout.SelectionGrid(selectedCategory, categoryIcons, categoryIcons.Length,
             StyleSet.buttonTab);
         if (tab != selectedCategory || modelThumbnails == null)
         {

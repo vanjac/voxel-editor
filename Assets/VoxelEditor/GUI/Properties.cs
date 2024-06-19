@@ -110,7 +110,6 @@ public static class PropertyGUIs
     public static void Enum(Property property)
     {
         System.Enum e = (System.Enum)property.value;
-        var buttonStyle = GUIPanel.StyleSet.buttonTab;
         GUILayout.BeginHorizontal();
         foreach (var enumValue in System.Enum.GetValues(e.GetType()))
         {
@@ -122,11 +121,27 @@ public static class PropertyGUIs
             else
                 name = Char.ToUpper(name[0]) + name.Substring(1).ToLower();
             if (enumValue.Equals(e))
-                GUIUtils.HighlightedButton(name, buttonStyle);
-            else if (GUILayout.Button(name, buttonStyle))
+                GUIUtils.HighlightedButton(name, GUIPanel.StyleSet.buttonTab);
+            else if (GUILayout.Button(name, GUIPanel.StyleSet.buttonTab))
                 property.value = enumValue;
         }
         GUILayout.EndHorizontal();
+    }
+
+    public static PropertyGUI EnumIcons(Texture[] icons)
+    {
+        return property => {
+            int eValue = (int)property.value;
+            GUILayout.BeginHorizontal();
+            for (int i = 0; i < icons.Length; i++)
+            {
+                if (eValue == i)
+                    GUIUtils.HighlightedButton(icons[i], GUIPanel.StyleSet.buttonTab);
+                else if (GUILayout.Button(icons[i], GUIPanel.StyleSet.buttonTab))
+                    property.value = i;
+            }
+            GUILayout.EndHorizontal();
+        };
     }
 
     private static bool ParseFloat(string s, out float result)

@@ -30,7 +30,7 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
 
     private void UpdateMaterials()
     {
-        Renderer renderer = GetComponent<Renderer>();
+        Renderer renderer = GetComponentInChildren<Renderer>();
         if (renderer == null || objectEntity == null)
             return;
         List<Material> materials = new List<Material>();

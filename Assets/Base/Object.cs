@@ -62,7 +62,7 @@ public abstract class ObjectEntity : DynamicEntity
         c.health = health;
         if (storeComponent)
             component = c;
-        Renderer renderer = c.GetComponent<Renderer>();
+        Renderer renderer = c.GetComponentInChildren<Renderer>();
         if (renderer != null)
         {
             List<Material> materials = new List<Material>();

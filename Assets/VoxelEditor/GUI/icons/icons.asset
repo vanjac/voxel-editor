@@ -71,6 +71,10 @@ MonoBehaviour:
   outgoing: {fileID: 2800000, guid: c1541e99001de67499abd2035f4dd25b, type: 3}
   incoming: {fileID: 2800000, guid: ce5e2b2696d009549918e698e86fb355, type: 3}
   model: {fileID: 2800000, guid: ae85ead688b361b4a9aa8c4fb21f2440, type: 3}
+  alignBottom: {fileID: 2800000, guid: a8dc91a081059b84595bd09d9d767280, type: 3}
+  alignCenter: {fileID: 2800000, guid: a377471e9bdb42a4fa1c6db85382c340, type: 3}
+  alignTop: {fileID: 2800000, guid: 1385bdadf6cd7c74e81cb18a5fb22185, type: 3}
+  origin: {fileID: 2800000, guid: abdf191ebcb245c40b9024588d0f0337, type: 3}
   indoorLarge: {fileID: 2800000, guid: 8429c955cd8746144b2d97cae562dce3, type: 3}
   floatingLarge: {fileID: 2800000, guid: 97faa5cce5f220b4caf45ea271a96c03, type: 3}
   newWorldLarge: {fileID: 2800000, guid: a6b7305e08a770c42aa700fbd66af21a, type: 3}
