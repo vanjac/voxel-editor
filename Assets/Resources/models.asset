@@ -15,8 +15,6 @@ MonoBehaviour:
   categories:
   - icon: {fileID: 2800000, guid: ae85ead688b361b4a9aa8c4fb21f2440, type: 3}
     models:
-    - SM_Primitive_Cone_03
-    - Torus
     - SM_Primitive_Helix_01
     - SM_Primitive_SoccerBall_01
   - icon: {fileID: 2800000, guid: cff0e338481dbed4eb274490963998b9, type: 3}
