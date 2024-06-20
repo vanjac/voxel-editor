@@ -87,7 +87,6 @@ ios-build/
 /Assets/GameAssets/Footsteps/*.wav
 /Assets/Resources/GameAssets/*.obj
 /Assets/Resources/GameAssets/Models/*.obj
-/Assets/Resources/Thumbnails/*.png
 
 *.keystore
 upload_certificate.pem
