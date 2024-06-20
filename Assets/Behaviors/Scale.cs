@@ -39,12 +39,14 @@ public class ScaleComponent : BehaviorComponent<ScaleBehavior>
         var scale = behavior.scale;
         if (GetComponent<ObjectMarker>()) // editor preview
         {
-            scale.x = Mathf.Max(scale.x, 0.1f);
-            scale.y = Mathf.Max(scale.y, 0.1f);
-            scale.z = Mathf.Max(scale.z, 0.1f);
+            scale.x = AdjustPreviewScale(scale.x);
+            scale.y = AdjustPreviewScale(scale.y);
+            scale.z = AdjustPreviewScale(scale.z);
         }
         transform.localScale = scale;
     }
+
+    private float AdjustPreviewScale(float s) => Mathf.Sign(s) * Mathf.Max(Mathf.Abs(s), 0.1f);
 
     public override void BehaviorDisabled()
     {
