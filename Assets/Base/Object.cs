@@ -29,6 +29,8 @@ public abstract class ObjectEntity : DynamicEntity
 
     protected virtual Vector3 PositionInGame() => position;
 
+    public virtual Bounds PlacementBounds() => new Bounds();
+
     public override bool AliveInEditor() => marker != null;
 
     public override void SetHighlight(Color c)

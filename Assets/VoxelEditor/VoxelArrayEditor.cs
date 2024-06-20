@@ -1497,12 +1497,18 @@ public class VoxelArrayEditor : VoxelArray
     public void PlaceObject(ObjectEntity obj)
     {
         Vector3 createPosition = selectionBounds.center; // not int
+        Vector3 createDirection = Vector3.up;
         int faceNormal = GetSelectedFaceNormal();
-        Vector3 createDirection = Voxel.DirectionForFaceI(faceNormal);
-        if (faceNormal != -1)
-            createPosition += createDirection / 2;
-        else // different normals
-            createDirection = Vector3.up;
+        if (faceNormal != -1) // same normal for all faces
+        {
+            createDirection = Voxel.DirectionForFaceI(faceNormal);
+            int createAxis = Voxel.FaceIAxis(faceNormal);
+            var bounds = obj.PlacementBounds();
+            var boundsVec = (faceNormal % 2 == 0) ? bounds.max : bounds.min;
+            Vector3 createOffset = Vector3.zero;
+            createOffset[createAxis] = boundsVec[createAxis];
+            createPosition -= createOffset;
+        }
 
         // don't create the object at the same location of an existing object
         // keep moving in the direction of the face normal until an empty space is found

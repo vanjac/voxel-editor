@@ -20,6 +20,8 @@ public class BallObject : ObjectEntity
         paint.material.color = Color.red;
     }
 
+    public override Bounds PlacementBounds() => new Bounds(Vector3.zero, Vector3.one);
+
     public override IEnumerable<Property> DeprecatedProperties() =>
         Property.JoinProperties(base.DeprecatedProperties(), new Property[]
         {
