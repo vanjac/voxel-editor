@@ -12,6 +12,8 @@ for root, dirs, files in os.walk(in_path):
 
         bpy.ops.import_scene.fbx(filepath=os.path.join(in_path, f))
 
+        bpy.ops.object.select_all(action='SELECT')
+        bpy.ops.object.transform_apply(location=False)
 
         for obj in bpy.data.objects:
             bpy.context.view_layer.objects.active = obj

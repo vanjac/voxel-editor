@@ -211,6 +211,7 @@ public static class GameScripts
         new PropertiesObjectType(PropObject.objectType, () =>
         {
             PropObject prop = new PropObject();
+            prop.behaviors.Add(new ScaleBehavior());
             prop.behaviors.Add(new VisibleBehavior());
             prop.behaviors.Add(new SolidBehavior());
             return prop;

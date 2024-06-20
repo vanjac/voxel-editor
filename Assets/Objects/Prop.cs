@@ -18,7 +18,7 @@ public class PropObject : ObjectEntity
     };
     public override PropertiesObjectType ObjectType => objectType;
 
-    public string modelName = "SM_Primitive_Cone_03";
+    public string modelName = "SM_Primitive_SoccerBall_01";
     public ObjectAlignment align = ObjectAlignment.Default;
 
     public PropObject()
