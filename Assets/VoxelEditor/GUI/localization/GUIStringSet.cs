@@ -1094,19 +1094,18 @@ If you have any questions, feedback, or suggestions, please send me an email:
         "If you enjoy N-Space, please consider donating to support development, using the Donate link in the menu. Thanks!";
 
     // Update messages
-    public virtual string UpdateMessage_1_3_6 =>
-@"N-Space has been updated!
+    public virtual string UpdateMessage_1_4_0_beta =>
+@"N-Space has been updated! You're on the <b>Beta</b> channel, so you'll get updates early. Feedback is appreciated!
 
-I'm looking for help with translation. If you would like to help translate this app to another language, please email me: <i>chroma@chroma.zone</i>
-Thanks!
+<i>Files saved with this version will not work with older versions!</i>
 
-Changes in this update (v1.3.6):
-•  Improved Paint panel UI
-•  Only show Score in HUD if it's being used
-•  Fixed bug with selecting custom textures from recent paint list
-•  Fixed issue with scroll momentum
-•  Fixed selecting no material/overlay in the paint panel
-•  Added various icons to help usability
-•  Other minor bug fixes
-•  Lots of internal restructuring";
+Changes in this update (v1.4.0 beta):
+•  New ""Prop"" object with a built-in selection of 3D models
+•  Objects can be moved by half-steps
+•  Objects show their scale in the editor
+        (this doesn't work for Substances)
+•  Menu options to select all incoming/outgoing connections
+•  Fixed issue with entering decimal separators in certain languages
+•  Fixed starting position of player
+•  Other various bug fixes";
 }
