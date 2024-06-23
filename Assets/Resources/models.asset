@@ -46,7 +46,6 @@ MonoBehaviour:
     models:
     - SM_Generic_Small_Rocks_01
     - SM_Generic_Small_Rocks_02
-    - SM_Gerneric_Grass_Patch_01
     - SM_Gerneric_Grass_Patch_02
     - SM_Prop_Tree_Bush_01
   - icon: {fileID: 2800000, guid: d2e6970125c54014dab222a78bc4611a, type: 3}
