@@ -14,7 +14,7 @@ public static class GenerateModelThumbnails
             fileInfo.Delete();
         }
 
-        string[] guids = AssetDatabase.FindAssets("", new string[]{ SEARCH_PATH });
+        string[] guids = AssetDatabase.FindAssets("", new string[] { SEARCH_PATH });
         foreach (string guid in guids)
         {
             string fullPath = AssetDatabase.GUIDToAssetPath(guid);

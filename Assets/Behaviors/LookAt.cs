@@ -7,7 +7,7 @@ public class LookAtBehavior : GenericEntityBehavior<LookAtBehavior, LookAtCompon
     {
         displayName = s => s.LookAtName,
         description = s => s.LookAtDesc,
-        longDescription =  s => s.LookAtLongDesc,
+        longDescription = s => s.LookAtLongDesc,
         iconName = "compass",
         rule = BehaviorType.BaseTypeRule(typeof(DynamicEntity)),
     };

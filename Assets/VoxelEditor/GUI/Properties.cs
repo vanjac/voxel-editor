@@ -130,7 +130,8 @@ public static class PropertyGUIs
 
     public static PropertyGUI EnumIcons(Texture[] icons)
     {
-        return property => {
+        return property =>
+        {
             int eValue = (int)property.value;
             GUILayout.BeginHorizontal();
             for (int i = 0; i < icons.Length; i++)
@@ -521,7 +522,8 @@ public static class PropertyGUIs
             var modelSelector = GUIPanel.GuiGameObject.AddComponent<ModelSelectorGUI>();
             modelSelector.title = selectString;
             modelSelector.selectedModel = (string)property.value;
-            modelSelector.handler = model => {
+            modelSelector.handler = model =>
+            {
                 property.setter(model);
             };
         }
@@ -676,20 +678,20 @@ public static class PropertyGUIs
         else
         {
             pivotString = (int)pivot.y switch
-                {0 => StringSet.Bottom + " ", 2 => StringSet.Top + " ", _ => ""};
+            { 0 => StringSet.Bottom + " ", 2 => StringSet.Top + " ", _ => "" };
             if (pivot.x == Pivot.Pos.Center || pivot.z == Pivot.Pos.Center)
             {
                 pivotString += (int)pivot.z switch
-                    {0 => StringSet.South, 2 => StringSet.North, _ => ""};
+                { 0 => StringSet.South, 2 => StringSet.North, _ => "" };
                 pivotString += (int)pivot.x switch
-                    {0 => StringSet.West, 2 => StringSet.East, _ => ""};
+                { 0 => StringSet.West, 2 => StringSet.East, _ => "" };
             }
             else
             {
                 pivotString += (int)pivot.z switch
-                    {0 => StringSet.SouthLetter, 2 => StringSet.NorthLetter, _ => ""};
+                { 0 => StringSet.SouthLetter, 2 => StringSet.NorthLetter, _ => "" };
                 pivotString += (int)pivot.x switch
-                    {0 => StringSet.WestLetter, 2 => StringSet.EastLetter, _ => ""};
+                { 0 => StringSet.WestLetter, 2 => StringSet.EastLetter, _ => "" };
             }
         }
 

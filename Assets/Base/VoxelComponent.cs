@@ -156,7 +156,8 @@ public class VoxelComponent : MonoBehaviour
                 {
                     if (!voxel.faces[faceNum].IsEmpty())
                     {
-                        faceVertexIndices[numFaces++] = new FaceVertexIndex() {
+                        faceVertexIndices[numFaces++] = new FaceVertexIndex()
+                        {
                             loc = new VoxelFaceLoc(pos, faceNum),
                             index = numVertices
                         };

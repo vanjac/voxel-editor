@@ -54,10 +54,10 @@ public class PropObject : ObjectEntity
                     GUIPanel.IconSet.origin,
                 })),
         });
-    
+
     private Mesh GetMesh() => Resources.Load<Mesh>("GameAssets/Models/" + modelName)
         ?? Resources.Load<Mesh>("GameAssets/error_model");
-    
+
     private GameObject CreatePropObject()
     {
         var mesh = GetMesh();
@@ -76,12 +76,13 @@ public class PropObject : ObjectEntity
         return rootGO;
     }
 
-    private Vector3 GetMeshPositionOffset(Mesh mesh) {
+    private Vector3 GetMeshPositionOffset(Mesh mesh)
+    {
         var yPos = align switch
         {
             ObjectAlignment.Bottom => -mesh.bounds.min.y,
             ObjectAlignment.Center => -mesh.bounds.center.y,
-            ObjectAlignment.Top    => -mesh.bounds.max.y,
+            ObjectAlignment.Top => -mesh.bounds.max.y,
             _ => 0,
         };
         return new Vector3(0, yPos, 0);

@@ -65,7 +65,7 @@ public class VoxelArray : MonoBehaviour
 
     public VoxelFace FaceAt(VoxelFaceLoc loc) =>
         VoxelAt(loc.position, false)?.faces?[loc.faceI] ?? default;
-    
+
     public bool SetFace(VoxelFaceLoc loc, VoxelFace face)
     {
         var voxel = VoxelAt(loc.position, !face.IsEmpty());

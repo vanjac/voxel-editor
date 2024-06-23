@@ -1426,7 +1426,7 @@ public class VoxelArrayEditor : VoxelArray
         if (alsoBevelOppositeConcaveEdge && type == EdgeType.CONCAVE)
         {
             var oppEdgeLoc = OpposingEdgeLoc(edgeLoc);
-            bool oppEdgeExists = ChangeEdge(oppEdgeLoc, e => new VoxelEdge(e){ bevel = edge.bevel }, false);
+            bool oppEdgeExists = ChangeEdge(oppEdgeLoc, e => new VoxelEdge(e) { bevel = edge.bevel }, false);
             if (oppEdgeExists)
             {
                 UpdateBevel(oppEdgeLoc, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
@@ -1436,7 +1436,7 @@ public class VoxelArrayEditor : VoxelArray
         else if (alsoBevelOppositeFlatEdge && type == EdgeType.FLAT)
         {
             var oppEdgeLoc = OpposingFlatEdgeLoc(edgeLoc);
-            bool oppEdgeExists = ChangeEdge(oppEdgeLoc, e => new VoxelEdge(e){ bevel = edge.bevel }, false);
+            bool oppEdgeExists = ChangeEdge(oppEdgeLoc, e => new VoxelEdge(e) { bevel = edge.bevel }, false);
             if (oppEdgeExists)
             {
                 UpdateBevel(oppEdgeLoc, voxelsToUpdate, alsoBevelOppositeConcaveEdge: false,
