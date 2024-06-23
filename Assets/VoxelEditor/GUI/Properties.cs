@@ -518,8 +518,9 @@ public static class PropertyGUIs
         var selectString = StringSet.SelectProperty(property.name(StringSet));
         if (GUILayout.Button(GUIUtils.PadContent(selectString, GUIPanel.IconSet.model)))
         {
-            ModelSelectorGUI modelSelector = GUIPanel.GuiGameObject.AddComponent<ModelSelectorGUI>();
+            var modelSelector = GUIPanel.GuiGameObject.AddComponent<ModelSelectorGUI>();
             modelSelector.title = selectString;
+            modelSelector.selectedModel = (string)property.value;
             modelSelector.handler = model => {
                 property.setter(model);
             };

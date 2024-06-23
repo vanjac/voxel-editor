@@ -4,8 +4,10 @@ using UnityEngine;
 public class ModelSelectorGUI : GUIPanel
 {
     public System.Action<string> handler;
+    public string selectedModel = "";
 
     private int selectedCategory = 0;
+    private int selectedIndex = -1;
     private Texture2D[] categoryIcons;
     private Texture2D[] modelThumbnails;
 
@@ -15,30 +17,42 @@ public class ModelSelectorGUI : GUIPanel
 
     void Start()
     {
-        categoryIcons = ResourcesDirectory.GetModelDatabase().categories.Select(cat => cat.icon)
-            .ToArray();
+        var categories = ResourcesDirectory.GetModelDatabase().categories;
+        categoryIcons = categories.Select(cat => cat.icon).ToArray();
+        selectedCategory = categories.FindIndex(cat => cat.models.Contains(selectedModel));
+        if (selectedCategory == -1)
+            selectedCategory = 0;
+        UpdateCategory();
     }
 
     private ModelCategory GetCategory() =>
         ResourcesDirectory.GetModelDatabase().categories[selectedCategory];
 
+    private void UpdateCategory()
+    {
+        scroll = Vector2.zero;
+        scrollVelocity = Vector2.zero;
+
+        var category = GetCategory();
+        modelThumbnails = category.models.Select(
+            name => ResourcesDirectory.GetModelThumbnail(name)).ToArray();
+        selectedIndex = category.models.IndexOf(selectedModel);
+    }
+
     public override void WindowGUI()
     {
         int tab = GUILayout.SelectionGrid(selectedCategory, categoryIcons, categoryIcons.Length,
             StyleSet.buttonTab);
-        if (tab != selectedCategory || modelThumbnails == null)
+        if (tab != selectedCategory)
         {
             selectedCategory = tab;
-            scroll = Vector2.zero;
-            scrollVelocity = Vector2.zero;
-
-            modelThumbnails = GetCategory().models.Select(
-                name => ResourcesDirectory.GetModelThumbnail(name)).ToArray();
+            UpdateCategory();
         }
 
         scroll = GUILayout.BeginScrollView(scroll);
-        int selection = GUILayout.SelectionGrid(-1, modelThumbnails, 4, StyleSet.buttonSmall);
-        if (selection != -1)
+        int selection = GUILayout.SelectionGrid(
+            selectedIndex, modelThumbnails, 4, StyleSet.buttonSmall);
+        if (selection != selectedIndex)
         {
             handler(GetCategory().models[selection]);
             Destroy(this);
