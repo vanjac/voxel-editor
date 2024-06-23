@@ -16,8 +16,13 @@ MonoBehaviour:
   - icon: {fileID: 2800000, guid: ae85ead688b361b4a9aa8c4fb21f2440, type: 3}
     models:
     - SM_Primitive_SoccerBall_01
+    - SM_Primitive_Cone_02
     - SM_Primitive_Torus_02
     - SM_Primitive_Helix_01
+    - SM_Buildings_Rail_1x1_01
+    - SM_Prop_Pipe_01
+    - SM_Prop_Pipe_02
+    - SM_Prop_Pipe_Curve_01
   - icon: {fileID: 2800000, guid: e5cfd38b60f43234fb72bf41d555ca5f, type: 3}
     models:
     - SM_Icon_Coin_01
@@ -42,8 +47,6 @@ MonoBehaviour:
     - SM_Prop_Tree_Palm_01
     - SM_Generic_TreeDead_01
     - SM_Generic_TreeStump_01
-  - icon: {fileID: 2800000, guid: 50a06eb9af5b0424eb3156078f2b5e49, type: 3}
-    models:
     - SM_Generic_Small_Rocks_01
     - SM_Generic_Small_Rocks_02
     - SM_Gerneric_Grass_Patch_02

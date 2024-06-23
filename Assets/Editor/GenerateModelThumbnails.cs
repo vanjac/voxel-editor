@@ -9,15 +9,10 @@ public static class GenerateModelThumbnails
     [MenuItem("Tools/Generate N-Space model thumbnails")]
     public static void Generate()
     {
-        foreach (var fileInfo in new System.IO.DirectoryInfo(WRITE_PATH).GetFiles())
-        {
-            fileInfo.Delete();
-        }
-
         string[] guids = AssetDatabase.FindAssets("", new string[] { SEARCH_PATH });
-        foreach (string guid in guids)
+        foreach (var obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
         {
-            string fullPath = AssetDatabase.GUIDToAssetPath(guid);
+            string fullPath = AssetDatabase.GetAssetPath(obj);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(fullPath);
             Mesh mesh = AssetDatabase.LoadAssetAtPath<Mesh>(fullPath);
 
