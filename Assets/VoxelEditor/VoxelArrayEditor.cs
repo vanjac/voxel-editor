@@ -151,6 +151,7 @@ public class VoxelArrayEditor : VoxelArray
     private Substance boxSelectSubstance = null;
     // dummy Substance to use for boxSelectSubstance when selecting objects
     private readonly Substance selectObjectSubstance = new Substance();
+    // Used for: box selection, axes placement, object creation
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     public Substance substanceToCreate = null;
@@ -957,6 +958,7 @@ public class VoxelArrayEditor : VoxelArray
         if (substanceToCreate != null && createdSubstance)
             substanceToCreate = null;
 
+        selectionBounds.center += (Vector3)adjustDirection * scale;
         AutoSetMoveAxesEnabled();
     }
 
