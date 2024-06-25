@@ -2,7 +2,7 @@
 
 public class RotateAxis : TransformAxis
 {
-    private const float SNAP = 45;
+    private const float SNAP = 15;
 
     private float startTouchAngle;
     private float startAxisAngle;
