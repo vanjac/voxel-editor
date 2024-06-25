@@ -40,6 +40,7 @@ public class GameTouchControl : MonoBehaviour
             return; // sometimes null for a few cycles
         RaycastHit hit;
         bool setAxes = false;
+        // TODO: switch to pointer events?
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch touch = Input.GetTouch(i);
