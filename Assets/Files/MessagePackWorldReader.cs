@@ -76,7 +76,10 @@ public class MessagePackWorldReader : WorldFileReader
 
         if (worldDict[FileKeys.WORLD_MIN_READER_VERSION].AsInt32() > VERSION)
         {
-            throw new MapReadException("This world file requires a newer version of the app");
+            var reason = "This world file requires a newer version of the app";
+            if (worldDict.ContainsKey(FileKeys.WORLD_APPLICATION_VERSION))
+                reason += $" (v{worldDict[FileKeys.WORLD_APPLICATION_VERSION].AsString()})";
+            throw new MapReadException(reason);
         }
         fileWriterVersion = worldDict[FileKeys.WORLD_WRITER_VERSION].AsInt32();
         Debug.Log("Saved with writer version " + fileWriterVersion);
