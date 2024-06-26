@@ -34,30 +34,33 @@ public class ObjectMarker : MonoBehaviour, VoxelArrayEditor.Selectable
         if (renderer == null || objectEntity == null)
             return;
         List<Material> materials = new List<Material>();
+        int layer = 0; // default
         if (objectEntity.highlight != Color.clear && !selected)
         {
             materials.Add(objectEntity.highlightMaterial);
-            gameObject.layer = 0; // default
         }
         else if (objectEntity != null && objectEntity.xRay)
         {
             materials.Add(VoxelComponent.xRayMaterial);
-            gameObject.layer = 8; // XRay layer
+            layer = 8; // XRay layer
         }
         else
         {
             if (objectEntity.paint.material != null)
-            {
                 materials.Add(objectEntity.paint.material);
-                gameObject.layer = 0; // default
-            }
             else
-                gameObject.layer = 10; // TransparentObject
+                layer = 10; // TransparentObject
+
             if (objectEntity.paint.overlay != null)
                 materials.Add(objectEntity.paint.overlay);
         }
         if (selected)
             materials.Add(VoxelComponent.selectedMaterial);
         renderer.materials = materials.ToArray();
+
+        gameObject.layer = layer;
+        Collider collider = GetComponentInChildren<Collider>();
+        if (collider != null)
+            collider.gameObject.layer = layer;
     }
 }
