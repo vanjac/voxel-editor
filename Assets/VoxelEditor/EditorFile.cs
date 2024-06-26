@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class EditorFile : MonoBehaviour
     public TouchListener touchListener;
 
     // importWorldHandler MUST dispose stream and call ShareMap.ClearFileWaitingToImport() when finished
-    public System.Action<System.IO.Stream> importWorldHandler;
+    public Action<System.IO.Stream> importWorldHandler;
 
     void Start()
     {
@@ -62,13 +63,18 @@ public class EditorFile : MonoBehaviour
 
         if (PlayerPrefs.HasKey("last_editScene_version"))
         {
-            string lastVersion = PlayerPrefs.GetString("last_editScene_version");
-            if (lastVersion.EndsWith("b"))
-                lastVersion = lastVersion.Substring(0, lastVersion.Length - 1);
-            if (CompareVersions(lastVersion, "1.4.0") == -1)
+            string lastVerStr = PlayerPrefs.GetString("last_editScene_version");
+            if (ParseAppVersion(lastVerStr, out var lastVersion))
             {
-                LargeMessageGUI.ShowLargeMessageDialog(guiGameObject,
-                    GUIPanel.StringSet.UpdateMessage_1_4_0_beta);
+                if (lastVersion < new Version(1, 4, 0))
+                {
+                    LargeMessageGUI.ShowLargeMessageDialog(guiGameObject,
+                        GUIPanel.StringSet.UpdateMessage_1_4_0_beta);
+                }
+            }
+            else
+            {
+                Debug.LogError("Unable to parse version: " + lastVerStr);
             }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
@@ -85,13 +91,12 @@ public class EditorFile : MonoBehaviour
         }
     }
 
-    // 1: a is greater; -1: b is greater; 0: equal
-    private static int CompareVersions(string a, string b)
+    private bool ParseAppVersion(string str, out Version version)
     {
-        if (System.Version.TryParse(a, out var verA) && System.Version.TryParse(b, out var verB))
-            return verA.CompareTo(verB);
-        else
-            return 0;
+        if (str.EndsWith("b"))
+            str = str.Substring(0, str.Length - 1); // 1.3.4b, 1.3.6b
+        str = str.Split('-')[0]; // remove pre-release suffix
+        return Version.TryParse(str, out version);
     }
 
     public bool Save(bool allowPopups = true)
@@ -122,7 +127,7 @@ public class EditorFile : MonoBehaviour
             voxelArray.unsavedChanges = false;
             return true;
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             if (allowPopups)
             {
@@ -187,7 +192,7 @@ public class EditorFile : MonoBehaviour
                     stream = ShareMap.GetImportStream();
                     importWorldHandler(stream);
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject,
                         GUIPanel.StringSet.UnknownReadError);
