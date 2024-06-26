@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -85,24 +85,11 @@ public class EditorFile : MonoBehaviour
         }
     }
 
-    // 1: a is greater; -1: b is creater; 0: equal
+    // 1: a is greater; -1: b is greater; 0: equal
     private static int CompareVersions(string a, string b)
     {
-        string[] aNums = a.Split('.');
-        string[] bNums = b.Split('.');
-        for (int i = 0; i < aNums.Length; i++)
-        {
-            if (i >= bNums.Length)
-                return 1;
-            int numA = int.Parse(aNums[i]);
-            int numB = int.Parse(bNums[i]);
-            if (numA > numB)
-                return 1;
-            else if (numB > numA)
-                return -1;
-        }
-        if (bNums.Length > aNums.Length)
-            return -1;
+        if (System.Version.TryParse(a, out var verA) && System.Version.TryParse(b, out var verB))
+            return verA.CompareTo(verB);
         else
             return 0;
     }
