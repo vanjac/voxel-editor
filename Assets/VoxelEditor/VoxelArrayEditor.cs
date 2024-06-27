@@ -992,14 +992,15 @@ public class VoxelArrayEditor : VoxelArray
                 // remove selection
                 selectedThings.Remove(faceSel);
                 voxelsToUpdate.Add(oldPos);
+                return false;
             }
             else
             {
                 selectedThings.Add(opposingFaceSel);
-                AdjustSelectedFace(opposingFaceSel, adjustDirection, null, voxelsToUpdate); // recurse!
                 // need to move the other substance out of the way first
+                AdjustSelectedFace(opposingFaceSel, adjustDirection, null, voxelsToUpdate); // recurse!
+                // now it's safe to move this face
             }
-            return false;
         }
 
         VoxelFace movingFace = oldVoxel.faces[faceI];
