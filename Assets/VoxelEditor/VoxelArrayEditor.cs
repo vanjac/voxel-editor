@@ -151,7 +151,7 @@ public class VoxelArrayEditor : VoxelArray
     private Substance boxSelectSubstance = null;
     // dummy Substance to use for boxSelectSubstance when selecting objects
     private readonly Substance selectObjectSubstance = new Substance();
-    // Used for: box selection, axes placement, object creation
+    // Used for: box selection, measurement UI
     public Bounds selectionBounds = new Bounds(Vector3.zero, Vector3.zero);
 
     public Substance substanceToCreate = null;
@@ -272,7 +272,7 @@ public class VoxelArrayEditor : VoxelArray
             // avoid issues when tapping things with overlapping bounds
             //UpdateBoxSelection();
             SelectThing(thing);
-            SetMoveAxes(selectionBounds.center);
+            SetMoveAxesSelectionBounds();
         }
         DisableMoveAxes();
     }
@@ -378,6 +378,11 @@ public class VoxelArrayEditor : VoxelArray
         if (axes == null)
             return;
         axes.position = position;
+    }
+
+    private void SetMoveAxesSelectionBounds()
+    {
+        SetMoveAxes(selectionBounds.center);
     }
 
     private void DisableMoveAxes()
@@ -555,8 +560,8 @@ public class VoxelArrayEditor : VoxelArray
 
     private void UpdateBoxSelection()
     {
+        SetMoveAxesSelectionBounds();
         var bounds = selectionBounds;
-        SetMoveAxes(bounds.center);
 
         // update selection...
         var toDeselect = new List<Selectable>();
@@ -687,7 +692,7 @@ public class VoxelArrayEditor : VoxelArray
             selectionBounds.Encapsulate(Voxel.FaceBounds(faceLoc));
         }
 
-        SetMoveAxes(start.position + new Vector3(0.5f, 0.5f, 0.5f) - Voxel.OppositeDirectionForFaceI(start.faceI) / 2);
+        SetMoveAxes(Voxel.FaceBounds(start).center);
     }
 
     public void FillSelectPaint()
@@ -1499,7 +1504,7 @@ public class VoxelArrayEditor : VoxelArray
 
     public void PlaceObject(ObjectEntity obj)
     {
-        Vector3 createPosition = selectionBounds.center; // not int
+        Vector3 createPosition = axes.position; // not int
         Vector3 createDirection = Vector3.up;
         int faceNormal = GetSelectedFaceNormal();
         if (faceNormal != -1) // same normal for all faces
