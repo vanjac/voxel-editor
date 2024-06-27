@@ -124,7 +124,7 @@ public static class Tutorials
         () => new SimpleTutorialPage(StringSet.TutorialPitActivatorsExplain),
         () => new SimpleTutorialPage(StringSet.TutorialPitHurtPoints),
         () => new SimpleTutorialPage(StringSet.TutorialPitPlay),
-        () => new SimpleTutorialPage(StringSet.TutorialPitBalls),
+        () => new SimpleTutorialPage(StringSet.TutorialPitObjects),
     };
 
     private class TutorialIntroOrbit : TutorialPage

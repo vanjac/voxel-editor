@@ -1066,8 +1066,8 @@ Substances will rotate around their <b>Pivot</b> point.";
         "<i>Make the trigger hurt the Activator by -100 points.</i>";
     public virtual string TutorialPitPlay =>
         "<i>Play your game. Try jumping in the pit.</i>";
-    public virtual string TutorialPitBalls =>
-        "<i>Now try making some balls with Physics behaviors. Then play the game and push them all into the pit.</i> Enjoy.";
+    public virtual string TutorialPitObjects =>
+        "<i>Now try placing some Props with Physics behaviors. Then play the game and push them all into the pit.</i> Enjoy.";
 
     public virtual string AboutMessage(string appVersion, string unityVersion, string donate, string credits, string debugInfo) =>
 @$"<i>Version {appVersion}</i>
