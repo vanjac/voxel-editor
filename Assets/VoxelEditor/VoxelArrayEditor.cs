@@ -369,6 +369,7 @@ public class VoxelArrayEditor : VoxelArray
         {
             ClearSelection();
             SubstanceSelect(substance);
+            selectionBounds = CalcSelectionBounds();
         }
         AutoSetMoveAxesEnabled();
     }
@@ -558,6 +559,16 @@ public class VoxelArrayEditor : VoxelArray
         selectionChanged = true;
     }
 
+    private Bounds CalcSelectionBounds()
+    {
+        if (selectedThings.Count == 0)
+            return new Bounds(Vector3.zero, Vector3.zero);
+        var bounds = selectedThings.First().GetBounds();
+        foreach (var thing in selectedThings)
+            bounds.Encapsulate(thing.GetBounds());
+        return bounds;
+    }
+
     private void UpdateBoxSelection()
     {
         SetMoveAxesSelectionBounds();
@@ -660,7 +671,6 @@ public class VoxelArrayEditor : VoxelArray
 
         // reset selection bounds
         selectMode = SelectMode.FACE_FLOOD_FILL;
-        selectionBounds = Voxel.FaceBounds(start);
 
         while (facesToSelect.Count != 0)
         {
@@ -687,11 +697,9 @@ public class VoxelArrayEditor : VoxelArray
                     facesToSelect.Enqueue(new VoxelFaceLoc(newPos, Voxel.OppositeFaceI(sideFaceI)));
                 }
             }
-
-            // grow bounds
-            selectionBounds.Encapsulate(Voxel.FaceBounds(faceLoc));
         }
 
+        selectionBounds = CalcSelectionBounds();
         SetMoveAxes(Voxel.FaceBounds(start).center);
     }
 
@@ -710,12 +718,12 @@ public class VoxelArrayEditor : VoxelArray
     private void EdgeSelectFloodFill(VoxelEdgeLoc edgeLoc, Substance substance)
     {
         selectMode = SelectMode.EDGE_FLOOD_FILL;
-        selectionBounds = Voxel.EdgeBounds(edgeLoc);
         int minFaceI = Voxel.EdgeIAxis(edgeLoc.edgeI) * 2;
         Vector3Int minDir = Voxel.IntDirectionForFaceI(minFaceI);
         var edgeType = GetEdgeType(edgeLoc);
         SelectContiguousEdges(edgeLoc, substance, minDir, edgeType);
         SelectContiguousEdges(edgeLoc, substance, minDir * -1, edgeType);
+        selectionBounds = CalcSelectionBounds();
     }
 
     private void SelectContiguousEdges(VoxelEdgeLoc edgeLoc, Substance substance,
@@ -730,7 +738,6 @@ public class VoxelArrayEditor : VoxelArray
             if (contigEdgeType != edgeType)
                 break;
             SelectThing(new VoxelEdgeSelect(contigEdgeLoc));
-            selectionBounds.Encapsulate(Voxel.EdgeBounds(contigEdgeLoc));
 
             var oppEdgeLoc = OpposingEdgeLoc(contigEdgeLoc);
             var oppVoxel = VoxelAt(oppEdgeLoc.position, false);
@@ -741,6 +748,7 @@ public class VoxelArrayEditor : VoxelArray
 
     private void SubstanceSelect(Substance substance)
     {
+        selectMode = SelectMode.FACE_FLOOD_FILL;
         foreach (var (pos, voxel) in substance.voxelGroup.IterateVoxelPairs())
         {
             for (int i = 0; i < 6; i++)
@@ -748,12 +756,6 @@ public class VoxelArrayEditor : VoxelArray
                 if (!voxel.faces[i].IsEmpty())
                 {
                     SelectFace(pos, i);
-                    var faceBounds = Voxel.FaceBounds(new VoxelFaceLoc(pos, i));
-                    if (selectMode != SelectMode.FACE_FLOOD_FILL)
-                        selectionBounds = faceBounds;
-                    else
-                        selectionBounds.Encapsulate(faceBounds);
-                    selectMode = SelectMode.FACE_FLOOD_FILL;
                 }
             }
         }
@@ -773,7 +775,6 @@ public class VoxelArrayEditor : VoxelArray
 
     public void SelectAllWithTag(byte tag)
     {
-        // TODO: set position of move axes
         foreach (ObjectEntity entity in IterateObjects())
         {
             if (entity.tag == tag)
@@ -788,6 +789,7 @@ public class VoxelArrayEditor : VoxelArray
                         SelectFace(pos, faceI);
             }
         }
+        SetMoveAxes(CalcSelectionBounds().center);
         AutoSetMoveAxesEnabled();
     }
 
@@ -852,7 +854,8 @@ public class VoxelArrayEditor : VoxelArray
         {
             SelectEntireEntity(entity);
         }
-        AutoSetMoveAxesEnabled(); // TODO also set position
+        SetMoveAxes(CalcSelectionBounds().center);
+        AutoSetMoveAxesEnabled();
     }
 
     public void SelectIncomingConnections()
@@ -893,7 +896,8 @@ public class VoxelArrayEditor : VoxelArray
         {
             SelectEntireEntity(entity);
         }
-        AutoSetMoveAxesEnabled(); // TODO also set position
+        SetMoveAxes(CalcSelectionBounds().center);
+        AutoSetMoveAxesEnabled();
     }
 
     public SelectionState GetSelectionState()
@@ -963,7 +967,6 @@ public class VoxelArrayEditor : VoxelArray
         if (substanceToCreate != null && createdSubstance)
             substanceToCreate = null;
 
-        selectionBounds.center += (Vector3)adjustDirection * scale;
         AutoSetMoveAxesEnabled();
     }
 
