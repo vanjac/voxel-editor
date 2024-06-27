@@ -69,7 +69,7 @@ public class EditorFile : MonoBehaviour
                 if (lastVersion < new Version(1, 4, 0))
                 {
                     LargeMessageGUI.ShowLargeMessageDialog(guiGameObject,
-                        GUIPanel.StringSet.UpdateMessage_1_4_0_beta);
+                        GUIPanel.StringSet.UpdateMessage_1_4_0);
                 }
             }
             else

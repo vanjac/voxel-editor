@@ -1094,12 +1094,10 @@ If you have any questions, feedback, or suggestions, please send me an email:
         "If you enjoy N-Space, please consider donating to support development, using the Donate link in the menu. Thanks!";
 
     // Update messages
-    public virtual string UpdateMessage_1_4_0_beta =>
-@"N-Space has been updated! You're on the <b>Beta</b> channel, so you'll get updates early. Feedback is appreciated!
+    public virtual string UpdateMessage_1_4_0 =>
+@"N-Space has been updated!
 
-<i>Files saved with this version will not work with older versions!</i>
-
-Changes in this update (v1.4.0 beta):
+Changes in this update (v1.4.0):
 •  New ""Prop"" object with a built-in selection of 3D models
 •  Objects can be moved by half-steps
 •  Objects show their scale in the editor
@@ -1107,5 +1105,6 @@ Changes in this update (v1.4.0 beta):
 •  Menu options to select all incoming/outgoing connections
 •  Fixed issue with entering decimal separators in certain languages
 •  Fixed starting position of player
+•  Fixed object creation position
 •  Other various bug fixes";
 }
