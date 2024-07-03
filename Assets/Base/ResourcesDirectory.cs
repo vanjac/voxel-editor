@@ -99,7 +99,6 @@ public static class ResourcesDirectory {
         }
     }
 
-    public static Texture2D GetModelThumbnail(string name) {
-        return Resources.Load<Texture2D>("Thumbnails/" + name);
-    }
+    public static Texture2D GetModelThumbnail(string name) =>
+        Resources.Load<Texture2D>("Thumbnails/" + name);
 }

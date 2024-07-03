@@ -163,13 +163,11 @@ public class VoxelArray : MonoBehaviour {
     public IEnumerable<(Vector3Int, Voxel)> IterateVoxelPairs() =>
         voxels.Select(p => (p.Key, p.Value));
 
-    private Vector3Int ObjectPositionKey(Vector3 position) {
-        return Vector3Int.RoundToInt(position / OBJECT_GRID);
-    }
+    private Vector3Int ObjectPositionKey(Vector3 position) =>
+        Vector3Int.RoundToInt(position / OBJECT_GRID);
 
-    protected Vector3 SnapToObjectGrid(Vector3 position) {
-        return ((Vector3)Vector3Int.RoundToInt(position / OBJECT_GRID)) * OBJECT_GRID;
-    }
+    protected Vector3 SnapToObjectGrid(Vector3 position) =>
+        ((Vector3)Vector3Int.RoundToInt(position / OBJECT_GRID)) * OBJECT_GRID;
 
     public ObjectEntity ObjectAt(Vector3 pos) {
         if (objects.TryGetValue(ObjectPositionKey(pos), out ObjectEntity obj)) {

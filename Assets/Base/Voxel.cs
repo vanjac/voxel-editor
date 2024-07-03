@@ -99,42 +99,30 @@ public struct VoxelEdge {
         set => bevel = (byte)((bevel & 0x8f) | ((byte)value << 4));
     }
 
-    public Vector2[] bevelTypeArray {
-        get {
-            return bevelType switch {
-                BevelType.SQUARE => SHAPE_SQUARE,
-                BevelType.FLAT => SHAPE_FLAT,
-                BevelType.CURVE => SHAPE_CURVE,
-                BevelType.STAIR_2 => SHAPE_STAIR_2,
-                BevelType.STAIR_4 => SHAPE_STAIR_4,
-                _ => null,
-            };
-        }
-    }
+    public Vector2[] bevelTypeArray => bevelType switch {
+        BevelType.SQUARE => SHAPE_SQUARE,
+        BevelType.FLAT => SHAPE_FLAT,
+        BevelType.CURVE => SHAPE_CURVE,
+        BevelType.STAIR_2 => SHAPE_STAIR_2,
+        BevelType.STAIR_4 => SHAPE_STAIR_4,
+        _ => null,
+    };
 
-    public Vector2[] bevelTypeNormalArray {
-        get {
-            return bevelType switch {
-                BevelType.SQUARE => NORMALS_SQUARE,
-                BevelType.FLAT => NORMALS_FLAT,
-                BevelType.CURVE => NORMALS_CURVE,
-                BevelType.STAIR_2 => NORMALS_STAIR_2,
-                BevelType.STAIR_4 => NORMALS_STAIR_4,
-                _ => null,
-            };
-        }
-    }
+    public Vector2[] bevelTypeNormalArray => bevelType switch {
+        BevelType.SQUARE => NORMALS_SQUARE,
+        BevelType.FLAT => NORMALS_FLAT,
+        BevelType.CURVE => NORMALS_CURVE,
+        BevelType.STAIR_2 => NORMALS_STAIR_2,
+        BevelType.STAIR_4 => NORMALS_STAIR_4,
+        _ => null,
+    };
 
-    public float bevelSizeFloat {
-        get {
-            return bevelSize switch {
-                BevelSize.QUARTER => 0.25f,
-                BevelSize.HALF => 0.5f,
-                BevelSize.FULL => 1.0f,
-                _ => 0.0f,
-            };
-        }
-    }
+    public float bevelSizeFloat => bevelSize switch {
+        BevelSize.QUARTER => 0.25f,
+        BevelSize.HALF => 0.5f,
+        BevelSize.FULL => 1.0f,
+        _ => 0.0f,
+    };
 
     public bool hasBevel => bevelType != BevelType.NONE;
 
@@ -154,29 +142,25 @@ public class Voxel {
     public readonly static int[] SQUARE_LOOP_COORD_INDEX = new int[] { 0, 1, 3, 2 };
 
 
-    public static Vector3 DirectionForFaceI(int faceI) {
-        return faceI switch {
-            0 => Vector3.left,
-            1 => Vector3.right,
-            2 => Vector3.down,
-            3 => Vector3.up,
-            4 => Vector3.back,
-            5 => Vector3.forward,
-            _ => Vector3.zero,
-        };
-    }
+    public static Vector3 DirectionForFaceI(int faceI) => faceI switch {
+        0 => Vector3.left,
+        1 => Vector3.right,
+        2 => Vector3.down,
+        3 => Vector3.up,
+        4 => Vector3.back,
+        5 => Vector3.forward,
+        _ => Vector3.zero,
+    };
 
-    public static Vector3Int IntDirectionForFaceI(int faceI) {
-        return faceI switch {
-            0 => Vector3Int.left,
-            1 => Vector3Int.right,
-            2 => Vector3Int.down,
-            3 => Vector3Int.up,
-            4 => Vector3Int.back,
-            5 => Vector3Int.forward,
-            _ => Vector3Int.zero,
-        };
-    }
+    public static Vector3Int IntDirectionForFaceI(int faceI) => faceI switch {
+        0 => Vector3Int.left,
+        1 => Vector3Int.right,
+        2 => Vector3Int.down,
+        3 => Vector3Int.up,
+        4 => Vector3Int.back,
+        5 => Vector3Int.forward,
+        _ => Vector3Int.zero,
+    };
 
     public static Vector3 OppositeDirectionForFaceI(int faceI) =>
         DirectionForFaceI(OppositeFaceI(faceI));
