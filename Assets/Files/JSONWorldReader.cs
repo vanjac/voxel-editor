@@ -5,8 +5,7 @@ using UnityEngine;
 using SimpleJSON;
 using MsgPack;
 
-public class JSONWorldReader : WorldFileReader
-{
+public class JSONWorldReader : WorldFileReader {
     private const int MAX_INPUT_VERSION = 7;
     private const int MIN_INPUT_VERSION = 6; // v1.1.5-beta or later
 
@@ -17,49 +16,36 @@ public class JSONWorldReader : WorldFileReader
     private Dictionary<int, int> overlayIndices = new Dictionary<int, int>();
     int maxMaterialIndex, maxOverlayIndex;
 
-    public void ReadStream(Stream stream)
-    {
+    public void ReadStream(Stream stream) {
         string jsonString;
-        try
-        {
-            using (var sr = new StreamReader(stream))
-            {
+        try {
+            using (var sr = new StreamReader(stream)) {
                 jsonString = sr.ReadToEnd();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new MapReadException("An error occurred while reading the file", e);
         }
-        try
-        {
+        try {
             rootNode = JSON.Parse(jsonString);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new MapReadException("Invalid world file", e);
         }
-        if (rootNode == null)
+        if (rootNode == null) {
             throw new MapReadException("Invalid world file");
+        }
     }
 
     public List<EmbeddedData> FindEmbeddedData(EmbeddedDataType type) => new List<EmbeddedData>();
 
     public List<Material> FindCustomTextures(bool overlay) => new List<Material>();
 
-    public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor)
-    {
+    public List<string> BuildWorld(Transform cameraPivot, VoxelArray voxelArray, bool editor) {
         MessagePackObjectDictionary world;
-        try
-        {
+        try {
             world = ConvertRoot(rootNode.AsObject);
-        }
-        catch (MapReadException e)
-        {
+        } catch (MapReadException e) {
             throw e;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new MapReadException("Error converting world file", e);
         }
 
@@ -69,24 +55,19 @@ public class JSONWorldReader : WorldFileReader
         return warnings;
     }
 
-    public MessagePackObjectDictionary ConvertRoot(JSONObject root)
-    {
+    public MessagePackObjectDictionary ConvertRoot(JSONObject root) {
         materialIndices = new Dictionary<int, int>();
         overlayIndices = new Dictionary<int, int>();
         maxMaterialIndex = 0;
         maxOverlayIndex = 0;
 
-        if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null)
-        {
+        if (root == null || root["writerVersion"] == null || root["minReaderVersion"] == null) {
             throw new MapReadException("Invalid world file");
         }
         int minReaderVersion = root["minReaderVersion"].AsInt;
-        if (minReaderVersion < MIN_INPUT_VERSION)
-        {
+        if (minReaderVersion < MIN_INPUT_VERSION) {
             throw new MapReadException("This file was created with an old (beta) version of the app and can no longer be read.");
-        }
-        else if (minReaderVersion > MAX_INPUT_VERSION)
-        {
+        } else if (minReaderVersion > MAX_INPUT_VERSION) {
             throw new MapReadException("Invalid world file");
         }
 
@@ -97,77 +78,77 @@ public class JSONWorldReader : WorldFileReader
         worldDict[FileKeys.WORLD_WRITER_VERSION] = root["writerVersion"].AsInt;
         worldDict[FileKeys.WORLD_MIN_READER_VERSION] = minReaderVersion;
 
-        if (root["camera"] != null)
-        {
+        if (root["camera"] != null) {
             worldDict[FileKeys.WORLD_CAMERA] = new MessagePackObject(
                 ConvertCamera(root["camera"].AsObject));
         }
-        if (root["world"] != null)
+        if (root["world"] != null) {
             ConvertWorld(root["world"].AsObject, worldDict);
+        }
 
         return worldDict;
     }
 
-    private MessagePackObjectDictionary ConvertCamera(JSONObject cameraObject)
-    {
+    private MessagePackObjectDictionary ConvertCamera(JSONObject cameraObject) {
         var cameraDict = new MessagePackObjectDictionary();
-        if (cameraObject["pan"] != null)
+        if (cameraObject["pan"] != null) {
             cameraDict[FileKeys.CAMERA_PAN] = ConvertFloatArray(cameraObject["pan"].AsArray);
-        if (cameraObject["rotate"] != null)
+        }
+        if (cameraObject["rotate"] != null) {
             cameraDict[FileKeys.CAMERA_ROTATE] = ConvertFloatArray(cameraObject["rotate"].AsArray);
-        if (cameraObject["scale"] != null)
+        }
+        if (cameraObject["scale"] != null) {
             cameraDict[FileKeys.CAMERA_SCALE] = cameraObject["scale"].AsFloat;
+        }
         return cameraDict;
     }
 
     // flattened into existing world dictionary
-    private void ConvertWorld(JSONObject worldObject, MessagePackObjectDictionary worldDict)
-    {
+    private void ConvertWorld(JSONObject worldObject, MessagePackObjectDictionary worldDict) {
         // save materials for last!
 
-        if (worldObject["substances"] != null)
-        {
+        if (worldObject["substances"] != null) {
             var substancesList = new List<MessagePackObject>();
-            foreach (JSONNode subNode in worldObject["substances"].AsArray)
+            foreach (JSONNode subNode in worldObject["substances"].AsArray) {
                 substancesList.Add(new MessagePackObject(ConvertEntity(subNode.AsObject, false)));
+            }
             worldDict[FileKeys.WORLD_SUBSTANCES] = new MessagePackObject(substancesList);
         }
 
-        if (worldObject["global"] != null)
-        {
+        if (worldObject["global"] != null) {
             worldDict[FileKeys.WORLD_GLOBAL] = new MessagePackObject(
                 ConvertPropertiesObject(worldObject["global"].AsObject, false));
         }
 
-        if (worldObject["map"] != null && worldObject["map"]["voxels"] != null)
-        {
+        if (worldObject["map"] != null && worldObject["map"]["voxels"] != null) {
             var voxelsList = new List<MessagePackObject>();
-            foreach (JSONNode voxelNode in worldObject["map"]["voxels"].AsArray)
+            foreach (JSONNode voxelNode in worldObject["map"]["voxels"].AsArray) {
                 voxelsList.Add(ConvertVoxel(voxelNode.AsObject));
+            }
             worldDict[FileKeys.WORLD_VOXELS] = new MessagePackObject(voxelsList);
         }
 
-        if (worldObject["objects"] != null)
-        {
+        if (worldObject["objects"] != null) {
             var objectsList = new List<MessagePackObject>();
-            foreach (JSONNode objNode in worldObject["objects"].AsArray)
+            foreach (JSONNode objNode in worldObject["objects"].AsArray) {
                 objectsList.Add(new MessagePackObject(ConvertObjectEntity(objNode.AsObject)));
+            }
             worldDict[FileKeys.WORLD_OBJECTS] = new MessagePackObject(objectsList);
         }
 
-        if (worldObject["materials"] != null)
-        {
+        if (worldObject["materials"] != null) {
             var materials = new MessagePackObject[maxMaterialIndex];
             var overlays = new MessagePackObject[maxOverlayIndex];
             int i = 0;
-            foreach (JSONNode matNode in worldObject["materials"].AsArray)
-            {
+            foreach (JSONNode matNode in worldObject["materials"].AsArray) {
                 MessagePackObject matObj = new MessagePackObject(
                     ConvertMaterial(matNode.AsObject, false));
-                if (materialIndices.TryGetValue(i, out int materialIndex))
+                if (materialIndices.TryGetValue(i, out int materialIndex)) {
                     materials[materialIndex] = matObj;
-                if (overlayIndices.TryGetValue(i, out int overlayIndex))
+                }
+                if (overlayIndices.TryGetValue(i, out int overlayIndex)) {
                     overlays[overlayIndex] = matObj;
+                }
                 i++;
             }
             worldDict[FileKeys.WORLD_MATERIALS] = new MessagePackObject(materials);
@@ -175,87 +156,85 @@ public class JSONWorldReader : WorldFileReader
         }
     }
 
-    private MessagePackObjectDictionary ConvertMaterial(JSONObject matObject, bool specifyAlphaMode)
-    {
+    private MessagePackObjectDictionary ConvertMaterial(JSONObject matObject, bool specifyAlphaMode) {
         var materialDict = new MessagePackObjectDictionary();
-        if (matObject["name"] != null)
+        if (matObject["name"] != null) {
             materialDict[FileKeys.MATERIAL_NAME] = matObject["name"].Value;
-        if (matObject["mode"] != null)
+        }
+        if (matObject["mode"] != null) {
             materialDict[FileKeys.MATERIAL_MODE] = matObject["mode"].Value;
-        if (matObject["color"] != null)
+        }
+        if (matObject["color"] != null) {
             materialDict[FileKeys.MATERIAL_COLOR] = ConvertFloatArray(matObject["color"].AsArray);
-        if (specifyAlphaMode && matObject["alpha"] != null)
+        }
+        if (specifyAlphaMode && matObject["alpha"] != null) {
             materialDict[FileKeys.MATERIAL_ALPHA] = matObject["color"].AsBool;
+        }
         return materialDict;
     }
 
-    private MessagePackObjectDictionary ConvertObjectEntity(JSONObject entityObject)
-    {
+    private MessagePackObjectDictionary ConvertObjectEntity(JSONObject entityObject) {
         var entityDict = ConvertEntity(entityObject, true);
-        if (entityObject["at"] != null)
+        if (entityObject["at"] != null) {
             entityDict[FileKeys.OBJECT_POSITION] = ConvertIntArray(entityObject["at"].AsArray);
-        if (entityObject["rotate"] != null)
+        }
+        if (entityObject["rotate"] != null) {
             entityDict[FileKeys.OBJECT_ROTATION] = entityObject["rotate"].AsFloat;
+        }
         return entityDict;
     }
 
-    private MessagePackObjectDictionary ConvertEntity(JSONObject entityObject, bool includeName)
-    {
+    private MessagePackObjectDictionary ConvertEntity(JSONObject entityObject, bool includeName) {
         var entityDict = ConvertPropertiesObject(entityObject, includeName);
 
-        if (entityObject["sensor"] != null)
-        {
+        if (entityObject["sensor"] != null) {
             entityDict[FileKeys.ENTITY_SENSOR] = new MessagePackObject(
                 ConvertPropertiesObject(entityObject["sensor"].AsObject, true));
         }
 
-        if (entityObject["behaviors"] != null)
-        {
+        if (entityObject["behaviors"] != null) {
             var behaviorsList = new List<MessagePackObject>();
-            foreach (JSONNode behaviorNode in entityObject["behaviors"].AsArray)
-            {
+            foreach (JSONNode behaviorNode in entityObject["behaviors"].AsArray) {
                 behaviorsList.Add(new MessagePackObject(
                     ConvertPropertiesObject(behaviorNode.AsObject, true)));
             }
             entityDict[FileKeys.ENTITY_BEHAVIORS] = new MessagePackObject(behaviorsList);
         }
 
-        if (entityObject["id"] != null)
-        {
+        if (entityObject["id"] != null) {
             entityDict[FileKeys.ENTITY_ID] = entityObject["id"].Value;
         }
 
         return entityDict;
     }
 
-    private MessagePackObjectDictionary ConvertPropertiesObject(JSONObject propsObject, bool includeName)
-    {
+    private MessagePackObjectDictionary ConvertPropertiesObject(JSONObject propsObject, bool includeName) {
         var propsDict = new MessagePackObjectDictionary();
-        if (includeName && propsObject["name"] != null)
+        if (includeName && propsObject["name"] != null) {
             propsDict[FileKeys.PROPOBJ_NAME] = propsObject["name"].Value;
+        }
 
-        if (propsObject["properties"] != null)
-        {
+        if (propsObject["properties"] != null) {
             var propertiesList = new List<MessagePackObject>();
-            foreach (JSONNode propNode in propsObject["properties"].AsArray)
-            {
+            foreach (JSONNode propNode in propsObject["properties"].AsArray) {
                 JSONArray propArray = propNode.AsArray;
                 string name = propArray[0];
-                if (!propNamesToIDs.TryGetValue(name, out string id))
-                {
+                if (!propNamesToIDs.TryGetValue(name, out string id)) {
                     warnings.Add("Unrecognized property: " + name);
                     continue;
                 }
 
                 var propList = new List<MessagePackObject>();
                 propList.Add(id);
-                if (name == "Material" || name == "Sky")
+                if (name == "Material" || name == "Sky") {
                     propList.Add(new MessagePackObject(ConvertMaterial(propArray[1].AsObject, true)));
-                else
+                } else {
                     propList.Add(propArray[1].Value);
+                }
 
-                if (propArray.Count > 2)
+                if (propArray.Count > 2) {
                     propList.Add(propArray[2].Value);
+                }
 
                 propertiesList.Add(new MessagePackObject(propList));
             }
@@ -265,104 +244,103 @@ public class JSONWorldReader : WorldFileReader
         return propsDict;
     }
 
-    private MessagePackObject ConvertVoxel(JSONObject voxelObject)
-    {
+    private MessagePackObject ConvertVoxel(JSONObject voxelObject) {
         var voxelList = new List<MessagePackObject>();
-        if (voxelObject["at"] == null)
+        if (voxelObject["at"] == null) {
             return new MessagePackObject(voxelList);
+        }
         voxelList.Add(ConvertIntArray(voxelObject["at"].AsArray));
 
         var facesList = new List<MessagePackObject>();
-        if (voxelObject["f"] != null)
-        {
-            foreach (JSONNode faceNode in voxelObject["f"].AsArray)
+        if (voxelObject["f"] != null) {
+            foreach (JSONNode faceNode in voxelObject["f"].AsArray) {
                 facesList.Add(ConvertFace(faceNode.AsObject));
+            }
         }
         voxelList.Add(new MessagePackObject(facesList));
 
         bool hasEdges = voxelObject["e"] != null;
 
-        if (voxelObject["s"] != null)
+        if (voxelObject["s"] != null) {
             voxelList.Add(voxelObject["s"].AsInt);
-        else if (hasEdges) // need to pad this index
+        } else if (hasEdges) { // need to pad this index
             voxelList.Add(-1);
+        }
 
-        if (hasEdges)
-        {
+        if (hasEdges) {
             var edgesList = new List<MessagePackObject>();
-            foreach (JSONNode edgeNode in voxelObject["e"].AsArray)
+            foreach (JSONNode edgeNode in voxelObject["e"].AsArray) {
                 edgesList.Add(ConvertEdge(edgeNode.AsObject));
+            }
             voxelList.Add(new MessagePackObject(edgesList));
         }
 
         return new MessagePackObject(voxelList);
     }
 
-    private MessagePackObject ConvertFace(JSONObject faceObject)
-    {
+    private MessagePackObject ConvertFace(JSONObject faceObject) {
         var faceList = new List<MessagePackObject>();
-        if (faceObject["i"] == null)
+        if (faceObject["i"] == null) {
             return new MessagePackObject(faceList);
+        }
         faceList.Add(faceObject["i"].AsInt);
-        if (faceObject["mat"] != null)
-        {
+        if (faceObject["mat"] != null) {
             int mat = faceObject["mat"].AsInt;
-            if (!materialIndices.TryGetValue(mat, out int index))
+            if (!materialIndices.TryGetValue(mat, out int index)) {
                 materialIndices[mat] = index = maxMaterialIndex++;
+            }
             faceList.Add(index);
-        }
-        else
-        {
+        } else {
             faceList.Add(-1);
         }
-        if (faceObject["over"] != null)
-        {
+        if (faceObject["over"] != null) {
             int over = faceObject["over"].AsInt;
-            if (!overlayIndices.TryGetValue(over, out int index))
+            if (!overlayIndices.TryGetValue(over, out int index)) {
                 overlayIndices[over] = index = maxOverlayIndex++;
+            }
             faceList.Add(index);
-        }
-        else
-        {
+        } else {
             faceList.Add(-1);
         }
-        if (faceObject["orient"] != null)
+        if (faceObject["orient"] != null) {
             faceList.Add(faceObject["orient"].AsInt);
-        while (faceList[faceList.Count - 1].AsInt32() == -1)
+        }
+        while (faceList[faceList.Count - 1].AsInt32() == -1) {
             faceList.RemoveAt(faceList.Count - 1);
+        }
         return new MessagePackObject(faceList);
     }
 
-    private MessagePackObject ConvertEdge(JSONObject edgeObject)
-    {
+    private MessagePackObject ConvertEdge(JSONObject edgeObject) {
         var edgeList = new List<MessagePackObject>();
-        if (edgeObject["i"] == null)
+        if (edgeObject["i"] == null) {
             return new MessagePackObject(edgeList);
+        }
         edgeList.Add(edgeObject["i"].AsInt);
-        if (edgeObject["bevel"] != null)
+        if (edgeObject["bevel"] != null) {
             edgeList.Add(edgeObject["bevel"].AsInt);
+        }
         return new MessagePackObject(edgeList);
     }
 
-    private MessagePackObject ConvertFloatArray(JSONArray a)
-    {
+    private MessagePackObject ConvertFloatArray(JSONArray a) {
         var l = new List<MessagePackObject>();
-        foreach (JSONNode val in a)
+        foreach (JSONNode val in a) {
             l.Add(val.AsFloat);
+        }
         return new MessagePackObject(l);
     }
 
-    private MessagePackObject ConvertIntArray(JSONArray a)
-    {
+    private MessagePackObject ConvertIntArray(JSONArray a) {
         var l = new List<MessagePackObject>();
-        foreach (JSONNode val in a)
+        foreach (JSONNode val in a) {
             l.Add(val.AsInt);
+        }
         return new MessagePackObject(l);
     }
 
     // all properties from v1.2.2, mapped to IDs from v1.2.3
-    private static Dictionary<string, string> propNamesToIDs = new Dictionary<string, string>
-    {
+    private static Dictionary<string, string> propNamesToIDs = new Dictionary<string, string> {
         // Entity
         {"Tag",                 "tag"},
         // Dynamic Entity

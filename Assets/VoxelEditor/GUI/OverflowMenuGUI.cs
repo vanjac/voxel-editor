@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 
-public class OverflowMenuGUI : GUIPanel
-{
-    public struct MenuItem
-    {
+public class OverflowMenuGUI : GUIPanel {
+    public struct MenuItem {
         public string text;
         public Texture icon;
         public System.Action action;
         public bool stayOpen;
 
-        public MenuItem(string text, Texture icon, System.Action action, bool stayOpen = false)
-        {
+        public MenuItem(string text, Texture icon, System.Action action, bool stayOpen = false) {
             this.text = text;
             this.icon = icon;
             this.action = action;
@@ -23,8 +20,7 @@ public class OverflowMenuGUI : GUIPanel
     private int selected = -1;
     public new bool stealFocus { get => base.stealFocus; set => base.stealFocus = value; } // :(
 
-    public static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() =>
-    {
+    public static readonly System.Lazy<GUIStyle> buttonStyle = new System.Lazy<GUIStyle>(() => {
         var style = new GUIStyle(StyleSet.buttonLarge);
         style.alignment = TextAnchor.MiddleLeft;
         return style;
@@ -35,29 +31,23 @@ public class OverflowMenuGUI : GUIPanel
 
     public override GUIStyle GetStyle() => GUIStyle.none;
 
-    public override void OnEnable()
-    {
+    public override void OnEnable() {
         stealFocus = false;
         base.OnEnable();
     }
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         int i = 0;
-        foreach (MenuItem item in items)
-        {
+        foreach (MenuItem item in items) {
             if (GUIUtils.HighlightedButton(GUIUtils.MenuContent(item.text, item.icon),
-                buttonStyle.Value, i == selected))
-            {
+                    buttonStyle.Value, i == selected)) {
                 item.action();
-                if (!item.stayOpen)
-                {
+                if (!item.stayOpen) {
                     // destroy self and all parent menus
-                    foreach (OverflowMenuGUI parentMenu in gameObject.GetComponents<OverflowMenuGUI>())
+                    foreach (OverflowMenuGUI parentMenu in gameObject.GetComponents<OverflowMenuGUI>()) {
                         Destroy(parentMenu);
-                }
-                else
-                {
+                    }
+                } else {
                     selected = i;
                 }
             }

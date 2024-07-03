@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ObjectEntity : DynamicEntity
-{
+public abstract class ObjectEntity : DynamicEntity {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Object", typeof(ObjectEntity))
-    {
+            "Object", typeof(ObjectEntity)) {
         displayName = s => s.ObjectName,
         description = s => s.ObjectDesc,
         iconName = "circle",
@@ -19,10 +17,10 @@ public abstract class ObjectEntity : DynamicEntity
     public Color highlight = Color.clear;
     public Material highlightMaterial;
 
-    public override void UpdateEntityEditor()
-    {
-        if (marker != null)
+    public override void UpdateEntityEditor() {
+        if (marker != null) {
             marker.UpdateMarker();
+        }
     }
 
     public override Vector3 PositionInEditor() => position;
@@ -33,45 +31,47 @@ public abstract class ObjectEntity : DynamicEntity
 
     public override bool AliveInEditor() => marker != null;
 
-    public override void SetHighlight(Color c)
-    {
-        if (c == highlight)
+    public override void SetHighlight(Color c) {
+        if (c == highlight) {
             return;
+        }
         highlight = c;
-        if (highlightMaterial == null)
+        if (highlightMaterial == null) {
             highlightMaterial = ResourcesDirectory.InstantiateMaterial(
                 ResourcesDirectory.FindMaterial("UNLIT", true));
+        }
         highlightMaterial.color = highlight;
-        if (marker != null)
+        if (marker != null) {
             marker.UpdateMarker();
+        }
     }
 
-    public void InitObjectMarker(VoxelArrayEditor voxelArray)
-    {
+    public void InitObjectMarker(VoxelArrayEditor voxelArray) {
         marker = CreateObjectMarker(voxelArray);
         marker.transform.parent = voxelArray.transform;
         marker.objectEntity = this;
         marker.tag = "ObjectMarker";
     }
 
-    public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
-    {
+    public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true) {
         var c = CreateEntityComponent(voxelArray);
         c.transform.parent = voxelArray.transform;
         c.transform.position = PositionInGame();
         c.transform.rotation = Quaternion.Euler(new Vector3(0, rotation, 0));
         c.entity = this;
         c.health = health;
-        if (storeComponent)
+        if (storeComponent) {
             component = c;
+        }
         Renderer renderer = c.GetComponentInChildren<Renderer>();
-        if (renderer != null)
-        {
+        if (renderer != null) {
             List<Material> materials = new List<Material>();
-            if (paint.material != null)
+            if (paint.material != null) {
                 materials.Add(paint.material);
-            if (paint.overlay != null)
+            }
+            if (paint.overlay != null) {
                 materials.Add(paint.overlay);
+            }
             renderer.materials = materials.ToArray();
         }
         return c;

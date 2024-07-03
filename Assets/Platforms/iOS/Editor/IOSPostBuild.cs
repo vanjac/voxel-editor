@@ -6,13 +6,10 @@ using UnityEditor.iOS.Xcode;
 using UnityEditor.Callbacks;
 
 // https://forum.unity.com/threads/how-can-you-add-items-to-the-xcode-project-targets-info-plist-using-the-xcodeapi.330574/
-public static class IOSPostBuild
-{
+public static class IOSPostBuild {
     [PostProcessBuild]
-    public static void ChangeXcodePlist(BuildTarget buildTarget, string pathToBuiltProject)
-    {
-        if (buildTarget == BuildTarget.iOS)
-        {
+    public static void ChangeXcodePlist(BuildTarget buildTarget, string pathToBuiltProject) {
+        if (buildTarget == BuildTarget.iOS) {
             Debug.Log("iOS post build");
             string plistPath = pathToBuiltProject + "/Info.plist";
             PlistDocument plist = new PlistDocument();
@@ -82,8 +79,7 @@ public static class IOSPostBuild
         }
     }
 
-    private static void AddDocumentType(PlistElementArray documentTypesArray, string name, string uti)
-    {
+    private static void AddDocumentType(PlistElementArray documentTypesArray, string name, string uti) {
         var docTypeDict = documentTypesArray.AddDict();
         docTypeDict.CreateArray("CFBundleTypeIconFiles");
         docTypeDict.SetString("CFBundleTypeName", name);
@@ -93,9 +89,8 @@ public static class IOSPostBuild
     }
 
     private static void AddImportedType(PlistElementArray importedTypesArray,
-        string description, string uti, string conforms,
-        string[] extensions, string[] mimeTypes)
-    {
+            string description, string uti, string conforms,
+            string[] extensions, string[] mimeTypes) {
         var declarationDict = importedTypesArray.AddDict();
         declarationDict.SetString("UTTypeIdentifier", uti);
         declarationDict.SetString("UTTypeDescription", description);
@@ -103,11 +98,13 @@ public static class IOSPostBuild
         conformsToArray.AddString(conforms);
         var tagSpecificationsDict = declarationDict.CreateDict("UTTypeTagSpecification");
         var extensionsArray = tagSpecificationsDict.CreateArray("public.filename-extension");
-        foreach (string ext in extensions)
+        foreach (string ext in extensions) {
             extensionsArray.AddString(ext);
+        }
         var mimeTypesArray = tagSpecificationsDict.CreateArray("public.mime-type");
-        foreach (string mime in mimeTypes)
+        foreach (string mime in mimeTypes) {
             mimeTypesArray.AddString(mime);
+        }
     }
 }
 

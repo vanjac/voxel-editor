@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BasePhysicsBehavior : EntityBehavior
-{
+public abstract class BasePhysicsBehavior : EntityBehavior {
     public float density = 0.5f;
     public bool gravity = true;
 }
 
-public class PhysicsBehavior : BasePhysicsBehavior
-{
+public class PhysicsBehavior : BasePhysicsBehavior {
     public static new BehaviorType objectType = new BehaviorType(
-        "Physics", typeof(PhysicsBehavior))
-    {
+            "Physics", typeof(PhysicsBehavior)) {
         displayName = s => s.PhysicsName,
         description = s => s.PhysicsDesc,
         longDescription = s => s.PhysicsLongDesc,
@@ -23,8 +20,7 @@ public class PhysicsBehavior : BasePhysicsBehavior
     public override BehaviorType BehaviorObjectType => objectType;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("den", s => s.PropDensity,
                 () => density,
                 v => density = (float)v,
@@ -35,8 +31,7 @@ public class PhysicsBehavior : BasePhysicsBehavior
                 PropertyGUIs.Toggle)
         });
 
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
+    public override Behaviour MakeComponent(GameObject gameObject) {
         var component = gameObject.AddComponent<PhysicsComponent>();
         component.Init(this);
         return component;
@@ -51,8 +46,7 @@ public class PhysicsBehavior : BasePhysicsBehavior
 //
 // Terms of use: do whatever you like
 
-public class PhysicsComponent : BehaviorComponent<BasePhysicsBehavior>
-{
+public class PhysicsComponent : BehaviorComponent<BasePhysicsBehavior> {
     public float volume = 1.0f;
     public bool calculateVolumeAndMass = true;
 
@@ -66,56 +60,55 @@ public class PhysicsComponent : BehaviorComponent<BasePhysicsBehavior>
     private Collider waterCollider;
     private WaterComponent water;
 
-    public override void Start()
-    {
+    public override void Start() {
         voxels = new List<Vector3>();
         SubstanceComponent substanceComponent = GetComponent<SubstanceComponent>();
-        if (substanceComponent != null)
-            foreach (var position in substanceComponent.substance.voxelGroup.IteratePositions())
+        if (substanceComponent != null) {
+            foreach (var position in substanceComponent.substance.voxelGroup.IteratePositions()) {
                 voxels.Add(Voxel.Bounds(position).center - transform.position);
-        else
+            }
+        } else {
             voxels.Add(Vector3.zero);
+        }
         base.Start();
     }
 
-    public override void BehaviorEnabled()
-    {
+    public override void BehaviorEnabled() {
         SubstanceComponent sComponent = GetComponent<SubstanceComponent>();
-        if (calculateVolumeAndMass && sComponent != null)
-        {
+        if (calculateVolumeAndMass && sComponent != null) {
             volume = 0;
-            foreach (var vc in sComponent.substance.voxelGroup.IterateComponents())
+            foreach (var vc in sComponent.substance.voxelGroup.IterateComponents()) {
                 volume += vc.positions.Count;
-            if (volume == 0)
+            }
+            if (volume == 0) {
                 volume = 1;
+            }
         }
         Rigidbody rigidBody = GetComponent<Rigidbody>();
-        if (rigidBody != null)
-        {
+        if (rigidBody != null) {
             rigidBody.isKinematic = false;
-            if (calculateVolumeAndMass)
+            if (calculateVolumeAndMass) {
                 rigidBody.mass = volume * behavior.density;
+            }
             rigidBody.useGravity = behavior.gravity;
         }
     }
 
-    public override void LastBehaviorDisabled()
-    {
+    public override void LastBehaviorDisabled() {
         Rigidbody rigidBody = GetComponent<Rigidbody>();
-        if (rigidBody != null)
+        if (rigidBody != null) {
             rigidBody.isKinematic = true;
+        }
     }
 
-    void OnTriggerEnter(Collider c)
-    {
+    void OnTriggerEnter(Collider c) {
         WaterComponent cWater = c.GetComponent<WaterComponent>();
-        if (cWater == null && c.transform.parent != null)
+        if (cWater == null && c.transform.parent != null) {
             cWater = c.transform.parent.GetComponent<WaterComponent>();
-        if (cWater != null)
-        {
+        }
+        if (cWater != null) {
             waterCollider = c;
-            if (water != cWater)
-            {
+            if (water != cWater) {
                 water = cWater;
                 float archimedesForceMagnitude = water.Density * Mathf.Abs(Physics.gravity.y) * volume;
                 localArchimedesForce = new Vector3(0, archimedesForceMagnitude, 0) / voxels.Count;
@@ -123,50 +116,40 @@ public class PhysicsComponent : BehaviorComponent<BasePhysicsBehavior>
         }
     }
 
-    void OnTriggerExit(Collider c)
-    {
-        if (c == waterCollider)
-        {
+    void OnTriggerExit(Collider c) {
+        if (c == waterCollider) {
             water = null;
             waterCollider = null;
         }
     }
 
-    void OnCollisionEnter(Collision c)
-    {
+    void OnCollisionEnter(Collision c) {
         OnTriggerEnter(c.collider);
     }
 
-    void OnCollisionExit(Collision c)
-    {
+    void OnCollisionExit(Collision c) {
         OnTriggerExit(c.collider);
     }
 
-    private float GetWaterLevel(float x, float z)
-    {
-        if (water != null && water.enabled)
+    private float GetWaterLevel(float x, float z) {
+        if (water != null && water.enabled) {
             return water.GetWaterLevel(x, z);
+        }
         return float.MinValue;
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         underWater = false;
-        foreach (var point in voxels)
-        {
+        foreach (var point in voxels) {
             var wp = transform.TransformPoint(point);
             float waterLevel = GetWaterLevel(wp.x, wp.z);
 
-            if (wp.y - VOXEL_HALF_HEIGHT < waterLevel)
-            {
+            if (wp.y - VOXEL_HALF_HEIGHT < waterLevel) {
                 underWater = true;
                 float k = (waterLevel - wp.y) / (2 * VOXEL_HALF_HEIGHT) + 0.5f;
-                if (k > 1)
-                {
+                if (k > 1) {
                     k = 1f;
-                }
-                else if (k < 0)
-                {
+                } else if (k < 0) {
                     k = 0f;
                 }
 

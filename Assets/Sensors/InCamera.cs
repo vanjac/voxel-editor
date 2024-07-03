@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
-{
+public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent> {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "In Camera", typeof(InCameraSensor))
-    {
+            "In Camera", typeof(InCameraSensor)) {
         displayName = s => s.InCameraName,
         description = s => s.InCameraDesc,
         longDescription = s => s.InCameraLongDesc,
@@ -16,8 +14,7 @@ public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
     public float maxDistance = 100;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(new Property[]
-        {
+        Property.JoinProperties(new Property[] {
             new Property("dis", s => s.PropMaxDistance,
                 () => maxDistance,
                 v => maxDistance = (float)v,
@@ -25,35 +22,32 @@ public class InCameraSensor : GenericSensor<InCameraSensor, InCameraComponent>
         }, base.Properties());
 }
 
-public class InCameraComponent : SensorComponent<InCameraSensor>
-{
+public class InCameraComponent : SensorComponent<InCameraSensor> {
     private int visible = 0;
 
-    void Update()
-    {
-        if (PlayerComponent.instance == null)
-        {
+    void Update() {
+        if (PlayerComponent.instance == null) {
             ClearActivators();
             return;
         }
         bool inRange = (PlayerComponent.instance.transform.position
             - transform.position).magnitude <= sensor.maxDistance;
-        if (visible > 0 && inRange)
+        if (visible > 0 && inRange) {
             AddActivator(PlayerComponent.instance);
-        else
+        } else {
             RemoveActivator(PlayerComponent.instance);
+        }
     }
 
-    void OnBecameVisible()
-    {
+    void OnBecameVisible() {
         visible++;
     }
 
-    void OnBecameInvisible()
-    {
-        if (visible > 0)
+    void OnBecameInvisible() {
+        if (visible > 0) {
             visible--;
-        else
+        } else {
             Debug.Log("Visible count less than zero!");
+        }
     }
 }

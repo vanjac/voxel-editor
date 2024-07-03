@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorldProperties : PropertiesObject
-{
-    private static readonly Dictionary<string, float> skyRotations = new Dictionary<string, float>
-    {
+public class WorldProperties : PropertiesObject {
+    private static readonly Dictionary<string, float> skyRotations = new Dictionary<string, float> {
         {"sky5X1", 102},
         {"sky5X2", 143},
         {"sky5X3", 7},
@@ -13,16 +11,14 @@ public class WorldProperties : PropertiesObject
     };
 
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "World", typeof(WorldProperties))
-    {
+            "World", typeof(WorldProperties)) {
         displayName = s => s.WorldName,
         description = s => s.WorldDesc,
         iconName = "earth",
     };
     public PropertiesObjectType ObjectType => objectType;
 
-    public void SetSky(Material sky)
-    {
+    public void SetSky(Material sky) {
         // instantiating material allows modifying the Rotation property without modifying asset
         var skyInstance = ResourcesDirectory.InstantiateMaterial(sky);
         skyInstance.name = sky.name; // sky will be saved correctly
@@ -30,11 +26,9 @@ public class WorldProperties : PropertiesObject
         UpdateSky();
     }
 
-    private void UpdateSky()
-    {
+    private void UpdateSky() {
         var sky = RenderSettings.skybox;
-        if (sky != null && skyRotations.TryGetValue(sky.name, out float baseRotation))
-        {
+        if (sky != null && skyRotations.TryGetValue(sky.name, out float baseRotation)) {
             // rotate sky to match sun direction
             float yaw = RenderSettings.sun.transform.rotation.eulerAngles.y;
             sky.SetFloat(Shader.PropertyToID("_Rotation"), baseRotation - yaw + 180);
@@ -43,22 +37,19 @@ public class WorldProperties : PropertiesObject
         UpdateEnvironment();
     }
 
-    private ReflectionProbe GetReflectionProbe()
-    {
+    private ReflectionProbe GetReflectionProbe() {
         // TODO!
         GameObject probeObj = GameObject.Find("ReflectionProbe");
         return (probeObj != null) ? probeObj.GetComponent<ReflectionProbe>() : null;
     }
 
-    private void UpdateEnvironment()
-    {
+    private void UpdateEnvironment() {
         DynamicGI.UpdateEnvironment(); // update ambient lighting
         GetReflectionProbe().RenderProbe();
     }
 
     public IEnumerable<Property> Properties() =>
-        new Property[]
-        {
+        new Property[] {
             new Property("sky", s => s.PropSky,
                 () => RenderSettings.skybox,
                 v => {
@@ -80,8 +71,9 @@ public class WorldProperties : PropertiesObject
             new Property("spi", s => s.PropSunPitch,
                 () => {
                     float value = RenderSettings.sun.transform.rotation.eulerAngles.x;
-                    if (value >= 270)
+                    if (value >= 270) {
                         value -= 360;
+                    }
                     return value;
                 },
                 v => {
@@ -128,19 +120,15 @@ public class WorldProperties : PropertiesObject
         };
 
     public IEnumerable<Property> DeprecatedProperties() =>
-        new Property[]
-        {
+        new Property[] {
             new Property("fdn", GUIStringSet.Empty,
                 () => RenderSettings.fog ? Mathf.Sqrt(RenderSettings.fogDensity) : 0.0f,
                 v => {
                     float value = (float)v;
-                    if (value == 0)
-                    {
+                    if (value == 0) {
                         RenderSettings.fog = false;
                         RenderSettings.fogDensity = 0.04f;
-                    }
-                    else
-                    {
+                    } else {
                         RenderSettings.fog = true;
                         RenderSettings.fogDensity = value * value;
                     }

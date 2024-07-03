@@ -3,10 +3,8 @@ using UnityEngine.EventSystems;
 
 // modified from Unity standard assets!
 
-namespace UnityStandardAssets.CrossPlatformInput
-{
-    public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
-    {
+namespace UnityStandardAssets.CrossPlatformInput {
+    public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler {
         private const float DOTS_PER_INCH = 72.0f;
 
         public float MovementRange = 30; // in dots
@@ -20,18 +18,15 @@ namespace UnityStandardAssets.CrossPlatformInput
 
         public int dragTouchId = -4;
 
-        void OnEnable()
-        {
+        void OnEnable() {
             CreateVirtualAxes();
         }
 
-        void Start()
-        {
+        void Start() {
             m_StartPos = transform.position;
         }
 
-        void UpdateVirtualAxes(Vector3 value)
-        {
+        void UpdateVirtualAxes(Vector3 value) {
             var delta = m_StartPos - value;
             delta.y = -delta.y;
             delta /= MovementRange * Screen.dpi / DOTS_PER_INCH;
@@ -39,8 +34,7 @@ namespace UnityStandardAssets.CrossPlatformInput
             m_VerticalVirtualAxis.Update(delta.y);
         }
 
-        void CreateVirtualAxes()
-        {
+        void CreateVirtualAxes() {
             // create new axes based on axes to use
             m_HorizontalVirtualAxis = new CrossPlatformInputManager.VirtualAxis(horizontalAxisName);
             CrossPlatformInputManager.RegisterVirtualAxis(m_HorizontalVirtualAxis);
@@ -49,8 +43,7 @@ namespace UnityStandardAssets.CrossPlatformInput
         }
 
 
-        public void OnDrag(PointerEventData data)
-        {
+        public void OnDrag(PointerEventData data) {
             Vector3 newPos = new Vector3(
                 data.position.x - m_StartDrag.x,
                 data.position.y - m_StartDrag.y,
@@ -62,22 +55,19 @@ namespace UnityStandardAssets.CrossPlatformInput
         }
 
 
-        public void OnPointerUp(PointerEventData data)
-        {
+        public void OnPointerUp(PointerEventData data) {
             transform.position = m_StartPos;
             UpdateVirtualAxes(m_StartPos);
             dragTouchId = -4;
         }
 
 
-        public void OnPointerDown(PointerEventData data)
-        {
+        public void OnPointerDown(PointerEventData data) {
             m_StartDrag = data.position;
             dragTouchId = data.pointerId;
         }
 
-        void OnDisable()
-        {
+        void OnDisable() {
             // remove the joysticks from the cross platform input
             m_HorizontalVirtualAxis.Remove();
             m_VerticalVirtualAxis.Remove();

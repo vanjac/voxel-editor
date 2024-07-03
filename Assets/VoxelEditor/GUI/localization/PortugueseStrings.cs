@@ -3,8 +3,7 @@
 // https://georeference.org/forum/t150812.62
 // https://steamcommunity.com/app/519860/discussions/6/1744512496199584988
 // https://www.construct.net/en/forum/construct-3/portugues-pt-br-14/100-today-132770
-public class PortugueseStrings : GUIStringSet
-{
+public class PortugueseStrings : GUIStringSet {
     // World -> Mundo
     // Paint -> Tinta
     // Material -> Material

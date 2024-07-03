@@ -3,33 +3,26 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-public class CreateMaterialsForTextures : ScriptableWizard
-{
+public class CreateMaterialsForTextures : ScriptableWizard {
     public Shader shader;
 
     [MenuItem("Tools/CreateMaterialsForTextures")]
-    static void CreateWizard()
-    {
+    static void CreateWizard() {
         ScriptableWizard.DisplayWizard<CreateMaterialsForTextures>("Create Materials", "Create");
     }
 
-    void OnEnable()
-    {
+    void OnEnable() {
         shader = Shader.Find("Standard");
     }
 
-    void OnWizardCreate()
-    {
-        try
-        {
+    void OnWizardCreate() {
+        try {
             AssetDatabase.StartAssetEditing();
             var textures = Selection.GetFiltered(typeof(Texture), SelectionMode.Assets).Cast<Texture>();
-            foreach (var tex in textures)
-            {
+            foreach (var tex in textures) {
                 string path = AssetDatabase.GetAssetPath(tex);
                 path = path.Substring(0, path.LastIndexOf(".")) + ".mat";
-                if (AssetDatabase.LoadAssetAtPath(path, typeof(Material)) != null)
-                {
+                if (AssetDatabase.LoadAssetAtPath(path, typeof(Material)) != null) {
                     Debug.LogWarning("Can't create material, it already exists: " + path);
                     continue;
                 }
@@ -37,9 +30,7 @@ public class CreateMaterialsForTextures : ScriptableWizard
                 mat.mainTexture = tex;
                 AssetDatabase.CreateAsset(mat, path);
             }
-        }
-        finally
-        {
+        } finally {
             AssetDatabase.StopAssetEditing();
             AssetDatabase.SaveAssets();
         }

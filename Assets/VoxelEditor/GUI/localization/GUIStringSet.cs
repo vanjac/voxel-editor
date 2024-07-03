@@ -2,8 +2,7 @@ public delegate string Localizer(GUIStringSet stringSet);
 
 // This class implements localizable strings for English.
 // Other languages are implemented as subclasses that override these methods.
-public class GUIStringSet
-{
+public class GUIStringSet {
     public static string Empty(GUIStringSet _) => ""; // utility
 
     // Common terminology:

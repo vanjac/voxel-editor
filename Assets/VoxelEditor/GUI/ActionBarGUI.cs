@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 
-public class ActionBarGUI : TopPanelGUI
-{
+public class ActionBarGUI : TopPanelGUI {
     public VoxelArrayEditor voxelArray;
     public EditorFile editorFile;
     public TouchListener touchListener;
 
-    private static readonly System.Lazy<GUIStyle> labelStyle = new System.Lazy<GUIStyle>(() =>
-    {
+    private static readonly System.Lazy<GUIStyle> labelStyle = new System.Lazy<GUIStyle>(() => {
         var style = new GUIStyle(StyleSet.buttonLarge);
         style.alignment = TextAnchor.MiddleCenter;
         style.normal.background = GUI.skin.box.normal.background;
@@ -15,8 +13,7 @@ public class ActionBarGUI : TopPanelGUI
         return style;
     });
 
-    public override void OnEnable()
-    {
+    public override void OnEnable() {
         holdOpen = true;
         stealFocus = false;
 
@@ -25,57 +22,53 @@ public class ActionBarGUI : TopPanelGUI
 
     public override GUIStyle GetStyle() => GUIStyle.none;
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         GUILayout.BeginHorizontal();
         // overflow menu will not be cut off if the buttons can't fit
         GUIUtils.BeginHorizontalClipped();
 
-        if (ActionBarButton(IconSet.close))
+        if (ActionBarButton(IconSet.close)) {
             editorFile.Close();
+        }
 
         SelectionGUI();
         EditGUI();
 
         GUILayout.FlexibleSpace();
 
-        if (ActionBarButton(IconSet.play))
+        if (ActionBarButton(IconSet.play)) {
             editorFile.Play();
+        }
 
         GUIUtils.EndHorizontalClipped();
 
         TutorialGUI.TutorialHighlight("bevel");
-        if (ActionBarButton(IconSet.overflow))
+        if (ActionBarButton(IconSet.overflow)) {
             BuildOverflowMenu();
+        }
         TutorialGUI.ClearHighlight();
 
         GUILayout.EndHorizontal();
     }
 
-    protected void SelectionGUI()
-    {
-        if (voxelArray.SomethingIsAddSelected())
-        {
-            if (ActionBarButton(IconSet.applySelection))
+    protected void SelectionGUI() {
+        if (voxelArray.SomethingIsAddSelected()) {
+            if (ActionBarButton(IconSet.applySelection)) {
                 voxelArray.StoreSelection();
+            }
         }
 
-        if (voxelArray.SomethingIsStoredSelected())
-        {
-            if (ActionBarButton(IconSet.clearSelection))
-            {
+        if (voxelArray.SomethingIsStoredSelected()) {
+            if (ActionBarButton(IconSet.clearSelection)) {
                 voxelArray.ClearStoredSelection();
                 voxelArray.ClearSelection();
             }
         }
     }
 
-    protected void EditGUI(string message = null)
-    {
-        if (!voxelArray.SomethingIsSelected())
-        {
-            if (message != null)
-            {
+    protected void EditGUI(string message = null) {
+        if (!voxelArray.SomethingIsSelected()) {
+            if (message != null) {
                 GUILayout.FlexibleSpace();
                 ActionBarLabel(message);
             }
@@ -84,12 +77,10 @@ public class ActionBarGUI : TopPanelGUI
         bool facesSelected = voxelArray.FacesAreSelected();
 
         TutorialGUI.TutorialHighlight("paint");
-        if (ActionBarButton(IconSet.paint))
-        {
+        if (ActionBarButton(IconSet.paint)) {
             PaintGUI paintGUI = gameObject.AddComponent<PaintGUI>();
             paintGUI.voxelArray = voxelArray;
-            paintGUI.handler = (VoxelFace paint) =>
-            {
+            paintGUI.handler = (VoxelFace paint) => {
                 voxelArray.PaintSelectedFaces(paint);
             };
             paintGUI.paint = voxelArray.GetSelectedPaint();
@@ -97,24 +88,19 @@ public class ActionBarGUI : TopPanelGUI
         TutorialGUI.ClearHighlight();
 
         TutorialGUI.TutorialHighlight("create object");
-        if (facesSelected && ActionBarButton(IconSet.create))
-        {
+        if (facesSelected && ActionBarButton(IconSet.create)) {
             TypePickerGUI picker = gameObject.AddComponent<TypePickerGUI>();
             picker.title = StringSet.CreateObjectTitle;
             picker.categories = new PropertiesObjectType[][] {
                 GameScripts.entityTemplates, GameScripts.objectTemplates };
             picker.categoryNames = new string[] { StringSet.SubstanceName, StringSet.ObjectName };
-            picker.handler = (PropertiesObjectType type) =>
-            {
-                if (typeof(Substance).IsAssignableFrom(type.type))
-                {
+            picker.handler = (PropertiesObjectType type) => {
+                if (typeof(Substance).IsAssignableFrom(type.type)) {
                     Substance substance = (Substance)type.Create();
                     voxelArray.substanceToCreate = substance;
                     var createGUI = gameObject.AddComponent<CreateSubstanceGUI>();
                     createGUI.voxelArray = voxelArray;
-                }
-                else if (typeof(ObjectEntity).IsAssignableFrom(type.type))
-                {
+                } else if (typeof(ObjectEntity).IsAssignableFrom(type.type)) {
                     voxelArray.PlaceObject((ObjectEntity)type.Create());
                 }
             };
@@ -124,21 +110,21 @@ public class ActionBarGUI : TopPanelGUI
         GUILayout.FlexibleSpace();
         float moveCount = 0;
         if (touchListener.currentTouchOperation == TouchListener.TouchOperation.MOVE
-            && touchListener.movingAxis is MoveAxis)
+                && touchListener.movingAxis is MoveAxis) {
             moveCount = Mathf.Abs(((MoveAxis)touchListener.movingAxis).moveCount);
-        if (moveCount != 0)
+        }
+        if (moveCount != 0) {
             ActionBarLabel(moveCount.ToString());
-        else if (message != null)
+        } else if (message != null) {
             ActionBarLabel(message);
-        else if (facesSelected)
+        } else if (facesSelected) {
             ActionBarLabel(SelectionString(voxelArray.selectionBounds.size));
+        }
     }
 
-    private void BuildOverflowMenu()
-    {
+    private void BuildOverflowMenu() {
         var overflow = gameObject.AddComponent<OverflowMenuGUI>();
-        overflow.items = new OverflowMenuGUI.MenuItem[]
-        {
+        overflow.items = new OverflowMenuGUI.MenuItem[] {
             new OverflowMenuGUI.MenuItem(StringSet.OpenHelp, IconSet.help, () => {
                 var help = gameObject.AddComponent<HelpGUI>();
                 help.voxelArray = voxelArray;
@@ -146,8 +132,7 @@ public class ActionBarGUI : TopPanelGUI
             }),
             new OverflowMenuGUI.MenuItem(StringSet.OpenWorldProperties, IconSet.world, () => {
                 PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
-                if (propsGUI != null)
-                {
+                if (propsGUI != null) {
                     propsGUI.specialSelection = voxelArray.world;
                     propsGUI.normallyOpen = true;
                 }
@@ -155,8 +140,7 @@ public class ActionBarGUI : TopPanelGUI
             new OverflowMenuGUI.MenuItem(StringSet.SelectSubmenu, IconSet.select, () => {
                 var selectMenu = gameObject.AddComponent<OverflowMenuGUI>();
                 selectMenu.depth = 1;
-                selectMenu.items = new OverflowMenuGUI.MenuItem[]
-                {
+                selectMenu.items = new OverflowMenuGUI.MenuItem[] {
                     new OverflowMenuGUI.MenuItem(StringSet.SelectDraw, IconSet.draw, () => {
                         DrawSelectInterface();
                     }),
@@ -204,80 +188,73 @@ public class ActionBarGUI : TopPanelGUI
     public static bool HighlightedActionBarButton(Texture icon) =>
         GUIUtils.HighlightedButton(icon, StyleSet.buttonLarge, true, GUILayout.ExpandWidth(false));
 
-    public static void ActionBarLabel(string text)
-    {
-        if (text.Length == 0)
+    public static void ActionBarLabel(string text) {
+        if (text.Length == 0) {
             return;
+        }
         GUILayout.Label(text, labelStyle.Value, GUILayout.ExpandWidth(false));
     }
 
-    protected string SelectionString(Vector3 selectionSize)
-    {
+    protected string SelectionString(Vector3 selectionSize) {
         string selectionString = "";
-        if (selectionSize.x != 0)
-        {
-            if (selectionString != "")
+        if (selectionSize.x != 0) {
+            if (selectionString != "") {
                 selectionString += StringSet.DimensionSeparator;
+            }
             selectionString += Mathf.RoundToInt(selectionSize.x);
         }
-        if (selectionSize.y != 0)
-        {
-            if (selectionString != "")
+        if (selectionSize.y != 0) {
+            if (selectionString != "") {
                 selectionString += StringSet.DimensionSeparator;
+            }
             selectionString += Mathf.RoundToInt(selectionSize.y);
         }
-        if (selectionSize.z != 0)
-        {
-            if (selectionString != "")
+        if (selectionSize.z != 0) {
+            if (selectionString != "") {
                 selectionString += StringSet.DimensionSeparator;
+            }
             selectionString += Mathf.RoundToInt(selectionSize.z);
         }
         return selectionString;
     }
 
 
-    private void SelectByTagInterface()
-    {
+    private void SelectByTagInterface() {
         TagPickerGUI tagPicker = gameObject.AddComponent<TagPickerGUI>();
         tagPicker.title = StringSet.SelectWithTagTitle;
-        tagPicker.handler = (byte tag) =>
-        {
+        tagPicker.handler = (byte tag) => {
             voxelArray.ClearSelection();
             voxelArray.SelectAllWithTag(tag);
         };
     }
 
-    private void SelectByPaintInterface()
-    {
+    private void SelectByPaintInterface() {
         FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
         facePicker.voxelArray = voxelArray;
         facePicker.message = StringSet.SelectWithPaintInstruction;
         facePicker.clearStoredSelection = false;
-        facePicker.pickAction = () =>
-        {
+        facePicker.pickAction = () => {
             VoxelFace paint = voxelArray.GetSelectedPaint();
             voxelArray.ClearSelection();
-            if (paint.IsEmpty())
+            if (paint.IsEmpty()) {
                 return;
+            }
             voxelArray.SelectAllWithPaint(paint);
         };
     }
 
-    private void FillPaintInterface()
-    {
+    private void FillPaintInterface() {
         FacePickerGUI facePicker = gameObject.AddComponent<FacePickerGUI>();
         facePicker.voxelArray = voxelArray;
         facePicker.message = StringSet.SelectFillPaintInstruction;
         facePicker.onlyFaces = true;  // filling object doesn't make sense
         facePicker.clearStoredSelection = false;
-        facePicker.pickAction = () =>
-        {
+        facePicker.pickAction = () => {
             voxelArray.FillSelectPaint();
         };
     }
 
-    private void DrawSelectInterface()
-    {
+    private void DrawSelectInterface() {
         DrawSelectGUI drawSelect = gameObject.AddComponent<DrawSelectGUI>();
         drawSelect.voxelArray = voxelArray;
         drawSelect.touchListener = touchListener;

@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-public class Opus
-{
+public class Opus {
 #if UNITY_IOS && !UNITY_EDITOR
     private const string LIBRARY_NAME = "__Internal";
 #elif (UNITY_ANDROID && !UNITY_EDITOR) || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
@@ -34,8 +33,7 @@ public class Opus
     [DllImport(LIBRARY_NAME)]
     public static extern int opus_encoder_ctl2(IntPtr st, Ctl request, out int result);
 
-    public static int opus_encoder_ctl(IntPtr st, Ctl request, out int result)
-    {
+    public static int opus_encoder_ctl(IntPtr st, Ctl request, out int result) {
         return opus_encoder_ctl2(st, request, out result);
     }
 #else
@@ -43,8 +41,7 @@ public class Opus
     public static extern int opus_encoder_ctl(IntPtr st, Ctl request, out int result);
 #endif
 
-    public enum Ctl : int
-    {
+    public enum Ctl : int {
         GetApplicationRequest = 4001,
         SetBitrateRequest = 4002,
         GetBitrateRequest = 4003,
@@ -52,8 +49,7 @@ public class Opus
         GetComplexityRequest = 4011
     }
 
-    public enum Bitrate : int
-    {
+    public enum Bitrate : int {
         Auto = -1000,
         Max = -1
     }
@@ -61,8 +57,7 @@ public class Opus
     /// <summary>
     /// Supported coding modes.
     /// </summary>
-    public enum Application
-    {
+    public enum Application {
         /// <summary>
         /// Best for most VoIP/videoconference applications where listening quality and intelligibility matter most.
         /// </summary>
@@ -77,8 +72,7 @@ public class Opus
         Restricted_LowDelay = 2051
     }
 
-    public enum Errors
-    {
+    public enum Errors {
         /// <summary>
         /// No error.
         /// </summary>

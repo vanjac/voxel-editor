@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
-public class GUIStyleSet
-{
+public class GUIStyleSet {
     public GUIStyle labelTitle, buttonTab, buttonLarge, buttonSmall;
 
     // must be created in OnGUI
-    public GUIStyleSet(GUISkin skin)
-    {
+    public GUIStyleSet(GUISkin skin) {
         labelTitle = skin.GetStyle("label_title");
         buttonTab = skin.GetStyle("button_tab");
         buttonLarge = skin.GetStyle("button_large");

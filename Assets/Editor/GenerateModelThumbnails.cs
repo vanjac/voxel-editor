@@ -1,24 +1,20 @@
 using UnityEngine;
 using UnityEditor;
 
-public static class GenerateModelThumbnails
-{
+public static class GenerateModelThumbnails {
     private const string SEARCH_PATH = "Assets/Resources/GameAssets/Models";
     private const string WRITE_PATH = "Assets/Resources/Thumbnails/";
 
     [MenuItem("Tools/Generate N-Space model thumbnails")]
-    public static void Generate()
-    {
+    public static void Generate() {
         string[] guids = AssetDatabase.FindAssets("", new string[] { SEARCH_PATH });
-        foreach (var obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
-        {
+        foreach (var obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets)) {
             string fullPath = AssetDatabase.GetAssetPath(obj);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(fullPath);
             Mesh mesh = AssetDatabase.LoadAssetAtPath<Mesh>(fullPath);
 
             Texture2D thumbnail = AssetPreview.GetAssetPreview(mesh);
-            if (thumbnail != null)
-            {
+            if (thumbnail != null) {
                 RenderTexture rt = RenderTexture.GetTemporary(thumbnail.width, thumbnail.height);
                 Graphics.Blit(thumbnail, rt);
 

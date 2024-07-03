@@ -1,20 +1,18 @@
 ﻿using UnityEngine;
 
-public static class GameScripts
-{
-    public static PropertiesObjectType FindTypeWithName(PropertiesObjectType[] types, string name)
-    {
-        for (int i = 0; i < types.Length; i++)
-            if (types[i].fullName == name)
+public static class GameScripts {
+    public static PropertiesObjectType FindTypeWithName(PropertiesObjectType[] types, string name) {
+        for (int i = 0; i < types.Length; i++) {
+            if (types[i].fullName == name) {
                 return types[i];
+            }
+        }
         return null;
     }
 
 
-    public static PropertiesObjectType[] entityTemplates = new PropertiesObjectType[]
-    {
-        new PropertiesObjectType("Solid Substance", typeof(Substance))
-        {
+    public static PropertiesObjectType[] entityTemplates = new PropertiesObjectType[] {
+        new PropertiesObjectType("Solid Substance", typeof(Substance)) {
             displayName = s => s.SolidSubstanceName,
             description = s => s.SolidSubstanceDesc,
             iconName = SolidBehavior.objectType.iconName,
@@ -25,8 +23,7 @@ public static class GameScripts
                 return substance;
             },
         },
-        new PropertiesObjectType("Water", typeof(Substance))
-        {
+        new PropertiesObjectType("Water", typeof(Substance)) {
             displayName = WaterBehavior.objectType.displayName,
             description = s => s.WaterSubstanceDesc,
             iconName = WaterBehavior.objectType.iconName,
@@ -39,8 +36,7 @@ public static class GameScripts
                 return substance;
             },
         },
-        new PropertiesObjectType("Trigger", typeof(Substance))
-        {
+        new PropertiesObjectType("Trigger", typeof(Substance)) {
             displayName = s => s.TriggerName,
             description = s => s.TriggerDesc,
             iconName = TouchSensor.objectType.iconName,
@@ -53,8 +49,7 @@ public static class GameScripts
                 return substance;
             },
         },
-        new PropertiesObjectType("Glass", typeof(Substance))
-        {
+        new PropertiesObjectType("Glass", typeof(Substance)) {
             displayName = s => s.GlassName,
             description = s => s.GlassDesc,
             iconName = "window-closed-variant",
@@ -71,8 +66,7 @@ public static class GameScripts
         },
     };
 
-    public static PropertiesObjectType[] sensors = new PropertiesObjectType[]
-    {
+    public static PropertiesObjectType[] sensors = new PropertiesObjectType[] {
         PropertiesObjectType.NONE,
 
         TouchSensor.objectType,
@@ -89,10 +83,8 @@ public static class GameScripts
         DelaySensor.objectType
     };
 
-    public static PropertiesObjectType[][] sensorTabs = new PropertiesObjectType[][]
-    {
-        new PropertiesObjectType[] // Detect
-        {
+    public static PropertiesObjectType[][] sensorTabs = new PropertiesObjectType[][] {
+        new PropertiesObjectType[] { // Detect
             PropertiesObjectType.NONE,
             TouchSensor.objectType,
             TapSensor.objectType,
@@ -101,8 +93,7 @@ public static class GameScripts
             InCameraSensor.objectType,
             CheckScoreSensor.objectType,
         },
-        new PropertiesObjectType[] // Logic
-        {
+        new PropertiesObjectType[] { // Logic
             InputThresholdSensor.objectType,
             ToggleSensor.objectType,
             PulseSensor.objectType,
@@ -111,8 +102,7 @@ public static class GameScripts
         }
     };
 
-    public static BehaviorType[] behaviors = new BehaviorType[]
-    {
+    public static BehaviorType[] behaviors = new BehaviorType[] {
         MoveBehavior.objectType,
         SpinBehavior.objectType,
         LookAtBehavior.objectType,
@@ -142,8 +132,7 @@ public static class GameScripts
     };
 
     public static string[] BehaviorTabNames(GUIStringSet s) =>
-        new string[]
-        {
+        new string[] {
             s.BehaviorsMotion,
             s.BehaviorsGraphics,
             s.BehaviorsLife,
@@ -151,10 +140,8 @@ public static class GameScripts
             s.BehaviorsSound,
         };
 
-    public static BehaviorType[][] behaviorTabs = new BehaviorType[][]
-    {
-        new BehaviorType[]
-        {
+    public static BehaviorType[][] behaviorTabs = new BehaviorType[][] {
+        new BehaviorType[] {
             MoveBehavior.objectType,
             SpinBehavior.objectType,
             LookAtBehavior.objectType,
@@ -163,21 +150,18 @@ public static class GameScripts
             ScaleBehavior.objectType,
             // JoystickBehavior.objectType,
         },
-        new BehaviorType[]
-        {
+        new BehaviorType[] {
             VisibleBehavior.objectType,
             LightBehavior.objectType,
             HaloBehavior.objectType,
             ReflectorBehavior.objectType,
         },
-        new BehaviorType[]
-        {
+        new BehaviorType[] {
             HurtHealBehavior.objectType,
             CloneBehavior.objectType,
             ScoreBehavior.objectType,
         },
-        new BehaviorType[]
-        {
+        new BehaviorType[] {
             SolidBehavior.objectType,
             PhysicsBehavior.objectType,
             CharacterBehavior.objectType,
@@ -185,39 +169,33 @@ public static class GameScripts
             WaterBehavior.objectType,
             ForceBehavior.objectType
         },
-        new BehaviorType[]
-        {
+        new BehaviorType[] {
             SoundBehavior.objectType,
             Sound3DBehavior.objectType
         }
     };
 
-    public static PropertiesObjectType[] objects = new PropertiesObjectType[]
-    {
+    public static PropertiesObjectType[] objects = new PropertiesObjectType[] {
         PlayerObject.objectType,
         BallObject.objectType,
         PropObject.objectType,
     };
 
-    public static PropertiesObjectType[] objectTemplates = new PropertiesObjectType[]
-    {
-        new PropertiesObjectType(BallObject.objectType, () =>
-        {
+    public static PropertiesObjectType[] objectTemplates = new PropertiesObjectType[] {
+        new PropertiesObjectType(BallObject.objectType, () => {
             BallObject ball = new BallObject();
             ball.behaviors.Add(new VisibleBehavior());
             ball.behaviors.Add(new SolidBehavior());
             return ball;
         }),
-        new PropertiesObjectType(PropObject.objectType, () =>
-        {
+        new PropertiesObjectType(PropObject.objectType, () => {
             PropObject prop = new PropObject();
             prop.behaviors.Add(new ScaleBehavior());
             prop.behaviors.Add(new VisibleBehavior());
             prop.behaviors.Add(new SolidBehavior());
             return prop;
         }),
-        new PropertiesObjectType("Empty", typeof(BallObject))
-        {
+        new PropertiesObjectType("Empty", typeof(BallObject)) {
             displayName = s => s.EmptyName,
             description = s => s.EmptyDesc,
             iconName = "scan-helper",
@@ -230,8 +208,7 @@ public static class GameScripts
                 return ball;
             },
         },
-        new PropertiesObjectType("Light", typeof(BallObject))
-        {
+        new PropertiesObjectType("Light", typeof(BallObject)) {
             displayName = LightBehavior.objectType.displayName,
             description = s => s.LightObjectDesc,
             iconName = LightBehavior.objectType.iconName,
@@ -246,8 +223,7 @@ public static class GameScripts
                 return ball;
             },
         },
-        new PropertiesObjectType("Reflector", typeof(BallObject))
-        {
+        new PropertiesObjectType("Reflector", typeof(BallObject)) {
             displayName = ReflectorBehavior.objectType.displayName,
             description = ReflectorBehavior.objectType.description,
             iconName = ReflectorBehavior.objectType.iconName,
@@ -262,8 +238,7 @@ public static class GameScripts
         },
     };
 
-    public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[]
-    {
+    public static PropertiesObjectType[] entityFilterTypes = new PropertiesObjectType[] {
         Entity.objectType,
         Substance.objectType,
         BallObject.objectType,

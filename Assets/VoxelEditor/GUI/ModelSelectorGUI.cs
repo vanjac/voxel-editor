@@ -1,8 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class ModelSelectorGUI : GUIPanel
-{
+public class ModelSelectorGUI : GUIPanel {
     public System.Action<string> handler;
     public string selectedModel = "";
 
@@ -15,21 +14,20 @@ public class ModelSelectorGUI : GUIPanel
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 960, safeRect.height * .8f,
             maxHeight: 1360);
 
-    void Start()
-    {
+    void Start() {
         var categories = ResourcesDirectory.GetModelDatabase().categories;
         categoryIcons = categories.Select(cat => cat.icon).ToArray();
         selectedCategory = categories.FindIndex(cat => cat.models.Contains(selectedModel));
-        if (selectedCategory == -1)
+        if (selectedCategory == -1) {
             selectedCategory = 0;
+        }
         UpdateCategory();
     }
 
     private ModelCategory GetCategory() =>
         ResourcesDirectory.GetModelDatabase().categories[selectedCategory];
 
-    private void UpdateCategory()
-    {
+    private void UpdateCategory() {
         scroll = Vector2.zero;
         scrollVelocity = Vector2.zero;
 
@@ -39,12 +37,10 @@ public class ModelSelectorGUI : GUIPanel
         selectedIndex = category.models.IndexOf(selectedModel);
     }
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         int tab = GUILayout.SelectionGrid(selectedCategory, categoryIcons, categoryIcons.Length,
             StyleSet.buttonTab);
-        if (tab != selectedCategory)
-        {
+        if (tab != selectedCategory) {
             selectedCategory = tab;
             UpdateCategory();
         }
@@ -52,8 +48,7 @@ public class ModelSelectorGUI : GUIPanel
         scroll = GUILayout.BeginScrollView(scroll);
         int selection = GUILayout.SelectionGrid(
             selectedIndex, modelThumbnails, 4, StyleSet.buttonSmall);
-        if (selection != selectedIndex)
-        {
+        if (selection != selectedIndex) {
             handler(GetCategory().models[selection]);
             Destroy(this);
         }

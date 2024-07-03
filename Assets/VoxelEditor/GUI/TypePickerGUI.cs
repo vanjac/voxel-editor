@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-public class TypePickerGUI : GUIPanel
-{
+public class TypePickerGUI : GUIPanel {
     public System.Action<PropertiesObjectType> handler;
     public PropertiesObjectType[][] categories;
     public string[] categoryNames = new string[0];
@@ -9,8 +8,7 @@ public class TypePickerGUI : GUIPanel
     private int selectedCategory;
     private PropertiesObjectType showHelp;
 
-    private static readonly System.Lazy<GUIStyle> descriptionStyle = new System.Lazy<GUIStyle>(() =>
-    {
+    private static readonly System.Lazy<GUIStyle> descriptionStyle = new System.Lazy<GUIStyle>(() => {
         var style = new GUIStyle(GUI.skin.label);
         style.wordWrap = true;
         style.padding = new RectOffset(0, 0, 0, 0);
@@ -18,8 +16,7 @@ public class TypePickerGUI : GUIPanel
         return style;
     });
 
-    private static readonly System.Lazy<GUIStyle> helpIconStyle = new System.Lazy<GUIStyle>(() =>
-    {
+    private static readonly System.Lazy<GUIStyle> helpIconStyle = new System.Lazy<GUIStyle>(() => {
         var style = new GUIStyle(GUI.skin.label);
         style.padding = new RectOffset(0, 0, 0, 0);
         //style.margin = new RectOffset(0, 0, 0, 0);
@@ -30,14 +27,11 @@ public class TypePickerGUI : GUIPanel
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y, 960, safeRect.height * .8f,
             maxHeight: 1360);
 
-    public override void WindowGUI()
-    {
-        if (categoryNames.Length > 1)
-        {
+    public override void WindowGUI() {
+        if (categoryNames.Length > 1) {
             int tab = GUILayout.SelectionGrid(selectedCategory, categoryNames,
                 categoryNames.Length, StyleSet.buttonTab);
-            if (tab != selectedCategory)
-            {
+            if (tab != selectedCategory) {
                 selectedCategory = tab;
                 scroll = Vector2.zero;
                 scrollVelocity = Vector2.zero;
@@ -46,8 +40,7 @@ public class TypePickerGUI : GUIPanel
 
         var categoryItems = categories[selectedCategory];
         scroll = GUILayout.BeginScrollView(scroll);
-        for (int i = 0; i < categoryItems.Length; i++)
-        {
+        for (int i = 0; i < categoryItems.Length; i++) {
             PropertiesObjectType item = categoryItems[i];
             GUIUtils.BeginButtonVertical(item.fullName);
             GUILayout.BeginHorizontal();
@@ -57,24 +50,22 @@ public class TypePickerGUI : GUIPanel
             GUILayout.Label(item.displayName(StringSet), StyleSet.labelTitle);
             var longDesc = item.longDescription(StringSet);
             if (longDesc != "" && GUILayout.Button(IconSet.helpCircle,
-                helpIconStyle.Value, GUILayout.ExpandWidth(false)))
-            {
-                if (showHelp == item)
+                    helpIconStyle.Value, GUILayout.ExpandWidth(false))) {
+                if (showHelp == item) {
                     showHelp = null;
-                else
+                } else {
                     showHelp = item;
+                }
             }
             GUILayout.EndHorizontal();
             GUILayout.Label("<i>" + item.description(StringSet) + "</i>", descriptionStyle.Value);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-            if (showHelp == item)
-            {
+            if (showHelp == item) {
                 GUILayout.Space(16);
                 GUILayout.Label(longDesc, descriptionStyle.Value);
             }
-            if (GUIUtils.EndButtonVertical(item.fullName))
-            {
+            if (GUIUtils.EndButtonVertical(item.fullName)) {
                 handler(item);
                 Destroy(this);
             }

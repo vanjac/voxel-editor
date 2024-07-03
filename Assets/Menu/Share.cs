@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using UnityEngine;
 
-public class ShareMap
-{
-    public static void Share(string filePath)
-    {
+public class ShareMap {
+    public static void Share(string filePath) {
 #if UNITY_ANDROID
         AndroidShare.Share(filePath);
 #elif UNITY_IOS
@@ -12,8 +10,7 @@ public class ShareMap
 #endif
     }
 
-    public static bool OpenFileManager()
-    {
+    public static bool OpenFileManager() {
 #if UNITY_ANDROID && !UNITY_EDITOR
         return AndroidShareReceive.OpenFileManager();
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -26,8 +23,7 @@ public class ShareMap
 #endif
     }
 
-    public static bool FileWaitingToImport()
-    {
+    public static bool FileWaitingToImport() {
 #if UNITY_IOS || UNITY_EDITOR
         return IOSShareReceive.FileWaitingToImport();
 #elif UNITY_ANDROID
@@ -37,8 +33,7 @@ public class ShareMap
 #endif
     }
 
-    public static void ClearFileWaitingToImport()
-    {
+    public static void ClearFileWaitingToImport() {
 #if UNITY_IOS || UNITY_EDITOR
         IOSShareReceive.ClearFileWaitingToImport();
 #elif UNITY_ANDROID
@@ -46,8 +41,7 @@ public class ShareMap
 #endif
     }
 
-    public static void ImportSharedFile(string filePath)
-    {
+    public static void ImportSharedFile(string filePath) {
 #if UNITY_IOS || UNITY_EDITOR
         IOSShareReceive.ImportSharedFile(filePath);
 #elif UNITY_ANDROID
@@ -56,8 +50,7 @@ public class ShareMap
     }
 
     // creates a stream; wrap inside "using"!
-    public static Stream GetImportStream()
-    {
+    public static Stream GetImportStream() {
 #if UNITY_IOS || UNITY_EDITOR
         return IOSShareReceive.GetImportStream();
 #elif UNITY_ANDROID

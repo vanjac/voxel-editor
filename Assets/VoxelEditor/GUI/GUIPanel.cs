@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class GUIPanel : MonoBehaviour
-{
+public abstract class GUIPanel : MonoBehaviour {
     // minimum scaled pixels a touch should move before start scrolling
     public const float SCROLL_THRESHOLD = 32;
 
@@ -40,72 +39,61 @@ public abstract class GUIPanel : MonoBehaviour
 
     public Rect panelRect;
 
-    public virtual void OnEnable()
-    {
+    public virtual void OnEnable() {
         openPanels.Add(this);
     }
 
-    public virtual void OnDisable()
-    {
+    public virtual void OnDisable() {
         openPanels.Remove(this);
     }
 
-    private bool IsFocused()
-    {
-        for (int i = openPanels.Count - 1; i >= 0; i--)
-        {
-            if (openPanels[i] == this)
+    private bool IsFocused() {
+        for (int i = openPanels.Count - 1; i >= 0; i--) {
+            if (openPanels[i] == this) {
                 return true;
-            if (openPanels[i].stealFocus)
+            }
+            if (openPanels[i].stealFocus) {
                 return false;
+            }
         }
         return false;
     }
 
-    public void OnGUI()
-    {
-        if (Input.touchCount == 1)
-        {
+    public void OnGUI() {
+        if (Input.touchCount == 1) {
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
-            {
+            if (touch.phase == TouchPhase.Began) {
                 touchStartPos = touch.position;
-                if (PanelContainsPoint(touch.position))
-                {
+                if (PanelContainsPoint(touch.position)) {
                     scrollVelocity = Vector2.zero;
                     touchVelocity = 0;
                     panelSlide = true;
-                }
-                else if (!holdOpen)
-                {
+                } else if (!holdOpen) {
                     GUIPanel touchedPanel = PanelContainingPoint(touch.position);
                     // if the panel is behind this one
-                    if (openPanels.IndexOf(touchedPanel) < openPanels.IndexOf(this))
+                    if (openPanels.IndexOf(touchedPanel) < openPanels.IndexOf(this)) {
                         Destroy(this);
+                    }
                 }
             }
             if (panelSlide && !verticalSlide
-                && Mathf.Abs((touch.position - touchStartPos).x) / scaleFactor > SCROLL_THRESHOLD)
-            {
+                    && Mathf.Abs((touch.position - touchStartPos).x) / scaleFactor > SCROLL_THRESHOLD) {
                 horizontalSlide = true;
             }
             if (panelSlide && !horizontalSlide
-                && Mathf.Abs((touch.position - touchStartPos).y) / scaleFactor > SCROLL_THRESHOLD)
-            {
+                    && Mathf.Abs((touch.position - touchStartPos).y) / scaleFactor > SCROLL_THRESHOLD) {
                 verticalSlide = true;
             }
-        }
-        else
-        {
+        } else {
             panelSlide = false;
             horizontalSlide = false;
             verticalSlide = false;
         }
 
-        if (Input.GetButtonDown("Cancel") && !holdOpen)
-        {
-            if (IsFocused())
+        if (Input.GetButtonDown("Cancel") && !holdOpen) {
+            if (IsFocused()) {
                 Destroy(this);
+            }
         }
 
         // these have to be set every frame for each panel for some reason
@@ -113,58 +101,54 @@ public abstract class GUIPanel : MonoBehaviour
         GUI.matrix = guiMatrix;
 
         Rect newPanelRect = GetRect(scaledSafeArea, scaledScreenArea);
-        if (newPanelRect.width == 0)
+        if (newPanelRect.width == 0) {
             newPanelRect.width = panelRect.width;
-        if (newPanelRect.height == 0)
+        }
+        if (newPanelRect.height == 0) {
             newPanelRect.height = panelRect.height;
+        }
         panelRect = newPanelRect;
         panelRect = GUILayout.Window(GetHashCode(), panelRect, _WindowGUI, "", GetStyle(), GUILayout.ExpandHeight(true));
     }
 
-    private void _WindowGUI(int id)
-    {
-        if (!IsFocused())
-        {
+    private void _WindowGUI(int id) {
+        if (!IsFocused()) {
             GUI.enabled = false;
             GUI.color = new Color(1, 1, 1, 0.8f);
-        }
-        else if (verticalSlide && Input.touchCount == 1 && IsFocused())
-        {
+        } else if (verticalSlide && Input.touchCount == 1 && IsFocused()) {
             GUI.enabled = false;
             GUI.color = new Color(1, 1, 1, 2); // reverse disabled tinting
-            if (Event.current.type == EventType.Repaint) // scroll at correct rate
-            {
+            if (Event.current.type == EventType.Repaint) { // scroll at correct rate
                 Touch touch = Input.GetTouch(0);
                 float scrollVel = touch.deltaPosition.y / scaleFactor;
                 scroll.y += scrollVel;
                 scrollVelocity = Vector2.zero;
-                if (touch.phase == TouchPhase.Moved && touch.deltaTime != 0)
+                if (touch.phase == TouchPhase.Moved && touch.deltaTime != 0) {
                     touchVelocity = scrollVel / touch.deltaTime;
-                else if (touch.phase == TouchPhase.Stationary)
+                } else if (touch.phase == TouchPhase.Stationary) {
                     touchVelocity = 0;
-                else
+                } else {
                     scrollVelocity = new Vector2(0, touchVelocity);
+                }
             }
-        }
-        else
-        {
+        } else {
             GUI.enabled = true;
             GUI.color = Color.white;
         }
-        if (Event.current.type == EventType.Repaint)
-        {
+        if (Event.current.type == EventType.Repaint) {
             scroll += scrollVelocity * Time.deltaTime;
             scrollVelocity *= .92f;
-            if (scroll.y < 0)
+            if (scroll.y < 0) {
                 scroll.y = 0;  // fix scroll bar disappearing
+            }
         }
 
-        if (title != "" || showCloseButton)
-        {
+        if (title != "" || showCloseButton) {
             GUILayout.BeginHorizontal();
             GUILayout.Label(title, GUIUtils.LABEL_HORIZ_CENTERED.Value);
-            if (showCloseButton && GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false)))
+            if (showCloseButton && GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false))) {
                 Destroy(this);
+            }
             GUILayout.EndHorizontal();
         }
 
@@ -180,30 +164,28 @@ public abstract class GUIPanel : MonoBehaviour
 
     public abstract void WindowGUI();
 
-    public bool PanelContainsPoint(Vector2 point)
-    {
+    public bool PanelContainsPoint(Vector2 point) {
         point.y = Screen.height - point.y;
         point /= scaleFactor;
         return panelRect.Contains(point);
     }
 
-    public static GUIPanel PanelContainingPoint(Vector2 point)
-    {
-        for (int i = openPanels.Count - 1; i >= 0; i--)
-            if (openPanels[i].PanelContainsPoint(point))
+    public static GUIPanel PanelContainingPoint(Vector2 point) {
+        for (int i = openPanels.Count - 1; i >= 0; i--) {
+            if (openPanels[i].PanelContainsPoint(point)) {
                 return openPanels[i];
+            }
+        }
         return null;
     }
 
-    public void BringToFront()
-    {
+    public void BringToFront() {
         GUI.BringWindowToFront(GetHashCode());
         openPanels.Remove(this);
         openPanels.Add(this);
     }
 
-    public void RotateAboutPoint(Vector2 point, float rotation, Vector2 scaleFactor)
-    {
+    public void RotateAboutPoint(Vector2 point, float rotation, Vector2 scaleFactor) {
         Vector2 translation = point + panelRect.min;
         GUI.matrix *= Matrix4x4.Translate(translation);
         GUI.matrix *= Matrix4x4.Scale(new Vector3(scaleFactor.x, scaleFactor.y, 1));

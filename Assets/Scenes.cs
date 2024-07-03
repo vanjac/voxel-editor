@@ -1,5 +1,4 @@
-﻿public static class Scenes
-{
+﻿public static class Scenes {
     public const string MENU = "menuScene";
     public const string EDITOR = "editScene";
     public const string GAME = "playScene";

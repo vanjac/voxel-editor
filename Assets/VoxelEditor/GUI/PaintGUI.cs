@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PaintGUI : GUIPanel
-{
+public class PaintGUI : GUIPanel {
     private const int PREVIEW_SIZE = 224;
     private const int NUM_RECENT_PAINTS = 5;
     private const int RECENT_PREVIEW_SIZE = 96;
@@ -23,29 +22,31 @@ public class PaintGUI : GUIPanel
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .7f, safeRect.height * .9f, maxWidth: 1360);
 
-    void Start()
-    {
-        if (paint.overlay != null)
+    void Start() {
+        if (paint.overlay != null) {
             selectedLayer = 1;
+        }
         UpdateMaterialSelector();
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         // add to recent materials list
-        for (int i = recentPaints.Count - 1; i >= 0; i--)
-            if (recentPaints[i].Equals(paint))
+        for (int i = recentPaints.Count - 1; i >= 0; i--) {
+            if (recentPaints[i].Equals(paint)) {
                 recentPaints.RemoveAt(i);
+            }
+        }
         recentPaints.Insert(0, paint);
-        while (recentPaints.Count > NUM_RECENT_PAINTS)
+        while (recentPaints.Count > NUM_RECENT_PAINTS) {
             recentPaints.RemoveAt(recentPaints.Count - 1);
+        }
 
-        if (materialSelector != null)
+        if (materialSelector != null) {
             Destroy(materialSelector);
+        }
     }
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         GUILayout.BeginHorizontal();
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(PREVIEW_SIZE), GUILayout.Height(PREVIEW_SIZE));
         DrawPaint(paint, GUILayoutUtility.GetLastRect());
@@ -53,33 +54,31 @@ public class PaintGUI : GUIPanel
 
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
-        if (GUILayout.Button(IconSet.rotateLeft, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(IconSet.rotateLeft, StyleSet.buttonSmall, GUILayout.ExpandWidth(false))) {
             Orient(3);
+        }
         // BeginHorizontalClipped prevents recent paints from expanding window
         // it's important that one button is outside the view to set the correct height
         // and that one button is always inside the view or weird buggy behavior happens
         GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-        if (GUILayout.Button(IconSet.rotateRight, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(IconSet.rotateRight, StyleSet.buttonSmall, GUILayout.ExpandWidth(false))) {
             Orient(1);
+        }
         TutorialGUI.ClearHighlight();
 
         GUILayout.FlexibleSpace();
-        for (int i = 0; i < recentPaints.Count; i++)
-        {
+        for (int i = 0; i < recentPaints.Count; i++) {
             if (GUILayout.Button(" ", StyleSet.buttonSmall,
-                GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE)))
-            {
+                    GUILayout.Width(RECENT_PREVIEW_SIZE), GUILayout.Height(RECENT_PREVIEW_SIZE))) {
                 paint = recentPaints[i];
                 if (paint.material != null && CustomTexture.IsCustomTexture(paint.material)
-                    && !voxelArray.customMaterials.Contains(paint.material))
-                {
+                        && !voxelArray.customMaterials.Contains(paint.material)) {
                     Debug.Log("Cloning custom material");
                     paint.material = CustomTexture.Clone(paint.material);
                     voxelArray.customMaterials.Add(paint.material);
                 }
                 if (paint.overlay != null && CustomTexture.IsCustomTexture(paint.overlay)
-                    && !voxelArray.customOverlays.Contains(paint.overlay))
-                {
+                        && !voxelArray.customOverlays.Contains(paint.overlay)) {
                     Debug.Log("Cloning custom overlay");
                     paint.overlay = CustomTexture.Clone(paint.overlay);
                     voxelArray.customOverlays.Add(paint.overlay);
@@ -97,76 +96,71 @@ public class PaintGUI : GUIPanel
         GUILayout.FlexibleSpace();
 
         GUIUtils.EndHorizontalClipped();
-        if (GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(StringSet.Done, GUILayout.ExpandWidth(false))) {
             Destroy(this);
+        }
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         TutorialGUI.TutorialHighlight("paint transform");
-        if (GUILayout.Button(IconSet.flipHorizontal, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
+        if (GUILayout.Button(IconSet.flipHorizontal, StyleSet.buttonSmall, GUILayout.ExpandWidth(false))) {
             Orient(5);
-        if (GUILayout.Button(IconSet.flipVertical, StyleSet.buttonSmall, GUILayout.ExpandWidth(false)))
+        }
+        if (GUILayout.Button(IconSet.flipVertical, StyleSet.buttonSmall, GUILayout.ExpandWidth(false))) {
             Orient(7);
+        }
         TutorialGUI.ClearHighlight();
         int oldSelectedLayer = selectedLayer;
         TutorialGUI.TutorialHighlight("paint layer");
-        selectedLayer = GUILayout.SelectionGrid(selectedLayer, new GUIContent[]
-            {
-                GUIUtils.PadContent(StringSet.PaintMaterial, IconSet.baseLayer),
-                GUIUtils.PadContent(StringSet.PaintOverlay, IconSet.overlayLayer),
-            }, 2, StyleSet.buttonSmall);
+        selectedLayer = GUILayout.SelectionGrid(selectedLayer, new GUIContent[] {
+            GUIUtils.PadContent(StringSet.PaintMaterial, IconSet.baseLayer),
+            GUIUtils.PadContent(StringSet.PaintOverlay, IconSet.overlayLayer),
+        }, 2, StyleSet.buttonSmall);
         TutorialGUI.ClearHighlight();
-        if (oldSelectedLayer != selectedLayer)
+        if (oldSelectedLayer != selectedLayer) {
             UpdateMaterialSelector();
+        }
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
 
-        if (materialSelector != null)
-        {
+        if (materialSelector != null) {
             materialSelector.scroll = scroll;
             materialSelector.scrollVelocity = scrollVelocity;
             materialSelector.WindowGUI();
             scroll = materialSelector.scroll;
             scrollVelocity = materialSelector.scrollVelocity;
-        }
-        else
-        {
+        } else {
             Destroy(this);
         }
     }
 
-    private void PaintChanged()
-    {
-        if (paint.material != null || paint.overlay != null)
+    private void PaintChanged() {
+        if (paint.material != null || paint.overlay != null) {
             handler(paint);
+        }
     }
 
-    private void UpdateMaterialSelector()
-    {
-        if (materialSelector != null)
+    private void UpdateMaterialSelector() {
+        if (materialSelector != null) {
             Destroy(materialSelector);
+        }
         materialSelector = gameObject.AddComponent<MaterialSelectorGUI>();
         materialSelector.enabled = false;
         materialSelector.voxelArray = voxelArray;
         materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
-        if (selectedLayer == 0)
-        {
+        if (selectedLayer == 0) {
             materialSelector.rootDirectory = "Materials";
-            materialSelector.handler = (Material mat) =>
-            {
+            materialSelector.handler = (Material mat) => {
                 paint.material = mat;
                 PaintChanged();
             };
             materialSelector.highlightMaterial = paint.material;
-        }
-        else
-        {
+        } else {
             materialSelector.rootDirectory = "Overlays";
             materialSelector.isOverlay = true;
-            materialSelector.handler = (Material mat) =>
-            {
+            materialSelector.handler = (Material mat) => {
                 paint.overlay = mat;
                 PaintChanged();
             };
@@ -177,29 +171,28 @@ public class PaintGUI : GUIPanel
         scrollVelocity = Vector2.zero;
     }
 
-    private void Orient(byte change)
-    {
+    private void Orient(byte change) {
         int changeRotation = VoxelFace.GetOrientationRotation(change);
         bool changeFlip = VoxelFace.GetOrientationMirror(change);
         int paintRotation = VoxelFace.GetOrientationRotation(paint.orientation);
         bool paintFlip = VoxelFace.GetOrientationMirror(paint.orientation);
-        if (paintFlip ^ changeFlip)
+        if (paintFlip ^ changeFlip) {
             paintRotation += 4 - changeRotation;
-        else
+        } else {
             paintRotation += changeRotation;
-        if (changeFlip)
+        }
+        if (changeFlip) {
             paintFlip = !paintFlip;
+        }
         paint.orientation = VoxelFace.Orientation(paintRotation, paintFlip);
         PaintChanged();
     }
 
-    private void DrawPaint(VoxelFace paint, Rect rect)
-    {
+    private void DrawPaint(VoxelFace paint, Rect rect) {
         int rotation = VoxelFace.GetOrientationRotation(paint.orientation);
         Vector2 u_vec = new Vector2(COARSE_COS[rotation], COARSE_SIN[rotation]);
         Vector2 v_vec = new Vector2(-COARSE_SIN[rotation], COARSE_COS[rotation]);
-        if (VoxelFace.GetOrientationMirror(paint.orientation))
-        {
+        if (VoxelFace.GetOrientationMirror(paint.orientation)) {
             var tmp = u_vec;
             u_vec = v_vec * -1;
             v_vec = tmp * -1;
@@ -208,8 +201,7 @@ public class PaintGUI : GUIPanel
         MaterialSelectorGUI.DrawMaterialTexture(paint.overlay, rect, true, u_vec, v_vec);
     }
 
-    public void TutorialShowSky()
-    {
+    public void TutorialShowSky() {
         selectedLayer = 0;
         paint.material = ResourcesDirectory.FindMaterial("Sky", true);
         PaintChanged();

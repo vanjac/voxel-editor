@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 
-public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent>
-{
-    public static new BehaviorType objectType = new BehaviorType("Water", typeof(WaterBehavior))
-    {
+public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent> {
+    public static new BehaviorType objectType = new BehaviorType("Water", typeof(WaterBehavior)) {
         displayName = s => s.WaterName,
         description = s => s.WaterDesc,
         longDescription = s => s.WaterLongDesc,
@@ -15,8 +13,7 @@ public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent
     public float density = 1.0f;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("den", s => s.PropDensity,
                 () => density,
                 v => density = (float)v,
@@ -24,21 +21,18 @@ public class WaterBehavior : GenericEntityBehavior<WaterBehavior, WaterComponent
         });
 }
 
-public class WaterComponent : BehaviorComponent<WaterBehavior>
-{
+public class WaterComponent : BehaviorComponent<WaterBehavior> {
     public float Density => behavior.density;
     private float waterLevel = float.MinValue;
 
-    public override void Start()
-    {
+    public override void Start() {
         SubstanceComponent substanceComponent = GetComponent<SubstanceComponent>();
-        if (substanceComponent != null)
-        {
-            foreach (var position in substanceComponent.substance.voxelGroup.IteratePositions())
-            {
+        if (substanceComponent != null) {
+            foreach (var position in substanceComponent.substance.voxelGroup.IteratePositions()) {
                 float top = Voxel.Bounds(position).max.y - transform.position.y;
-                if (top > waterLevel)
+                if (top > waterLevel) {
                     waterLevel = top;
+                }
             }
         }
         base.Start();

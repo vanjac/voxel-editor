@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class FileReceiveGUI : GUIPanel
-{
+public class FileReceiveGUI : GUIPanel {
     bool openingWorld = false;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
@@ -10,35 +9,31 @@ public class FileReceiveGUI : GUIPanel
 
     public override GUIStyle GetStyle() => GUIStyle.none;
 
-    public override void OnEnable()
-    {
+    public override void OnEnable() {
         holdOpen = true;
         stealFocus = false;
         base.OnEnable();
     }
 
-    private void DestroyThis() // to use as callback
-    {
+    private void DestroyThis() { // to use as callback
         Destroy(this);
     }
 
-    void Start()
-    {
+    void Start() {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
         inputDialog.prompt = StringSet.ImportWorldNamePrompt;
         inputDialog.handler = ImportWorld;
         inputDialog.cancelHandler = DestroyThis;
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         ShareMap.ClearFileWaitingToImport();
-        if (!openingWorld)
+        if (!openingWorld) {
             SceneManager.LoadScene(Scenes.MENU);
+        }
     }
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         ActionBarGUI.ActionBarLabel(StringSet.ImportingFile);
@@ -46,32 +41,24 @@ public class FileReceiveGUI : GUIPanel
         GUILayout.EndHorizontal();
     }
 
-    private void ImportWorld(string name)
-    {
-        if (!WorldFiles.ValidateName(name, out string errorMessage))
-        {
-            if (errorMessage != null)
-            {
+    private void ImportWorld(string name) {
+        if (!WorldFiles.ValidateName(name, out string errorMessage)) {
+            if (errorMessage != null) {
                 var dialog = DialogGUI.ShowMessageDialog(gameObject, errorMessage);
                 dialog.yesButtonHandler = DestroyThis;
-            }
-            else
-            {
+            } else {
                 Destroy(this);
             }
             return;
         }
 
         string newPath = WorldFiles.GetNewWorldPath(name);
-        try
-        {
+        try {
             ShareMap.ImportSharedFile(newPath);
             MenuGUI.OpenWorld(newPath, Scenes.EDITOR);
             openingWorld = true;
             Destroy(this);
-        }
-        catch (System.Exception e)
-        {
+        } catch (System.Exception e) {
             Debug.Log(e);
             var dialog = DialogGUI.ShowMessageDialog(gameObject, StringSet.ImportWorldError);
             dialog.yesButtonHandler = DestroyThis;

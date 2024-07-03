@@ -2,19 +2,16 @@
 using UnityEngine;
 
 // wraps a Material, for editing properties of a custom texture
-public class CustomTexture : PropertiesObject
-{
+public class CustomTexture : PropertiesObject {
     public static PropertiesObjectType objectType = new PropertiesObjectType(
-        "Custom Texture", typeof(CustomTexture))
-    {
+            "Custom Texture", typeof(CustomTexture)) {
         displayName = s => s.CustomTextureName,
         description = s => s.CustomTextureDesc,
         iconName = "image",
     };
     public PropertiesObjectType ObjectType => objectType;
 
-    public enum CustomFilter
-    {
+    public enum CustomFilter {
         SMOOTH, PIXEL
     }
 
@@ -23,23 +20,20 @@ public class CustomTexture : PropertiesObject
 
     public Material material => _material;
 
-    public Texture2D texture
-    {
-        get
-        {
+    public Texture2D texture {
+        get {
             // make sure value is never null!
             var tex = (Texture2D)_material.mainTexture;
-            if (tex == null)
+            if (tex == null) {
                 return Texture2D.whiteTexture;
+            }
             return tex;
         }
         set => _material.mainTexture = value;
     }
 
-    protected (float, float) scale
-    {
-        get
-        {
+    protected (float, float) scale {
+        get {
             Vector2 s = _material.mainTextureScale;
             return (s.x == 0 ? 0 : (1.0f / s.x), s.y == 0 ? 0 : (1.0f / s.y));
         }
@@ -47,18 +41,13 @@ public class CustomTexture : PropertiesObject
             value.Item1 == 0 ? 0 : (1.0f / value.Item1), value.Item2 == 0 ? 0 : (1.0f / value.Item2));
     }
 
-    public Material baseMat
-    {
+    public Material baseMat {
         get => _baseMat;
-        set
-        {
+        set {
             _baseMat = value;
-            if (_material == null)
-            {
+            if (_material == null) {
                 _material = new Material(_baseMat);
-            }
-            else
-            {
+            } else {
                 Texture2D oldTexture = texture;
                 (float, float) oldScale = scale;
 
@@ -73,43 +62,37 @@ public class CustomTexture : PropertiesObject
         }
     }
 
-    protected CustomFilter filter
-    {
+    protected CustomFilter filter {
         get => texture.filterMode == FilterMode.Point ? CustomFilter.PIXEL : CustomFilter.SMOOTH;
         set => texture.filterMode = (value == CustomFilter.PIXEL ? FilterMode.Point : FilterMode.Bilinear);
     }
 
-    public CustomTexture(Material material, bool isOverlay)
-    {
+    public CustomTexture(Material material, bool isOverlay) {
         _material = material;
         this.isOverlay = isOverlay;
-        if (_material != null && IsCustomTexture(_material))
-        {
+        if (_material != null && IsCustomTexture(_material)) {
             string baseName = GetBaseMaterialName(_material);
             _baseMat = ResourcesDirectory.FindMaterial(baseName, true);
             string colorProp = ResourcesDirectory.MaterialColorProperty(_baseMat);
             // copied from MessagePackWorldReader
             Color color = _material.GetColor(colorProp);
-            if (color != _baseMat.GetColor(colorProp))
-            {
+            if (color != _baseMat.GetColor(colorProp)) {
                 _baseMat = ResourcesDirectory.InstantiateMaterial(_baseMat);
                 _baseMat.SetColor(colorProp, color);
             }
-        }
-        else
+        } else {
             _baseMat = _material;  // probably temporary
+        }
     }
 
-    public static CustomTexture FromBaseMaterial(Material baseMat, bool overlay)
-    {
+    public static CustomTexture FromBaseMaterial(Material baseMat, bool overlay) {
         var customTex = new CustomTexture(null, overlay);
         customTex.baseMat = baseMat;
         return customTex;
     }
 
     public IEnumerable<Property> Properties() =>
-        new Property[]
-        {
+        new Property[] {
             new Property("bas", s => s.PropBase,
                 () => baseMat,
                 v => baseMat = (Material)v,
@@ -134,13 +117,11 @@ public class CustomTexture : PropertiesObject
 
     public static string GetBaseMaterialName(Material material) => material.name.Split(':')[1];
 
-    public static Material Clone(Material material)
-    {
+    public static Material Clone(Material material) {
         Material newMat = Material.Instantiate(material);
         Debug.Log("old name: " + material.name);
         var nameParts = material.name.Split(':');
-        if (nameParts.Length < 3)
-        {
+        if (nameParts.Length < 3) {
             Debug.LogError("Bad material name!");
             return newMat;
         }

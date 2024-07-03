@@ -1,21 +1,20 @@
 ﻿using UnityEngine;
 
-public abstract class TopPanelGUI : GUIPanel
-{
+public abstract class TopPanelGUI : GUIPanel {
     private GUIPanel prevTopPanel;
 
-    public virtual void Start()
-    {
+    public virtual void Start() {
         prevTopPanel = GUIPanel.topPanel;
-        if (prevTopPanel != null)
+        if (prevTopPanel != null) {
             prevTopPanel.enabled = false;
+        }
         GUIPanel.topPanel = this;
     }
 
-    public virtual void OnDestroy()
-    {
-        if (prevTopPanel != null)
+    public virtual void OnDestroy() {
+        if (prevTopPanel != null) {
             prevTopPanel.enabled = true;
+        }
         GUIPanel.topPanel = prevTopPanel;
     }
 

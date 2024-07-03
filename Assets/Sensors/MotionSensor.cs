@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
-{
+public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent> {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Motion", typeof(MotionSensor))
-    {
+            "Motion", typeof(MotionSensor)) {
         displayName = s => s.MotionName,
         description = s => s.MotionDesc,
         longDescription = s => s.MotionLongDesc,
@@ -18,8 +16,7 @@ public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
     public Target direction = new Target(null);
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(new Property[]
-        {
+        Property.JoinProperties(new Property[] {
             new Property("vel", s => s.PropMinVelocity,
                 () => minVelocity,
                 v => minVelocity = (float)v,
@@ -35,23 +32,19 @@ public class MotionSensor : GenericSensor<MotionSensor, MotionSensorComponent>
         }, base.Properties());
 }
 
-public class MotionSensorComponent : SensorComponent<MotionSensor>
-{
-    void Update()
-    {
+public class MotionSensorComponent : SensorComponent<MotionSensor> {
+    void Update() {
         var rigidbody = GetComponent<Rigidbody>();
-        if (rigidbody != null)
-        {
+        if (rigidbody != null) {
             bool aboveVel = rigidbody.velocity.magnitude >= sensor.minVelocity;
             bool aboveAngVel = Mathf.Rad2Deg * rigidbody.angularVelocity.magnitude >= sensor.minAngularVelocity;
             bool matchesDirection = sensor.direction.MatchesDirection(transform, rigidbody.velocity);
-            if (aboveVel && aboveAngVel && matchesDirection)
+            if (aboveVel && aboveAngVel && matchesDirection) {
                 AddActivator(null);
-            else
+            } else {
                 RemoveActivator(null);
-        }
-        else
-        {
+            }
+        } else {
             RemoveActivator(null);
         }
     }

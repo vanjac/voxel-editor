@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHealComponent>
-{
+public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHealComponent> {
     public static new BehaviorType objectType = new BehaviorType(
-        "Hurt/Heal", typeof(HurtHealBehavior))
-    {
+            "Hurt/Heal", typeof(HurtHealBehavior)) {
         displayName = s => s.HurtHealName,
         description = s => s.HurtHealDesc,
         longDescription = s => s.HurtHealLongDesc,
@@ -19,8 +17,7 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
     public (float, float) healthRange = (0, 200);
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("num", s => s.PropAmount,
                 () => amount,
                 v => amount = (float)v,
@@ -36,8 +33,7 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
         });
 
     public override IEnumerable<Property> DeprecatedProperties() =>
-        Property.JoinProperties(base.DeprecatedProperties(), new Property[]
-        {
+        Property.JoinProperties(base.DeprecatedProperties(), new Property[] {
             new Property("min", GUIStringSet.Empty,
                 () => healthRange.Item1,
                 v => healthRange.Item1 = (float)v,
@@ -49,42 +45,42 @@ public class HurtHealBehavior : GenericEntityBehavior<HurtHealBehavior, HurtHeal
         });
 }
 
-public class HurtHealComponent : BehaviorComponent<HurtHealBehavior>
-{
+public class HurtHealComponent : BehaviorComponent<HurtHealBehavior> {
     private float lastTime;
 
-    public override void BehaviorEnabled()
-    {
+    public override void BehaviorEnabled() {
         HurtHeal();
         lastTime = Time.time;
     }
 
-    void Update()
-    {
-        if (behavior.rate != 0 && Time.time - lastTime >= behavior.rate)
-        {
+    void Update() {
+        if (behavior.rate != 0 && Time.time - lastTime >= behavior.rate) {
             HurtHeal();
             lastTime += behavior.rate;
         }
     }
 
-    private void HurtHeal()
-    {
+    private void HurtHeal() {
         DynamicEntityComponent dynamicEntity = GetComponent<DynamicEntityComponent>();
-        if (dynamicEntity == null)
+        if (dynamicEntity == null) {
             return;
+        }
         float health = dynamicEntity.health;
-        if (health < behavior.healthRange.Item1 || health > behavior.healthRange.Item2)
+        if (health < behavior.healthRange.Item1 || health > behavior.healthRange.Item2) {
             return;
+        }
         health += behavior.amount;
-        if (health < behavior.healthRange.Item1)
+        if (health < behavior.healthRange.Item1) {
             health = behavior.healthRange.Item1;
-        if (health > behavior.healthRange.Item2)
+        }
+        if (health > behavior.healthRange.Item2) {
             health = behavior.healthRange.Item2;
+        }
         float diff = health - dynamicEntity.health;
-        if (diff > 0)
+        if (diff > 0) {
             dynamicEntity.Heal(diff);
-        else if (diff < 0)
+        } else if (diff < 0) {
             dynamicEntity.Hurt(-diff);
+        }
     }
 }

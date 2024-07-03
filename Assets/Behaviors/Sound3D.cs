@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SpatialSoundMode
-{
+public enum SpatialSoundMode {
     POINT, AMBIENT
 }
 
-public class Sound3DBehavior : BaseSoundBehavior
-{
+public class Sound3DBehavior : BaseSoundBehavior {
     public static new BehaviorType objectType = new BehaviorType(
-        "3D Sound", typeof(Sound3DBehavior))
-    {
+            "3D Sound", typeof(Sound3DBehavior)) {
         displayName = s => s.Sound3DName,
         description = s => s.Sound3DDesc,
         longDescription = s => s.Sound3DLongDesc,
@@ -23,8 +20,7 @@ public class Sound3DBehavior : BaseSoundBehavior
     public SpatialSoundMode spatialMode = SpatialSoundMode.POINT;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("dat", s => s.PropSound,
                 () => soundData,
                 v => soundData = (EmbeddedData)v,
@@ -47,8 +43,7 @@ public class Sound3DBehavior : BaseSoundBehavior
                 PropertyGUIs.FloatRange)
         });
 
-    public override Behaviour MakeComponent(GameObject gameObject)
-    {
+    public override Behaviour MakeComponent(GameObject gameObject) {
         var component = gameObject.AddComponent<SoundComponent>();
         component.Init(this);
         return component;

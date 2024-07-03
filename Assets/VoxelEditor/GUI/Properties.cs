@@ -3,91 +3,72 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
-public static class Properties
-{
+public static class Properties {
     // Unlike EntityReferencePropertyManager, this is not tied to GUI
-    public static IEnumerable<EntityReference> EntityReferences(Property prop)
-    {
+    public static IEnumerable<EntityReference> EntityReferences(Property prop) {
         var value = prop.value;
-        if (value is EntityReference reference)
-        {
+        if (value is EntityReference reference) {
             yield return reference;
-        }
-        else if (value is Target target)
-        {
+        } else if (value is Target target) {
             yield return target.entityRef;
-        }
-        else if (value is ActivatedSensor.EntityFilter filter)
-        {
+        } else if (value is ActivatedSensor.EntityFilter filter) {
             yield return filter.entityRef;
-        }
-        else if (value is EntityBehavior.BehaviorTargetProperty behaviorTarget)
-        {
+        } else if (value is EntityBehavior.BehaviorTargetProperty behaviorTarget) {
             yield return behaviorTarget.targetEntity;
-        }
-        else if (value is InputThresholdSensor.Input[] inputs)
-        {
-            foreach (var input in inputs)
-            {
+        } else if (value is InputThresholdSensor.Input[] inputs) {
+            foreach (var input in inputs) {
                 yield return input.entityRef;
             }
         }
     }
 }
 
-public static class PropertyGUIs
-{
+public static class PropertyGUIs {
     private static GUIStringSet StringSet => GUIPanel.StringSet;
 
     private static TouchScreenKeyboard numberKeyboard = null;
     private static Action<string> keyboardHandler;
 
-    private static readonly Lazy<GUIStyle> alignedLabelStyle = new Lazy<GUIStyle>(() =>
-    {
+    private static readonly Lazy<GUIStyle> alignedLabelStyle = new Lazy<GUIStyle>(() => {
         var style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.MiddleLeft;
         style.padding.right = 0;
         return style;
     });
-    private static readonly Lazy<GUIStyle> headerLabelStyle = new Lazy<GUIStyle>(() =>
-    {
+    private static readonly Lazy<GUIStyle> headerLabelStyle = new Lazy<GUIStyle>(() => {
         var style = new GUIStyle(GUI.skin.label);
         style.padding.top = 0;
         style.padding.bottom = 0;
         return style;
     });
-    private static readonly Lazy<GUIStyle> inlineLabelStyle = new Lazy<GUIStyle>(() =>
-    {
+    private static readonly Lazy<GUIStyle> inlineLabelStyle = new Lazy<GUIStyle>(() => {
         var style = new GUIStyle(alignedLabelStyle.Value);
         style.padding.left = 0;
         return style;
     });
-    private static readonly Lazy<GUIStyle> tagFieldStyle = new Lazy<GUIStyle>(() =>
-    {
+    private static readonly Lazy<GUIStyle> tagFieldStyle = new Lazy<GUIStyle>(() => {
         var style = new GUIStyle(GUI.skin.textField);
         style.fontSize = GUI.skin.font.fontSize * 2;
         return style;
     });
 
-    public static void AlignedLabel(Property property)
-    {
+    public static void AlignedLabel(Property property) {
         var name = property.name(StringSet);
-        if (name != "")
+        if (name != "") {
             GUILayout.Label(name, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
+        }
     }
 
     public static void Empty(Property property) { }
 
-    public static void Text(Property property)
-    {
+    public static void Text(Property property) {
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
         property.value = GUILayout.TextField((string)property.value);
         GUILayout.EndHorizontal();
     }
 
-    public static void Toggle(Property property)
-    {
+    public static void Toggle(Property property) {
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
         GUILayout.FlexibleSpace();
@@ -95,8 +76,7 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static void DoubleToggle(Property property)
-    {
+    public static void DoubleToggle(Property property) {
         string[] names = property.name(StringSet).Split('|');
         var values = ((bool, bool))property.value;
         var buttonStyle = GUIPanel.StyleSet.buttonTab;
@@ -107,93 +87,86 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static void Enum(Property property)
-    {
+    public static void Enum(Property property) {
         System.Enum e = (System.Enum)property.value;
         GUILayout.BeginHorizontal();
-        foreach (var enumValue in System.Enum.GetValues(e.GetType()))
-        {
+        foreach (var enumValue in System.Enum.GetValues(e.GetType())) {
             // TODO: localize!
             string name = enumValue.ToString();
             // sentence case
-            if (name[0] == '_')
+            if (name[0] == '_') {
                 name = name.Substring(1).ToLower();
-            else
+            } else {
                 name = Char.ToUpper(name[0]) + name.Substring(1).ToLower();
-            if (enumValue.Equals(e))
+            }
+            if (enumValue.Equals(e)) {
                 GUIUtils.HighlightedButton(name, GUIPanel.StyleSet.buttonTab);
-            else if (GUILayout.Button(name, GUIPanel.StyleSet.buttonTab))
+            } else if (GUILayout.Button(name, GUIPanel.StyleSet.buttonTab)) {
                 property.value = enumValue;
+            }
         }
         GUILayout.EndHorizontal();
     }
 
-    public static PropertyGUI EnumIcons(Texture[] icons)
-    {
-        return property =>
-        {
+    public static PropertyGUI EnumIcons(Texture[] icons) {
+        return property => {
             int eValue = (int)property.value;
             GUILayout.BeginHorizontal();
-            for (int i = 0; i < icons.Length; i++)
-            {
-                if (eValue == i)
+            for (int i = 0; i < icons.Length; i++) {
+                if (eValue == i) {
                     GUIUtils.HighlightedButton(icons[i], GUIPanel.StyleSet.buttonTab);
-                else if (GUILayout.Button(icons[i], GUIPanel.StyleSet.buttonTab))
+                } else if (GUILayout.Button(icons[i], GUIPanel.StyleSet.buttonTab)) {
                     property.value = i;
+                }
             }
             GUILayout.EndHorizontal();
         };
     }
 
-    private static bool ParseFloat(string s, out float result)
-    {
+    private static bool ParseFloat(string s, out float result) {
         // do NOT allow thousands separators, they can get confused for decimals
-        if (float.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out result))
+        if (float.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out result)) {
             return true;
+        }
         // a bug on Android prevents commas from being used as decimal separators
-        if (float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
+        if (float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out result)) {
             return true;
+        }
         return false;
     }
 
-    public static void Float(Property property)
-    {
+    public static void Float(Property property) {
         float fValue = (float)property.value;
         string sValue = fValue.ToString();
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (TouchScreenKeyboard.isSupported)
-        {
-            if (numberKeyboard != null && numberKeyboard.status != TouchScreenKeyboard.Status.Visible)
-            {
+        if (TouchScreenKeyboard.isSupported) {
+            if (numberKeyboard != null && numberKeyboard.status != TouchScreenKeyboard.Status.Visible) {
                 keyboardHandler(numberKeyboard.text);
                 numberKeyboard = null;
                 keyboardHandler = null;
             }
-            if (GUILayout.Button(sValue, GUI.skin.textField) && numberKeyboard == null)
-            {
+            if (GUILayout.Button(sValue, GUI.skin.textField) && numberKeyboard == null) {
                 numberKeyboard = TouchScreenKeyboard.Open(sValue,
                     TouchScreenKeyboardType.NumbersAndPunctuation);
                 numberKeyboard.selection = new RangeInt(0, sValue.Length);
-                keyboardHandler = text =>
-                {
-                    if (ParseFloat(text, out float newValue))
+                keyboardHandler = text => {
+                    if (ParseFloat(text, out float newValue)) {
                         property.value = newValue;
+                    }
                 };
             }
-        }
-        else // TouchScreenKeyboard not supported
-        {
+        } else { // TouchScreenKeyboard not supported
             sValue = GUILayout.TextField(sValue);
-            if (ParseFloat(sValue, out float newValue))
+            if (ParseFloat(sValue, out float newValue)) {
                 property.value = newValue;
+            }
         }
         GUILayout.EndHorizontal();
     }
 
-    public static void Int(Property property)
-    {
+    public static void Int(Property property) {
         Property wrapper = new Property(
             property.id,
             property.name,
@@ -203,13 +176,11 @@ public static class PropertyGUIs
         Float(wrapper);
     }
 
-    public static void Time(Property property)
-    {
+    public static void Time(Property property) {
         Float(property);
     }
 
-    public static void FloatPair(Property property, string separator)
-    {
+    public static void FloatPair(Property property, string separator) {
         GUILayout.Label(property.name(StringSet) + ":", headerLabelStyle.Value);
         GUILayout.BeginHorizontal();
         var range = ((float, float))property.value;
@@ -231,18 +202,15 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static void FloatRange(Property property)
-    {
+    public static void FloatRange(Property property) {
         FloatPair(property, StringSet.RangeSeparator);
     }
 
-    public static void FloatDimensions(Property property)
-    {
+    public static void FloatDimensions(Property property) {
         FloatPair(property, StringSet.DimensionSeparator);
     }
 
-    public static void Vector3(Property property)
-    {
+    public static void Vector3(Property property) {
         GUILayout.Label(property.name(StringSet) + ":", headerLabelStyle.Value);
         GUILayout.BeginHorizontal();
         var vec = (Vector3)property.value;
@@ -273,27 +241,23 @@ public static class PropertyGUIs
         GUILayout.EndHorizontal();
     }
 
-    public static void Tag(Property property)
-    {
+    public static void Tag(Property property) {
         string tagString = Entity.TagToString((byte)property.value);
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button(" " + tagString + " ", tagFieldStyle.Value, GUILayout.ExpandWidth(false)))
-        {
+        if (GUILayout.Button(" " + tagString + " ", tagFieldStyle.Value, GUILayout.ExpandWidth(false))) {
             TagPickerGUI picker = GUIPanel.GuiGameObject.AddComponent<TagPickerGUI>();
             picker.title = StringSet.ChangeProperty(property.name(StringSet));
             picker.multiSelection = (byte)(1 << (byte)property.value);
-            picker.handler = (byte tag) =>
-            {
+            picker.handler = (byte tag) => {
                 property.value = tag;
             };
         }
         GUILayout.EndHorizontal();
     }
 
-    public static void BehaviorCondition(Property property)
-    {
+    public static void BehaviorCondition(Property property) {
         var condition = (EntityBehavior.Condition)property.value;
         GUILayout.Label(StringSet.SensorConditionHeader);
         TutorialGUI.TutorialHighlight("behavior condition");
@@ -303,41 +267,32 @@ public static class PropertyGUIs
         TutorialGUI.ClearHighlight();
     }
 
-    public static void ActivatorBehaviorCondition(Property property)
-    {
+    public static void ActivatorBehaviorCondition(Property property) {
         GUILayout.Label(StringSet.WhenSensorIsOn);
         property.value = EntityBehavior.Condition.ON;
     }
 
-    public static void BehaviorTarget(Property property)
-    {
+    public static void BehaviorTarget(Property property) {
         var value = (EntityBehavior.BehaviorTargetProperty)(property.value);
         Entity behaviorTarget = value.targetEntity.entity;
         string text;
-        if (value.targetEntityIsActivator)
-        {
+        if (value.targetEntityIsActivator) {
             text = StringSet.EntityActivators;
-        }
-        else if (behaviorTarget != null)
-        {
+        } else if (behaviorTarget != null) {
             // only temporarily, so the name won't be "Target":
             EntityReferencePropertyManager.SetBehaviorTarget(null);
             EntityReferencePropertyManager.Next(behaviorTarget);
             text = EntityReferencePropertyManager.GetName(StringSet);
             EntityReferencePropertyManager.SetBehaviorTarget(behaviorTarget); // put it back
-        }
-        else
-        {
+        } else {
             return;
         }
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.Label(GUIPanel.IconSet.target, alignedLabelStyle.Value, GUILayout.ExpandWidth(false));
-        if (GUILayout.Button("<i>" + text + "</i>", GUILayout.ExpandWidth(false)))
-        {
+        if (GUILayout.Button("<i>" + text + "</i>", GUILayout.ExpandWidth(false))) {
             BehaviorTargetPicker(GUIPanel.GuiGameObject, VoxelArrayEditor.instance,
-                EntityReferencePropertyManager.CurrentEntity(), newValue =>
-                {
+                EntityReferencePropertyManager.CurrentEntity(), newValue => {
                     property.value = newValue;
                 });
         }
@@ -346,25 +301,23 @@ public static class PropertyGUIs
     }
 
     public static EntityPickerGUI BehaviorTargetPicker(GameObject guiGameObject, VoxelArrayEditor voxelArray,
-        Entity self, Action<EntityBehavior.BehaviorTargetProperty> handler)
-    {
+            Entity self, Action<EntityBehavior.BehaviorTargetProperty> handler) {
         EntityPickerGUI entityPicker = guiGameObject.AddComponent<EntityPickerGUI>();
         entityPicker.voxelArray = voxelArray;
         entityPicker.allowNone = true;
         entityPicker.allowMultiple = false;
         entityPicker.allowNull = true;
         entityPicker.nullName = StringSet.EntityActivators;
-        entityPicker.handler = (ICollection<Entity> entities) =>
-        {
+        entityPicker.handler = (ICollection<Entity> entities) => {
             entityPicker = null;
-            foreach (Entity entity in entities)
-            {
-                if (entity == null) // activator
+            foreach (Entity entity in entities) {
+                if (entity == null) { // activator
                     handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), true));
-                else if (entity == self)
+                } else if (entity == self) {
                     handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), false));
-                else
+                } else {
                     handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(entity), false));
+                }
                 return;
             }
             handler(new EntityBehavior.BehaviorTargetProperty(new EntityReference(null), false));
@@ -372,24 +325,20 @@ public static class PropertyGUIs
         return entityPicker;
     }
 
-    public static void EntityReference(Property property)
-    {
+    public static void EntityReference(Property property) {
         _EntityReferenceCustom(property, false, StringSet.EntityRefNone);
     }
 
-    public static void EntityReferenceWithNull(Property property)
-    {
+    public static void EntityReferenceWithNull(Property property) {
         _EntityReferenceCustom(property, true, StringSet.EntityRefNone);
     }
 
-    public static void _EntityReferenceCustom(Property property, bool allowNull, string nullName)
-    {
+    public static void _EntityReferenceCustom(Property property, bool allowNull, string nullName) {
         var reference = (EntityReference)property.value;
         string valueString = nullName;
 
         Color baseColor = GUI.color;
-        if (reference.entity != null)
-        {
+        if (reference.entity != null) {
             EntityReferencePropertyManager.Next(reference.entity);
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
             valueString = EntityReferencePropertyManager.GetName(StringSet);
@@ -397,18 +346,15 @@ public static class PropertyGUIs
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(valueString, GUI.skin.textField))
-        {
+        if (GUILayout.Button(valueString, GUI.skin.textField)) {
             EntityPickerGUI picker = GUIPanel.GuiGameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = VoxelArrayEditor.instance;
             picker.allowNone = false;
             picker.allowMultiple = false;
             picker.allowNull = allowNull;
             picker.nullName = nullName;
-            picker.handler = (ICollection<Entity> entities) =>
-            {
-                foreach (Entity entity in entities)
-                {
+            picker.handler = (ICollection<Entity> entities) => {
+                foreach (Entity entity in entities) {
                     property.value = new EntityReference(entity);
                     return;
                 }
@@ -420,18 +366,15 @@ public static class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static void Filter(Property property)
-    {
+    public static void Filter(Property property) {
         var filter = (ActivatedSensor.Filter)property.value;
         string filterString = filter.ToString(StringSet);
 
         Color baseColor = GUI.color;
         ActivatedSensor.EntityFilter entityFilter = filter as ActivatedSensor.EntityFilter;
-        if (entityFilter != null)
-        {
+        if (entityFilter != null) {
             Entity e = entityFilter.entityRef.entity;
-            if (e != null)
-            {
+            if (e != null) {
                 EntityReferencePropertyManager.Next(e);
                 GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
                 filterString = EntityReferencePropertyManager.GetName(StringSet);
@@ -440,14 +383,12 @@ public static class PropertyGUIs
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(filterString, GUI.skin.textField))
-        {
+        if (GUILayout.Button(filterString, GUI.skin.textField)) {
             FilterGUI filterGUI = GUIPanel.GuiGameObject.AddComponent<FilterGUI>();
             filterGUI.title = StringSet.FilterByTitle;
             filterGUI.voxelArray = VoxelArrayEditor.instance;
             filterGUI.current = filter;
-            filterGUI.handler = (ActivatedSensor.Filter newFilter) =>
-            {
+            filterGUI.handler = (ActivatedSensor.Filter newFilter) => {
                 property.value = newFilter;
             };
         }
@@ -458,8 +399,7 @@ public static class PropertyGUIs
 
     public static PropertyGUI Material(string materialDirectory, bool isOverlay = false,
         bool customTextureBase = false) =>
-        (Property property) =>
-        {
+        (Property property) => {
             GUILayout.BeginHorizontal();
             AlignedLabel(property);
             GUILayout.FlexibleSpace();
@@ -469,8 +409,7 @@ public static class PropertyGUIs
             Rect textureRect = new Rect(
                 buttonRect.xMin + 20, buttonRect.yMin + 20,
                 buttonRect.width - 20 * 2, buttonRect.height - 20 * 2);
-            if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
-            {
+            if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value)) {
                 MaterialSelectorGUI materialSelector
                     = GUIPanel.GuiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = StringSet.ChangeProperty(property.name(StringSet));
@@ -479,8 +418,7 @@ public static class PropertyGUIs
                 materialSelector.highlightMaterial = (Material)property.value;
                 materialSelector.isOverlay = isOverlay;
                 materialSelector.customTextureBase = customTextureBase;
-                materialSelector.handler = (Material mat) =>
-                {
+                materialSelector.handler = (Material mat) => {
                     property.setter(mat); // skip equality check, it could be the same material with a different color
                 };
             }
@@ -489,8 +427,7 @@ public static class PropertyGUIs
             GUILayout.EndHorizontal();
         };
 
-    public static void Texture(Property property)
-    {
+    public static void Texture(Property property) {
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
         GUILayout.FlexibleSpace();
@@ -501,29 +438,25 @@ public static class PropertyGUIs
         Rect textureRect = new Rect(
             buttonRect.xMin + 20, buttonRect.yMin + 20,
             buttonRect.width - 20 * 2, buttonRect.height - 20 * 2);
-        if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value))
-        {
-            NativeGalleryWrapper.ImportTexture((Texture2D newTexture) =>
-            {
-                if (newTexture != null)
+        if (GUI.Button(buttonRect, "  ", tagFieldStyle.Value)) {
+            NativeGalleryWrapper.ImportTexture((Texture2D newTexture) => {
+                if (newTexture != null) {
                     property.setter(newTexture);  // skip equality check
+                }
             });
         }
         GUI.DrawTexture(textureRect, (Texture2D)property.value);
         GUILayout.EndHorizontal();
     }
 
-    public static void Model(Property property)
-    {
+    public static void Model(Property property) {
         GUILayout.BeginHorizontal();
         var selectString = StringSet.SelectProperty(property.name(StringSet));
-        if (GUILayout.Button(GUIUtils.PadContent(selectString, GUIPanel.IconSet.model)))
-        {
+        if (GUILayout.Button(GUIUtils.PadContent(selectString, GUIPanel.IconSet.model))) {
             var modelSelector = GUIPanel.GuiGameObject.AddComponent<ModelSelectorGUI>();
             modelSelector.title = selectString;
             modelSelector.selectedModel = (string)property.value;
-            modelSelector.handler = model =>
-            {
+            modelSelector.handler = model => {
                 property.setter(model);
             };
         }
@@ -531,26 +464,22 @@ public static class PropertyGUIs
     }
 
     public static PropertyGUI Slider(float minValue, float maxValue) =>
-        (Property property) =>
-        {
+        (Property property) => {
             GUILayout.Label(property.name(StringSet) + ":");
             property.value = GUILayout.HorizontalSlider(
                 (float)property.value, minValue, maxValue);
         };
 
-    public static void Color(Property property)
-    {
+    public static void Color(Property property) {
         Color baseColor = GUI.color;
         Color valueColor = (Color)property.value;
         GUI.color = baseColor * valueColor;
         var name = property.name(StringSet);
-        if (GUILayout.Button(name))
-        {
+        if (GUILayout.Button(name)) {
             ColorPickerGUI colorPicker = GUIPanel.GuiGameObject.AddComponent<ColorPickerGUI>();
             colorPicker.title = name;
             colorPicker.SetColor(valueColor);
-            colorPicker.handler = (Color color) =>
-            {
+            colorPicker.handler = (Color color) => {
                 property.value = color;
             };
         }
@@ -558,15 +487,13 @@ public static class PropertyGUIs
     }
 
     public static void _TargetCustom(Property property,
-        bool allowObjectTarget = true, bool allowVertical = true, bool alwaysWorld = false,
-        bool allowRandom = true)
-    {
+            bool allowObjectTarget = true, bool allowVertical = true, bool alwaysWorld = false,
+            bool allowRandom = true) {
         var target = (Target)property.value;
         string targetString = target.ToString(StringSet);
 
         Color baseColor = GUI.color;
-        if (target.entityRef.entity != null)
-        {
+        if (target.entityRef.entity != null) {
             EntityReferencePropertyManager.Next(target.entityRef.entity);
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
             targetString = EntityReferencePropertyManager.GetName(StringSet);
@@ -574,8 +501,7 @@ public static class PropertyGUIs
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(targetString, GUI.skin.textField))
-        {
+        if (GUILayout.Button(targetString, GUI.skin.textField)) {
             TargetGUI targetGUI = GUIPanel.GuiGameObject.AddComponent<TargetGUI>();
             targetGUI.title = property.name(StringSet);
             targetGUI.voxelArray = VoxelArrayEditor.instance;
@@ -583,8 +509,7 @@ public static class PropertyGUIs
             targetGUI.allowVertical = allowVertical;
             targetGUI.alwaysWorld = alwaysWorld;
             targetGUI.allowRandom = allowRandom;
-            targetGUI.handler = (Target newTarget) =>
-            {
+            targetGUI.handler = (Target newTarget) => {
                 property.value = newTarget;
             };
         }
@@ -593,39 +518,34 @@ public static class PropertyGUIs
         GUI.color = baseColor;
     }
 
-    public static void Target(Property property)
-    {
+    public static void Target(Property property) {
         _TargetCustom(property);
     }
 
-    public static void TargetWorldOnly(Property property)
-    {
+    public static void TargetWorldOnly(Property property) {
         _TargetCustom(property, alwaysWorld: true);
     }
 
-    public static void Target4Directions(Property property)
-    {
+    public static void Target4Directions(Property property) {
         _TargetCustom(property, allowObjectTarget: false, allowVertical: false,
             alwaysWorld: true, allowRandom: false);
     }
 
-    public static void TargetStatic(Property property)
-    {
+    public static void TargetStatic(Property property) {
         _TargetCustom(property, allowObjectTarget: false, allowRandom: false);
     }
 
-    public static void TargetFacing(Property property)
-    {
+    public static void TargetFacing(Property property) {
         var target = (Target)property.value;
         string targetString = target.ToString(StringSet);
 
-        if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
+        if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION) {
             targetString = StringSet.Camera;
+        }
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(targetString, GUI.skin.textField))
-        {
+        if (GUILayout.Button(targetString, GUI.skin.textField)) {
             TargetGUI targetGUI = GUIPanel.GuiGameObject.AddComponent<TargetGUI>();
             targetGUI.title = property.name(StringSet);
             targetGUI.voxelArray = VoxelArrayEditor.instance;
@@ -635,70 +555,61 @@ public static class PropertyGUIs
             targetGUI.allowVertical = false;
             targetGUI.nullTargetName = StringSet.Camera;
             targetGUI.nullTargetIcon = GUIPanel.IconSet.camera;
-            targetGUI.handler = (Target newTarget) =>
-            {
+            targetGUI.handler = (Target newTarget) => {
                 property.value = newTarget;
             };
         }
         GUILayout.EndHorizontal();
     }
 
-    public static void TargetDirectionFilter(Property property)
-    {
+    public static void TargetDirectionFilter(Property property) {
         var target = (Target)property.value;
         string targetString = target.ToString(StringSet);
 
-        if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION)
+        if (target.entityRef.entity == null && target.direction == global::Target.NO_DIRECTION) {
             targetString = StringSet.TargetAny;
+        }
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(targetString, GUI.skin.textField))
-        {
+        if (GUILayout.Button(targetString, GUI.skin.textField)) {
             TargetGUI targetGUI = GUIPanel.GuiGameObject.AddComponent<TargetGUI>();
             targetGUI.title = property.name(StringSet);
             targetGUI.voxelArray = VoxelArrayEditor.instance;
             targetGUI.allowNullTarget = true;
             targetGUI.allowObjectTarget = false;
             targetGUI.allowRandom = false;
-            targetGUI.handler = (Target newTarget) =>
-            {
+            targetGUI.handler = (Target newTarget) => {
                 property.value = newTarget;
             };
         }
         GUILayout.EndHorizontal();
     }
 
-    public static void PivotProp(Property property)
-    {
+    public static void PivotProp(Property property) {
         var pivot = (Pivot)property.value;
         string pivotString;
-        if (pivot.x == Pivot.Pos.Center && pivot.y == Pivot.Pos.Center && pivot.z == Pivot.Pos.Center)
+        if (pivot.x == Pivot.Pos.Center && pivot.y == Pivot.Pos.Center && pivot.z == Pivot.Pos.Center) {
             pivotString = StringSet.Center;
-        else
-        {
-            pivotString = (int)pivot.y switch
-            { 0 => StringSet.Bottom + " ", 2 => StringSet.Top + " ", _ => "" };
-            if (pivot.x == Pivot.Pos.Center || pivot.z == Pivot.Pos.Center)
-            {
-                pivotString += (int)pivot.z switch
-                { 0 => StringSet.South, 2 => StringSet.North, _ => "" };
-                pivotString += (int)pivot.x switch
-                { 0 => StringSet.West, 2 => StringSet.East, _ => "" };
-            }
-            else
-            {
-                pivotString += (int)pivot.z switch
-                { 0 => StringSet.SouthLetter, 2 => StringSet.NorthLetter, _ => "" };
-                pivotString += (int)pivot.x switch
-                { 0 => StringSet.WestLetter, 2 => StringSet.EastLetter, _ => "" };
+        } else {
+            pivotString = (int)pivot.y
+                switch { 0 => StringSet.Bottom + " ", 2 => StringSet.Top + " ", _ => "" };
+            if (pivot.x == Pivot.Pos.Center || pivot.z == Pivot.Pos.Center) {
+                pivotString += (int)pivot.z
+                    switch { 0 => StringSet.South, 2 => StringSet.North, _ => "" };
+                pivotString += (int)pivot.x
+                    switch { 0 => StringSet.West, 2 => StringSet.East, _ => "" };
+            } else {
+                pivotString += (int)pivot.z
+                    switch { 0 => StringSet.SouthLetter, 2 => StringSet.NorthLetter, _ => "" };
+                pivotString += (int)pivot.x
+                    switch { 0 => StringSet.WestLetter, 2 => StringSet.EastLetter, _ => "" };
             }
         }
 
         GUILayout.BeginHorizontal();
         AlignedLabel(property);
-        if (GUILayout.Button(pivotString, GUI.skin.textField))
-        {
+        if (GUILayout.Button(pivotString, GUI.skin.textField)) {
             PivotGUI pivotGUI = GUIPanel.GuiGameObject.AddComponent<PivotGUI>();
             pivotGUI.title = property.name(StringSet);
             pivotGUI.value = pivot;
@@ -708,20 +619,17 @@ public static class PropertyGUIs
     }
 
     public static PropertyGUI EmbeddedData(EmbeddedDataType type, AudioPlayerFactory playerFactory = null) =>
-        (Property property) =>
-        {
+        (Property property) => {
             var embeddedData = (EmbeddedData)property.value;
 
             GUILayout.BeginHorizontal();
             AlignedLabel(property);
-            if (GUILayout.Button(embeddedData.name, GUI.skin.textField))
-            {
+            if (GUILayout.Button(embeddedData.name, GUI.skin.textField)) {
                 var import = GUIPanel.GuiGameObject.AddComponent<DataImportGUI>();
                 import.title = StringSet.SelectProperty(property.name(StringSet));
                 import.type = type;
                 import.playerFactory = playerFactory;
-                import.dataAction = (data) =>
-                {
+                import.dataAction = (data) => {
                     property.value = data;
                 };
             }

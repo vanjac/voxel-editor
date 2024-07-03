@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface AudioPlayer
-{
+public interface AudioPlayer {
     void Stop();
 }
 
 public delegate AudioPlayer AudioPlayerFactory(byte[] data);
 
-public class DataImportGUI : GUIPanel
-{
+public class DataImportGUI : GUIPanel {
     public EmbeddedDataType type;
     public System.Action<EmbeddedData> dataAction;
     public AudioPlayerFactory playerFactory;
@@ -28,20 +26,17 @@ public class DataImportGUI : GUIPanel
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .6f, safeRect.height * .9f, maxWidth: 1280, maxHeight: 1360);
 
-    void Start()
-    {
+    void Start() {
         WorldFiles.ListWorlds(worldPaths, worldNames);
         EditorFile.instance.importWorldHandler = ImportWorldHandler;
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         StopPlayer();
         EditorFile.instance.importWorldHandler = null;
     }
 
-    private EmbeddedData StopPlayer()
-    {
+    private EmbeddedData StopPlayer() {
         playingAudio?.Stop();
         playingAudio = null;
         var data = playingData;
@@ -49,10 +44,8 @@ public class DataImportGUI : GUIPanel
         return data;
     }
 
-    public override void WindowGUI()
-    {
-        if (loadingWorld)
-        {
+    public override void WindowGUI() {
+        if (loadingWorld) {
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
@@ -60,25 +53,22 @@ public class DataImportGUI : GUIPanel
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
-        }
-        else if (!worldSelected)
-        {
+        } else if (!worldSelected) {
             scroll = GUILayout.BeginScrollView(scroll);
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             if (GUILayout.Button(GUIUtils.PadContent(StringSet.ImportFile, IconSet.import),
-                    StyleSet.buttonLarge))
+                    StyleSet.buttonLarge)) {
                 NativeGalleryWrapper.ImportAudioStream(ImportWorldHandler);
+            }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.Label(StringSet.ImportFromWorldHeader);
-            for (int i = 0; i < worldPaths.Count; i++)
-            {
+            for (int i = 0; i < worldPaths.Count; i++) {
                 string path = worldPaths[i];
                 string name = worldNames[i];
 
-                if (GUILayout.Button(name, StyleSet.buttonLarge))
-                {
+                if (GUILayout.Button(name, StyleSet.buttonLarge)) {
                     worldSelected = true;
                     selectedWorldName = name;
                     StartCoroutine(LoadWorldCoroutine(path));
@@ -87,12 +77,9 @@ public class DataImportGUI : GUIPanel
                 }
             }
             GUILayout.EndScrollView();
-        }
-        else // world is selected
-        {
+        } else { // world is selected
             GUILayout.BeginHorizontal();
-            if (ActionBarGUI.ActionBarButton(IconSet.close))
-            {
+            if (ActionBarGUI.ActionBarButton(IconSet.close)) {
                 worldSelected = false;
                 dataList = null;
                 scroll = Vector2.zero;
@@ -101,22 +88,17 @@ public class DataImportGUI : GUIPanel
             }
             GUILayout.Label(selectedWorldName, MaterialSelectorGUI.categoryLabelStyle.Value);
             GUILayout.EndHorizontal();
-            if (dataList != null && dataList.Count > 0)
-            {
+            if (dataList != null && dataList.Count > 0) {
                 scroll = GUILayout.BeginScrollView(scroll);
-                foreach (EmbeddedData data in dataList)
-                {
+                foreach (EmbeddedData data in dataList) {
                     GUILayout.BeginHorizontal();
-                    if (GUILayout.Button(data.name, StyleSet.buttonLarge))
-                    {
+                    if (GUILayout.Button(data.name, StyleSet.buttonLarge)) {
                         dataAction(data);
                         Destroy(this);
                     }
                     if (playerFactory != null && GUIUtils.HighlightedButton(IconSet.playAudio,
-                        StyleSet.buttonLarge, playingData == data, GUILayout.ExpandWidth(false)))
-                    {
-                        if (StopPlayer() != data)
-                        {
+                            StyleSet.buttonLarge, playingData == data, GUILayout.ExpandWidth(false))) {
+                        if (StopPlayer() != data) {
                             playingAudio = playerFactory(data.bytes);
                             playingData = data;
                         }
@@ -124,15 +106,14 @@ public class DataImportGUI : GUIPanel
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.EndScrollView();
-            }
-            else
-            {
+            } else {
                 GUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
-                if (errorMessage != null)
+                if (errorMessage != null) {
                     ActionBarGUI.ActionBarLabel(errorMessage);
-                else
+                } else {
                     ActionBarGUI.ActionBarLabel(StringSet.NoDataInWorld(type.ToString())); // TODO: localize
+                }
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }
@@ -141,41 +122,36 @@ public class DataImportGUI : GUIPanel
 
 
     // disposes stream when done
-    private IEnumerator LoadWorldCoroutine(string path = null, System.IO.Stream stream = null)
-    {
+    private IEnumerator LoadWorldCoroutine(string path = null, System.IO.Stream stream = null) {
         loadingWorld = true;
         errorMessage = null;
         yield return null;
         yield return null;
-        try
-        {
-            if (stream != null)
+        try {
+            if (stream != null) {
                 dataList = ReadWorldFile.ReadEmbeddedData(stream, type);
-            else
+            } else {
                 dataList = ReadWorldFile.ReadEmbeddedData(path, type);
-            foreach (EmbeddedData data in dataList)
+            }
+            foreach (EmbeddedData data in dataList) {
                 Debug.Log(data.name);
-        }
-        catch (MapReadException e)
-        {
+            }
+        } catch (MapReadException e) {
             errorMessage = e.Message;
             Debug.LogError(e.InnerException);
-        }
-        finally
-        {
+        } finally {
             loadingWorld = false;
-            if (stream != null)
-            {
+            if (stream != null) {
                 stream.Dispose();
                 ShareMap.ClearFileWaitingToImport();
             }
         }
     }
 
-    private void ImportWorldHandler(System.IO.Stream stream)
-    {
-        if (stream == null)
+    private void ImportWorldHandler(System.IO.Stream stream) {
+        if (stream == null) {
             return;
+        }
         StopPlayer();
         dataList = null;
         worldSelected = true;

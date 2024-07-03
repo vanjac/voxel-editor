@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
-{
+public class DelaySensor : GenericSensor<DelaySensor, DelayComponent> {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Delay", typeof(DelaySensor))
-    {
+            "Delay", typeof(DelaySensor)) {
         displayName = s => s.DelayName,
         description = s => s.DelayDesc,
         longDescription = s => s.DelayLongDesc,
@@ -18,8 +16,7 @@ public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
     public bool startOn;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(new Property[]
-        {
+        Property.JoinProperties(new Property[] {
             new Property("inp", s => s.PropInput,
                 () => input,
                 v => input = (EntityReference)v,
@@ -39,21 +36,17 @@ public class DelaySensor : GenericSensor<DelaySensor, DelayComponent>
         }, base.Properties());
 }
 
-public class DelayComponent : SensorComponent<DelaySensor>
-{
-    private enum ActivatorState
-    {
+public class DelayComponent : SensorComponent<DelaySensor> {
+    private enum ActivatorState {
         TURNING_ON, ON, TURNING_OFF
     }
 
-    private class DelayedActivator
-    {
+    private class DelayedActivator {
         public EntityComponent activator;
         public ActivatorState state;
         public float changeTime;
 
-        public DelayedActivator(EntityComponent activator)
-        {
+        public DelayedActivator(EntityComponent activator) {
             this.activator = activator;
         }
     }
@@ -65,17 +58,14 @@ public class DelayComponent : SensorComponent<DelaySensor>
     private List<EntityComponent> delayedActivatorsToRemove = new List<EntityComponent>();
     private bool inputWasOn = false;
 
-    void Start()
-    {
-        if (nullKey == null)
-        {
+    void Start() {
+        if (nullKey == null) {
             var go = new GameObject();
             go.name = "Null Key";
             nullKey = go.AddComponent<NullKeyComponent>();
             nullKey.entity = new BallObject(); // idk
         }
-        if (sensor.startOn)
-        {
+        if (sensor.startOn) {
             var nullDelayedA = new DelayedActivator(null);
             nullDelayedA.state = ActivatorState.TURNING_OFF;
             nullDelayedA.changeTime = Time.time;
@@ -84,78 +74,67 @@ public class DelayComponent : SensorComponent<DelaySensor>
         }
     }
 
-    void Update()
-    {
+    void Update() {
         float time = Time.time;
         EntityComponent inputEntity = sensor.input.component;
 
-        foreach (var keyValue in delayedActivators)
-        {
+        foreach (var keyValue in delayedActivators) {
             DelayedActivator delayedA = keyValue.Value;
-            if (delayedA.state == ActivatorState.TURNING_ON)
-            {
-                if (time - delayedA.changeTime >= sensor.onTime)
-                {
+            if (delayedA.state == ActivatorState.TURNING_ON) {
+                if (time - delayedA.changeTime >= sensor.onTime) {
                     delayedA.state = ActivatorState.ON;
                     AddActivator(delayedA.activator);
                 }
-            }
-            else if (delayedA.state == ActivatorState.TURNING_OFF)
-            {
-                if (time - delayedA.changeTime >= sensor.offTime)
-                {
+            } else if (delayedA.state == ActivatorState.TURNING_OFF) {
+                if (time - delayedA.changeTime >= sensor.offTime) {
                     delayedActivatorsToRemove.Add(keyValue.Key);
                     RemoveActivator(delayedA.activator);
                 }
             }
         }
-        foreach (EntityComponent e in delayedActivatorsToRemove)
+        foreach (EntityComponent e in delayedActivatorsToRemove) {
             delayedActivators.Remove(e);
+        }
         delayedActivatorsToRemove.Clear();
 
-        if (inputEntity == null)
+        if (inputEntity == null) {
             return;
+        }
 
-        foreach (EntityComponent newActivator in inputEntity.GetNewActivators())
-        {
-            if (newActivator == null) // null is reserved for the net cycle
+        foreach (EntityComponent newActivator in inputEntity.GetNewActivators()) {
+            if (newActivator == null) { // null is reserved for the net cycle
                 continue;
+            }
             AddActivatorDelay(newActivator, newActivator, time);
         }
 
-        foreach (EntityComponent removedActivator in inputEntity.GetRemovedActivators())
-        {
-            if (removedActivator == null) // null is reserved for the net cycle
+        foreach (EntityComponent removedActivator in inputEntity.GetRemovedActivators()) {
+            if (removedActivator == null) { // null is reserved for the net cycle
                 continue;
+            }
             RemoveActivatorDelay(removedActivator, removedActivator, time);
         }
 
         // net cycle
         bool inputIsOn = inputEntity.IsOn();
-        if (inputIsOn && !inputWasOn)
+        if (inputIsOn && !inputWasOn) {
             AddActivatorDelay(nullKey, null, time);
-        else if (inputWasOn && !inputIsOn)
+        } else if (inputWasOn && !inputIsOn) {
             RemoveActivatorDelay(nullKey, null, time);
+        }
         inputWasOn = inputIsOn;
     }
 
-    private void AddActivatorDelay(EntityComponent key, EntityComponent newActivator, float time)
-    {
-        if (delayedActivators.ContainsKey(key))
-        {
+    private void AddActivatorDelay(EntityComponent key, EntityComponent newActivator, float time) {
+        if (delayedActivators.ContainsKey(key)) {
             // must be in TURNING_OFF state
             delayedActivators[key].state = ActivatorState.ON;
-        }
-        else
-        {
+        } else {
             var delayedA = new DelayedActivator(newActivator);
-            if (sensor.onTime == 0)
-            {
+            if (sensor.onTime == 0) {
                 delayedA.state = ActivatorState.ON;
                 AddActivator(newActivator);
-            }
-            else
-            {
+            } else {
                 delayedA.state = ActivatorState.TURNING_ON;
                 delayedA.changeTime = time;
             }
@@ -163,18 +142,13 @@ public class DelayComponent : SensorComponent<DelaySensor>
         }
     }
 
-    private void RemoveActivatorDelay(EntityComponent key, EntityComponent removedActivator, float time)
-    {
-        if (delayedActivators.ContainsKey(key))
-        {
+    private void RemoveActivatorDelay(EntityComponent key, EntityComponent removedActivator, float time) {
+        if (delayedActivators.ContainsKey(key)) {
             var delayedA = delayedActivators[key];
-            if (delayedA.state == ActivatorState.TURNING_ON || sensor.offTime == 0)
-            {
+            if (delayedA.state == ActivatorState.TURNING_ON || sensor.offTime == 0) {
                 delayedActivators.Remove(key);
                 RemoveActivator(removedActivator);
-            }
-            else
-            {
+            } else {
                 delayedA.state = ActivatorState.TURNING_OFF;
                 delayedA.changeTime = time;
             }

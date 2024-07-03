@@ -2,10 +2,8 @@
 using UnityEngine;
 
 [EditorPreviewBehavior]
-public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
-{
-    public static new BehaviorType objectType = new BehaviorType("Halo", typeof(HaloBehavior))
-    {
+public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent> {
+    public static new BehaviorType objectType = new BehaviorType("Halo", typeof(HaloBehavior)) {
         displayName = s => s.HaloName,
         description = s => s.HaloDesc,
         longDescription = s => s.HaloLongDesc,
@@ -17,8 +15,7 @@ public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
     public Color color = Color.white;  // scaled by INTENSITY
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("siz", s => s.PropSize,
                 () => size,
                 v => size = (float)v,
@@ -30,14 +27,12 @@ public class HaloBehavior : GenericEntityBehavior<HaloBehavior, HaloComponent>
         });
 }
 
-public class HaloComponent : BehaviorComponent<HaloBehavior>
-{
+public class HaloComponent : BehaviorComponent<HaloBehavior> {
     public const float INTENSITY = 1.4f;  // doesn't get any brighter past this
 
     private Light lightComponent;
 
-    public override void Start()
-    {
+    public override void Start() {
         // Halos are not exposed through the unity api :(
         var lightObj = Instantiate(Resources.Load<GameObject>("LightHaloPrefab"));
         lightObj.transform.SetParent(transform, false);
@@ -50,13 +45,11 @@ public class HaloComponent : BehaviorComponent<HaloBehavior>
         base.Start();
     }
 
-    public override void BehaviorEnabled()
-    {
+    public override void BehaviorEnabled() {
         lightComponent.enabled = true;
     }
 
-    public override void BehaviorDisabled()
-    {
+    public override void BehaviorDisabled() {
         lightComponent.enabled = false;
     }
 }

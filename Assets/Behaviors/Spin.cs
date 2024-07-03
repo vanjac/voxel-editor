@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
-{
-    public static new BehaviorType objectType = new BehaviorType("Spin", typeof(SpinBehavior))
-    {
+public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent> {
+    public static new BehaviorType objectType = new BehaviorType("Spin", typeof(SpinBehavior)) {
         displayName = s => s.SpinName,
         description = s => s.SpinDesc,
         longDescription = s => s.SpinLongDesc,
@@ -17,8 +15,7 @@ public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
     public Target axis = new Target(Target.UP); // not random
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("vel", s => s.PropSpeed,
                 () => speed,
                 v => speed = (float)v,
@@ -30,8 +27,7 @@ public class SpinBehavior : GenericEntityBehavior<SpinBehavior, SpinComponent>
         });
 }
 
-public class SpinComponent : MotionComponent<SpinBehavior>
-{
+public class SpinComponent : MotionComponent<SpinBehavior> {
     public override Quaternion GetRotateFixed() =>
         Quaternion.AngleAxis(behavior.speed * Time.fixedDeltaTime,
             behavior.axis.DirectionFrom(transform));

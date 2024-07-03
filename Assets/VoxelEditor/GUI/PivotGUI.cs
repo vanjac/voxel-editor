@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-public class PivotGUI : GUIPanel
-{
+public class PivotGUI : GUIPanel {
     public Pivot value;
     public System.Action<Pivot> handler;
 
@@ -9,14 +8,12 @@ public class PivotGUI : GUIPanel
         new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 1100, 0);
 
-    public override void OnEnable()
-    {
+    public override void OnEnable() {
         showCloseButton = true;
         base.OnEnable();
     }
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         Pivot oldValue = value;
 
         GUILayout.BeginHorizontal();
@@ -47,7 +44,8 @@ public class PivotGUI : GUIPanel
 
         GUILayout.EndHorizontal();
 
-        if (!oldValue.Equals(value))
+        if (!oldValue.Equals(value)) {
             handler(value);
+        }
     }
 }

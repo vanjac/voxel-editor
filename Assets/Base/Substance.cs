@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public struct Pivot
-{
+public struct Pivot {
     public enum Pos { Min, Center, Max };
     public Pos x, y, z;
 }
 
-public class Substance : DynamicEntity
-{
+public class Substance : DynamicEntity {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Substance", typeof(Substance))
-    {
+            "Substance", typeof(Substance)) {
         displayName = s => s.SubstanceName,
         description = s => s.SubstanceDesc,
         longDescription = s => s.SubstanceLongDesc,
@@ -28,30 +25,24 @@ public class Substance : DynamicEntity
     public VoxelFace defaultPaint;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("piv", s => s.PropPivot,
                 () => pivot,
                 v => pivot = (Pivot)v,
                 PropertyGUIs.PivotProp),
         });
 
-    public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true)
-    {
+    public override EntityComponent InitEntityGameObject(VoxelArray voxelArray, bool storeComponent = true) {
         GameObject substanceObject = new GameObject();
         substanceObject.name = "Substance";
         substanceObject.transform.parent = voxelArray.transform;
         substanceObject.transform.position = PositionInEditor();
 
-        foreach (VoxelComponent vc in voxelGroup.IterateComponents())
-        {
+        foreach (VoxelComponent vc in voxelGroup.IterateComponents()) {
             // TODO: need to update this!
-            if (storeComponent)
-            {
+            if (storeComponent) {
                 vc.transform.parent = substanceObject.transform;
-            }
-            else
-            {
+            } else {
                 // clone
                 VoxelComponent vClone = vc.Clone();
                 vClone.transform.parent = substanceObject.transform;
@@ -63,58 +54,58 @@ public class Substance : DynamicEntity
         component.entity = this;
         component.substance = this;
         component.health = health;
-        if (storeComponent)
+        if (storeComponent) {
             this.component = component;
+        }
         return component;
     }
 
-    public override bool AliveInEditor()
-    {
-        foreach (var _ in voxelGroup.IteratePositions())
+    public override bool AliveInEditor() {
+        foreach (var _ in voxelGroup.IteratePositions()) {
             return true;
+        }
         return false;
     }
 
-    public override void UpdateEntityEditor()
-    {
+    public override void UpdateEntityEditor() {
         base.UpdateEntityEditor();
-        foreach (VoxelComponent v in voxelGroup.IterateComponents())
+        foreach (VoxelComponent v in voxelGroup.IterateComponents()) {
             v.UpdateVoxel();
+        }
     }
 
-    public override Vector3 PositionInEditor()
-    {
+    public override Vector3 PositionInEditor() {
         Bounds voxelBounds = new Bounds();
-        foreach (var position in voxelGroup.IteratePositions())
-        {
-            if (voxelBounds.extents == Vector3.zero)
+        foreach (var position in voxelGroup.IteratePositions()) {
+            if (voxelBounds.extents == Vector3.zero) {
                 voxelBounds = Voxel.Bounds(position);
-            else
+            } else {
                 voxelBounds.Encapsulate(Voxel.Bounds(position));
+            }
         }
         var factor = new Vector3((float)pivot.x, (float)pivot.y, (float)pivot.z) / 2;
         return voxelBounds.min + Vector3.Scale(voxelBounds.size, factor);
     }
 
-    public override void SetHighlight(Color c)
-    {
-        if (c == highlight)
+    public override void SetHighlight(Color c) {
+        if (c == highlight) {
             return;
+        }
         highlight = c;
-        if (highlightMaterial == null)
+        if (highlightMaterial == null) {
             highlightMaterial = ResourcesDirectory.InstantiateMaterial(VoxelComponent.highlightMaterials[15]);
+        }
         highlightMaterial.color = highlight;
-        foreach (VoxelComponent v in voxelGroup.IterateComponents())
+        foreach (VoxelComponent v in voxelGroup.IterateComponents()) {
             v.UpdateVoxel();
+        }
     }
 }
 
-public class SubstanceComponent : DynamicEntityComponent
-{
+public class SubstanceComponent : DynamicEntityComponent {
     public Substance substance;
 
-    public override void Start()
-    {
+    public override void Start() {
         // a rigidBody is required for collision detection
         Rigidbody rigidBody = gameObject.AddComponent<Rigidbody>(); // TODO slow for large number of colliders!
         // no physics by default (could be disabled by a Physics behavior)

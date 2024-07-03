@@ -1,19 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreComponent>
-{
+public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreComponent> {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Check Score", typeof(CheckScoreSensor))
-    {
+            "Check Score", typeof(CheckScoreSensor)) {
         displayName = s => s.CheckScoreName,
         description = s => s.CheckScoreDesc,
         iconName = "code-greater-than-or-equal",
     };
     public override PropertiesObjectType ObjectType => objectType;
 
-    public enum AboveOrBelow
-    {
+    public enum AboveOrBelow {
         ABOVE, BELOW
     }
 
@@ -21,8 +18,7 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
     public AboveOrBelow compare = AboveOrBelow.ABOVE;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(new Property[]
-        {
+        Property.JoinProperties(new Property[] {
             new Property("cmp", s => s.PropScoreIs,
                 () => compare,
                 v => compare = (AboveOrBelow)v,
@@ -35,30 +31,24 @@ public class CheckScoreSensor : GenericSensor<CheckScoreSensor, CheckScoreCompon
         }, base.Properties());
 }
 
-public class CheckScoreComponent : SensorComponent<CheckScoreSensor>
-{
-    void Update()
-    {
+public class CheckScoreComponent : SensorComponent<CheckScoreSensor> {
+    void Update() {
         var player = PlayerComponent.instance;
-        if (player == null)
-        {
+        if (player == null) {
             RemoveActivator(null);
-        }
-        else
-        {
-            if (sensor.compare == CheckScoreSensor.AboveOrBelow.ABOVE)
-            {
-                if (player.score >= sensor.threshold)
+        } else {
+            if (sensor.compare == CheckScoreSensor.AboveOrBelow.ABOVE) {
+                if (player.score >= sensor.threshold) {
                     AddActivator(null);
-                else
+                } else {
                     RemoveActivator(null);
-            }
-            else
-            {
-                if (player.score <= sensor.threshold)
+                }
+            } else {
+                if (player.score <= sensor.threshold) {
                     AddActivator(null);
-                else
+                } else {
                     RemoveActivator(null);
+                }
             }
         }
     }

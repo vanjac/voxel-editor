@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class NewRigidbodyController : MonoBehaviour
-{
+public class NewRigidbodyController : MonoBehaviour {
     public float walkSpeed = 3.5f;
     public float fallMoveSpeed = 1.5f;
     public float jumpForce = 55f;
@@ -31,95 +30,79 @@ public class NewRigidbodyController : MonoBehaviour
     private float footstepDistance;
     private bool leftFoot;
 
-    void Start()
-    {
+    void Start() {
         rigidBody = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
         footstepSoundPlayer = GetComponent<FootstepSounds>();
     }
 
-    void Update()
-    {
+    void Update() {
         RotateView();
 
-        if (CrossPlatformInputManager.GetButtonDown("Jump") && !jump)
-        {
+        if (CrossPlatformInputManager.GetButtonDown("Jump") && !jump) {
             jump = true;
         }
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         GroundCheck();
         bool underWater = false;
         PhysicsComponent physicsComponent = GetComponent<PhysicsComponent>();
-        if (physicsComponent != null)
+        if (physicsComponent != null) {
             underWater = physicsComponent.underWater;
+        }
 
-        Vector2 input = new Vector2
-        {
+        Vector2 input = new Vector2 {
             x = CrossPlatformInputManager.GetAxis("Horizontal"),
             y = CrossPlatformInputManager.GetAxis("Vertical")
         };
 
-        if (Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon)
-        {
+        if (Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon) {
             float maxSpeed = (grounded && !underWater) ? walkSpeed : fallMoveSpeed;
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = Quaternion.AngleAxis(cam.transform.rotation.eulerAngles.y, Vector3.up)
                 * new Vector3(input.x, 0, input.y);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, groundContactNormal).normalized;
             desiredMove *= input.magnitude * maxSpeed;
-            if (rigidBody.velocity.sqrMagnitude < (maxSpeed * maxSpeed))
-            {
+            if (rigidBody.velocity.sqrMagnitude < (maxSpeed * maxSpeed)) {
                 // TODO: scale by time??
                 rigidBody.AddForce(desiredMove * SlopeMultiplier(), ForceMode.Impulse);
             }
         }
 
-        if (grounded || underWater)
-        {
+        if (grounded || underWater) {
             rigidBody.drag = 5f;
 
-            if (jump)
-            {
+            if (jump) {
                 rigidBody.drag = 0f;
                 rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0f, rigidBody.velocity.z);
                 rigidBody.AddForce(new Vector3(0f, underWater ? swimForce : jumpForce, 0f), ForceMode.Impulse);
                 jumping = true;
             }
-        }
-        else
-        {
+        } else {
             rigidBody.drag = 0f;
-            if (previouslyGrounded && !jumping)
-            {
+            if (previouslyGrounded && !jumping) {
                 StickToGroundHelper();
             }
         }
 
         // footstep sounds...
-        if (underWater)
+        if (underWater) {
             footstepSound = MaterialSound.SWIM;
-        if ((grounded || underWater) && jump)
-        {
+        }
+        if ((grounded || underWater) && jump) {
             PlayFootstep();
             footstepDistance = 0;
-        }
-        else if ((!previouslyGrounded && grounded && !underWater)
-            || (!previouslyUnderWater && underWater))
-        {
+        } else if ((!previouslyGrounded && grounded && !underWater)
+                || (!previouslyUnderWater && underWater)) {
             // landed
             StartCoroutine(LandSoundCoroutine());
             footstepDistance = 0;
-        }
-        else if (grounded || underWater)
-        {
+        } else if (grounded || underWater) {
             Vector3 velocity = rigidBody.velocity;
             velocity.y = 0;
             footstepDistance += velocity.magnitude * Time.fixedDeltaTime;
-            if (footstepDistance > footstepStride)
-            {
+            if (footstepDistance > footstepStride) {
                 footstepDistance -= footstepStride;
                 PlayFootstep();
             }
@@ -129,51 +112,46 @@ public class NewRigidbodyController : MonoBehaviour
         previouslyUnderWater = underWater;
     }
 
-    private void PlayFootstep()
-    {
-        if (!PlayerComponent.instance.obj.footstepSounds)
+    private void PlayFootstep() {
+        if (!PlayerComponent.instance.obj.footstepSounds) {
             return;
-        if (leftFoot)
+        }
+        if (leftFoot) {
             footstepSoundPlayer.PlayLeftFoot(footstepSound);
-        else
+        } else {
             footstepSoundPlayer.PlayRightFoot(footstepSound);
+        }
         leftFoot = !leftFoot;
     }
 
-    private IEnumerator LandSoundCoroutine()
-    {
+    private IEnumerator LandSoundCoroutine() {
         PlayFootstep();
         yield return new WaitForSeconds(1.0f / 30.0f);
         PlayFootstep();
     }
 
 
-    private float SlopeMultiplier()
-    {
+    private float SlopeMultiplier() {
         float angle = Vector3.Angle(groundContactNormal, Vector3.up);
         return slopeCurveModifier.Evaluate(angle);
     }
 
 
-    private void StickToGroundHelper()
-    {
+    private void StickToGroundHelper() {
         if (Physics.SphereCast(transform.position, capsule.radius * (1.0f - shellOffset),
-            Vector3.down, out RaycastHit hitInfo,
-            (capsule.height / 2f) - capsule.radius + stickToGroundHelperDistance,
-            Physics.AllLayers, QueryTriggerInteraction.Ignore))
-        {
-            if (Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f)
-            {
+                Vector3.down, out RaycastHit hitInfo,
+                (capsule.height / 2f) - capsule.radius + stickToGroundHelperDistance,
+                Physics.AllLayers, QueryTriggerInteraction.Ignore)) {
+            if (Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f) {
                 rigidBody.velocity = Vector3.ProjectOnPlane(rigidBody.velocity, hitInfo.normal);
             }
         }
     }
 
 
-    private void RotateView()
-    {
+    private void RotateView() {
         //avoids the mouse looking if the game is effectively paused
-        if (Mathf.Abs(Time.timeScale) < float.Epsilon) return;
+        if (Mathf.Abs(Time.timeScale) < float.Epsilon) { return; }
 
         // get the rotation before it's changed
         float oldYRotation = transform.eulerAngles.y;
@@ -186,73 +164,61 @@ public class NewRigidbodyController : MonoBehaviour
     }
 
     /// sphere cast down just beyond the bottom of the capsule to see if the capsule is colliding round the bottom
-    private void GroundCheck()
-    {
+    private void GroundCheck() {
         previouslyGrounded = grounded;
-        if (disableGroundCheck)
-        {
+        if (disableGroundCheck) {
             disableGroundCheck = false;
             grounded = false;
             jumping = true;
         }
 
         if (Physics.SphereCast(transform.position, capsule.radius * (1.0f - shellOffset),
-            Vector3.down, out RaycastHit hitInfo,
-            (capsule.height / 2f) - capsule.radius + groundCheckDistance,
-            Physics.AllLayers, QueryTriggerInteraction.Ignore))
-        {
+                Vector3.down, out RaycastHit hitInfo,
+                (capsule.height / 2f) - capsule.radius + groundCheckDistance,
+                Physics.AllLayers, QueryTriggerInteraction.Ignore)) {
             grounded = true;
             groundContactNormal = hitInfo.normal;
             // move with moving object
             Vector3 move = Vector3.zero;
-            foreach (IMotionComponent motionComponent in hitInfo.transform.GetComponents<IMotionComponent>())
-            {
-                if (motionComponent.enabled)
-                {
+            foreach (IMotionComponent motionComponent in hitInfo.transform.GetComponents<IMotionComponent>()) {
+                if (motionComponent.enabled) {
                     move += motionComponent.GetTranslateFixed();
                     Vector3 relPos = transform.position - motionComponent.transform.position;
                     move += (motionComponent.GetRotateFixed() * relPos) - relPos;
                 }
             }
             move.y = 0;
-            if (move != Vector3.zero)
+            if (move != Vector3.zero) {
                 rigidBody.MovePosition(rigidBody.position + move);
+            }
 
             // determine footstep sound
-            if (hitInfo.collider.gameObject.tag == "Voxel")
-            {
+            if (hitInfo.collider.gameObject.tag == "Voxel") {
                 var voxelComponent = hitInfo.collider.GetComponent<VoxelComponent>();
                 VoxelFaceLoc faceLoc;
-                if (voxelComponent.GetSubstance() != null)
-                {
+                if (voxelComponent.GetSubstance() != null) {
                     // substances use convex hulls which don't have submeshes
                     // so just use the top face of the voxel
                     faceLoc = new VoxelFaceLoc(voxelComponent.GetVoxelForCollider(hitInfo.collider), 3);
-                }
-                else
-                {
+                } else {
                     int hitVertexI = TouchListener.GetRaycastHitVertexIndex(hitInfo);
                     faceLoc = voxelComponent.GetVoxelFaceForVertex(hitVertexI);
                 }
                 footstepSound = voxelComponent.voxelArray.FaceAt(faceLoc).GetSound();
-            }
-            else
-            {
+            } else {
                 Renderer hitRender = hitInfo.collider.GetComponent<Renderer>();
-                if (hitRender != null)
+                if (hitRender != null) {
                     // regular .material has (Instance) suffix
                     footstepSound = ResourcesDirectory.GetMaterialSound(hitRender.sharedMaterial);
-                else
+                } else {
                     footstepSound = MaterialSound.GENERIC;
+                }
             }
-        }
-        else
-        {
+        } else {
             grounded = false;
             groundContactNormal = Vector3.up;
         }
-        if (!previouslyGrounded && grounded && jumping)
-        {
+        if (!previouslyGrounded && grounded && jumping) {
             jumping = false;
         }
     }

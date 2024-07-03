@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerObject : ObjectEntity
-{
+public class PlayerObject : ObjectEntity {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Player", typeof(PlayerObject))
-    {
+            "Player", typeof(PlayerObject)) {
         displayName = s => s.PlayerName,
         description = s => s.PlayerDesc,
         iconName = "human-greeting",
@@ -14,16 +12,14 @@ public class PlayerObject : ObjectEntity
 
     public bool footstepSounds = true;
 
-    public PlayerObject()
-    {
+    public PlayerObject() {
         paint.material = ResourcesDirectory.InstantiateMaterial(
             ResourcesDirectory.FindMaterial("GLOSSY", true));
         paint.material.color = Color.green;
     }
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("wlk", s => s.PropFootstepSounds,
                 () => footstepSounds,
                 v => footstepSounds = (bool)v,
@@ -32,15 +28,13 @@ public class PlayerObject : ObjectEntity
 
     protected override Vector3 PositionInGame() => base.PositionInGame() + new Vector3(0, 1, 0);
 
-    protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray)
-    {
+    protected override ObjectMarker CreateObjectMarker(VoxelArrayEditor voxelArray) {
         GameObject markerObject = Resources.Load<GameObject>("ObjectMarkers/Player");
         markerObject = GameObject.Instantiate(markerObject);
         return markerObject.AddComponent<ObjectMarker>();
     }
 
-    protected override DynamicEntityComponent CreateEntityComponent(VoxelArray voxelArray)
-    {
+    protected override DynamicEntityComponent CreateEntityComponent(VoxelArray voxelArray) {
         GameObject playerObject = Resources.Load<GameObject>("ObjectPrefabs/Player");
         playerObject = GameObject.Instantiate(playerObject);
         var character = new CharacterBehavior();
@@ -54,20 +48,17 @@ public class PlayerObject : ObjectEntity
     }
 }
 
-public class PlayerComponent : DynamicEntityComponent
-{
+public class PlayerComponent : DynamicEntityComponent {
     public static PlayerComponent instance;
     public PlayerObject obj;
     public int score = 0;
     public bool hasScore = false;
 
-    void Awake()
-    {
+    void Awake() {
         instance = this;
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         instance = null;
     }
 }

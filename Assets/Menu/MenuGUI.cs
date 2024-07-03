@@ -3,8 +3,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuGUI : GUIPanel
-{
+public class MenuGUI : GUIPanel {
     public TextAsset indoorTemplate, floatingTemplate;
 
     private List<string> worldPaths = new List<string>();
@@ -20,22 +19,18 @@ public class MenuGUI : GUIPanel
 
     public override GUIStyle GetStyle() => GUIStyle.none;
 
-    public override void OnEnable()
-    {
+    public override void OnEnable() {
         holdOpen = true;
         stealFocus = false;
         base.OnEnable();
     }
 
-    void Start()
-    {
+    void Start() {
         UpdateWorldList();
     }
 
-    public override void WindowGUI()
-    {
-        if (worldPaths.Count == 0)
-        {
+    public override void WindowGUI() {
+        if (worldPaths.Count == 0) {
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
@@ -43,19 +38,15 @@ public class MenuGUI : GUIPanel
             // copied from TemplatePickerGUI
             GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(900), GUILayout.Height(480));
             GUILayout.Label(StringSet.WelcomeMessage, GUIUtils.LABEL_HORIZ_CENTERED.Value);
-            int selection = GUILayout.SelectionGrid(-1, new GUIContent[]
-            {
+            int selection = GUILayout.SelectionGrid(-1, new GUIContent[] {
                 new GUIContent(StringSet.StartTutorial, IconSet.helpLarge),
                 new GUIContent(StringSet.CreateNewWorld, IconSet.newWorldLarge)
             }, 2, TemplatePickerGUI.buttonStyle.Value, GUILayout.ExpandHeight(true));
-            if (selection == 0)
-            {
+            if (selection == 0) {
                 TutorialGUI.StartTutorial(Tutorials.INTRO_TUTORIAL, null, null, null);
                 HelpGUI.OpenDemoWorld(StringSet.TutorialWorldName(StringSet.TutorialIntro),
                     "Templates/indoor");
-            }
-            else if (selection == 1)
-            {
+            } else if (selection == 1) {
                 AskNewWorldTemplate();
             }
             GUILayout.EndVertical();
@@ -63,49 +54,43 @@ public class MenuGUI : GUIPanel
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
-        }
-        else
-        {
+        } else {
             if (GUIUtils.HighlightedButton(
                     GUIUtils.MenuContent(StringSet.CreateNewWorld, IconSet.newItem),
-                    StyleSet.buttonLarge))
-            {
+                    StyleSet.buttonLarge)) {
                 AskNewWorldTemplate();
             }
             scroll = GUILayout.BeginScrollView(scroll);
-            for (int i = 0; i < worldPaths.Count; i++)
-            {
+            for (int i = 0; i < worldPaths.Count; i++) {
                 string path = worldPaths[i];
                 string name = worldNames[i];
                 bool selected = worldOverflowMenu != null && path == selectedWorldPath;
 
                 GUILayout.BeginHorizontal();
                 GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-                if (GUIUtils.HighlightedButton(name, StyleSet.buttonLarge, selected))
+                if (GUIUtils.HighlightedButton(name, StyleSet.buttonLarge, selected)) {
                     OpenWorld(path, Scenes.EDITOR);
+                }
                 GUIUtils.EndHorizontalClipped();
                 if (GUIUtils.HighlightedButton(IconSet.overflow, StyleSet.buttonLarge,
-                        selected, GUILayout.ExpandWidth(false)))
+                        selected, GUILayout.ExpandWidth(false))) {
                     CreateWorldOverflowMenu(path);
+                }
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
         }
     }
 
-    public static void OpenWorld(string path, string scene)
-    {
+    public static void OpenWorld(string path, string scene) {
         SelectedWorld.SelectSavedWorld(path);
         SceneManager.LoadScene(scene);
     }
 
-    private void AskNewWorldTemplate()
-    {
+    private void AskNewWorldTemplate() {
         var menu = gameObject.AddComponent<TemplatePickerGUI>();
-        menu.handler = (value) =>
-        {
-            switch (value)
-            {
+        menu.handler = (value) => {
+            switch (value) {
                 case 0:
                     AskNewWorldName(indoorTemplate);
                     break;
@@ -116,32 +101,26 @@ public class MenuGUI : GUIPanel
         };
     }
 
-    private void AskNewWorldName(TextAsset template)
-    {
+    private void AskNewWorldName(TextAsset template) {
         TextInputDialogGUI inputDialog = gameObject.AddComponent<TextInputDialogGUI>();
         inputDialog.prompt = StringSet.WorldNamePrompt;
         inputDialog.text = StringSet.UntitledWorldName(System.DateTime.Now);
         inputDialog.handler = (string name) => NewWorld(name, template);
     }
 
-    private void NewWorld(string name, TextAsset template)
-    {
-        if (!WorldFiles.ValidateName(name, out string errorMessage))
-        {
-            if (errorMessage != null)
+    private void NewWorld(string name, TextAsset template) {
+        if (!WorldFiles.ValidateName(name, out string errorMessage)) {
+            if (errorMessage != null) {
                 DialogGUI.ShowMessageDialog(gameObject, errorMessage);
+            }
             return;
         }
         string path = WorldFiles.GetNewWorldPath(name);
-        try
-        {
-            using (FileStream fileStream = File.Create(path))
-            {
+        try {
+            using (FileStream fileStream = File.Create(path)) {
                 fileStream.Write(template.bytes, 0, template.bytes.Length);
             }
-        }
-        catch (System.Exception ex)
-        {
+        } catch (System.Exception ex) {
             DialogGUI.ShowMessageDialog(gameObject, StringSet.ErrorCreatingWorld);
             Debug.LogError(ex);
             return;
@@ -151,18 +130,15 @@ public class MenuGUI : GUIPanel
         OpenWorld(path, Scenes.EDITOR);
     }
 
-    private void UpdateWorldList()
-    {
+    private void UpdateWorldList() {
         WorldFiles.ListWorlds(worldPaths, worldNames);
     }
 
-    private void CreateWorldOverflowMenu(string path)
-    {
+    private void CreateWorldOverflowMenu(string path) {
         string name = Path.GetFileNameWithoutExtension(path);
         worldOverflowMenu = gameObject.AddComponent<OverflowMenuGUI>();
         selectedWorldPath = path;
-        worldOverflowMenu.items = new OverflowMenuGUI.MenuItem[]
-        {
+        worldOverflowMenu.items = new OverflowMenuGUI.MenuItem[] {
             new OverflowMenuGUI.MenuItem(StringSet.PlayWorld, IconSet.play, () => {
                 MenuGUI.OpenWorld(path, Scenes.GAME);
             }),
@@ -182,8 +158,7 @@ public class MenuGUI : GUIPanel
                 dialog.message = StringSet.WorldDeleteConfirm(name);
                 dialog.yesButtonText = StringSet.Yes;
                 dialog.noButtonText = StringSet.No;
-                dialog.yesButtonHandler = () =>
-                {
+                dialog.yesButtonHandler = () => {
                     File.Delete(path);
                     UpdateWorldList();
                 };
@@ -195,12 +170,11 @@ public class MenuGUI : GUIPanel
         };
     }
 
-    private void RenameWorld(string newName)
-    {
-        if (!WorldFiles.ValidateName(newName, out string errorMessage))
-        {
-            if (errorMessage != null)
+    private void RenameWorld(string newName) {
+        if (!WorldFiles.ValidateName(newName, out string errorMessage)) {
+            if (errorMessage != null) {
                 DialogGUI.ShowMessageDialog(gameObject, errorMessage);
+            }
             return;
         }
         string newPath = WorldFiles.GetNewWorldPath(newName);
@@ -208,12 +182,11 @@ public class MenuGUI : GUIPanel
         UpdateWorldList();
     }
 
-    private void CopyWorld(string newName)
-    {
-        if (!WorldFiles.ValidateName(newName, out string errorMessage))
-        {
-            if (errorMessage != null)
+    private void CopyWorld(string newName) {
+        if (!WorldFiles.ValidateName(newName, out string errorMessage)) {
+            if (errorMessage != null) {
                 DialogGUI.ShowMessageDialog(gameObject, errorMessage);
+            }
             return;
         }
         string newPath = WorldFiles.GetNewWorldPath(newName);

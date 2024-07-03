@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
-{
+public class PulseSensor : GenericSensor<PulseSensor, PulseComponent> {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Pulse", typeof(PulseSensor))
-    {
+            "Pulse", typeof(PulseSensor)) {
         displayName = s => s.PulseName,
         description = s => s.PulseDesc,
         longDescription = s => s.PulseLongDesc,
@@ -19,8 +17,7 @@ public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
     public EntityReference input = new EntityReference(null);
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(new Property[]
-        {
+        Property.JoinProperties(new Property[] {
             new Property("sta", s => s.PropStartOn,
                 () => startOn,
                 v => startOn = (bool)v,
@@ -40,62 +37,54 @@ public class PulseSensor : GenericSensor<PulseSensor, PulseComponent>
         }, base.Properties());
 }
 
-public class PulseComponent : SensorComponent<PulseSensor>
-{
+public class PulseComponent : SensorComponent<PulseSensor> {
     private float startTime;
     private bool useInput;
     private bool cyclePaused;
 
-    void Start()
-    {
+    void Start() {
         startTime = Time.time;
         useInput = sensor.input.component != null;
         cyclePaused = useInput;
     }
 
-    public void Update()
-    {
+    public void Update() {
         bool inputIsOn = false;
-        if (sensor.input.component != null)
+        if (sensor.input.component != null) {
             inputIsOn = sensor.input.component.IsOn();
+        }
 
         float timePassed = Time.time - startTime;
-        if (cyclePaused && inputIsOn)
-        {
+        if (cyclePaused && inputIsOn) {
             cyclePaused = false;
             startTime = Time.time;
             timePassed = 0;
-        }
-        else if (useInput && timePassed >= sensor.offTime + sensor.onTime)
-        {
-            if (inputIsOn)
-            {
-                while (timePassed >= sensor.offTime + sensor.onTime)
-                {
+        } else if (useInput && timePassed >= sensor.offTime + sensor.onTime) {
+            if (inputIsOn) {
+                while (timePassed >= sensor.offTime + sensor.onTime) {
                     startTime += sensor.offTime + sensor.onTime;
                     timePassed -= sensor.offTime + sensor.onTime;
                 }
-            }
-            else
-            {
+            } else {
                 cyclePaused = true;
             }
         }
 
-        if (cyclePaused)
+        if (cyclePaused) {
             RemoveActivator(null);
-        else
-        {
+        } else {
             bool state;
             float cycleTime = timePassed % (sensor.offTime + sensor.onTime);
-            if (sensor.startOn)
+            if (sensor.startOn) {
                 state = cycleTime < sensor.onTime;
-            else
+            } else {
                 state = cycleTime >= sensor.offTime;
-            if (state)
+            }
+            if (state) {
                 AddActivator(null);
-            else
+            } else {
                 RemoveActivator(null);
+            }
         }
     }
 }

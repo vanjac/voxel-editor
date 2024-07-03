@@ -1,0 +1,8 @@
+[*.cs]
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0011
+csharp_prefer_braces = true : warning

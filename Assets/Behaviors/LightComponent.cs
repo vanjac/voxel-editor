@@ -2,10 +2,8 @@
 using UnityEngine;
 
 [EditorPreviewBehavior]
-public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent>
-{
-    public static new BehaviorType objectType = new BehaviorType("Light", typeof(LightBehavior))
-    {
+public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent> {
+    public static new BehaviorType objectType = new BehaviorType("Light", typeof(LightBehavior)) {
         displayName = s => s.LightName,
         description = s => s.LightDesc,
         longDescription = s => s.LightLongDesc,
@@ -19,8 +17,7 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
     public bool halo = false;  // deprecated
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("siz", s => s.PropSize,
                 () => size,
                 v => size = (float)v,
@@ -40,8 +37,7 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
         });
 
     public override IEnumerable<Property> DeprecatedProperties() =>
-        Property.JoinProperties(base.DeprecatedProperties(), new Property[]
-        {
+        Property.JoinProperties(base.DeprecatedProperties(), new Property[] {
             new Property("hal", GUIStringSet.Empty,
                 () => halo,
                 v => halo = (bool)v,
@@ -49,12 +45,10 @@ public class LightBehavior : GenericEntityBehavior<LightBehavior, LightComponent
         });
 }
 
-public class LightComponent : BehaviorComponent<LightBehavior>
-{
+public class LightComponent : BehaviorComponent<LightBehavior> {
     private Light lightComponent;
 
-    public override void Start()
-    {
+    public override void Start() {
         var lightObj = new GameObject(); // only one Light allowed per GameObject
         lightObj.transform.SetParent(transform, false);
         lightComponent = lightObj.AddComponent<Light>();
@@ -63,8 +57,7 @@ public class LightComponent : BehaviorComponent<LightBehavior>
         lightComponent.color = behavior.color;
         lightComponent.enabled = false;
 
-        if (behavior.shadows)
-        {
+        if (behavior.shadows) {
             lightComponent.shadows = LightShadows.Hard;
             // fix seams (also done in directional light)
             lightComponent.shadowBias = 0.0f;
@@ -74,13 +67,11 @@ public class LightComponent : BehaviorComponent<LightBehavior>
         base.Start();
     }
 
-    public override void BehaviorEnabled()
-    {
+    public override void BehaviorEnabled() {
         lightComponent.enabled = true;
     }
 
-    public override void BehaviorDisabled()
-    {
+    public override void BehaviorDisabled() {
         lightComponent.enabled = false;
     }
 }

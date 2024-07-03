@@ -3,11 +3,9 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 [EditorPreviewBehavior]
-public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, ReflectorComponent>
-{
+public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, ReflectorComponent> {
     public static new BehaviorType objectType = new BehaviorType(
-        "Reflector", typeof(ReflectorBehavior))
-    {
+            "Reflector", typeof(ReflectorBehavior)) {
         displayName = s => s.ReflectorName,
         description = s => s.ReflectorDesc,
         longDescription = s => s.ReflectorLongDesc,
@@ -19,8 +17,7 @@ public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, Reflec
     public bool realtime;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("siz", s => s.PropRange,
                 () => size,
                 v => size = (float)v,
@@ -36,47 +33,44 @@ public class ReflectorBehavior : GenericEntityBehavior<ReflectorBehavior, Reflec
         });
 }
 
-public class ReflectorComponent : BehaviorComponent<ReflectorBehavior>
-{
+public class ReflectorComponent : BehaviorComponent<ReflectorBehavior> {
     private ReflectionProbe probe;
     private Vector3 prevPos;
 
-    public override void Start()
-    {
+    public override void Start() {
         probe = gameObject.AddComponent<ReflectionProbe>();
         probe.size = Vector3.one * behavior.size;
         probe.intensity = behavior.intensity;
         probe.mode = ReflectionProbeMode.Realtime;
-        if (behavior.realtime && !CompareTag("EditorPreview"))
+        if (behavior.realtime && !CompareTag("EditorPreview")) {
             probe.refreshMode = ReflectionProbeRefreshMode.EveryFrame;
-        else
+        } else {
             probe.refreshMode = ReflectionProbeRefreshMode.ViaScripting;
+        }
         probe.importance = 2;
         probe.enabled = false;
         base.Start();
     }
 
-    public override void BehaviorEnabled()
-    {
+    public override void BehaviorEnabled() {
         probe.enabled = true;
-        if (probe.refreshMode == ReflectionProbeRefreshMode.ViaScripting)
+        if (probe.refreshMode == ReflectionProbeRefreshMode.ViaScripting) {
             probe.RenderProbe();
+        }
         prevPos = transform.position;
     }
 
-    public override void BehaviorDisabled()
-    {
+    public override void BehaviorDisabled() {
         // TODO if the probe is disabled while rendering, it will break
         probe.enabled = false;
     }
 
-    void Update()
-    {
-        if (transform.position != prevPos)
-        {
+    void Update() {
+        if (transform.position != prevPos) {
             prevPos = transform.position;
-            if (CompareTag("EditorPreview"))
+            if (CompareTag("EditorPreview")) {
                 probe.RenderProbe();
+            }
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, TeleportComponent>
-{
+public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, TeleportComponent> {
     public static new BehaviorType objectType = new BehaviorType(
-        "Teleport", typeof(TeleportBehavior))
-    {
+            "Teleport", typeof(TeleportBehavior)) {
         displayName = s => s.TeleportName,
         description = s => s.TeleportDesc,
         longDescription = s => s.TeleportLongDesc,
@@ -18,8 +16,7 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
     public EntityReference origin = new EntityReference(null);
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("loc", s => s.PropTo,
                 () => target,
                 v => target = (EntityReference)v,
@@ -29,14 +26,14 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
                 v => origin = (EntityReference)v,
                 (Property property) => {
                     var reference = (EntityReference)property.value;
-                    if (reference.entity == null)
-                    {
-                        if (targetEntity.entity != null)
+                    if (reference.entity == null) {
+                        if (targetEntity.entity != null) {
                             property.value = targetEntity;
-                        else if (!targetEntityIsActivator)
+                        } else if (!targetEntityIsActivator) {
                             // TODO: this is not a good solution
                             property.value = new EntityReference(
                                 EntityReferencePropertyManager.CurrentEntity());
+                        }
                     }
                     var none = targetEntityIsActivator ? GUIPanel.StringSet.EntityRefActivator
                             : GUIPanel.StringSet.EntityRefNone;
@@ -45,17 +42,17 @@ public class TeleportBehavior : GenericEntityBehavior<TeleportBehavior, Teleport
         });
 }
 
-public class TeleportComponent : BehaviorComponent<TeleportBehavior>
-{
-    public override void BehaviorEnabled()
-    {
-        if (behavior.target.component == null)
+public class TeleportComponent : BehaviorComponent<TeleportBehavior> {
+    public override void BehaviorEnabled() {
+        if (behavior.target.component == null) {
             return;
+        }
         Vector3 originPos;
-        if (behavior.origin.component != null)
+        if (behavior.origin.component != null) {
             originPos = behavior.origin.component.transform.position;
-        else
+        } else {
             originPos = transform.position;
+        }
         transform.position += behavior.target.component.transform.position - originPos;
     }
 }

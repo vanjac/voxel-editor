@@ -4,35 +4,28 @@ using System.Xml.Serialization;
 using UnityEngine;
 
 // allows properties that reference entities to be serialized
-public class EntityReference
-{
+public class EntityReference {
     [XmlIgnore]
     private WeakReference entityWeakRef;
     public Guid guid;
-    public Entity entity
-    {
-        get
-        {
-            if (!EntitiesLoaded())
+    public Entity entity {
+        get {
+            if (!EntitiesLoaded()) {
                 return null;
-            if (guid == Guid.Empty)
+            }
+            if (guid == Guid.Empty) {
                 return null;
-            else if (entityWeakRef == null) // this happens when the reference is deserialized
-            {
-                try
-                {
+            } else if (entityWeakRef == null) { // this happens when the reference is deserialized
+                try {
                     entityWeakRef = existingEntityIds[guid];
-                }
-                catch (KeyNotFoundException)
-                {
+                } catch (KeyNotFoundException) {
                     guid = Guid.Empty;
                     return null;
                 }
             }
 
             Entity target = (Entity)(entityWeakRef.Target);
-            if (target == null || (!target.AliveInEditor() && target.component == null))
-            {
+            if (target == null || (!target.AliveInEditor() && target.component == null)) {
                 guid = Guid.Empty;
                 entityWeakRef = null;
                 return null;
@@ -47,59 +40,50 @@ public class EntityReference
 
     EntityReference() { } // deserialization
 
-    public EntityReference(Entity entity)
-    {
-        if (entity == null)
-        {
+    public EntityReference(Entity entity) {
+        if (entity == null) {
             guid = Guid.Empty;
             entityWeakRef = null;
-        }
-        else
-        {
-            if (entity.guid == Guid.Empty)
+        } else {
+            if (entity.guid == Guid.Empty) {
                 entity.guid = Guid.NewGuid();
+            }
             guid = entity.guid;
             entityWeakRef = new WeakReference(entity);
         }
     }
 
-    public EntityReference(Guid guid)
-    {
+    public EntityReference(Guid guid) {
         this.guid = guid;
     }
 
     // for comparing property values
-    public override bool Equals(object obj)
-    {
+    public override bool Equals(object obj) {
         var objReference = obj as EntityReference;
         return objReference != null && objReference.entity == entity;
     }
 
-    public override int GetHashCode()
-    {
-        if (entity == null)
+    public override int GetHashCode() {
+        if (entity == null) {
             return 0;
+        }
         return entity.GetHashCode();
     }
 
-    public static void ResetEntityIds()
-    {
+    public static void ResetEntityIds() {
         existingEntityIds.Clear();
         entitiesLoaded = false;
     }
 
-    public static void DoneLoadingEntities()
-    {
+    public static void DoneLoadingEntities() {
         entitiesLoaded = true;
     }
 
     // has the map file finished loading? are EntityReferences safe to be read?
     public static bool EntitiesLoaded() => entitiesLoaded;
 
-    public static void AddExistingEntityId(Entity entity, Guid guid)
-    {
-        if (existingEntityIds.ContainsKey(guid))
-        {
+    public static void AddExistingEntityId(Entity entity, Guid guid) {
+        if (existingEntityIds.ContainsKey(guid)) {
             Debug.Log("ERROR: 2 entities have the same GUID! " + guid);
             return;
         }
@@ -109,8 +93,7 @@ public class EntityReference
 }
 
 
-public struct Target
-{
+public struct Target {
     public const sbyte WEST = 0;
     public const sbyte EAST = 1;
     public const sbyte DOWN = 2;
@@ -127,80 +110,73 @@ public struct Target
     [XmlIgnore]
     private Vector3 randomDirection;
 
-    public Target(Entity entity)
-    {
+    public Target(Entity entity) {
         entityRef = new EntityReference(entity);
         direction = NO_DIRECTION;
         randomDirection = Vector3.zero;
     }
 
-    public Target(sbyte direction)
-    {
+    public Target(sbyte direction) {
         entityRef = new EntityReference(null);
         this.direction = direction;
         randomDirection = Vector3.zero;
     }
 
-    public void PickRandom()
-    {
-        if (direction != RANDOM)
+    public void PickRandom() {
+        if (direction != RANDOM) {
             return;
+        }
         float angle = UnityEngine.Random.Range(0.0f, 2 * Mathf.PI);
         randomDirection = new Vector3(Mathf.Cos(angle), 0.0f, Mathf.Sin(angle));
     }
 
-    public Vector3 DirectionFrom(Transform transform)
-    {
-        if (entityRef.entity != null)
-        {
+    public Vector3 DirectionFrom(Transform transform) {
+        if (entityRef.entity != null) {
             direction = NO_DIRECTION; // older versions had default direction as 0
             EntityComponent c = entityRef.component;
-            if (c != null)
+            if (c != null) {
                 return (c.transform.position - transform.position).normalized;
+            }
             return Vector3.zero;
-        }
-        else if (direction == NO_DIRECTION)
+        } else if (direction == NO_DIRECTION) {
             return Vector3.zero;
-        else if (direction == RANDOM)
+        } else if (direction == RANDOM) {
             return randomDirection;
-        else if ((direction & LOCAL_BIT) != 0)
+        } else if ((direction & LOCAL_BIT) != 0) {
             return transform.TransformDirection(Voxel.DirectionForFaceI(direction & ~LOCAL_BIT));
-        else
+        } else {
             return Voxel.DirectionForFaceI(direction);
-    }
-
-    public float DistanceFrom(Transform transform)
-    {
-        if (entityRef.entity != null)
-        {
-            EntityComponent c = entityRef.component;
-            if (c != null)
-                return (c.transform.position - transform.position).magnitude;
-            return 0.0f;
         }
-        else if (direction == NO_DIRECTION)
-            return 0.0f;
-        else
-            return float.PositiveInfinity;
     }
 
-    public bool MatchesDirection(Transform transform, Vector3 direction)
-    {
+    public float DistanceFrom(Transform transform) {
+        if (entityRef.entity != null) {
+            EntityComponent c = entityRef.component;
+            if (c != null) {
+                return (c.transform.position - transform.position).magnitude;
+            }
+            return 0.0f;
+        } else if (direction == NO_DIRECTION) {
+            return 0.0f;
+        } else {
+            return float.PositiveInfinity;
+        }
+    }
+
+    public bool MatchesDirection(Transform transform, Vector3 direction) {
         Vector3 targetDirection = DirectionFrom(transform);
-        if (targetDirection == Vector3.zero)
+        if (targetDirection == Vector3.zero) {
             return true;
+        }
         return Vector3.Angle(targetDirection, direction) < 45;
     }
 
-    public string ToString(GUIStringSet s)
-    {
-        if (entityRef.entity != null)
+    public string ToString(GUIStringSet s) {
+        if (entityRef.entity != null) {
             return entityRef.entity.ToString(s);
-        else
-        {
+        } else {
             string dirStr = s.EntityRefNone;
-            switch (direction & ~LOCAL_BIT)
-            {
+            switch (direction & ~LOCAL_BIT) {
                 case WEST:
                     dirStr = s.West;
                     break;
@@ -223,10 +199,11 @@ public struct Target
                     dirStr = s.TargetRandom;
                     break;
             }
-            if ((direction & LOCAL_BIT) != 0 && direction != NO_DIRECTION)
+            if ((direction & LOCAL_BIT) != 0 && direction != NO_DIRECTION) {
                 return s.TargetLocalDirection(dirStr);
-            else
+            } else {
                 return dirStr;
+            }
         }
     }
 }

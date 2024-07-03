@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleComponent>
-{
-    public static new BehaviorType objectType = new BehaviorType("Visible", typeof(VisibleBehavior))
-    {
+public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleComponent> {
+    public static new BehaviorType objectType = new BehaviorType("Visible", typeof(VisibleBehavior)) {
         displayName = s => s.VisibleName,
         description = s => s.VisibleDesc,
         iconName = "eye",
@@ -15,23 +13,22 @@ public class VisibleBehavior : GenericEntityBehavior<VisibleBehavior, VisibleCom
     public override BehaviorType BehaviorObjectType => objectType;
 }
 
-public class VisibleComponent : BehaviorComponent<VisibleBehavior>
-{
-    private IEnumerable<Renderer> IterateRenderers()
-    {
-        foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
+public class VisibleComponent : BehaviorComponent<VisibleBehavior> {
+    private IEnumerable<Renderer> IterateRenderers() {
+        foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>()) {
             yield return childRenderer;
+        }
     }
 
-    public override void BehaviorEnabled()
-    {
-        foreach (Renderer r in IterateRenderers())
+    public override void BehaviorEnabled() {
+        foreach (Renderer r in IterateRenderers()) {
             r.enabled = true;
+        }
     }
 
-    public override void LastBehaviorDisabled()
-    {
-        foreach (Renderer r in IterateRenderers())
+    public override void LastBehaviorDisabled() {
+        foreach (Renderer r in IterateRenderers()) {
             r.enabled = false;
+        }
     }
 }

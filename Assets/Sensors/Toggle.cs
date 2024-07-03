@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 
-public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
-{
+public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent> {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Toggle", typeof(ToggleSensor))
-    {
+            "Toggle", typeof(ToggleSensor)) {
         displayName = s => s.ToggleName,
         description = s => s.ToggleDesc,
         longDescription = s => s.ToggleLongDesc,
@@ -17,8 +15,7 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
     public bool startOn;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(new Property[]
-        {
+        Property.JoinProperties(new Property[] {
             new Property("sta", s => s.PropStartOn,
                 () => startOn,
                 v => startOn = (bool)v,
@@ -34,60 +31,54 @@ public class ToggleSensor : GenericSensor<ToggleSensor, ToggleComponent>
         }, base.Properties());
 }
 
-public class ToggleComponent : SensorComponent<ToggleSensor>
-{
+public class ToggleComponent : SensorComponent<ToggleSensor> {
     public bool value;
     private bool bothOn = false;
 
-    public override void Init(ToggleSensor sensor)
-    {
+    public override void Init(ToggleSensor sensor) {
         base.Init(sensor);
         value = sensor.startOn;
     }
 
-    void Start()
-    {
-        if (value)
+    void Start() {
+        if (value) {
             // start on
             AddActivator(null);
+        }
     }
 
-    void Update()
-    {
+    void Update() {
         bool offInputOn = false;
         EntityComponent offEntity = sensor.offInput.component;
-        if (offEntity != null)
+        if (offEntity != null) {
             offInputOn = offEntity.IsOn();
+        }
 
         bool onInputOn = false;
         EntityComponent onEntity = sensor.onInput.component;
-        if (onEntity != null)
+        if (onEntity != null) {
             onInputOn = onEntity.IsOn();
+        }
 
-        if (offInputOn && onInputOn)
-        {
-            if (!bothOn)
-            {
+        if (offInputOn && onInputOn) {
+            if (!bothOn) {
                 bothOn = true;
                 value = !value;
-                if (value)
+                if (value) {
                     AddActivators(onEntity.GetActivators());
-                else
+                } else {
                     ClearActivators();
+                }
             }
-        }
-        else
-        {
+        } else {
             bothOn = false;
-            if (offInputOn)
-            {
+            if (offInputOn) {
                 value = false;
                 ClearActivators();
-            }
-            else if (onInputOn)
-            {
-                if (!value)
+            } else if (onInputOn) {
+                if (!value) {
                     AddActivators(onEntity.GetActivators());
+                }
                 value = true;
             }
         }

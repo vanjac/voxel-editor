@@ -2,16 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // TODO: combine with Pivot?
-public enum ObjectAlignment
-{
+public enum ObjectAlignment {
     Bottom, Center, Top, Default
 }
 
-public class PropObject : ObjectEntity
-{
+public class PropObject : ObjectEntity {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "Prop", typeof(PropObject))
-    {
+            "Prop", typeof(PropObject)) {
         displayName = s => s.PropName,
         description = s => s.PropDesc,
         iconName = "traffic-cone",
@@ -21,20 +18,17 @@ public class PropObject : ObjectEntity
     public string modelName = "SM_Primitive_SoccerBall_01";
     public ObjectAlignment align = ObjectAlignment.Default;
 
-    public PropObject()
-    {
+    public PropObject() {
         paint.material = ResourcesDirectory.InstantiateMaterial(
             ResourcesDirectory.FindMaterial("GLOSSY", true));
         paint.material.color = Color.white;
     }
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("mdl", s => s.PropModel,
                 () => modelName,
-                v =>
-                {
+                v => {
                     modelName = (string)v;
                     UpdateMarkerMesh();
                     UpdateMarkerPosition();
@@ -42,8 +36,7 @@ public class PropObject : ObjectEntity
                 PropertyGUIs.Model),
             new Property("ali", s => s.PropPivot,
                 () => align,
-                v =>
-                {
+                v => {
                     align = (ObjectAlignment)v;
                     UpdateMarkerPosition();
                 },
@@ -58,8 +51,7 @@ public class PropObject : ObjectEntity
     private Mesh GetMesh() => Resources.Load<Mesh>("GameAssets/Models/" + modelName)
         ?? Resources.Load<Mesh>("GameAssets/error_model");
 
-    private GameObject CreatePropObject()
-    {
+    private GameObject CreatePropObject() {
         var mesh = GetMesh();
         GameObject rootGO = new GameObject(modelName);
         GameObject meshGO = new GameObject("mesh");
@@ -76,10 +68,8 @@ public class PropObject : ObjectEntity
         return rootGO;
     }
 
-    private Vector3 GetMeshPositionOffset(Mesh mesh)
-    {
-        var yPos = align switch
-        {
+    private Vector3 GetMeshPositionOffset(Mesh mesh) {
+        var yPos = align switch {
             ObjectAlignment.Bottom => -mesh.bounds.min.y,
             ObjectAlignment.Center => -mesh.bounds.center.y,
             ObjectAlignment.Top => -mesh.bounds.max.y,
@@ -88,20 +78,16 @@ public class PropObject : ObjectEntity
         return new Vector3(0, yPos, 0);
     }
 
-    private void UpdateMarkerMesh()
-    {
-        if (marker)
-        {
+    private void UpdateMarkerMesh() {
+        if (marker) {
             var mesh = GetMesh();
             marker.GetComponentInChildren<MeshFilter>().mesh = mesh;
             marker.GetComponentInChildren<MeshCollider>().sharedMesh = mesh;
         }
     }
 
-    private void UpdateMarkerPosition()
-    {
-        if (marker)
-        {
+    private void UpdateMarkerPosition() {
+        if (marker) {
             var meshFilter = marker.GetComponentInChildren<MeshFilter>();
             meshFilter.transform.localPosition = GetMeshPositionOffset(meshFilter.mesh);
         }
@@ -114,10 +100,8 @@ public class PropObject : ObjectEntity
         CreatePropObject().AddComponent<PropComponent>();
 }
 
-public class PropComponent : DynamicEntityComponent
-{
-    public override void Start()
-    {
+public class PropComponent : DynamicEntityComponent {
+    public override void Start() {
         GetComponentInChildren<MeshRenderer>().enabled = false;
         GetComponentInChildren<Collider>().isTrigger = true;
         // a rigidBody is required for collision detection

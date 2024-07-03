@@ -1,5 +1,4 @@
-﻿public static class FileKeys
-{
+﻿public static class FileKeys {
     // constants follow name pattern:
     // [containing object type]_[property]
 

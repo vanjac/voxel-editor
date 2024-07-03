@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetGUI : GUIPanel
-{
+public class TargetGUI : GUIPanel {
     public System.Action<Target> handler;
     public VoxelArrayEditor voxelArray;
     public bool allowObjectTarget = true, allowNullTarget = false, allowVertical = true;
@@ -16,13 +15,11 @@ public class TargetGUI : GUIPanel
         new Rect(GUIPanel.leftPanel.panelRect.xMax,
             GUIPanel.topPanel.panelRect.yMax, 880, 0);
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         GUILayout.BeginHorizontal();
 
         GUILayout.BeginVertical();
-        if (!alwaysWorld)
-        {
+        if (!alwaysWorld) {
             localState = GUILayout.SelectionGrid(localState,
                 new string[] { StringSet.TargetWorld, StringSet.TargetLocal }, 2);
         }
@@ -45,67 +42,67 @@ public class TargetGUI : GUIPanel
 
         GUILayout.BeginHorizontal();
         if (allowObjectTarget && GUILayout.Button(GUIUtils.PadContent(StringSet.TargetPickObject,
-            IconSet.singleObject), StyleSet.buttonSmall))
-        {
+                IconSet.singleObject), StyleSet.buttonSmall)) {
             EntityPickerGUI picker = gameObject.AddComponent<EntityPickerGUI>();
             picker.voxelArray = voxelArray;
             picker.allowNone = false;
             picker.allowMultiple = false;
-            picker.handler = (ICollection<Entity> entities) =>
-            {
-                if (entities.Count > 0)
-                    foreach (Entity entity in entities) // only first one
-                    {
+            picker.handler = (ICollection<Entity> entities) => {
+                if (entities.Count > 0) {
+                    foreach (Entity entity in entities) { // only first one
                         handler(new Target(entity));
                         return;
                     }
+                }
             };
             Destroy(this);
         }
         if (allowNullTarget && GUILayout.Button(GUIUtils.PadContent(nullTargetName, nullTargetIcon),
-            StyleSet.buttonSmall))
-        {
+                StyleSet.buttonSmall)) {
             handler(new Target(null));
             Destroy(this);
         }
         if (allowRandom && GUILayout.Button(
-            GUIUtils.PadContent(StringSet.TargetRandom, IconSet.random), StyleSet.buttonSmall))
-        {
+                GUIUtils.PadContent(StringSet.TargetRandom, IconSet.random), StyleSet.buttonSmall)) {
             handler(new Target(Target.RANDOM));  // don't check local state
             Destroy(this);
         }
         GUILayout.EndHorizontal();
     }
 
-    private void DirectionButtons()
-    {
+    private void DirectionButtons() {
         Color baseColor = GUI.color;
         GUILayout.BeginHorizontal();
 
         GUI.color = baseColor * new Color(0.2f, 0.2f, 1);
         GUILayout.BeginVertical();
-        if (GUILayout.Button(StringSet.North, StyleSet.buttonSmall))
+        if (GUILayout.Button(StringSet.North, StyleSet.buttonSmall)) {
             SelectDirection(Target.NORTH);
-        if (GUILayout.Button(StringSet.South, StyleSet.buttonSmall))
+        }
+        if (GUILayout.Button(StringSet.South, StyleSet.buttonSmall)) {
             SelectDirection(Target.SOUTH);
+        }
         GUILayout.EndVertical();
 
         GUI.color = baseColor * new Color(1, 0.2f, 0.2f);
         GUILayout.BeginVertical();
-        if (GUILayout.Button(StringSet.East, StyleSet.buttonSmall))
+        if (GUILayout.Button(StringSet.East, StyleSet.buttonSmall)) {
             SelectDirection(Target.EAST);
-        if (GUILayout.Button(StringSet.West, StyleSet.buttonSmall))
+        }
+        if (GUILayout.Button(StringSet.West, StyleSet.buttonSmall)) {
             SelectDirection(Target.WEST);
+        }
         GUILayout.EndVertical();
 
-        if (allowVertical)
-        {
+        if (allowVertical) {
             GUI.color = baseColor * new Color(0.2f, 1, 0.2f);
             GUILayout.BeginVertical();
-            if (GUILayout.Button(StringSet.Up, StyleSet.buttonSmall))
+            if (GUILayout.Button(StringSet.Up, StyleSet.buttonSmall)) {
                 SelectDirection(Target.UP);
-            if (GUILayout.Button(StringSet.Down, StyleSet.buttonSmall))
+            }
+            if (GUILayout.Button(StringSet.Down, StyleSet.buttonSmall)) {
                 SelectDirection(Target.DOWN);
+            }
             GUILayout.EndVertical();
         }
 
@@ -113,16 +110,15 @@ public class TargetGUI : GUIPanel
         GUI.color = baseColor;
     }
 
-    private void SelectDirection(sbyte direction)
-    {
-        if (localState == 1)
+    private void SelectDirection(sbyte direction) {
+        if (localState == 1) {
             direction |= Target.LOCAL_BIT;
+        }
         handler(new Target(direction));
         Destroy(this);
     }
 
-    public static void DrawCompass(GUIPanel panel, Rect rect)
-    {
+    public static void DrawCompass(GUIPanel panel, Rect rect) {
         float rotation = -Camera.main.transform.parent.rotation.eulerAngles.y;
         Matrix4x4 baseMatrix = GUI.matrix;
         panel.RotateAboutPoint(rect.center, rotation, Vector2.one);

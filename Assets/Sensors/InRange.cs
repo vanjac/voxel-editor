@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InRangeSensor : BaseTouchSensor
-{
+public class InRangeSensor : BaseTouchSensor {
     public static new PropertiesObjectType objectType = new PropertiesObjectType(
-        "In Range", typeof(InRangeSensor))
-    {
+            "In Range", typeof(InRangeSensor)) {
         displayName = s => s.InRangeName,
         description = s => s.InRangeDesc,
         longDescription = s => s.InRangeLongDesc,
@@ -17,16 +15,14 @@ public class InRangeSensor : BaseTouchSensor
     private float distance = 5;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("dis", s => s.PropDistance,
                 () => distance,
                 v => distance = (float)v,
                 PropertyGUIs.Float)
         });
 
-    public override ISensorComponent MakeComponent(GameObject gameObject)
-    {
+    public override ISensorComponent MakeComponent(GameObject gameObject) {
         // TODO: this is ugly and bad
 
         // set up sphere
@@ -53,30 +49,25 @@ public class InRangeSensor : BaseTouchSensor
     }
 }
 
-public class InRangeUpdate : MonoBehaviour
-{
+public class InRangeUpdate : MonoBehaviour {
     public GameObject parent;
     public ISensorComponent sensor;
 
-    void LateUpdate()
-    {
-        if (parent == null)
+    void LateUpdate() {
+        if (parent == null) {
             Destroy(gameObject);
-        else
-        {
+        } else {
             transform.position = parent.transform.position;
             // TODO: this is very ugly
             // entity is about to die, so remove all activators
             // see DynamicEntityComponent.Die()
-            if (transform.position == DynamicEntityComponent.KILL_LOCATION)
-            {
+            if (transform.position == DynamicEntityComponent.KILL_LOCATION) {
                 StartCoroutine(ClearSensorCoroutine());
             }
         }
     }
 
-    private IEnumerator ClearSensorCoroutine()
-    {
+    private IEnumerator ClearSensorCoroutine() {
         // make sure sensor.LateUpdate() won't be called again after this
         yield return new WaitForEndOfFrame();
         sensor.ClearActivators();

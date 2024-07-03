@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaterialSelectorGUI : GUIPanel
-{
+public class MaterialSelectorGUI : GUIPanel {
     private static RenderTexture previewTexture;
     private static Material previewMaterial;
     private const int NUM_COLUMNS = 4;
@@ -35,36 +34,31 @@ public class MaterialSelectorGUI : GUIPanel
     private bool showColorStyle;
     private ResourcesDirectory.ColorStyle colorStyle;
 
-    private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() =>
-    {
+    private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() => {
         var style = new GUIStyle(StyleSet.buttonLarge);
         style.padding.left = 0;
         style.padding.right = 0;
         return style;
     });
 
-    public static readonly System.Lazy<GUIStyle> categoryLabelStyle = new System.Lazy<GUIStyle>(() =>
-    {
+    public static readonly System.Lazy<GUIStyle> categoryLabelStyle = new System.Lazy<GUIStyle>(() => {
         var style = new GUIStyle(StyleSet.labelTitle);
         style.alignment = TextAnchor.MiddleCenter;
         style.fixedHeight = StyleSet.buttonLarge.fixedHeight;
         return style;
     });
 
-    public override void OnEnable()
-    {
+    public override void OnEnable() {
         showCloseButton = true;
         base.OnEnable();
     }
 
-    public void Start()
-    {
+    public void Start() {
         CategorySelected("");
         instance = false;
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         AssetManager.UnusedAssets();
     }
 
@@ -72,41 +66,36 @@ public class MaterialSelectorGUI : GUIPanel
         GUIUtils.CenterRect(safeRect.center.x, safeRect.center.y,
             safeRect.width * .5f, safeRect.height * .8f, maxWidth: 1280);
 
-    public override void WindowGUI()
-    {
-        if (page == Page.COLOR)
-        {
+    public override void WindowGUI() {
+        if (page == Page.COLOR) {
             ColorPage();
-        }
-        else if (colorPicker != null)
-        {
+        } else if (colorPicker != null) {
             Destroy(colorPicker);
             colorPicker = null;
         }
 
-        if (page == Page.TEXTURE)
+        if (page == Page.TEXTURE) {
             TexturePage();
-        else
+        } else {
             scrollVelocity = Vector2.zero;
+        }
     }
 
-    private void ColorPage()
-    {
+    private void ColorPage() {
         GUILayout.BeginHorizontal();
-        if (ActionBarGUI.ActionBarButton(IconSet.close))
+        if (ActionBarGUI.ActionBarButton(IconSet.close)) {
             page = Page.TEXTURE;
+        }
         GUILayout.Label(StringSet.MaterialColorHeader, categoryLabelStyle.Value);
         GUILayout.EndHorizontal();
 
         string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
-        if (colorPicker == null)
-        {
+        if (colorPicker == null) {
             whitePoint = Color.white;
             showColorStyle = false;
             colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
             if (!customTextureBase &&
-                ResourcesDirectory.materialInfos.TryGetValue(highlightMaterial.name, out var info))
-            {
+                    ResourcesDirectory.materialInfos.TryGetValue(highlightMaterial.name, out var info)) {
                 whitePoint = info.whitePoint;
                 whitePoint.a = 1.0f;
                 showColorStyle = info.supportsColorStyles;
@@ -116,28 +105,28 @@ public class MaterialSelectorGUI : GUIPanel
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
             Color currentColor = highlightMaterial.GetColor(colorProp);
-            if (colorStyle == ResourcesDirectory.ColorStyle.TINT)
+            if (colorStyle == ResourcesDirectory.ColorStyle.TINT) {
                 currentColor *= whitePoint;
+            }
             colorPicker.SetColor(currentColor);
             colorPicker.includeAlpha = isOverlay;
-            colorPicker.handler = (Color c) =>
-            {
+            colorPicker.handler = (Color c) => {
                 MakeInstance();
                 // don't believe what they tell you, color values can go above 1.0
-                if (colorStyle == ResourcesDirectory.ColorStyle.TINT)
+                if (colorStyle == ResourcesDirectory.ColorStyle.TINT) {
                     c = new Color(c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a);
+                }
                 highlightMaterial.SetColor(colorProp, c);
-                if (handler != null)
+                if (handler != null) {
                     handler(highlightMaterial);
+                }
             };
         }
         colorPicker.WindowGUI();
-        if (showColorStyle)
-        {
+        if (showColorStyle) {
             var newStyle = (ResourcesDirectory.ColorStyle)GUILayout.SelectionGrid((int)colorStyle,
                 new string[] { StringSet.ColorTintMode, StringSet.ColorPaintMode }, 2);
-            if (newStyle != colorStyle)
-            {
+            if (newStyle != colorStyle) {
                 colorStyle = newStyle;
                 MakeInstance();
                 ResourcesDirectory.SetMaterialColorStyle(highlightMaterial, newStyle);
@@ -146,12 +135,11 @@ public class MaterialSelectorGUI : GUIPanel
         }
     }
 
-    private void TexturePage()
-    {
-        if (materials == null)
+    private void TexturePage() {
+        if (materials == null) {
             return;
-        if (loadingWorld)
-        {
+        }
+        if (loadingWorld) {
             GUILayout.Label(StringSet.LoadingWorld);
             return;
         }
@@ -160,19 +148,22 @@ public class MaterialSelectorGUI : GUIPanel
 
         bool wasEnabled = GUI.enabled;
         Color baseColor = GUI.color;
-        if (selectedCategory == "" && !importFromWorld)
+        if (selectedCategory == "" && !importFromWorld) {
             GUIUtils.ShowDisabled();
-        if (ActionBarGUI.ActionBarButton(IconSet.close))
+        }
+        if (ActionBarGUI.ActionBarButton(IconSet.close)) {
             BackButton();
+        }
         GUI.enabled = wasEnabled;
         GUI.color = baseColor;
 
-        if (selectedCategory == CUSTOM_CATEGORY)
-        {
-            if (ActionBarGUI.ActionBarButton(IconSet.newTexture))
+        if (selectedCategory == CUSTOM_CATEGORY) {
+            if (ActionBarGUI.ActionBarButton(IconSet.newTexture)) {
                 ImportTextureFromPhotos();
-            if (ActionBarGUI.ActionBarButton(IconSet.worldImport))
+            }
+            if (ActionBarGUI.ActionBarButton(IconSet.worldImport)) {
                 CategorySelected(WORLD_LIST_CATEGORY);
+            }
         }
 
         // prevent from expanding window
@@ -181,60 +172,59 @@ public class MaterialSelectorGUI : GUIPanel
         GUIUtils.EndHorizontalClipped();
 
         if (selectedCategory == CUSTOM_CATEGORY
-            && highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial))
-        {
-            if (ActionBarGUI.ActionBarButton(IconSet.copy))
+                && highlightMaterial != null && CustomTexture.IsCustomTexture(highlightMaterial)) {
+            if (ActionBarGUI.ActionBarButton(IconSet.copy)) {
                 DuplicateCustomTexture();
-            if (ActionBarGUI.ActionBarButton(IconSet.draw))
+            }
+            if (ActionBarGUI.ActionBarButton(IconSet.draw)) {
                 EditCustomTexture(new CustomTexture(highlightMaterial, isOverlay));
-            if (ActionBarGUI.ActionBarButton(IconSet.delete))
-            {
+            }
+            if (ActionBarGUI.ActionBarButton(IconSet.delete)) {
                 var dialog = gameObject.AddComponent<DialogGUI>();
                 dialog.message = StringSet.CustomTextureDeleteConfirm;
                 dialog.yesButtonText = StringSet.Yes;
                 dialog.noButtonText = StringSet.No;
                 dialog.yesButtonHandler = () => DeleteCustomTexture();
             }
-        }
-        else if (selectedCategory != WORLD_LIST_CATEGORY)
-        {
+        } else if (selectedCategory != WORLD_LIST_CATEGORY) {
             wasEnabled = GUI.enabled;
             baseColor = GUI.color;
             if (highlightMaterial == null || CustomTexture.IsCustomTexture(highlightMaterial)
-                || ResourcesDirectory.MaterialColorProperty(highlightMaterial) == null)
-            {
+                    || ResourcesDirectory.MaterialColorProperty(highlightMaterial) == null) {
                 GUIUtils.ShowDisabled();
             }
             TutorialGUI.TutorialHighlight("material color");
-            if (ActionBarGUI.ActionBarButton(IconSet.color))
+            if (ActionBarGUI.ActionBarButton(IconSet.color)) {
                 page = Page.COLOR;
+            }
             TutorialGUI.ClearHighlight();
             GUI.enabled = wasEnabled;
             GUI.color = baseColor;
 
-            if (allowNullMaterial)
-            {
-                if (highlightMaterial != null && ActionBarGUI.ActionBarButton(IconSet.no))
+            if (allowNullMaterial) {
+                if (highlightMaterial != null && ActionBarGUI.ActionBarButton(IconSet.no)) {
                     MaterialSelected(null);
-                else if (highlightMaterial == null)
+                } else if (highlightMaterial == null) {
                     ActionBarGUI.HighlightedActionBarButton(IconSet.no);
+                }
             }
         }
 
         GUILayout.EndHorizontal();
 
         scroll = GUILayout.BeginScrollView(scroll);
-        if (importFromWorld && (importMessage != null))
+        if (importFromWorld && (importMessage != null)) {
             GUILayout.Label(importMessage);
+        }
 
         Rect rowRect = new Rect();
         int materialColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
         string highlightName = (highlightMaterial != null) ? highlightMaterial.name : null;
         string previewName = (highlightName != null) ? (highlightName + PREVIEW_SUFFIX) : null;
-        for (int i = 0; i < materials.Count; i++)
-        {
-            if (i % materialColumns == 0)
+        for (int i = 0; i < materials.Count; i++) {
+            if (i % materialColumns == 0) {
                 rowRect = GUILayoutUtility.GetAspectRect(materialColumns);
+            }
             Rect buttonRect = rowRect;
             buttonRect.width = buttonRect.height;
             buttonRect.x = buttonRect.width * (i % materialColumns);
@@ -244,80 +234,75 @@ public class MaterialSelectorGUI : GUIPanel
             Material material = materials[i];
             bool selected;
             if (material != null
-                    && (material.name == highlightName || material.name == previewName))
+                    && (material.name == highlightName || material.name == previewName)) {
                 // highlight the button
                 selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
-            else
+            } else {
                 selected = GUI.Button(buttonRect, "");
-            if (selected)
+            }
+            if (selected) {
                 MaterialSelected(material);
+            }
+
             DrawMaterialTexture(material, textureRect, isOverlay);
         }
 
-        if (categories.Length > 0)
-        {
+        if (categories.Length > 0) {
             int selectDir = GUILayout.SelectionGrid(-1, categories,
                 selectedCategory == WORLD_LIST_CATEGORY ? 1 : NUM_COLUMNS,
                 categoryButtonStyle.Value);
-            if (selectDir != -1)
+            if (selectDir != -1) {
                 CategorySelected(categories[selectDir]);
+            }
         }
 
         GUILayout.EndScrollView();
     }
 
-    private void MakeInstance()
-    {
-        if (!instance)
-        {
+    private void MakeInstance() {
+        if (!instance) {
             //Debug.Log("instantiate");
             highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
             instance = true;
         }
     }
 
-    private void BackButton()
-    {
-        if (importFromWorld)
-        {
+    private void BackButton() {
+        if (importFromWorld) {
             CategorySelected(WORLD_LIST_CATEGORY);
             importFromWorld = false;
-        }
-        else if (selectedCategory == WORLD_LIST_CATEGORY)
+        } else if (selectedCategory == WORLD_LIST_CATEGORY) {
             CategorySelected(CUSTOM_CATEGORY);
-        else
+        } else {
             CategorySelected("");
+        }
     }
 
-    private void CategorySelected(string category)
-    {
-        if (selectedCategory == WORLD_LIST_CATEGORY && category != CUSTOM_CATEGORY)
+    private void CategorySelected(string category) {
+        if (selectedCategory == WORLD_LIST_CATEGORY && category != CUSTOM_CATEGORY) {
             importFromWorld = true;
+        }
         selectedCategory = category;
         scroll = Vector2.zero;
         scrollVelocity = Vector2.zero;
 
-        if (category == CUSTOM_CATEGORY)
-        {
+        if (category == CUSTOM_CATEGORY) {
             categories = new string[0];
-            if (rootDirectory == "Overlays")
+            if (rootDirectory == "Overlays") {
                 materials = voxelArray.customOverlays;
-            else
+            } else {
                 materials = voxelArray.customMaterials;
+            }
             AssetManager.UnusedAssets();
             return;
-        }
-        else if (category == WORLD_LIST_CATEGORY)
-        {
+        } else if (category == WORLD_LIST_CATEGORY) {
             materials = new List<Material>();
             var worldNames = new List<string>();
             WorldFiles.ListWorlds(new List<string>(), worldNames);
             categories = worldNames.ToArray();
             AssetManager.UnusedAssets();
             return;
-        }
-        else if (importFromWorld)
-        {
+        } else if (importFromWorld) {
             categories = new string[0];
             materials = new List<Material>();
             // TODO :(
@@ -326,26 +311,29 @@ public class MaterialSelectorGUI : GUIPanel
         }
 
         string currentDirectory = rootDirectory;
-        if (category != "")
+        if (category != "") {
             currentDirectory += "/" + category;
+        }
 
         var categoriesList = new List<string>();
         if (!customTextureBase && category == ""
-                && (rootDirectory == "Materials" || rootDirectory == "Overlays"))
+                && (rootDirectory == "Materials" || rootDirectory == "Overlays")) {
             categoriesList.Add(CUSTOM_CATEGORY);
+        }
         materials = new List<Material>();
-        foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values)
-        {
-            if (dirEntry.parent != currentDirectory)
+        foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values) {
+            if (dirEntry.parent != currentDirectory) {
                 continue;
-            if (dirEntry.name.StartsWith("$"))
+            }
+            if (dirEntry.name.StartsWith("$")) {
                 continue; // special alternate materials for game
-            if (dirEntry.isDirectory)
+            }
+            if (dirEntry.isDirectory) {
                 categoriesList.Add(dirEntry.name); // TODO: localize!
-            else
-            {
-                if (dirEntry.name.EndsWith(PREVIEW_SUFFIX))
+            } else {
+                if (dirEntry.name.EndsWith(PREVIEW_SUFFIX)) {
                     materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
+                }
                 materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
             }
         }
@@ -354,16 +342,13 @@ public class MaterialSelectorGUI : GUIPanel
         AssetManager.UnusedAssets();
     }
 
-    private void MaterialSelected(Material material)
-    {
-        if (material != null && material.name.EndsWith(PREVIEW_SUFFIX))
-        {
+    private void MaterialSelected(Material material) {
+        if (material != null && material.name.EndsWith(PREVIEW_SUFFIX)) {
             string newName = material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
             material = ResourcesDirectory.FindMaterial(newName, true);
         }
         highlightMaterial = material;
-        if (importFromWorld)
-        {
+        if (importFromWorld) {
             // jank
             importFromWorld = false;
             CategorySelected(CUSTOM_CATEGORY);
@@ -371,31 +356,28 @@ public class MaterialSelectorGUI : GUIPanel
             return;  // don't call handler
         }
         instance = false;
-        if (customTextureBase && highlightMaterial != null)
-        {
+        if (customTextureBase && highlightMaterial != null) {
             // reset color to white
             string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
-            if (colorProp != null)
-            {
+            if (colorProp != null) {
                 Color prevColor = highlightMaterial.GetColor(colorProp);
                 Color newColor = new Color(1, 1, 1, prevColor.a);
-                if (newColor != prevColor)
-                {
+                if (newColor != prevColor) {
                     MakeInstance();
                     highlightMaterial.SetColor(colorProp, newColor);
                 }
             }
         }
-        if (handler != null)
+        if (handler != null) {
             handler(highlightMaterial);
+        }
     }
 
-    private void ImportTextureFromPhotos()
-    {
-        NativeGalleryWrapper.ImportTexture((Texture2D texture) =>
-        {
-            if (texture == null)
+    private void ImportTextureFromPhotos() {
+        NativeGalleryWrapper.ImportTexture((Texture2D texture) => {
+            if (texture == null) {
                 return;
+            }
 
             Material baseMat = ResourcesDirectory.InstantiateMaterial(Resources.Load<Material>(
                 isOverlay ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE"));
@@ -411,19 +393,16 @@ public class MaterialSelectorGUI : GUIPanel
         });
     }
 
-    private void EditCustomTexture(CustomTexture customTex)
-    {
+    private void EditCustomTexture(CustomTexture customTex) {
         PropertiesGUI propsGUI = GetComponent<PropertiesGUI>();
-        if (propsGUI != null)
-        {
+        if (propsGUI != null) {
             propsGUI.specialSelection = customTex;
             propsGUI.normallyOpen = true;
             Destroy(this);
         }
     }
 
-    private void DuplicateCustomTexture()
-    {
+    private void DuplicateCustomTexture() {
         Material newMat = CustomTexture.Clone(highlightMaterial);
         materials.Add(newMat);
         MaterialSelected(newMat);
@@ -431,58 +410,53 @@ public class MaterialSelectorGUI : GUIPanel
         scrollVelocity = new Vector2(0, 1000 * materials.Count);
     }
 
-    private void DeleteCustomTexture()
-    {
+    private void DeleteCustomTexture() {
         CustomTexture customTex = new CustomTexture(highlightMaterial, isOverlay);
         voxelArray.ReplaceMaterial(highlightMaterial, customTex.baseMat);
-        if (!materials.Remove(highlightMaterial))
+        if (!materials.Remove(highlightMaterial)) {
             Debug.LogError("Error removing material");
+        }
         MaterialSelected(customTex.baseMat);
         voxelArray.unsavedChanges = true;
     }
 
-    private IEnumerator LoadWorldCoroutine(string path)
-    {
+    private IEnumerator LoadWorldCoroutine(string path) {
         // copied from DataImportGUI
         loadingWorld = true;
         importMessage = null;
         yield return null;
         yield return null;
-        try
-        {
+        try {
             materials = ReadWorldFile.ReadCustomTextures(path, isOverlay);
-            if (materials.Count == 0)
-            {
+            if (materials.Count == 0) {
                 importMessage = isOverlay ? StringSet.NoCustomOverlaysInWorld
                     : StringSet.NoCustomMaterialsInWorld;
             }
-        }
-        catch (MapReadException e)
-        {
+        } catch (MapReadException e) {
             importMessage = e.Message;
             Debug.LogError(e.InnerException);
-        }
-        finally
-        {
+        } finally {
             loadingWorld = false;
         }
     }
 
-    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha)
-    {
+    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha) {
         DrawMaterialTexture(mat, rect, alpha, Vector2.right, Vector2.up);
     }
 
-    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha, Vector2 u_vec, Vector2 v_vec)
-    {
-        if (mat == null)
+    public static void DrawMaterialTexture(Material mat, Rect rect, bool alpha, Vector2 u_vec, Vector2 v_vec) {
+        if (mat == null) {
             return;
-        if (previewTexture == null)
+        }
+        if (previewTexture == null) {
             previewTexture = new RenderTexture(256, 256, 0, RenderTextureFormat.ARGB32);
-        if (!previewTexture.IsCreated())
+        }
+        if (!previewTexture.IsCreated()) {
             previewTexture.Create();
-        if (previewMaterial == null)
+        }
+        if (previewMaterial == null) {
             previewMaterial = new Material(Shader.Find("Unlit/MaterialPreview"));  // TODO make sure shader is included
+        }
 
         RenderTexture prevActive = RenderTexture.active;
         RenderTexture.active = previewTexture;
@@ -493,29 +467,29 @@ public class MaterialSelectorGUI : GUIPanel
 
         previewMaterial.CopyPropertiesFromMaterial(mat);
         string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
-        if (colorProp == null)
+        if (colorProp == null) {
             previewMaterial.color = Color.white;
-        else
-        {
+        } else {
             Color color = mat.GetColor(colorProp);
-            if (color.a == 0.0f)
+            if (color.a == 0.0f) {
                 color = new Color(color.r, color.g, color.b, 0.6f);
+            }
             previewMaterial.color = color;
         }
-        if (!mat.HasProperty("_BumpMap"))
+        if (!mat.HasProperty("_BumpMap")) {
             previewMaterial.SetTexture("_BumpMap", Texture2D.normalTexture);
-        if (!mat.HasProperty("_MainTex"))
-        {
-            if (mat.HasProperty("_FrontTex"))  // 6-sided skybox
-            {
+        }
+        if (!mat.HasProperty("_MainTex")) {
+            if (mat.HasProperty("_FrontTex")) { // 6-sided skybox
                 previewMaterial.mainTexture = mat.GetTexture("_FrontTex");
                 previewMaterial.color *= 2;
-            }
-            else
+            } else {
                 previewMaterial.mainTexture = Texture2D.whiteTexture;
+            }
         }
-        if (mat.HasProperty("_WaveScale"))  // water
+        if (mat.HasProperty("_WaveScale")) { // water
             previewMaterial.mainTextureScale = Vector2.one * mat.GetFloat("_WaveScale");
+        }
         previewMaterial.SetPass(0);
 
         Vector2 uv;

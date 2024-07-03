@@ -2,27 +2,25 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public static class AudioCompression
-{
+public static class AudioCompression {
     private const int HEADER_SIZE = 10;
     private const int FRAMES_PER_SECOND = 50; // 20ms, recommended by Opus docs
 
-    private static int GetClosestOpusSampleRate(int sampleRate)
-    {
-        if (sampleRate >= 36000)
+    private static int GetClosestOpusSampleRate(int sampleRate) {
+        if (sampleRate >= 36000) {
             return 48000;
-        else if (sampleRate >= 20000)
+        } else if (sampleRate >= 20000) {
             return 24000;
-        else if (sampleRate >= 14000)
+        } else if (sampleRate >= 14000) {
             return 16000;
-        else if (sampleRate >= 10000)
+        } else if (sampleRate >= 10000) {
             return 12000;
-        else
+        } else {
             return 8000;
+        }
     }
 
-    public static byte[] Compress(AudioClip clip)
-    {
+    public static byte[] Compress(AudioClip clip) {
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
 
@@ -33,14 +31,15 @@ public static class AudioCompression
 
         IntPtr encoder = Opus.opus_encoder_create(opusSampleRate, clip.channels,
             (int)Opus.Application.Audio, out int error);
-        if ((Opus.Errors)error != Opus.Errors.OK)
+        if ((Opus.Errors)error != Opus.Errors.OK) {
             throw new MapReadException("Error creating Opus encoder: " + (Opus.Errors)error);
+        }
 
         error = Opus.opus_encoder_ctl(encoder, Opus.Ctl.GetBitrateRequest, out int bitrate);
-        if (error < 0)
+        if (error < 0) {
             throw new MapReadException("Error getting bitrate " + error);
-        if (bitrate <= 0)
-        {
+        }
+        if (bitrate <= 0) {
             // error finding bitrate!
             // this is basically the same algorithm Opus uses
             // TODO this is still broken
@@ -74,14 +73,15 @@ public static class AudioCompression
         int byteI = HEADER_SIZE;
 
         int largestPacket = 0;
-        for (int i = 0; i < samples; i += frameSize)
-        {
+        for (int i = 0; i < samples; i += frameSize) {
             clip.GetData(sampleBlock, i);
             int packetSize = Opus.opus_encode_float(encoder, sampleBlock, frameSize, packet, maxPacketSize);
-            if (packetSize < 0)
+            if (packetSize < 0) {
                 throw new MapReadException("Opus encoding failed: " + (Opus.Errors)packetSize);
-            if (packetSize > largestPacket)
+            }
+            if (packetSize > largestPacket) {
                 largestPacket = packetSize;
+            }
             bytes[byteI] = (byte)(packetSize >> 8);
             bytes[byteI + 1] = (byte)(packetSize & 0xff);
             Buffer.BlockCopy(packet, 0, bytes, byteI + 2, packetSize);
@@ -99,10 +99,10 @@ public static class AudioCompression
         return bytes;
     }
 
-    public static AudioClip Decompress(byte[] bytes, MonoBehaviour coroutineObject)
-    {
-        if (bytes.Length < HEADER_SIZE)
+    public static AudioClip Decompress(byte[] bytes, MonoBehaviour coroutineObject) {
+        if (bytes.Length < HEADER_SIZE) {
             return null;
+        }
 
         // header
         int channels = bytes[0];
@@ -111,23 +111,24 @@ public static class AudioCompression
 
         //Debug.Log(frequency + "Hz " + channels + " channels, " + samples + " samples");
 
-        if (samples == 0 || channels == 0 || frequency == 0)
+        if (samples == 0 || channels == 0 || frequency == 0) {
             return null;
+        }
 
         AudioClip clip = AudioClip.Create("audio", samples, channels, frequency, false);
         coroutineObject.StartCoroutine(DecompressCoroutine(clip, bytes));
         return clip;
     }
 
-    private static IEnumerator DecompressCoroutine(AudioClip clip, byte[] bytes)
-    {
+    private static IEnumerator DecompressCoroutine(AudioClip clip, byte[] bytes) {
         int largestPacket = (bytes[8] << 8) | bytes[9];
         //Debug.Log("Largest packet: " + largestPacket);
 
         int opusSampleRate = GetClosestOpusSampleRate(clip.frequency);
         IntPtr decoder = Opus.opus_decoder_create(opusSampleRate, clip.channels, out int error);
-        if ((Opus.Errors)error != Opus.Errors.OK)
+        if ((Opus.Errors)error != Opus.Errors.OK) {
             throw new Exception("Error creating decoder " + (Opus.Errors)error);
+        }
 
         int frameSize = opusSampleRate / FRAMES_PER_SECOND; // 20ms
         int blockSize = frameSize * clip.channels;
@@ -136,19 +137,18 @@ public static class AudioCompression
         int byteI = HEADER_SIZE;
         int sampleI = 0;
         float timeDecompressed = 0;
-        while (byteI < bytes.Length)
-        {
+        while (byteI < bytes.Length) {
             int packetSize = bytes[byteI] * 256 + bytes[byteI + 1];
             Buffer.BlockCopy(bytes, byteI + 2, packet, 0, packetSize);
             byteI += packetSize + 2;
             int numSamples = Opus.opus_decode_float(decoder, packet, packetSize, sampleBlock, frameSize, 0);
-            if (numSamples < 0)
+            if (numSamples < 0) {
                 throw new Exception("Decoding failed " + (Opus.Errors)numSamples);
+            }
             clip.SetData(sampleBlock, sampleI);
             sampleI += numSamples;
             timeDecompressed += numSamples / (float)clip.frequency;
-            if (timeDecompressed >= Time.deltaTime * 2)
-            {
+            if (timeDecompressed >= Time.deltaTime * 2) {
                 // decompress twice as fast
                 yield return null;
                 timeDecompressed = 0;

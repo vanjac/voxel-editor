@@ -1,7 +1,6 @@
 using UnityEngine;
 
-public class GUIManager : MonoBehaviour
-{
+public class GUIManager : MonoBehaviour {
     public enum Language { Auto, English, Portuguese }
 
     // minimum supported targetHeight value
@@ -26,24 +25,19 @@ public class GUIManager : MonoBehaviour
     // fix bug that causes fonts to be unloaded when Resources.UnloadUnusedAssets is called
     public Font[] alternateFonts;
 
-    public static void SetLanguage(Language language)
-    {
+    public static void SetLanguage(Language language) {
         PlayerPrefs.SetInt("language", (int)language);
         UpdateLanguage(language);
     }
 
-    private static void UpdateLanguage(Language language)
-    {
-        if (language == Language.Auto)
-        {
-            language = Application.systemLanguage switch
-            {
+    private static void UpdateLanguage(Language language) {
+        if (language == Language.Auto) {
+            language = Application.systemLanguage switch {
                 SystemLanguage.Portuguese => Language.Portuguese,
                 _ => Language.English
             };
         }
-        switch (language)
-        {
+        switch (language) {
             case Language.English:
                 GUIPanel.StringSet = new GUIStringSet();
                 break;
@@ -53,38 +47,34 @@ public class GUIManager : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
+    void Awake() {
         instance = this;
 
         // TODO: enable this when other languages are properly supported
         // UpdateLanguage((Language)PlayerPrefs.GetInt("language", (int)Language.Auto));
     }
 
-    void Start()
-    {
+    void Start() {
         GUIPanel.guiSkin = guiSkin;
-        if (Screen.dpi <= 0)
-        {
+        if (Screen.dpi <= 0) {
             Debug.Log("Unknown screen DPI!");
         }
         Update();
     }
 
-    void Update()
-    {
+    void Update() {
         float scaledScreenHeight;
-        if (targetHeightOverride > 500)  // values too small make unity freeze
+        if (targetHeightOverride > 500) { // values too small make unity freeze
             scaledScreenHeight = targetHeightOverride;
-        else if (Application.isEditor || Screen.dpi <= 0)
+        } else if (Application.isEditor || Screen.dpi <= 0) {
             scaledScreenHeight = MIN_TARGET_HEIGHT;
-        else
-        {
+        } else {
             float screenHeightInches = Screen.height / Screen.dpi;
-            if (screenHeightInches < MAX_PHONE_HEIGHT_INCHES)
+            if (screenHeightInches < MAX_PHONE_HEIGHT_INCHES) {
                 scaledScreenHeight = MIN_TARGET_HEIGHT;
-            else
+            } else {
                 scaledScreenHeight = (MIN_TARGET_HEIGHT / MAX_PHONE_HEIGHT_INCHES) * screenHeightInches;
+            }
         }
         GUIPanel.scaleFactor = Screen.height / scaledScreenHeight;
         GUIPanel.scaledScreenArea = new Rect(0, 0,

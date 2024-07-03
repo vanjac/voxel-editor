@@ -3,13 +3,11 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class JoystickBehavior
-    : GenericEntityBehavior<JoystickBehavior, JoystickComponent>
-{
+        : GenericEntityBehavior<JoystickBehavior, JoystickComponent> {
     public enum JoystickAlignment { HORIZONTAL, VERTICAL }
 
     public static new BehaviorType objectType = new BehaviorType(
-        "Joystick", typeof(JoystickBehavior))
-    {
+            "Joystick", typeof(JoystickBehavior)) {
         displayName = s => s.JoystickName,
         description = s => s.JoystickDesc,
         iconName = "joystick",
@@ -24,8 +22,7 @@ public class JoystickBehavior
     public JoystickAlignment alignment = JoystickAlignment.HORIZONTAL;
 
     public override IEnumerable<Property> Properties() =>
-        Property.JoinProperties(base.Properties(), new Property[]
-        {
+        Property.JoinProperties(base.Properties(), new Property[] {
             new Property("vel", s => s.PropSpeed,
                 () => speed,
                 v => speed = (float)v,
@@ -41,25 +38,25 @@ public class JoystickBehavior
         });
 }
 
-public class JoystickComponent : MotionComponent<JoystickBehavior>
-{
-    public override Vector3 GetTranslateFixed()
-    {
+public class JoystickComponent : MotionComponent<JoystickBehavior> {
+    public override Vector3 GetTranslateFixed() {
         Vector3 forward;
-        if (behavior.facing.direction == Target.NO_DIRECTION && PlayerComponent.instance != null)
+        if (behavior.facing.direction == Target.NO_DIRECTION && PlayerComponent.instance != null) {
             forward = PlayerComponent.instance.transform.forward;
-        else
+        } else {
             forward = behavior.facing.DirectionFrom(transform);
+        }
         forward = forward.normalized;
         Vector3 right = Vector3.Cross(Vector3.up, forward);
 
         float x = CrossPlatformInputManager.GetAxis("Horizontal");
         float y = CrossPlatformInputManager.GetAxis("Vertical");
         Vector3 control = x * right;
-        if (behavior.alignment == JoystickBehavior.JoystickAlignment.VERTICAL)
+        if (behavior.alignment == JoystickBehavior.JoystickAlignment.VERTICAL) {
             control += new Vector3(0, y, 0);
-        else
+        } else {
             control += y * forward;
+        }
 
         return control * behavior.speed * Time.fixedDeltaTime;
     }

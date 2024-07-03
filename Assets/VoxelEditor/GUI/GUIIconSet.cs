@@ -2,8 +2,7 @@
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "icons", menuName = "ScriptableObjects/N-Space Icon Set")]
-public class GUIIconSet : ScriptableObject
-{
+public class GUIIconSet : ScriptableObject {
     public Texture close, x, next, create, applySelection, clearSelection, paint, play, overflow, world, help;
     public Texture helpCircle, done, rotateLeft, rotateRight, flipHorizontal, flipVertical, about, select;
     public Texture entityTag, target, rename, copy, delete, share, bevel, no, pause, restart, editor, playAudio;
@@ -16,8 +15,7 @@ public class GUIIconSet : ScriptableObject
     public Texture[] tagIcons;
 
     [System.Serializable]
-    public struct BevelIconSet
-    {
+    public struct BevelIconSet {
         public Texture quarter, half, full;
         public Texture square, flat, curve, stair2, stair4;
     }

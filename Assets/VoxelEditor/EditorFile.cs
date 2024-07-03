@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class EditorFile : MonoBehaviour
-{
+public class EditorFile : MonoBehaviour {
     public static EditorFile instance;
     public LoadingGUI loadingGUI;
     public List<MonoBehaviour> enableOnLoad;
@@ -17,34 +16,27 @@ public class EditorFile : MonoBehaviour
     // importWorldHandler MUST dispose stream and call ShareMap.ClearFileWaitingToImport() when finished
     public Action<System.IO.Stream> importWorldHandler;
 
-    void Start()
-    {
+    void Start() {
         instance = this;
     }
 
-    public void Load()
-    {
+    public void Load() {
         StartCoroutine(LoadCoroutine());
     }
 
-    private IEnumerator LoadCoroutine()
-    {
+    private IEnumerator LoadCoroutine() {
         yield return null;
         var guiGameObject = loadingGUI.gameObject;
 
         List<string> warnings;
-        try
-        {
+        try {
             warnings = ReadWorldFile.Read(SelectedWorld.GetLoadStream(),
                 cameraPivot, voxelArray, true);
-        }
-        catch (MapReadException e)
-        {
+        } catch (MapReadException e) {
             var dialog = guiGameObject.AddComponent<DialogGUI>();
             dialog.message = e.FullMessage;
             dialog.yesButtonText = GUIPanel.StringSet.Close;
-            dialog.yesButtonHandler = () =>
-            {
+            dialog.yesButtonHandler = () => {
                 voxelArray.unsavedChanges = false;
                 Close();
             };
@@ -58,29 +50,24 @@ public class EditorFile : MonoBehaviour
         voxelArray.selectionChanged = false;
 
         Destroy(loadingGUI);
-        foreach (MonoBehaviour b in enableOnLoad)
+        foreach (MonoBehaviour b in enableOnLoad) {
             b.enabled = true;
+        }
 
-        if (PlayerPrefs.HasKey("last_editScene_version"))
-        {
+        if (PlayerPrefs.HasKey("last_editScene_version")) {
             string lastVerStr = PlayerPrefs.GetString("last_editScene_version");
-            if (ParseAppVersion(lastVerStr, out var lastVersion))
-            {
-                if (lastVersion < new Version(1, 4, 0))
-                {
+            if (ParseAppVersion(lastVerStr, out var lastVersion)) {
+                if (lastVersion < new Version(1, 4, 0)) {
                     LargeMessageGUI.ShowLargeMessageDialog(guiGameObject,
                         GUIPanel.StringSet.UpdateMessage_1_4_0);
                 }
-            }
-            else
-            {
+            } else {
                 Debug.LogError("Unable to parse version: " + lastVerStr);
             }
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
 
-        if (warnings.Count > 0)
-        {
+        if (warnings.Count > 0) {
             // avoids a bug where two dialogs created on the same frame will put the unfocused one on top
             // for some reason it's necessary to wait two frames
             yield return null;
@@ -91,46 +78,36 @@ public class EditorFile : MonoBehaviour
         }
     }
 
-    private bool ParseAppVersion(string str, out Version version)
-    {
-        if (str.EndsWith("b"))
+    private bool ParseAppVersion(string str, out Version version) {
+        if (str.EndsWith("b")) {
             str = str.Substring(0, str.Length - 1); // 1.3.4b, 1.3.6b
+        }
         str = str.Split('-')[0]; // remove pre-release suffix
         return Version.TryParse(str, out version);
     }
 
-    public bool Save(bool allowPopups = true)
-    {
-        if (!voxelArray.unsavedChanges)
-        {
+    public bool Save(bool allowPopups = true) {
+        if (!voxelArray.unsavedChanges) {
             Debug.unityLogger.Log("EditorFile", "No unsaved changes");
             return true;
         }
-        if (voxelArray.IsEmpty())
-        {
+        if (voxelArray.IsEmpty()) {
             Debug.Log("World is empty! File will not be written.");
             return true;
         }
         string savePath = SelectedWorld.GetSavePath();
-        try
-        {
-            if (System.IO.File.Exists(savePath))
-            {
+        try {
+            if (System.IO.File.Exists(savePath)) {
                 MessagePackWorldWriter.Write(WorldFiles.GetTempPath(),
                     cameraPivot, voxelArray);
                 WorldFiles.RestoreTempFile(savePath);
-            }
-            else
-            {
+            } else {
                 MessagePackWorldWriter.Write(savePath, cameraPivot, voxelArray);
             }
             voxelArray.unsavedChanges = false;
             return true;
-        }
-        catch (Exception e)
-        {
-            if (allowPopups)
-            {
+        } catch (Exception e) {
+            if (allowPopups) {
                 string message = GUIPanel.StringSet.UnknownSaveError + e.ToString();
                 var dialog = LargeMessageGUI.ShowLargeMessageDialog(GUIPanel.GuiGameObject, message);
                 dialog.closeHandler = () => SceneManager.LoadScene(Scenes.MENU);
@@ -140,60 +117,50 @@ public class EditorFile : MonoBehaviour
         }
     }
 
-    public void Play()
-    {
+    public void Play() {
         Debug.unityLogger.Log("EditorFile", "Play");
-        if (Save())
+        if (Save()) {
             SceneManager.LoadScene(Scenes.GAME);
+        }
     }
 
-    public void Close()
-    {
+    public void Close() {
         Debug.unityLogger.Log("EditorFile", "Close");
-        if (Save())
+        if (Save()) {
             SceneManager.LoadScene(Scenes.MENU);
+        }
     }
 
-    public void Revert()
-    {
+    public void Revert() {
         Debug.unityLogger.Log("EditorFile", "Revert");
         SceneManager.LoadScene(Scenes.EDITOR);
     }
 
-    void OnEnable()
-    {
+    void OnEnable() {
         Debug.unityLogger.Log("EditorFile", "OnEnable()");
         Load();
     }
 
-    void OnApplicationQuit()
-    {
+    void OnApplicationQuit() {
         Debug.unityLogger.Log("EditorFile", "OnApplicationQuit()");
         Save(allowPopups: false);
     }
 
-    void OnApplicationPause(bool pauseStatus)
-    {
+    void OnApplicationPause(bool pauseStatus) {
         Debug.unityLogger.Log("EditorFile", "OnApplicationPause(" + pauseStatus + ")");
-        if (pauseStatus)
+        if (pauseStatus) {
             Save(allowPopups: false);
-        else if (ShareMap.FileWaitingToImport())
-        {
-            if (importWorldHandler == null)
-            {
-                if (Save())
+        } else if (ShareMap.FileWaitingToImport()) {
+            if (importWorldHandler == null) {
+                if (Save()) {
                     SceneManager.LoadScene(Scenes.FILE_RECEIVE);
-            }
-            else
-            {
+                }
+            } else {
                 System.IO.Stream stream = null;
-                try
-                {
+                try {
                     stream = ShareMap.GetImportStream();
                     importWorldHandler(stream);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     DialogGUI.ShowMessageDialog(GUIPanel.GuiGameObject,
                         GUIPanel.StringSet.UnknownReadError);
                     Debug.LogError(e);

@@ -1,7 +1,6 @@
 using UnityEngine;
 
-public class MenuOverflowGUI : GUIPanel
-{
+public class MenuOverflowGUI : GUIPanel {
     public TextAsset creditsText;
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
@@ -10,33 +9,26 @@ public class MenuOverflowGUI : GUIPanel
 
     public override GUIStyle GetStyle() => GUIStyle.none;
 
-    void Start()
-    {
+    void Start() {
         GUIPanel.topPanel = this;
     }
 
-    public override void OnEnable()
-    {
+    public override void OnEnable() {
         holdOpen = true;
         stealFocus = false;
         base.OnEnable();
     }
 
-    public override void WindowGUI()
-    {
+    public override void WindowGUI() {
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (ActionBarGUI.ActionBarButton(IconSet.overflow))
-        {
+        if (ActionBarGUI.ActionBarButton(IconSet.overflow)) {
             var overflow = gameObject.AddComponent<OverflowMenuGUI>();
-            overflow.items = new OverflowMenuGUI.MenuItem[]
-            {
-                new OverflowMenuGUI.MenuItem(StringSet.OpenHelp, IconSet.help, () =>
-                {
+            overflow.items = new OverflowMenuGUI.MenuItem[] {
+                new OverflowMenuGUI.MenuItem(StringSet.OpenHelp, IconSet.help, () => {
                     gameObject.AddComponent<HelpGUI>();
                 }),
-                new OverflowMenuGUI.MenuItem(StringSet.OpenAbout, IconSet.about, () =>
-                {
+                new OverflowMenuGUI.MenuItem(StringSet.OpenAbout, IconSet.about, () => {
 #if false
                     string donate = StringSet.DonateMessage + "\n\n";
 #else
@@ -50,38 +42,30 @@ public class MenuOverflowGUI : GUIPanel
                         Application.unityVersion, donate, creditsText.text, debugInfo);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 }),
-                new OverflowMenuGUI.MenuItem(StringSet.OpenWebsite, IconSet.website, () =>
-                {
+                new OverflowMenuGUI.MenuItem(StringSet.OpenWebsite, IconSet.website, () => {
                     Application.OpenURL("https://chroma.zone/voxel-editor/");
                 }),
-                new OverflowMenuGUI.MenuItem(StringSet.OpenSubreddit, IconSet.reddit, () =>
-                {
+                new OverflowMenuGUI.MenuItem(StringSet.OpenSubreddit, IconSet.reddit, () => {
                     Application.OpenURL("https://www.reddit.com/r/nspace/");
                 }),
 #if false
-                new OverflowMenuGUI.MenuItem(StringSet.Donate, IconSet.donate, () =>
-                {
+                new OverflowMenuGUI.MenuItem(StringSet.Donate, IconSet.donate, () => {
                     Application.OpenURL("https://chroma.zone/donate");
                 }),
 #endif
 #if false
-                new OverflowMenuGUI.MenuItem(StringSet.Language, IconSet.language, () =>
-                {
+                new OverflowMenuGUI.MenuItem(StringSet.Language, IconSet.language, () => {
                     var languageMenu = gameObject.AddComponent<OverflowMenuGUI>();
                     languageMenu.stealFocus = true;
                     languageMenu.depth = 1;
-                    languageMenu.items = new OverflowMenuGUI.MenuItem[]
-                    {
-                        new OverflowMenuGUI.MenuItem(StringSet.LanguageAuto, null, () =>
-                        {
+                    languageMenu.items = new OverflowMenuGUI.MenuItem[] {
+                        new OverflowMenuGUI.MenuItem(StringSet.LanguageAuto, null, () => {
                             GUIManager.SetLanguage(GUIManager.Language.Auto);
                         }),
-                        new OverflowMenuGUI.MenuItem("English", null, () =>
-                        {
+                        new OverflowMenuGUI.MenuItem("English", null, () => {
                             GUIManager.SetLanguage(GUIManager.Language.English);
                         }),
-                        new OverflowMenuGUI.MenuItem("Português", null, () =>
-                        {
+                        new OverflowMenuGUI.MenuItem("Português", null, () => {
                             GUIManager.SetLanguage(GUIManager.Language.Portuguese);
                         }),
                     };
