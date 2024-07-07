@@ -11,6 +11,7 @@ public static class ResourcesDirectory {
 
     // map name to info
     private static Dictionary<string, MaterialInfo> materialInfos = null;
+    private static Dictionary<string, MaterialInfo> previewMaterialInfos = null;
 
     private static Dictionary<MaterialType, List<string>> materialCategories =
         new Dictionary<MaterialType, List<string>>();
@@ -27,8 +28,13 @@ public static class ResourcesDirectory {
     public static Dictionary<string, MaterialInfo> GetMaterialInfos() {
         if (materialInfos == null) {
             materialInfos = new Dictionary<string, MaterialInfo>();
+            previewMaterialInfos = new Dictionary<string, MaterialInfo>();
             foreach (MaterialInfo info in GetMaterialDatabase().materials) {
-                materialInfos.Add(info.name, info);
+                if (info.type == MaterialType.Preview) {
+                    previewMaterialInfos.Add(info.name, info);
+                } else {
+                    materialInfos.Add(info.name, info);
+                }
             }
         }
         return materialInfos;
@@ -63,6 +69,7 @@ public static class ResourcesDirectory {
             MaterialType.Material => "Materials/",
             MaterialType.Overlay => "Overlays/",
             MaterialType.Sky => "Skies/",
+            MaterialType.Preview => "Previews/",
             _ => "",
         };
 
@@ -76,6 +83,14 @@ public static class ResourcesDirectory {
             return LoadMaterial(info);
         }
         if (infos.TryGetValue(name, out info)) {
+            return LoadMaterial(info);
+        }
+        return null;
+    }
+
+    public static Material FindPreviewMaterial(string name) {
+        GetMaterialInfos();
+        if (previewMaterialInfos.TryGetValue(name, out var info)) {
             return LoadMaterial(info);
         }
         return null;

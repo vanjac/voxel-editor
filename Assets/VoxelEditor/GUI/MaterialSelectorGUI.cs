@@ -8,7 +8,6 @@ public class MaterialSelectorGUI : GUIPanel {
     private const int NUM_COLUMNS = 4;
     private const int NUM_COLUMNS_ROOT = 6;
     private const int TEXTURE_MARGIN = 20;
-    private const string PREVIEW_SUFFIX = "_preview";
     private readonly string CUSTOM_CATEGORY = StringSet.CustomTextureCategory;
     private readonly string WORLD_LIST_CATEGORY = StringSet.MaterialImportFromWorld;
 
@@ -220,7 +219,6 @@ public class MaterialSelectorGUI : GUIPanel {
         Rect rowRect = new Rect();
         int materialColumns = categories.Length > 0 ? NUM_COLUMNS_ROOT : NUM_COLUMNS;
         string highlightName = (highlightMaterial != null) ? highlightMaterial.name : null;
-        string previewName = (highlightName != null) ? (highlightName + PREVIEW_SUFFIX) : null;
         for (int i = 0; i < materials.Count; i++) {
             if (i % materialColumns == 0) {
                 rowRect = GUILayoutUtility.GetAspectRect(materialColumns);
@@ -233,8 +231,7 @@ public class MaterialSelectorGUI : GUIPanel {
                 buttonRect.width - TEXTURE_MARGIN * 2, buttonRect.height - TEXTURE_MARGIN * 2);
             Material material = materials[i];
             bool selected;
-            if (material != null
-                    && (material.name == highlightName || material.name == previewName)) {
+            if (material != null && material.name == highlightName) {
                 // highlight the button
                 selected = !GUI.Toggle(buttonRect, true, "", GUI.skin.button);
             } else {
@@ -327,10 +324,12 @@ public class MaterialSelectorGUI : GUIPanel {
             if (matInfo.name.StartsWith("$")) {
                 continue; // special alternate materials for game
             }
-            if (matInfo.name.EndsWith(PREVIEW_SUFFIX)) {
-                materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
+            var previewMat = ResourcesDirectory.FindPreviewMaterial(matInfo.name);
+            if (previewMat != null) {
+                materials.Add(previewMat);
+            } else {
+                materials.Add(ResourcesDirectory.LoadMaterial(matInfo));
             }
-            materials.Add(ResourcesDirectory.LoadMaterial(matInfo));
         }
         categories = categoriesList.ToArray();
 
@@ -338,9 +337,9 @@ public class MaterialSelectorGUI : GUIPanel {
     }
 
     private void MaterialSelected(Material material) {
-        if (material != null && material.name.EndsWith(PREVIEW_SUFFIX)) {
-            string newName = material.name.Substring(0, material.name.Length - PREVIEW_SUFFIX.Length);
-            material = ResourcesDirectory.FindMaterial(newName, true);
+        if (material != null && !CustomTexture.IsCustomTexture(material)) {
+            // don't select preview materials
+            material = ResourcesDirectory.FindMaterial(material.name, true);
         }
         highlightMaterial = material;
         if (importFromWorld) {

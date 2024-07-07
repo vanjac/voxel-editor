@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum MaterialType {
-    None, Material, Overlay, Sky
+    None, Material, Overlay, Sky, Preview
 }
 
 public enum MaterialSound {
