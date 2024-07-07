@@ -397,7 +397,7 @@ public static class PropertyGUIs {
         GUI.color = baseColor;
     }
 
-    public static PropertyGUI Material(string materialDirectory, bool isOverlay = false,
+    public static PropertyGUI Material(MaterialType materialType, bool isOverlay = false,
         bool customTextureBase = false) =>
         (Property property) => {
             GUILayout.BeginHorizontal();
@@ -414,7 +414,7 @@ public static class PropertyGUIs {
                     = GUIPanel.GuiGameObject.AddComponent<MaterialSelectorGUI>();
                 materialSelector.title = StringSet.ChangeProperty(property.name(StringSet));
                 materialSelector.voxelArray = VoxelArrayEditor.instance;
-                materialSelector.rootDirectory = materialDirectory;
+                materialSelector.materialType = materialType;
                 materialSelector.highlightMaterial = (Material)property.value;
                 materialSelector.isOverlay = isOverlay;
                 materialSelector.customTextureBase = customTextureBase;

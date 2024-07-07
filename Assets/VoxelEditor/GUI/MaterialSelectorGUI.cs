@@ -13,7 +13,7 @@ public class MaterialSelectorGUI : GUIPanel {
     private readonly string WORLD_LIST_CATEGORY = StringSet.MaterialImportFromWorld;
 
     public System.Action<Material> handler;
-    public string rootDirectory = "Materials";
+    public MaterialType materialType = MaterialType.Material;
     public bool isOverlay = false;
     public bool allowNullMaterial = false;
     public bool customTextureBase = false;
@@ -95,7 +95,7 @@ public class MaterialSelectorGUI : GUIPanel {
             showColorStyle = false;
             colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
             if (!customTextureBase &&
-                    ResourcesDirectory.materialInfos.TryGetValue(highlightMaterial.name, out var info)) {
+                    ResourcesDirectory.GetMaterialInfos().TryGetValue(highlightMaterial.name, out var info)) {
                 whitePoint = info.whitePoint;
                 whitePoint.a = 1.0f;
                 showColorStyle = info.supportsColorStyles;
@@ -248,11 +248,11 @@ public class MaterialSelectorGUI : GUIPanel {
         }
 
         if (categories.Length > 0) {
-            int selectDir = GUILayout.SelectionGrid(-1, categories,
+            int selectCat = GUILayout.SelectionGrid(-1, categories,
                 selectedCategory == WORLD_LIST_CATEGORY ? 1 : NUM_COLUMNS,
                 categoryButtonStyle.Value);
-            if (selectDir != -1) {
-                CategorySelected(categories[selectDir]);
+            if (selectCat != -1) {
+                CategorySelected(categories[selectCat]);
             }
         }
 
@@ -288,7 +288,7 @@ public class MaterialSelectorGUI : GUIPanel {
 
         if (category == CUSTOM_CATEGORY) {
             categories = new string[0];
-            if (rootDirectory == "Overlays") {
+            if (materialType == MaterialType.Overlay) {
                 materials = voxelArray.customOverlays;
             } else {
                 materials = voxelArray.customMaterials;
@@ -310,32 +310,27 @@ public class MaterialSelectorGUI : GUIPanel {
             return;
         }
 
-        string currentDirectory = rootDirectory;
-        if (category != "") {
-            currentDirectory += "/" + category;
-        }
-
+        // TODO: localize!
         var categoriesList = new List<string>();
         if (!customTextureBase && category == ""
-                && (rootDirectory == "Materials" || rootDirectory == "Overlays")) {
+                && (materialType == MaterialType.Material || materialType == MaterialType.Overlay)) {
             categoriesList.Add(CUSTOM_CATEGORY);
         }
+        if (category == "") {
+            categoriesList.AddRange(ResourcesDirectory.GetMaterialCategories(materialType));
+        }
         materials = new List<Material>();
-        foreach (MaterialInfo dirEntry in ResourcesDirectory.materialInfos.Values) {
-            if (dirEntry.parent != currentDirectory) {
+        foreach (MaterialInfo matInfo in ResourcesDirectory.GetMaterialDatabase().materials) {
+            if (matInfo.type != materialType || matInfo.category != category) {
                 continue;
             }
-            if (dirEntry.name.StartsWith("$")) {
+            if (matInfo.name.StartsWith("$")) {
                 continue; // special alternate materials for game
             }
-            if (dirEntry.isDirectory) {
-                categoriesList.Add(dirEntry.name); // TODO: localize!
-            } else {
-                if (dirEntry.name.EndsWith(PREVIEW_SUFFIX)) {
-                    materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
-                }
-                materials.Add(ResourcesDirectory.LoadMaterial(dirEntry));
+            if (matInfo.name.EndsWith(PREVIEW_SUFFIX)) {
+                materials.RemoveAt(materials.Count - 1); // special preview material which replaces the previous
             }
+            materials.Add(ResourcesDirectory.LoadMaterial(matInfo));
         }
         categories = categoriesList.ToArray();
 

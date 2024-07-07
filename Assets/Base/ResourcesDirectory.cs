@@ -7,22 +7,48 @@ public static class ResourcesDirectory {
         TINT, PAINT
     }
 
+    private static MaterialDatabase materialDatabase;
+
     // map name to info
-    private static Dictionary<string, MaterialInfo> _materialInfos = null;
-    public static Dictionary<string, MaterialInfo> materialInfos {
-        get {
-            if (_materialInfos == null) {
-                MaterialDatabase database = Resources.Load<MaterialDatabase>("materials");
-                _materialInfos = new Dictionary<string, MaterialInfo>();
-                foreach (MaterialInfo info in database.materials) {
-                    _materialInfos.Add(info.name, info);
-                }
-            }
-            return _materialInfos;
-        }
-    }
+    private static Dictionary<string, MaterialInfo> materialInfos = null;
+
+    private static Dictionary<MaterialType, List<string>> materialCategories =
+        new Dictionary<MaterialType, List<string>>();
 
     private static ModelDatabase modelDatabase;
+
+    public static MaterialDatabase GetMaterialDatabase() {
+        if (materialDatabase == null) {
+            materialDatabase = Resources.Load<MaterialDatabase>("materials");
+        }
+        return materialDatabase;
+    }
+
+    public static Dictionary<string, MaterialInfo> GetMaterialInfos() {
+        if (materialInfos == null) {
+            materialInfos = new Dictionary<string, MaterialInfo>();
+            foreach (MaterialInfo info in GetMaterialDatabase().materials) {
+                materialInfos.Add(info.name, info);
+            }
+        }
+        return materialInfos;
+    }
+
+    public static List<string> GetMaterialCategories(MaterialType type) {
+        if (materialCategories.TryGetValue(type, out var categories)) {
+            return categories;
+        }
+
+        var categorySet = new SortedSet<string>();
+        foreach (MaterialInfo matInfo in GetMaterialDatabase().materials) {
+            if (matInfo.type == type && matInfo.category != "") {
+                categorySet.Add(matInfo.category);
+            }
+        }
+        categories = new List<string>(categorySet);
+        materialCategories[type] = categories;
+        return categories;
+    }
 
     public static ModelDatabase GetModelDatabase() {
         if (modelDatabase == null) {
@@ -31,15 +57,25 @@ public static class ResourcesDirectory {
         return modelDatabase;
     }
 
+    private static string MaterialDirectory(MaterialType type) =>
+        "GameAssets/" + type switch {
+            MaterialType.None => "Hidden/",
+            MaterialType.Material => "Materials/",
+            MaterialType.Overlay => "Overlays/",
+            MaterialType.Sky => "Skies/",
+            _ => "",
+        };
+
     public static Material LoadMaterial(MaterialInfo info) =>
-        Resources.Load<Material>("GameAssets/" + info.path);
+        Resources.Load<Material>(MaterialDirectory(info.type) + info.name);
 
     public static Material FindMaterial(string name, bool editor) {
         // special alternate materials for game
-        if ((!editor) && materialInfos.TryGetValue("$" + name, out MaterialInfo info)) {
+        var infos = GetMaterialInfos();
+        if ((!editor) && infos.TryGetValue("$" + name, out MaterialInfo info)) {
             return LoadMaterial(info);
         }
-        if (materialInfos.TryGetValue(name, out info)) {
+        if (infos.TryGetValue(name, out info)) {
             return LoadMaterial(info);
         }
         return null;
@@ -74,11 +110,7 @@ public static class ResourcesDirectory {
         } else {
             name = material.name;
         }
-        // special alternate materials for game
-        if (materialInfos.TryGetValue("$" + name, out MaterialInfo info)) {
-            return info.sound;
-        }
-        if (materialInfos.TryGetValue(name, out info)) {
+        if (GetMaterialInfos().TryGetValue(name, out var info)) {
             return info.sound;
         }
         return MaterialSound.GENERIC;

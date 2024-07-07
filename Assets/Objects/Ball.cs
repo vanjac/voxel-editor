@@ -36,7 +36,7 @@ public class BallObject : ObjectEntity {
                         marker.UpdateMarker();
                     }
                 },
-                PropertyGUIs.Material("Overlays", true))
+                PropertyGUIs.Material(MaterialType.Overlay, true))
         });
 
     private GameObject ObjectTemplate(VoxelArray voxelArray) =>

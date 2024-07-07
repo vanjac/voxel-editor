@@ -151,14 +151,14 @@ public class PaintGUI : GUIPanel {
         materialSelector.voxelArray = voxelArray;
         materialSelector.allowNullMaterial = true; // TODO: disable if no substances selected
         if (selectedLayer == 0) {
-            materialSelector.rootDirectory = "Materials";
+            materialSelector.materialType = MaterialType.Material;
             materialSelector.handler = (Material mat) => {
                 paint.material = mat;
                 PaintChanged();
             };
             materialSelector.highlightMaterial = paint.material;
         } else {
-            materialSelector.rootDirectory = "Overlays";
+            materialSelector.materialType = MaterialType.Overlay;
             materialSelector.isOverlay = true;
             materialSelector.handler = (Material mat) => {
                 paint.overlay = mat;

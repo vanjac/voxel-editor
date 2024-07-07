@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MaterialType {
+    None, Material, Overlay, Sky
+}
+
 public enum MaterialSound {
     GENERIC, CONCRETE, ROCK, PLASTER, FABRIC, DIRT, GRASS, GRAVEL, SAND, METAL,
     TILE, SNOW, ICE, WOOD, METAL_GRATE, GLASS, WATER, CHAIN_LINK, SWIM
@@ -9,11 +13,9 @@ public enum MaterialSound {
 // could represent a material or a directory!
 [System.Serializable]
 public struct MaterialInfo {
-    public bool isDirectory;
     public string name;
-    // without extension, starting from Assets/Resources/GameAssets/
-    public string path;
-    public string parent; // parent directory
+    public MaterialType type;
+    public string category;
     public MaterialSound sound;
     public Color whitePoint;
     public bool supportsColorStyles;

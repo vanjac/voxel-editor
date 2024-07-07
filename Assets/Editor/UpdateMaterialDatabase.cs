@@ -1,3 +1,4 @@
+#if false
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -70,3 +71,4 @@ public class UpdateMaterialDatabase {
         return null;
     }
 }
+#endif

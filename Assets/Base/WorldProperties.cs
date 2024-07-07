@@ -55,7 +55,7 @@ public class WorldProperties : PropertiesObject {
                 v => {
                     SetSky((Material)v);
                 },
-                PropertyGUIs.Material("Skies", false)),
+                PropertyGUIs.Material(MaterialType.Sky, false)),
             new Property("amb", s => s.PropAmbientLightIntensity,
                 () => RenderSettings.ambientIntensity,
                 v => RenderSettings.ambientIntensity = (float)v,
