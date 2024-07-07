@@ -556,6 +556,12 @@ public class GUIStringSet {
         "Relative to";
     public virtual string PropModel =>
         "Model";
+    public virtual string PropWidth =>
+        "Width";
+    public virtual string PropLength =>
+        "Length";
+    public virtual string PropPhysicsEnable =>
+        "Physics?";
 
     // Object names/descriptions
     public virtual string NoneName =>
@@ -775,6 +781,10 @@ Increase the <b>Density</b> of the Physics/Character behavior to increase the ob
 •  Surfaces within <b>Range</b> distance are affected
 •  <b>Intensity</b> controls the brightness of the reflections
 •  When <b>Real-time</b> is checked, reflections will update continuously (expensive!)";
+    public virtual string RopeName =>
+        "Rope";
+    public virtual string RopeDesc =>
+        "A rope connected to another object";
     public virtual string ScaleName =>
         "Scale";
     public virtual string ScaleDesc =>

@@ -51,6 +51,12 @@ public static class PropertyGUIs {
         style.fontSize = GUI.skin.font.fontSize * 2;
         return style;
     });
+    private static readonly Lazy<GUIStyle> colorButtonStyle = new Lazy<GUIStyle>(() => {
+        var style = new GUIStyle(GUI.skin.button);
+        style.normal.textColor = UnityEngine.Color.white;
+        style.active.textColor = UnityEngine.Color.white;
+        return style;
+    });
 
     public static void AlignedLabel(Property property) {
         var name = property.name(StringSet);
@@ -471,11 +477,15 @@ public static class PropertyGUIs {
         };
 
     public static void Color(Property property) {
-        Color baseColor = GUI.color;
         Color valueColor = (Color)property.value;
-        GUI.color = baseColor * valueColor;
+
+        Color prevBackgroundColor = GUI.backgroundColor;
+        Color prevGUIContentColor = GUI.contentColor;
+        GUI.backgroundColor = prevBackgroundColor * valueColor;
+        GUI.contentColor = valueColor.grayscale < 0.5f ? UnityEngine.Color.white : UnityEngine.Color.black;
+
         var name = property.name(StringSet);
-        if (GUILayout.Button(name)) {
+        if (GUILayout.Button(name, colorButtonStyle.Value)) {
             ColorPickerGUI colorPicker = GUIPanel.GuiGameObject.AddComponent<ColorPickerGUI>();
             colorPicker.title = name;
             colorPicker.SetColor(valueColor);
@@ -483,7 +493,8 @@ public static class PropertyGUIs {
                 property.value = color;
             };
         }
-        GUI.color = baseColor;
+        GUI.backgroundColor = prevBackgroundColor;
+        GUI.contentColor = prevGUIContentColor;
     }
 
     public static void _TargetCustom(Property property,

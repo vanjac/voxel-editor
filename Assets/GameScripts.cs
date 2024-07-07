@@ -126,6 +126,7 @@ public static class GameScripts {
         CarryableBehavior.objectType,
         WaterBehavior.objectType,
         ForceBehavior.objectType,
+        RopeBehavior.objectType,
 
         SoundBehavior.objectType,
         Sound3DBehavior.objectType
@@ -167,11 +168,12 @@ public static class GameScripts {
             CharacterBehavior.objectType,
             CarryableBehavior.objectType,
             WaterBehavior.objectType,
-            ForceBehavior.objectType
+            ForceBehavior.objectType,
+            RopeBehavior.objectType,
         },
         new BehaviorType[] {
             SoundBehavior.objectType,
-            Sound3DBehavior.objectType
+            Sound3DBehavior.objectType,
         }
     };
 
