@@ -442,6 +442,8 @@ public class GUIStringSet {
         "Fog density";
     public virtual string PropFogColor =>
         "Fog color";
+    public virtual string PropGravity =>
+        "Gravity";
     public virtual string PropBase =>
         "Base";
     public virtual string PropTexture =>
@@ -524,7 +526,7 @@ public class GUIStringSet {
         "Parent";
     public virtual string PropFollowRotation =>
         "Follow rotation?";
-    public virtual string PropGravity =>
+    public virtual string PropGravityEnable =>
         "Gravity?";
     public virtual string PropRange =>
         "Range";

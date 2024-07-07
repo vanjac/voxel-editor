@@ -10,7 +10,6 @@ public enum MaterialSound {
     TILE, SNOW, ICE, WOOD, METAL_GRATE, GLASS, WATER, CHAIN_LINK, SWIM
 }
 
-// could represent a material or a directory!
 [System.Serializable]
 public struct MaterialInfo {
     public string name;

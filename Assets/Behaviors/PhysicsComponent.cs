@@ -25,7 +25,7 @@ public class PhysicsBehavior : BasePhysicsBehavior {
                 () => density,
                 v => density = (float)v,
                 PropertyGUIs.Float),
-            new Property("gra", s => s.PropGravity,
+            new Property("gra", s => s.PropGravityEnable,
                 () => gravity,
                 v => gravity = (bool)v,
                 PropertyGUIs.Toggle)

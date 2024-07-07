@@ -487,7 +487,7 @@ public class PortugueseStrings : GUIStringSet {
         "Pai";
     public override string PropFollowRotation =>
         "Seguir rotação?";
-    public override string PropGravity =>
+    public override string PropGravityEnable =>
         "Gravity?";
     public override string PropRange =>
         "Alcance";

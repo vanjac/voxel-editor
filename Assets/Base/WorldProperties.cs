@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldProperties : PropertiesObject {
+    // TODO: move these properties to sky materials (custom shader)
     private static readonly Dictionary<string, float> skyRotations = new Dictionary<string, float> {
         {"sky5X1", 102},
         {"sky5X2", 143},
@@ -116,7 +117,15 @@ public class WorldProperties : PropertiesObject {
             new Property("fco", s => s.PropFogColor,
                 () => RenderSettings.fogColor,
                 v => RenderSettings.fogColor = (Color) v,
-                PropertyGUIs.Color)
+                PropertyGUIs.Color),
+            new Property("grv", s => s.PropGravity,
+                () => -Physics.gravity.y,
+                v => {
+                    var gravity = Physics.gravity;
+                    gravity.y = -(float)v;
+                    Physics.gravity = gravity;
+                },
+                PropertyGUIs.Float),
         };
 
     public IEnumerable<Property> DeprecatedProperties() =>
