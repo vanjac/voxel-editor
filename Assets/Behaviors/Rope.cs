@@ -65,10 +65,14 @@ public class RopeComponent : BehaviorComponent<RopeBehavior> {
     public override void BehaviorEnabled() {
         if (behavior.physics && behavior.target.component != null) {
             springJoint = gameObject.AddComponent<SpringJoint>();
+            springJoint.autoConfigureConnectedAnchor = false;
             springJoint.connectedBody = behavior.target.component.GetComponent<Rigidbody>();
             springJoint.minDistance = 0;
             springJoint.maxDistance = behavior.length;
+            springJoint.spring = 100;
             springJoint.enableCollision = true;
+            springJoint.anchor = Vector3.zero;
+            springJoint.connectedAnchor = Vector3.zero;
         }
     }
 
