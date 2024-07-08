@@ -103,6 +103,13 @@ public class RopeComponent : BehaviorComponent<RopeBehavior> {
             lineRenderer.positionCount = 2;
             lineRenderer.SetPosition(0, p1);
             lineRenderer.SetPosition(1, p2);
+        } else if (Mathf.Abs(p1.x - p2.x) < EPSILON && Mathf.Abs(p1.z - p2.z) < EPSILON) {
+            var hiPt = p1.y > p2.y ? p1 : p2;
+            var loY = p1.y > p2.y ? p2.y : p1.y;
+            var bottomY = loY - (behavior.length - hiPt.y + loY) / 2;
+            lineRenderer.positionCount = 2;
+            lineRenderer.SetPosition(0, hiPt);
+            lineRenderer.SetPosition(1, new Vector3(p1.x, bottomY, p1.z));
         } else {
             renderCaternaryCurve(p1, p2);
         }
