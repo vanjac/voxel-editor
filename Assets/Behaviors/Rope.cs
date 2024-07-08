@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[EditorPreviewBehavior]
 public class RopeBehavior : GenericEntityBehavior<RopeBehavior, RopeComponent> {
     public static new BehaviorType objectType = new BehaviorType("Rope", typeof(RopeBehavior)) {
         displayName = s => s.RopeName,
@@ -83,20 +84,27 @@ public class RopeComponent : BehaviorComponent<RopeBehavior> {
     void Update() {
         if (!lineRenderer) {
             // nothing
-        } else if (behavior.target.component == null) {
-            lineRenderer.enabled = false;
-        } else {
+        } else if (behavior.target.component != null) {
             lineRenderer.enabled = true;
+            renderRope(transform.position, behavior.target.component.transform.position);
+        } else if (behavior.target.entity != null && CompareTag("EditorPreview")) {
+            lineRenderer.enabled = true;
+            renderRope(transform.position, behavior.target.entity.PositionInEditor());
+        } else {
+            lineRenderer.enabled = false;
+        }
+    }
 
-            var p1 = transform.position;
-            var p2 = behavior.target.component.transform.position;
-            if (Vector3.Distance(p1, p2) >= behavior.length) {
-                lineRenderer.positionCount = 2;
-                lineRenderer.SetPosition(0, transform.position);
-                lineRenderer.SetPosition(1, behavior.target.component.transform.position);
-            } else {
-                renderCaternaryCurve(p1, p2);
-            }
+    private void renderRope(Vector3 p1, Vector3 p2) {
+        var dist = Vector3.Distance(p1, p2);
+        if (dist < EPSILON) {
+            lineRenderer.positionCount = 0;
+        } else if (dist >= behavior.length) {
+            lineRenderer.positionCount = 2;
+            lineRenderer.SetPosition(0, p1);
+            lineRenderer.SetPosition(1, p2);
+        } else {
+            renderCaternaryCurve(p1, p2);
         }
     }
 
