@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityStandardAssets.Characters.FirstPerson;
 
 public class NewRigidbodyController : MonoBehaviour {
     public float walkSpeed = 3.5f;

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityStandardAssets.CrossPlatformInput;
 
 public class GameTouchControl : MonoBehaviour {
     private const float DRAG_THRESHOLD = 64;
