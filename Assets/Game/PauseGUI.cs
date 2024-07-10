@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class HUDCounter {
     private readonly string text;
@@ -66,15 +67,8 @@ public class PauseGUI : GUIPanel {
         stealFocus = false;
         base.OnEnable();
     }
-    public override void WindowGUI() {
-        if (paused && pauseMenu == null) {
-            paused = false;
-            Time.timeScale = 1;
-            AudioListener.pause = false;
-            Destroy(fade);
-            GameInput.LockCursor();
-        }
 
+    public override void WindowGUI() {
         if (pauseMenu != null) {
             pauseMenu.BringToFront();
         }
@@ -101,19 +95,33 @@ public class PauseGUI : GUIPanel {
             PauseGame();
         }
         GUILayout.EndHorizontal();
+    }
 
-        // mouse lock
-        if (Input.GetButtonUp("Cancel")) {
-            GameInput.UnlockCursor();
-            if (!paused) {
-                PauseGame();
-            }
-        } else if (Input.GetMouseButtonUp(0) && !paused) {
+    void Update() {
+        if (Input.GetButtonUp("Cancel") && !paused) {
+            StartCoroutine(PauseNextFrame());
+        } else if (Input.GetMouseButtonDown(0) && !paused
+                && PanelContainingPoint(Input.mousePosition) == null) {
             GameInput.LockCursor();
+        }
+
+        if (paused && pauseMenu == null) {
+            paused = false;
+            Time.timeScale = 1;
+            AudioListener.pause = false;
+            Destroy(fade);
+        }
+    }
+
+    private IEnumerator PauseNextFrame() {
+        yield return null;
+        if (!paused) {
+            PauseGame();
         }
     }
 
     private void PauseGame() {
+        GameInput.UnlockCursor();
         Time.timeScale = 0;
         AudioListener.pause = true;
         paused = true;

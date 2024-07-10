@@ -38,12 +38,10 @@ public static class GameInput {
     public static void LockCursor() {
         if (!UseTouchInput()) {
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
     }
 
     public static void UnlockCursor() {
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
     }
 }
