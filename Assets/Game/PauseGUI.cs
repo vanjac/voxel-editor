@@ -111,6 +111,15 @@ public class PauseGUI : GUIPanel {
             AudioListener.pause = false;
             Destroy(fade);
         }
+
+        if (Input.GetButtonDown("Pause")) {
+            if (paused) {
+                Destroy(pauseMenu);
+                GameInput.LockCursor();
+            } else {
+                PauseGame();
+            }
+        }
     }
 
     private IEnumerator PauseNextFrame() {
