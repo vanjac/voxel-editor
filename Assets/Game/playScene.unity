@@ -276,7 +276,6 @@ GameObject:
   - component: {fileID: 553249410}
   - component: {fileID: 553249413}
   - component: {fileID: 553249409}
-  - component: {fileID: 553249408}
   - component: {fileID: 553249412}
   m_Layer: 5
   m_Name: TouchControl
@@ -285,19 +284,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &553249408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 11400012, guid: 9529ecc3d479da5499993355e6c2cb4f,
-    type: 2}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553249407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71398ce7fbc3a5b4fa50b50bd54317a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &553249409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,8 +705,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementRange: 30
-  horizontalAxisName: Horizontal
-  verticalAxisName: Vertical
   dragTouchId: -4
 --- !u!114 &1457520466
 MonoBehaviour:
@@ -848,7 +832,6 @@ GameObject:
   - component: {fileID: 1944336050}
   - component: {fileID: 1944336054}
   - component: {fileID: 1944336053}
-  - component: {fileID: 1944336052}
   - component: {fileID: 1944336051}
   m_Layer: 5
   m_Name: JumpButton
@@ -881,63 +864,15 @@ RectTransform:
 --- !u!114 &1944336051
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 11400002, guid: 9529ecc3d479da5499993355e6c2cb4f,
-    type: 2}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944336049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85bf3be603548374ca46f521a3aa7fda, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c3535dfa3b90fc41af65e8481e50a57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Jump
---- !u!114 &1944336052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 11400004, guid: 9529ecc3d479da5499993355e6c2cb4f,
-    type: 2}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1944336049}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1944336051}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: SetDownState
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Jump
-            m_BoolArgument: 0
-          m_CallState: 1
-  - eventID: 3
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1944336051}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: SetUpState
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Jump
-            m_BoolArgument: 0
-          m_CallState: 1
 --- !u!114 &1944336053
 MonoBehaviour:
   m_ObjectHideFlags: 0

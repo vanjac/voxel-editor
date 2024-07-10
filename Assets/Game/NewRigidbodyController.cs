@@ -39,7 +39,7 @@ public class NewRigidbodyController : MonoBehaviour {
     void Update() {
         RotateView();
 
-        if (CrossPlatformInputManager.GetButtonDown("Jump") && !jump) {
+        if (GameInput.GetJump() && !jump) {
             jump = true;
         }
     }
@@ -52,10 +52,7 @@ public class NewRigidbodyController : MonoBehaviour {
             underWater = physicsComponent.underWater;
         }
 
-        Vector2 input = new Vector2 {
-            x = CrossPlatformInputManager.GetAxis("Horizontal"),
-            y = CrossPlatformInputManager.GetAxis("Vertical")
-        };
+        Vector2 input = GameInput.GetJoystick();
 
         if (Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon) {
             float maxSpeed = (grounded && !underWater) ? walkSpeed : fallMoveSpeed;

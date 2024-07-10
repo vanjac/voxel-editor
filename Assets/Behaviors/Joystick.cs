@@ -49,13 +49,12 @@ public class JoystickComponent : MotionComponent<JoystickBehavior> {
         forward = forward.normalized;
         Vector3 right = Vector3.Cross(Vector3.up, forward);
 
-        float x = CrossPlatformInputManager.GetAxis("Horizontal");
-        float y = CrossPlatformInputManager.GetAxis("Vertical");
-        Vector3 control = x * right;
+        var joystick = GameInput.GetJoystick();
+        Vector3 control = joystick.x * right;
         if (behavior.alignment == JoystickBehavior.JoystickAlignment.VERTICAL) {
-            control += new Vector3(0, y, 0);
+            control += new Vector3(0, joystick.y, 0);
         } else {
-            control += y * forward;
+            control += joystick.y * forward;
         }
 
         return control * behavior.speed * Time.fixedDeltaTime;

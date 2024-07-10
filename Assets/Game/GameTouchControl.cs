@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -26,6 +26,12 @@ public class GameTouchControl : MonoBehaviour {
     }
 
     void Update() {
+        // show/hide joystick and jump button
+        bool touchEnabled = GameInput.UseTouchInput();
+        foreach (Transform t in transform) {
+            t.gameObject.SetActive(touchEnabled);
+        }
+
         if (cam == null) {
             cam = Camera.main; // sometimes null for a few cycles
             if (cam != null && cam.tag == "DeathCamera") {
