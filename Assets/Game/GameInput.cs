@@ -8,6 +8,8 @@ public static class GameInput {
     public static bool UseTouchInput() {
 #if UNITY_EDITOR
         return UnityEditor.EditorApplication.isRemoteConnected;
+#elif UNITY_WEBGL
+        return false;
 #else
         return Input.touchSupported;
 #endif

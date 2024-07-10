@@ -103,7 +103,7 @@ public class PauseGUI : GUIPanel {
         GUILayout.EndHorizontal();
 
         // mouse lock
-        if (Input.GetKeyUp(KeyCode.Escape)) {
+        if (Input.GetButtonUp("Cancel")) {
             GameInput.UnlockCursor();
             if (!paused) {
                 PauseGame();
