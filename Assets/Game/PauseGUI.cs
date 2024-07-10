@@ -72,6 +72,7 @@ public class PauseGUI : GUIPanel {
             Time.timeScale = 1;
             AudioListener.pause = false;
             Destroy(fade);
+            GameInput.LockCursor();
         }
 
         if (pauseMenu != null) {
@@ -100,6 +101,16 @@ public class PauseGUI : GUIPanel {
             PauseGame();
         }
         GUILayout.EndHorizontal();
+
+        // mouse lock
+        if (Input.GetKeyUp(KeyCode.Escape)) {
+            GameInput.UnlockCursor();
+            if (!paused) {
+                PauseGame();
+            }
+        } else if (Input.GetMouseButtonUp(0) && !paused) {
+            GameInput.LockCursor();
+        }
     }
 
     private void PauseGame() {

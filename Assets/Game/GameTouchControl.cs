@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -6,24 +6,11 @@ public class GameTouchControl : MonoBehaviour {
     private const float DRAG_THRESHOLD = 64;
     private const float CARRY_DISTANCE = 3;
     private Camera cam;
-    private CrossPlatformInputManager.VirtualAxis hAxis, vAxis;
     private int lookTouchId;
     private Vector2 lookTouchStart;
     private TapComponent touchedTapComponent;
     private CarryableComponent carriedComponent;
     public Joystick joystick;
-
-    void OnEnable() {
-        hAxis = new CrossPlatformInputManager.VirtualAxis("Mouse X");
-        CrossPlatformInputManager.RegisterVirtualAxis(hAxis);
-        vAxis = new CrossPlatformInputManager.VirtualAxis("Mouse Y");
-        CrossPlatformInputManager.RegisterVirtualAxis(vAxis);
-    }
-
-    void OnDisable() {
-        hAxis.Remove();
-        vAxis.Remove();
-    }
 
     void Update() {
         // show/hide joystick and jump button
@@ -74,8 +61,8 @@ public class GameTouchControl : MonoBehaviour {
             }
             if (touch.fingerId == lookTouchId) {
                 setAxes = true;
-                hAxis.Update(touch.deltaPosition.x * 150f / cam.pixelHeight);
-                vAxis.Update(touch.deltaPosition.y * 150f / cam.pixelHeight);
+                // TODO: dependent on GameObject update order!
+                GameInput.virtLook = touch.deltaPosition * 150f / cam.pixelHeight;
                 if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                         && touchedTapComponent != null) {
                     // check for early cancel (tap left component)
@@ -115,8 +102,7 @@ public class GameTouchControl : MonoBehaviour {
         }
         if (!setAxes) {
             lookTouchId = -1;
-            hAxis.Update(0);
-            vAxis.Update(0);
+            GameInput.virtLook = Vector2.zero;
         }
     }
 

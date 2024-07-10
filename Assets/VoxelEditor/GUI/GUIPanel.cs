@@ -90,7 +90,7 @@ public abstract class GUIPanel : MonoBehaviour {
             verticalSlide = false;
         }
 
-        if (Input.GetButtonDown("Cancel") && !holdOpen) {
+        if (Input.GetButtonUp("Cancel") && !holdOpen) {
             if (IsFocused()) {
                 Destroy(this);
             }
