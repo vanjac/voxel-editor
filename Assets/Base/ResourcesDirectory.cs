@@ -14,6 +14,8 @@ public enum MaterialSound {
 
 public class MaterialInfo {
     public string name;
+    public string gameMat;
+
     public MaterialType type = MaterialType.None;
     public string category = "";
     public MaterialSound sound = MaterialSound.GENERIC;
@@ -107,6 +109,8 @@ public static class ResourcesDirectory {
                 };
                 materials.Add(previewMat);
                 namedPreviewMaterials.Add(previewMat.name, previewMat);
+            } else if (cmd == "ingame") {
+                parser.state.material.gameMat = args;
             }
         });
     }
@@ -157,8 +161,10 @@ public static class ResourcesDirectory {
             _ => "",
         };
 
-    public static Material LoadMaterial(MaterialInfo info) =>
-        Resources.Load<Material>(MaterialDirectory(info.type) + info.name);
+    public static Material LoadMaterial(MaterialInfo info, bool editor) {
+        var name = (!editor && info.gameMat != null) ? info.gameMat : info.name;
+        return Resources.Load<Material>(MaterialDirectory(info.type) + name);
+    }
 
     public static bool FindMaterialInfo(string name, out MaterialInfo info) {
         EnsureMaterialsLoaded();
@@ -166,13 +172,8 @@ public static class ResourcesDirectory {
     }
 
     public static Material FindMaterial(string name, bool editor) {
-        // special alternate materials for game
-        MaterialInfo info;
-        if ((!editor) && FindMaterialInfo("$" + name, out info)) {
-            return LoadMaterial(info);
-        }
-        if (FindMaterialInfo(name, out info)) {
-            return LoadMaterial(info);
+        if (FindMaterialInfo(name, out var info)) {
+            return LoadMaterial(info, editor);
         }
         return null;
     }
@@ -180,7 +181,7 @@ public static class ResourcesDirectory {
     public static Material FindPreviewMaterial(string name) {
         EnsureMaterialsLoaded();
         if (namedPreviewMaterials.TryGetValue(name, out var info)) {
-            return LoadMaterial(info);
+            return LoadMaterial(info, true);
         }
         return null;
     }

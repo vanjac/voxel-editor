@@ -4,10 +4,7 @@ sound GENERIC
 {
     mat Invisible
     nopaint
-}
-{
-    mat $Invisible
-    nopaint
+    ingame Invisible_game
 }
 {
     mat ADD_overlay

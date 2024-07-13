@@ -4,10 +4,7 @@ sound GENERIC
 {
     mat Sky
     nopaint
-}
-{
-    mat $Sky
-    nopaint
+    ingame Sky_game
 }
 {
     sound TILE

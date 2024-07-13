@@ -328,7 +328,7 @@ public class MaterialSelectorGUI : GUIPanel {
             if (previewMat != null) {
                 materials.Add(previewMat);
             } else {
-                materials.Add(ResourcesDirectory.LoadMaterial(matInfo));
+                materials.Add(ResourcesDirectory.LoadMaterial(matInfo, true));
             }
         }
         categories = categoriesList.ToArray();
