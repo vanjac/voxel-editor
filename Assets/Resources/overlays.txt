@@ -9,28 +9,28 @@ sound GENERIC
 {
     mat ADD_overlay
     nopaint
-    preview
+    preview ADD_overlay
 }
 {
     sound GLASS
     mat GLASS_overlay
     nopaint
-    preview
+    preview GLASS_overlay
 }
 {
     mat MATTE_overlay
     nopaint
-    preview
+    preview MATTE_overlay
 }
 {
     mat MULTIPLY_overlay
     nopaint
-    preview
+    preview MULTIPLY_overlay
 }
 {
     mat UNLIT_overlay
     nopaint
-    preview
+    preview UNLIT_overlay
 }
 ################################################################################
 cat Fencing

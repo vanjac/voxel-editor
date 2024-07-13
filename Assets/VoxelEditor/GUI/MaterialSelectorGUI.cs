@@ -324,12 +324,7 @@ public class MaterialSelectorGUI : GUIPanel {
             if (matInfo.name.StartsWith("$")) {
                 continue; // special alternate materials for game
             }
-            var previewMat = ResourcesDirectory.FindPreviewMaterial(matInfo.name);
-            if (previewMat != null) {
-                materials.Add(previewMat);
-            } else {
-                materials.Add(ResourcesDirectory.LoadMaterial(matInfo, true));
-            }
+            materials.Add(ResourcesDirectory.LoadMaterialPreview(matInfo));
         }
         categories = categoriesList.ToArray();
 

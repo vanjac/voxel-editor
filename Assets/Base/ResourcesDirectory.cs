@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 public enum MaterialType {
-    None, Material, Overlay, Sky, Preview
+    None, Material, Overlay, Sky
 }
 
 public enum MaterialSound {
@@ -15,6 +15,7 @@ public enum MaterialSound {
 public class MaterialInfo {
     public string name;
     public string gameMat;
+    public string previewMat;
 
     public MaterialType type = MaterialType.None;
     public string category = "";
@@ -46,8 +47,6 @@ public static class ResourcesDirectory {
 
     private static List<MaterialInfo> materials;
     private static Dictionary<string, MaterialInfo> namedMaterials =
-        new Dictionary<string, MaterialInfo>();
-    private static Dictionary<string, MaterialInfo> namedPreviewMaterials =
         new Dictionary<string, MaterialInfo>();
     private static Dictionary<MaterialType, List<string>> materialCategories =
         new Dictionary<MaterialType, List<string>>();
@@ -100,15 +99,7 @@ public static class ResourcesDirectory {
                 var values = words.Select(s => ConfigParser.ParseFloat(s)).ToArray();
                 parser.state.material.whitePoint = new Color(values[0], values[1], values[2]);
             } else if (cmd == "preview") {
-                // TODO!
-                var previewMat = new MaterialInfo() {
-                    name = parser.state.material.name,
-                    type = MaterialType.Preview,
-                    category = parser.state.category,
-                    supportsColorStyles = parser.state.material.supportsColorStyles,
-                };
-                materials.Add(previewMat);
-                namedPreviewMaterials.Add(previewMat.name, previewMat);
+                parser.state.material.previewMat = args;
             } else if (cmd == "ingame") {
                 parser.state.material.gameMat = args;
             }
@@ -157,13 +148,19 @@ public static class ResourcesDirectory {
             MaterialType.Material => "Materials/",
             MaterialType.Overlay => "Overlays/",
             MaterialType.Sky => "Skies/",
-            MaterialType.Preview => "Previews/",
             _ => "",
         };
 
     public static Material LoadMaterial(MaterialInfo info, bool editor) {
         var name = (!editor && info.gameMat != null) ? info.gameMat : info.name;
         return Resources.Load<Material>(MaterialDirectory(info.type) + name);
+    }
+
+    public static Material LoadMaterialPreview(MaterialInfo info) {
+        if (info.previewMat != null) {
+            return Resources.Load<Material>("GameAssets/Previews/" + info.previewMat);
+        }
+        return LoadMaterial(info, true);
     }
 
     public static bool FindMaterialInfo(string name, out MaterialInfo info) {
@@ -174,14 +171,6 @@ public static class ResourcesDirectory {
     public static Material FindMaterial(string name, bool editor) {
         if (FindMaterialInfo(name, out var info)) {
             return LoadMaterial(info, editor);
-        }
-        return null;
-    }
-
-    public static Material FindPreviewMaterial(string name) {
-        EnsureMaterialsLoaded();
-        if (namedPreviewMaterials.TryGetValue(name, out var info)) {
-            return LoadMaterial(info, true);
         }
         return null;
     }

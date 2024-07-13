@@ -1,14 +1,14 @@
 mat sky_unlit
 nopaint
-preview
+preview sky_unlit
 
 mat sky_procedural
 nopaint
-preview
+preview sky_procedural
 
 mat sky_gray
 nopaint
-preview
+preview sky_gray
 
 mat sky5X1
 nopaint
@@ -27,4 +27,4 @@ nopaint
 
 mat starmap
 nopaint
-preview
+preview starmap

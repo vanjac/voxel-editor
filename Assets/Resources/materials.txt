@@ -10,23 +10,23 @@ sound GENERIC
     sound TILE
     mat GLOSSY
     nopaint
-    preview
+    preview GLOSSY
 }
 {
     mat MATTE
     nopaint
-    preview
+    preview MATTE
 }
 {
     sound METAL
     mat METAL
     nopaint
-    preview
+    preview METAL
 }
 {
     mat UNLIT
     nopaint
-    preview
+    preview UNLIT
 }
 ################################################################################
 cat Asphalt
