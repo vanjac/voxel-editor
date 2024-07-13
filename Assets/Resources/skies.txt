@@ -1,0 +1,30 @@
+mat sky_unlit
+nopaint
+preview
+
+mat sky_procedural
+nopaint
+preview
+
+mat sky_gray
+nopaint
+preview
+
+mat sky5X1
+nopaint
+
+mat sky5X2
+nopaint
+
+mat sky5X3
+nopaint
+
+mat sky5X4
+nopaint
+
+mat sky5X5
+nopaint
+
+mat starmap
+nopaint
+preview

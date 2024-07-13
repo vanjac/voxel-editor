@@ -94,7 +94,7 @@ public class MaterialSelectorGUI : GUIPanel {
             showColorStyle = false;
             colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
             if (!customTextureBase &&
-                    ResourcesDirectory.GetMaterialInfos().TryGetValue(highlightMaterial.name, out var info)) {
+                    ResourcesDirectory.FindMaterialInfo(highlightMaterial.name, out var info)) {
                 whitePoint = info.whitePoint;
                 whitePoint.a = 1.0f;
                 showColorStyle = info.supportsColorStyles;
@@ -317,7 +317,7 @@ public class MaterialSelectorGUI : GUIPanel {
             categoriesList.AddRange(ResourcesDirectory.GetMaterialCategories(materialType));
         }
         materials = new List<Material>();
-        foreach (MaterialInfo matInfo in ResourcesDirectory.GetMaterialDatabase().materials) {
+        foreach (MaterialInfo matInfo in ResourcesDirectory.GetMaterials()) {
             if (matInfo.type != materialType || matInfo.category != category) {
                 continue;
             }

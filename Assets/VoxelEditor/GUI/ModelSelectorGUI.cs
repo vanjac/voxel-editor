@@ -24,7 +24,7 @@ public class ModelSelectorGUI : GUIPanel {
         UpdateCategory();
     }
 
-    private ResourcesDirectory.ModelCategory GetCategory() =>
+    private ModelCategory GetCategory() =>
         ResourcesDirectory.GetModelCategories()[selectedCategory];
 
     private void UpdateCategory() {

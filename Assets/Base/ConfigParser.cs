@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 abstract class ConfigParser {
     public delegate void ParseLineFn(string command, string args, int lineNum);
@@ -12,6 +13,11 @@ abstract class ConfigParser {
         public ConfigException(Exception inner, int line)
             : base("Exception while reading line " + line, inner) { }
     }
+
+    // Utility functions
+    public static string[] SplitWords(string args) =>
+        args.Split(wordSeparators, StringSplitOptions.RemoveEmptyEntries);
+    public static float ParseFloat(string s) => float.Parse(s, CultureInfo.InvariantCulture);
 }
 
 class ConfigParser<State> : ConfigParser where State : struct {

@@ -1,5 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+public enum MaterialType {
+    None, Material, Overlay, Sky, Preview
+}
+
+public enum MaterialSound {
+    GENERIC, CONCRETE, ROCK, PLASTER, FABRIC, DIRT, GRASS, GRAVEL, SAND, METAL,
+    TILE, SNOW, ICE, WOOD, METAL_GRATE, GLASS, WATER, CHAIN_LINK, SWIM
+}
+
+public class MaterialInfo {
+    public string name;
+    public MaterialType type = MaterialType.None;
+    public string category = "";
+    public MaterialSound sound = MaterialSound.GENERIC;
+    public Color whitePoint = Color.white;
+    public bool supportsColorStyles;
+}
+
+public struct ModelCategory {
+    public Texture2D icon;
+    public List<string> models;
+}
 
 // Remember that Unity resource paths always use forward slashes
 public static class ResourcesDirectory {
@@ -7,62 +32,93 @@ public static class ResourcesDirectory {
         TINT, PAINT
     }
 
-    public struct ModelCategory {
-        public Texture2D icon;
-        public List<string> models;
+    private struct MaterialConfigState {
+        public string category;
+        public MaterialSound sound;
+        public MaterialInfo material;
     }
 
     private struct ModelConfigState {
         public ModelCategory category;
     }
 
-    private static MaterialDatabase materialDatabase;
-
-    // map name to info
-    private static Dictionary<string, MaterialInfo> materialInfos = null;
-    private static Dictionary<string, MaterialInfo> previewMaterialInfos = null;
-
+    private static List<MaterialInfo> materials;
+    private static Dictionary<string, MaterialInfo> namedMaterials =
+        new Dictionary<string, MaterialInfo>();
+    private static Dictionary<string, MaterialInfo> namedPreviewMaterials =
+        new Dictionary<string, MaterialInfo>();
     private static Dictionary<MaterialType, List<string>> materialCategories =
         new Dictionary<MaterialType, List<string>>();
 
     private static List<ModelCategory> modelCategories;
 
-    public static MaterialDatabase GetMaterialDatabase() {
-        if (materialDatabase == null) {
-            materialDatabase = Resources.Load<MaterialDatabase>("materials");
+    private static void EnsureMaterialsLoaded() {
+        if (materials == null) {
+            materials = new List<MaterialInfo>();
+            LoadMaterialType(MaterialType.None, "hiddenmat");
+            LoadMaterialType(MaterialType.Material, "materials");
+            LoadMaterialType(MaterialType.Overlay, "overlays");
+            LoadMaterialType(MaterialType.Sky, "skies");
         }
-        return materialDatabase;
     }
 
-    public static Dictionary<string, MaterialInfo> GetMaterialInfos() {
-        if (materialInfos == null) {
-            materialInfos = new Dictionary<string, MaterialInfo>();
-            previewMaterialInfos = new Dictionary<string, MaterialInfo>();
-            foreach (MaterialInfo info in GetMaterialDatabase().materials) {
-                if (info.type == MaterialType.Preview) {
-                    previewMaterialInfos.Add(info.name, info);
-                } else {
-                    materialInfos.Add(info.name, info);
+    private static void LoadMaterialType(MaterialType type, string fileName) {
+        var categories = new List<string>();
+        materialCategories[type] = categories;
+
+        var script = Resources.Load<TextAsset>(fileName).text;
+        var parser = new ConfigParser<MaterialConfigState>();
+        parser.state.category = "";
+        parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
+            if (cmd == "cat") {
+                parser.state.category = args;
+                if (args != "") {
+                    categories.Add(args);
                 }
+            } else if (cmd == "sound") {
+                if (Enum.TryParse<MaterialSound>(args, out var sound)) {
+                    parser.state.sound = sound;
+                } else {
+                    throw new ConfigParser.ConfigException("Unrecognized sound", l);
+                }
+            } else if (cmd == "mat") {
+                parser.state.material = new MaterialInfo() {
+                    name = args,
+                    type = type,
+                    category = parser.state.category,
+                    sound = parser.state.sound,
+                    supportsColorStyles = true,
+                };
+                materials.Add(parser.state.material);
+                namedMaterials.Add(args, parser.state.material);
+            } else if (cmd == "nopaint") {
+                parser.state.material.supportsColorStyles = false;
+            } else if (cmd == "white") {
+                var words = ConfigParser.SplitWords(args);
+                var values = words.Select(s => ConfigParser.ParseFloat(s)).ToArray();
+                parser.state.material.whitePoint = new Color(values[0], values[1], values[2]);
+            } else if (cmd == "preview") {
+                // TODO!
+                var previewMat = new MaterialInfo() {
+                    name = parser.state.material.name,
+                    type = MaterialType.Preview,
+                    category = parser.state.category,
+                    supportsColorStyles = parser.state.material.supportsColorStyles,
+                };
+                materials.Add(previewMat);
+                namedPreviewMaterials.Add(previewMat.name, previewMat);
             }
-        }
-        return materialInfos;
+        });
+    }
+
+    public static List<MaterialInfo> GetMaterials() {
+        EnsureMaterialsLoaded();
+        return materials;
     }
 
     public static List<string> GetMaterialCategories(MaterialType type) {
-        if (materialCategories.TryGetValue(type, out var categories)) {
-            return categories;
-        }
-
-        var categorySet = new SortedSet<string>();
-        foreach (MaterialInfo matInfo in GetMaterialDatabase().materials) {
-            if (matInfo.type == type && matInfo.category != "") {
-                categorySet.Add(matInfo.category);
-            }
-        }
-        categories = new List<string>(categorySet);
-        materialCategories[type] = categories;
-        return categories;
+        EnsureMaterialsLoaded();
+        return materialCategories[type];
     }
 
     public static List<ModelCategory> GetModelCategories() {
@@ -73,9 +129,10 @@ public static class ResourcesDirectory {
     }
 
     private static List<ModelCategory> LoadModelCategories() {
+        var categories = new List<ModelCategory>();
+
         var script = Resources.Load<TextAsset>("models").text;
         var parser = new ConfigParser<ModelConfigState>();
-        var categories = new List<ModelCategory>();
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
             if (cmd == "cat") {
                 parser.state.category = new ModelCategory() {
@@ -103,21 +160,26 @@ public static class ResourcesDirectory {
     public static Material LoadMaterial(MaterialInfo info) =>
         Resources.Load<Material>(MaterialDirectory(info.type) + info.name);
 
+    public static bool FindMaterialInfo(string name, out MaterialInfo info) {
+        EnsureMaterialsLoaded();
+        return namedMaterials.TryGetValue(name, out info);
+    }
+
     public static Material FindMaterial(string name, bool editor) {
         // special alternate materials for game
-        var infos = GetMaterialInfos();
-        if ((!editor) && infos.TryGetValue("$" + name, out MaterialInfo info)) {
+        MaterialInfo info;
+        if ((!editor) && FindMaterialInfo("$" + name, out info)) {
             return LoadMaterial(info);
         }
-        if (infos.TryGetValue(name, out info)) {
+        if (FindMaterialInfo(name, out info)) {
             return LoadMaterial(info);
         }
         return null;
     }
 
     public static Material FindPreviewMaterial(string name) {
-        GetMaterialInfos();
-        if (previewMaterialInfos.TryGetValue(name, out var info)) {
+        EnsureMaterialsLoaded();
+        if (namedPreviewMaterials.TryGetValue(name, out var info)) {
             return LoadMaterial(info);
         }
         return null;
@@ -152,7 +214,7 @@ public static class ResourcesDirectory {
         } else {
             name = material.name;
         }
-        if (GetMaterialInfos().TryGetValue(name, out var info)) {
+        if (FindMaterialInfo(name, out var info)) {
             return info.sound;
         }
         return MaterialSound.GENERIC;
