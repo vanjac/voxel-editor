@@ -1,0 +1,16 @@
+{
+    "files.exclude": {
+        "**/*.meta": true,
+        "build/": true,
+        "Build/": true,
+        "Library/": true,
+        "library/": true,
+        "obj/": true,
+        "Obj/": true,
+        "temp/": true,
+        "Temp/": true
+    },
+    "dotnet.preferCSharpExtension": true,
+    "dotnet.defaultSolution": "voxel-editor.sln",
+    "editor.formatOnSave": true
+}

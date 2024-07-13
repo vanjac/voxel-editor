@@ -92,7 +92,6 @@ ios-build/
 upload_certificate.pem
 *.skb
 
-.vscode/settings.json
 *.log
 
 /opus/opus/*
