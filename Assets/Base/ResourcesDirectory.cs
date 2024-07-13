@@ -142,18 +142,9 @@ public static class ResourcesDirectory {
         return categories;
     }
 
-    private static string MaterialDirectory(MaterialType type) =>
-        "GameAssets/" + type switch {
-            MaterialType.None => "Hidden/",
-            MaterialType.Material => "Materials/",
-            MaterialType.Overlay => "Overlays/",
-            MaterialType.Sky => "Skies/",
-            _ => "",
-        };
-
     public static Material LoadMaterial(MaterialInfo info, bool editor) {
         var name = (!editor && info.gameMat != null) ? info.gameMat : info.name;
-        return Resources.Load<Material>(MaterialDirectory(info.type) + name);
+        return Resources.Load<Material>("GameAssets/Materials/" + name);
     }
 
     public static Material LoadMaterialPreview(MaterialInfo info) {

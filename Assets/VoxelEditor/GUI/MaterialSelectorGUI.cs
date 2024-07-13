@@ -369,7 +369,7 @@ public class MaterialSelectorGUI : GUIPanel {
             }
 
             Material baseMat = ResourcesDirectory.InstantiateMaterial(Resources.Load<Material>(
-                isOverlay ? "GameAssets/Overlays/MATTE_overlay" : "GameAssets/Materials/MATTE"));
+                isOverlay ? "GameAssets/Materials/MATTE_overlay" : "GameAssets/Materials/MATTE"));
             baseMat.color = new Color(1, 1, 1, baseMat.color.a);
             CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, isOverlay);
             customTex.texture = texture;
