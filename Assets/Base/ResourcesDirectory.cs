@@ -7,6 +7,15 @@ public static class ResourcesDirectory {
         TINT, PAINT
     }
 
+    public struct ModelCategory {
+        public Texture2D icon;
+        public List<string> models;
+    }
+
+    private struct ModelConfigState {
+        public ModelCategory category;
+    }
+
     private static MaterialDatabase materialDatabase;
 
     // map name to info
@@ -16,7 +25,7 @@ public static class ResourcesDirectory {
     private static Dictionary<MaterialType, List<string>> materialCategories =
         new Dictionary<MaterialType, List<string>>();
 
-    private static ModelDatabase modelDatabase;
+    private static List<ModelCategory> modelCategories;
 
     public static MaterialDatabase GetMaterialDatabase() {
         if (materialDatabase == null) {
@@ -56,11 +65,29 @@ public static class ResourcesDirectory {
         return categories;
     }
 
-    public static ModelDatabase GetModelDatabase() {
-        if (modelDatabase == null) {
-            modelDatabase = Resources.Load<ModelDatabase>("models");
+    public static List<ModelCategory> GetModelCategories() {
+        if (modelCategories == null) {
+            modelCategories = LoadModelCategories();
         }
-        return modelDatabase;
+        return modelCategories;
+    }
+
+    private static List<ModelCategory> LoadModelCategories() {
+        var script = Resources.Load<TextAsset>("models").text;
+        var parser = new ConfigParser<ModelConfigState>();
+        var categories = new List<ModelCategory>();
+        parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
+            if (cmd == "cat") {
+                parser.state.category = new ModelCategory() {
+                    icon = Resources.Load<Texture2D>("Icons/" + args),
+                    models = new List<string>()
+                };
+                categories.Add(parser.state.category);
+            } else if (cmd == "mdl") {
+                parser.state.category.models.Add(args);
+            }
+        });
+        return categories;
     }
 
     private static string MaterialDirectory(MaterialType type) =>

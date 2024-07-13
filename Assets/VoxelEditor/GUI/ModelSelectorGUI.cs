@@ -15,7 +15,7 @@ public class ModelSelectorGUI : GUIPanel {
             maxHeight: 1360);
 
     void Start() {
-        var categories = ResourcesDirectory.GetModelDatabase().categories;
+        var categories = ResourcesDirectory.GetModelCategories();
         categoryIcons = categories.Select(cat => cat.icon).ToArray();
         selectedCategory = categories.FindIndex(cat => cat.models.Contains(selectedModel));
         if (selectedCategory == -1) {
@@ -24,8 +24,8 @@ public class ModelSelectorGUI : GUIPanel {
         UpdateCategory();
     }
 
-    private ModelCategory GetCategory() =>
-        ResourcesDirectory.GetModelDatabase().categories[selectedCategory];
+    private ResourcesDirectory.ModelCategory GetCategory() =>
+        ResourcesDirectory.GetModelCategories()[selectedCategory];
 
     private void UpdateCategory() {
         scroll = Vector2.zero;
