@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 public class MenuGUI : GUIPanel {
     public TextAsset indoorTemplate, floatingTemplate;
 
+    private static readonly System.Lazy<GUIStyle> worldButtonStyle = new System.Lazy<GUIStyle>(() =>
+        new GUIStyle(StyleSet.buttonLarge) {
+            alignment = TextAnchor.MiddleLeft,
+        });
+
     private List<string> worldPaths = new List<string>();
     private List<string> worldNames = new List<string>();
     private OverflowMenuGUI worldOverflowMenu;
@@ -67,11 +72,10 @@ public class MenuGUI : GUIPanel {
                 bool selected = worldOverflowMenu != null && path == selectedWorldPath;
 
                 GUILayout.BeginHorizontal();
-                GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
-                if (GUIUtils.HighlightedButton(name, StyleSet.buttonLarge, selected)) {
+                if (GUIUtils.HighlightedButton(name, worldButtonStyle.Value, selected,
+                        GUILayout.MinWidth(0))) {
                     OpenWorld(path, Scenes.EDITOR);
                 }
-                GUIUtils.EndHorizontalClipped();
                 if (GUIUtils.HighlightedButton(IconSet.overflow, StyleSet.buttonLarge,
                         selected, GUILayout.ExpandWidth(false))) {
                     CreateWorldOverflowMenu(path);
