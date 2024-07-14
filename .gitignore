@@ -85,7 +85,6 @@ ios-build/
 /Assets/GameAssets/3dtextures/*/*.png
 /Assets/GameAssets/NASA/*.tif
 /Assets/GameAssets/Footsteps/*.wav
-/Assets/Resources/GameAssets/*.obj
 /Assets/Resources/GameAssets/Models/*.obj
 
 *.keystore

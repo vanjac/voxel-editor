@@ -48,8 +48,8 @@ public class PropObject : ObjectEntity {
                 })),
         });
 
-    private Mesh GetMesh() => Resources.Load<Mesh>("GameAssets/Models/" + modelName)
-        ?? Resources.Load<Mesh>("GameAssets/error_model");
+    private Mesh GetMesh() => ResourcesDirectory.LoadModel(modelName)
+        ?? ResourcesDirectory.LoadModel("error_model");
 
     private GameObject CreatePropObject() {
         var mesh = GetMesh();

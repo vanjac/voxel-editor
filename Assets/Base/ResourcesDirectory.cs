@@ -216,6 +216,8 @@ public static class ResourcesDirectory {
         }
     }
 
+    public static Mesh LoadModel(string name) => Resources.Load<Mesh>("GameAssets/Models/" + name);
+
     public static Texture2D GetModelThumbnail(string name) =>
         Resources.Load<Texture2D>("Thumbnails/" + name);
 }
