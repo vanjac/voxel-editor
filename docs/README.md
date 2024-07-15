@@ -37,7 +37,7 @@ N-Space has built-in documentation and tutorials, which you can access through t
 
 The app has been tested with Unity 2020.3.X on Android and iOS. There is little platform-specific code (only for importing/exporting files). Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
-The repository does not come with textures from [Poliigon](https://www.poliigon.com/), [FreePBR](https://freepbr.com/), [3dtextures](https://3dtextures.me), and [Genetica](https://web.archive.org/web/20220323200944/http://spiralgraphics.biz/genetica.htm). You can purchase/download them yourself - look in the folders inside [Assets/GameAssets](https://github.com/vanjac/voxel-editor/tree/master/Assets/GameAssets) for a list of `.meta` files which correspond to the missing textures. It is also possible to test N-Space without the textures at all. Materials will lack texture, but you can paint the walls with colors instead.
+This repository does NOT include the AssetBundle which contains all built-in materials and models. Due to license restrictions the source files for these assets cannot be distributed as open-source. (TODO: How to acquire AssetBundles or create a custom AssetBundle. Contact me if you need help.)
 
 The app has four scenes:
 

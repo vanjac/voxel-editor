@@ -79,16 +79,8 @@ ios-build/
 /Assets/StreamingAssets/*
 !/Assets/StreamingAssets/README.md
 
-/Assets/GameAssets/Poliigon/*.jpg
-/Assets/GameAssets/Poliigon/*.png
-/Assets/GameAssets/FreePBR/*.png
-/Assets/GameAssets/FreePBR/*.psd
-/Assets/GameAssets/Genetica/*.png
-/Assets/GameAssets/3dtextures/*/*.jpg
-/Assets/GameAssets/3dtextures/*/*.png
-/Assets/GameAssets/NASA/*.tif
+# TODO!
 /Assets/GameAssets/Footsteps/*.wav
-/Assets/Resources/GameAssets/Models/*.obj
 
 *.keystore
 upload_certificate.pem
