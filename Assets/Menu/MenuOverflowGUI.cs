@@ -34,12 +34,13 @@ public class MenuOverflowGUI : GUIPanel {
 #else
                     string donate = "";
 #endif
+                    string assetCredits = ResourcesDirectory.LoadTextFile("info");
                     string debugInfo =
                         $"Build: {Application.buildGUID}\n"
                         + $"Resolution: {Screen.width}x{Screen.height}\nDPI: {Screen.dpi}\n"
                         + $"Audio: {AudioSettings.outputSampleRate}Hz {AudioSettings.speakerMode}";
                     string text = StringSet.AboutMessage(Application.version,
-                        Application.unityVersion, donate, creditsText.text, debugInfo);
+                        Application.unityVersion, donate, creditsText.text, assetCredits, debugInfo);
                     LargeMessageGUI.ShowLargeMessageDialog(gameObject, text);
                 }),
                 new OverflowMenuGUI.MenuItem(StringSet.OpenWebsite, IconSet.website, () => {

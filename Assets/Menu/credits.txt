@@ -1,12 +1,3 @@
-Images:
-    Materials from Poliigon.com, FreePBR.com, 3dtextures.me, spiralgraphics.biz (Genetica)
-    Skies from Sky5X One (Unity Asset Store)
-    Space spheremap from NASA
-    Icons from materialdesignicons.com
-
-Models:
-    Low Poly 3D Art by Synty (Unity Asset Store)
-
 Fonts:
     Roboto
     Designed by Christian Robertson. From Google.
@@ -18,13 +9,8 @@ Fonts:
     Designed by Oswald Bruce Cooper. From Adobe Originals.
 
 Assets from Unity Standard Assets:
-    Water (Basic)
     Ethan character mesh
     Various scripts
-
-Sounds:
-    Footstep/physics sounds from Half-Life 2
-    Originally from The Hollywood Edge
 
 Libraries:
     SimpleJSON

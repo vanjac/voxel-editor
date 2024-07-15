@@ -1080,7 +1080,7 @@ Substances will rotate around their <b>Pivot</b> point.";
     public virtual string TutorialPitObjects =>
         "<i>Now try placing some Props with Physics behaviors. Then play the game and push them all into the pit.</i> Enjoy.";
 
-    public virtual string AboutMessage(string appVersion, string unityVersion, string donate, string credits, string debugInfo) =>
+    public virtual string AboutMessage(string appVersion, string unityVersion, string donate, string credits, string assetCredits, string debugInfo) =>
 @$"<i>Version {appVersion}</i>
 <i>Made with Unity {unityVersion}</i>
 
@@ -1095,8 +1095,8 @@ If you have any questions, feedback, or suggestions, please send me an email:
 
 <b>Sources:</b>
 
+{assetCredits}
 {credits}
-
 ----------
 
 <b>System Info:</b>

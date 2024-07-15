@@ -79,6 +79,10 @@ public static class ResourcesDirectory {
         return assetBundle;
     }
 
+    public static string LoadTextFile(string name) {
+        return GetAssetBundle().LoadAsset<TextAsset>($"{PREFIX}{name}.txt").text;
+    }
+
     private static void EnsureMaterialsLoaded() {
         if (materials == null) {
             materials = new List<MaterialInfo>();
