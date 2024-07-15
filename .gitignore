@@ -76,6 +76,9 @@ crashlytics-build.properties
 ios-build/
 .DS_Store
 
+/Assets/StreamingAssets/*
+!/Assets/StreamingAssets/README.md
+
 /Assets/GameAssets/Poliigon/*.jpg
 /Assets/GameAssets/Poliigon/*.png
 /Assets/GameAssets/FreePBR/*.png

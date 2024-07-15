@@ -31,6 +31,7 @@ public class MenuGUI : GUIPanel {
     }
 
     void Start() {
+        ResourcesDirectory.UnloadAll(); // no AssetBundles in this scene!
         UpdateWorldList();
     }
 

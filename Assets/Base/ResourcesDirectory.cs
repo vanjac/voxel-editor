@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// https://docs.unity3d.com/Manual/BuiltInImporters.html
+// https://unity.com/blog/engine-platform/unity-asset-bundles-tips-pitfalls
+
 public enum MaterialType {
     None, Material, Overlay, Sky
 }
@@ -31,6 +34,8 @@ public struct ModelCategory {
 
 // Remember that Unity resource paths always use forward slashes
 public static class ResourcesDirectory {
+    private const string PREFIX = "assets/nspace/";
+
     public enum ColorStyle {
         TINT, PAINT
     }
@@ -45,6 +50,7 @@ public static class ResourcesDirectory {
         public ModelCategory category;
     }
 
+    private static AssetBundle assetBundle;
     private static List<MaterialInfo> materials;
     private static Dictionary<string, MaterialInfo> namedMaterials =
         new Dictionary<string, MaterialInfo>();
@@ -52,6 +58,26 @@ public static class ResourcesDirectory {
         new Dictionary<MaterialType, List<string>>();
 
     private static List<ModelCategory> modelCategories;
+
+    // slow and dangerous!
+    public static void UnloadUnused() {
+        Resources.UnloadUnusedAssets();
+    }
+
+    public static void UnloadAll() {
+        if (assetBundle != null) {
+            assetBundle.Unload(true);
+            assetBundle = null;
+        }
+    }
+
+    private static AssetBundle GetAssetBundle() {
+        if (assetBundle == null) {
+            assetBundle = AssetBundle.LoadFromFile(
+                System.IO.Path.Combine(Application.streamingAssetsPath, "nspace_default"));
+        }
+        return assetBundle;
+    }
 
     private static void EnsureMaterialsLoaded() {
         if (materials == null) {
@@ -67,7 +93,7 @@ public static class ResourcesDirectory {
         var categories = new List<string>();
         materialCategories[type] = categories;
 
-        var script = Resources.Load<TextAsset>(fileName).text;
+        var script = GetAssetBundle().LoadAsset<TextAsset>($"{PREFIX}{fileName}.txt").text;
         var parser = new ConfigParser<MaterialConfigState>();
         parser.state.category = "";
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
@@ -126,12 +152,12 @@ public static class ResourcesDirectory {
     private static List<ModelCategory> LoadModelCategories() {
         var categories = new List<ModelCategory>();
 
-        var script = Resources.Load<TextAsset>("models").text;
+        var script = GetAssetBundle().LoadAsset<TextAsset>(PREFIX + "models.txt").text;
         var parser = new ConfigParser<ModelConfigState>();
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
             if (cmd == "cat") {
                 parser.state.category = new ModelCategory() {
-                    icon = Resources.Load<Texture2D>("Icons/" + args),
+                    icon = GetAssetBundle().LoadAsset<Texture2D>($"{PREFIX}icons/{args}.png"),
                     models = new List<string>()
                 };
                 categories.Add(parser.state.category);
@@ -144,12 +170,12 @@ public static class ResourcesDirectory {
 
     public static Material LoadMaterial(MaterialInfo info, bool editor) {
         var name = (!editor && info.gameMat != null) ? info.gameMat : info.name;
-        return Resources.Load<Material>("GameAssets/Materials/" + name);
+        return GetAssetBundle().LoadAsset<Material>($"{PREFIX}materials/{name}.mat");
     }
 
     public static Material LoadMaterialPreview(MaterialInfo info) {
         if (info.previewMat != null) {
-            return Resources.Load<Material>("GameAssets/Previews/" + info.previewMat);
+            return GetAssetBundle().LoadAsset<Material>($"{PREFIX}previews/{info.previewMat}.mat");
         }
         return LoadMaterial(info, true);
     }
@@ -216,8 +242,10 @@ public static class ResourcesDirectory {
         }
     }
 
-    public static Mesh LoadModel(string name) => Resources.Load<Mesh>("GameAssets/Models/" + name);
+    // TODO: support other model formats!!
+    public static Mesh LoadModel(string name) =>
+        GetAssetBundle().LoadAsset<Mesh>($"{PREFIX}models/{name}.obj");
 
     public static Texture2D GetModelThumbnail(string name) =>
-        Resources.Load<Texture2D>("Thumbnails/" + name);
+    GetAssetBundle().LoadAsset<Texture2D>($"{PREFIX}thumbnails/{name}.png");
 }

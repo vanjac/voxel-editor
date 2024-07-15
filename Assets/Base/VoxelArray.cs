@@ -139,7 +139,6 @@ public class VoxelArray : MonoBehaviour {
         if (voxel == null) {
         } else if (voxel.IsEmpty()) {
             RemoveVoxel(position);
-            AssetManager.UnusedAssets();
         } else {
             UpdateVoxel(position);
         }

@@ -58,7 +58,7 @@ public class MaterialSelectorGUI : GUIPanel {
     }
 
     void OnDestroy() {
-        AssetManager.UnusedAssets();
+        ResourcesDirectory.UnloadUnused();
     }
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
@@ -290,14 +290,12 @@ public class MaterialSelectorGUI : GUIPanel {
             } else {
                 materials = voxelArray.customMaterials;
             }
-            AssetManager.UnusedAssets();
             return;
         } else if (category == WORLD_LIST_CATEGORY) {
             materials = new List<Material>();
             var worldNames = new List<string>();
             WorldFiles.ListWorlds(new List<string>(), worldNames);
             categories = worldNames.ToArray();
-            AssetManager.UnusedAssets();
             return;
         } else if (importFromWorld) {
             categories = new string[0];
@@ -327,8 +325,6 @@ public class MaterialSelectorGUI : GUIPanel {
             materials.Add(ResourcesDirectory.LoadMaterialPreview(matInfo));
         }
         categories = categoriesList.ToArray();
-
-        AssetManager.UnusedAssets();
     }
 
     private void MaterialSelected(Material material) {
