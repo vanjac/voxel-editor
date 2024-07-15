@@ -12,8 +12,7 @@ public class BallObject : ObjectEntity {
     public override PropertiesObjectType ObjectType => objectType;
 
     public BallObject() {
-        paint.material = ResourcesDirectory.InstantiateMaterial(
-            ResourcesDirectory.FindMaterial("MATTE", true));
+        paint.material = AssetPack.InstantiateMaterial(AssetPack.FindMaterial("MATTE", true));
         paint.material.color = Color.red;
     }
 

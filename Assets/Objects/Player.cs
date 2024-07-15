@@ -13,8 +13,7 @@ public class PlayerObject : ObjectEntity {
     public bool footstepSounds = true;
 
     public PlayerObject() {
-        paint.material = ResourcesDirectory.InstantiateMaterial(
-            ResourcesDirectory.FindMaterial("GLOSSY", true));
+        paint.material = AssetPack.InstantiateMaterial(AssetPack.FindMaterial("GLOSSY", true));
         paint.material.color = Color.green;
     }
 

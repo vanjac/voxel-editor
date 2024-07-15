@@ -38,8 +38,8 @@ public struct VoxelFace {
     }
 
     public MaterialSound GetSound() {
-        MaterialSound matSound = ResourcesDirectory.GetMaterialSound(material);
-        MaterialSound overSound = ResourcesDirectory.GetMaterialSound(overlay);
+        MaterialSound matSound = AssetPack.GetMaterialSound(material);
+        MaterialSound overSound = AssetPack.GetMaterialSound(overlay);
         if (overSound == MaterialSound.GENERIC) {
             return matSound;
         } else {

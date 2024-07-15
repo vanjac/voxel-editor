@@ -72,12 +72,12 @@ public class CustomTexture : PropertiesObject {
         this.isOverlay = isOverlay;
         if (_material != null && IsCustomTexture(_material)) {
             string baseName = GetBaseMaterialName(_material);
-            _baseMat = ResourcesDirectory.FindMaterial(baseName, true);
-            string colorProp = ResourcesDirectory.MaterialColorProperty(_baseMat);
+            _baseMat = AssetPack.FindMaterial(baseName, true);
+            string colorProp = AssetPack.MaterialColorProperty(_baseMat);
             // copied from MessagePackWorldReader
             Color color = _material.GetColor(colorProp);
             if (color != _baseMat.GetColor(colorProp)) {
-                _baseMat = ResourcesDirectory.InstantiateMaterial(_baseMat);
+                _baseMat = AssetPack.InstantiateMaterial(_baseMat);
                 _baseMat.SetColor(colorProp, color);
             }
         } else {

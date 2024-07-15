@@ -32,7 +32,7 @@ public static class GameScripts {
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new WaterBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("WaterBasicDaytime", true);
+                substance.defaultPaint.overlay = AssetPack.FindMaterial("WaterBasicDaytime", true);
                 return substance;
             },
         },
@@ -45,7 +45,7 @@ public static class GameScripts {
                 substance.sensor = new TouchSensor();
                 substance.xRay = true;
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.FindMaterial("Invisible", true);
+                substance.defaultPaint.overlay = AssetPack.FindMaterial("Invisible", true);
                 return substance;
             },
         },
@@ -58,8 +58,8 @@ public static class GameScripts {
                 substance.behaviors.Add(new VisibleBehavior());
                 substance.behaviors.Add(new SolidBehavior());
                 substance.defaultPaint = new VoxelFace();
-                substance.defaultPaint.overlay = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
+                substance.defaultPaint.overlay = AssetPack.InstantiateMaterial(
+                    AssetPack.FindMaterial("GLASS_overlay", true));
                 substance.defaultPaint.overlay.color = new Color(1, 1, 1, 0.25f);
                 return substance;
             },
@@ -204,8 +204,8 @@ public static class GameScripts {
             constructor = () => {
                 var ball = new BallObject();
                 ball.paint.material = null;
-                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("MATTE_overlay", true));
+                ball.paint.overlay = AssetPack.InstantiateMaterial(
+                    AssetPack.FindMaterial("MATTE_overlay", true));
                 ball.paint.overlay.color = new Color(1, 0, 0, 0.5f);
                 return ball;
             },
@@ -217,8 +217,8 @@ public static class GameScripts {
             constructor = () => {
                 var ball = new BallObject();
                 ball.paint.material = null;
-                ball.paint.overlay = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("GLASS_overlay", true));
+                ball.paint.overlay = AssetPack.InstantiateMaterial(
+                    AssetPack.FindMaterial("GLASS_overlay", true));
                 ball.paint.overlay.color = new Color(1, 1, 1, 0.25f);
                 ball.xRay = true;
                 ball.behaviors.Add(new LightBehavior());
@@ -231,8 +231,8 @@ public static class GameScripts {
             iconName = ReflectorBehavior.objectType.iconName,
             constructor = () => {
                 var ball = new BallObject();
-                ball.paint.material = ResourcesDirectory.InstantiateMaterial(
-                    ResourcesDirectory.FindMaterial("METAL", true));
+                ball.paint.material = AssetPack.InstantiateMaterial(
+                    AssetPack.FindMaterial("METAL", true));
                 ball.paint.material.color = Color.white;
                 ball.behaviors.Add(new ReflectorBehavior());
                 return ball;

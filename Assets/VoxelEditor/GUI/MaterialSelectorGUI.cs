@@ -31,7 +31,7 @@ public class MaterialSelectorGUI : GUIPanel {
     private bool instance;
     private Color whitePoint;  // white point only applies in TINT style
     private bool showColorStyle;
-    private ResourcesDirectory.ColorStyle colorStyle;
+    private AssetPack.ColorStyle colorStyle;
 
     private static readonly System.Lazy<GUIStyle> categoryButtonStyle = new System.Lazy<GUIStyle>(() => {
         var style = new GUIStyle(StyleSet.buttonLarge);
@@ -58,7 +58,7 @@ public class MaterialSelectorGUI : GUIPanel {
     }
 
     void OnDestroy() {
-        ResourcesDirectory.UnloadUnused();
+        AssetPack.UnloadUnused();
     }
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) =>
@@ -88,23 +88,23 @@ public class MaterialSelectorGUI : GUIPanel {
         GUILayout.Label(StringSet.MaterialColorHeader, categoryLabelStyle.Value);
         GUILayout.EndHorizontal();
 
-        string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
+        string colorProp = AssetPack.MaterialColorProperty(highlightMaterial);
         if (colorPicker == null) {
             whitePoint = Color.white;
             showColorStyle = false;
-            colorStyle = ResourcesDirectory.ColorStyle.PAINT;  // ignore white point by default
+            colorStyle = AssetPack.ColorStyle.PAINT;  // ignore white point by default
             if (!customTextureBase &&
-                    ResourcesDirectory.FindMaterialInfo(highlightMaterial.name, out var info)) {
+                    AssetPack.FindMaterialInfo(highlightMaterial.name, out var info)) {
                 whitePoint = info.whitePoint;
                 whitePoint.a = 1.0f;
                 showColorStyle = info.supportsColorStyles;
-                colorStyle = ResourcesDirectory.GetMaterialColorStyle(highlightMaterial);
+                colorStyle = AssetPack.GetMaterialColorStyle(highlightMaterial);
             }
 
             colorPicker = gameObject.AddComponent<ColorPickerGUI>();
             colorPicker.enabled = false;
             Color currentColor = highlightMaterial.GetColor(colorProp);
-            if (colorStyle == ResourcesDirectory.ColorStyle.TINT) {
+            if (colorStyle == AssetPack.ColorStyle.TINT) {
                 currentColor *= whitePoint;
             }
             colorPicker.SetColor(currentColor);
@@ -112,7 +112,7 @@ public class MaterialSelectorGUI : GUIPanel {
             colorPicker.handler = (Color c) => {
                 MakeInstance();
                 // don't believe what they tell you, color values can go above 1.0
-                if (colorStyle == ResourcesDirectory.ColorStyle.TINT) {
+                if (colorStyle == AssetPack.ColorStyle.TINT) {
                     c = new Color(c.r / whitePoint.r, c.g / whitePoint.g, c.b / whitePoint.b, c.a);
                 }
                 highlightMaterial.SetColor(colorProp, c);
@@ -123,12 +123,12 @@ public class MaterialSelectorGUI : GUIPanel {
         }
         colorPicker.WindowGUI();
         if (showColorStyle) {
-            var newStyle = (ResourcesDirectory.ColorStyle)GUILayout.SelectionGrid((int)colorStyle,
+            var newStyle = (AssetPack.ColorStyle)GUILayout.SelectionGrid((int)colorStyle,
                 new string[] { StringSet.ColorTintMode, StringSet.ColorPaintMode }, 2);
             if (newStyle != colorStyle) {
                 colorStyle = newStyle;
                 MakeInstance();
-                ResourcesDirectory.SetMaterialColorStyle(highlightMaterial, newStyle);
+                AssetPack.SetMaterialColorStyle(highlightMaterial, newStyle);
                 colorPicker.CallHandler();  // update white point and call material handler also
             }
         }
@@ -189,7 +189,7 @@ public class MaterialSelectorGUI : GUIPanel {
             wasEnabled = GUI.enabled;
             baseColor = GUI.color;
             if (highlightMaterial == null || CustomTexture.IsCustomTexture(highlightMaterial)
-                    || ResourcesDirectory.MaterialColorProperty(highlightMaterial) == null) {
+                    || AssetPack.MaterialColorProperty(highlightMaterial) == null) {
                 GUIUtils.ShowDisabled();
             }
             TutorialGUI.TutorialHighlight("material color");
@@ -259,7 +259,7 @@ public class MaterialSelectorGUI : GUIPanel {
     private void MakeInstance() {
         if (!instance) {
             //Debug.Log("instantiate");
-            highlightMaterial = ResourcesDirectory.InstantiateMaterial(highlightMaterial);
+            highlightMaterial = AssetPack.InstantiateMaterial(highlightMaterial);
             instance = true;
         }
     }
@@ -312,17 +312,17 @@ public class MaterialSelectorGUI : GUIPanel {
             categoriesList.Add(CUSTOM_CATEGORY);
         }
         if (category == "") {
-            categoriesList.AddRange(ResourcesDirectory.GetMaterialCategories(materialType));
+            categoriesList.AddRange(AssetPack.GetMaterialCategories(materialType));
         }
         materials = new List<Material>();
-        foreach (MaterialInfo matInfo in ResourcesDirectory.GetMaterials()) {
+        foreach (MaterialInfo matInfo in AssetPack.GetMaterials()) {
             if (matInfo.type != materialType || matInfo.category != category) {
                 continue;
             }
             if (matInfo.name.StartsWith("$")) {
                 continue; // special alternate materials for game
             }
-            materials.Add(ResourcesDirectory.LoadMaterialPreview(matInfo));
+            materials.Add(AssetPack.LoadMaterialPreview(matInfo));
         }
         categories = categoriesList.ToArray();
     }
@@ -330,7 +330,7 @@ public class MaterialSelectorGUI : GUIPanel {
     private void MaterialSelected(Material material) {
         if (material != null && !CustomTexture.IsCustomTexture(material)) {
             // don't select preview materials
-            material = ResourcesDirectory.FindMaterial(material.name, true);
+            material = AssetPack.FindMaterial(material.name, true);
         }
         highlightMaterial = material;
         if (importFromWorld) {
@@ -343,7 +343,7 @@ public class MaterialSelectorGUI : GUIPanel {
         instance = false;
         if (customTextureBase && highlightMaterial != null) {
             // reset color to white
-            string colorProp = ResourcesDirectory.MaterialColorProperty(highlightMaterial);
+            string colorProp = AssetPack.MaterialColorProperty(highlightMaterial);
             if (colorProp != null) {
                 Color prevColor = highlightMaterial.GetColor(colorProp);
                 Color newColor = new Color(1, 1, 1, prevColor.a);
@@ -364,9 +364,8 @@ public class MaterialSelectorGUI : GUIPanel {
                 return;
             }
 
-            Material baseMat = ResourcesDirectory.FindMaterial(
-                isOverlay ? "MATTE_overlay" : "MATTE", true);
-            baseMat = ResourcesDirectory.InstantiateMaterial(baseMat);
+            Material baseMat = AssetPack.FindMaterial(isOverlay ? "MATTE_overlay" : "MATTE", true);
+            baseMat = AssetPack.InstantiateMaterial(baseMat);
             baseMat.color = new Color(1, 1, 1, baseMat.color.a);
             CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, isOverlay);
             customTex.texture = texture;
@@ -452,7 +451,7 @@ public class MaterialSelectorGUI : GUIPanel {
         GL.Clear(false, true, Color.clear);
 
         previewMaterial.CopyPropertiesFromMaterial(mat);
-        string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
+        string colorProp = AssetPack.MaterialColorProperty(mat);
         if (colorProp == null) {
             previewMaterial.color = Color.white;
         } else {

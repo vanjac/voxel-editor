@@ -204,7 +204,7 @@ public class NewRigidbodyController : MonoBehaviour {
                 Renderer hitRender = hitInfo.collider.GetComponent<Renderer>();
                 if (hitRender != null) {
                     // regular .material has (Instance) suffix
-                    footstepSound = ResourcesDirectory.GetMaterialSound(hitRender.sharedMaterial);
+                    footstepSound = AssetPack.GetMaterialSound(hitRender.sharedMaterial);
                 } else {
                     footstepSound = MaterialSound.GENERIC;
                 }

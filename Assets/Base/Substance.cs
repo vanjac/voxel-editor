@@ -93,7 +93,7 @@ public class Substance : DynamicEntity {
         }
         highlight = c;
         if (highlightMaterial == null) {
-            highlightMaterial = ResourcesDirectory.InstantiateMaterial(VoxelComponent.highlightMaterials[15]);
+            highlightMaterial = AssetPack.InstantiateMaterial(VoxelComponent.highlightMaterials[15]);
         }
         highlightMaterial.color = highlight;
         foreach (VoxelComponent v in voxelGroup.IterateComponents()) {

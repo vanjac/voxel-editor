@@ -19,8 +19,7 @@ public class PropObject : ObjectEntity {
     public ObjectAlignment align = ObjectAlignment.Default;
 
     public PropObject() {
-        paint.material = ResourcesDirectory.InstantiateMaterial(
-            ResourcesDirectory.FindMaterial("GLOSSY", true));
+        paint.material = AssetPack.InstantiateMaterial(AssetPack.FindMaterial("GLOSSY", true));
         paint.material.color = Color.white;
     }
 
@@ -48,8 +47,8 @@ public class PropObject : ObjectEntity {
                 })),
         });
 
-    private Mesh GetMesh() => ResourcesDirectory.LoadModel(modelName)
-        ?? ResourcesDirectory.LoadModel("error_model");
+    private Mesh GetMesh() => AssetPack.LoadModel(modelName)
+        ?? AssetPack.LoadModel("error_model");
 
     private GameObject CreatePropObject() {
         var mesh = GetMesh();

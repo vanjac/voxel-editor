@@ -33,7 +33,7 @@ public struct ModelCategory {
 }
 
 // Remember that Unity resource paths always use forward slashes
-public static class ResourcesDirectory {
+public static class AssetPack {
     private const string PREFIX = "assets/nspace/";
 
     public enum ColorStyle {

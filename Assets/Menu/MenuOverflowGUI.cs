@@ -34,7 +34,7 @@ public class MenuOverflowGUI : GUIPanel {
 #else
                     string donate = "";
 #endif
-                    string assetCredits = ResourcesDirectory.LoadTextFile("info");
+                    string assetCredits = AssetPack.LoadTextFile("info");
                     string debugInfo =
                         $"Build: {Application.buildGUID}\n"
                         + $"Resolution: {Screen.width}x{Screen.height}\nDPI: {Screen.dpi}\n"

@@ -37,8 +37,8 @@ public abstract class ObjectEntity : DynamicEntity {
         }
         highlight = c;
         if (highlightMaterial == null) {
-            highlightMaterial = ResourcesDirectory.InstantiateMaterial(
-                ResourcesDirectory.FindMaterial("UNLIT", true));
+            highlightMaterial = AssetPack.InstantiateMaterial(
+                AssetPack.FindMaterial("UNLIT", true));
         }
         highlightMaterial.color = highlight;
         if (marker != null) {

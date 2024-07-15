@@ -222,7 +222,7 @@ public class MessagePackWorldReader : WorldFileReader {
         if (isCustom) {
             mat = customTextureNames[name];
         } else {
-            mat = ResourcesDirectory.FindMaterial(name, editor);
+            mat = AssetPack.FindMaterial(name, editor);
         }
         if (mat == null) {
             warnings.Add("Unrecognized material: " + name);
@@ -230,26 +230,26 @@ public class MessagePackWorldReader : WorldFileReader {
         }
         if (!isCustom && matDict.ContainsKey(FileKeys.MATERIAL_COLOR)) {
             // custom textures can't have colors
-            string colorProp = ResourcesDirectory.MaterialColorProperty(mat);
+            string colorProp = AssetPack.MaterialColorProperty(mat);
             if (colorProp != null) {
                 Color color = ReadColor(matDict[FileKeys.MATERIAL_COLOR]);
                 bool setColor = color != mat.GetColor(colorProp);
 
-                var colorStyle = ResourcesDirectory.ColorStyle.TINT;
+                var colorStyle = AssetPack.ColorStyle.TINT;
                 if (matDict.ContainsKey(FileKeys.MATERIAL_COLOR_STYLE)) {
                     Enum.TryParse(matDict[FileKeys.MATERIAL_COLOR_STYLE].AsString(), out colorStyle);
                 }
-                bool setStyle = colorStyle == ResourcesDirectory.ColorStyle.PAINT
-                    && ResourcesDirectory.GetMaterialColorStyle(mat) != ResourcesDirectory.ColorStyle.PAINT;
+                bool setStyle = colorStyle == AssetPack.ColorStyle.PAINT
+                    && AssetPack.GetMaterialColorStyle(mat) != AssetPack.ColorStyle.PAINT;
 
                 if (setColor || setStyle) {
-                    mat = ResourcesDirectory.InstantiateMaterial(mat);
+                    mat = AssetPack.InstantiateMaterial(mat);
                 }
                 if (setColor) {
                     mat.SetColor(colorProp, color);
                 }
                 if (setStyle) {
-                    ResourcesDirectory.SetMaterialColorStyle(mat, colorStyle);
+                    AssetPack.SetMaterialColorStyle(mat, colorStyle);
                 }
             }
         }

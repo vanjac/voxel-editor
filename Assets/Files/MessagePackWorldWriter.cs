@@ -131,11 +131,11 @@ public class MessagePackWorldWriter {
         var materialDict = new MessagePackObjectDictionary();
         materialDict[FileKeys.MATERIAL_NAME] = material.name;
         string colorProp = CustomTexture.IsCustomTexture(material) ? null
-            : ResourcesDirectory.MaterialColorProperty(material);
+            : AssetPack.MaterialColorProperty(material);
         if (colorProp != null) {
             materialDict[FileKeys.MATERIAL_COLOR] = WriteColor(material.GetColor(colorProp));
             materialDict[FileKeys.MATERIAL_COLOR_STYLE]
-                = ResourcesDirectory.GetMaterialColorStyle(material).ToString();
+                = AssetPack.GetMaterialColorStyle(material).ToString();
         }
         return materialDict;
     }
