@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -62,13 +62,6 @@ public static class AssetPack {
     // slow and dangerous!
     public static void UnloadUnused() {
         Resources.UnloadUnusedAssets();
-    }
-
-    public static void UnloadAll() {
-        if (assetBundle != null) {
-            assetBundle.Unload(true);
-            assetBundle = null;
-        }
     }
 
     private static AssetBundle GetAssetBundle() {
