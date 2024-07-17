@@ -24,8 +24,7 @@ public class ModelSelectorGUI : GUIPanel {
         UpdateCategory();
     }
 
-    private ModelCategory GetCategory() =>
-        AssetPack.GetModelCategories()[selectedCategory];
+    private ModelCategory GetCategory() => AssetPack.GetModelCategories()[selectedCategory];
 
     private void UpdateCategory() {
         scroll = Vector2.zero;

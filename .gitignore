@@ -79,9 +79,6 @@ ios-build/
 /Assets/StreamingAssets/*
 !/Assets/StreamingAssets/README.md
 
-# TODO!
-/Assets/GameAssets/Footsteps/*.wav
-
 *.keystore
 upload_certificate.pem
 *.skb

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,9 +27,15 @@ public class MaterialInfo {
     public bool supportsColorStyles;
 }
 
-public struct ModelCategory {
+public class ModelCategory {
     public Texture2D icon;
-    public List<string> models;
+    public List<string> models = new List<string>();
+}
+
+public class MaterialSoundData {
+    public float volume = 1;
+    public List<AudioClip> left = new List<AudioClip>();
+    public List<AudioClip> right = new List<AudioClip>();
 }
 
 // Remember that Unity resource paths always use forward slashes
@@ -50,12 +56,17 @@ public static class AssetPack {
         public ModelCategory category;
     }
 
+    private struct MaterialSoundConfigState {
+        public MaterialSoundData data;
+    }
+
     private static AssetBundle assetBundle;
     private static List<MaterialInfo> materials;
     private static Dictionary<string, MaterialInfo> namedMaterials =
         new Dictionary<string, MaterialInfo>();
     private static Dictionary<MaterialType, List<string>> materialCategories =
         new Dictionary<MaterialType, List<string>>();
+    private static Dictionary<MaterialSound, MaterialSoundData> materialSounds;
 
     private static List<ModelCategory> modelCategories;
 
@@ -155,7 +166,6 @@ public static class AssetPack {
             if (cmd == "cat") {
                 parser.state.category = new ModelCategory() {
                     icon = GetAssetBundle().LoadAsset<Texture2D>($"{PREFIX}icons/{args}.png"),
-                    models = new List<string>()
                 };
                 categories.Add(parser.state.category);
             } else if (cmd == "mdl") {
@@ -163,6 +173,37 @@ public static class AssetPack {
             }
         });
         return categories;
+    }
+
+    public static void EnsureMaterialSoundsLoaded() {
+        if (materialSounds == null) {
+            materialSounds = LoadMaterialSounds();
+        }
+    }
+
+    private static Dictionary<MaterialSound, MaterialSoundData> LoadMaterialSounds() {
+        var materialSounds = new Dictionary<MaterialSound, MaterialSoundData>();
+
+        var bundle = GetAssetBundle();
+        var script = bundle.LoadAsset<TextAsset>(PREFIX + "matsounds.txt").text;
+        var parser = new ConfigParser<MaterialSoundConfigState>();
+        parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
+            if (cmd == "sound") {
+                if (Enum.TryParse<MaterialSound>(args, out var sound)) {
+                    parser.state.data = new MaterialSoundData();
+                    materialSounds.Add(sound, parser.state.data);
+                } else {
+                    throw new ConfigParser.ConfigException("Unrecognized sound", l);
+                }
+            } else if (cmd == "left") {
+                parser.state.data.left.Add(LoadSound(args));
+            } else if (cmd == "right") {
+                parser.state.data.right.Add(LoadSound(args));
+            } else if (cmd == "volume") {
+                parser.state.data.volume = ConfigParser.ParseFloat(args);
+            }
+        });
+        return materialSounds;
     }
 
     public static Material LoadMaterial(MaterialInfo info, bool editor) {
@@ -244,5 +285,17 @@ public static class AssetPack {
         GetAssetBundle().LoadAsset<Mesh>($"{PREFIX}models/{name}.obj");
 
     public static Texture2D GetModelThumbnail(string name) =>
-    GetAssetBundle().LoadAsset<Texture2D>($"{PREFIX}thumbnails/{name}.png");
+        GetAssetBundle().LoadAsset<Texture2D>($"{PREFIX}thumbnails/{name}.png");
+
+    private static AudioClip LoadSound(string name) =>
+        GetAssetBundle().LoadAsset<AudioClip>($"{PREFIX}sounds/{name}.wav");
+
+    public static MaterialSoundData GetMaterialSoundData(MaterialSound sound) {
+        EnsureMaterialSoundsLoaded();
+        if (materialSounds.TryGetValue(sound, out var data)) {
+            return data;
+        } else {
+            return materialSounds[MaterialSound.GENERIC];
+        }
+    }
 }
