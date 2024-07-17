@@ -16,6 +16,9 @@ public static class WorldFiles {
 
     public static string GetBackupPath() => GetNewWorldPath(BACKUP_NAME);
 
+    public static string GetThumbnailPath(string worldPath) =>
+        Path.ChangeExtension(worldPath, "jpg");
+
     // will throw an exception on failure
     public static void RestoreTempFile(string path) {
         File.Replace(GetTempPath(), path, GetBackupPath(), true);

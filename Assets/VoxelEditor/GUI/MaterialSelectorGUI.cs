@@ -306,7 +306,6 @@ public class MaterialSelectorGUI : GUIPanel {
         }
 
         var pack = AssetPack.Current();
-        // TODO: localize!
         var categoriesList = new List<string>();
         if (!customTextureBase && category == ""
                 && (materialType == MaterialType.Material || materialType == MaterialType.Overlay)) {

@@ -32,4 +32,8 @@ public static class SelectedWorld {
         demoWorldAsset = null; // load from the saved file next time
         return worldPath;
     }
+
+    public static string GetThumbnailPath() => WorldFiles.GetThumbnailPath(worldPath);
+
+    public static bool IsUserCreatedWorld() => demoWorldAsset == null;
 }

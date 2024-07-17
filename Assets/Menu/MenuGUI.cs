@@ -165,6 +165,7 @@ public class MenuGUI : GUIPanel {
                 dialog.noButtonText = StringSet.No;
                 dialog.yesButtonHandler = () => {
                     File.Delete(path);
+                    File.Delete(WorldFiles.GetThumbnailPath(path));
                     UpdateWorldList();
                 };
             }),
@@ -184,6 +185,11 @@ public class MenuGUI : GUIPanel {
         }
         string newPath = WorldFiles.GetNewWorldPath(newName);
         File.Move(selectedWorldPath, newPath);
+        var newThumbPath = WorldFiles.GetThumbnailPath(newPath);
+        try {
+            File.Delete(newThumbPath);
+            File.Move(WorldFiles.GetThumbnailPath(selectedWorldPath), newThumbPath);
+        } catch (IOException) { }
         UpdateWorldList();
     }
 
@@ -196,6 +202,10 @@ public class MenuGUI : GUIPanel {
         }
         string newPath = WorldFiles.GetNewWorldPath(newName);
         File.Copy(selectedWorldPath, newPath);
+        var newThumbPath = WorldFiles.GetThumbnailPath(newPath);
+        try {
+            File.Copy(WorldFiles.GetThumbnailPath(selectedWorldPath), newThumbPath, true);
+        } catch (IOException) { }
         UpdateWorldList();
     }
 }

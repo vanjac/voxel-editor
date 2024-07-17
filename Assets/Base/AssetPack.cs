@@ -114,6 +114,7 @@ public class AssetPack {
         parser.state.category = "";
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
             if (cmd == "cat") {
+                // TODO: localize category names
                 parser.state.category = args;
                 if (args != "") {
                     categories.Add(args);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,8 @@ public class EditorFile : MonoBehaviour {
     public VoxelArrayEditor voxelArray;
     public Transform cameraPivot;
     public TouchListener touchListener;
+    public Transform cameraTransform;
+    public Camera thumbnailCamera;
 
     // importWorldHandler MUST dispose stream and call ShareMap.ClearFileWaitingToImport() when finished
     public Action<System.IO.Stream> importWorldHandler;
@@ -67,11 +70,17 @@ public class EditorFile : MonoBehaviour {
         }
         PlayerPrefs.SetString("last_editScene_version", Application.version);
 
+        // avoids a bug where two dialogs created on the same frame will put the unfocused one on top
+        // for some reason it's necessary to wait two frames
+        yield return null;
+        yield return null;
+
+        if (SelectedWorld.IsUserCreatedWorld() && !File.Exists(SelectedWorld.GetThumbnailPath())) {
+            Debug.Log("Creating new thumbnail");
+            SaveThumbnail();
+        }
+
         if (warnings.Count > 0) {
-            // avoids a bug where two dialogs created on the same frame will put the unfocused one on top
-            // for some reason it's necessary to wait two frames
-            yield return null;
-            yield return null;
             string message = GUIPanel.StringSet.WorldWarningsHeader + "\n\n  •  " +
                 string.Join("\n  •  ", warnings.ToArray());
             LargeMessageGUI.ShowLargeMessageDialog(guiGameObject, message);
@@ -105,6 +114,7 @@ public class EditorFile : MonoBehaviour {
                 MessagePackWorldWriter.Write(savePath, cameraPivot, voxelArray);
             }
             voxelArray.unsavedChanges = false;
+            SaveThumbnail();
             return true;
         } catch (Exception e) {
             if (allowPopups) {
@@ -115,6 +125,26 @@ public class EditorFile : MonoBehaviour {
             }
             return false;
         }
+    }
+
+    private void SaveThumbnail() {
+        thumbnailCamera.transform.position = cameraTransform.position;
+        thumbnailCamera.transform.rotation = cameraTransform.rotation;
+
+        var rt = thumbnailCamera.targetTexture;
+        var prevRT = RenderTexture.active;
+        RenderTexture.active = rt;
+
+        thumbnailCamera.Render();
+        var image = new Texture2D(rt.width, rt.height);
+        image.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        image.Apply();
+
+        RenderTexture.active = prevRT;
+
+        var bytes = image.EncodeToJPG(90);
+        Destroy(image);
+        File.WriteAllBytes(SelectedWorld.GetThumbnailPath(), bytes);
     }
 
     public void Play() {
