@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class ObjectEntity : DynamicEntity {
@@ -16,6 +16,10 @@ public abstract class ObjectEntity : DynamicEntity {
     public VoxelFace paint;
     public Color highlight = Color.clear;
     public Material highlightMaterial;
+
+    public ObjectEntity() {
+        paint.material = AssetPack.FindMaterial("MATTE", true);
+    }
 
     public override void UpdateEntityEditor() {
         if (marker != null) {

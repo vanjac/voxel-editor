@@ -11,11 +11,6 @@ public class BallObject : ObjectEntity {
     };
     public override PropertiesObjectType ObjectType => objectType;
 
-    public BallObject() {
-        paint.material = AssetPack.InstantiateMaterial(AssetPack.FindMaterial("MATTE", true));
-        paint.material.color = Color.red;
-    }
-
     public override Bounds PlacementBounds() => new Bounds(Vector3.zero, Vector3.one);
 
     public override IEnumerable<Property> DeprecatedProperties() =>

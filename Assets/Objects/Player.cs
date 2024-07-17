@@ -13,6 +13,7 @@ public class PlayerObject : ObjectEntity {
     public bool footstepSounds = true;
 
     public PlayerObject() {
+        // default value when loading from older worlds
         paint.material = AssetPack.InstantiateMaterial(AssetPack.FindMaterial("GLOSSY", true));
         paint.material.color = Color.green;
     }

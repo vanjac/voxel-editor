@@ -18,11 +18,6 @@ public class PropObject : ObjectEntity {
     public string modelName = "SM_Primitive_SoccerBall_01";
     public ObjectAlignment align = ObjectAlignment.Default;
 
-    public PropObject() {
-        paint.material = AssetPack.InstantiateMaterial(AssetPack.FindMaterial("GLOSSY", true));
-        paint.material.color = Color.white;
-    }
-
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(base.Properties(), new Property[] {
             new Property("mdl", s => s.PropModel,
@@ -47,8 +42,7 @@ public class PropObject : ObjectEntity {
                 })),
         });
 
-    private Mesh GetMesh() => AssetPack.LoadModel(modelName)
-        ?? AssetPack.LoadModel("error_model");
+    private Mesh GetMesh() => AssetPack.LoadModel(modelName) ?? AssetPack.LoadModel("error_model");
 
     private GameObject CreatePropObject() {
         var mesh = GetMesh();

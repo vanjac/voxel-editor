@@ -10,7 +10,7 @@ public static class GameScripts {
         return null;
     }
 
-
+    // TODO: move to AssetBundle
     public static PropertiesObjectType[] entityTemplates = new PropertiesObjectType[] {
         new PropertiesObjectType("Solid Substance", typeof(Substance)) {
             displayName = s => s.SolidSubstanceName,
@@ -183,15 +183,22 @@ public static class GameScripts {
         PropObject.objectType,
     };
 
+    // TODO: move to AssetBundle
     public static PropertiesObjectType[] objectTemplates = new PropertiesObjectType[] {
         new PropertiesObjectType(BallObject.objectType, () => {
             BallObject ball = new BallObject();
+            ball.paint.material = AssetPack.InstantiateMaterial(
+                AssetPack.FindMaterial("MATTE", true));
+            ball.paint.material.color = Color.red;
             ball.behaviors.Add(new VisibleBehavior());
             ball.behaviors.Add(new SolidBehavior());
             return ball;
         }),
         new PropertiesObjectType(PropObject.objectType, () => {
             PropObject prop = new PropObject();
+            prop.paint.material = AssetPack.InstantiateMaterial(
+                AssetPack.FindMaterial("GLOSSY", true));
+            prop.paint.material.color = Color.white;
             prop.behaviors.Add(new ScaleBehavior());
             prop.behaviors.Add(new VisibleBehavior());
             prop.behaviors.Add(new SolidBehavior());
