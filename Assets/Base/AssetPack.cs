@@ -41,8 +41,6 @@ public class MaterialSoundData {
 
 // Remember that Unity resource paths always use forward slashes
 public static class AssetPack {
-    private const string PREFIX = "assets/nspace/";
-
     public enum ColorStyle {
         TINT, PAINT
     }
@@ -87,8 +85,8 @@ public static class AssetPack {
         return assetBundle;
     }
 
-    public static string LoadTextFile(string name) {
-        return GetAssetBundle().LoadAsset<TextAsset>($"{PREFIX}{name}.txt").text;
+    public static string LoadConfigFile(string name) {
+        return GetAssetBundle().LoadAsset<TextAsset>("Config/" + name).text;
     }
 
     private static void EnsureMaterialsLoaded() {
@@ -105,7 +103,7 @@ public static class AssetPack {
         var categories = new List<string>();
         materialCategories[type] = categories;
 
-        var script = GetAssetBundle().LoadAsset<TextAsset>($"{PREFIX}{fileName}.txt").text;
+        var script = LoadConfigFile(fileName);
         var parser = new ConfigParser<MaterialConfigState>();
         parser.state.category = "";
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
@@ -164,12 +162,12 @@ public static class AssetPack {
     private static List<ModelCategory> LoadModelCategories() {
         var categories = new List<ModelCategory>();
 
-        var script = GetAssetBundle().LoadAsset<TextAsset>(PREFIX + "models.txt").text;
+        var script = LoadConfigFile("models");
         var parser = new ConfigParser<ModelConfigState>();
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
             if (cmd == "cat") {
                 parser.state.category = new ModelCategory() {
-                    icon = GetAssetBundle().LoadAsset<Texture2D>($"{PREFIX}icons/{args}.png"),
+                    icon = GetAssetBundle().LoadAsset<Texture2D>("Icons/" + args),
                 };
                 categories.Add(parser.state.category);
             } else if (cmd == "mdl") {
@@ -189,7 +187,7 @@ public static class AssetPack {
         var materialSounds = new Dictionary<MaterialSound, MaterialSoundData>();
 
         var bundle = GetAssetBundle();
-        var script = bundle.LoadAsset<TextAsset>(PREFIX + "matsounds.txt").text;
+        var script = LoadConfigFile("matsounds");
         var parser = new ConfigParser<MaterialSoundConfigState>();
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
             if (cmd == "sound") {
@@ -212,12 +210,12 @@ public static class AssetPack {
 
     public static Material LoadMaterial(MaterialInfo info, bool editor) {
         var name = (!editor && info.gameMat != null) ? info.gameMat : info.name;
-        return GetAssetBundle().LoadAsset<Material>($"{PREFIX}materials/{name}.mat");
+        return GetAssetBundle().LoadAsset<Material>("Materials/" + name);
     }
 
     public static Material LoadMaterialPreview(MaterialInfo info) {
         if (info.previewMat != null) {
-            return GetAssetBundle().LoadAsset<Material>($"{PREFIX}previews/{info.previewMat}.mat");
+            return GetAssetBundle().LoadAsset<Material>("Previews/" + info.previewMat);
         }
         return LoadMaterial(info, true);
     }
@@ -284,15 +282,14 @@ public static class AssetPack {
         }
     }
 
-    // TODO: support other model formats!!
     public static Mesh LoadModel(string name) =>
-        GetAssetBundle().LoadAsset<Mesh>($"{PREFIX}models/{name}.obj");
+        GetAssetBundle().LoadAsset<Mesh>("Models/" + name);
 
     public static Texture2D GetModelThumbnail(string name) =>
-        GetAssetBundle().LoadAsset<Texture2D>($"{PREFIX}thumbnails/{name}.png");
+        GetAssetBundle().LoadAsset<Texture2D>("Thumbnails/" + name);
 
     private static AudioClip LoadSound(string name) =>
-        GetAssetBundle().LoadAsset<AudioClip>($"{PREFIX}sounds/{name}.wav");
+        GetAssetBundle().LoadAsset<AudioClip>("Sounds/" + name);
 
     public static MaterialSoundData GetMaterialSoundData(MaterialSound sound) {
         EnsureMaterialSoundsLoaded();
