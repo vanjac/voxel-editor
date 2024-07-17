@@ -51,12 +51,12 @@ The app has four scenes:
 These notes are mostly for me, but you can read them too.
 
 - iOS: install Xcode
-- Install latest release of Unity 2020, with build tools for Android/iOS.
-- Clone repo. **Don't open in Unity yet!!**
-- Optional: Download/copy textures from Poliigon, FreePBR, 3dtextures, and Genetica (see above)
+- Install latest release of Unity 2020, with build tools for Android/iOS
+- Clone repo
+- Copy AssetBundles into StreamingAssets
 - Open project in Unity, and switch platform to Android/iOS
 - Open Project Settings > Editor and switch Unity Remote device to Android
-- Android: open Player settings and browse for the keystore location.
+- Android: open Player settings and browse for the keystore location
 - iOS: download certificate from Apple and install, get private key and install
 
 ## More info
