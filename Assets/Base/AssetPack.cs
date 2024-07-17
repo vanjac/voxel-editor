@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 // https://docs.unity3d.com/Manual/BuiltInImporters.html
@@ -77,8 +78,11 @@ public static class AssetPack {
 
     private static AssetBundle GetAssetBundle() {
         if (assetBundle == null) {
-            assetBundle = AssetBundle.LoadFromFile(
-                System.IO.Path.Combine(Application.streamingAssetsPath, "nspace_default"));
+            var platformName = Application.platform.ToString();
+            platformName = Regex.Replace(platformName, "(Player|Editor)", "");
+            var bundleName = "nspace_default_" + platformName;
+            var bundlePath = System.IO.Path.Combine(Application.streamingAssetsPath, bundleName);
+            assetBundle = AssetBundle.LoadFromFile(bundlePath);
         }
         return assetBundle;
     }
