@@ -95,9 +95,9 @@ public static class ReadWorldFile {
     public static Material MissingMaterial(bool overlay) {
         if (missingMaterial == null) {
             missingMaterial = AssetPack.InstantiateMaterial(
-                AssetPack.FindMaterial("MISSING", true));
+                AssetPack.Current().FindMaterial("MISSING", true));
             missingOverlay = AssetPack.InstantiateMaterial(
-                AssetPack.FindMaterial("MISSING_overlay", true));
+                AssetPack.Current().FindMaterial("MISSING_overlay", true));
         }
         return overlay ? missingOverlay : missingMaterial;
     }

@@ -15,7 +15,7 @@ public class ModelSelectorGUI : GUIPanel {
             maxHeight: 1360);
 
     void Start() {
-        var categories = AssetPack.GetModelCategories();
+        var categories = AssetPack.Current().GetModelCategories();
         categoryIcons = categories.Select(cat => cat.icon).ToArray();
         selectedCategory = categories.FindIndex(cat => cat.models.Contains(selectedModel));
         if (selectedCategory == -1) {
@@ -24,7 +24,8 @@ public class ModelSelectorGUI : GUIPanel {
         UpdateCategory();
     }
 
-    private ModelCategory GetCategory() => AssetPack.GetModelCategories()[selectedCategory];
+    private ModelCategory GetCategory() =>
+        AssetPack.Current().GetModelCategories()[selectedCategory];
 
     private void UpdateCategory() {
         scroll = Vector2.zero;
@@ -32,7 +33,7 @@ public class ModelSelectorGUI : GUIPanel {
 
         var category = GetCategory();
         modelThumbnails = category.models.Select(
-            name => AssetPack.GetModelThumbnail(name)).ToArray();
+            name => AssetPack.Current().GetModelThumbnail(name)).ToArray();
         selectedIndex = category.models.IndexOf(selectedModel);
     }
 

@@ -203,7 +203,7 @@ public class PaintGUI : GUIPanel {
 
     public void TutorialShowSky() {
         selectedLayer = 0;
-        paint.material = AssetPack.FindMaterial("Sky", true);
+        paint.material = AssetPack.Current().FindMaterial("Sky", true);
         PaintChanged();
         UpdateMaterialSelector();
     }

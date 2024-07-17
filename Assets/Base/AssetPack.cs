@@ -39,8 +39,7 @@ public class MaterialSoundData {
     public List<AudioClip> right = new List<AudioClip>();
 }
 
-// Remember that Unity resource paths always use forward slashes
-public static class AssetPack {
+public class AssetPack {
     public enum ColorStyle {
         TINT, PAINT
     }
@@ -59,37 +58,44 @@ public static class AssetPack {
         public MaterialSoundData data;
     }
 
-    private static AssetBundle assetBundle;
-    private static List<MaterialInfo> materials;
-    private static Dictionary<string, MaterialInfo> namedMaterials =
-        new Dictionary<string, MaterialInfo>();
-    private static Dictionary<MaterialType, List<string>> materialCategories =
-        new Dictionary<MaterialType, List<string>>();
-    private static Dictionary<MaterialSound, MaterialSoundData> materialSounds;
+    private static AssetPack current;
 
-    private static List<ModelCategory> modelCategories;
+    private AssetBundle assetBundle;
+    private List<MaterialInfo> materials;
+    private Dictionary<string, MaterialInfo> namedMaterials =
+        new Dictionary<string, MaterialInfo>();
+    private Dictionary<MaterialType, List<string>> materialCategories =
+        new Dictionary<MaterialType, List<string>>();
+    private Dictionary<MaterialSound, MaterialSoundData> materialSounds;
+
+    private List<ModelCategory> modelCategories;
+
+    public static AssetPack Current() {
+        if (current == null) {
+            var platformName = Application.platform.ToString();
+            platformName = Regex.Replace(platformName, "(Player|Editor)", "").ToLower();
+            var bundleName = "nspace_default_" + platformName;
+            var bundlePath = System.IO.Path.Combine(Application.streamingAssetsPath, bundleName);
+            var assetBundle = AssetBundle.LoadFromFile(bundlePath);
+            current = new AssetPack(assetBundle);
+        }
+        return current;
+    }
 
     // slow and dangerous!
     public static void UnloadUnused() {
         Resources.UnloadUnusedAssets();
     }
 
-    private static AssetBundle GetAssetBundle() {
-        if (assetBundle == null) {
-            var platformName = Application.platform.ToString();
-            platformName = Regex.Replace(platformName, "(Player|Editor)", "").ToLower();
-            var bundleName = "nspace_default_" + platformName;
-            var bundlePath = System.IO.Path.Combine(Application.streamingAssetsPath, bundleName);
-            assetBundle = AssetBundle.LoadFromFile(bundlePath);
-        }
-        return assetBundle;
+    public AssetPack(AssetBundle bundle) {
+        assetBundle = bundle;
     }
 
-    public static string LoadConfigFile(string name) {
-        return GetAssetBundle().LoadAsset<TextAsset>("Config/" + name).text;
+    public string LoadConfigFile(string name) {
+        return assetBundle.LoadAsset<TextAsset>("Config/" + name).text;
     }
 
-    private static void EnsureMaterialsLoaded() {
+    private void EnsureMaterialsLoaded() {
         if (materials == null) {
             materials = new List<MaterialInfo>();
             LoadMaterialType(MaterialType.None, "hiddenmat");
@@ -99,7 +105,7 @@ public static class AssetPack {
         }
     }
 
-    private static void LoadMaterialType(MaterialType type, string fileName) {
+    private void LoadMaterialType(MaterialType type, string fileName) {
         var categories = new List<string>();
         materialCategories[type] = categories;
 
@@ -142,24 +148,24 @@ public static class AssetPack {
         });
     }
 
-    public static List<MaterialInfo> GetMaterials() {
+    public List<MaterialInfo> GetMaterials() {
         EnsureMaterialsLoaded();
         return materials;
     }
 
-    public static List<string> GetMaterialCategories(MaterialType type) {
+    public List<string> GetMaterialCategories(MaterialType type) {
         EnsureMaterialsLoaded();
         return materialCategories[type];
     }
 
-    public static List<ModelCategory> GetModelCategories() {
+    public List<ModelCategory> GetModelCategories() {
         if (modelCategories == null) {
             modelCategories = LoadModelCategories();
         }
         return modelCategories;
     }
 
-    private static List<ModelCategory> LoadModelCategories() {
+    private List<ModelCategory> LoadModelCategories() {
         var categories = new List<ModelCategory>();
 
         var script = LoadConfigFile("models");
@@ -167,7 +173,7 @@ public static class AssetPack {
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
             if (cmd == "cat") {
                 parser.state.category = new ModelCategory() {
-                    icon = GetAssetBundle().LoadAsset<Texture2D>("Icons/" + args),
+                    icon = assetBundle.LoadAsset<Texture2D>("Icons/" + args),
                 };
                 categories.Add(parser.state.category);
             } else if (cmd == "mdl") {
@@ -177,16 +183,15 @@ public static class AssetPack {
         return categories;
     }
 
-    public static void EnsureMaterialSoundsLoaded() {
+    public void EnsureMaterialSoundsLoaded() {
         if (materialSounds == null) {
             materialSounds = LoadMaterialSounds();
         }
     }
 
-    private static Dictionary<MaterialSound, MaterialSoundData> LoadMaterialSounds() {
+    private Dictionary<MaterialSound, MaterialSoundData> LoadMaterialSounds() {
         var materialSounds = new Dictionary<MaterialSound, MaterialSoundData>();
 
-        var bundle = GetAssetBundle();
         var script = LoadConfigFile("matsounds");
         var parser = new ConfigParser<MaterialSoundConfigState>();
         parser.Parse(new System.IO.StringReader(script), (cmd, args, l) => {
@@ -208,24 +213,24 @@ public static class AssetPack {
         return materialSounds;
     }
 
-    public static Material LoadMaterial(MaterialInfo info, bool editor) {
+    public Material LoadMaterial(MaterialInfo info, bool editor) {
         var name = (!editor && info.gameMat != null) ? info.gameMat : info.name;
-        return GetAssetBundle().LoadAsset<Material>("Materials/" + name);
+        return assetBundle.LoadAsset<Material>("Materials/" + name);
     }
 
-    public static Material LoadMaterialPreview(MaterialInfo info) {
+    public Material LoadMaterialPreview(MaterialInfo info) {
         if (info.previewMat != null) {
-            return GetAssetBundle().LoadAsset<Material>("Previews/" + info.previewMat);
+            return assetBundle.LoadAsset<Material>("Previews/" + info.previewMat);
         }
         return LoadMaterial(info, true);
     }
 
-    public static bool FindMaterialInfo(string name, out MaterialInfo info) {
+    public bool FindMaterialInfo(string name, out MaterialInfo info) {
         EnsureMaterialsLoaded();
         return namedMaterials.TryGetValue(name, out info);
     }
 
-    public static Material FindMaterial(string name, bool editor) {
+    public Material FindMaterial(string name, bool editor) {
         if (FindMaterialInfo(name, out var info)) {
             return LoadMaterial(info, editor);
         }
@@ -251,7 +256,7 @@ public static class AssetPack {
         }
     }
 
-    public static MaterialSound GetMaterialSound(Material material) {
+    public MaterialSound GetMaterialSound(Material material) {
         if (material == null) {
             return MaterialSound.GENERIC;
         }
@@ -267,6 +272,16 @@ public static class AssetPack {
         return MaterialSound.GENERIC;
     }
 
+    public MaterialSound GetMaterialSound(VoxelFace face) {
+        MaterialSound matSound = GetMaterialSound(face.material);
+        MaterialSound overSound = GetMaterialSound(face.overlay);
+        if (overSound == MaterialSound.GENERIC) {
+            return matSound;
+        } else {
+            return overSound;
+        }
+    }
+
     public static ColorStyle GetMaterialColorStyle(Material material) {
         if (!material.HasProperty("_MainTex")) {
             return ColorStyle.PAINT;
@@ -274,7 +289,7 @@ public static class AssetPack {
         return material.mainTexture == null ? ColorStyle.PAINT : ColorStyle.TINT;
     }
 
-    public static void SetMaterialColorStyle(Material material, ColorStyle style) {
+    public void SetMaterialColorStyle(Material material, ColorStyle style) {
         if (style == ColorStyle.PAINT) {
             material.mainTexture = null;
         } else if (style == ColorStyle.TINT) {
@@ -282,16 +297,14 @@ public static class AssetPack {
         }
     }
 
-    public static Mesh LoadModel(string name) =>
-        GetAssetBundle().LoadAsset<Mesh>("Models/" + name);
+    public Mesh LoadModel(string name) => assetBundle.LoadAsset<Mesh>("Models/" + name);
 
-    public static Texture2D GetModelThumbnail(string name) =>
-        GetAssetBundle().LoadAsset<Texture2D>("Thumbnails/" + name);
+    public Texture2D GetModelThumbnail(string name) =>
+        assetBundle.LoadAsset<Texture2D>("Thumbnails/" + name);
 
-    private static AudioClip LoadSound(string name) =>
-        GetAssetBundle().LoadAsset<AudioClip>("Sounds/" + name);
+    private AudioClip LoadSound(string name) => assetBundle.LoadAsset<AudioClip>("Sounds/" + name);
 
-    public static MaterialSoundData GetMaterialSoundData(MaterialSound sound) {
+    public MaterialSoundData GetMaterialSoundData(MaterialSound sound) {
         EnsureMaterialSoundsLoaded();
         if (materialSounds.TryGetValue(sound, out var data)) {
             return data;

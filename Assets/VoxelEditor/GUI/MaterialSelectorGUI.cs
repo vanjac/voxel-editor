@@ -94,7 +94,7 @@ public class MaterialSelectorGUI : GUIPanel {
             showColorStyle = false;
             colorStyle = AssetPack.ColorStyle.PAINT;  // ignore white point by default
             if (!customTextureBase &&
-                    AssetPack.FindMaterialInfo(highlightMaterial.name, out var info)) {
+                    AssetPack.Current().FindMaterialInfo(highlightMaterial.name, out var info)) {
                 whitePoint = info.whitePoint;
                 whitePoint.a = 1.0f;
                 showColorStyle = info.supportsColorStyles;
@@ -128,7 +128,7 @@ public class MaterialSelectorGUI : GUIPanel {
             if (newStyle != colorStyle) {
                 colorStyle = newStyle;
                 MakeInstance();
-                AssetPack.SetMaterialColorStyle(highlightMaterial, newStyle);
+                AssetPack.Current().SetMaterialColorStyle(highlightMaterial, newStyle);
                 colorPicker.CallHandler();  // update white point and call material handler also
             }
         }
@@ -305,6 +305,7 @@ public class MaterialSelectorGUI : GUIPanel {
             return;
         }
 
+        var pack = AssetPack.Current();
         // TODO: localize!
         var categoriesList = new List<string>();
         if (!customTextureBase && category == ""
@@ -312,17 +313,17 @@ public class MaterialSelectorGUI : GUIPanel {
             categoriesList.Add(CUSTOM_CATEGORY);
         }
         if (category == "") {
-            categoriesList.AddRange(AssetPack.GetMaterialCategories(materialType));
+            categoriesList.AddRange(pack.GetMaterialCategories(materialType));
         }
         materials = new List<Material>();
-        foreach (MaterialInfo matInfo in AssetPack.GetMaterials()) {
+        foreach (MaterialInfo matInfo in pack.GetMaterials()) {
             if (matInfo.type != materialType || matInfo.category != category) {
                 continue;
             }
             if (matInfo.name.StartsWith("$")) {
                 continue; // special alternate materials for game
             }
-            materials.Add(AssetPack.LoadMaterialPreview(matInfo));
+            materials.Add(pack.LoadMaterialPreview(matInfo));
         }
         categories = categoriesList.ToArray();
     }
@@ -330,7 +331,7 @@ public class MaterialSelectorGUI : GUIPanel {
     private void MaterialSelected(Material material) {
         if (material != null && !CustomTexture.IsCustomTexture(material)) {
             // don't select preview materials
-            material = AssetPack.FindMaterial(material.name, true);
+            material = AssetPack.Current().FindMaterial(material.name, true);
         }
         highlightMaterial = material;
         if (importFromWorld) {
@@ -364,7 +365,8 @@ public class MaterialSelectorGUI : GUIPanel {
                 return;
             }
 
-            Material baseMat = AssetPack.FindMaterial(isOverlay ? "MATTE_overlay" : "MATTE", true);
+            Material baseMat = AssetPack.Current().FindMaterial(
+                isOverlay ? "MATTE_overlay" : "MATTE", true);
             baseMat = AssetPack.InstantiateMaterial(baseMat);
             baseMat.color = new Color(1, 1, 1, baseMat.color.a);
             CustomTexture customTex = CustomTexture.FromBaseMaterial(baseMat, isOverlay);

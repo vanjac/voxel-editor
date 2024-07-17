@@ -7,7 +7,7 @@ public class FootstepSounds : MonoBehaviour {
     private AudioSource audioSource;
 
     void Awake() {
-        AssetPack.EnsureMaterialSoundsLoaded();
+        AssetPack.Current().EnsureMaterialSoundsLoaded();
     }
 
     void Start() {
@@ -23,12 +23,12 @@ public class FootstepSounds : MonoBehaviour {
     }
 
     public void PlayLeftFoot(MaterialSound sound) {
-        var data = AssetPack.GetMaterialSoundData(sound);
+        var data = AssetPack.Current().GetMaterialSoundData(sound);
         PlayRandomFromList(data.left, data.volume);
     }
 
     public void PlayRightFoot(MaterialSound sound) {
-        var data = AssetPack.GetMaterialSoundData(sound);
+        var data = AssetPack.Current().GetMaterialSoundData(sound);
         PlayRandomFromList(data.right, data.volume);
     }
 }

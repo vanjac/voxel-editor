@@ -42,7 +42,11 @@ public class PropObject : ObjectEntity {
                 })),
         });
 
-    private Mesh GetMesh() => AssetPack.LoadModel(modelName) ?? AssetPack.LoadModel("error_model");
+    private Mesh GetMesh() {
+        var pack = AssetPack.Current();
+        var mesh = pack.LoadModel(modelName);
+        return (mesh != null) ? mesh : pack.LoadModel("error_model");
+    }
 
     private GameObject CreatePropObject() {
         var mesh = GetMesh();

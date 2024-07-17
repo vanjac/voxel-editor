@@ -222,7 +222,7 @@ public class MessagePackWorldReader : WorldFileReader {
         if (isCustom) {
             mat = customTextureNames[name];
         } else {
-            mat = AssetPack.FindMaterial(name, editor);
+            mat = AssetPack.Current().FindMaterial(name, editor);
         }
         if (mat == null) {
             warnings.Add("Unrecognized material: " + name);
@@ -249,7 +249,7 @@ public class MessagePackWorldReader : WorldFileReader {
                     mat.SetColor(colorProp, color);
                 }
                 if (setStyle) {
-                    AssetPack.SetMaterialColorStyle(mat, colorStyle);
+                    AssetPack.Current().SetMaterialColorStyle(mat, colorStyle);
                 }
             }
         }

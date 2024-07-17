@@ -36,16 +36,6 @@ public struct VoxelFace {
         rotation %= 4;
         return (byte)(rotation + (mirror ? 4 : 0));
     }
-
-    public MaterialSound GetSound() {
-        MaterialSound matSound = AssetPack.GetMaterialSound(material);
-        MaterialSound overSound = AssetPack.GetMaterialSound(overlay);
-        if (overSound == MaterialSound.GENERIC) {
-            return matSound;
-        } else {
-            return overSound;
-        }
-    }
 }
 
 public struct VoxelEdge {

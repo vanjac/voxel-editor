@@ -14,7 +14,8 @@ public class PlayerObject : ObjectEntity {
 
     public PlayerObject() {
         // default value when loading from older worlds
-        paint.material = AssetPack.InstantiateMaterial(AssetPack.FindMaterial("GLOSSY", true));
+        paint.material = AssetPack.InstantiateMaterial(
+            AssetPack.Current().FindMaterial("GLOSSY", true));
         paint.material.color = Color.green;
     }
 

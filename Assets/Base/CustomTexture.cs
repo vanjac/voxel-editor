@@ -72,7 +72,7 @@ public class CustomTexture : PropertiesObject {
         this.isOverlay = isOverlay;
         if (_material != null && IsCustomTexture(_material)) {
             string baseName = GetBaseMaterialName(_material);
-            _baseMat = AssetPack.FindMaterial(baseName, true);
+            _baseMat = AssetPack.Current().FindMaterial(baseName, true);
             string colorProp = AssetPack.MaterialColorProperty(_baseMat);
             // copied from MessagePackWorldReader
             Color color = _material.GetColor(colorProp);

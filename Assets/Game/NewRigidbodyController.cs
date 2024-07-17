@@ -199,12 +199,13 @@ public class NewRigidbodyController : MonoBehaviour {
                     int hitVertexI = TouchListener.GetRaycastHitVertexIndex(hitInfo);
                     faceLoc = voxelComponent.GetVoxelFaceForVertex(hitVertexI);
                 }
-                footstepSound = voxelComponent.voxelArray.FaceAt(faceLoc).GetSound();
+                footstepSound = AssetPack.Current().GetMaterialSound(
+                    voxelComponent.voxelArray.FaceAt(faceLoc));
             } else {
                 Renderer hitRender = hitInfo.collider.GetComponent<Renderer>();
                 if (hitRender != null) {
                     // regular .material has (Instance) suffix
-                    footstepSound = AssetPack.GetMaterialSound(hitRender.sharedMaterial);
+                    footstepSound = AssetPack.Current().GetMaterialSound(hitRender.sharedMaterial);
                 } else {
                     footstepSound = MaterialSound.GENERIC;
                 }

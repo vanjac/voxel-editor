@@ -18,7 +18,7 @@ public abstract class ObjectEntity : DynamicEntity {
     public Material highlightMaterial;
 
     public ObjectEntity() {
-        paint.material = AssetPack.FindMaterial("MATTE", true);
+        paint.material = AssetPack.Current().FindMaterial("MATTE", true);
     }
 
     public override void UpdateEntityEditor() {
@@ -42,7 +42,7 @@ public abstract class ObjectEntity : DynamicEntity {
         highlight = c;
         if (highlightMaterial == null) {
             highlightMaterial = AssetPack.InstantiateMaterial(
-                AssetPack.FindMaterial("UNLIT", true));
+                AssetPack.Current().FindMaterial("UNLIT", true));
         }
         highlightMaterial.color = highlight;
         if (marker != null) {
