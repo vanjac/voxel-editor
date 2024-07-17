@@ -79,7 +79,7 @@ public static class AssetPack {
     private static AssetBundle GetAssetBundle() {
         if (assetBundle == null) {
             var platformName = Application.platform.ToString();
-            platformName = Regex.Replace(platformName, "(Player|Editor)", "");
+            platformName = Regex.Replace(platformName, "(Player|Editor)", "").ToLower();
             var bundleName = "nspace_default_" + platformName;
             var bundlePath = System.IO.Path.Combine(Application.streamingAssetsPath, bundleName);
             assetBundle = AssetBundle.LoadFromFile(bundlePath);
