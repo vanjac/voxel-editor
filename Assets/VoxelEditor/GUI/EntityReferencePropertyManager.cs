@@ -157,9 +157,5 @@ public class EntityReferencePropertyManager : MonoBehaviour {
                 child.GetComponent<EntityReferenceLine>().UpdatePositions();
             }
         }
-
-        if (currentEntity != null) {
-            EntityPreviewManager.UpdateEntityPosition(currentEntity);
-        }
     }
 }

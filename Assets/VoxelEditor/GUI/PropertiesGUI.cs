@@ -182,6 +182,12 @@ public class PropertiesGUI : LeftPanelGUI {
             scrollVelocity = Vector2.zero;
             selectedEntities = new List<Entity>(voxelArray.GetSelectedEntities());
             UpdateEditEntity();
+
+            // currently this is also called whenever selection is Adjusted.
+            // TODO: can we rely on this?
+            foreach (var entity in selectedEntities) {
+                EntityPreviewManager.UpdateEntityPosition(entity);
+            }
         }
 
         bool propertiesDisplayed = false;
