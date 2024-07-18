@@ -190,6 +190,20 @@ public class GUIStringSet {
     public virtual string NoDataInWorld(string type) =>
         $"World contains no {type} files.";
 
+    // Permissions
+    public virtual string SelectTextureImage =>
+        "Select a texture image";
+    public virtual string ErrorImagePermission =>
+        "Please grant N-Space permission to access your photo gallery.";
+    public virtual string ErrorAudioPermission =>
+        "Please grant N-Space permission to access media on your device.";
+    public virtual string ErrorImageImport =>
+        "Error importing image";
+    public virtual string ErrorAudioImport =>
+        "Error importing audio file";
+    public virtual string ErrorFileManager =>
+        "Error opening file manager. Find an audio file and open it with N-Space.";
+
     // Filter
     public virtual string FilterSpecificObject =>
         "Specific object";
