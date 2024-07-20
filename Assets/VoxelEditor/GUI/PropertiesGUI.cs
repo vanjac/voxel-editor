@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -153,12 +153,6 @@ public class PropertiesGUI : LeftPanelGUI {
         style.margin = new RectOffset(0, 0, 0, 0);
         return style;
     });
-
-    public override void OnEnable() {
-        holdOpen = true;
-        stealFocus = false;
-        base.OnEnable();
-    }
 
     public override Rect GetRect(Rect safeRect, Rect screenRect) {
         bottomGap = screenRect.yMax - safeRect.yMax;

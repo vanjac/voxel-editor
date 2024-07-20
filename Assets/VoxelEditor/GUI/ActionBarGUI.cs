@@ -13,13 +13,6 @@ public class ActionBarGUI : TopPanelGUI {
         return style;
     });
 
-    public override void OnEnable() {
-        holdOpen = true;
-        stealFocus = false;
-
-        base.OnEnable();
-    }
-
     public override GUIStyle GetStyle() => GUIStyle.none;
 
     public override void WindowGUI() {

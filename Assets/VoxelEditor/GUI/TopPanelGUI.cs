@@ -3,6 +3,13 @@
 public abstract class TopPanelGUI : GUIPanel {
     private GUIPanel prevTopPanel;
 
+    public override void OnEnable() {
+        holdOpen = true;
+        stealFocus = false;
+
+        base.OnEnable();
+    }
+
     public virtual void Start() {
         prevTopPanel = GUIPanel.topPanel;
         if (prevTopPanel != null) {
@@ -14,6 +21,7 @@ public abstract class TopPanelGUI : GUIPanel {
     public virtual void OnDestroy() {
         if (prevTopPanel != null) {
             prevTopPanel.enabled = true;
+            prevTopPanel.PushToBack();
         }
         GUIPanel.topPanel = prevTopPanel;
     }

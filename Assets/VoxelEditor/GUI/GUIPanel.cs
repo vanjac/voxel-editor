@@ -185,6 +185,11 @@ public abstract class GUIPanel : MonoBehaviour {
         openPanels.Add(this);
     }
 
+    public void PushToBack() {
+        openPanels.Remove(this);
+        openPanels.Insert(0, this);
+    }
+
     public void RotateAboutPoint(Vector2 point, float rotation, Vector2 scaleFactor) {
         Vector2 translation = point + panelRect.min;
         GUI.matrix *= Matrix4x4.Translate(translation);

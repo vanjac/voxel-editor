@@ -60,8 +60,6 @@ public class BevelGUI : LeftPanelGUI {
         new Rect(safeRect.xMin, safeRect.yMin, 540, 0);
 
     public override void OnEnable() {
-        holdOpen = true;
-        stealFocus = false;
         base.OnEnable();
         EnableEdgeMode();
     }
