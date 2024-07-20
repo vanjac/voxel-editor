@@ -28,7 +28,7 @@ public class EditorFile : MonoBehaviour {
     }
 
     private IEnumerator LoadCoroutine() {
-        yield return null;
+        yield return AssetPack.LoadAsync(); // always waits at least 1 frame
         var guiGameObject = loadingGUI.gameObject;
 
         List<string> warnings;

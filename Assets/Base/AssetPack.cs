@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+#if UNITY_WEBGL
+using UnityEngine.Networking;
+#endif
 
 // https://docs.unity3d.com/Manual/BuiltInImporters.html
 // https://unity.com/blog/engine-platform/unity-asset-bundles-tips-pitfalls
@@ -70,14 +74,35 @@ public class AssetPack {
 
     private List<ModelCategory> modelCategories;
 
+    private static string GetPath() {
+        var platformName = Application.platform.ToString();
+        platformName = Regex.Replace(platformName, "(Player|Editor)", "").ToLower();
+        var bundleName = "nspace_default_" + platformName;
+        return System.IO.Path.Combine(Application.streamingAssetsPath, bundleName);
+    }
+
+    public static IEnumerator LoadAsync() {
+        if (current != null) {
+            yield break;
+        }
+#if UNITY_WEBGL
+        Debug.Log("Downloading AssetBundle from " + GetPath());
+        var request = UnityWebRequestAssetBundle.GetAssetBundle(GetPath());
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success) {
+            Debug.LogError(request.error);
+        } else {
+            current = new AssetPack(DownloadHandlerAssetBundle.GetContent(request));
+        }
+#else
+        Current(); // TODO: AssetBundle.LoadFromFileAsync();
+        yield break;
+#endif
+    }
+
     public static AssetPack Current() {
         if (current == null) {
-            var platformName = Application.platform.ToString();
-            platformName = Regex.Replace(platformName, "(Player|Editor)", "").ToLower();
-            var bundleName = "nspace_default_" + platformName;
-            var bundlePath = System.IO.Path.Combine(Application.streamingAssetsPath, bundleName);
-            var assetBundle = AssetBundle.LoadFromFile(bundlePath);
-            current = new AssetPack(assetBundle);
+            current = new AssetPack(AssetBundle.LoadFromFile(GetPath()));
         }
         return current;
     }

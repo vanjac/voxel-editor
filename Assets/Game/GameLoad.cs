@@ -10,7 +10,7 @@ public class GameLoad : MonoBehaviour {
     }
 
     private IEnumerator LoadCoroutine() {
-        yield return null;
+        yield return AssetPack.LoadAsync(); // always waits at least 1 frame
         try {
             ReadWorldFile.Read(SelectedWorld.GetLoadStream(),
                 null, GetComponent<VoxelArray>(), false);
