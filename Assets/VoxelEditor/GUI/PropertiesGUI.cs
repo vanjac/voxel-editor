@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -354,7 +354,6 @@ public class PropertiesGUI : LeftPanelGUI {
         TutorialGUI.TutorialHighlight("add behavior");
         if (GUILayout.Button(GUIUtils.PadContent(StringSet.AddBehavior, IconSet.newItem))) {
             NewBehaviorGUI behaviorMenu = gameObject.AddComponent<NewBehaviorGUI>();
-            behaviorMenu.title = StringSet.AddBehavior;
             behaviorMenu.self = singleSelectedEntity;
             behaviorMenu.voxelArray = voxelArray;
             behaviorMenu.handler = (PropertiesObjectType behaviorType) => {
@@ -498,6 +497,13 @@ public class NewBehaviorGUI : GUIPanel {
     private Entity targetEntity;
     private bool targetEntityIsActivator = false;
 
+    public static readonly System.Lazy<GUIStyle> titleStyle = new System.Lazy<GUIStyle>(
+        () => new GUIStyle(GUI.skin.label) {
+            alignment = TextAnchor.MiddleCenter,
+            // TODO: very ugly
+            fixedHeight = IconSet.target.height + GUI.skin.button.padding.top * 2,
+        });
+
     public override Rect GetRect(Rect safeRect, Rect screenRect) {
         if (entityPicker != null || typePicker == null) {
             // move panel offscreen
@@ -565,8 +571,11 @@ public class NewBehaviorGUI : GUIPanel {
         } else if (targetEntity != null) {
             targetButtonText = StringSet.TargetEntity(targetEntity.ToString(StringSet));
         }
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(StringSet.AddBehavior, titleStyle.Value);
         TutorialGUI.TutorialHighlight("behavior target");
-        if (GUIUtils.HighlightedButton(targetButtonText)) {
+        if (GUIUtils.HighlightedButton(GUIUtils.PadContent(targetButtonText, IconSet.target), null,
+                targetEntity != null || targetEntityIsActivator, GUILayout.ExpandWidth(false))) {
             entityPicker = PropertyGUIs.BehaviorTargetPicker(gameObject, voxelArray, self, value => {
                 targetEntity = value.targetEntity.entity;
                 targetEntityIsActivator = value.targetEntityIsActivator;
@@ -574,6 +583,7 @@ public class NewBehaviorGUI : GUIPanel {
             });
         }
         TutorialGUI.ClearHighlight();
+        GUILayout.EndHorizontal();
         if (typePicker != null) {
             typePicker.scroll = scroll;
             typePicker.WindowGUI();
