@@ -24,8 +24,10 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
         }
     }
 
+    private static readonly Input[] EMPTY_INPUTS = new Input[0]; // shared between new instances
+
     public int threshold = 1;
-    public Input[] inputs = new Input[0];
+    public Input[] inputs = EMPTY_INPUTS;
 
     public override IEnumerable<Property> Properties() =>
         Property.JoinProperties(new Property[] {
@@ -59,13 +61,12 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
             };
         }
 
-        bool copyArray = false;
-        int inputToDelete = -1;
+        Input[] newInputs = null;
         Color baseColor = GUI.color;
         for (int i = 0; i < inputs.Length; i++) {
             Entity e = inputs[i].entityRef.entity;
             if (e == null) {
-                inputToDelete = i;
+                newInputs = DeleteInput(inputs, i);
             }
             EntityReferencePropertyManager.Next(e);
             GUI.color = baseColor * EntityReferencePropertyManager.GetColor();
@@ -80,27 +81,33 @@ public class InputThresholdSensor : GenericSensor<InputThresholdSensor, InputThr
                 new Texture[] { GUIPanel.IconSet.plusOne, GUIPanel.IconSet.minusOne }, 2,
                 GUIPanel.StyleSet.buttonSmall, GUILayout.ExpandWidth(false));
             if (negativeNum != newNegativeNum) {
-                inputs[i].negative = newNegativeNum == 1;
-                copyArray = true;
+                newInputs = CloneInputs(inputs);
+                newInputs[i].negative = newNegativeNum == 1;
             }
             GUILayout.FlexibleSpace();
             if (GUILayout.Button(GUIPanel.IconSet.delete, GUIPanel.StyleSet.buttonSmall,
                     GUILayout.ExpandWidth(false))) {
-                inputToDelete = i;
+                newInputs = DeleteInput(inputs, i);
             }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
-        if (inputToDelete != -1) {
-            Input[] newInputs = new Input[inputs.Length - 1];
-            Array.Copy(inputs, newInputs, inputToDelete);
-            Array.Copy(inputs, inputToDelete + 1, newInputs, inputToDelete, newInputs.Length - inputToDelete);
+        if (newInputs != null) {
             property.value = newInputs;
-        } else if (copyArray) {
-            Input[] newInputs = new Input[inputs.Length];
-            Array.Copy(inputs, newInputs, inputs.Length);
-            property.value = newInputs; // mark unsaved changes flag
         }
+    }
+
+    private static Input[] CloneInputs(Input[] inputs) {
+        var newInputs = new Input[inputs.Length];
+        inputs.CopyTo(newInputs, 0);
+        return newInputs;
+    }
+
+    private static Input[] DeleteInput(Input[] inputs, int index) {
+        var newInputs = new Input[inputs.Length - 1];
+        Array.Copy(inputs, newInputs, index);
+        Array.Copy(inputs, index + 1, newInputs, index, newInputs.Length - index);
+        return newInputs;
     }
 }
 
