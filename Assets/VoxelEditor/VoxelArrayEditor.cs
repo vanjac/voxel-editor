@@ -768,7 +768,7 @@ public class VoxelArrayEditor : VoxelArray {
     private IEnumerable<Entity> OutgoingConnections(Entity e) {
         foreach (var prop in AllEntityProperties(e)) {
             foreach (var entitySel in Properties.EntityReferences(prop)) {
-                if (entitySel.entity != null) {
+                if (entitySel.entity != null && entitySel.entity != e) {
                     yield return entitySel.entity;
                 }
             }
