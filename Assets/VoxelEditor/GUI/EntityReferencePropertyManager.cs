@@ -27,7 +27,6 @@ public class EntityReferencePropertyManager : MonoBehaviour {
     }
 
 
-    private static bool updateTargets = false;
     private static Entity currentEntity;
     private static List<Entity> targetEntities = new List<Entity>();
     private static HashSet<Entity> entitiesToClear = new HashSet<Entity>();
@@ -121,12 +120,13 @@ public class EntityReferencePropertyManager : MonoBehaviour {
     }
 
     void Update() {
-        if (currentEntity == null && targetEntities.Count != 0) {
-            targetEntities.Clear();
-            currentTargetEntityI = -1;
-        }
-
-        if (transform.childCount != targetEntities.Count) {
+        bool updateTargets = false;
+        if (currentEntity == null && transform.childCount != 0) {
+            foreach (Transform child in transform) {
+                Destroy(child.gameObject);
+            }
+            return; // no lines for multiple selection
+        } else if (transform.childCount != targetEntities.Count) {
             updateTargets = true;
         } else {
             foreach (Transform child in transform) {
@@ -139,7 +139,6 @@ public class EntityReferencePropertyManager : MonoBehaviour {
         }
 
         if (updateTargets) {
-            updateTargets = false;
             foreach (Transform child in transform) {
                 Destroy(child.gameObject);
             }
@@ -151,8 +150,7 @@ public class EntityReferencePropertyManager : MonoBehaviour {
                 line.sourceEntity = currentEntity;
                 line.targetEntity = targetEntities[i];
             }
-            return; // wait a frame to let the new/deleted objects update
-        } else {
+        } else if (currentEntity != null) {
             foreach (Transform child in transform) {
                 child.GetComponent<EntityReferenceLine>().UpdatePositions();
             }
