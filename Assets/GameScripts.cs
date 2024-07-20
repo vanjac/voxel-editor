@@ -111,7 +111,7 @@ public static class GameScripts {
         TeleportBehavior.objectType,
         MoveWithBehavior.objectType,
         ScaleBehavior.objectType,
-        // JoystickBehavior.objectType,
+        JoystickBehavior.objectType,
 
         VisibleBehavior.objectType,
         LightBehavior.objectType,
@@ -151,7 +151,9 @@ public static class GameScripts {
             TeleportBehavior.objectType,
             MoveWithBehavior.objectType,
             ScaleBehavior.objectType,
-            // JoystickBehavior.objectType,
+#if NSPACE_1_5
+            JoystickBehavior.objectType,
+#endif
         },
         new BehaviorType[] {
             VisibleBehavior.objectType,
@@ -171,7 +173,9 @@ public static class GameScripts {
             CarryableBehavior.objectType,
             WaterBehavior.objectType,
             ForceBehavior.objectType,
+#if NSPACE_1_5
             RopeBehavior.objectType,
+#endif
         },
         new BehaviorType[] {
             SoundBehavior.objectType,

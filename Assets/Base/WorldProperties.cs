@@ -118,6 +118,7 @@ public class WorldProperties : PropertiesObject {
                 () => RenderSettings.fogColor,
                 v => RenderSettings.fogColor = (Color) v,
                 PropertyGUIs.Color),
+#if NSPACE_1_5
             new Property("grv", s => s.PropGravity,
                 () => -Physics.gravity.y,
                 v => {
@@ -126,6 +127,7 @@ public class WorldProperties : PropertiesObject {
                     Physics.gravity = gravity;
                 },
                 PropertyGUIs.Float),
+#endif
         };
 
     public IEnumerable<Property> DeprecatedProperties() =>
