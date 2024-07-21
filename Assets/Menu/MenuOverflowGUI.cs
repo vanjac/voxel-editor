@@ -20,6 +20,7 @@ public class MenuOverflowGUI : GUIPanel {
     }
 
     public override void WindowGUI() {
+#if !UNITY_WEBGL || UNITY_EDITOR
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         if (ActionBarGUI.ActionBarButton(IconSet.overflow)) {
@@ -75,5 +76,6 @@ public class MenuOverflowGUI : GUIPanel {
             };
         }
         GUILayout.EndHorizontal();
+#endif // !UNITY_WEBGL
     }
 }

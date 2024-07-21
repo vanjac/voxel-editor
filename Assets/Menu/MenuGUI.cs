@@ -94,12 +94,14 @@ public class MenuGUI : GUIPanel {
 #endif
     }
 
+#if UNITY_WEBGL
     private void PlayerMenuGUI() {
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
 
-        if (GUILayout.Button("Select File", StyleSet.buttonLarge)) {
+        if (GUILayout.Button(GUIUtils.MenuContent("Select File...", IconSet.openFile),
+                StyleSet.buttonLarge)) {
             OpenFilePicker();
         }
 
@@ -107,6 +109,7 @@ public class MenuGUI : GUIPanel {
         GUILayout.EndHorizontal();
         GUILayout.FlexibleSpace();
     }
+#endif
 
     public static void OpenWorld(string path, string scene) {
         SelectedWorld.SelectSavedWorld(path);

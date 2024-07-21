@@ -141,8 +141,10 @@ public class PauseGUI : GUIPanel {
                 () => {}), // menu will close
             new OverflowMenuGUI.MenuItem(StringSet.RestartGame, IconSet.restart,
                 () => { gameLoad.Close(Scenes.GAME); }),
+#if !UNITY_WEBGL
             new OverflowMenuGUI.MenuItem(StringSet.OpenEditor, IconSet.editor,
                 () => { gameLoad.Close(Scenes.EDITOR); }),
+#endif
             new OverflowMenuGUI.MenuItem(StringSet.CloseGame, IconSet.x,
                 () => { gameLoad.Close(Scenes.MENU); }),
         };
