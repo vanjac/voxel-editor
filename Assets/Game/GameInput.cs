@@ -1,9 +1,21 @@
 using UnityEngine;
+#if UNITY_WEBGL
+using System.Runtime.InteropServices;
+#endif
 
 public static class GameInput {
     public static Vector2 virtJoystick;
     public static bool virtJump;
     public static Vector2 virtLook;
+
+#if UNITY_WEBGL
+    [DllImport("__Internal")]
+    private static extern bool IsPointerLocked();
+#else
+    private static bool IsPointerLocked() {
+        return Cursor.lockState == CursorLockMode.Locked;
+    }
+#endif
 
     public static bool UseTouchInput() {
 #if UNITY_EDITOR
@@ -28,8 +40,12 @@ public static class GameInput {
     public static Vector2 GetLookDelta() {
         if (UseTouchInput()) {
             return virtLook;
-        } else if (Cursor.lockState == CursorLockMode.Locked) {
-            return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        } else if (IsPointerLocked()) {
+            var mouseVec = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+#if UNITY_WEBGL
+            mouseVec /= 2;
+#endif
+            return mouseVec;
         } else {
             return Vector2.zero;
         }

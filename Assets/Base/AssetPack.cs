@@ -86,7 +86,6 @@ public class AssetPack {
             yield break;
         }
 #if UNITY_WEBGL
-        Debug.Log("Downloading AssetBundle from " + GetPath());
         var request = UnityWebRequestAssetBundle.GetAssetBundle(GetPath());
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success) {
