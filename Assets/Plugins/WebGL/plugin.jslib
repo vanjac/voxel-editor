@@ -26,6 +26,7 @@ mergeInto(LibraryManager.library, {
 
             document.body.appendChild(fileSelect)
         }
+        fileSelect.value = null;
         fileSelect.click()
     },
 })
