@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
 using System.Runtime.InteropServices;
 #endif
 
@@ -39,7 +39,7 @@ public class MenuGUI : GUIPanel {
     }
 
     public override void WindowGUI() {
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
         PlayerMenuGUI();
 #else
         if (worldPaths.Count == 0) {
@@ -94,7 +94,7 @@ public class MenuGUI : GUIPanel {
 #endif
     }
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
     private void PlayerMenuGUI() {
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
@@ -233,7 +233,7 @@ public class MenuGUI : GUIPanel {
         UpdateWorldList();
     }
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")]
     private static extern bool OpenFilePicker();
 

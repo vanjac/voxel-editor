@@ -27,62 +27,46 @@ public class GameTouchControl : MonoBehaviour {
         if (cam == null) {
             return; // sometimes null for a few cycles
         }
-        RaycastHit hit;
+
+#if UNITY_EDITOR
+        if (UnityEditor.EditorApplication.isRemoteConnected) {
+#else
+        if (Input.touchSupported) {
+#endif
+            UpdateTouchInput();
+        } else {
+            UpdateMouseInput();
+        }
+    }
+
+    private void UpdateTouchInput() {
         bool setAxes = false;
-        // TODO: switch to pointer events?
         for (int i = 0; i < Input.touchCount; i++) {
             Touch touch = Input.GetTouch(i);
             if (touch.phase == TouchPhase.Began
                     && !EventSystem.current.IsPointerOverGameObject(touch.fingerId)
                     && GUIPanel.PanelContainingPoint(touch.position) == null) {
-                if (touchedTapComponent != null) {
-                    touchedTapComponent.TapEnd();
-                    touchedTapComponent = null;
-                }
                 lookTouchId = touch.fingerId;
                 lookTouchStart = touch.position;
-
-                if (TapRaycast(touch.position, out hit)) {
-                    TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
-                    if (hitTapComponent != null && hit.distance <= hitTapComponent.Distance) {
-                        touchedTapComponent = hitTapComponent;
-                        touchedTapComponent.TapStart(PlayerComponent.instance);
-                    }
-                }
+                TapStart(touch.position);
             }
             // don't move joystick and camera with same touch
             if (lookTouchId == joystick.dragTouchId) {
                 lookTouchId = -1;
-                if (touchedTapComponent != null) {
-                    touchedTapComponent.TapEnd();
-                    touchedTapComponent = null;
-                }
+                TapEnd();
             }
             if (touch.fingerId == lookTouchId) {
                 setAxes = true;
                 // TODO: dependent on GameObject update order!
                 GameInput.virtLook = touch.deltaPosition * 150f / cam.pixelHeight;
-                if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
-                        && touchedTapComponent != null) {
-                    // check for early cancel (tap left component)
-                    if (TapRaycast(touch.position, out hit)) {
-                        TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
-                        if (hitTapComponent != touchedTapComponent || hit.distance > touchedTapComponent.Distance) {
-                            touchedTapComponent.TapEnd();
-                            touchedTapComponent = null;
-                        }
-                    } else {
-                        touchedTapComponent.TapEnd();
-                        touchedTapComponent = null;
-                    }
-                }
-                if (touch.phase == TouchPhase.Ended && touchedTapComponent != null) {
-                    touchedTapComponent.TapEnd();
-                    touchedTapComponent = null;
+                if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) {
+                    TapMove(touch.position);
+                } else if (touch.phase == TouchPhase.Ended) {
+                    TapEnd();
                 }
                 if (touch.phase == TouchPhase.Ended
                         && (touch.position - lookTouchStart).magnitude / GUIPanel.scaleFactor < DRAG_THRESHOLD) {
-                    if (TapRaycast(touch.position, out hit)) {
+                    if (TapRaycast(touch.position, out var hit)) {
                         CarryableComponent hitCarryable = hit.transform.GetComponent<CarryableComponent>();
                         if (hitCarryable != null && hitCarryable.enabled) {
                             if (hitCarryable.IsCarried()) {
@@ -99,9 +83,53 @@ public class GameTouchControl : MonoBehaviour {
                 }
             }  // end if touch.fingerId == lookTouchId
         }
+
         if (!setAxes) {
             lookTouchId = -1;
             GameInput.virtLook = Vector2.zero;
+        }
+    }
+
+    private void UpdateMouseInput() {
+        if (Input.GetMouseButtonDown(0)) {
+            TapStart(Input.mousePosition);
+        } else if (Input.GetMouseButtonUp(0)) {
+            TapEnd();
+        } else if (Input.GetMouseButton(0)) {
+            TapMove(Input.mousePosition);
+        }
+    }
+
+    private void TapStart(Vector2 position) {
+        TapEnd();
+
+        if (TapRaycast(position, out var hit)) {
+            TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
+            if (hitTapComponent != null && hit.distance <= hitTapComponent.Distance) {
+                touchedTapComponent = hitTapComponent;
+                touchedTapComponent.TapStart(PlayerComponent.instance);
+            }
+        }
+    }
+
+    private void TapEnd() {
+        if (touchedTapComponent != null) {
+            touchedTapComponent.TapEnd();
+            touchedTapComponent = null;
+        }
+    }
+
+    private void TapMove(Vector2 position) {
+        if (touchedTapComponent == null) {
+            // nothing
+        } else if (TapRaycast(position, out var hit)) {
+            // check for early cancel (tap left component)
+            TapComponent hitTapComponent = hit.transform.GetComponent<TapComponent>();
+            if (hitTapComponent != touchedTapComponent || hit.distance > touchedTapComponent.Distance) {
+                TapEnd();
+            }
+        } else {
+            TapEnd();
         }
     }
 
