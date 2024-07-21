@@ -8,7 +8,7 @@ public static class GameInput {
     public static bool virtJump;
     public static Vector2 virtLook;
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")]
     private static extern bool IsPointerLocked();
 #else
@@ -42,7 +42,7 @@ public static class GameInput {
             return virtLook;
         } else if (IsPointerLocked()) {
             var mouseVec = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
             mouseVec /= 2;
 #endif
             return mouseVec;

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_WEBGL
+using System.Runtime.InteropServices;
+#endif
 
 public class MenuGUI : GUIPanel {
     public TextAsset indoorTemplate, floatingTemplate;
@@ -36,6 +39,9 @@ public class MenuGUI : GUIPanel {
     }
 
     public override void WindowGUI() {
+#if UNITY_WEBGL
+        PlayerMenuGUI();
+#else
         if (worldPaths.Count == 0) {
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
@@ -85,6 +91,21 @@ public class MenuGUI : GUIPanel {
             }
             GUILayout.EndScrollView();
         }
+#endif
+    }
+
+    private void PlayerMenuGUI() {
+        GUILayout.FlexibleSpace();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Select File", StyleSet.buttonLarge)) {
+            OpenFilePicker();
+        }
+
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        GUILayout.FlexibleSpace();
     }
 
     public static void OpenWorld(string path, string scene) {
@@ -208,4 +229,13 @@ public class MenuGUI : GUIPanel {
         } catch (IOException) { }
         UpdateWorldList();
     }
+
+#if UNITY_WEBGL
+    [DllImport("__Internal")]
+    private static extern bool OpenFilePicker();
+
+    void LoadWebGLFile() {
+        OpenWorld("/tmp/mapsave", Scenes.GAME);
+    }
+#endif
 }
