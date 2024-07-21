@@ -87,10 +87,12 @@ public class AssetPack {
         }
 #if UNITY_WEBGL
         var request = UnityWebRequestAssetBundle.GetAssetBundle(GetPath());
+        Debug.Log("Downloading AssetBundle...");
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success) {
             Debug.LogError(request.error);
         } else {
+            Debug.Log("Download complete");
             current = new AssetPack(DownloadHandlerAssetBundle.GetContent(request));
         }
 #else

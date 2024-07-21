@@ -7,6 +7,7 @@ public static class GameInput {
     public static Vector2 virtJoystick;
     public static bool virtJump;
     public static Vector2 virtLook;
+    private static bool wasLocked = false;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")]
@@ -59,5 +60,14 @@ public static class GameInput {
 
     public static void UnlockCursor() {
         Cursor.lockState = CursorLockMode.None;
+        wasLocked = false;
+    }
+
+    public static void FixCursorLock() {
+        if (!wasLocked && IsPointerLocked()) {
+            wasLocked = true;
+        } else if (wasLocked && !IsPointerLocked()) {
+            UnlockCursor();
+        }
     }
 }

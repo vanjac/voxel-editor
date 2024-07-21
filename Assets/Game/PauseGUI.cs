@@ -120,6 +120,8 @@ public class PauseGUI : GUIPanel {
                 PauseGame();
             }
         }
+
+        GameInput.FixCursorLock();
     }
 
     private IEnumerator PauseNextFrame() {
