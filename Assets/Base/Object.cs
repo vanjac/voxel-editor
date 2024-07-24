@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class ObjectEntity : DynamicEntity {
@@ -41,6 +41,7 @@ public abstract class ObjectEntity : DynamicEntity {
         }
         highlight = c;
         if (highlightMaterial == null) {
+            // TODO: load from Resources!
             highlightMaterial = AssetPack.InstantiateMaterial(
                 AssetPack.Current().FindMaterial("UNLIT", true));
         }
