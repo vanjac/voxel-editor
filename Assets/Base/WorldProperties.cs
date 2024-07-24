@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldProperties : PropertiesObject {
+    private const float DEFAULT_GRAVITY = 9.81f;
+
     // TODO: move these properties to sky materials (custom shader)
     private static readonly Dictionary<string, float> skyRotations = new Dictionary<string, float> {
         {"sky5X1", 102},
@@ -18,6 +20,20 @@ public class WorldProperties : PropertiesObject {
         iconName = "earth",
     };
     public PropertiesObjectType ObjectType => objectType;
+
+    private float Gravity {
+        get => -Physics.gravity.y;
+        set {
+            var gravity = Physics.gravity;
+            gravity.y = -value;
+            Physics.gravity = gravity;
+        }
+    }
+
+    public void InitDefaultProperties() {
+        // gravity is preserved between scenes!
+        Gravity = DEFAULT_GRAVITY;
+    }
 
     public void SetSky(Material sky) {
         // instantiating material allows modifying the Rotation property without modifying asset
@@ -120,12 +136,8 @@ public class WorldProperties : PropertiesObject {
                 PropertyGUIs.Color),
 #if NSPACE_1_5
             new Property("grv", s => s.PropGravity,
-                () => -Physics.gravity.y,
-                v => {
-                    var gravity = Physics.gravity;
-                    gravity.y = -(float)v;
-                    Physics.gravity = gravity;
-                },
+                () => Gravity,
+                v => Gravity = (float)v,
                 PropertyGUIs.Float),
 #endif
         };
@@ -145,5 +157,11 @@ public class WorldProperties : PropertiesObject {
                     }
                 },
                 PropertyGUIs.Slider(0, 1)),
+#if !NSPACE_1_5
+            new Property("grv", GUIStringSet.Empty,
+                () => Gravity,
+                v => Gravity = (float)v,
+                PropertyGUIs.Empty),
+#endif
         };
 }

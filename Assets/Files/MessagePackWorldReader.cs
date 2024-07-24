@@ -122,6 +122,7 @@ public class MessagePackWorldReader : WorldFileReader {
             }
         }
 
+        voxelArray.world.InitDefaultProperties();
         if (world.ContainsKey(FileKeys.WORLD_GLOBAL)) {
             ReadPropertiesObject(world[FileKeys.WORLD_GLOBAL].AsDictionary(), voxelArray.world);
             // the new skybox shader makes ambient light for this sky a lot brighter
