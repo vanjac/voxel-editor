@@ -93,7 +93,10 @@ public class AssetPack {
             Debug.LogError(request.error);
         } else {
             Debug.Log("Download complete");
-            current = new AssetPack(DownloadHandlerAssetBundle.GetContent(request));
+            var bundle = DownloadHandlerAssetBundle.GetContent(request);
+            if (bundle) {
+                current = new AssetPack();
+            }
         }
 #else
         Current(); // TODO: AssetBundle.LoadFromFileAsync();
@@ -103,7 +106,10 @@ public class AssetPack {
 
     public static AssetPack Current() {
         if (current == null) {
-            current = new AssetPack(AssetBundle.LoadFromFile(GetPath()));
+            var bundle = AssetBundle.LoadFromFile(GetPath());
+            if (bundle) {
+                current = new AssetPack(bundle);
+            }
         }
         return current;
     }
@@ -118,7 +124,8 @@ public class AssetPack {
     }
 
     public string LoadConfigFile(string name) {
-        return assetBundle.LoadAsset<TextAsset>("Config/" + name).text;
+        var asset = assetBundle.LoadAsset<TextAsset>("Config/" + name);
+        return asset ? asset.text : "";
     }
 
     private void EnsureMaterialsLoaded() {
