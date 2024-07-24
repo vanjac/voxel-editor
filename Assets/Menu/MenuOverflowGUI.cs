@@ -50,6 +50,9 @@ public class MenuOverflowGUI : GUIPanel {
                 new OverflowMenuGUI.MenuItem(StringSet.OpenSubreddit, IconSet.reddit, () => {
                     Application.OpenURL("https://www.reddit.com/r/nspace/");
                 }),
+                new OverflowMenuGUI.MenuItem(StringSet.OpenWebPlayer, IconSet.desktop, () => {
+                    Application.OpenURL("https://chroma-zone.itch.io/n-space");
+                }),
 #if false
                 new OverflowMenuGUI.MenuItem(StringSet.Donate, IconSet.donate, () => {
                     Application.OpenURL("https://chroma.zone/donate");

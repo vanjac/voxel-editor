@@ -95,6 +95,8 @@ public class GUIStringSet {
         "Website";
     public virtual string OpenSubreddit =>
         "Subreddit";
+    public virtual string OpenWebPlayer =>
+        "Web Player";
     public virtual string OpenVideos =>
         "Videos";
     public virtual string Donate =>
