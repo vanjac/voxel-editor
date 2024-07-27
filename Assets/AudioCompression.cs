@@ -116,7 +116,9 @@ public static class AudioCompression {
         }
 
         AudioClip clip = AudioClip.Create("audio", samples, channels, frequency, false);
-        coroutineObject.StartCoroutine(DecompressCoroutine(clip, bytes));
+        if (Opus.IsSupported) {
+            coroutineObject.StartCoroutine(DecompressCoroutine(clip, bytes));
+        }
         return clip;
     }
 

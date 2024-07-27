@@ -10,6 +10,12 @@ public class Opus {
     private const string LIBRARY_NAME = "opus";
 #endif
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+    public static bool IsSupported => false;
+#else
+    public static bool IsSupported => true;
+#endif
+
     [DllImport(LIBRARY_NAME)]
     public static extern IntPtr opus_encoder_create(int Fs, int channels, int application, out int error);
 
