@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 public class MenuGUI : GUIPanel {
     public TextAsset indoorTemplate, floatingTemplate;
 
-    private static readonly System.Lazy<GUIStyle> worldButtonStyle = new System.Lazy<GUIStyle>(() =>
+    public static readonly System.Lazy<GUIStyle> worldButtonStyle = new System.Lazy<GUIStyle>(() =>
         new GUIStyle(StyleSet.buttonLarge) {
             alignment = TextAnchor.MiddleLeft,
         });
@@ -193,7 +193,7 @@ public class MenuGUI : GUIPanel {
                     UpdateWorldList();
                 };
             }),
-#if (UNITY_ANDROID || UNITY_IOS)
+#if UNITY_ANDROID || UNITY_IOS
             new OverflowMenuGUI.MenuItem(StringSet.ShareWorld, IconSet.share,
                 () => ShareMap.Share(path))
 #endif

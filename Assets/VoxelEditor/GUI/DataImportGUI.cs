@@ -68,7 +68,7 @@ public class DataImportGUI : GUIPanel {
                 string path = worldPaths[i];
                 string name = worldNames[i];
 
-                if (GUILayout.Button(name, StyleSet.buttonLarge)) {
+                if (GUILayout.Button(name, MenuGUI.worldButtonStyle.Value)) {
                     worldSelected = true;
                     selectedWorldName = name;
                     StartCoroutine(LoadWorldCoroutine(path));
@@ -86,13 +86,17 @@ public class DataImportGUI : GUIPanel {
                 scrollVelocity = Vector2.zero;
                 StopPlayer();
             }
+            // prevent from expanding window
+            GUIUtils.BeginHorizontalClipped(GUILayout.ExpandHeight(false));
             GUILayout.Label(selectedWorldName, MaterialSelectorGUI.categoryLabelStyle.Value);
+            GUIUtils.EndHorizontalClipped();
             GUILayout.EndHorizontal();
             if (dataList != null && dataList.Count > 0) {
                 scroll = GUILayout.BeginScrollView(scroll);
                 foreach (EmbeddedData data in dataList) {
                     GUILayout.BeginHorizontal();
-                    if (GUILayout.Button(data.name, StyleSet.buttonLarge)) {
+                    if (GUILayout.Button(
+                            data.name, MenuGUI.worldButtonStyle.Value, GUILayout.MinWidth(0))) {
                         dataAction(data);
                         Destroy(this);
                     }
