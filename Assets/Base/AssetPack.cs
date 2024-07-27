@@ -95,7 +95,7 @@ public class AssetPack {
             Debug.Log("Download complete");
             var bundle = DownloadHandlerAssetBundle.GetContent(request);
             if (bundle) {
-                current = new AssetPack();
+                current = new AssetPack(bundle);
             }
         }
 #else
