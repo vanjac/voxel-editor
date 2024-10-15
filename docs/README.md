@@ -55,11 +55,13 @@ These notes are mostly for me, but you can read them too.
 - iOS: install Xcode
 - Install latest release of Unity 2020, with build tools for Android/iOS
 - Clone repo
-- Copy AssetBundles into StreamingAssets
+- Download the [AssetBundles](https://github.com/vanjac/voxel-editor/releases/latest) and copy them into StreamingAssets
 - Open project in Unity, and switch platform to Android/iOS
 - Open Project Settings > Editor and switch Unity Remote device to Android
 - Android: open Player settings and browse for the keystore location
 - iOS: download certificate from Apple and install, get private key and install
+
+Note: there is currently a bug when building for Android using **SDK 34**. See [this thread](https://discussions.unity.com/t/cant-build-for-android-sdk-34/927940/24) for details.
 
 ## More info
 
