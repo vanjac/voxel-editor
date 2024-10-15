@@ -39,7 +39,7 @@ N-Space has built-in documentation and tutorials, which you can access through t
 
 The app has been tested with Unity 2020.3.X on Android and iOS. There is little platform-specific code (only for importing/exporting files). Most of the user interface requires touch input and will not work with a mouse, so you will need to use the Unity Remote App, or build for Android directly.
 
-This repository does NOT include the AssetBundle which contains all built-in materials and models. Due to license restrictions the source files for these assets cannot be distributed as open-source. (TODO: How to acquire AssetBundles or create a custom AssetBundle. Contact me if you need help.)
+This repository does NOT include the AssetBundle which contains all built-in materials and models. Due to license restrictions the source files for these assets cannot be distributed as open-source. Instead, download the AssetBundle files (`nspace_default_*`) from the [latest release](https://github.com/vanjac/voxel-editor/releases/latest) and put them in the `StreamingAssets` folder.
 
 The app has four scenes:
 
