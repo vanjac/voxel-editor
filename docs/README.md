@@ -1,6 +1,6 @@
 # N-Space
 
-<img src="https://raw.githubusercontent.com/vanjac/voxel-editor/master/Assets/icon.png" alt="Icon" width="128">
+<img src="icon.png" alt="Icon" width="128">
 
 A mobile app for building 3D interactive worlds. This is a work in progress.
 
@@ -25,15 +25,15 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 # Screenshots
 
-<span><img src="https://user-images.githubusercontent.com/8228102/206854943-364af43e-7b16-403d-9479-253b4b2f6b39.png" width="427">
-<img src="https://user-images.githubusercontent.com/8228102/206854950-f061274c-e1c9-4227-a9fa-67d78c2b3da8.png" width="427">
-<img src="https://user-images.githubusercontent.com/8228102/206854952-2faa8a2d-8eb6-4d52-a750-ee18973ae01f.png" width="427"></span>
+<span><img src="screenshot1.png" width="427">
+<img src="screenshot2.png" width="427">
+<img src="screenshot3.png" width="427"></span>
 
 ## Using the app
 
 The app opens to a list of "worlds" that you have created. Tap "New" to create a new world. Tap a world to open it in the Editor. Tap the menu button next to a world to access additional options, including sharing the worlds as `.nspace` files. You can open these files in N-Space from another app, like an email attachment or downloaded file.
 
-N-Space has built-in documentation and tutorials, which you can access through the overflow (<img src="https://user-images.githubusercontent.com/8228102/206855184-e73ee339-7490-478c-a93a-d57609127541.png" width="24" height="24" style="display:inline;margin:0;">) menu, by tapping Help.
+N-Space has built-in documentation and tutorials, which you can access through the overflow (<img src="dots-vertical.png" width="24" height="24" style="display:inline;margin:0;">) menu, by tapping Help.
 
 ## Building the app yourself
 
