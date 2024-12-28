@@ -25,9 +25,9 @@ A mobile app for building 3D interactive worlds. This is a work in progress.
 
 # Screenshots
 
-<span><img src="screenshot1.png" width="427">
-<img src="screenshot2.png" width="427">
-<img src="screenshot3.png" width="427"></span>
+<span><img src="screenshot1.jpg" width="427">
+<img src="screenshot2.jpg" width="427">
+<img src="screenshot3.jpg" width="427"></span>
 
 ## Using the app
 
